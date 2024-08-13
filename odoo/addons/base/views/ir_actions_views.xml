@@ -345,7 +345,7 @@
                             <field name="update_path" widget="DynamicModelFieldSelectorChar" class="oe_inline" options="{'model': 'model_name'}"/>
                             <field name="update_field_id" invisible="1"/>
                             <field name="value_field_to_show" invisible="1"/>
-                            <field name="update_related_model_id" invisible="1"/>
+                            <field name="update_related_model_id" invisible="1" force_save="1"/>
                             <field name="update_field_type" invisible="1"/>
                             <span invisible="evaluation_type != 'value' or not update_field_type == 'many2many'">by</span>
                             <field name="update_m2m_operation" class="oe_inline" invisible="evaluation_type != 'value' or not update_field_type == 'many2many'" required="update_field_type == 'many2many'"/>
