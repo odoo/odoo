@@ -33,28 +33,32 @@
     <field name="model">website.page</field>
     <field name="arch" type="xml">
         <form js_class="page_properties_dialog_form">
-            <notebook>
-                <page string="Name" name="page_name">
-                    <group class="mt-4">
-                        <field name="name" string="Page Name" placeholder="e.g. Home Page"/>
-                        <field name="website_id" invisible="1"/>
-                        <field name="url" string="Page URL" widget="page_url"/>
-                    </group>
-                </page>
-                <page string="Publish" name="page_publish">
-                    <group class="mt-4">
-                        <field name="is_in_menu" string="Show in Top Menu" widget="boolean_toggle"/>
-                        <field name="is_homepage" string="Use as Homepage" widget="boolean_toggle"/>
-                        <field name="website_indexed" string="Indexed" widget="boolean_toggle" help="Hide this page from search results"/>
-                        <field name="is_published" string="Published" widget="boolean_toggle"/>
-                        <field name="date_publish" widget="datetime"/>
-                        <field name="visibility"/>
-                        <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
-                        <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
-                        <field name="is_new_page_template" widget="boolean_toggle"/>
-                    </group>
-                </page>
-            </notebook>
+            <group class="mt-4">
+                <field name="name" string="Page Title" placeholder="e.g. Home Page"/>
+                <field name="website_id" invisible="1"/>
+                <field name="url" string="Page URL" widget="page_url"/>
+
+                <label for="is_in_menu" string="In Menu"/>
+                <div class="o_row">
+                    <field name="is_in_menu" widget="boolean_toggle"/>
+                    <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
+                </div>
+
+                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
+                <field name="is_published" string="Published" widget="boolean_toggle"/>
+                <field name="date_publish" widget="datetime"/>
+
+                <label for="website_indexed" string="Indexed" invisible="not is_published"/>
+                <div class="o_row" invisible="not is_published">
+                    <field name="website_indexed" widget="boolean_toggle" help="Hide this page from search results"/>
+                    <span invisible="website_indexed">Won't appear in search engine results</span>
+                </div>
+
+                <field name="visibility"/>
+                <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
+                <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
+                <field name="is_new_page_template" string="Is a Template" widget="boolean_toggle"/>
+            </group>
         </form>
     </field>
 </record>
