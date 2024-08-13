@@ -170,7 +170,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that the second image is not within a link.",
-        trigger: ':iframe .s_three_columns .row > :nth-child(2) div > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(2) figure > img',
     },
     {
         content: "Check that link tools appear.",
@@ -179,17 +179,17 @@ registerWebsitePreviewTour('link_tools', {
     ...clickOnSave(),
     {
         content: "Check that the first image was saved.",
-        trigger: ':iframe .s_three_columns .row > :nth-child(1) div > a > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(1) figure > a > img',
     },
     {
         content: "Check that the second image was saved.",
-        trigger: ':iframe .s_three_columns .row > :nth-child(2) div > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(2) figure > img',
     },
     // 5. Remove link from image.
     ...clickOnEditAndWaitEditMode(),
     {
         content: "Reselect the first image.",
-        trigger: ':iframe .s_three_columns .row > :nth-child(1) div > a > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(1) figure > a > img',
         run: 'click',
     },
     {
@@ -203,7 +203,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that image is not within a link anymore.",
-        trigger: ':iframe .s_three_columns .row > :nth-child(1) div > img',
+        trigger: ':iframe .s_three_columns .row > :nth-child(1) figure > img',
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
     clickOnElement("menu link", ":iframe header .nav-item a"),

@@ -387,6 +387,13 @@
     </t>
 </template>
 
+<template id="snippet_options_version_control">
+    <div data-js="VersionControl"
+        t-att-data-selector="selector"
+        t-att-data-exclude="exclude"
+        t-att-data-target="target"/>
+</template>
+
 <!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
 <template id="snippet_options">
     <!-- t-field -->
@@ -397,8 +404,9 @@
     <div data-selector=".s_hr"
          data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
 
-    <div data-js="VersionControl"
-         data-selector="[data-snippet]"/>
+    <t t-call="web_editor.snippet_options_version_control">
+        <t t-set="selector" t-value="'[data-snippet]'"/>
+    </t>
 
     <!-- Replace a media -->
     <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->

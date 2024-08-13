@@ -79,7 +79,7 @@ registerWebsitePreviewTour("website_update_column_count", {
     run: "click",
 }, {
     content: "Delete the item",
-    trigger: "we-title:contains('Column'):not(:contains('Columns')) .oe_snippet_remove",
+    trigger: "we-title:contains('Card') .oe_snippet_remove",
     run: "click",
 }, {
     content: "Toggle mobile view",
