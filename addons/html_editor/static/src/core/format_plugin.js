@@ -7,6 +7,7 @@ import { closestElement, descendants, selectElements } from "../utils/dom_traver
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
+import { _t } from "@web/core/l10n/translation";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -50,7 +51,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_BOLD");
                 },
                 icon: "fa-bold",
-                name: "Toggle bold",
+                name: _t("Toggle bold"),
                 isFormatApplied: isFormatted(p, "bold"),
             },
             {
@@ -60,7 +61,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_ITALIC");
                 },
                 icon: "fa-italic",
-                name: "Toggle italic",
+                name: _t("Toggle italic"),
                 isFormatApplied: isFormatted(p, "italic"),
             },
             {
@@ -70,7 +71,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_UNDERLINE");
                 },
                 icon: "fa-underline",
-                name: "Toggle underline",
+                name: _t("Toggle underline"),
                 isFormatApplied: isFormatted(p, "underline"),
             },
             {
@@ -80,7 +81,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_STRIKETHROUGH");
                 },
                 icon: "fa-strikethrough",
-                name: "Toggle strikethrough",
+                name: _t("Toggle strikethrough"),
                 isFormatApplied: isFormatted(p, "strikeThrough"),
             },
             {
@@ -90,7 +91,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_REMOVE_FORMAT");
                 },
                 icon: "fa-eraser",
-                name: "Remove Format",
+                name: _t("Remove Format"),
                 hasFormat: hasFormat(p),
             },
         ],
