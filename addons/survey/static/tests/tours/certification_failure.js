@@ -109,6 +109,10 @@ var failSteps = [{ // Page-1
     content: "Finish Survey",
     trigger: 'button[type="submit"]',
     run: "click",
+}, {
+    content: "Click on Submit",
+    trigger: 'button.btn-primary:contains("Submit")',
+    run: "click",
 }];
 
 var retrySteps = [{

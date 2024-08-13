@@ -176,6 +176,7 @@
             <button
                 t-att-disabled="not can_go_forward"
                 type="submit" class="btn border-0 p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
+                <t t-if="survey_last">Submit</t>
                 <i class="oi oi-chevron-right p-2" />
             </button>
         </div>
