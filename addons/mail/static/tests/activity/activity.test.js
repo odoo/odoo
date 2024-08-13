@@ -320,9 +320,9 @@ test("activity with mail template: send mail", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/res.partner/activity_send_mail", (request) => {
+    onRpc("/web/dataset/call_kw/res.partner/activity_send_mail", async (request) => {
         step("activity_send_mail");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(partnerId);
         expect(params.args[1]).toBe(mailTemplateId);
@@ -445,9 +445,9 @@ test("activity click on cancel", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/mail.activity/unlink", (request) => {
+    onRpc("/web/dataset/call_kw/mail.activity/unlink", async (request) => {
         step("unlink");
-        const { params } = request.json();
+        const { params } = await request.json();
         expect(params.args[0]).toHaveLength(1);
         expect(params.args[0][0]).toBe(activityId);
     });

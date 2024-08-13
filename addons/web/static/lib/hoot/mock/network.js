@@ -175,9 +175,12 @@ export async function mockedFetch(input, init) {
 
     if (result instanceof MockResponse) {
         // Mocked response
-        logResponse(async () =>
-            headers.get(HEADER.contentType) === HEADER.json ? result.json() : result.text()
-        );
+        logResponse(async () => {
+            const textValue = getSyncValue(result);
+            return headers.get(HEADER.contentType) === HEADER.json
+                ? JSON.parse(textValue)
+                : textValue;
+        });
         return result;
     }
 
@@ -572,19 +575,19 @@ export class MockRequest extends Request {
         setSyncValue(this, init?.body ?? null);
     }
 
-    arrayBuffer() {
+    async arrayBuffer() {
         return new TextEncoder().encode(getSyncValue(this));
     }
 
-    blob() {
+    async blob() {
         return new MockBlob([getSyncValue(this)]);
     }
 
-    json() {
+    async json() {
         return JSON.parse(getSyncValue(this));
     }
 
-    text() {
+    async text() {
         return getSyncValue(this);
     }
 }
@@ -600,19 +603,19 @@ export class MockResponse extends Response {
         setSyncValue(this, body ?? null);
     }
 
-    arrayBuffer() {
+    async arrayBuffer() {
         return new TextEncoder().encode(getSyncValue(this)).buffer;
     }
 
-    blob() {
+    async blob() {
         return new MockBlob([getSyncValue(this)]);
     }
 
-    json() {
+    async json() {
         return JSON.parse(getSyncValue(this));
     }
 
-    text() {
+    async text() {
         return getSyncValue(this);
     }
 }
