@@ -19,6 +19,7 @@ export class LandingPage extends Component {
 
         onWillStart(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+                console.log("Kiosk mode detected");
                 const orders = this.selfOrder.models["pos.order"].getAll();
                 for (const order of orders) {
                     order.delete();

@@ -74,6 +74,14 @@ export class SelfOrder extends Reactive {
             await this.initMobileData();
         }
 
+        this.router.urlOption.config_id = this.config.id;
+        if (this.ordering) {
+            this.router.urlOption.access_token = this.access_token;
+            if (this.table_identifier) {
+                this.router.urlOption.table_identifier = this.table_identifier;
+            }
+        }
+
         this.onNotified = getOnNotified(this.bus, this.access_token);
         this.onNotified("PRODUCT_CHANGED", (payload) => {
             this.models.replaceDataByKey("uuid", payload);
@@ -129,6 +137,9 @@ export class SelfOrder extends Reactive {
         });
     }
 
+    setTableIdentifier(tableIdentifier) {
+        this.router.urlOption.table_identifier = tableIdentifier;
+    }
     subscribeToOrderChannel(order) {
         if (!order.access_token || this.orderSubscribtion.has(order.access_token)) {
             return;
@@ -403,6 +414,7 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
+        this.table_identifier = odoo.table_identifier;
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.product"].getAllBy("pos_categ_ids");
         const productWoCat = this.models["product.product"].filter(
@@ -510,10 +522,11 @@ export class SelfOrder extends Reactive {
         if (this.config.self_ordering_mode !== "qr_code") {
             if (
                 this.session &&
-                this.access_token &&
+                odoo.access_token &&
                 this.config.self_ordering_mode !== "consultation"
             ) {
                 this.ordering = true;
+                this.access_token = odoo.access_token;
             }
 
             if (!this.ordering) {

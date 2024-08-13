@@ -64,7 +64,10 @@ export class Router extends Component {
         const path = this.router.path;
 
         for (const [routeName, { paramSpecs, regex }] of Object.entries(this.routes)) {
-            const match = path.match(regex);
+            const pathWithoutBase = this.router.basePath
+                ? path.slice(this.router.basePath.length)
+                : path;
+            const match = pathWithoutBase.match(regex);
             if (match) {
                 const parsedParams = parseParams(match.slice(1), paramSpecs);
                 this.router.activeSlot = routeName;

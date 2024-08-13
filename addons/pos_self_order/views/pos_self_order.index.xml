@@ -10,6 +10,8 @@
                 <script type="text/javascript">
                     var odoo = {
                         csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
+                        access_token: <t t-esc="json.dumps(session_info['data'].get('access_token'))"/>,
+                        table_identifier: <t t-esc="json.dumps(session_info['data'].get('table_identifier'))"/>,
                         debug: "<t t-esc="debug"/>",
                         __session_info__: <t t-esc="json.dumps(session_info)"/>,
                     };
