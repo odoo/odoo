@@ -45,7 +45,7 @@ var BarChart = publicWidget.Widget.extend({
             data.push(pt[1]);
         });
 
-        this.$('.title').html(nbClicks + _t(' clicks'));
+        this.$('.title').text(_t('%(clicks)s clicks', {clicks: nbClicks}));
 
         var config = {
             type: 'line',
@@ -95,7 +95,7 @@ var PieChart = publicWidget.Widget.extend({
         }
 
         // Set title
-        this.$('.title').html(this.data.length + _t(' countries'));
+        this.$('.title').text(_t('%(count)s countries', {count: this.data.length}));
 
         var config = {
             type: 'pie',

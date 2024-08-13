@@ -180,10 +180,16 @@ class AccountJournal(models.Model):
         """
         self.ensure_one()
         if any(not self.company_id[f] for f in self._l10n_sa_csr_required_fields()):
-            raise UserError(_("Please, make sure all the following fields have been correctly set on the Company: \n")
-                            + "\n".join(
-                " - %s" % self.company_id._fields[f].string for f in self._l10n_sa_csr_required_fields() if
-                not self.company_id[f]))
+            raise UserError(
+                _(
+                    "Please, make sure all the following fields have been correctly set on the Company:%(fields)s",
+                    fields="".join(
+                        "\n - %s" % self.company_id._fields[f].string
+                        for f in self._l10n_sa_csr_required_fields()
+                        if not self.company_id[f]
+                    ),
+                ),
+            )
         self._l10n_sa_reset_certificates()
         self.l10n_sa_csr = self._l10n_sa_get_csr_str()
 
@@ -564,7 +570,7 @@ class AccountJournal(models.Model):
         except (ValueError, HTTPError) as ex:
             # In the case of an explicit error from ZATCA, i.e we got a response but the code of the response is not 2xx
             return {
-                'error': _("Server returned an unexpected error: ") + (request_response.text or str(ex)),
+                'error': _("Server returned an unexpected error: %(error)s", error=(request_response.text or str(ex))),
                 'blocking_level': 'error'
             }
         except RequestException as ex:

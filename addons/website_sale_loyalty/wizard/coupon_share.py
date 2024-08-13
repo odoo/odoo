@@ -84,7 +84,7 @@ class CouponShare(models.TransientModel):
             raise UserError(_("Provide either a coupon or a program."))
 
         return {
-            'name': _('Share') + f' {self.env["loyalty.program"]._program_items_name().get((program or coupon).program_type, "")}',
+            'name': _('Share %s', self.env["loyalty.program"]._program_items_name().get((program or coupon).program_type, "")),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'coupon.share',

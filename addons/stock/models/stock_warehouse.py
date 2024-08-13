@@ -1092,17 +1092,17 @@ class Warehouse(models.Model):
         code = code if code else self.code
         return {
             'in_type_id': {
-                'name': name + ' ' + _('Sequence in'),
+                'name': _('%(name)s Sequence in', name=name),
                 'prefix': code + '/IN/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
-                'name': name + ' ' + _('Sequence out'),
+                'name': _('%(name)s Sequence out', name=name),
                 'prefix': code + '/OUT/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
-                'name': name + ' ' + _('Sequence packing'),
+                'name': _('%(name)s Sequence packing', name=name),
                 'prefix': code + '/PACK/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
@@ -1112,22 +1112,22 @@ class Warehouse(models.Model):
                 'company_id': self.company_id.id,
             },
             'qc_type_id': {
-                'name': name + ' ' + _('Sequence quality control'),
+                'name': _('%(name)s Sequence quality control', name=name),
                 'prefix': code + '/QC/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'store_type_id': {
-                'name': name + ' ' + _('Sequence storage'),
+                'name': _('%(name)s Sequence storage', name=name),
                 'prefix': code + '/STOR/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
-                'name': name + ' ' + _('Sequence internal'),
+                'name': _('%(name)s Sequence internal', name=name),
                 'prefix': code + '/INT/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'xdock_type_id': {
-                'name': name + ' ' + _('Sequence cross dock'),
+                'name': _('%(name)s Sequence cross dock', name=name),
                 'prefix': code + '/XD/', 'padding': 5,
                 'company_id': self.company_id.id,
             },

@@ -27,7 +27,7 @@ export function checkSCSS(scss) {
                     isValid: false,
                     error: {
                         line,
-                        message: _t("Unexpected ") + scss[i],
+                        message: _t("Unexpected %(char)s", {char: scss[i]}),
                     },
                 };
             }
@@ -40,7 +40,7 @@ export function checkSCSS(scss) {
             isValid: false,
             error: {
                 line,
-                message: _t("Expected ") + MAPPING[stack.pop()],
+                message: _t("Expected %(char)s", {char: MAPPING[stack.pop()]}),
             },
         };
     }

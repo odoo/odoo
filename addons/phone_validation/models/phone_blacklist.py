@@ -37,7 +37,7 @@ class PhoneBlackList(models.Model):
             try:
                 sanitized_value = self.env.user._phone_format(number=value['number'], raise_exception=True)
             except UserError as err:
-                raise UserError(str(err) + _(" Please correct the number and try again.")) from err
+                raise UserError(_("%(error)s Please correct the number and try again.", error=err)) from err
             if sanitized_value in done:
                 continue
             done.add(sanitized_value)
@@ -66,7 +66,7 @@ class PhoneBlackList(models.Model):
             try:
                 sanitized = self.env.user._phone_format(number=values['number'], raise_exception=True)
             except UserError as err:
-                raise UserError(str(err) + _(" Please correct the number and try again.")) from err
+                raise UserError(_("%(error)s Please correct the number and try again.", error=str(err))) from err
             values['number'] = sanitized
         return super(PhoneBlackList, self).write(values)
 

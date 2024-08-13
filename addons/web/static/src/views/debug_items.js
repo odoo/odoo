@@ -58,7 +58,7 @@ export function editView({ accessRights, component, env }) {
         return;
     }
     const displayName = type[0].toUpperCase() + type.slice(1);
-    const description = _t("Edit View: ") + displayName;
+    const description = _t("Edit View: %(displayName)s", { displayName });
     return {
         type: "item",
         description,

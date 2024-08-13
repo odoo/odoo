@@ -158,13 +158,13 @@ class StockWarehouse(models.Model):
         count = self.env['ir.sequence'].search_count([('prefix', '=like', self.code + '/SBC%/%')])
         values.update({
             'subcontracting_type_id': {
-                'name': self.name + ' ' + _('Sequence subcontracting'),
+                'name': _('%(name)s Sequence subcontracting', name=self.name),
                 'prefix': self.code + (('/SBC' + str(count) + '/') if count else '/SBC/'),
                 'padding': 5,
                 'company_id': self.company_id.id
             },
             'subcontracting_resupply_type_id': {
-                'name': self.name + ' ' + _('Sequence Resupply Subcontractor'),
+                'name': _('%(name)s Sequence Resupply Subcontractor', name=self.name),
                 'prefix': self.code + (('/RES' + str(count) + '/') if count else '/RES/'),
                 'padding': 5,
                 'company_id': self.company_id.id

@@ -211,7 +211,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     node.text = spec.text
 
                 else:
-                    raise ValueError(_("Invalid mode attribute:") + " '%s'" % mode)
+                    raise ValueError(_("Invalid mode attribute: “%s”", mode))
             elif pos == 'attributes':
                 for child in spec.getiterator('attribute'):
                     # The element should only have attributes:

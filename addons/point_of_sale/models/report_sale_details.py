@@ -204,7 +204,7 @@ class ReportSaleDetails(models.AbstractModel):
                         payment['cash_moves'] = cash_in_out_list
                         payment['count'] = True
             if not is_cash_method:
-                cash_name = _('Cash') + ' ' + str(session.name)
+                cash_name = _('Cash %(session_name)s', session_name=session.name)
                 previous_session = self.env['pos.session'].search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
                 final_count = previous_session.cash_register_balance_end_real + session.cash_real_transaction
                 cash_difference = session.cash_register_balance_end_real - final_count

@@ -343,14 +343,14 @@ class HolidaysType(models.Model):
             return super()._compute_display_name()
         for record in self:
             name = record.name
-            if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
-                name = "{name} ({count})".format(
-                    name=name,
-                    count=_('%(remaining)g remaining out of %(maximum)g',
-                        remaining=float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
-                        maximum=float_round(record.max_leaves, precision_digits=2) or 0.0,
-                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days')),
-            )
+            if record.requires_allocation == "yes" and not self._context.get("from_manager_leave_form"):
+                remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
+                maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
+
+                if record.request_unit == "hour":
+                    name = _("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
+                else:
+                    name = _("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
             record.display_name = name
 
     @api.model

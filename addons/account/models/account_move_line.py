@@ -986,7 +986,7 @@ class AccountMoveLine(models.Model):
                     'move_id': line.move_id.id,
                     'display_type': line.display_type,
                 }): {
-                    'name': tax['name'] + (' ' + _('(Discount)') if line.display_type == 'epd' else ''),
+                    'name': _('%(tax_name)s (Discount)', tax_name=tax['name']) if line.display_type == 'epd' else tax['name'],
                     'balance': sign * tax['amount'] / rate,
                     'amount_currency': sign * tax['amount'],
                     'tax_base_amount': sign * tax['base'] / rate * (-1 if line.tax_tag_invert else 1),

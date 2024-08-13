@@ -1254,7 +1254,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             for quant in quants:
                 sn_to_location += _("\n(%(serial_number)s) exists in location %(location)s", serial_number=quant.lot_id.display_name, location=quant.location_id.display_name)
             return {
-                'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded:') + sn_to_location}
+                'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
             }
 
     @api.onchange('product_uom')

@@ -1328,7 +1328,7 @@ class BaseModel(metaclass=MetaModel):
                 except Exception as e:
                     _logger.debug("Error while loading record", exc_info=True)
                     info = rec_data['info']
-                    message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
+                    message = _('Unknown error during import: %(error_type)s: %(error_message)s', error_type=type(e), error_message=e)
                     moreinfo = _('Resolve other errors first')
                     messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                     # Failed for some reason, perhaps due to invalid data supplied,
@@ -4325,10 +4325,13 @@ class BaseModel(metaclass=MetaModel):
             return
         _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
         raise MissingError(
-            _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
-            + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
-                _('Document type:'), self._name, _('Operation:'), operation,
-                _('Records:'), invalid.ids[:6], _('User:'), self._uid,
+            _(
+                'One of the documents you are trying to access has been deleted, please try again after refreshing.\n\n'
+                'Document type: %(document_type)s, Operation: %(operation)s, Records: %(records)s, User: %(user)s',
+                document_type=self._name,
+                operation=operation,
+                records=invalid.ids[:6],
+                user=self._uid,
             )
         )
 

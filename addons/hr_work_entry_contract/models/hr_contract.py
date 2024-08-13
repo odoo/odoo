@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import string_to_datetime, Intervals
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import ormcache, format_list
 from odoo.exceptions import UserError
 
 
@@ -335,8 +335,9 @@ class HrContract(models.Model):
         canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
         if canceled_contracts:
             raise UserError(
-                _("Sorry, generating work entries from cancelled contracts is not allowed.") + '\n%s' % (
-                    ', '.join(canceled_contracts.mapped('name'))))
+                _("Sorry, generating work entries from cancelled contracts is not allowed.")
+                + "\n%s" % (format_list(self.env, canceled_contracts.mapped("name"))),
+            )
         vals_list = []
         self.write({'last_generation_date': fields.Date.today()})
 

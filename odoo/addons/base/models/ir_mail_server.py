@@ -442,10 +442,11 @@ class IrMailServer(models.Model):
                     raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
 
         if not smtp_server:
-            raise UserError(
-                (_("Missing SMTP Server") + "\n" +
-                 _("Please define at least one SMTP server, "
-                   "or provide the SMTP parameters explicitly.")))
+            raise UserError(_(
+                "Missing SMTP Server\n"
+                "Please define at least one SMTP server, "
+                "or provide the SMTP parameters explicitly.",
+            ))
 
         if smtp_encryption == 'ssl':
             if 'SMTP_SSL' not in smtplib.__all__:

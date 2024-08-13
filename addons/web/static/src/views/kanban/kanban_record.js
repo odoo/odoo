@@ -350,9 +350,12 @@ export class KanbanRecord extends Component {
                 break;
             }
             default: {
-                return this.notification.add(_t("Kanban: no action for type: ") + type, {
-                    type: "danger",
-                });
+                return this.notification.add(
+                    _t("Kanban: no action for type: %(type)s", { type }),
+                    {
+                        type: "danger",
+                    }
+                );
             }
         }
     }
