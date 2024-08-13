@@ -2396,8 +2396,9 @@ describe("images", () => {
 describe("youtube video", () => {
     describe("range collapsed", () => {
         beforeEach(() => {
-            onRpc("/html_editor/video_url/data", (request) => {
-                return { embed_url: request.json().params.video_url };
+            onRpc("/html_editor/video_url/data", async (request) => {
+                const { params } = await request.json();
+                return { embed_url: params.video_url };
             });
         });
 
@@ -2475,8 +2476,9 @@ describe("youtube video", () => {
 
     describe("range not collapsed", () => {
         beforeEach(() => {
-            onRpc("/html_editor/video_url/data", (request) => {
-                return { embed_url: request.json().params.video_url };
+            onRpc("/html_editor/video_url/data", async (request) => {
+                const { params } = await request.json();
+                return { embed_url: params.video_url };
             });
         });
 
@@ -2834,8 +2836,8 @@ describe("Paste HTML tables", () => {
                 );
             },
             contentAfter: `<table class="table table-bordered">
-            
-            
+${"            "}
+${"            "}
             <tbody><tr>
                 <td>Italic
                         then also BOLD</td>
@@ -2858,9 +2860,9 @@ describe("Paste HTML tables", () => {
                 </td>
             </tr>
         </tbody></table><p>
-    
+${"    "}
 
-    
+${"    "}
 []</p>`,
         });
     });
@@ -2937,10 +2939,10 @@ describe("Paste HTML tables", () => {
                 );
             },
             contentAfter: `<table class="table table-bordered">
-        
-            
-            
-        
+${"        "}
+${"            "}
+${"            "}
+${"        "}
         <tbody>
             <tr>
                 <td>
@@ -3073,8 +3075,8 @@ describe("Paste HTML tables", () => {
                 );
             },
             contentAfter: `<table class="table table-bordered">
-        
-        
+${"        "}
+${"        "}
         <tbody><tr>
             <td><i>Italic then also BOLD</i></td>
             <td><i><s>Italic strike</s></i></td>

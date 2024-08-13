@@ -1881,8 +1881,8 @@ test("server actions are called with the correct context", async () => {
 });
 
 test("BinaryField is correctly rendered in Settings form view", async () => {
-    onRpc("/web/content", (request) => {
-        const body = request.text();
+    onRpc("/web/content", async (request) => {
+        const body = await request.text();
         expect(body).toBeInstanceOf(FormData);
         expect(body.get("field")).toBe("file", {
             message: "we should download the field document",
