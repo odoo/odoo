@@ -58,6 +58,7 @@ class Environment(Mapping):
         self.transaction.reset()
 
     def __new__(cls, cr, uid, context, su=False, uid_origin=None):
+        assert isinstance(cr, BaseCursor)
         if uid == SUPERUSER_ID:
             su = True
 
@@ -77,7 +78,6 @@ class Environment(Mapping):
                 return env
 
         # otherwise create environment, and add it in the set
-        assert isinstance(cr, BaseCursor)
         self = object.__new__(cls)
         self.cr, self.uid, self.su, self.uid_origin = cr, uid, su, uid_origin
         self.context = frozendict(context)
