@@ -50,10 +50,10 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory.main">
-        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'my-2 position-relative': store.discuss.isSidebarCompact, 'my-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
+        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'm-2 position-relative': store.discuss.isSidebarCompact, 'my-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
             <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start opacity-100-hover opacity-75" t-att-class="{ 'mx-1 align-items-baseline': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
-                    <i t-if="store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarCategory-foldIndicatorCompact position-absolute" t-att-class="{
+                    <i t-if="store.discuss.isSidebarCompact" class="start-0 position-absolute" t-att-class="{
                         'oi oi-chevron-down': category.open,
                         'oi oi-chevron-right opacity-50': !category.open,
                     }"/>
