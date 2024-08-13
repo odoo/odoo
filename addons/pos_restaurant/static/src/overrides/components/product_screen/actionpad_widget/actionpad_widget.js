@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
-import { useState } from "@odoo/owl";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 /**
  * @props partner
@@ -9,9 +8,6 @@ import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_sc
 patch(ActionpadWidget.prototype, {
     setup() {
         super.setup();
-        this.uiState = useState({
-            clicked: false,
-        });
     },
     get swapButton() {
         return (
@@ -32,15 +28,8 @@ patch(ActionpadWidget.prototype, {
             altlight: !this.hasChangesToPrint && this.currentOrder?.hasSkippedChanges(),
         };
     },
-    async submitOrder() {
-        if (!this.uiState.clicked) {
-            this.uiState.clicked = true;
-            try {
-                await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-            } finally {
-                this.uiState.clicked = false;
-            }
-        }
+    submitOrder() {
+        this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
     },
     hasQuantity(order) {
         if (!order) {
