@@ -57,7 +57,7 @@ export class MediaPlugin extends Plugin {
                     action(dispatch) {
                         dispatch("REPLACE_IMAGE");
                     },
-                    name: "Replace media",
+                    name: _t("Replace media"),
                     text: "Replace",
                 },
             ],
