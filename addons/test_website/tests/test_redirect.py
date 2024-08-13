@@ -67,7 +67,7 @@ class TestRedirect(HttpCase):
         rec_published = self.env['test.model'].create({'name': 'name', 'website_published': True})
         rec_unpublished = self.env['test.model'].create({'name': 'name', 'website_published': False})
 
-        WebsiteHttp = odoo.addons.website.models.ir_http.Http
+        WebsiteHttp = odoo.addons.website.models.ir_http.IrHttp
 
         def _get_error_html(env, code, value):
             return str(code).split('_')[-1], f"CUSTOM {code}"

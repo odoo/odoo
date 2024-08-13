@@ -11,7 +11,7 @@ from odoo.osv import expression
 from odoo.addons.resource.models.utils import Intervals
 
 
-class Partner(models.Model):
+class ResPartner(models.Model):
     _inherit = ['res.partner']
 
     def _get_employees_from_attendees(self, everybody=False):

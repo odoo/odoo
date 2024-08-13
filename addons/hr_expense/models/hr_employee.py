@@ -73,7 +73,7 @@ class HrEmployeePublic(models.Model):
     expense_manager_id = fields.Many2one('res.users', readonly=True)
 
 
-class User(models.Model):
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)

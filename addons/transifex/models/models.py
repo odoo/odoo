@@ -4,9 +4,7 @@
 from odoo import models
 
 
-class BaseModel(models.AbstractModel):
-    _name = "base"
-
+class Base(models.AbstractModel):
     _inherit = ['base']
 
     def get_field_translations(self, field_name, langs=None):

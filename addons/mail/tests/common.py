@@ -15,13 +15,13 @@ from functools import partial
 from lxml import html
 from unittest.mock import patch
 
-from odoo.addons.base.models.ir_mail_server import IrMailServer
+from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
-from odoo.addons.bus.models.bus import ImBus, json_dump
+from odoo.addons.bus.models.bus import BusBus, json_dump
 from odoo.addons.mail.models.mail_mail import MailMail
-from odoo.addons.mail.models.mail_message import Message
+from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_notification import MailNotification
-from odoo.addons.mail.models.res_users import Users
+from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, new_test_user
 from odoo.tools import email_normalize, formataddr, mute_logger
@@ -66,8 +66,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     @contextmanager
     def mock_mail_gateway(self, mail_unlink_sent=False):
-        build_email_origin = IrMailServer.build_email
-        send_email_origin = IrMailServer.send_email
+        build_email_origin = IrMail_Server.build_email
+        send_email_origin = IrMail_Server.send_email
         mail_create_origin = MailMail.create
         mail_private_send_origin = MailMail._send
         mail_unlink_origin = MailMail.unlink
@@ -95,8 +95,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             return True
 
         with self.mock_smtplib_connection(), \
-             patch.object(IrMailServer, 'build_email', autospec=True, wraps=IrMailServer, side_effect=_ir_mail_server_build_email) as build_email_mocked, \
-             patch.object(IrMailServer, 'send_email', autospec=True, wraps=IrMailServer, side_effect=send_email_origin) as send_email_mocked, \
+             patch.object(IrMail_Server, 'build_email', autospec=True, wraps=IrMail_Server, side_effect=_ir_mail_server_build_email) as build_email_mocked, \
+             patch.object(IrMail_Server, 'send_email', autospec=True, wraps=IrMail_Server, side_effect=send_email_origin) as send_email_mocked, \
              patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create) as mail_mail_create_mocked, \
              patch.object(MailMail, '_send', autospec=True, wraps=MailMail, side_effect=mail_private_send_origin) as mail_mail_private_send_mocked, \
              patch.object(MailMail, 'unlink', autospec=True, wraps=MailMail, side_effect=_mail_mail_unlink):
@@ -799,7 +799,7 @@ class MailCase(MockEmail):
 
     @contextmanager
     def mock_bus(self):
-        bus_bus_create_origin = ImBus.create
+        bus_bus_create_origin = BusBus.create
         self._init_mock_bus()
 
         def _bus_bus_create(model, *args, **kwargs):
@@ -807,7 +807,7 @@ class MailCase(MockEmail):
             self._new_bus_notifs += res.sudo()
             return res
 
-        with patch.object(ImBus, 'create', autospec=True, wraps=ImBus, side_effect=_bus_bus_create) as _bus_bus_create_mock:
+        with patch.object(BusBus, 'create', autospec=True, wraps=BusBus, side_effect=_bus_bus_create) as _bus_bus_create_mock:
             yield
             self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 
@@ -820,7 +820,7 @@ class MailCase(MockEmail):
 
     @contextmanager
     def mock_mail_app(self):
-        message_create_origin = Message.create
+        message_create_origin = MailMessage.create
         notification_create_origin = MailNotification.create
         self._init_mock_mail()
 
@@ -834,7 +834,7 @@ class MailCase(MockEmail):
             self._new_notifs += res.sudo()
             return res
 
-        with patch.object(Message, 'create', autospec=True, wraps=Message, side_effect=_mail_message_create) as _mail_message_create_mock, \
+        with patch.object(MailMessage, 'create', autospec=True, wraps=MailMessage, side_effect=_mail_message_create) as _mail_message_create_mock, \
                 patch.object(MailNotification, 'create', autospec=True, wraps=MailNotification, side_effect=_mail_notification_create) as _mail_notification_create_mock:
             yield
 
@@ -1306,7 +1306,7 @@ class MailCommon(common.TransactionCase, MailCase):
             'email': 'your.company@example.com',  # ensure email for various fallbacks
             'name': 'YourTestCompany',  # force for reply_to computation
         })
-        with patch.object(Users, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
+        with patch.object(ResUsers, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
             cls.user_admin.write({
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'test.admin@test.example.com',

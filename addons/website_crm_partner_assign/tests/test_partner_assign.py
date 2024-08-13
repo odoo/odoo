@@ -39,7 +39,7 @@ class TestPartnerAssign(TransactionCase):
                 'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
             }.get(addr)
 
-        patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.GeoCoder.geo_find', wraps=geo_find)
+        patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find', wraps=geo_find)
         self.startPatcher(patcher)
 
     def test_opportunity_count(self):

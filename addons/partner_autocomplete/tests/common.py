@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import exceptions
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.partner_autocomplete.models.iap_autocomplete_api import IapAutocompleteEnrichAPI
+from odoo.addons.partner_autocomplete.models.iap_autocomplete_api import IapAutocompleteApi
 from odoo.tests import common
 
 
@@ -92,7 +92,7 @@ class MockIAPPartnerAutocomplete(common.BaseCase):
                 return {'company_data': sim_result}
 
         try:
-            with patch.object(IapAutocompleteEnrichAPI, '_contact_iap', side_effect=_contact_iap):
+            with patch.object(IapAutocompleteApi, '_contact_iap', side_effect=_contact_iap):
                 yield
         finally:
             pass
