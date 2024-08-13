@@ -97,7 +97,7 @@ class EventTrackController(http.Controller):
         if searches.get('search'):
             search_domain = expression.AND([
                 search_domain,
-                [('name', 'ilike', searches['search'])]
+                ['|', ('name', 'ilike', searches['search']), ('partner_name', 'ilike', searches['search'])]
             ])
 
         # search on tags

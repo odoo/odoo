@@ -53,11 +53,17 @@
                 </div>
             </div>
             <div class="o_wevent_search d-flex w-100 w-lg-auto">
-                <t t-set="event_search_placeholder">Search a talk ...</t>
-                <t t-call="website_event.events_search_box">
-                    <t t-set="_searches" t-value="searches"/>
+                <t t-call="website.website_search_box_input">
+                    <t t-set="_classes" t-valuef="o_wevent_event_track_searchbar_form flex-grow-1"/>
+                    <t t-set="search_type">track</t>
                     <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
-                    <t t-set="_placeholder" t-value="event_search_placeholder"/>
+                    <t t-set="display_detail" t-valuef="false"/>
+                    <t t-set="search" t-value="search or searches and searches['search']"/>
+                    <t t-set="placeholder">Search a talk ...</t>
+                    <t t-foreach="searches" t-as="item">
+                        <input t-if="item != 'search' and item_value != 'all'" type="hidden"
+                            t-att-name="item" t-att-value="item_value"/>
+                    </t>
                 </t>
                 <button class="btn btn-light position-relative ms-2 d-lg-none"
                     data-bs-toggle="offcanvas"
