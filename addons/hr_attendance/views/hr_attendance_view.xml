@@ -7,10 +7,15 @@
         <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <list string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
+            <list
+                js_class="attendance_list_view"
+                string="Employee attendances"
+                decoration-success="color == 10"
+                decoration-danger="color == 1"
+                duplicate="false">
                 <header>
-                    <button class="btn-primary" string="Approve Extra Hours" name="action_approve_overtime" type="object"/>
-                    <button class="btn-primary" string="Refuse Extra Hours" name="action_refuse_overtime" type="object"/>
+                    <button class="btn-secondary" string="Approve Extra Hours" name="action_approve_overtime" type="object"/>
+                    <button class="btn-secondary" string="Refuse Extra Hours" name="action_refuse_overtime" type="object"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_user"/>
                 <field name="check_in"/>
@@ -221,12 +226,7 @@
                 <filter string="Automatically Checked-Out" name="auto_check"
                         domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <separator/>
-                <filter string="Check In" name="check_in_filter" date="check_in"/>
-                <filter string="Last 7 days" name="last_week" domain="[(
-                    'check_in','&gt;=', (
-                        context_today() + datetime.timedelta(days=-7)
-                        )
-                    )]"/>
+                <filter string="Date" name="check_in_filter" date="check_in"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
                     'check_in','&gt;=', (
                         context_today() + datetime.timedelta(days=-90)
@@ -236,10 +236,8 @@
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
                     <filter string="Departement" name="departement" context="{'group_by': 'department_id'}"/>
                     <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
-                    <filter string="Mode (In)" name="groupby_mode_in" context="{'group_by': 'in_mode'}"/>
-                    <filter string="Mode (Out)" name="groupby_mode_out" context="{'group_by': 'out_mode'}"/>
-                    <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in:week'}"/>
-                    <filter string="Check Out" name="groupby_check_out" context="{'group_by': 'check_out'}"/>
+                    <filter string="Method" name="groupby_mode_in" context="{'group_by': 'in_mode'}"/>
+                    <filter string="Date" name="groupby_name" context="{'group_by': 'check_in:month'}"/>
                 </group>
             </search>
         </field>
@@ -268,7 +266,8 @@
         <field name="view_mode">list,form</field>
         <field name="context">
             {
-                "search_default_employee": 1
+                "search_default_groupby_name": 1,
+                "search_default_employee": 2
             }
         </field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
@@ -279,12 +278,12 @@
     <record id="hr_attendance_reporting" model="ir.actions.act_window">
         <field name="name">Attendances</field>
         <field name="res_model">hr.attendance</field>
-        <field name="view_mode">graph,pivot</field>
+        <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="context">
             {
                 "search_default_groupby_name" : 1,
-                "search_default_employee": 1,
+                "search_default_employee": 2,
                 "search_default_last_three_months": 1
             }
         </field>
@@ -379,9 +378,7 @@
 
     <menuitem id="menu_action_open_form" name="Kiosk Mode" action="hr_attendance_action_install_kiosk_pwa" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager" />
 
-    <menuitem id="menu_hr_attendance_reporting" name="Reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
-
-    <menuitem id="menu_hr_attendance_attendance_reporting" name="Worked Hours" parent="menu_hr_attendance_reporting" sequence="15" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_reporting"/>
+    <menuitem id="menu_hr_attendance_reporting" name="Reporting" action="hr_attendance_reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
 
     <menuitem id="menu_hr_attendance_view_attendances" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_action"/>
 
