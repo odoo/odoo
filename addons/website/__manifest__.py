@@ -20,6 +20,9 @@
         'google_recaptcha',
         'utm',
     ],
+    'external_dependencies': {
+        'python': ['geoip2'],
+    },
     'installable': True,
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
