@@ -245,12 +245,6 @@ class ResCompany(models.Model):
         if any(company.sudo()._existing_accounting() for company in self):
             raise ValidationError("Cannot change Price Tax computation method on a company that has already started invoicing.")
 
-    def _reset_default_price_include(self):
-        if not self._existing_accounting():
-            new_value = self._get_default_account_price_include()
-            if new_value != self.account_price_include:
-                self.account_price_include = new_value
-
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'fiscalyear_last_day',

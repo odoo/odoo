@@ -1138,14 +1138,6 @@
                                                                     <div class="col-auto fw-bold float-end text-end">
                                                                         <field name="price_subtotal"/>
                                                                         <field name="price_total" t-if="tax_calculation_rounding_method == 'round_per_line'"/>
-                                                                        <!-- TODO: doesnt work?
-                                                                            <field name="price_subtotal"
-                                                                                t-if="!['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
-                                                                                string="Amount"/>
-                                                                            <field name="price_total"
-                                                                                t-if="['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
-                                                                                string="Amount"/>
-                                                                        -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-muted">
