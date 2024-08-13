@@ -53,11 +53,7 @@ export class ChatWindow extends Record {
         await this._onClose(options);
         this.delete();
         if (escape && indexAsOpened !== -1 && chatHub.actuallyOpened.length > 0) {
-            if (indexAsOpened === chatHub.actuallyOpened.length - 1) {
-                chatHub.actuallyOpened.at(indexAsOpened - 1).focus();
-            } else {
-                chatHub.actuallyOpened.at(indexAsOpened).focus();
-            }
+            chatHub.actuallyOpened[indexAsOpened === 0 ? 0 : indexAsOpened - 1].focus();
         }
     }
 

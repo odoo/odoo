@@ -13,6 +13,7 @@
                     'o-isUiSmall': ui.isSmall,
                     'p-3': normal,
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
+                    'o-focused': props.composer.isFocused
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
