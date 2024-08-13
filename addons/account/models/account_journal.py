@@ -355,6 +355,8 @@ class AccountJournal(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         self.refund_sequence = self.type in ('sale', 'purchase')
+        if self.type == 'general':
+            self.default_account_id = False
 
     def _get_alias_values(self, type, alias_name=None):
         """ This function verifies that the user-given mail alias (or its fallback) doesn't contain non-ascii chars.
