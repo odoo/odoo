@@ -145,7 +145,7 @@ class L10nInWithholdWizard(models.TransientModel):
         vals = self._prepare_withhold_header()
         move_lines = self._prepare_withhold_move_lines(withholding_account_id)
         vals['line_ids'] = [Command.create(line) for line in move_lines]
-        withhold = self.env['account.move'].create(vals)
+        withhold = self.with_company(self.company_id).env['account.move'].create(vals)
         withhold.action_post()
 
         # If the withhold is created from a payment, there is no need to reconcile
