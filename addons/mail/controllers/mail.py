@@ -92,8 +92,8 @@ class MailController(http.Controller):
                     if not suggested_company:
                         raise AccessError('')
                     cids = cids + [suggested_company.id]
-                    request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
+                    request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
             except AccessError:
                 return cls._redirect_to_messaging()
             else:
