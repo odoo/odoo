@@ -77,15 +77,9 @@
         <field name="model">event.track.stage</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="name"/>
-                <field name="fold"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div>
-                                <strong class="o_kanban_record_title"><field name="name"/></strong>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name" class="fw-medium fs-5"/>
                     </t>
                 </templates>
             </kanban>

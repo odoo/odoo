@@ -47,41 +47,28 @@
     <field name="model">blog.post</field>
     <field name="arch" type="xml">
         <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
-            <field name="name"/>
-            <field name="blog_id"/>
-            <field name="author_id"/>
-            <field name="post_date"/>
-            <field name="website_url"/>
             <templates>
-                <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click d-flex flex-column">
-                        <div class="row mb-auto">
-                            <strong class="col-8">
-                                <span class="o_text_overflow" t-esc="record.name.value"/>
-                                <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
-                                    <i class="fa fa-globe me-1" title="Website"/>
-                                    <field name="website_id"/>
-                                </div>
-                            </strong>
-                            <strong class="col-4 text-end">
-                                <span t-esc="record.blog_id.value"/>
-                            </strong>
-                            <div class="col-8">
-                                <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
-                            </div>
-                            <div class="col-4 text-end">
-                                <img t-if="record.author_id.raw_value"
-                                     t-att-title="record.author_id.value"
-                                     t-att-alt="record.author_id.value"
-                                     class="oe_kanban_avatar o_avatar rounded"
-                                     t-att-src="kanban_image('res.partner', 'avatar_128', record.author_id.raw_value)"/>
+                <t t-name="kanban-card">
+                    <div class="row mb-auto">
+                        <div class="col-8 fw-bolder">
+                            <field class="text-truncate" name="name"/>
+                            <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
+                                <i class="fa fa-globe me-1" title="Website"/>
+                                <field name="website_id"/>
                             </div>
                         </div>
-                        <div class="border-top mt-2 pt-2">
-                            <field name="is_published" widget="boolean_toggle"/>
-                            <t t-if="record.is_published.raw_value">Published</t>
-                            <t t-else="">Not Published</t>
+                        <field name="blog_id" class="col-4 text-end fw-bolder"/>
+                        <div class="col-8">
+                            <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/><field name="post_date"/>
                         </div>
+                        <div class="col-4 text-end" t-att-title="record.author_id.value">
+                            <field name="author_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_avatar rounded"/>
+                        </div>
+                    </div>
+                    <div class="d-flex border-top mt-2 pt-2">
+                        <field name="is_published" widget="boolean_toggle"/>
+                        <t t-if="record.is_published.raw_value">Published</t>
+                        <t t-else="">Not Published</t>
                     </div>
                 </t>
             </templates>

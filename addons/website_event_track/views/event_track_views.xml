@@ -31,13 +31,8 @@
         <field name="name">event.track.kanban</field>
         <field name="model">event.track</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" quick_create_view="website_event_track.event_track_view_form_quick_create">
-                <field name="color"/>
-                <field name="partner_id"/>
-                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
+            <kanban highlight_color="color" default_group_by="stage_id" quick_create_view="website_event_track.event_track_view_form_quick_create">
                 <field name="website_url"/>
-                <field name="activity_ids"/>
-                <field name="activity_state"/>
                 <field name="legend_blocked"/>
                 <field name="legend_normal"/>
                 <field name="legend_done"/>
@@ -45,34 +40,26 @@
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                     <t t-name="kanban-menu" groups="base.group_user">
                         <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
-                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Track</a></t>
+                        <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit Track</a></t>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                </div>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <field name="priority" widget="priority"/>
-                                        <field name="activity_ids" widget="kanban_activity"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
-                                        <img t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)"
-                                            t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value"
-                                            class="oe_kanban_avatar o_avatar rounded"/>
-                                    </div>
+                    <t t-name="kanban-card">
+                        <field name="name" class="fw-medium fs-5"/>
+                        <div t-if="duration" class="d-flex"><field name="duration" widget="float_time"/>hours</div>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <footer class="fs-6 pt-0">
+                            <div class="d-flex align-items-center">
+                                <field name="priority" widget="priority"/>
+                                <field name="activity_ids" widget="kanban_activity" class="ms-1"/>
+                            </div>
+                            <div class="d-flex ms-auto align-items-center">
+                                <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                <div t-att-title="record.partner_id.value">
+                                    <field name="partner_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_avatar rounded ms-1"/>
                                 </div>
                             </div>
-                        </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
