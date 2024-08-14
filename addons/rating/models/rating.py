@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import uuid
 
 from odoo import api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.tools.misc import file_open
 
@@ -193,3 +194,8 @@ class Rating(models.Model):
             data_by_model[rating.res_model]['ratings'] += rating
             data_by_model[rating.res_model]['record_ids'].append(rating.res_id)
         return data_by_model
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        if fields is None:
+            fields = ["rating", "rating_image_url", "rating_text"]
+        store.add(self._name, self._read_format(fields, load=False))

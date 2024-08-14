@@ -204,7 +204,13 @@ class LivechatController(http.Controller):
             'rating_url': rating.rating_image_url,
             'reason': reason,
         }
-        channel.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_comment')
+        # sudo: discuss.channel - not necessary for posting, but necessary to update related rating
+        channel.sudo().message_post(
+            body=body,
+            message_type="notification",
+            rating_id=rating.id,
+            subtype_xmlid="mail.mt_comment",
+        )
 
     @http.route("/im_livechat/feedback", type="json", auth="public")
     @add_guest_to_context
@@ -233,7 +239,8 @@ class LivechatController(http.Controller):
                 rating = request.env['rating.rating'].sudo().create(values)
             else:
                 rating = channel.rating_ids[0]
-                rating.write(values)
+                # sudo: rating.rating - guest or portal user can update their livechat rating
+                rating.sudo().write(values)
             self._post_feedback_message(channel, rating, reason)
             return rating.id
         return False

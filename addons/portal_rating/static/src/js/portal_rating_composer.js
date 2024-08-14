@@ -109,9 +109,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         // Refresh the internal state of the widget
         this.rating_avg = data.rating_avg || data["mail.thread"][0].rating_avg;
         this.rating_count = data.rating_count || data["mail.thread"][0].rating_count;
-        this.rating_value =
-            data.rating_value ||
-            (data["mail.message"] && data["mail.message"][0].rating.ratingValue);
+        this.rating_value = data.rating_value || data["rating.rating"]?.[0].rating;
 
         // Clean the dictionary
         delete data.rating_avg;
