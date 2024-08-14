@@ -106,9 +106,9 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("lookup", () => {
-        const list = ["babAba", "bAAab", "cccbCCb"];
-        expect(lookup("aaa", list)).toEqual(["bAAab", "babAba"]);
-        expect(lookup(/.b$/, list)).toEqual(["bAAab", "cccbCCb"]);
+        const list = [{ key: "bababa" }, { key: "baaab" }, { key: "cccbccb" }];
+        expect(lookup("aaa", list)).toEqual([{ key: "baaab" }, { key: "bababa" }]);
+        expect(lookup(/.b$/, list)).toEqual([{ key: "baaab" }, { key: "cccbccb" }]);
     });
 
     test("match", () => {

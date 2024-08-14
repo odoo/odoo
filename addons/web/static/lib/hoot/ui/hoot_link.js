@@ -2,17 +2,13 @@
 
 import { Component, useState, xml } from "@odoo/owl";
 import { FILTER_KEYS } from "../core/config";
-import { EXCLUDE_PREFIX, createURL } from "../core/url";
-import { ensureArray } from "../hoot_utils";
+import { createUrlFromId } from "../core/url";
 
 /**
  * @typedef {{
  *  class?: string;
  *  id?: string;
- *  options?: {
- *      debug?: boolean;
- *      ignore?: boolean;
- *  };
+ *  options?: import("../core/url").CreateUrlFromIdOptions;
  *  slots: { default: any };
  *  style?: string;
  *  target?: string;
@@ -20,14 +16,6 @@ import { ensureArray } from "../hoot_utils";
  *  type?: keyof DEFAULT_FILTERS;
  * }} HootLinkProps
  */
-
-//-----------------------------------------------------------------------------
-// Global
-//-----------------------------------------------------------------------------
-
-const {
-    Object: { fromEntries: $fromEntries, keys: $keys },
-} = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -46,8 +34,8 @@ export class HootLink extends Component {
             t-att-target="props.target"
             t-att-title="props.title"
             t-att-style="props.style"
-            t-on-focus="computeHref"
-            t-on-pointerenter="computeHref"
+            t-on-focus="updateHref"
+            t-on-pointerenter="updateHref"
         >
             <t t-slot="default" />
         </a>
@@ -79,85 +67,8 @@ export class HootLink extends Component {
         this.state = useState({ href: "#" });
     }
 
-    computeHref() {
-        const clearAll = () => $keys(nextParams).forEach((key) => nextParams[key].clear());
-
-        const { type, id, options } = this.props;
-        const ids = ensureArray(id);
-        const { config } = this.env.runner;
-        const nextParams = $fromEntries(FILTER_KEYS.map((k) => [k, new Set(config[k] || [])]));
-        if (config.filter) {
-            nextParams.filter = new Set([config.filter]);
-        }
-
-        switch (type) {
-            case "suite": {
-                if (options?.ignore) {
-                    for (const id of ids) {
-                        const exludedId = EXCLUDE_PREFIX + id;
-                        if (nextParams.suite.has(exludedId)) {
-                            nextParams.suite.delete(exludedId);
-                        } else {
-                            nextParams.suite.add(exludedId);
-                        }
-                    }
-                } else {
-                    clearAll();
-                    for (const id of ids) {
-                        nextParams.suite.add(id);
-                    }
-                }
-                break;
-            }
-            case "tag": {
-                if (options?.ignore) {
-                    for (const id of ids) {
-                        const exludedId = EXCLUDE_PREFIX + id;
-                        if (nextParams.tag.has(exludedId)) {
-                            nextParams.tag.delete(exludedId);
-                        } else {
-                            nextParams.tag.add(exludedId);
-                        }
-                    }
-                } else {
-                    clearAll();
-                    for (const id of ids) {
-                        nextParams.tag.add(id);
-                    }
-                }
-                break;
-            }
-            case "test": {
-                if (options?.ignore) {
-                    for (const id of ids) {
-                        const exludedId = EXCLUDE_PREFIX + id;
-                        if (nextParams.test.has(exludedId)) {
-                            nextParams.test.delete(exludedId);
-                        } else {
-                            nextParams.test.add(exludedId);
-                        }
-                    }
-                } else {
-                    clearAll();
-                    for (const id of ids) {
-                        nextParams.test.add(id);
-                    }
-                }
-                break;
-            }
-            default: {
-                clearAll();
-            }
-        }
-
-        for (const key in nextParams) {
-            if (!nextParams[key].size) {
-                nextParams[key] = null;
-            }
-        }
-
-        nextParams.debugTest = options?.debug ? true : null;
-
-        this.state.href = createURL(nextParams);
+    updateHref() {
+        const { id, type, options } = this.props;
+        this.state.href = createUrlFromId(id, type, options);
     }
 }
