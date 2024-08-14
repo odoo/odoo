@@ -773,7 +773,9 @@ export class GraphRenderer extends Component {
             onResize: () => {
                 this.resizeChart(options);
             },
-            animation: this.getAnimationOptions(),
+            animation: false, // this.getAnimationOptions(),
+            parsing: false,
+            normalized: true,
         };
         if (!disableLinking && mode !== "line") {
             options.onClick = this.onGraphClicked.bind(this);
@@ -838,7 +840,9 @@ export class GraphRenderer extends Component {
         }
         if (this.canvasRef.el) {
             const config = this.getChartConfig();
+            console.time("chart");
             this.chart = new Chart(this.canvasRef.el, config);
+            console.timeEnd("chart");
         }
     }
 
