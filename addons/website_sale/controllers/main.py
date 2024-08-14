@@ -1144,7 +1144,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'countries': ResCountrySudo.search([]),
             'state_id': state_id,
             'country_states': country_sudo.state_ids,
-            'zip_before_city': address_fields.index('zip') < address_fields.index('city'),
+            'zip_before_city': (
+                'zip' in address_fields
+                and address_fields.index('zip') < address_fields.index('city')
+            ),
             'show_vat': (
                 address_type == 'billing'
                 and (
@@ -2130,7 +2133,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             required_fields = self._get_mandatory_delivery_address_fields(country)
         return {
             'fields': address_fields,
-            'zip_before_city': address_fields.index('zip') < address_fields.index('city'),
+            'zip_before_city': (
+                'zip' in address_fields
+                and address_fields.index('zip') < address_fields.index('city')
+            ),
             'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
             'phone_code': country.phone_code,
             'required_fields': list(required_fields),
