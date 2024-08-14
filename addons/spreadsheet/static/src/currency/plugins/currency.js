@@ -48,14 +48,16 @@ export class CurrencyPlugin extends OdooUIPlugin {
      * Get the currency rate between the two given currencies
      * @param {string} from Currency from
      * @param {string} to Currency to
-     * @param {string} date
+     * @param {string | undefined} date
+     * @param {number | undefined} companyId
      * @returns {number|string}
      */
-    getCurrencyRate(from, to, date) {
+    getCurrencyRate(from, to, date, companyId) {
         const data = this.serverData.batch.get("res.currency.rate", "get_rates_for_spreadsheet", {
             from,
             to,
             date: date ? toServerDateString(date) : undefined,
+            company_id: companyId,
         });
         const rate = data !== undefined ? data.rate : undefined;
         if (rate === false) {
