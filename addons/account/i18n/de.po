@@ -650,6 +650,28 @@ msgid "<span class=\"text-danger\">High risk</span>:"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
+msgid ""
+"<span class=\"text-muted ms-2\">\n"
+"                                <i>inclusive, to make them immutable</i>\n"
+"                            </span>"
+msgstr ""
+"<span class=\"text-muted ms-2\">\n"
+"                                <i>inklusive, um sie unveränderbar zu machen</i>\n"
+"                            </span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
+msgid ""
+"<span class=\"text-muted\">\n"
+"                                <i>Secure entries up to</i>\n"
+"                            </span>"
+msgstr ""
+"<span class=\"text-muted\">\n"
+"                                <i>Festschreiben bis</i>\n"
+"                            </span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid ""
 "<span class=\"text-muted\" colspan=\"2\">\n"
@@ -10344,10 +10366,11 @@ msgid "Reversed"
 msgstr "Storniert"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
-#: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
+#. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Review"
-msgstr "Konfigurieren"
+msgstr "Überprüfen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
@@ -10632,6 +10655,29 @@ msgstr "Suche in der Referenz des Auszugs, um die Referenz der Rechnung/Zahlung 
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Section"
 msgstr "Sektion"
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_action_secure_entries
+#: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
+msgid "Secure Entries"
+msgstr "Festschreiben"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
+#: model:ir.model,name:account.model_account_secure_entries_wizard
+#: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
+msgid "Secure Journal Entries"
+msgstr "Festschreiben"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid ""
+"Securing these entries will create at least one gap in the sequence: "
+"%(gap_info)s"
+msgstr ""
+"Das Festschreiben dieser Buchungssätze wird mindestens eine Lücke in einer Sequenz verursachen: "
+"%(gap_info)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
@@ -12619,15 +12665,43 @@ msgstr "Derzeit sind keine Rechnungen und Zahlungen für Ihr Konto vorhanden."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid ""
+"There are entries that cannot be hashed. They can be protected by the "
+"Hard Lock Date."
+msgstr ""
+"Es gibt Buchungssätze, die nicht festgeschrieben werden können. Sie können mit dem "
+"Harten Sperrdatum geschützt werden."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "There are no journal items in the draft state to post."
 msgstr "Es gibt keine Journalposten im Entwurfszustand zu buchen."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid "There are still draft entries before the selected date."
+msgstr "Es gibt Entwurfsbuchungssätze vor dem gewählten Datum."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "There are still unposted entries in the period you want to lock. You should either post or delete them."
 msgstr "In dem zu sperrenden Zeitraum sind noch nicht gebuchte Einträge vorhanden. Sie sollten sie entweder buchen oder löschen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid ""
+"There are still unreconciled bank statement lines before the selected date. "
+"The entries from journal prefixes containing them will not be secured: "
+"%(prefix_info)s"
+msgstr ""
+"Es gibt noch nicht abgestimmte Kontoauszugszeilen vor dem gewählten Datum. "
+"Buchungssätze aus Journalen, die solche Einträge enthalten, werden nicht festgeschrieben: "
+"%(prefix_info)s"
 
 #. module: account
 #. odoo-python

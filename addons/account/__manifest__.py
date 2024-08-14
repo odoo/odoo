@@ -70,6 +70,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'report/account_hash_integrity_templates.xml',
         'views/res_currency.xml',
         'views/account_menuitem.xml',
+        'wizard/account_secure_entries_wizard.xml',
         'views/mail_message_views.xml',
         'wizard/accrued_orders.xml',
         'views/bill_preview_template.xml',
