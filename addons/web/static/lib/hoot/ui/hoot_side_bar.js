@@ -1,7 +1,10 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
+import { FOCUSABLE_SELECTOR } from "../../hoot-dom/helpers/dom";
 import { Suite } from "../core/suite";
+import { createUrlFromId } from "../core/url";
+import { lookup, normalize } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 
 /**
@@ -27,7 +30,13 @@ import { HootJobButtons } from "./hoot_job_buttons";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, Object, String } = globalThis;
+const { Boolean, location: actualLocation, Object, String } = globalThis;
+
+//-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
+
+const SUITE_CLASSNAME = "hoot-sidebar-suite";
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -121,18 +130,40 @@ export class HootSideBar extends Component {
 
     static template = xml`
         <div
-            class="${HootSideBar.name} flex-col w-64 h-full overflow-x-hidden overflow-y-auto resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
+            class="${HootSideBar.name} flex-col w-64 h-full resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
             t-on-click="onClick"
         >
-            <ul>
-                <t t-foreach="state.suites" t-as="suite" t-key="suite.id">
+            <form class="flex p-2 items-center gap-1">
+                <div class="hoot-search-bar border rounded bg-base">
+                    <input
+                        class="w-full rounded px-2 py-1 outline-none"
+                        type="search"
+                        placeholder="Search suites"
+                        t-ref="search-input"
+                        t-model="state.filter"
+                        t-on-keydown="onSearchInputKeydown"
+                    />
+                </div>
+                <t t-set="expanded" t-value="unfoldedIds.size === env.runner.suites.size" />
+                <button
+                    type="button"
+                    class="text-primary p-1 transition-colors"
+                    t-attf-title="{{ expanded ? 'Collapse' : 'Expand' }} all"
+                    t-on-click="() => this.toggleExpand(expanded)"
+                >
+                    <i t-attf-class="fa fa-{{ expanded ? 'compress' : 'expand' }}" />
+                </button>
+            </form>
+            <ul class="overflow-x-hidden overflow-y-auto" t-ref="suites-list">
+                <t t-foreach="filteredSuites" t-as="suite" t-key="suite.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
-                            class="hoot-sidebar-suite flex items-center w-full h-full px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
+                            class="${SUITE_CLASSNAME} flex items-center w-full h-full gap-1 px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
                             t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
                             t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
                             t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
-                            t-on-click="() => this.toggleItem(suite.id)"
+                            t-on-click="() => this.toggleItem(suite)"
+                            t-on-keydown="(ev) => this.onSuiteKeydown(ev, suite)"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
@@ -141,7 +172,7 @@ export class HootSideBar extends Component {
                                     hasSuites="hasSuites(suite)"
                                     reporting="suite.reporting"
                                     selected="uiState.selectedSuiteId === suite.id"
-                                    unfolded="state.unfolded.has(suite.id)"
+                                    unfolded="unfoldedIds.has(suite.id)"
                                 />
                                 <span class="text-muted">
                                     (<t t-esc="suite.totalTestCount" />)
@@ -161,16 +192,21 @@ export class HootSideBar extends Component {
         </div>
     `;
 
+    filteredSuites = [];
     runningSuites = new Set();
+    unfoldedIds = new Set();
 
     setup() {
         const { runner, ui } = this.env;
 
+        this.searchInputRef = useRef("search-input");
+        this.suitesListRef = useRef("suites-list");
         this.uiState = useState(ui);
         this.state = useState({
+            filter: "",
             suites: [],
             /** @type {Set<string>} */
-            unfolded: new Set(),
+            unfoldedIds: new Set(),
         });
 
         runner.beforeAll(() => {
@@ -179,32 +215,55 @@ export class HootSideBar extends Component {
                 // Unfolds only root suite containing jobs
                 this.unfoldAndSelect(singleRootSuite[0]);
             }
+        });
 
-            this.computeItems();
+        onWillRender(() => {
+            [this.filteredSuites, this.unfoldedIds] = this.getFilteredVisibleSuites();
         });
     }
 
     /**
-     * @param {PointerEvent} ev
+     * Filters
      */
-    onClick(ev) {
-        if (!ev.target.closest("button")) {
-            // Unselect suite when clicking outside of a suite & in the side bar
-            this.uiState.selectedSuiteId = null;
-            this.uiState.resultsPage = 0;
-        }
-    }
+    getFilteredVisibleSuites() {
+        let allowedIds;
+        let unfoldedIds;
+        let rootSuites;
+        const { runner } = this.env;
+        const allSuites = runner.suites.values();
 
-    computeItems() {
+        // Filtering suites
+
+        const nFilter = normalize(this.state.filter);
+        if (nFilter) {
+            allowedIds = new Set();
+            unfoldedIds = new Set(this.state.unfoldedIds);
+            rootSuites = new Set();
+            for (const matchingSuite of lookup(nFilter, allSuites, "name")) {
+                for (const suite of matchingSuite.path) {
+                    allowedIds.add(suite.id);
+                    unfoldedIds.add(suite.id);
+                    if (!suite.parent) {
+                        rootSuites.add(suite);
+                    }
+                }
+            }
+        } else {
+            unfoldedIds = this.state.unfoldedIds;
+            rootSuites = runner.rootSuites;
+        }
+
+        // Computing unfolded suites
+
         /**
          * @param {Suite} suite
          */
         const addSuite = (suite) => {
-            if (!(suite instanceof Suite)) {
+            if (!(suite instanceof Suite) || (allowedIds && !allowedIds.has(suite.id))) {
                 return;
             }
-            this.state.suites.push(suite);
-            if (!unfolded.has(suite.id)) {
+            unfoldedSuites.push(suite);
+            if (!unfoldedIds.has(suite.id)) {
                 return;
             }
             for (const child of suite.jobs) {
@@ -212,12 +271,18 @@ export class HootSideBar extends Component {
             }
         };
 
-        const { unfolded } = this.state;
-
-        this.state.suites = [];
-        for (const suite of this.env.runner.rootSuites) {
+        const unfoldedSuites = [];
+        for (const suite of rootSuites) {
             addSuite(suite);
         }
+
+        return [unfoldedSuites, unfoldedIds];
+    }
+
+    getSuiteElements() {
+        return this.suitesListRef.el
+            ? [...this.suitesListRef.el.getElementsByClassName(SUITE_CLASSNAME)]
+            : [];
     }
 
     /**
@@ -228,39 +293,124 @@ export class HootSideBar extends Component {
     }
 
     /**
-     * @param {string} id
+     * @param {PointerEvent} ev
      */
-    toggleItem(id) {
-        if (this.uiState.selectedSuiteId !== id) {
-            this.uiState.selectedSuiteId = id;
+    onClick(ev) {
+        if (!ev.target.closest(FOCUSABLE_SELECTOR)) {
+            // Unselect suite when clicking outside of a suite & in the side bar
+            this.uiState.selectedSuiteId = null;
+            this.uiState.resultsPage = 0;
+        }
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    onSearchInputKeydown(ev) {
+        switch (ev.key) {
+            case "ArrowDown": {
+                if (ev.target.selectionEnd === ev.target.value.length) {
+                    const suiteElements = this.getSuiteElements();
+                    suiteElements[0]?.focus();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     * @param {Suite} suite
+     */
+    onSuiteKeydown(ev, suite) {
+        /**
+         * @param {number} delta
+         */
+        const selectElementAt = (delta) => {
+            const suiteElements = this.getSuiteElements();
+            const nextIndex = suiteElements.indexOf(ev.target) + delta;
+            if (nextIndex < 0) {
+                this.searchInputRef.el?.focus();
+            } else if (nextIndex >= suiteElements.length) {
+                suiteElements[0].focus();
+            } else {
+                suiteElements[nextIndex].focus();
+            }
+        };
+
+        switch (ev.key) {
+            case "ArrowDown": {
+                return selectElementAt(+1);
+            }
+            case "ArrowLeft": {
+                if (this.state.unfoldedIds.has(suite.id)) {
+                    return this.toggleItem(suite, false);
+                } else {
+                    return selectElementAt(-1);
+                }
+            }
+            case "ArrowRight": {
+                if (this.state.unfoldedIds.has(suite.id)) {
+                    return selectElementAt(+1);
+                } else {
+                    return this.toggleItem(suite, true);
+                }
+            }
+            case "ArrowUp": {
+                return selectElementAt(-1);
+            }
+            case "Enter": {
+                ev.preventDefault();
+                actualLocation.href = createUrlFromId(suite.id, "suite");
+            }
+        }
+    }
+
+    /**
+     * @param {boolean} expanded
+     */
+    toggleExpand(expanded) {
+        if (expanded) {
+            this.state.unfoldedIds.clear();
+        } else {
+            for (const { id } of this.env.runner.suites.values()) {
+                this.state.unfoldedIds.add(id);
+            }
+        }
+    }
+
+    /**
+     * @param {Suite} suite
+     * @param {boolean} [forceAdd]
+     */
+    toggleItem(suite, forceAdd) {
+        if (this.uiState.selectedSuiteId !== suite.id) {
+            this.uiState.selectedSuiteId = suite.id;
             this.uiState.resultsPage = 0;
 
-            if (this.state.unfolded.has(id)) {
+            if (this.state.unfoldedIds.has(suite.id)) {
                 return;
             }
         }
 
-        if (this.state.unfolded.has(id)) {
-            this.state.unfolded.delete(id);
+        if (forceAdd ?? !this.state.unfoldedIds.has(suite.id)) {
+            this.unfoldAndSelect(suite);
         } else {
-            this.unfoldAndSelect(this.env.runner.suites.get(id));
+            this.state.unfoldedIds.delete(suite.id);
         }
-
-        this.computeItems();
     }
 
     /**
      * @param {Suite} suite
      */
     unfoldAndSelect(suite) {
-        this.state.unfolded.add(suite.id);
+        this.state.unfoldedIds.add(suite.id);
 
         while (suite.currentJobs.length === 1) {
             suite = suite.currentJobs[0];
             if (!(suite instanceof Suite)) {
                 break;
             }
-            this.state.unfolded.add(suite.id);
+            this.state.unfoldedIds.add(suite.id);
             this.uiState.selectedSuiteId = suite.id;
             this.uiState.resultsPage = 0;
         }
