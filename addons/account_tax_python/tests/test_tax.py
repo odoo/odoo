@@ -91,3 +91,38 @@ class TestTaxPython(TestTaxCommon):
             {'product': product2},
         ))
         self._assert_tests(tests, mode='py')
+
+    def test_different_syntaxes(self):
+        # Test the different syntaxes that are allowed: "product['standard_price']" and "product.standard_price"
+        tests = []
+        product = self.env['product.product'].create({
+            'name': "product1",
+            'standard_price': 120,
+        })
+        tax1 = self.python_tax("result = product.standard_price * 0.5")
+        tests.append(self._prepare_taxes_computation_test(
+            tax1,
+            130.0,
+            {
+                'total_included': 190.0,
+                'total_excluded': 130.0,
+                'taxes_data': (
+                    (130.0, 60.0),
+                ),
+            },
+            {'product': product},
+        ))
+        tax2 = self.python_tax("result = product['standard_price'] * 0.5")
+        tests.append(self._prepare_taxes_computation_test(
+            tax2,
+            130.0,
+            {
+                'total_included': 190.0,
+                'total_excluded': 130.0,
+                'taxes_data': (
+                    (130.0, 60.0),
+                ),
+            },
+            {'product': product},
+        ))
+        self._assert_tests(tests, mode='py')
