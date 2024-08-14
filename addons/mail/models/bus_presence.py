@@ -16,7 +16,7 @@ class BusPresence(models.Model):
     ]
 
     def _get_bus_target(self):
-        return "broadcast" if self.guest_id else super()._get_bus_target()
+        return self.guest_id or super()._get_bus_target()
 
     def _get_identity_field_name(self):
         return "guest_id" if self.guest_id else super()._get_identity_field_name()

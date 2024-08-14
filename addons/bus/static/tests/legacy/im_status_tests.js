@@ -3,12 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
-import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
-import {
-    AWAY_DELAY as ACTUAL_AWAY_DELAY,
-    FIRST_UPDATE_DELAY,
-    imStatusService,
-} from "@bus/im_status_service";
+import { AWAY_DELAY as ACTUAL_AWAY_DELAY, imStatusService } from "@bus/im_status_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { mockTimeout, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
@@ -42,13 +37,10 @@ QUnit.module("IM status", {
 QUnit.test(
     "update presence if IM status changes to offline while this device is online",
     async () => {
-        const { advanceTime } = mockTimeout();
         const pyEnv = await startServer();
         const env = await makeTestEnv({ activateMockServer: true });
         patchWithCleanup(env.services.bus_service, { send: (type) => step(type) });
         env.services.bus_service.start();
-        await waitUntilSubscribe();
-        advanceTime(FIRST_UPDATE_DELAY);
         await assertSteps(["update_presence"]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
             im_status: "offline",
@@ -59,15 +51,11 @@ QUnit.test(
 );
 
 QUnit.test("update presence if IM status changes to away while this device is online", async () => {
-    const { advanceTime } = mockTimeout();
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
     patchWithCleanup(env.services.bus_service, { send: (type) => step(type) });
     patchWithCleanup(env.services.presence, { getLastPresence: () => new Date().getTime() });
-    env.services.bus_service.addEventListener("connect", () => step("connect"), { once: true });
     env.services.bus_service.start();
-    await assertSteps(["connect"]);
-    advanceTime(FIRST_UPDATE_DELAY);
     await assertSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
         im_status: "away",
@@ -79,17 +67,13 @@ QUnit.test("update presence if IM status changes to away while this device is on
 QUnit.test(
     "do not update presence if IM status changes to away while this device is away",
     async () => {
-        const { advanceTime } = mockTimeout();
         const pyEnv = await startServer();
         const env = await makeTestEnv({ activateMockServer: true });
         patchWithCleanup(env.services.bus_service, { send: (type) => step(type) });
         patchWithCleanup(env.services.presence, {
             getLastPresence: () => new Date().getTime() - AWAY_DELAY,
         });
-        env.services.bus_service.addEventListener("connect", () => step("connect"), { once: true });
         env.services.bus_service.start();
-        await assertSteps(["connect"]);
-        advanceTime(FIRST_UPDATE_DELAY);
         await assertSteps(["update_presence"]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
             im_status: "away",
@@ -101,15 +85,11 @@ QUnit.test(
 );
 
 QUnit.test("do not update presence if other user's IM status changes to away", async () => {
-    const { advanceTime } = mockTimeout();
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
     patchWithCleanup(env.services.bus_service, { send: (type) => step(type) });
     patchWithCleanup(env.services.presence, { getLastPresence: () => new Date().getTime() });
-    env.services.bus_service.addEventListener("connect", () => step("connect"), { once: true });
     env.services.bus_service.start();
-    await assertSteps(["connect"]);
-    advanceTime(FIRST_UPDATE_DELAY);
     await assertSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
         im_status: "away",
@@ -120,7 +100,6 @@ QUnit.test("do not update presence if other user's IM status changes to away", a
 });
 
 QUnit.test("update presence when user comes back from away", async () => {
-    const { advanceTime } = mockTimeout();
     const env = await makeTestEnv();
     patchWithCleanup(env.services.bus_service, {
         send: (type, payload) => {
@@ -134,10 +113,7 @@ QUnit.test("update presence when user comes back from away", async () => {
         getLastPresence: () => new Date().getTime() - AWAY_DELAY,
     });
     let expectedInactivityPeriod = AWAY_DELAY;
-    env.services.bus_service.addEventListener("connect", () => step("connect"), { once: true });
     env.services.bus_service.start();
-    await assertSteps(["connect"]);
-    advanceTime(FIRST_UPDATE_DELAY);
     await assertSteps(["update_presence"]);
     const event = new StorageEvent("storage", {
         key: "presence.lastPresence",
@@ -152,6 +128,7 @@ QUnit.test("update presence when user comes back from away", async () => {
 QUnit.test("update presence when user status changes to away", async () => {
     const { advanceTime } = mockTimeout();
     const env = await makeTestEnv();
+    let expectedInactivityPeriod = 0;
     patchWithCleanup(env.services.bus_service, {
         send: (type, payload) => {
             if (type === "update_presence") {
@@ -160,11 +137,7 @@ QUnit.test("update presence when user status changes to away", async () => {
             }
         },
     });
-    let expectedInactivityPeriod = FIRST_UPDATE_DELAY;
-    env.services.bus_service.addEventListener("connect", () => step("connect"), { once: true });
     env.services.bus_service.start();
-    await assertSteps(["connect"]);
-    advanceTime(FIRST_UPDATE_DELAY);
     await assertSteps(["update_presence"]);
     expectedInactivityPeriod = AWAY_DELAY;
     patchWithCleanup(env.services.presence, {
