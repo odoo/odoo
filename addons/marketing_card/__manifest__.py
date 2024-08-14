@@ -3,7 +3,7 @@
     'version': '1.0',
     'category': 'Marketing/Social Marketing',
     'summary': 'Generate dynamic shareable cards',
-    'depends': ['link_tracker', 'website'],
+    'depends': ['link_tracker', 'mass_mailing', 'website'],
     'data': [
         'security/marketing_card_groups.xml',
         'security/ir.model.access.csv',
@@ -25,6 +25,7 @@
         'web.assets_backend': [
             'marketing_card/static/src/card_campaign_element_field_selector/*',
             'marketing_card/static/src/scss/*',
+            'marketing_card/static/src/js/mass_mailing_html_field.js',
         ],
     },
     'application': True,
