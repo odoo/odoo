@@ -3204,11 +3204,12 @@ export function getRangePosition(el, document, options = {}) {
         offset.left = marginLeft;
     }
 
-    if (options.parentContextRect) {
-        offset.left += options.parentContextRect.left;
-        offset.top += options.parentContextRect.top;
+    if (options.getContextFromParentRect) {
+        const parentContextRect = options.getContextFromParentRect();
+        offset.left += parentContextRect.left;
+        offset.top += parentContextRect.top;
         if (isRtl) {
-            offset.right += options.parentContextRect.left;
+            offset.right += parentContextRect.left;
         }
     }
 
