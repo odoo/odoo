@@ -346,7 +346,8 @@
                             <b>Start</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="event.date_begin_located"/>
+                            <span t-out="event.date_begin"
+                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
                     <div class="row">
@@ -354,7 +355,8 @@
                             <b>End</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="event.date_end_located"/>
+                            <span t-out="event.date_end"
+                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
                     <div class="mt-4">
