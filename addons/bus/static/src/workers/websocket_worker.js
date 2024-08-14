@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { debounce } from "@bus/workers/websocket_worker_utils";
+import { debounce, Deferred } from "@bus/workers/websocket_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
@@ -60,10 +60,11 @@ export class WebsocketWorker {
         this.active = true;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
+        this.firstSubscribeDeferred = new Deferred();
         this.lastNotificationId = 0;
         this.messageWaitQueue = [];
         this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
-        this._updateChannels = debounce(this._updateChannels, 0);
+        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
 
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
@@ -160,7 +161,7 @@ export class WebsocketWorker {
         if (!clientChannels.includes(channel)) {
             clientChannels.push(channel);
             this.channelsByClient.set(client, clientChannels);
-            this._updateChannels();
+            this._debouncedUpdateChannels();
         }
     }
 
@@ -179,7 +180,7 @@ export class WebsocketWorker {
         const channelIndex = clientChannels.indexOf(channel);
         if (channelIndex !== -1) {
             clientChannels.splice(channelIndex, 1);
-            this._updateChannels();
+            this._debouncedUpdateChannels();
         }
     }
 
@@ -204,7 +205,7 @@ export class WebsocketWorker {
         this.isDebug = Object.values(this.debugModeByClient).some(
             (debugValue) => debugValue !== ""
         );
-        this._updateChannels();
+        this._debouncedUpdateChannels();
     }
 
     /**
@@ -309,6 +310,7 @@ export class WebsocketWorker {
             );
         }
         this.lastChannelSubscription = null;
+        this.firstSubscribeDeferred = new Deferred();
         if (this.isReconnecting) {
             // Connection was not established but the close event was
             // triggered anyway. Let the onWebsocketError method handle
@@ -380,13 +382,15 @@ export class WebsocketWorker {
                 "color: #c6e; font-weight: bold;"
             );
         }
-        this._updateChannels();
-        this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
-        this.messageWaitQueue = [];
         this.broadcast(this.isReconnecting ? "reconnect" : "connect");
+        this._debouncedUpdateChannels();
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
+        this.firstSubscribeDeferred.then(() => {
+            this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
+            this.messageWaitQueue = [];
+        });
     }
 
     /**
@@ -410,9 +414,20 @@ export class WebsocketWorker {
     _sendToServer(message) {
         const payload = JSON.stringify(message);
         if (!this._isWebsocketConnected()) {
-            this.messageWaitQueue.push(payload);
+            if (message["event_name"] === "subscribe") {
+                this.messageWaitQueue = this.messageWaitQueue.filter(
+                    (msg) => JSON.parse(msg).event_name !== "subscribe"
+                );
+                this.messageWaitQueue.unshift(payload);
+            } else {
+                this.messageWaitQueue.push(payload);
+            }
         } else {
-            this.websocket.send(payload);
+            if (message["event_name"] === "subscribe") {
+                this.websocket.send(payload);
+            } else {
+                this.firstSubscribeDeferred.then(() => this.websocket.send(payload));
+            }
         }
     }
 
@@ -475,6 +490,7 @@ export class WebsocketWorker {
                 event_name: "subscribe",
                 data: { channels: allTabsChannels, last: this.lastNotificationId },
             });
+            this.firstSubscribeDeferred.resolve();
         }
     }
 }
