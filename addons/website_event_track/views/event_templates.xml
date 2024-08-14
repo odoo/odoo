@@ -3,7 +3,7 @@
 
 <!-- Add a shortcut to favorites / tracks after registration -->
 <template id="registration_complete" inherit_id="website_event.registration_complete">
-    <xpath expr="//div[hasclass('row')][last()]" position="after">
+    <xpath expr="//div[hasclass('container')]/div[last()]" position="after">
         <div t-if="event.website_track" class="row mt-5 mb256">
             <div class="col-12">
                 <h3>Book your seats to the best talks</h3>
