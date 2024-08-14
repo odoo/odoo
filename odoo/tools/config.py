@@ -335,17 +335,17 @@ class configmanager(object):
                              help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                              "reset after the current request (default 2048MiB).",
                              type="int")
-            group.add_option("--limit-memory-soft-gevent", dest="limit_memory_soft_gevent",
+            group.add_option("--limit-memory-soft-gevent", dest="limit_memory_soft_gevent", my_default=False,
                              help="Maximum allowed virtual memory per gevent worker (in bytes), when reached the worker will be "
-                             "reset after the current request.",
+                             "reset after the current request. Defaults to `--limit-memory-soft`.",
                              type="int")
             group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
                              help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory "
                              "allocation will fail (default 2560MiB).",
                              type="int")
-            group.add_option("--limit-memory-hard-gevent", dest="limit_memory_hard_gevent",
+            group.add_option("--limit-memory-hard-gevent", dest="limit_memory_hard_gevent", my_default=False,
                              help="Maximum allowed virtual memory per gevent worker (in bytes), when reached, any memory "
-                             "allocation will fail.",
+                             "allocation will fail. Defaults to `--limit-memory-hard`.",
                              type="int")
             group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
                              help="Maximum allowed CPU time per request (default 60).",
