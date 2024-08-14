@@ -403,6 +403,17 @@ describe("Link creation", () => {
                 '<p>a<a href="http://test.com/">bcdef[]</a></p><p>gh</p>'
             );
         });
+        test("when create a link on selection which doesn't include a link, it should create a new one", async () => {
+            await setupEditor(
+                '<p><strong>abc<a href="http://test.com/">de</a>te[st</strong> m]e</p>'
+            );
+            await waitFor(".o-we-toolbar");
+
+            click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover");
+            expect(".o_we_label_link").toHaveValue("st m");
+            expect(".o_we_href_input_link").toHaveValue("");
+        });
     });
 });
 

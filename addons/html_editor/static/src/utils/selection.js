@@ -13,6 +13,10 @@ import {
 } from "./position";
 
 /**
+ * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
+ */
+
+/**
  * From selection position, checks if it is left-to-right or right-to-left.
  *
  * @param {Node} anchorNode
@@ -33,6 +37,10 @@ export function getCursorDirection(anchorNode, anchorOffset, focusNode, focusOff
         : DIRECTIONS.LEFT;
 }
 
+/**
+ * @param {EditorSelection} selection
+ * @param {string} selector
+ */
 export function findInSelection(selection, selector) {
     const selectorInStartAncestors = closestElement(selection.startContainer, selector);
     if (selectorInStartAncestors) {
@@ -42,7 +50,7 @@ export function findInSelection(selection, selector) {
         return (
             commonElementAncestor &&
             [...commonElementAncestor.querySelectorAll(selector)].find((node) =>
-                selection.commonAncestorContainer.contains(node)
+                selection.intersectsNode(node)
             )
         );
     }
