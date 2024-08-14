@@ -215,8 +215,6 @@ class EventEvent(models.Model):
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True,
         help="When the event is scheduled to take place (expressed in your local timezone on the form view).")
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
-    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
@@ -393,24 +391,6 @@ class EventEvent(models.Model):
                 (event.seats_limited and event.seats_max and not event.seats_available)
                 or (event.event_ticket_ids and all(ticket.is_sold_out for ticket in event.event_ticket_ids))
             )
-
-    @api.depends('date_tz', 'date_begin')
-    def _compute_date_begin_tz(self):
-        for event in self:
-            if event.date_begin:
-                event.date_begin_located = format_datetime(
-                    self.env, event.date_begin, tz=event.date_tz, dt_format='medium')
-            else:
-                event.date_begin_located = False
-
-    @api.depends('date_tz', 'date_end')
-    def _compute_date_end_tz(self):
-        for event in self:
-            if event.date_end:
-                event.date_end_located = format_datetime(
-                    self.env, event.date_end, tz=event.date_tz, dt_format='medium')
-            else:
-                event.date_end_located = False
 
     @api.depends('date_begin', 'date_end')
     def _compute_is_ongoing(self):
