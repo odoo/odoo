@@ -50,6 +50,7 @@ class AccountTaxPython(models.Model):
             if tax_data['amount_type'] == 'code':
                 tax = self.browse(tax_data['id'])
                 for formula in ((tax.python_applicable or '').strip(), (tax.python_compute or '').strip()):
+                    formula = self._adapt_fomula_to_python(formula)
                     groups = REGEX_FORMULA_OBJECT.findall(formula)
                     if groups:
                         for group in groups:
@@ -69,7 +70,8 @@ class AccountTaxPython(models.Model):
             local_dict = {**evaluation_context, 'base_amount': raw_base}
             json.dumps(local_dict) # Ensure it contains only json serializable data (security).
             try:
-                safe_eval(tax.python_applicable, local_dict, mode="exec", nocopy=True)
+                python_applicable_formula = self._adapt_fomula_to_python(tax.python_applicable)
+                safe_eval(python_applicable_formula, local_dict, mode="exec", nocopy=True)
             except Exception as e: # noqa: BLE001
                 raise UserError(_(
                     "You entered invalid code %r in %r taxes\n\nError : %s",
@@ -82,7 +84,8 @@ class AccountTaxPython(models.Model):
                 return
 
             try:
-                safe_eval(tax.python_compute, local_dict, mode="exec", nocopy=True)
+                python_compute_formula = self._adapt_fomula_to_python(tax.python_compute)
+                safe_eval(python_compute_formula, local_dict, mode="exec", nocopy=True)
             except Exception as e: # noqa: BLE001
                 raise UserError(_(
                     "You entered invalid code %r in %r taxes\n\nError : %s",
@@ -92,3 +95,12 @@ class AccountTaxPython(models.Model):
                 )) from e
             return local_dict.get('result', 0.0)
         return super()._eval_tax_amount(tax_data, evaluation_context)
+
+    def _adapt_fomula_to_python(self, formula):
+        groups = re.findall(r'((?:product\.)(?P<field>\w+))+', formula) or []
+        Product = self.env['product.product']
+        for group in groups:
+            field_name = group[1]
+            if field_name in Product and not Product._fields[field_name].relational:
+                formula = formula.replace(f"product.{field_name}", f"product['{field_name}']")
+        return formula
