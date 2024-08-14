@@ -24,7 +24,7 @@ class X2ManyButtons extends Component {
         this.action.doAction({
             name: this.props.treeLabel,
             type: "ir.actions.act_window",
-            res_model: "account.move",
+            res_model: this.currentField.resModel,
             views: [
                 [false, "list"],
                 [false, "form"],
