@@ -181,8 +181,33 @@ class CardCampaign(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Send Cards'),
-            'res_model': 'card.card.share',
-            'context': {'default_card_campaign_id': self.id, 'default_subject': self.name},
+            'res_model': 'mailing.mailing',
+            'context': {
+                'default_subject': self.name,
+                'default_body_arch': f"""
+<div class="o_layout oe_unremovable oe_unmovable bg-200 o_empty_theme" data-name="Mailing">
+<style id="design-element"></style>
+<div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+<div class="row">
+<div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable theme_selection_done">
+
+<div class="s_call_to_share_card o_mail_snippet_general" style="padding-top: 10px; padding-bottom: 10px;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <a href="/cards/{self.id}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
+                        <img src="/web/image/card.campaign/{self.id}/image_preview" alt="Card Preview" class="img-fluid" style="width: 540px;"/>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div></div></div></div>
+""",
+            },
             'views': [[False, 'form']],
             'target': 'new',
         }
