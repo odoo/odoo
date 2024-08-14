@@ -64,29 +64,50 @@ class ProjectTaskRecurrence(models.Model):
         })
 
     def _create_next_occurrence(self, occurrence_from):
-        self.ensure_one()
-        if self.repeat_type == 'until' and fields.Date.today() > self.repeat_until:
-            return
-        occurrence_from.with_context(copy_project=True).sudo().copy(self._create_next_occurrence_values(occurrence_from))
+        occurences_from = occurences_from.filtered(lambda task:
+            task.recurrence_id.repeat_type != 'until' or
+            task.recurrence_id.repeat_until >= fields.Date.today()
+        )
 
-    def _create_next_occurrence_values(self, occurrence_from):
-        self.ensure_one()
-        fields_to_copy = occurrence_from.read(self._get_recurring_fields_to_copy()).pop()
-        create_values = {
-            field: value[0] if isinstance(value, tuple) else value
-            for field, value in fields_to_copy.items()
-        }
+        fields_to_copy = self._get_recurring_fields_to_copy()
+        fields_to_postpone = self._get_recurring_fields_to_postpone()
 
-        fields_to_postpone = occurrence_from.read(self._get_recurring_fields_to_postpone()).pop()
-        fields_to_postpone.pop('id', None)
-        create_values.update({
-            field: value and value + self._get_recurrence_delta()
-            for field, value in fields_to_postpone.items()
-        })
+        recordset = self.env['project.task']
 
-        create_values['priority'] = '0'
-        create_values['stage_id'] = occurrence_from.project_id.type_ids[0].id if occurrence_from.project_id.type_ids else occurrence_from.stage_id.id
-        create_values['child_ids'] = [
-            child.with_context(copy_project=True).sudo().copy(self._create_next_occurrence_values(child)).id for child in occurrence_from.with_context(active_test=False).child_ids
-        ]
-        return create_values
+        for task_from in occurences_from:
+            task_copy = task.with_context(copy_project=True).sudo().copy()
+            recordset |= task_copy
+            stack = {task: task_copy}
+
+            while stack:
+                tasks_from, tasks_copy = stack.popitem()
+                child_tasks = tasks_from.child_ids
+                if not child_tasks: continue
+
+                child_tasks_copy_data_list = child_tasks.with_context(copy_project=True).sudo().copy_data({'child_ids': []})
+                fields_copy_list = child_tasks._read_format(fields_to_copy)
+                fields_postpone_list = child_tasks._read_format(fields_to_postpone)
+
+                for child_task, child_tasks_copy_data, fields_copy, fields_postpone in zip(child_tasks, child_tasks_copy_data_list, fields_copy_list, fields_postpone_list):
+                    update_dict = {
+                        field: value[0] if isinstance(value, tuple) else value
+                        for field, value in fields_copy.items()
+                    }
+                    fields_postpone.pop('id', None)
+                    update_dict.update({
+                        field: value and value + self._get_recurrence_delta()
+                        for field, value in fields_postpone.items()
+                    })
+                    update_dict.update({
+                        'priority': '0',
+                        'stage_id': child_task.project_id.type_ids[0].id if child_task.project_id.type_ids else child_task.stage_id.id,
+                    })
+                    child_tasks_copy_data.update(update_dict)
+
+                child_tasks_copy = self.env['project.task'].create(child_tasks_copy_data_list)
+                task_copy.child_ids = child_tasks_copy
+
+                for child_task, child_task_copy in zip(child_tasks, child_tasks_copy):
+                    stack[child_task] = child_tasks_copy
+
+        return recordset

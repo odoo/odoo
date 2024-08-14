@@ -413,9 +413,9 @@ class Task(models.Model):
 
     def _inverse_state(self):
         last_task_id_per_recurrence_id = self.recurrence_id._get_last_task_id_per_recurrence_id()
-        for task in self:
-            if task.state in CLOSED_STATES and task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
-                task.recurrence_id._create_next_occurrence(task)
+        tasks = self.browse(last_task_id_per_recurrence_id.values())
+        tasks = tasks.filtered(lambda task: task.state in CLOSED_STATES and task.id in set(self.ids))
+        self.env['project.task.recurrence']._create_next_occurrence(tasks)
 
     @api.depends_context('uid')
     @api.depends('user_ids')
