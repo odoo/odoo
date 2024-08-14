@@ -5,7 +5,7 @@ import datetime
 import json
 import pytz
 from freezegun import freeze_time
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
 from unittest.mock import patch
 from tempfile import TemporaryDirectory
 
@@ -68,7 +68,7 @@ class TestHttpSession(TestHttpBase):
         ])
         self.assertFalse(session['db'])
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers['Location']).path, '/web/database/selector')
+        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_session4_web_authenticate_multidb(self):
         self.db_list = [get_db_name(), 'another_database']

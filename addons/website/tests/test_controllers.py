@@ -52,7 +52,6 @@ class TestControllers(tests.HttpCase):
         self.assertEqual(set(last_modified_values), set(last_5_url_edited) - matching_pages)
 
     def test_02_client_action_iframe_url(self):
-        base_url = self.base_url()
         urls = [
             '/',  # Homepage URL (special case)
             '/contactus',  # Regular website.page URL
@@ -61,13 +60,13 @@ class TestControllers(tests.HttpCase):
         ]
         for url in urls:
             resp = self.url_open(f'/@{url}')
-            self.assertEqual(resp.url, base_url + url, "Public user should have landed in the frontend")
+            self.assertURLEqual(resp.url, url, "Public user should have landed in the frontend")
         self.authenticate("admin", "admin")
         for url in urls:
             resp = self.url_open(f'/@{url}')
             backend_params = url_encode(dict(action='website.website_preview', path=url))
-            self.assertEqual(
-                resp.url, f'{base_url}/web#{backend_params}',
+            self.assertURLEqual(
+                resp.url, f'/web#{backend_params}',
                 "Internal user should have landed in the backend")
 
     def test_03_website_image(self):
