@@ -26,7 +26,6 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
-
             <field name="picking_type_id" position="after">
                 <field name="batch_id" optional="show"
                     domain="[
@@ -49,11 +48,13 @@
             <xpath expr="//tree" position="attributes">
                 <attribute name="default_order">batch_sequence</attribute>
             </xpath>
-            <field name="company_id" position="attributes">
-                <attribute name="optional">show</attribute>
-            </field>
             <field name="company_id" position="before">
                 <field name="batch_sequence" widget="handle"/>
+            </field>
+            <field name="company_id" position="replace"/>
+            <field name="batch_id" position="replace"/>
+            <field name="scheduled_date" position="attributes">
+                <attribute name="optional">hide</attribute>
             </field>
         </field>
     </record>
