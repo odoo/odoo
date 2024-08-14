@@ -384,7 +384,10 @@ export class Message extends Component {
     }
 
     getAvatarContainerAttClass() {
-        return { "opacity-50": this.message.isPending };
+        return {
+            "opacity-50": this.message.isPending,
+            "o-inChatWindow": this.env.inChatWindow,
+        };
     }
 
     exitEditMode() {
