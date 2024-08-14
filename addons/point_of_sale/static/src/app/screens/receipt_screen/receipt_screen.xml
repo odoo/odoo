@@ -25,17 +25,18 @@
                                         <i t-attf-class="fa {{doBasicPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Basic Receipt
                                     </button>
                                 </div>
-                                <div class="d-flex gap-1" t-att-class="{'flex-column': this.ui.isSmall}">
-                                    <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
-                                        <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}" t-model="state.input" />
-                                        <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
-                                            <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex">
+                                        <input type="text" class="flex-grow-1 border p-3 bg-view pe-5 border-end-0 rounded-start-2 position-relative send-receipt-email-input" t-attf-placeholder="e.g. john.doe@mail.com" t-model="state.email" />
+                                        <div>
+                                            <button t-att-style="`width: ${this.ui.isSmall ? '4rem' : '8rem'}`" class="btn btn-primary btn-lg lh-lg rounded-start-0 h-100" t-att-disabled="!isValidEmail" t-on-click="() => this.actionSendReceiptOnEmail()">
+                                                <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-paper-plane'}}" />
+                                            </button>
                                         </div>
                                     </div>
-                                    <div t-if="pos.config.module_pos_sms or pos.config.whatsapp_enabled" t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
-                                        <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary btn-lg lh-lg d-flex align-items-center justify-content-center w-100" >
-                                            <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
-                                        </button>
+                                    <div class="d-flex gap-1">
+                                        <input t-if="showPhoneInput()" type="text" class="flex-grow-1 border p-3 bg-view pe-5 rounded-2 position-relative send-receipt-phone-input" t-attf-placeholder="e.g. 0123456789" t-model="state.phone" />
+                                        <div class="sending-receipt-management d-flex gap-1" />
                                     </div>
                                 </div>
                                 <div class="notice text-center">
