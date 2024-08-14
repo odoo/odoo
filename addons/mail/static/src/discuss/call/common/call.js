@@ -11,6 +11,7 @@ import {
     useExternalListener,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -45,6 +46,7 @@ export class Call extends Component {
         this.rtc = useState(useService("discuss.rtc"));
         this.state = useState({
             isFullscreen: false,
+            collapsed: false,
             sidebar: false,
             tileWidth: 0,
             tileHeight: 0,
@@ -52,6 +54,12 @@ export class Call extends Component {
             overlay: false,
             /** @type {CardData|undefined} */
             insetCard: undefined,
+        });
+        useSubEnv({
+            discussCall: {
+                collapsed: this.state.collapsed,
+                resizeCallSpace: this.resizeCallSpace.bind(this),
+            },
         });
         this.store = useState(useService("mail.store"));
         onMounted(() => {
@@ -224,7 +232,8 @@ export class Call extends Component {
             return;
         }
         const { width, height } = this.grid.el.getBoundingClientRect();
-        const aspectRatio = this.minimized ? 1 : 16 / 9;
+        const aspectRatio =
+            (this.minimized && !this.env.inChatWindow) || this.state.collapsed ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
         let optimal = {
             area: 0,
@@ -294,6 +303,18 @@ export class Call extends Component {
             }
         }
         this.state.isFullscreen = false;
+    }
+
+    resizeCallSpace(collapsed) {
+        if (collapsed === undefined) {
+            if (!this.state.collapsed && this.isActiveCall) {
+                this.rtc.state.channel.activeRtcSession = undefined;
+            }
+            this.state.collapsed = !this.state.collapsed;
+        } else {
+            this.state.collapsed = collapsed;
+        }
+        this.env.discussCall.collapsed = this.state.collapsed;
     }
 
     /**
