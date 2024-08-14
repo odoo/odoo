@@ -205,11 +205,14 @@
         @extend %-main-navbar-entry-spacing;
         padding-left: 0;
         font-size: $o-navbar-brand-font-size;
-        color: var(--NavBar-brand-color, #{$o-navbar-brand-color});
 
         &:hover {
             background: none;
         }
+    }
+
+    .o_menu_brand, .o_navbar_breadcrumbs {
+        color: var(--NavBar-brand-color, #{$o-navbar-brand-color});
     }
 
     .o_menu_sections {
