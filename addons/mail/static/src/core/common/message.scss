@@ -35,6 +35,11 @@
     flex-basis: $o-mail-Message-sidebarWidth;
     max-width: $o-mail-Message-sidebarWidth;
 
+    &.o-inChatWindow {
+        flex-basis: $o-mail-Message-sidebarSmallWidth;
+        max-width: $o-mail-Message-sidebarSmallWidth;
+    }
+
     .o-mail-Message-date {
         font-size: 0.75rem;
     }
@@ -43,6 +48,11 @@
 .o-mail-Message-avatarContainer {
     width: $o-mail-Avatar-size;
     height: $o-mail-Avatar-size;
+
+    &.o-inChatWindow {
+        width: $o-mail-Avatar-sizeSmall;
+        height: $o-mail-Avatar-sizeSmall;
+    }
 }
 
 @font-face {
