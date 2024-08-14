@@ -317,7 +317,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                     {
                         id: "test_btn",
                         category: "test_group",
-                        name: "Test Button",
+                        title: "Test Button",
                         icon: "fa-square",
                         action: () => null,
                     },
@@ -345,7 +345,7 @@ test("toolbar correctly process inheritance buttons chain", async () => {
                     {
                         id: "test_btn",
                         category: "test_group",
-                        name: "Test Button",
+                        title: "Test Button",
                         icon: "fa-square",
                         action: () => null,
                     },
@@ -353,7 +353,7 @@ test("toolbar correctly process inheritance buttons chain", async () => {
                         id: "test_btn2",
                         category: "test_group",
                         inherit: "test_btn",
-                        name: "Test Button 2",
+                        title: "Test Button 2",
                     },
                 ],
             };
@@ -386,7 +386,7 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
                         action(dispatch) {
                             dispatch("test_cmd");
                         },
-                        name: "Test Button",
+                        title: "Test Button",
                         icon: "fa-square",
                         isFormatApplied: () => expect.step("image format evaluated"),
                     },
@@ -425,7 +425,7 @@ test("plugins can create buttons with text in toolbar", async () => {
                         action(dispatch) {
                             dispatch("test_cmd");
                         },
-                        name: "Test Button",
+                        title: "Test Button",
                         text: "Text button",
                     },
                 ],
@@ -484,7 +484,7 @@ test("toolbar buttons should have title attribute", async () => {
 test("toolbar buttons should have title attribute with translated text", async () => {
     // Retrieve toolbar buttons descriptions in English
     const { editor } = await setupEditor("");
-    const titles = editor.resources.toolbarItems.map((item) => item.name);
+    const titles = editor.resources.toolbarItems.map((item) => item.title);
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
@@ -495,7 +495,7 @@ test("toolbar buttons should have title attribute with translated text", async (
 
     // Check that every registered button has the result of the call to _t
     postPatchEditor.resources.toolbarItems.forEach((item) => {
-        expect(item.name).toBe("Translated");
+        expect(item.title).toBe("Translated");
     });
 
     await waitFor(".o-we-toolbar");

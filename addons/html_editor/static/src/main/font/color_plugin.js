@@ -29,7 +29,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "forecolor",
                 category: "color",
-                name: _t("Font Color"),
+                title: _t("Font Color"),
                 Component: ColorSelector,
                 props: {
                     type: "foreground",
@@ -40,7 +40,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "backcolor",
                 category: "color",
-                name: _t("Background Color"),
+                title: _t("Background Color"),
 
                 Component: ColorSelector,
                 props: {

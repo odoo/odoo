@@ -19,7 +19,7 @@ export class ImageCropPlugin extends Plugin {
                 {
                     id: "image_crop",
                     category: "image_crop",
-                    name: _t("Crop image"),
+                    title: _t("Crop image"),
                     icon: "fa-crop",
                     action(dispatch) {
                         dispatch("CROP_IMAGE");

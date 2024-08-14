@@ -46,7 +46,7 @@ export class IconPlugin extends Plugin {
                         dispatch("RESIZE_ICON", "1");
                     },
                     text: "1x",
-                    name: _t("Icon size 1x"),
+                    title: _t("Icon size 1x"),
                     isFormatApplied: () => p.hasIconSize("1"),
                 },
                 {
@@ -56,7 +56,7 @@ export class IconPlugin extends Plugin {
                         dispatch("RESIZE_ICON", "2");
                     },
                     text: "2x",
-                    name: _t("Icon size 2x"),
+                    title: _t("Icon size 2x"),
                     isFormatApplied: () => p.hasIconSize("2"),
                 },
                 {
@@ -66,7 +66,7 @@ export class IconPlugin extends Plugin {
                         dispatch("RESIZE_ICON", "3");
                     },
                     text: "3x",
-                    name: _t("Icon size 3x"),
+                    title: _t("Icon size 3x"),
                     isFormatApplied: () => p.hasIconSize("3"),
                 },
                 {
@@ -76,7 +76,7 @@ export class IconPlugin extends Plugin {
                         dispatch("RESIZE_ICON", "4");
                     },
                     text: "4x",
-                    name: _t("Icon size 4x"),
+                    title: _t("Icon size 4x"),
                     isFormatApplied: () => p.hasIconSize("4"),
                 },
                 {
@@ -86,7 +86,7 @@ export class IconPlugin extends Plugin {
                         dispatch("RESIZE_ICON", "5");
                     },
                     text: "5x",
-                    name: _t("Icon size 5x"),
+                    title: _t("Icon size 5x"),
                     isFormatApplied: () => p.hasIconSize("5"),
                 },
                 {
@@ -96,7 +96,7 @@ export class IconPlugin extends Plugin {
                         dispatch("TOGGLE_SPIN_ICON");
                     },
                     icon: "fa-play",
-                    name: _t("Toggle icon spin"),
+                    title: _t("Toggle icon spin"),
                     isFormatApplied: () => p.hasSpinIcon(),
                 },
             ],
