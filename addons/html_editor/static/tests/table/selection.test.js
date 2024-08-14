@@ -1,7 +1,47 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor } from "../_helpers/user_actions";
+import { getContent } from "../_helpers/selection";
+import { queryAll } from "@odoo/hoot-dom";
+
+describe("custom selection", () => {
+    test("should indicate selected cells with blue background", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+            <table>
+                <tbody>
+                    <tr>
+                        <td>ab</td>
+                        <td>c[d</td>
+                        <td>e]f</td>
+                    </tr>
+                </tbody>
+            </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td>ab</td>
+                        <td class="o_selected_td">c[d</td>
+                        <td class="o_selected_td">e]f</td>
+                    </tr>
+                </tbody>
+            </table>`)
+        );
+        const defaultBackgroundColor = getComputedStyle(el)["background-color"];
+        const backgroundColorTDs = queryAll("table td").map(
+            (td) => getComputedStyle(td)["background-color"]
+        );
+        // Unselected cells should have the default background color
+        expect(backgroundColorTDs[0]).toBe(defaultBackgroundColor);
+        // Selected cells should have a distinct background color
+        expect(backgroundColorTDs[1]).not.toBe(defaultBackgroundColor);
+        expect(backgroundColorTDs[2]).not.toBe(defaultBackgroundColor);
+    });
+});
 
 describe("select a full table on cross over", () => {
     describe("select", () => {
