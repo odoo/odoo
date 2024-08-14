@@ -17,7 +17,7 @@ const { DEFAULT_LOCALE } = constants;
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  */
 
-export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
+export const NO_RECORD_AT_THIS_POSITION = "__NO_RECORD_AT_THIS_POSITION__";
 
 /**
  * This class is an extension of PivotModel with some additional information
