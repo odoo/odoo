@@ -6,10 +6,12 @@
             <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.selfSession">
                     <t t-foreach="callActions.actions.slice(0, 3)" t-as="action" t-key="action_index">
-                        <t t-call="discuss.CallActionList.actionButton" />
+                            <t t-if="!env.discussCall.collapsed or !env.inChatWindow or (['Mute', 'Unmute', 'Deafen', 'Undeafen'].includes(action.name))" t-call="discuss.CallActionList.actionButton">
+                                <t t-set="collapsed" t-value="env.discussCall.collapsed"/>
+                            </t>
                     </t>
-                    <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
-                        <button t-att-class="`btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
+                    <Dropdown t-if="!(env.inChatWindow and env.discussCall.collapsed)" position="'top-end'" menuClass="'d-flex flex-column py-0'">
+                        <button t-att-class="`btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall or env.discussCall.collapsed ? 'p-2' : 'p-3' }`" t-att-title="MORE">
                             <div class="fa-stack">
                                 <i class="fa fa-ellipsis-v fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                             </div>
@@ -39,7 +41,7 @@
                 <t t-else="" t-set="callText">Join Call</t>
                 <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none"
                     t-att-aria-label="callText"
-                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall or env.discussCall.collapsed, 'p-3': !isSmall and !env.discussCall.collapsed, 'btn-success': !isOfActiveCall }"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-att-title="callText"
                     t-on-click="onClickToggleAudioCall">
@@ -61,7 +63,7 @@
 
     <t t-name="discuss.CallActionList.actionButton">
         <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-            t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+            t-att-class="{ 'p-2': isSmall or collapsed, 'p-3': !isSmall and !collapsed }"
             t-att-aria-label="action.name"
             t-att-title="action.name"
             t-on-click="action.select">

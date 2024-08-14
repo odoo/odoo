@@ -79,6 +79,7 @@ callActionsRegistry
             if (component.props.fullscreen.isActive) {
                 component.props.fullscreen.exit();
             } else {
+                component.env.discussCall.toggleCallSpace(false);
                 component.props.fullscreen.enter();
             }
         },

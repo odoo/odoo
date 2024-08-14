@@ -10,11 +10,22 @@
     &.o-minimized {
         height: 20%; // ensures that the view returns to the right height when resized
         min-height: #{"max(20%, 130px)"};
-        &.o-compact {
-            height: 10%;
-            min-height: #{"max(10%, 100px)"};
-        }
     }
+
+    &.o-compact {
+        height: 10%;
+        min-height: #{"max(10%, 100px)"};
+    }
+
+    &.o-collapsed {
+        height: fit-content;
+        min-height: fit-content;
+        max-height: max-content;
+    }
+}
+
+.o-discuss-Call-collapsibleBtn {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .o-discuss-Call-main {

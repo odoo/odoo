@@ -138,6 +138,13 @@ export class CallParticipantCard extends Component {
                     this.props.inset(activeRtcSession, currentMainVideoType);
                 }
             }
+            if (this.env.discussCall.toggleCallSpace) {
+                if (!this.rtcSession) {
+                    this.env.discussCall.toggleCallSpace(true);
+                } else {
+                    this.env.discussCall.toggleCallSpace(false);
+                }
+            }
             return;
         }
         await rpc("/mail/rtc/channel/cancel_call_invitation", {
