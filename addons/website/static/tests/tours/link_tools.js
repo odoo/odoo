@@ -133,7 +133,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.dragNDrop({
         id: 's_three_columns',
         name: 'Columns',
-        groupName: "Content",
+        groupName: "Columns",
     }),
     {
         content: "Click on the first image.",
