@@ -115,10 +115,8 @@ class Company(models.Model):
     # partner's contact address
     def _compute_address(self):
         for company in self.filtered(lambda company: company.partner_id):
-            address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
-            if address_data['contact']:
-                partner = company.partner_id.browse(address_data['contact']).sudo()
-                company.update(company._get_company_address_update(partner))
+            partner = company.partner_id.sudo()
+            company.update(company._get_company_address_update(partner))
 
     def _inverse_street(self):
         for company in self:
