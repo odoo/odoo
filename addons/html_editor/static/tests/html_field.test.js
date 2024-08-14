@@ -254,6 +254,74 @@ test("onchange update html field in edition", async () => {
     expect(".odoo-editor-editable p").toHaveText("hello");
 });
 
+test("create new record and load it correctly", async () => {
+    class Composer extends models.Model {
+        linked_composer_id = fields.Many2one({ relation: "composer" });
+        name = fields.Char();
+        body = fields.Html({ trim: true });
+
+        _records = [
+            {
+                id: 1,
+                linked_composer_id: 2,
+                name: "first",
+                body: "<p>2</p>",
+            },
+            {
+                id: 2,
+                name: "second",
+                linked_composer_id: 1,
+                body: "<p></p>",
+            },
+        ];
+
+        // Necessary for mobile
+        _views = {
+            "kanban,false": `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        };
+
+        _onChanges = {
+            linked_composer_id(record) {
+                record.body = `<p>${record.linked_composer_id}</p>`;
+            },
+        };
+    }
+    defineModels([Composer]);
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "composer",
+        arch: `
+            <form>
+                <field name="body" widget="html"/>
+                <field name="linked_composer_id"/>
+            </form>`,
+    });
+
+    expect(".odoo-editor-editable").toHaveCount(1);
+    expect(".odoo-editor-editable").toHaveInnerHTML("<p>2</p>");
+    await contains(".o_input#linked_composer_id_0").click();
+    await animationFrame();
+    await contains(".ui-menu-item:contains(first), .o_kanban_record:contains(first)").click();
+    await animationFrame();
+    expect(".odoo-editor-editable").toHaveInnerHTML("<p>1</p>");
+    await contains(".o_input#linked_composer_id_0").click();
+    await animationFrame();
+    await contains(".ui-menu-item:contains(second), .o_kanban_record:contains(second)").click();
+    await animationFrame();
+    expect(".odoo-editor-editable").toHaveInnerHTML("<p>2</p>");
+});
+
 test("edit html field and blur multiple time should apply 1 onchange", async () => {
     const def = new Deferred();
     Partner._onChanges = {
