@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
     steps: () =>
         [
             {
-                trigger: "div:contains('Start adding products')",
+                trigger: "div:contains('Welcome.')",
                 run: () => {
                     window.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
                     postMessage(ADD_PRODUCT, "add product").run();
@@ -40,11 +40,11 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             postMessage(ORDER_IS_FINALIZED, "order is finalized"),
             {
                 content: "Check that we are now on the 'Thank you' screen",
-                trigger: "div:contains('Thank you')",
+                trigger: "div:contains('Thank you.')",
             },
             postMessage(NEW_ORDER, "new order"),
             {
-                trigger: " div:contains('Start adding products')",
+                trigger: " div:contains('Welcome.')",
             },
             Order.doesNotHaveLine({}),
             amountIs("Total", "0.00"),
