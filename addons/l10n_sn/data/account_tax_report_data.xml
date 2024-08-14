@@ -241,7 +241,7 @@
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -273,7 +273,7 @@
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">SN_OPE.tax - SN_VAT_DEDUCT.tax</field>
-                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="subformula">if_above(XOF(0))</field>
                     </record>
                 </field>
             </record>
@@ -285,7 +285,7 @@
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">SN_VAT_DEDUCT.tax - SN_OPE.tax</field>
-                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="subformula">if_above(XOF(0))</field>
                     </record>
                     <record id="account_tax_report_line_sn_to_report_carryover" model="account.report.expression">
                         <field name="label">_carryover_tax</field>
@@ -303,7 +303,7 @@
                         <field name="label">tax</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=2</field>
+                        <field name="subformula">editable</field>
                     </record>
                 </field>
             </record>
