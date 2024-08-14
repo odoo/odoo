@@ -173,6 +173,9 @@
                 <t t-snippet="website.s_masonry_block" string="Masonry" group="images">
                     <keywords>masonry, grid</keywords>
                 </t>
+                <t t-snippet="website.s_quadrant" string="Quadrant" group="images">
+                    <keywords>four sections, column, grid, division, split, segments, pictures, illustration, media, photos, tiles, arrangement, gallery, images-grid, mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, thumbnails, engage, call to action, cta, showcase</keywords>
+                </t>
                 <t t-snippet="website.s_image_gallery" string="Image Gallery" group="images">
                     <keywords>gallery, carousel</keywords>
                 </t>
@@ -739,7 +742,7 @@
     <div data-js="layout_column"
         data-selector="section"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed">
+        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
