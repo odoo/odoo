@@ -640,7 +640,9 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
     def test_resequence_payment_and_non_payment_without_payment_sequence(self):
         """Resequence wizard could be open for different move type if the payment sequence is set to False on the journal."""
-        journal = self.company_data['default_journal_bank'].copy({'payment_sequence': False})
+        journal = self.company_data['default_journal_bank'].copy()
+        journal.outbound_payment_method_line_ids.write({'payment_sequence': False})
+        journal.inbound_payment_method_line_ids.write({'payment_sequence': False})
         bsl = self.env['account.bank.statement.line'].create({'name': 'test', 'amount': 100, 'journal_id': journal.id})
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',

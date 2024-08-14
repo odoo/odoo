@@ -918,6 +918,8 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         AccountPayment = self.env['account.payment']
         AccountPayment.search([]).unlink()
 
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.write({'payment_sequence': False})
+
         payment = AccountPayment.create({
             'journal_id': self.company_data['default_journal_bank'].id,
         })
@@ -932,6 +934,40 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         self.assertEqual(payment.name, '/')
         payment.action_post()
         self.assertRegex(payment.name, r'BNK1/\d{4}/00002')
+
+    def test_payment_method_sequence_name(self):
+        AccountPayment = self.env['account.payment']
+        AccountPayment.search([]).unlink()
+
+        self.company_data['default_journal_cash'].inbound_payment_method_line_ids.write({'payment_sequence': False})
+
+        payment = AccountPayment.create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        self.assertRegex(payment.name, r'P\d{2,}BNK1/\d{4}/00001')
+
+        payment = AccountPayment.create({
+            'journal_id': self.company_data['default_journal_cash'].id,
+        })
+        self.assertRegex(payment.name, r'PCSH1/\d{4}/00001')
+
+        payment = AccountPayment.create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+        self.assertRegex(payment.name, r'P\d{2,}BNK1/\d{4}/00002')
+
+        payment = AccountPayment.create({
+            'journal_id': self.company_data['default_journal_cash'].id,
+        })
+        payment.action_post()
+        self.assertRegex(payment.name, r'PCSH1/\d{4}/00002')
+
+        payment = AccountPayment.create({
+            'journal_id': self.company_data['default_journal_cash'].id,
+            'payment_type': 'outbound'
+        })
+        self.assertRegex(payment.name, r'P\d{2,}CSH1/\d{4}/00001')
 
     def test_payment_without_default_company_account(self):
         """ The purpose of this test is to check the specific behavior when duplicating an inbound payment, then change

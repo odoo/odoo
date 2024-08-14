@@ -121,6 +121,11 @@ class AccountPaymentMethodLine(models.Model):
     payment_type = fields.Selection(related='payment_method_id.payment_type')
     company_id = fields.Many2one(related='journal_id.company_id')
     available_payment_method_ids = fields.Many2many(related='journal_id.available_payment_method_ids')
+    payment_sequence = fields.Boolean(
+        string='Dedicated Payment Sequence',
+        default=True,
+        help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal",
+    )
 
     @api.depends('journal_id')
     def _compute_display_name(self):

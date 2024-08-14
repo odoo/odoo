@@ -41,7 +41,7 @@ class ReSequenceWizard(models.TransientModel):
             raise UserError(_('The sequences of this journal are different for Invoices and Refunds but you selected some of both types.'))
         is_payment = set(active_move_ids.mapped(lambda x: bool(x.payment_id)))
         if (
-            active_move_ids.journal_id.payment_sequence
+            active_move_ids.journal_id._has_dedicated_payment_sequence()
             and len(is_payment) > 1
         ):
             raise UserError(_('The sequences of this journal are different for Payments and non-Payments but you selected some of both types.'))
