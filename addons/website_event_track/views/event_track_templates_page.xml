@@ -102,7 +102,7 @@
                             -
                             <span t-field="track.date_end"
                                 t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
-                            <t t-if="event.date_tz">
+                            <t t-if="event.date_tz and website_visitor_timezone != event.date_tz">
                                 (<span t-out="event.date_tz"/>)
                             </t>
                         </t>
