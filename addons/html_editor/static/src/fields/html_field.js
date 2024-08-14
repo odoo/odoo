@@ -194,22 +194,6 @@ export class HtmlField extends Component {
             dynamicPlaceholder: this.dynamicPlaceholder,
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
-            resources: {
-                toolbarCategory: {
-                    id: "codeview",
-                    sequence: 100,
-                },
-                toolbarItems: [
-                    {
-                        id: "codeview",
-                        category: "codeview",
-                        icon: "fa-code",
-                        action: () => {
-                            this.toggleCodeView();
-                        },
-                    },
-                ],
-            },
             direction: localization.direction || "ltr",
             getRecordInfo: () => {
                 const { resModel, resId } = this.props.record;
@@ -224,6 +208,22 @@ export class HtmlField extends Component {
             (sanitize_tags || (sanitize_tags === undefined && sanitize))
         ) {
             config.disableVideo = true; // Tag-sanitized fields remove videos.
+        }
+        if (this.props.codeview) {
+            config.resources = {
+                toolbarCategory: {
+                    id: "codeview",
+                    sequence: 100,
+                },
+                toolbarItems: {
+                    id: "codeview",
+                    category: "codeview",
+                    icon: "fa-code",
+                    action: () => {
+                        this.toggleCodeView();
+                    },
+                },
+            };
         }
         return config;
     }

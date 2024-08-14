@@ -850,7 +850,58 @@ test("'Image' command is not available when 'disableImage' = true", async () => 
     expect(queryAllTexts(".o-we-command-name")).toEqual([]);
 });
 
+test("codeview is not available by default", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    const node = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar button[name='codeview']").toHaveCount(0);
+});
+
+test("codeview is not available when not in debug mode", async () => {
+    odoo.debug = false;
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'codeview': true}"/>
+            </form>`,
+    });
+    const node = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar button[name='codeview']").toHaveCount(0);
+});
+
+test("codeview is available when option is active and in debug mode", async () => {
+    odoo.debug = true;
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'codeview': true}"/>
+            </form>`,
+    });
+    const node = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar button[name='codeview']").toHaveCount(1);
+});
+
 test("enable/disable codeview with editor toolbar", async () => {
+    odoo.debug = true;
     await mountView({
         type: "form",
         resId: 1,
@@ -883,6 +934,7 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
         expect(args[1].txt).toBe("<div></div>");
         expect.step("web_save");
     });
+    odoo.debug = true;
     await mountView({
         type: "form",
         resId: 1,
