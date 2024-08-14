@@ -156,16 +156,18 @@ class ImBus(models.Model):
                         )
 
     @api.model
-    def _poll(self, channels, last=0):
+    def _poll(self, channels, last=0, ignore_ids=None):
         # first poll return the notification in the 'buffer'
         if last == 0:
             timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago)]
         else:  # else returns the unread notifications
             domain = [('id', '>', last)]
+        if ignore_ids:
+            domain.append(("id", "not in", ignore_ids))
         channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
         domain.append(('channel', 'in', channels))
-        notifications = self.sudo().search_read(domain)
+        notifications = self.sudo().search_read(domain, ["message"])
         # list of notification to return
         result = []
         for notif in notifications:
