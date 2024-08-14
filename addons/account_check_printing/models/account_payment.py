@@ -205,7 +205,8 @@ class AccountPayment(models.Model):
     #CHECK PRINTING METHODS
     #######################
     def _check_fill_line(self, amount_str):
-        return amount_str and (amount_str + ' ').ljust(200, '*') or ''
+        # return amount_str and (amount_str + ' ').ljust(200, '*') or ''
+        return amount_str or ''
 
     def _check_build_page_info(self, i, p):
         multi_stub = self.company_id.account_check_printing_multi_stub
