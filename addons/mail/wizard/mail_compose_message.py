@@ -1114,6 +1114,9 @@ class MailComposer(models.TransientModel):
         self.ensure_one()
         email_mode = self.composition_mode == 'mass_mail'
 
+        if tools.is_html_empty(self.body) and self.template_id:
+            self._set_value_from_template('body_html', 'body')
+
         # Duplicate attachments linked to the email.template. Indeed, composer
         # duplicates attachments in mass mode. But in 'rendered' mode attachments
         # may come from an email template (same IDs). They also have to be
