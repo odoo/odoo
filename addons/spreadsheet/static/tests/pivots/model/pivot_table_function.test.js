@@ -5,7 +5,7 @@ import {
     defineSpreadsheetModels,
 } from "@spreadsheet/../tests/helpers/data";
 
-import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
+import { setCellContent, updatePivot } from "@spreadsheet/../tests/helpers/commands";
 import {
     getEvaluatedCell,
     getEvaluatedFormatGrid,
@@ -338,4 +338,33 @@ test("Renaming the pivot reevaluates the PIVOT function", async function () {
         name: "New Name",
     });
     expect(getEvaluatedCell(model, "A1", "42").value).toBe("(#1) New Name");
+});
+
+test("can hide a measure", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+        <pivot>
+            <field name="probability" type="measure"/>
+            <field name="foo" type="measure"/>
+        </pivot>`,
+    });
+    setCellContent(model, "A10", '=PIVOT("1")');
+    // prettier-ignore
+    expect(getEvaluatedGrid(model, "A10:C12")).toEqual([
+        ["(#1) Partner Pivot",      "Total",            "",],
+        ["",                        "Probability",      "Foo"],
+        ["Total",                   131,                32],
+    ]);
+    const [pivotId] = model.getters.getPivotIds();
+    const definition = model.getters.getPivotCoreDefinition(pivotId);
+    updatePivot(model, pivotId, {
+        measures: [{ ...definition.measures[0], isHidden: true }, definition.measures[1]],
+    });
+    await animationFrame();
+    // prettier-ignore
+    expect(getEvaluatedGrid(model, "A10:C12")).toEqual([
+        ["(#1) Partner Pivot",      "Total",    null],
+        ["",                        "Foo",      null],
+        ["Total",                   32,         null],
+    ]);
 });
