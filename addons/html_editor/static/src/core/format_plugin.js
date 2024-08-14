@@ -51,7 +51,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_BOLD");
                 },
                 icon: "fa-bold",
-                name: _t("Toggle bold"),
+                title: _t("Toggle bold"),
                 isFormatApplied: isFormatted(p, "bold"),
             },
             {
@@ -61,7 +61,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_ITALIC");
                 },
                 icon: "fa-italic",
-                name: _t("Toggle italic"),
+                title: _t("Toggle italic"),
                 isFormatApplied: isFormatted(p, "italic"),
             },
             {
@@ -71,7 +71,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_UNDERLINE");
                 },
                 icon: "fa-underline",
-                name: _t("Toggle underline"),
+                title: _t("Toggle underline"),
                 isFormatApplied: isFormatted(p, "underline"),
             },
             {
@@ -81,7 +81,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_STRIKETHROUGH");
                 },
                 icon: "fa-strikethrough",
-                name: _t("Toggle strikethrough"),
+                title: _t("Toggle strikethrough"),
                 isFormatApplied: isFormatted(p, "strikeThrough"),
             },
             {
@@ -91,7 +91,7 @@ export class FormatPlugin extends Plugin {
                     dispatch("FORMAT_REMOVE_FORMAT");
                 },
                 icon: "fa-eraser",
-                name: _t("Remove Format"),
+                title: _t("Remove Format"),
                 hasFormat: hasFormat(p),
             },
         ],

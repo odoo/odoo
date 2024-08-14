@@ -25,7 +25,7 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             category: String,
-                                            name: String,
+                                            title: String,
                                             inherit: { type: String, optional: true },
                                         };
                                         if (button.Component) {
@@ -86,7 +86,7 @@ export class Toolbar extends Component {
 }
 
 export const toolbarButtonProps = {
-    name: String,
+    title: String,
     dispatch: Function,
     getSelection: Function,
 };

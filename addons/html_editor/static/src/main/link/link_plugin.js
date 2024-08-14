@@ -67,7 +67,7 @@ export class LinkPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "link",
-                name: _t("Link"),
+                title: _t("Link"),
                 category: "link",
                 action(dispatch) {
                     dispatch("CREATE_LINK_ON_SELECTION");
@@ -78,7 +78,7 @@ export class LinkPlugin extends Plugin {
             {
                 id: "unlink",
                 category: "link",
-                name: _t("Remove Link"),
+                title: _t("Remove Link"),
 
                 action(dispatch) {
                     dispatch("REMOVE_LINK_FROM_SELECTION");
