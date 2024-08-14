@@ -74,8 +74,10 @@ class StockPickingBatch(models.Model):
 
     # Private buisness logic
     def _set_moves_destination_to_dock(self):
-        if self.dock_id:
-            self.move_ids.write({'location_dest_id': self.dock_id.id})
-        else:
-            for picking in self:
-                picking.move_ids.write({'location_dest_id': picking.location_dest_id.id})
+        for batch in self:
+            if not batch.dock_id:
+                batch.picking_ids._reset_location()
+            if batch.picking_type_id.code in ["internal", "receipt"]:
+                batch.picking_ids.move_ids.write({'location_dest_id': self.dock_id.id})
+            else:
+                batch.picking_ids.move_ids.write({'location_id': self.dock_id.id})
