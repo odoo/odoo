@@ -173,6 +173,14 @@
         <t t-set="cta_btn_text" t-value="False"/>
         <t t-set="cta_btn_href">/contactus</t>
         <t t-set="extra_items_toggle_aria_label">Extra items button</t>
+        <t t-set="primary_additional_colors" t-value="False"/>
+        <t t-set="secondary_additional_colors" t-value="False"/>
+        <t t-if="primary_additional_colors">
+            <t t-set="_additional_btn_color" t-valuef="btn btn-outline-primary"/>
+        </t>
+        <t t-if="secondary_additional_colors">
+            <t t-set="_additional_btn_color" t-valuef="btn btn-outline-secondary"/>
+        </t>
     </xpath>
 
     <xpath expr="//footer" position="attributes">
@@ -407,7 +415,7 @@
                     <ul class="navbar-nav gap-2 mt-3 w-100">
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="nav-link d-flex align-items-center w-100 px-2"/>
+                            <t t-set="_btn_class" t-valuef="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"/>
                             <t t-set="_txt_class" t-valuef="me-auto small"/>
                             <t t-set="_flag_class" t-valuef="me-2"/>
                             <t t-set="_div_classes" t-valuef="dropup"/>
@@ -415,14 +423,14 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary w-100"/>
+                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} w-100 border rounded text-center"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_user_name_class" t-valuef="me-auto small"/>
-                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center border-0 px-2"/>
+                            <t t-set="_link_class" t-valuef="{{ _additional_btn_color or 'nav-link'}} d-flex align-items-center border-0"/>
                             <t t-set="_icon_class" t-valuef="me-2"/>
                             <t t-set="_item_class" t-valuef="dropdown dropup"/>
                             <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
@@ -510,20 +518,18 @@
                     <t t-call="website.placeholder_header_social_links"/>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_btn_class" t-valuef="btn btn-outline-secondary border-0"/>
-                        <t t-set="_txt_class" t-valuef="small"/>
+                        <t t-set="_btn_class" t-value="_additional_btn_color or 'nav-link'"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_link_class" t-valuef="btn btn-outline-secondary"/>
+                        <t t-set="_link_class" t-value="_additional_btn_color or 'nav-link border rounded px-3'"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_user_name" t-value="True"/>
                         <t t-set="_item_class" t-valuef="dropdown"/>
-                        <t t-set="_link_class" t-valuef="btn btn-outline-secondary border-0 fw-bold"/>
-                        <t t-set="_user_name_class" t-valuef="small"/>
+                        <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} border-0"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                     <!-- Call To Action -->
@@ -618,7 +624,7 @@
                         <ul class="navbar-nav gap-2 mt-3 w-100">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="btn btn-outline-secondary d-flex align-items-center w-100"/>
+                                <t t-set="_btn_class" t-valuef="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"/>
                                 <t t-set="_txt_class" t-valuef="me-auto small"/>
                                 <t t-set="_flag_class" t-valuef="me-2"/>
                                 <t t-set="_div_classes" t-valuef="dropup"/>
@@ -1075,7 +1081,7 @@
                             </t>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_link_class" t-valuef="btn btn-outline-secondary"/>
+                                <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} ms-2 rounded border px-3"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
@@ -1220,6 +1226,12 @@
 
 <!-- "Sales four" template -->
 <template id="template_header_sales_four" inherit_id="website.layout" name="Template Header Sale 4" active="False">
+    <xpath expr="//t[@t-if='primary_additional_colors']" position="inside">
+        <t t-set="_additional_btn_color" t-valuef="text-primary"/>
+    </xpath>
+    <xpath expr="//t[@t-if='secondary_additional_colors']" position="inside">
+        <t t-set="_additional_btn_color" t-valuef="text-secondary"/>
+    </xpath>
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 shadow-sm z-1"/>
@@ -1252,8 +1264,8 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_item_class" t-valuef="position-relative"/>
-                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center h-100 border-0"/>
+                            <t t-set="_item_class" t-valuef="position-relative small"/>
+                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center h-100 border-0 px-2 text-decoration-none"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
@@ -1372,7 +1384,7 @@
                         <ul class="navbar-nav gap-2 mt-3 w-100">
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-valuef="btn btn-outline-secondary d-flex align-items-center w-100 px-2"/>
+                                <t t-set="_btn_class" t-valuef="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"/>
                                 <t t-set="_txt_class" t-valuef="me-auto small"/>
                                 <t t-set="_flag_class" t-valuef="me-2"/>
                                 <t t-set="_div_classes" t-valuef="dropup"/>
@@ -1380,14 +1392,14 @@
                             </t>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_link_class" t-valuef="btn btn-outline-secondary w-100"/>
+                                <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} w-100 border rounded text-center"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_icon" t-value="true"/>
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_user_name_class" t-valuef="me-auto small"/>
-                                <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center border-0 px-2"/>
+                                <t t-set="_link_class" t-valuef="{{ _additional_btn_color or 'nav-link'}} d-flex align-items-center border-0"/>
                                 <t t-set="_icon_class" t-valuef="me-2"/>
                                 <t t-set="_item_class" t-valuef="dropdown dropup"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
@@ -1481,13 +1493,13 @@
                         <t t-call="website.placeholder_header_social_links"/>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="btn btn-outline-secondary d-flex align-items-center gap-1 border-0 rounded-circle px-3"/>
+                            <t t-set="_btn_class" t-valuef="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center gap-1 border-0 rounded-pill px-3"/>
                             <t t-set="_txt_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary rounded-circle px-3"/>
+                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} border rounded-pill px-3"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
@@ -1495,7 +1507,7 @@
                             <t t-set="_user_name" t-value="false"/>
                             <t t-set="_user_name_class" t-valuef="me-auto small"/>
                             <t t-set="_item_class" t-valuef="dropdown"/>
-                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary d-flex align-items-center border-0 rounded-circle px-3 fw-bold"/>
+                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center border-0 rounded-pill px-3"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Call To Action -->
@@ -1519,6 +1531,18 @@
 <template id="template_header_boxed_align_right" inherit_id="website.template_header_boxed" active="False">
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
         <t t-set="_nav_class" t-valuef="ms-auto"/>
+    </xpath>
+</template>
+
+<!-- Additional colors option -->
+<template id="template_header_additional_color_primary" inherit_id="website.layout" active="False">
+    <xpath expr="//t[@t-set='primary_additional_colors']" position="attributes">
+        <attribute name="t-value">True</attribute>
+    </xpath>
+</template>
+<template id="template_header_additional_color_secondary" inherit_id="website.layout" active="False">
+    <xpath expr="//t[@t-set='secondary_additional_colors']" position="attributes">
+        <attribute name="t-value">True</attribute>
     </xpath>
 </template>
 
