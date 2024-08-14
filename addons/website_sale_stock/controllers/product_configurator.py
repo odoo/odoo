@@ -3,7 +3,7 @@
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.product_configurator import (
-    WebsiteSaleProductConfiguratorController
+    WebsiteSaleProductConfiguratorController,
 )
 
 
@@ -12,11 +12,10 @@ class WebsiteSaleStockProductConfiguratorController(WebsiteSaleProductConfigurat
     def _get_basic_product_information(self, product_or_template, pricelist, combination, **kwargs):
         """ Override of `website_sale` to append stock data.
 
-        :param recordset product_or_template: The product for which to seek information, as a
-                                              `product.product` or `product.template` record.
-        :param recordset pricelist: The pricelist to use, as a `product.pricelist` record.
-        :param recordset combination: The combination of the product, as a
-                                      `product.template.attribute.value` recordset.
+        :param product.product|product.template product_or_template: The product for which to seek
+            information.
+        :param product.pricelist pricelist: The pricelist to use.
+        :param product.template.attribute.value combination: The combination of the product.
         :param dict kwargs: Locally unused data passed to `super` and `_get_product_available_qty`.
         :rtype: dict
         :return: A dict with the following structure:
