@@ -11,13 +11,10 @@
     &.o-mobile {
         z-index: 1001; // above messaging menu (chat window takes whole screen)
     }
-    box-shadow: -5px -5px 10px rgba(#000000, 0.09);
-    outline: none;
-
-    &.o-folded {
-        height: $o-mail-Discuss-headerHeight;
+    &:not(.o-mobile) {
+        --border-opacity: var(--mail-ChatWindow-desktopBorderOpacity, .15);
     }
-
+    outline: none;
 }
 
 .o-mail-ChatWindow-command {
@@ -35,17 +32,9 @@
     padding: 3px 6px;
 }
 
-.o-mail-ChatWindow-header {
-    height: $o-mail-Discuss-headerHeight;
-
-    &:not(.o-folded) {
-        box-shadow: 0px 3px 12px -3px rgba(50, 50, 50, 0.15);
-    }
-
-    .o-mail-ChatWindow-threadAvatar img {
-        height: 28px;
-        width: 28px;
-    }
+.o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar img {
+    height: $o-mail-Avatar-sizeSmall;
+    width: $o-mail-Avatar-sizeSmall;
 }
 
 .o-mail-ChatWindow-typing {

@@ -2,11 +2,19 @@
     &.o-isLeftAlign {
         left: $o-mail-Message-sidebarWidth / 2;
         border-radius: $o-RoundedRectangle-small 0 0 0;
+
+        &.o-inChatWindow {
+            left: $o-mail-Message-sidebarSmallWidth / 2;
+        }
     }
 
     &.o-isRightAlign {
         right: $o-mail-Message-sidebarWidth / 2;
         border-radius: 0 $o-RoundedRectangle-small 0 0;
+
+        &.o-inChatWindow {
+            right: $o-mail-Message-sidebarSmallWidth / 2;
+        }
     }
 }
 
