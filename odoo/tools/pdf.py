@@ -154,13 +154,6 @@ def fill_form_fields_pdf(writer, form_fields):
                     _logger.info("Fields couldn't be filled in this page.")
                     continue
 
-        for raw_annot in page.get('/Annots', []):
-            annot = raw_annot.getObject()
-            for field in form_fields:
-                # Mark filled fields as readonly to avoid the blue overlay:
-                if annot.get('/T') == field:
-                    annot.update({NameObject("/Ff"): NumberObject(1)})
-
 def rotate_pdf(pdf):
     ''' Rotate clockwise PDF (90°) into a new PDF.
     Note that the attachments are not copied.
