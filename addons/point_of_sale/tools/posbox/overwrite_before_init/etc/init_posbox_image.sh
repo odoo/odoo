@@ -102,6 +102,7 @@ PKGS_TO_INSTALL="
     vim \
     x11-utils \
     xdotool \
+    xinput \
     xserver-xorg-input-evdev \
     xserver-xorg-video-dummy \
     xserver-xorg-video-fbdev"
