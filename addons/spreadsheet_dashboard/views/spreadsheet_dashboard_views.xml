@@ -9,6 +9,7 @@
                 <field name="sequence" widget="handle" groups="base.group_system"/>
                 <field name="name"/>
                 <field name="group_ids" widget="many2many_tags" required="1"/>
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 <field name="is_published" widget="boolean_toggle"/>
                 <field name="dashboard_group_id" optional="hidden"/>
             </tree>

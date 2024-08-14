@@ -8,6 +8,12 @@
         <field name="domain_force">[('group_ids', 'in', user.groups_id.ids)]</field>
     </record>
 
+    <record id="spreadsheet_dashboard_rule_company" model="ir.rule">
+        <field name="name">Dashboard multi-company</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
     <record id="base.module_category_productivity_dashboard" model="ir.module.category">
         <field name="name">Dashboard</field>
         <field name="description">User access level for Dashboard module</field>
