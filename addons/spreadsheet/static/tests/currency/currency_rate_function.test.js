@@ -4,6 +4,7 @@ import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/ge
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
+import { RPCError } from "@web/core/network/rpc";
 
 describe.current.tags("headless");
 
@@ -65,6 +66,45 @@ test("invalid date", async () => {
     expect(getEvaluatedCell(model, "A1").message).toBe(
         "The function ODOO.CURRENCY.RATE expects a number value, but 'hello' is a string, and cannot be coerced to a number."
     );
+});
+
+test("rate formula at a given company", async () => {
+    const model = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "get_rates_for_spreadsheet") {
+                const [A1, A2] = args.args[0];
+                expect(A1.company_id).toBe(1);
+                expect(A2.company_id).toBe(2);
+                expect.step("rate fetched");
+                return [
+                    { ...A1, rate: 0.7 },
+                    { ...A2, rate: 0.9 },
+                ];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD",, 1)`);
+    setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD",, 2)`);
+    await waitForDataLoaded(model);
+    expect.verifySteps(["rate fetched"]);
+    expect(getCellValue(model, "A1")).toBe(0.7);
+    expect(getCellValue(model, "A2")).toBe(0.9);
+});
+
+test("invalid company id", async () => {
+    const model = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "get_rates_for_spreadsheet") {
+                const error = new RPCError();
+                error.data = { message: "Invalid company id." };
+                throw error;
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD",, 45)`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe("Invalid company id.");
 });
 
 test("Currency rate throw with unknown currency", async () => {
