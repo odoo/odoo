@@ -106,6 +106,7 @@
                             <field name="company_id" groups="base.group_multi_company" readonly="picking_ids" force_save="1"/>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                         </group>
+                        <field name="properties" nolabel="1" columns="2" hideAddButton="1"/>
                     </group>
                     <notebook>
                         <page string="Detailed Operations" name="page_detailed_operations" invisible="state == 'draft'">

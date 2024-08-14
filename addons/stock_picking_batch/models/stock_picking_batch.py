@@ -62,6 +62,7 @@ class StockPickingBatch(models.Model):
         "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
     estimated_shipping_volume = fields.Float(
         "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit of Measure')
+    properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
 
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):
