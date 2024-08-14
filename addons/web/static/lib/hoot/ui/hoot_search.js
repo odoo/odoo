@@ -411,7 +411,7 @@ export class HootSearch extends Component {
             }
         }
 
-        const matching = lookup(query, remaining, (item) => item.key);
+        const matching = lookup(query, remaining);
         result.push(...matching.slice(0, RESULT_LIMIT));
 
         return [result, checkedCount, matching.length - RESULT_LIMIT];

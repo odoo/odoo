@@ -2,10 +2,15 @@
 
 import { onWillRender, reactive, useState } from "@odoo/owl";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { debounce, isNil } from "../hoot_utils";
+import { debounce, ensureArray, isNil } from "../hoot_utils";
 import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config";
 
 /**
+ * @typedef {{
+ *  debug?: boolean;
+ *  ignore?: boolean;
+ * }} CreateUrlFromIdOptions
+ *
  * @typedef {typeof import("./config").DEFAULT_CONFIG} DEFAULT_CONFIG
  *
  * @typedef {typeof import("./config").DEFAULT_FILTERS} DEFAULT_FILTERS
@@ -18,7 +23,7 @@ import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config
 const {
     history,
     location,
-    Object: { entries: $entries },
+    Object: { entries: $entries, fromEntries: $fromEntries, keys: $keys },
     Set,
     URIError,
     URL,
@@ -30,7 +35,7 @@ const {
 //-----------------------------------------------------------------------------
 
 const debouncedUpdateUrl = debounce(function updateUrl() {
-    const url = createURL({});
+    const url = createUrl({});
     url.search = "";
     for (const [key, value] of $entries(urlParams)) {
         if (isIterable(value)) {
@@ -54,7 +59,7 @@ const debouncedUpdateUrl = debounce(function updateUrl() {
 /**
  * @param {Partial<DEFAULT_CONFIG & DEFAULT_FILTERS>} params
  */
-export function createURL(params) {
+export function createUrl(params) {
     const url = new URL(location.href);
     for (const key in params) {
         url.searchParams.delete(key);
@@ -70,6 +75,91 @@ export function createURL(params) {
         }
     }
     return url;
+}
+
+/**
+ * @param {string} id
+ * @param {keyof DEFAULT_FILTERS} type
+ * @param {CreateUrlFromIdOptions} [options]
+ */
+export function createUrlFromId(id, type, options) {
+    const clearAll = () => $keys(nextParams).forEach((key) => nextParams[key].clear());
+
+    const ids = ensureArray(id);
+    const nextParams = $fromEntries(FILTER_KEYS.map((k) => [k, new Set(urlParams[k] || [])]));
+    if (urlParams.filter) {
+        nextParams.filter = new Set([urlParams.filter]);
+    }
+
+    switch (type) {
+        case "suite": {
+            if (options?.ignore) {
+                for (const id of ids) {
+                    const exludedId = EXCLUDE_PREFIX + id;
+                    if (nextParams.suite.has(exludedId)) {
+                        nextParams.suite.delete(exludedId);
+                    } else {
+                        nextParams.suite.add(exludedId);
+                    }
+                }
+            } else {
+                clearAll();
+                for (const id of ids) {
+                    nextParams.suite.add(id);
+                }
+            }
+            break;
+        }
+        case "tag": {
+            if (options?.ignore) {
+                for (const id of ids) {
+                    const exludedId = EXCLUDE_PREFIX + id;
+                    if (nextParams.tag.has(exludedId)) {
+                        nextParams.tag.delete(exludedId);
+                    } else {
+                        nextParams.tag.add(exludedId);
+                    }
+                }
+            } else {
+                clearAll();
+                for (const id of ids) {
+                    nextParams.tag.add(id);
+                }
+            }
+            break;
+        }
+        case "test": {
+            if (options?.ignore) {
+                for (const id of ids) {
+                    const exludedId = EXCLUDE_PREFIX + id;
+                    if (nextParams.test.has(exludedId)) {
+                        nextParams.test.delete(exludedId);
+                    } else {
+                        nextParams.test.add(exludedId);
+                    }
+                }
+            } else {
+                clearAll();
+                for (const id of ids) {
+                    nextParams.test.add(id);
+                }
+            }
+            break;
+        }
+        default: {
+            clearAll();
+        }
+    }
+
+    for (const key in nextParams) {
+        if (!nextParams[key].size) {
+            nextParams[key] = null;
+        }
+    }
+
+    nextParams.debugTest = options?.debug ? true : null;
+
+    return createUrl(nextParams);
 }
 
 export function refresh() {

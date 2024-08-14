@@ -735,26 +735,39 @@ export function isOfType(value, type) {
  * (descending). A higher score means that the match is closer (e.g. consecutive
  * letters).
  *
- * @template T
+ * @template {{ key: string }} T
  * @param {string | RegExp} pattern normalized string or RegExp
  * @param {Iterable<T>} items
- * @param {(item: T) => string} mapFn
+ * @param {keyof T} [property]
  * @returns {T[]}
  */
-export function lookup(pattern, items, mapFn = normalize) {
+export function lookup(pattern, items, property = "key") {
+    /** @type {T[]} */
+    const result = [];
     if (pattern instanceof RegExp) {
-        return [...items].filter((item) => pattern.test(mapFn(item)));
-    } else {
-        // Fuzzy lookup
-        const result = [];
+        // Regex lookup
         for (const item of items) {
-            const score = getFuzzyScore(pattern, mapFn(item));
-            if (score > 0) {
-                result.push([item, score]);
+            if (pattern.test(item[property])) {
+                result.push(item);
             }
         }
-        return result.sort((a, b) => b[1] - a[1]).map(([item]) => item);
+    } else {
+        // Fuzzy lookup
+        const scores = new Map();
+        for (const item of items) {
+            if (scores.has(item)) {
+                result.push(item);
+                continue;
+            }
+            const score = getFuzzyScore(pattern, item[property]);
+            if (score > 0) {
+                scores.set(item, score);
+                result.push(item);
+            }
+        }
+        result.sort((a, b) => scores.get(b) - scores.get(a));
     }
+    return result;
 }
 
 /**

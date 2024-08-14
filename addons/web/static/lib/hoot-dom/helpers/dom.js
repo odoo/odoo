@@ -761,7 +761,7 @@ const R_HORIZONTAL_WHITESPACE =
 
 // Following selector is based on this spec:
 // https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
-const FOCUSABLE_SELECTOR = [
+export const FOCUSABLE_SELECTOR = [
     "a[href]",
     "area[href]",
     "button:enabled",
