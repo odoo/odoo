@@ -64,15 +64,13 @@
             </t>
         </xpath>
 
-        <xpath expr="//div[@id='payment_term']" position="before">
+        <xpath expr="//div[@id='payment_term']" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
                 <t t-set="hsn_summary" t-value="o._l10n_in_get_hsn_summary_table()"/>
                 <t t-if="hsn_summary">
-                    <div name="l10n_in_hsn_summary" class="mt-3">
-                        <table class="table table-sm table-borderless col-6" style="page-break-inside: avoid;">
-                            <thead>
-                                <th t-att-colspan="hsn_summary['nb_columns']"><h3>HSN Summary</h3></th>
-                            </thead>
+                    <div name="l10n_in_hsn_summary" class="mt-3" style="page-break-inside: avoid;">
+                        <h3>HSN Summary</h3>
+                        <table class="table table-sm table-borderless col-6">
                             <thead>
                                 <th>HSN/SAC</th>
                                 <th class="text-end">Quantity</th>
