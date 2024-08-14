@@ -15,7 +15,11 @@ export class UrlField extends Component {
     };
 
     setup() {
-        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
+        useInputField({ getValue: () => this.value });
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name] || "";
     }
 
     get formattedHref() {

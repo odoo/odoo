@@ -81,7 +81,7 @@ patch(NavBar.prototype, {
     /**
      * @override
      */
-    onNavBarDropdownItemSelection(menu) {
+    async onNavBarDropdownItemSelection(menu) {
         const websiteMenu = this.websiteCustomMenus.get(menu.xmlid);
         if (websiteMenu) {
             return this.websiteCustomMenus.open(menu);
