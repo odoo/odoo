@@ -502,6 +502,9 @@ export class WebsiteFormEditor extends FormEditor {
 
         const formKey = this.activeForm.website_form_key;
         const formInfo = FormEditorRegistry.get(formKey, null);
+        if (!formInfo || !formInfo.fields) {
+            return;
+        }
         formInfo.fields.forEach(field => {
             if (field.required) {
                 // Try to retrieve hidden value in form, else,

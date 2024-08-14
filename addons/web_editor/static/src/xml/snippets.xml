@@ -211,10 +211,10 @@
                 <div class="d-none" id="legacyOptionsLimiter"/>
                 <t t-foreach="[...state.enabledEditorHierarchy].reverse()" t-as="editor" t-key="editor.key">
                     <t t-set="snippetOptions" t-value="editor.getOptions()"/>
-                    <we-customizeblock-options t-if="snippetOptions.length > 0">
+                    <we-customizeblock-options t-if="snippetOptions.length > 0" t-att-class="{ 'd-none': !editor.shouldShow }">
                         <we-title>
                             <span>
-                                [OWL] <t t-out="editor.name"/>
+                                <t t-out="editor.name"/>
                                 <t t-out="editor.extraTitle"/>
                             </span>
                             <we-top-button-group>
@@ -223,6 +223,14 @@
                                         snippetOption="option"
                                         onOptionMounted.bind="onOptionMounted"/>
                                 </t>
+                                <we-button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success"
+                                            title="Duplicate Container"
+                                            aria-label="Duplicate Container"
+                                            t-on-click="editor.onCloneClick"/>
+                                <we-button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger"
+                                            title="Remove Block"
+                                            aria-label="Remove Block"
+                                            t-on-click="editor.onRemoveClick"/>
                             </we-top-button-group>
                         </we-title>
                         <t t-foreach="snippetOptions" t-as="option" t-key="option_index">

@@ -250,6 +250,8 @@ var SnippetEditor = Widget.extend({
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
         });
+        this.onRemoveClick = this._onRemoveClick.bind(this);
+        this.onCloneClick = this._onCloneClick.bind(this);
     },
     /**
      * @override
@@ -751,20 +753,20 @@ var SnippetEditor = Widget.extend({
             const styles = sortBy(Object.values(editor.styles || {}), "__order");
             await focusOrBlur(editor, styles);
         }
-        await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
+        // await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
         // A `d-none` class is added to option sections that have no visible
         // options with `updateOptionsUIVisibility`. If no option section is
         // visible (including the options moved to the toolbar), we prevent
         // the activation of the options.
-        const optionsSectionVisible = await Promise.all(
-            editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility())
-        ).then(editorVisibilityValues => {
-            return editorVisibilityValues.some(editorVisibilityValue => editorVisibilityValue);
-        });
-        if (editorUIsToUpdate.length > 0 && !optionsSectionVisible) {
-            return null;
-        }
-        return this._customize$Elements;
+        // const optionsSectionVisible = await Promise.all(
+        //     editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility())
+        // ).then(editorVisibilityValues => {
+        //     return editorVisibilityValues.some(editorVisibilityValue => editorVisibilityValue);
+        // });
+        // if (editorUIsToUpdate.length > 0 && !optionsSectionVisible) {
+        //     return null;
+        // }
+        // return this._customize$Elements;
     },
     /**
      * Returns the OWL Options templates to mount their widgets.
@@ -851,6 +853,7 @@ var SnippetEditor = Widget.extend({
         this.$optionsSection.toggleClass("d-none", !optionsSectionVisible);
         // Even with a hidden options section, the editor is still considered
         // visible" if it has visible toolbar options.
+        this.shouldShow = optionsSectionVisible || someOptionsVisible;
         return optionsSectionVisible || someOptionsVisible;
     },
     /**
@@ -1008,6 +1011,7 @@ var SnippetEditor = Widget.extend({
                     option.isTopOption = true;
                 }
             } else {
+                return;
                 option = new (options.registry[optionName] || options.Class)(
                     this,
                     val.$el.children(),

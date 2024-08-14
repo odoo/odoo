@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-inherit="website_mass_mailing.s_newsletter_block_template_options" t-inherit-mode="extension">
+    <xpath expr="//WeSelect/WeButton[@selectDataAttribute=&quot;'email'&quot;]" position="after">
+        <WeButton title.translate="SMS Newsletter"
+                   selectTemplate="'website_mass_mailing_sms.s_newsletter_block_sms_template'"
+                   selectDataAttribute="'sms'" name="'sms_opt'">SMS Subscription</WeButton>
+    </xpath>
+</t>
+</templates>

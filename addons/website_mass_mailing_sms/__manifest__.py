@@ -15,6 +15,11 @@ your visitors to subscribe with their phone number.
         'views/snippets/snippets_templates.xml',
         'data/ir_model_data.xml',
     ],
+    'assets': {
+        'website.assets_wysiwyg': [
+            'website_mass_mailing_sms/static/src/snippets/snippets.options.xml',
+        ],
+    },
     'auto_install': True,
     'license': 'LGPL-3',
 }
