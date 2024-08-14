@@ -4,7 +4,6 @@ import json
 from io import StringIO
 from socket import gethostbyname
 from unittest.mock import patch
-from urllib.parse import urlparse
 
 import odoo
 from odoo.http import root, content_disposition
@@ -203,13 +202,13 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_ensure_db1_grant_db(self):
         res = self.multidb_url_open('/test_http/ensure_db?db=db0')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertURLEqual(res.headers.get('Location'), '/test_http/ensure_db?db=db0')
         self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'db0')
 
         # follow the redirection
@@ -236,7 +235,7 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db?db=db1')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertURLEqual(res.headers.get('Location'), '/test_http/ensure_db?db=db1')
 
         new_session = odoo.http.root.session_store.get(res.cookies['session_id'])
         self.assertNotEqual(session.sid, new_session.sid)
@@ -256,8 +255,12 @@ class TestHttpEnsureDb(TestHttpBase):
         res = self.multidb_url_open('/test_http/ensure_db?db=basededonnée1')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
-        self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'basededonnée1')
+        self.assertURLEqual(
+            res.headers.get('Location'),
+            '/test_http/ensure_db?db=basededonnée1')
+        self.assertEqual(
+            odoo.http.root.session_store.get(res.cookies['session_id']).db,
+            'basededonnée1')
 
         # follow the redirection
         res = self.multidb_url_open('/test_http/ensure_db')
