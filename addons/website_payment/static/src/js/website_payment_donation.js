@@ -18,7 +18,10 @@ publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFocusAmountInput(ev) {
-        this.el.querySelector('#other_amount').checked = true;
+        const otherAmountEl = this.el.querySelector("#other_amount");
+        if (otherAmountEl) {
+            otherAmountEl.checked = true;
+        }
     },
     /**
      * @private
