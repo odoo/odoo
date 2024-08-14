@@ -139,7 +139,9 @@ class TestHttpStatic(TestHttpStaticCommon):
         res = self.db_url_open('/web/content/test_http.rickroll')
         res.raise_for_status()
         self.assertEqual(res.status_code, 301)
-        self.assertEqual(res.headers.get('Location'), 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+        self.assertURLEqual(
+            res.headers.get('Location'),
+            'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
     def test_static08_binary_field_attach(self):
         earth = self.env.ref('test_http.earth')
