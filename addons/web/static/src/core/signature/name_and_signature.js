@@ -250,7 +250,6 @@ export class NameAndSignature extends Component {
         const options = {
             width: this.signatureRef.el.width,
             height: this.signatureRef.el.height,
-            yOffset: 30,
         };
         await this.fromDataURL(imgSrc, options);
     }
