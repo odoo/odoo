@@ -21,5 +21,33 @@ if records:
             </field>
         </record>
 
+        <record id="check_paperformat" model="report.paperformat">
+            <field name="name">Check Paper Format</field>
+            <field name="default" eval="False" />
+            <field name="format">custom</field>
+            <field name="page_height">0</field> <!-- Height in mm -->
+            <field name="page_width">0</field> <!-- Width in mm -->
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_print_check" model="ir.actions.report">
+            <field name="name">Defualt (Custom)</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_check_printing.print_check</field>
+            <field name="report_file">account_check_printing.print_check</field>
+            <field name="print_report_name">'Check - %s' % (object.partner_id.name or '',)</field>
+            <field name="paperformat_id" ref="account_check_printing.check_paperformat"/>
+            <field name="attachment">'check_'+(object.partner_id and object.partner_id.name or 'Internal')+'_'+(object.name)+'_top.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
+
     </data>
 </odoo>

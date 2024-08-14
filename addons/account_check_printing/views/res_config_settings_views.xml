@@ -11,17 +11,24 @@
                         <label for="account_check_printing_layout" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_layout" required="True"/>
                     </div>
-                    <div class="row">
+                    <div class="row" invisible="account_check_printing_layout == 'account_check_printing.action_print_check'">
                         <label for="account_check_printing_multi_stub" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_multi_stub" class="w-50"/>
                     </div>
-                    <div class="row">
+                    <div class="row" invisible="account_check_printing_layout == 'account_check_printing.action_print_check'">
                         <label for="account_check_printing_margin_top" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_margin_top"/>
                     </div>
-                    <div class="row">
+                    <div class="row" invisible="account_check_printing_layout == 'account_check_printing.action_print_check'">
                         <label for="account_check_printing_margin_left" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_margin_left"/>
+                    </div>
+                    <div class="row" invisible="account_check_printing_layout != 'account_check_printing.action_print_check'">
+                        <label for="account_default_check_layout_format_id" class="col-lg-4 o_light_label"/>
+                        <field name="account_default_check_layout_format_id"/>
+                    </div>
+                    <div class="mt8" invisible="account_check_printing_layout != 'account_check_printing.action_print_check'">
+                        <button type="action" name="%(account_check_printing.action_check_layout_form)d" string="Check Formats" class="btn-link" icon="oi-arrow-right"/>
                     </div>
                     <div class="row" invisible="country_code != 'CA'">
                         <label for="account_check_printing_margin_right" class="col-lg-4 o_light_label"/>

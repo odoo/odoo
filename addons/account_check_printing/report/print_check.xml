@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <template id="print_check">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-foreach="o._check_get_pages()" t-as="page" class="article" style="zoom: 1.3; font-family: 'Lato', monospace; font-size: 12pt;">
+                    <div t-attf-style="position: absolute; top: #{o.account_check_layout_format_id.check_margin_top}mm; left: #{o.account_check_layout_format_id.check_margin_left}mm; height: #{o.account_check_layout_format_id.check_height}mm; width: #{o.account_check_layout_format_id.check_width}mm; border: 1px solid black; overflow: hidden;">
+                        <t t-if="o.account_check_layout_format_id.is_cross_check">
+                            <div t-attf-style="position: absolute; border-top: 1px solid black; border-bottom: 1px solid black; transform: rotate(315deg); transform-origin: top center; text-align: center; top: #{o.account_check_layout_format_id.cross_check_dist / 1.41}mm; left: #{(o.account_check_layout_format_id.cross_check_dist / 1.41) - (o.account_check_layout_format_id.cross_check_width / 2)}mm; width: #{o.account_check_layout_format_id.cross_check_width}mm; font-size: 6pt;">
+                                <t t-out="o.account_check_layout_format_id.cross_check_content"/>
+                            </div>
+                        </t>
+                        <div t-attf-style="position: absolute; top: #{o.account_check_layout_format_id.check_date_dist_from_top}mm; left: #{o.account_check_layout_format_id.check_date_dist_from_left}mm; letter-spacing: #{o.account_check_layout_format_id.check_date_dist_bet_char}mm;" t-out="o.formatted_date_with_seperator(page['date'])"/>
+                        <div t-attf-style="position: absolute; top: #{o.account_check_layout_format_id.payee_dist_from_top}mm; left: #{o.account_check_layout_format_id.payee_dist_from_left}mm;" t-out="o.get_payee_name(page['partner_name'])"/>
+                        <div t-attf-style="position: absolute; top: #{o.account_check_layout_format_id.aif_dist_from_top}mm; left: #{o.account_check_layout_format_id.aif_dist_from_left}mm;">
+                            <t t-if="o.account_check_layout_format_id.aif_currency_symbol == 'no'">
+                                <t t-out="page['amount'].replace(o.currency_id.symbol, '')"/>
+                            </t>
+                            <t t-else="">
+                                <t t-out="page['amount']"/>
+                            </t>
+                        </div>
+                        <div t-attf-style="position: absolute; top: #{o.account_check_layout_format_id.aiw_line1_dist_from_top}mm; left: #{o.account_check_layout_format_id.aiw_line1_dist_from_left}mm;" t-out="o.get_aiw_lines(page['amount_in_word'])[0]"/>
+                        <div t-attf-style="position: absolute; top: #{o.account_check_layout_format_id.aiw_line2_dist_from_top}mm; left: #{o.account_check_layout_format_id.aiw_line2_dist_from_left}mm;" t-out="o.get_aiw_lines(page['amount_in_word'])[1]"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</data>
+</odoo>

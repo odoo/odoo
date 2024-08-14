@@ -3,8 +3,10 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
-from odoo.tools.misc import formatLang, format_date
+from odoo.tools.misc import formatLang, format_date, file_path
 from odoo.tools.sql import column_exists, create_column
+from datetime import datetime
+from PIL import ImageFont, ImageDraw, Image
 
 INV_LINES_PER_STUB = 9
 
@@ -30,6 +32,7 @@ class AccountPayment(models.Model):
     )
     payment_method_line_id = fields.Many2one(index=True)
     show_check_number = fields.Boolean(compute='_compute_show_check_number')
+    account_check_layout_format_id = fields.Many2one('account.check.layout.format', compute='_compute_account_check_layout_format_id')
 
     @api.depends('payment_method_line_id.code', 'check_number')
     def _compute_show_check_number(self):
@@ -106,6 +109,89 @@ class AccountPayment(models.Model):
                 pay.check_number = sequence.get_next_char(sequence.number_next_actual)
             else:
                 pay.check_number = False
+
+    @api.depends('journal_id')
+    def _compute_account_check_layout_format_id(self):
+        for payment in self:
+            payment.account_check_layout_format_id = payment.company_id.account_default_check_layout_format_id
+            if payment.journal_id.bank_check_printing_layout == 'account_check_printing.action_print_check' and payment.journal_id.bank_check_printing_format:
+                payment.account_check_layout_format_id = payment.journal_id.bank_check_printing_format
+
+    def write(self, vals):
+        result = super().write(vals)
+        self.account_check_layout_format_id._paper_format()
+        return result
+
+    def formatted_date_with_seperator(self, date):
+        lang = self.env['res.lang'].search([('code', '=', self.env.user.lang)], limit=1)
+        date_obj = datetime.strptime(date, lang.date_format)
+        date_seperator = self.account_check_layout_format_id.check_date_seperator or ''
+        day_str = f"{date_obj.day:02}"
+        month_str = f"{date_obj.month:02}"
+        year_str = f"{date_obj.year:04}"
+        year_short_str = f"{date_obj.year % 100:02}"
+
+        date_string = f"{day_str}{date_seperator}{month_str}{date_seperator}{year_str}"
+        if self.account_check_layout_format_id.check_date_format == 'mmddyyyy':
+            date_string = f"{month_str}{date_seperator}{day_str}{date_seperator}{year_str}"
+        elif self.account_check_layout_format_id.check_date_format == 'yyyymmdd':
+            date_string = f"{year_str}{date_seperator}{month_str}{date_seperator}{day_str}"
+        elif self.account_check_layout_format_id.check_date_format == 'mmddyy':
+            date_string = f"{month_str}{date_seperator}{day_str}{date_seperator}{year_short_str}"
+        elif self.account_check_layout_format_id.check_date_format == 'ddmmyy':
+            date_string = f"{day_str}{date_seperator}{month_str}{date_seperator}{year_short_str}"
+        elif self.account_check_layout_format_id.check_date_format == 'yymmdd':
+            date_string = f"{year_short_str}{date_seperator}{month_str}{date_seperator}{day_str}"
+
+        return date_string
+
+    def text_length_in_mm(self, text, dpi):
+        # Create a temporary image to get the drawing context
+        img = Image.new('RGB', (1, 1))  # 1x1 pixel image
+        draw = ImageDraw.Draw(img)
+
+        lato_path = 'web/static/fonts/lato/Lato-Reg-webfont.ttf'
+        # Load the font
+        font = ImageFont.truetype(file_path(lato_path), 12)
+
+        # Get the width of the text
+        text_width = draw.textlength(text, font=font)
+
+        # Convert width from pixels to mm
+        width_in_mm = (text_width / dpi) * 25.4
+
+        return width_in_mm
+
+    def get_aiw_lines(self, amount_in_word):
+        dpi = self.env['report.paperformat'].search([('name', '=', 'Check Paper Format')], limit=1).dpi
+        line1_width = self.account_check_layout_format_id.aiw_line1_width_area
+        line2_width = self.account_check_layout_format_id.aiw_line2_width_area
+        line1, line2 = '', ''
+        words = amount_in_word.rstrip('*').split() if self.account_check_layout_format_id.aiw_currency_name == 'yes' else amount_in_word.rstrip('*').split()[:-1] if amount_in_word.rstrip('*') else ''
+
+        for i in range(len(words)):
+            if self.text_length_in_mm(line1 + words[i] + ' ', dpi) <= line1_width:
+                line1 += words[i] + ' '
+            elif self.text_length_in_mm(line2 + words[i] + ' ', dpi) <= line2_width:
+                line2 += words[i] + ' '
+            else:
+                break
+
+        return [line1, line2]
+
+    def get_payee_name(self, payee_name):
+        dpi = self.env['report.paperformat'].search([('name', '=', 'Check Paper Format')], limit=1).dpi
+        line_width = self.account_check_layout_format_id.payee_width_area
+        line = ''
+        words = payee_name.split() if payee_name else ''
+
+        for i in range(len(words)):
+            if self.text_length_in_mm(line + words[i] + ' ', dpi) <= line_width:
+                line += words[i] + ' '
+            else:
+                break
+
+        return line
 
     def _inverse_check_number(self):
         for payment in self:

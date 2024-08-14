@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="check_layout_format_list" model="ir.ui.view">
+            <field name="name">account.check.layout.format.list</field>
+            <field name="model">account.check.layout.format</field>
+            <field name="arch" type="xml">
+                <list string="Check Formats">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="paper_format"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="check_layout_format_form" model="ir.ui.view">
+            <field name="name">account.check.layout.format.form</field>
+            <field name="model">account.check.layout.format</field>
+            <field name="arch" type="xml">
+                <form>
+                    <p><b>All the measurement must be provided in millimeters (mm)</b></p>
+                    <group>
+                        <group string="General">
+                            <field name="name" placeholder="HDFC Bank Default"/>
+                            <field name="description" />
+                        </group>
+                        <group string="Paper Format and Alignment">
+                            <field name="paper_format" />
+                            <field name="page_width" invisible="paper_format != 'custom'" />
+                            <field name="page_height" invisible="paper_format != 'custom'" />
+                            <field name="check_orientation" />
+                        </group>
+                        <group string="Check Layout and Position">
+                            <field name="check_width"/>
+                            <field name="check_height"/>
+                            <field name="check_position" />
+                            <field name="margin_top" invisible="check_position != 'custom'" />
+                            <field name="margin_left" invisible="check_position != 'custom'" />
+                        </group>
+                        <group string="Cross Check">
+                            <field name="is_cross_check" />
+                            <field name="cross_check_content" invisible='not is_cross_check' />
+                            <field name="cross_check_dist" invisible='not is_cross_check' />
+                        </group>
+                        <group string="Date">
+                            <field name="check_date_dist_from_top"/>
+                            <field name="check_date_dist_from_left"/>
+                            <field name="check_date_format"/>
+                            <field name="check_date_seperator"/>
+                            <field name="check_date_dist_bet_char"/>
+                        </group>
+                        <group string="Payee/Party Name">
+                            <field name="payee_dist_from_top"/>
+                            <field name="payee_dist_from_left"/>
+                            <field name="payee_width_area"/>
+                        </group>
+                        <group string="Amount in Words">
+                            <field name="aiw_line1_dist_from_top"/>
+                            <field name="aiw_line2_dist_from_top"/>
+                            <field name="aiw_line1_dist_from_left"/>
+                            <field name="aiw_line2_dist_from_left"/>
+                            <field name="aiw_line1_width_area"/>
+                            <field name="aiw_line2_width_area"/>
+                            <field name="aiw_currency_name"/>
+                        </group>
+                        <group string="Amount in Figures">
+                            <field name="aif_dist_from_top"/>
+                            <field name="aif_dist_from_left"/>
+                            <field name="aif_currency_symbol"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_check_layout_form" model="ir.actions.act_window">
+            <field name="name">Check Format</field>
+            <field name="res_model">account.check.layout.format</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+    </data>
+</odoo>
