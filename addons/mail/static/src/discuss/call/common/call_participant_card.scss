@@ -2,6 +2,10 @@
     color: white;
     aspect-ratio: 16/9;
 
+    .o-small-Label {
+        font-size: xx-small;
+    }
+
     &.o-isTalking {
         box-shadow: inset 0 0 0 map-get($spacers, 1) var(--discuss-talkingColor, $o-discuss-talkingColor);
 
@@ -46,6 +50,11 @@
         outline-offset: -4px;
     }
 
+    &.o-isTalking-collapsed {
+        outline: 2px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -1px;
+    }
+
     &.o-isInvitation:not(:hover) {
         animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
     }
@@ -71,6 +80,10 @@
 
 .o-discuss-CallParticipantCard-overlay {
     margin: Min(5%, map-get($spacers, 2));
+
+    &.o-isCollapsed {
+        font-size: 0.5rem !important;
+    }
 }
 
 .o-discuss-CallParticipantCard-overlayBottomName {
