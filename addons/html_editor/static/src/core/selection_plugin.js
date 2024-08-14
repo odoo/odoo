@@ -256,6 +256,7 @@ export class SelectionPlugin extends Plugin {
                 direction,
                 textContent: () => (range.collapsed ? "" : selection.toString()),
                 inEditable,
+                intersectsNode: (node) => range.intersectsNode(node),
             };
         }
 
