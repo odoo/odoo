@@ -24,7 +24,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
         :param int product_template_id: The product being checked, as a `product.template` id.
         :param list(int) ptav_ids: The combination of the product, as a list of
-                                   `product.template.attribute.value` ids.
+            `product.template.attribute.value` ids.
         :param bool is_product_configured: Whether the product is already configured.
         :rtype: bool
         :return: Whether the product configurator dialog should be shown.
@@ -166,14 +166,13 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     ):
         """ Override of `sale` to append website data and apply taxes.
 
-        :param recordset product_or_template: The product for which to seek information, as a
-                                              `product.product` or `product.template` record.
-        :param recordset pricelist: The pricelist to use, as a `product.pricelist` record.
-        :param recordset combination: The combination of the product, as a
-                                      `product.template.attribute.value` recordset.
-        :param recordset|None currency: The currency of the transaction, as a `res.currency` record.
+        :param product.product|product.template product_or_template: The product for which to seek
+            information.
+        :param product.pricelist pricelist: The pricelist to use.
+        :param product.template.attribute.value combination: The combination of the product.
+        :param res.currency|None currency: The currency of the transaction.
         :param datetime|None date: The date of the `sale.order`, to compute the price at the right
-                                   rate.
+            rate.
         :param dict kwargs: Locally unused data passed to `super`.
         :rtype: dict
         :return: A dict with the following structure:
@@ -221,14 +220,12 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):
         """ Override of `sale` to apply taxes.
 
-        :param recordset ptav: The product template attribute value for which to compute the extra
-                               price, as a `product.template.attribute.value` record.
-        :param recordset currency: The currency to compute the extra price in, as a `res.currency`
-                                   record.
+        :param product.template.attribute.value ptav: The product template attribute value for which
+            to compute the extra price.
+        :param res.currency currency: The currency to compute the extra price in.
         :param datetime date: The date to compute the extra price at.
-        :param recordset product_or_template: The product on which the product template attribute
-                                              value applies, as a `product.product` or
-                                              `product.template` record.
+        :param product.product|product.template product_or_template: The product on which the
+            product template attribute value applies.
         :rtype: float
         :return: The extra price for the product template attribute value.
         """
@@ -240,12 +237,9 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     def _get_strikethrough_price(self, product_or_template, currency, date, price):
         """ Return the strikethrough price of the product, if there is one.
 
-        :param recordset product_or_template: The product for which to compute the strikethrough
-                                              price, as a `product.product` or `product.template`
-                                              record.
-        :param recordset pricelist: The pricelist to use, as a `product.pricelist` record.
-        :param recordset currency: The currency to compute the strikethrough price in, as a
-                                   `res.currency` record.
+        :param product.product|product.template product_or_template: The product for which to
+            compute the strikethrough price.
+        :param res.currency currency: The currency to compute the strikethrough price in.
         :param datetime date: The date to compute the strikethrough price at.
         :param float price: The actual price of the product.
         :rtype: float|None
@@ -287,10 +281,9 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     def _should_show_product(self, product_template, parent_combination):
         """ Override of `sale` to only show products that can be added to the cart.
 
-        :param recordset product_template: The product being checked, as a `product.template`
-                                           record.
-        :param recordset parent_combination: The combination of the parent product, as a
-                                             `product.template.attribute.value` recordset.
+        :param product.template product_template: The product being checked.
+        :param product.template.attribute.value parent_combination: The combination of the parent
+            product.
         :rtype: bool
         :return: Whether the product should be shown in the configurator.
         """
