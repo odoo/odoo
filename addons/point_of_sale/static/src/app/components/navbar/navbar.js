@@ -9,7 +9,7 @@ import {
     SaleDetailsButton,
     handleSaleDetails,
 } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
@@ -45,6 +45,26 @@ export class Navbar extends Component {
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
+        useExternalListener(document, "keydown", this.handleKeydown.bind(this));
+    }
+
+    handleKeydown(event) {
+        if (
+            !this.ui.isSmall &&
+            this.inputRef &&
+            document.activeElement !== this.inputRef.el &&
+            !this.pos.getOrder()?.getSelectedOrderline() &&
+            this.noOpenDialogs() &&
+            event.key.length == 1
+        ) {
+            this.inputRef.el.focus();
+            this.inputRef.el.value = event.key;
+            event.preventDefault();
+        }
+    }
+
+    noOpenDialogs() {
+        return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
     }
     onClickScan() {
         if (!this.pos.scanning) {
