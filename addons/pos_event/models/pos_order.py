@@ -60,3 +60,9 @@ class PosOrder(models.Model):
             self.env['event.registration'].browse(event_to_cancel).write({'state': 'cancel'})
 
         return res
+
+    def print_event_tickets(self):
+        return self.env.ref('event.action_report_event_registration_full_page_ticket').report_action(self.lines.event_registration_ids)
+
+    def print_event_badges(self):
+        return self.env.ref('event.action_report_event_registration_badge').report_action(self.lines.event_registration_ids)
