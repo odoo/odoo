@@ -23,8 +23,8 @@ export class ReceiptScreen extends Component {
         this.currentOrder = this.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.state = useState({
-            input: partner?.email || "",
-            mode: "email",
+            email: partner?.email || "",
+            phone: partner?.mobile || "",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doPrint = useTrackedAsync(() => this.pos.printReceipt());
@@ -38,21 +38,20 @@ export class ReceiptScreen extends Component {
     _addNewOrder() {
         this.pos.add_new_order();
     }
-    actionSendReceipt() {
-        if (this.state.mode === "email" && this.isValidEmail(this.state.input)) {
-            this.sendReceipt.call({ action: "action_send_receipt", name: "Email" });
+    actionSendReceiptOnEmail() {
+        if (this.isValidEmailAddress(this.state.email)) {
+            this.sendReceipt.call({ action: "action_send_receipt", destination: this.state.email });
         } else {
             this.notification.add(_t("Please enter a valid email address"), {
                 type: "danger",
             });
         }
     }
-    changeMode(mode) {
-        this.state.mode = mode;
-        this.state.input = this.currentOrder.partner_id?.email || this.state.input || "";
+    get isValidEmail() {
+        return this.isValidEmailAddress(this.state.email);
     }
-    get isValidInput() {
-        return this.isValidEmail(this.state.input);
+    get isValidPhone() {
+        return this.isValidPhoneNumber(this.state.phone);
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
@@ -93,7 +92,7 @@ export class ReceiptScreen extends Component {
     isResumeVisible() {
         return this.pos.get_open_orders().length > 0;
     }
-    async _sendReceiptToCustomer({ action }) {
+    async _sendReceiptToCustomer({ action, destination }) {
         const order = this.currentOrder;
         if (typeof order.id !== "number") {
             this.dialog.add(ConfirmationDialog, {
@@ -112,10 +111,13 @@ export class ReceiptScreen extends Component {
             },
             { addClass: "pos-receipt-print" }
         );
-        await this.pos.data.call("pos.order", action, [[order.id], this.state.input, ticketImage]);
+        await this.pos.data.call("pos.order", action, [[order.id], destination, ticketImage]);
     }
-    isValidEmail(email) {
+    isValidEmailAddress(email) {
         return email && /^.+@.+$/.test(email);
+    }
+    isValidPhoneNumber(x) {
+        return x && /^\+?[()\d\s-.]{8,18}$/.test(x);
     }
 }
 
