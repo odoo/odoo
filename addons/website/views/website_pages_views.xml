@@ -28,38 +28,67 @@
     </field>
 </record>
 
-<record id="website_page_properties_view_form" model="ir.ui.view">
-    <field name="name">website.page.properties.form.view</field>
-    <field name="model">website.page</field>
+<record id="website_page_properties_base_view_form" model="ir.ui.view">
+    <field name="name">website.page.properties.base.form.view</field>
+    <field name="model">website.page.properties.base</field>
     <field name="arch" type="xml">
         <form js_class="page_properties_dialog_form">
             <group class="mt-4">
-                <field name="name" string="Page Title" placeholder="e.g. Home Page"/>
-                <field name="website_id" invisible="1"/>
-                <field name="url" string="Page URL" widget="page_url"/>
-
                 <label for="is_in_menu" string="In Menu"/>
                 <div class="o_row">
-                    <field name="is_in_menu" widget="boolean_toggle"/>
+                    <field name="is_in_menu" widget="boolean_toggle" options="{'autosave': False}"/>
                     <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
                 </div>
 
-                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
-                <field name="is_published" string="Published" widget="boolean_toggle"/>
-                <field name="date_publish" widget="datetime"/>
-
-                <label for="website_indexed" string="Indexed" invisible="not is_published"/>
-                <div class="o_row" invisible="not is_published">
-                    <field name="website_indexed" widget="boolean_toggle" help="Hide this page from search results"/>
-                    <span invisible="website_indexed">Won't appear in search engine results</span>
-                </div>
-
-                <field name="visibility"/>
-                <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
-                <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
-                <field name="is_new_page_template" string="Is a Template" widget="boolean_toggle"/>
+                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle" options="{'autosave': False}"/>
+                <field name="is_published" string="Published" widget="boolean_toggle" options="{'autosave': False}" invisible="not can_publish"/>
             </group>
         </form>
+    </field>
+</record>
+
+<record id="website_page_properties_view_form" model="ir.ui.view">
+    <field name="name">website.page.properties.form.view</field>
+    <field name="inherit_id" ref="website_page_properties_base_view_form"/>
+    <field name="model">website.page.properties</field>
+    <field name="arch" type="xml">
+        <xpath expr="//group/*" position="before"> <!-- Top -->
+            <field name="name" string="Page Title" placeholder="e.g. Home Page"/>
+            <field name="website_id" invisible="1"/>
+
+            <label for="url" string="Page URL"/>
+            <div class="o_col">
+                <field name="url" widget="page_url"/>
+                <div class="my-4" invisible="url == old_url">
+                    <div class="o_row">
+                        <field name="redirect_old_url" widget="boolean_toggle" options="{'autosave': False}"/>
+                        <label for="redirect_old_url" string="Redirect Old URL"/>
+                    </div>
+                    <div class="o_row">
+                        <widget name="form_page_dependencies" resModel="website.page" mode="popover"/>
+                    </div>
+                    <div class="o_row mt-4" invisible="not redirect_old_url">
+                        <label for="redirect_type" string="Type"/>
+                        <field name="redirect_type"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//group/field[@name='is_published']" position="after">
+            <field name="date_publish" widget="datetime"/>
+        </xpath>
+        <xpath expr="//group/*[last()]" position="after"> <!-- Bottom -->
+            <label for="website_indexed" string="Indexed"/>
+            <div class="o_row">
+                <field name="website_indexed" widget="boolean_toggle" options="{'autosave': False}" help="Hide this page from search results"/>
+                <span invisible="website_indexed">Won't appear in search engine results</span>
+            </div>
+
+            <field name="visibility"/>
+            <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
+            <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
+            <field name="is_new_page_template" string="Is a Template" widget="boolean_toggle" options="{'autosave': False}"/>
+        </xpath>
     </field>
 </record>
 

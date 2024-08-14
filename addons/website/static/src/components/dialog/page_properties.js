@@ -3,10 +3,11 @@ import { _t } from "@web/core/l10n/translation";
 import {useService, useAutofocus} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
 import {WebsiteDialog} from './dialog';
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from '@web/views/form/form_view';
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, useEffect, useState, xml, useRef } from "@odoo/owl";
+import { Component, useEffect, useRef, useState, xml } from "@odoo/owl";
 import { FormController } from '@web/views/form/form_controller';
 import { registry } from "@web/core/registry";
 
@@ -43,11 +44,15 @@ export class PageDependencies extends Component {
         });
     }
 
+    async getResIds() {
+        return this.props.resIds;
+    }
+
     async fetchDependencies() {
         this.state.dependencies = await this.orm.call(
             'website',
             'search_url_dependencies',
-            [this.props.resModel, this.props.resIds],
+            [this.props.resModel, await this.getResIds()],
         );
     }
 
@@ -65,6 +70,37 @@ export class PageDependencies extends Component {
         }).popover('toggle');
     }
 }
+
+export class FormPageDependencies extends PageDependencies {
+    static props = {
+        ...standardFieldProps,
+        ...PageDependencies.props,
+        resIds: { type: Array, optional: true },
+    };
+
+    async getResIds() {
+        const records = await this.orm.read(
+            this.props.record.resModel,
+            [this.props.record.resId],
+            ["target_model_id"],
+        );
+        return records.map((record) => record.target_model_id[0]);
+    }
+}
+
+export const formPageDependenciesWidget = {
+    component: FormPageDependencies,
+    extractProps: ({ attrs }) => {
+        const { mode, name, resModel, resIds } = attrs;
+        return {
+            mode,
+            name: name || "",
+            resModel,
+            resIds,
+        };
+    },
+};
+registry.category("view_widgets").add("form_page_dependencies", formPageDependenciesWidget);
 
 export class DeletePageDialog extends Component {
     static template = "website.DeletePageDialog";
@@ -137,8 +173,8 @@ export class DuplicatePageDialog extends Component {
 export class PagePropertiesFormController extends FormController {
     static props = {
         ...FormController.props,
-        clonePage: Function,
-        deletePage: Function,
+        clonePage: { type: Function, optional: true },
+        deletePage: { type: Function, optional: true },
     };
 }
 
@@ -156,12 +192,8 @@ export class PagePropertiesDialog extends FormViewDialog {
 
     static defaultProps = {
         ...FormViewDialog.defaultProps,
-        resModel: "website.page",
         title: _t("Page Properties"),
         size: "md",
-        context: {
-            form_view_ref: "website.website_page_properties_view_form",
-        },
         onClose: () => {},
     };
 
@@ -174,14 +206,46 @@ export class PagePropertiesDialog extends FormViewDialog {
         this.viewProps = {
             ...this.viewProps,
             resId: this.resId,
-            buttonTemplate: "website.PagePropertiesDialogButtons",
-            clonePage: this.clonePage.bind(this),
-            deletePage: this.deletePage.bind(this),
+            resModel: this.resModel,
+            context: Object.assign(
+                {
+                    form_view_ref: this.isPage
+                        ? "website.website_page_properties_view_form"
+                        : "website.website_page_properties_base_view_form",
+                },
+                this.viewProps.context,
+            ),
+            ...(this.isPage
+                ? {
+                      buttonTemplate: "website.PagePropertiesDialogButtons",
+                      clonePage: this.clonePage.bind(this),
+                      deletePage: this.deletePage.bind(this),
+                  }
+                : {}),
         };
     }
 
     get resId() {
-        return this.props.resId || (this.website.currentWebsite && this.website.currentWebsite.metadata.mainObject.id);
+        return this.props.resId;
+    }
+
+    get resModel() {
+        if (this.props.resModel) {
+            return this.props.resModel;
+        }
+        return this.isPage ? "website.page.properties" : "website.page.properties.base";
+    }
+
+    get targetId() {
+        return this.website.currentWebsite?.metadata.mainObject.id;
+    }
+
+    get targetModel() {
+        return this.website.currentWebsite?.metadata.mainObject.model;
+    }
+
+    get isPage() {
+        return this.targetModel === "website.page";
     }
 
     clonePage() {
