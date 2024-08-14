@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { HootError, generateHash, isOfType, normalize } from "../hoot_utils";
+import { generateHash, HootError, isOfType, normalize } from "../hoot_utils";
 import { Tag } from "./tag";
 
 /**
