@@ -303,3 +303,50 @@ registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add('tour_detailed_op_2_sm_save', { test: true, steps: () => [
+    //  set lot on move 1 sml
+    {
+        trigger: "tr:contains(Product Lot 1) > td > .fa-list",
+        run: 'click',
+    },
+    {
+        // click table cell to make input cell appear
+        trigger: '.modal-body tbody tr:first-child td.o_field_cell[name=lot_name]',
+        run: 'click',
+    },
+    {
+        trigger: ".o_field_widget[name=lot_name] input",
+        run: 'text lot1',
+    },
+    {
+        trigger: ".o_form_button_save",
+        run: 'click',
+    },
+    // set lot on move 2 sml
+    {
+        trigger: "tr:contains(Product Lot 2) > td > .fa-list",
+        run: 'click',
+    },
+    {
+        trigger: '.modal-body tbody tr:first-child td.o_field_cell[name=lot_name]',
+        run: 'click',
+    },
+    {
+        trigger: ".o_field_widget[name=lot_name] input",
+        run: 'text lot2',
+    },
+    {
+        trigger: ".o_form_button_save",
+        run: 'click',
+    },
+    // Validate and Check
+    {
+        trigger: "button:contains(Validate)",
+        run: 'click',
+    },
+    {
+        trigger: ".o_control_panel_actions button:contains('Traceability')",
+        isCheck: true,
+    },
+]});

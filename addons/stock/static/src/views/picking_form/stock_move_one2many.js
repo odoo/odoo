@@ -51,6 +51,8 @@ export class StockMoveX2ManyField extends X2ManyField {
             const dirty = await record.isDirty();
             if (await record._parentRecord.isDirty()){
                 await record._parentRecord.save({ reload: true });
+                // sync up the X2ManyField's record with the new picking's sub datapoints created by the save
+                record = record._parentRecord.data[this.props.name].records.find(e => e.resId === record.resId);
             }
             if (dirty && 'quantity' in record._changes) {
                 await record._parentRecord.save({ reload: true });

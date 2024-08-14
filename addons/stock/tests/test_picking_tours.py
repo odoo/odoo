@@ -216,3 +216,34 @@ class TestStockPickingTour(HttpCase):
         url = self._get_picking_url(picking.id)
         self.start_tour(url, 'test_onchange_twice_lot_ids', login='admin', step_delay=100)
         self.assertRecordValues(picking.move_ids, [{"quantity": 1, "lot_ids": lots[2].ids}])
+
+    def test_detailed_op_2_sm_save(self):
+        # set up a receipt for 2 products tracked by lot
+        product_lot1, product_lot2 = self.env['product.product'].create([
+            {
+                'name': f'Product Lot {i}',
+                'type': 'product',
+                'tracking': 'lot',
+            }
+            for i in (1, 2)
+        ])
+
+        self.receipt.write({'move_ids': [
+            Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 1.0,
+                'location_id': self.receipt.location_id.id,
+                'location_dest_id': self.receipt.location_dest_id.id,
+            })
+            for product in (product_lot1, product_lot2)]
+        })
+        self.receipt.action_confirm()
+
+        url = self._get_picking_url(self.receipt.id)
+        # tour: set lots for the move_lines of both products, then validate
+        self.start_tour(url, 'tour_detailed_op_2_sm_save', login='admin', timeout=60)
+        self.assertEqual(
+            self.receipt.move_ids.move_line_ids.mapped('lot_name'),
+            ['lot1', 'lot2']
+        )
