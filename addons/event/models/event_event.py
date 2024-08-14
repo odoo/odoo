@@ -4,9 +4,12 @@
 import logging
 import pytz
 import textwrap
+import re
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from markupsafe import escape
+from urllib.parse import urlparse
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
@@ -231,6 +234,11 @@ class EventEvent(models.Model):
         compute_sudo=True)
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
+    event_url = fields.Char(
+        string='Online Event URL', compute='_compute_event_url', readonly=False, store=True,
+        help="Link where the online event will take place.",
+    )
+    event_share_url = fields.Char(string='Event Share URL', compute='_compute_event_share_url')
     lang = fields.Selection(_lang_get, string='Language',
         help="All the communication emails sent to attendees will be translated in this language.")
     # ticket reports
@@ -259,6 +267,11 @@ class EventEvent(models.Model):
         use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
         for record in self:
             record.use_barcode = use_barcode
+
+    def _compute_event_share_url(self):
+        """Get the URL to use to redirect to the event, overriden in website for fallback."""
+        for event in self:
+            event.event_share_url = event.event_url
 
     @api.depends('event_type_id')
     def _compute_question_ids(self):
@@ -597,6 +610,11 @@ class EventEvent(models.Model):
             else:
                 event.address_inline = event.address_id.name or ''
 
+    @api.depends('address_id')
+    def _compute_event_url(self):
+        """Reset url field as it should only be used for events with no physical location."""
+        self.filtered('address_id').event_url = ''
+
     @api.constrains('seats_max', 'seats_limited', 'registration_ids')
     def _check_seats_availability(self, minimal_availability=0):
         sold_out_events = []
@@ -614,6 +632,21 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+
+    @api.constrains('event_url')
+    def _check_event_url(self):
+        for event in self.filtered('event_url'):
+            url = urlparse(event.event_url)
+            if not (url.scheme and url.netloc):
+                raise ValidationError(_('Please enter a valid event URL.'))
+
+    @api.onchange('event_url')
+    def _onchange_event_url(self):
+        """Correct the url by adding scheme if it is missing."""
+        for event in self.filtered('event_url'):
+            parsed_url = urlparse(event.event_url)
+            if parsed_url.scheme not in ('http', 'https'):
+                event.event_url = 'https://' + event.event_url
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -704,14 +737,17 @@ class EventEvent(models.Model):
     def _get_external_description(self):
         """
         Description of the event shortened to maximum 1900 characters to
-        leave some space for addition by sub-modules, such as the even link.
+        leave some space for addition by sub-modules.
         Meant to be used for external content (ics/icalc/Gcal).
 
         Reference Docs for URL limit -: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
         """
         self.ensure_one()
-        description = html_to_inner_content(self.description)
-        return textwrap.shorten(description, 1900)
+        description = ''
+        if self.event_share_url:
+            description = f'<a href="{escape(self.event_share_url)}">{escape(self.name)}</a>\n'
+        description += textwrap.shorten(html_to_inner_content(self.description), 1900)
+        return description
 
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
