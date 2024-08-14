@@ -25,10 +25,8 @@ class Page(models.Model):
     website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
-    # This is needed to be able to control if page is a menu in page properties.
-    # TODO this should be reviewed entirely so that we use a transient model.
-    is_in_menu = fields.Boolean(compute='_compute_website_menu', inverse='_inverse_website_menu')
-    is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_set_is_homepage', string='Homepage')
+    is_in_menu = fields.Boolean(compute='_compute_website_menu')
+    is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
 
@@ -48,16 +46,6 @@ class Page(models.Model):
         for page in self:
             page.is_homepage = page.url == (website.homepage_url or page.website_id == website and '/')
 
-    def _set_is_homepage(self):
-        website = self.env['website'].get_current_website()
-        for page in self:
-            if page.is_homepage:
-                if website.homepage_url != page.url:
-                    website.homepage_url = page.url
-            else:
-                if website.homepage_url == page.url:
-                    website.homepage_url = ''
-
     def _compute_visible(self):
         for page in self:
             page.is_visible = page.website_published and (
@@ -68,21 +56,6 @@ class Page(models.Model):
     def _compute_website_menu(self):
         for page in self:
             page.is_in_menu = bool(page.menu_ids)
-
-    def _inverse_website_menu(self):
-        for page in self:
-            if page.is_in_menu:
-                if not page.menu_ids:
-                    self.env['website.menu'].create({
-                        'name': page.name,
-                        'url': page.url,
-                        'page_id': page.id,
-                        'parent_id': page.website_id.menu_id.id,
-                        'website_id': page.website_id.id,
-                    })
-            elif page.menu_ids:
-                # If the page is no longer in menu, we should remove its website_menu
-                page.menu_ids.unlink()
 
     # This update was added to make sure the mixin calculations are correct
     # (page.website_url > page.url).
@@ -169,24 +142,10 @@ class Page(models.Model):
             # If URL has been edited, slug it
             if 'url' in vals:
                 url = vals['url'] or ''
-                redirect_old_url = redirect_type = None
-                # TODO This should be done another way after the backend/frontend merge
-                if isinstance(url, dict):
-                    redirect_old_url = url.get('redirect_old_url')
-                    redirect_type = url.get('redirect_type')
-                    url = url.get('url')
                 url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
                 if page.url != url:
                     url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
                     page.menu_ids.write({'url': url})
-                    if redirect_old_url:
-                        self.env['website.rewrite'].create({
-                            'name': vals.get('name') or page.name,
-                            'redirect_type': redirect_type,
-                            'url_from': page.url,
-                            'url_to': url,
-                            'website_id': website_id,
-                        })
                     # Sync website's homepage URL
                     website = self.env['website'].get_current_website()
                     page_url_normalized = {'homepage_url': page.url}

@@ -20,13 +20,13 @@ export const websiteCustomMenus = {
             get(xmlId) {
                 return registry.category('website_custom_menus').get(xmlId, null);
             },
-            open(customMenu) {
+            async open(customMenu) {
                 const menuConfig = this.get(customMenu.xmlid);
                 if (menuConfig.openWidget) {
                     return menuConfig.openWidget(services);
                 }
                 const menuProps = {
-                    ...(menuConfig.getProps && menuConfig.getProps(services)),
+                    ...(menuConfig.getProps && (await menuConfig.getProps(services))),
                     // Values on 'dynamicProps' are retrieved after the content is loaded (e.g. id of
                     // the content menu to be edited).
                     ...customMenu.dynamicProps,
@@ -98,15 +98,36 @@ registry.category('website_custom_menus').add('website.menu_page_properties', {
     Component: PagePropertiesDialog,
     isDisplayed: (env) => env.services.website.currentWebsite
         && env.services.website.isDesigner
-        && !!env.services.website.currentWebsite.metadata.mainObject
-        && env.services.website.currentWebsite.metadata.mainObject.model === 'website.page',
-    getProps: (services) => ({
-        onRecordSaved: (record) => {
-            return services.orm.read('website.page', [record.resId], ['url']).then(res => {
-                services.website.goToWebsite({websiteId: record.data.website_id[0], path: res[0]['url']});
-            });
-        },
-    })
+        && !!env.services.website.currentWebsite.metadata.mainObject,
+    getProps: async ({ orm, website }) => {
+        const mainObject = website.currentWebsite.metadata.mainObject;
+        const isPage = mainObject.model === "website.page";
+        const model = isPage ? "website.page.properties" : "website.page.properties.base";
+        return {
+            resId: await orm.call(model, "create", [
+                isPage
+                    ? {
+                          target_model_id: mainObject.id,
+                          website_id: website.currentWebsite.id,
+                      }
+                    : {
+                          target_model_id: `${mainObject.model},${mainObject.id}`,
+                          url: window.location.pathname,
+                          website_id: website.currentWebsite.id,
+                      },
+            ]),
+            resModel: model,
+            onRecordSaved: async (record) => {
+                const page = isPage
+                    ? (await orm.read("website.page", [mainObject.id], ["website_id", "url"]))[0]
+                    : undefined;
+                return website.goToWebsite({
+                    websiteId: page?.website_id?.[0] ?? website.currentWebsite.id,
+                    path: page?.url ?? website.currentWebsite.metadata.path,
+                });
+            },
+        };
+    },
 });
 registry.category('website_custom_menus').add('website.custom_menu_edit_menu', {
     Component: EditMenuDialog,
