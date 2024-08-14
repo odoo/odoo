@@ -81,6 +81,7 @@ export class HtmlField extends Component {
                 this.state.containsComplexHTML = computeContainsComplexHTML(
                     record.data[this.props.name]
                 );
+                this.lastValue = record.data[this.props.name].toString();
             }
         });
         useRecordObserver((record) => {
