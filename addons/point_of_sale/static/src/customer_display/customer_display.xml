@@ -15,9 +15,14 @@
                             'o_customer_display_orderline mx-2 bg-white fs-3 rounded-0': true,
                         }"
                     />
+                    <t t-set-slot="emptyCart">
+                        <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+                            <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Welcome.</h1>
+                        </div>
+                    </t>
                 </OrderWidget>
-                <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100 text-muted">
-                    <h3 class="w-75 mt-2 text-center">Thank you</h3>
+                <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+                    <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Thank you.</h1>
                 </div>
                 <div t-if="order.amount and !order.finalized" class="py-3 px-4 bg-view border-top">
                     <div class="d-flex flex-column justify-content-center gap-1 w-100 w-sm-50 ms-auto">
@@ -34,6 +39,9 @@
                             <div class="col text-end" t-esc="order.change"/>
                         </div>
                     </div>
+                </div>
+                <div class="d-flex justify-content-center" t-att-class="{ 'bg-view': order.amount and !order.finalized }">
+                    <div class=" bottom-0 mb-4 d-flex align-items-center ps-3 pe-2 py-1 rounded-3 small">Powered by <OdooLogo style="'width: 3rem;'"/></div>
                 </div>
             </div>
         </div>
