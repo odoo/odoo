@@ -4126,17 +4126,21 @@ class AccountMove(models.Model):
 
         return reverse_moves
 
+    def _can_be_unlinked(self):
+        self.ensure_one()
+        lock_date = self.company_id._get_user_fiscal_lock_date()
+        return not self.inalterable_hash and self.date > lock_date
+
     def _unlink_or_reverse(self):
         if not self:
             return
         to_reverse = self.env['account.move']
         to_unlink = self.env['account.move']
         for move in self:
-            lock_date = move.company_id._get_user_fiscal_lock_date()
-            if move.inalterable_hash or move.date <= lock_date:
-                to_reverse += move
-            else:
+            if move._can_be_unlinked():
                 to_unlink += move
+            else:
+                to_reverse += move
         to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
         return to_reverse._reverse_moves(cancel=True)
