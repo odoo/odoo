@@ -97,6 +97,7 @@ export function useActiveActions({
         // We need to take care of tags "control" and "create" to set create stuff
         result.create = !readonly && evalAction("create");
         result.createEdit = !readonly && result.create && crudOptions.createEdit; // always a boolean
+        result.edit = crudOptions.edit;
         result.delete = !readonly && evalAction("delete");
 
         if (isMany2Many) {
@@ -701,6 +702,7 @@ export function useOpenX2ManyRecord({
 }) {
     const viewService = useService("view");
     const env = useEnv();
+    const component = useComponent();
 
     const addDialog = useOwnedDialogs();
     const viewMode = activeField.viewMode;
@@ -719,6 +721,9 @@ export function useOpenX2ManyRecord({
             viewService,
             env,
         });
+        if (!component.props.record.isInEdition) {
+            archInfo.activeActions.edit = false;
+        }
 
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, _fields);
 

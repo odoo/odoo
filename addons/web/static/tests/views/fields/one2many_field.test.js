@@ -11493,6 +11493,58 @@ test("toggle boolean in o2m with the formView in edition", async () => {
     expect.verifySteps(["onchange partner"]);
 });
 
+test("Boolean toggle in x2many must not be editable if form is not editable", async () => {
+    Turtle._views = {
+        [["form", false]]: /* xml */ `
+            <form>
+                <field name="turtle_bar" widget="boolean_toggle"/>
+                <field name="partner_ids">
+                    <tree>
+                        <field name="bar" widget="boolean_toggle"/>
+                    </tree>
+                </field>
+            </form>
+        `,
+    };
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+                <form edit="0">
+                    <field name="turtles">
+                        <tree>
+                            <field name="turtle_bar" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                </form>`,
+        resId: 1,
+    });
+
+    expect(".o_form_renderer").toHaveClass("o_form_readonly");
+    const booleanToggle = queryOne(
+        "[name='turtles'] .o_data_row [name='turtle_bar'] .o_boolean_toggle input"
+    );
+    expect(booleanToggle).not.toBeEnabled({
+        message: "The boolean toggle should be disabled when the form is readonly",
+    });
+
+    await contains(".o_data_cell").click();
+    expect(".modal-dialog").toHaveCount(1);
+    expect(".o_form_renderer").toHaveClass("o_form_readonly");
+    const booleanToggleInDialog = queryOne(".modal [name='turtle_bar'] input");
+    expect(booleanToggleInDialog).not.toBeEnabled({
+        message:
+            "The boolean toggle in the form view dialog should be disabled when the main form is readonly",
+    });
+    expect(
+        ".modal [name='partner_ids'] .o_data_row [name='bar'] .o_boolean_toggle input"
+    ).not.toBeEnabled({
+        message:
+            "The boolean toggle in x2m in the form view dialog should be disabled when the main form is readonly",
+    });
+});
+
 test("create a new record with an x2m invisible", async () => {
     onRpc("onchange", (args) => {
         expect(args.args[3]).toEqual({
