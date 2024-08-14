@@ -419,9 +419,9 @@ class ResCompany(models.Model):
         for account in accounts:
             account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
-    def _get_fiscalyear_lock_statement_lines_redirect_action(self, unreconciled_statement_lines):
-        """ Get the action redirecting to the statement lines that are not already reconciled when setting a fiscal
-        year lock date.
+    def _get_unreconciled_statement_lines_redirect_action(self, unreconciled_statement_lines):
+        """ Get the action redirecting to the statement lines that are not already reconciled.
+        It can i.e. be used when setting a fiscal year lock date or hashing all entries until a certain date.
 
         :param unreconciled_statement_lines: The statement lines.
         :return: A dictionary representing a window action.
@@ -444,6 +444,14 @@ class ResCompany(models.Model):
                 'domain': [('id', 'in', unreconciled_statement_lines.ids)],
             })
         return action
+
+    def _get_unreconciled_statement_lines_domain(self, last_date):
+        return [
+            ('company_id', 'child_of', self.ids),
+            ('is_reconciled', '=', False),
+            ('date', '<=', last_date),
+            ('move_id.state', 'in', ('draft', 'posted')),
+        ]
 
     def _validate_locks(self, values):
         """Check that the lock date changes are valid.
@@ -491,16 +499,13 @@ class ResCompany(models.Model):
 
         # Check for unreconciled bank statement lines
         if fiscal_lock_date:
-            unreconciled_statement_lines = self.env['account.bank.statement.line'].search([
-                ('company_id', 'child_of', self.ids),
-                ('is_reconciled', '=', False),
-                ('date', '<=', fiscal_lock_date),
-                ('move_id.state', 'in', ('draft', 'posted')),
-            ])
+            unreconciled_statement_lines = self.env['account.bank.statement.line'].search(
+                self._get_unreconciled_statement_lines_domain(fiscal_lock_date)
+            )
             if unreconciled_statement_lines:
                 error_msg = _("There are still unreconciled bank statement lines in the period you want to lock."
                             "You should either reconcile or delete them.")
-                action_error = self._get_fiscalyear_lock_statement_lines_redirect_action(unreconciled_statement_lines)
+                action_error = self._get_unreconciled_statement_lines_redirect_action(unreconciled_statement_lines)
                 raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
 
     def _get_user_lock_date(self, soft_lock_date_field, ignore_exceptions=False):
@@ -871,7 +876,7 @@ class ResCompany(models.Model):
         return self.env.ref('account.action_report_account_hash_integrity').report_action(self.id)
 
     def _check_hash_integrity(self):
-        """Checks that all posted moves have still the same data as when they were posted
+        """Checks that all hashed moves have still the same data as when they were hashed
         and raises an error with the result.
         """
         if not self.env.user.has_group('account.group_account_user'):
@@ -881,15 +886,7 @@ class ResCompany(models.Model):
         results = []
 
         for journal in journals:
-            if not journal.restrict_mode_hash_table:
-                results.append({
-                    'journal_name': journal.name,
-                    'restricted_by_hash_table': 'X',
-                    'status': 'not_restricted',
-                    'msg_cover': _('This journal is not restricted'),
-                })
-                continue
-
+            restricted_by_hash_table_flag = 'V' if journal.restrict_mode_hash_table else 'X'
             # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
             # This is required in order to generate consistent hashes.
             # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
@@ -913,7 +910,7 @@ class ResCompany(models.Model):
                 if not moves and not last_move:
                     results.append({
                         'journal_name': journal.name,
-                        'restricted_by_hash_table': 'V',
+                        'restricted_by_hash_table': restricted_by_hash_table_flag,
                         'status': 'no_data',
                         'msg_cover': _('There is no journal entry flagged for accounting data inalterability yet.'),
                     })
@@ -943,7 +940,7 @@ class ResCompany(models.Model):
             for prefix, prefix_result in prefix2result.items():
                 if corrupted_move := prefix_result['corrupted_move']:
                     results.append({
-                        'restricted_by_hash_table': 'V',
+                        'restricted_by_hash_table': restricted_by_hash_table_flag,
                         'journal_name': f"{journal.name} ({prefix}...)",
                         'status': 'corrupted',
                         'msg_cover': _(
@@ -954,7 +951,7 @@ class ResCompany(models.Model):
                     })
                 else:
                     results.append({
-                        'restricted_by_hash_table': 'V',
+                        'restricted_by_hash_table': restricted_by_hash_table_flag,
                         'journal_name': f"{journal.name} ({prefix}...)",
                         'status': 'verified',
                         'msg_cover': _("Entries are correctly hashed"),
