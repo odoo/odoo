@@ -892,6 +892,7 @@ class Message(models.Model):
         store: Store,
         /,
         *,
+        fields=None,
         format_reply=True,
         msg_vals=None,
         for_current_user=False,
@@ -918,6 +919,18 @@ class Message(models.Model):
             them. It lessen query count in some optimized use cases.
             Only applicable if ``add_followers`` is True.
         """
+        if fields is None:
+            fields = [
+                "body",
+                "create_date",
+                "date",
+                "message_type",
+                "model",  # keep for iOS app
+                "pinned_at",
+                "res_id",  # keep for iOS app
+                "subject",
+                "write_date",
+            ]
         com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
         # fetch scheduled notifications once, only if msg_vals is not given to
@@ -971,20 +984,7 @@ class Message(models.Model):
             store.add(record, thread_data, as_thread=True)
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
-            data = message._read_format(
-                [
-                    "body",
-                    "create_date",
-                    "date",
-                    "message_type",
-                    "model",  # keep for iOS app
-                    "pinned_at",
-                    "res_id",  # keep for iOS app
-                    "subject",
-                    "write_date",
-                ],
-                load=False,
-            )[0]
+            data = message._read_format(fields, load=False)[0]
             record = record_by_message.get(message)
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name

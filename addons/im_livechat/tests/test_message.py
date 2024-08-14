@@ -5,11 +5,12 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.exceptions import AccessError
 from odoo.tests.common import users, tagged, HttpCase
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
 @tagged('post_install', '-at_install')
-class TestImLivechatMessage(HttpCase):
+class TestImLivechatMessage(HttpCase, MailCommon):
     def setUp(self):
         super().setUp()
         self.password = 'Pl1bhD@2!kXZ'
@@ -82,7 +83,7 @@ class TestImLivechatMessage(HttpCase):
         self.assertEqual(
             Store(message, for_current_user=True).get_result(),
             {
-                "mail.message": [
+                "mail.message": self._filter_messages_fields(
                     {
                         "attachments": [],
                         "author": {"id": self.users[1].partner_id.id, "type": "partner"},
@@ -103,12 +104,7 @@ class TestImLivechatMessage(HttpCase):
                         "thread": {"id": channel_livechat_1.id, "model": "discuss.channel"},
                         "parentMessage": False,
                         "pinned_at": False,
-                        "rating": {
-                            "id": record_rating.id,
-                            "ratingImageUrl": record_rating.rating_image_url,
-                            "ratingText": "top",
-                            "ratingValue": 5.0
-                        },
+                        "rating_id": {"id": record_rating.id},
                         "recipients": [],
                         "record_name": "test1 Ernest Employee",
                         "res_id": channel_livechat_1.id,
@@ -118,8 +114,8 @@ class TestImLivechatMessage(HttpCase):
                         "subtype_description": False,
                         "trackingValues": [],
                     },
-                ],
-                "mail.thread": [
+                ),
+                "mail.thread": self._filter_threads_fields(
                     {
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
@@ -127,8 +123,16 @@ class TestImLivechatMessage(HttpCase):
                         "rating_avg": 5.0,
                         "rating_count": 1,
                     },
+                ),
+                "rating.rating": [
+                    {
+                        "id": record_rating.id,
+                        "rating": 5.0,
+                        "rating_image_url": record_rating.rating_image_url,
+                        "rating_text": "top",
+                    },
                 ],
-                "res.partner": [
+                "res.partner": self._filter_partners_fields(
                     {
                         "id": self.users[1].partner_id.id,
                         "is_company": False,
@@ -137,6 +141,6 @@ class TestImLivechatMessage(HttpCase):
                         "userId": self.users[1].id,
                         "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
-                ],
+                ),
             },
         )
