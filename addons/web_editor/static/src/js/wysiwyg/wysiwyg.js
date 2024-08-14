@@ -1706,15 +1706,9 @@ export class Wysiwyg extends Component {
             }, {
                 onPositioned: (popover) => {
                     restoreSelection();
-                    // Set the 'parentContextRect' option in 'options' when
-                    // 'getContextFromParentRect' is available. This facilitates
-                    // element positioning relative to a parent or reference
-                    // rectangle.
-                    const options = {};
-                    if (this.options.getContextFromParentRect) {
-                        options['parentContextRect'] = this.options.getContextFromParentRect();
-                    }
-                    const rangePosition = getRangePosition(popover, this.options.document, options);
+                    const rangePosition = getRangePosition(popover, this.options.document, {
+                        getContextFromParentRect: this.options.getContextFromParentRect,
+                    });
                     popover.style.top = rangePosition.top + 'px';
                     popover.style.left = rangePosition.left + 'px';
                     const oInputBox = popover.querySelector('input');
