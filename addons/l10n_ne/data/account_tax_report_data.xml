@@ -233,7 +233,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
-                                        <field name="subformula">editable;rounding=2</field>
+                                        <field name="subformula">editable</field>
                                     </record>
                                 </field>
                             </record>
@@ -245,7 +245,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
-                                        <field name="subformula">editable;rounding=2</field>
+                                        <field name="subformula">editable</field>
                                     </record>
                                 </field>
                             </record>
@@ -258,7 +258,7 @@
                             <record id="account_tax_report_line_ne_net_to_pay_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                                 <field name="formula">NE_GROSS_VAT.balance + NE_REPAY.balance - NE_DEDUCTIBLE_TOTAL.balance - NE_DEDUCTIBLE_ADDITION.balance</field>
                             </record>
                         </field>
@@ -270,7 +270,7 @@
                             <record id="account_tax_report_line_ne_credit_to_report_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                                 <field name="formula">NE_DEDUCTIBLE_TOTAL.balance + NE_DEDUCTIBLE_ADDITION.balance - NE_GROSS_VAT.balance - NE_REPAY.balance</field>
                             </record>
                             <record id="account_tax_report_line_ne_credit_to_report_carryover" model="account.report.expression">

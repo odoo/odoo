@@ -138,7 +138,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -150,7 +150,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -202,7 +202,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_GROSS.balance - BJ_VAT_DEDUCTIBLE.balance</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                             </record>
                         </field>
                     </record>
@@ -214,7 +214,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_VAT_DEDUCTIBLE.balance - BJ_GROSS.balance</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                             </record>
                             <record id="account_tax_report_line_bj_credit_to_report_carryover" model="account.report.expression">
                                 <field name="label">_carryover_balance</field>
