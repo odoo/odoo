@@ -460,12 +460,9 @@ class EventEvent(models.Model):
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
         return super()._track_subtype(init_values)
 
-    def _get_external_description(self):
-        """ Adding the URL of the event into the description """
-        self.ensure_one()
-        event_url = f'<a href="{self.event_register_url}">{self.name}</a>'
-        description = event_url + '\n' + super()._get_external_description()
-        return description
+    def _get_event_url(self):
+        """Fall back on mixin url if no specific url is specified."""
+        return super()._get_event_url() or werkzeug.urls.url_join(self.get_base_url(), self.website_url)
 
     def _get_event_resource_urls(self):
         url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
