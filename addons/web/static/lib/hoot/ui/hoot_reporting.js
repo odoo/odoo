@@ -28,6 +28,35 @@ const { Boolean, RegExp } = globalThis;
 // Internal
 //-----------------------------------------------------------------------------
 
+/**
+ * @param {keyof import("../core/runner").Runner["state"]} varName
+ * @param {string} colorClassName
+ */
+const issueTemplate = (varName, colorClassName) => /* xml */ `
+    <t t-foreach="runnerState['${varName}']" t-as="key" t-key="key">
+        <t t-set="issue" t-value="runnerState['${varName}'][key]" />
+        <div
+            class="flex flex-col justify-center px-3 py-2 gap-2 border-muted border-b text-${colorClassName} bg-${colorClassName}-900"
+            t-att-title="issue.message"
+        >
+            <h3 class="flex items-center gap-1 whitespace-nowrap">
+                <span class="min-w-3 min-h-3 rounded-full bg-${colorClassName}" />
+                Global <t t-esc="issue.name" />
+                <span t-if="issue.count > 1">
+                    (x<t t-esc="issue.count" />)
+                </span>:
+                <small class="ms-auto text-muted whitespace-nowrap italic font-normal">
+                    stack trace available in the console
+                </small>
+            </h3>
+            <ul>
+                <t t-foreach="issue.message.split('\\n')" t-as="messagePart" t-key="messagePart_index">
+                    <li class="truncate" t-esc="messagePart" />
+                </t>
+            </ul>
+        </div>
+    </t>`;
+
 const sortByDurationAscending = (a, b) => a.duration - b.duration;
 
 const sortByDurationDescending = (a, b) => b.duration - a.duration;
@@ -58,29 +87,10 @@ export class HootReporting extends Component {
     static template = xml`
         <div class="${HootReporting.name} flex-1 overflow-y-auto">
             <!-- Errors -->
-            <t t-foreach="runnerState.globalErrors" t-as="key" t-key="key">
-                <t t-set="error" t-value="runnerState.globalErrors[key]" />
-                <div
-                    class="flex flex-col justify-center px-3 py-2 gap-2 border-muted border-b text-fail bg-fail-900"
-                    t-att-title="error.message"
-                >
-                    <h3 class="flex items-center gap-1 whitespace-nowrap">
-                        <span class="min-w-3 min-h-3 rounded-full bg-fail" />
-                        Global <t t-esc="error.name" />
-                        <span t-if="error.count > 1">
-                            (x<t t-esc="error.count" />)
-                        </span>:
-                        <small class="ms-auto text-muted whitespace-nowrap italic font-normal">
-                            stack trace available in the console
-                        </small>
-                    </h3>
-                    <ul>
-                        <t t-foreach="error.message.split('\n')" t-as="messagePart" t-key="messagePart_index">
-                            <li class="truncate" t-esc="messagePart" />
-                        </t>
-                    </ul>
-                </div>
-            </t>
+            ${issueTemplate("globalErrors", "fail")}
+
+            <!-- Warnings -->
+            ${issueTemplate("globalWarnings", "abort")}
 
             <!-- Test results -->
             <t t-set="resultStart" t-value="uiState.resultsPage * uiState.resultsPerPage" />
