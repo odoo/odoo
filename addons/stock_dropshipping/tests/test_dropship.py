@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+
 from odoo.tests import common, Form
 from odoo.tools import mute_logger
 
@@ -207,3 +209,30 @@ class TestDropship(common.TransactionCase):
         self.assertEqual(sale_order.picking_ids.state, 'done')
         self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.name, '123')
         self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.last_delivery_partner_id, self.customer)
+
+    def test_sol_reserved_qty_wizard_dropship(self):
+        """
+        Check that the reserved qty wizard related to a sol is computed from
+        the PO if the product is dropshipped.
+        """
+        product = self.dropship_product
+        product.route_ids = self.dropshipping_route
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 3.0,
+            })]
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_available_today, 0.0)
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
+        purchase_order.button_confirm()
+        picking_dropship = sale_order.picking_ids.filtered(lambda p: p.picking_type_id)
+        self.assertTrue(picking_dropship)
+        self.assertEqual(sale_order.order_line.qty_available_today, 3.0)
+        self.assertRecordValues(sale_order.order_line, [{'qty_available_today': 3.0, 'qty_delivered': 0.0}])
+        picking_dropship.move_ids.quantity = 3.0
+        picking_dropship.move_ids.picked = True
+        picking_dropship.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 3.0)
