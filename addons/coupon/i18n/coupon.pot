@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
+"PO-Revision-Date: 2024-08-14 15:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -724,6 +724,11 @@ msgid ""
 msgstr ""
 
 #. module: coupon
+#: model:ir.model,name:coupon.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr ""
@@ -970,9 +975,8 @@ msgid "The program code must be unique!"
 msgstr ""
 
 #. module: coupon
-#: code:addons/coupon/models/coupon_rules.py:0
-#, python-format
-msgid "The start date must be before the end date"
+#: model:ir.model.constraint,message:coupon.constraint_coupon_rule_check_coupon_rule_dates
+msgid "The start date must be before the end date!"
 msgstr ""
 
 #. module: coupon
@@ -1069,8 +1073,8 @@ msgstr ""
 #: code:addons/coupon/models/product_product.py:0
 #, python-format
 msgid ""
-"You cannot delete a product that is linked with Coupon or Promotion "
-"program. Archive it instead."
+"You cannot delete a product that is linked with Coupon or Promotion program."
+" Archive it instead."
 msgstr ""
 
 #. module: coupon
