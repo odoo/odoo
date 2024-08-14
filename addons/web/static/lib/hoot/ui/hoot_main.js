@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { createURL } from "../core/url";
+import { createUrl } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
@@ -46,7 +46,7 @@ export class HootMain extends Component {
         <t t-if="env.runner.config.headless">
             <div class="flex justify-center items-center text-3xl w-full h-full gap-3">
                 Running in headless mode
-                <a class="text-primary hoot-link" t-att-href="createURL({ headless: null })">
+                <a class="text-primary hoot-link" t-att-href="createUrl({ headless: null })">
                     Run with UI
                 </a>
             </div>
@@ -84,7 +84,7 @@ export class HootMain extends Component {
         </t>
     `;
 
-    createURL = createURL;
+    createUrl = createUrl;
     escapeKeyPresses = 0;
 
     setup() {
