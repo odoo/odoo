@@ -42,7 +42,7 @@ registerWebsitePreviewTour('snippet_translation_changing_lang', {
 }, () => [
     {
         content: "Change language to Parseltongue",
-        trigger: ':iframe .js_language_selector .btn',
+        trigger: ':iframe .js_language_selector button',
         run: "click",
     },
     {
