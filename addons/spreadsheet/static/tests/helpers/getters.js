@@ -29,10 +29,11 @@ export function getEvaluatedGrid(model, zoneXc, sheetId = model.getters.getActiv
     const { top, bottom, left, right } = toZone(zoneXc);
     const grid = [];
     for (const row of range(top, bottom + 1)) {
-        grid.push([]);
+        const colValues = [];
+        grid.push(colValues);
         for (const col of range(left, right + 1)) {
             const cell = model.getters.getEvaluatedCell({ sheetId, col, row });
-            grid[row][col] = cell.value;
+            colValues.push(cell.value);
         }
     }
     return grid;
