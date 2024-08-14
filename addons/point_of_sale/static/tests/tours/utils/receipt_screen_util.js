@@ -26,7 +26,7 @@ export function clickContinueOrder() {
 export function setEmail(email) {
     return [
         {
-            trigger: ".receipt-screen .send-receipt-input input",
+            trigger: ".receipt-screen .send-receipt-email-input",
             run: `edit ${email}`,
         },
     ];
@@ -35,7 +35,7 @@ export function clickSend() {
     return [
         {
             run: "click",
-            trigger: `.receipt-screen .send-receipt-input div`,
+            trigger: `.receipt-screen button i.fa-paper-plane`,
         },
     ];
 }
