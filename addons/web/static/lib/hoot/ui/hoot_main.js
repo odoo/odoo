@@ -108,6 +108,7 @@ export class HootMain extends Component {
         });
 
         useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev), { capture: true });
+        useWindowListener("resize", (ev) => this.onWindowResize(ev));
     }
 
     /**
@@ -144,5 +145,9 @@ export class HootMain extends Component {
                 break;
             }
         }
+    }
+
+    onWindowResize() {
+        this.env.runner.checkPresetForViewPort();
     }
 }

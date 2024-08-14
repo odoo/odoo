@@ -47,8 +47,9 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  *
  * @typedef {{
  *  count: number;
+ *  message: string;
  *  name: string;
- * }} GlobalErrorReport
+ * }} GlobalIssueReport
  *
  * @typedef {Suite | Test} Job
  *
@@ -306,9 +307,13 @@ export class Runner {
          */
         done: new Set(),
         /**
-         * @type {Record<string, GlobalErrorReport>}
+         * @type {Record<string, GlobalIssueReport>}
          */
         globalErrors: {},
+        /**
+         * @type {Record<string, GlobalIssueReport>}
+         */
+        globalWarnings: {},
         /**
          * Dictionnary containing whether a job is included or excluded from the
          * current run. Values are numbers defining priority:
@@ -698,6 +703,9 @@ export class Runner {
         const [width, height] = preset.size;
         if (width !== innerWidth || height !== innerHeight) {
             if (lastPresetWarn !== presetId) {
+                this._handleGlobalWarning(
+                    "viewport size does not match the expected size for the current preset"
+                );
                 logger.warn(
                     `viewport size does not match the expected size for the "${preset.label}" preset`,
                     `\n> expected:`,
@@ -707,7 +715,8 @@ export class Runner {
                     `\n> current:`,
                     innerWidth,
                     "x",
-                    innerHeight
+                    innerHeight,
+                    `\n\nHint: you can use the "device toolbar" in your devtools to manually set the size of your viewport`
                 );
             }
             lastPresetWarn = presetId;
@@ -1586,6 +1595,24 @@ export class Runner {
                 count: 1,
                 message: error.message,
                 name: error.constructor.name || error.name,
+            };
+        }
+        return false;
+    }
+
+    /**
+     * @param {string} message
+     */
+    _handleGlobalWarning(message) {
+        const { globalWarnings } = this.state;
+        const key = message;
+        if (globalWarnings[key]) {
+            globalWarnings[key].count++;
+        } else {
+            globalWarnings[key] = {
+                count: 1,
+                message,
+                name: "warning",
             };
         }
         return false;
