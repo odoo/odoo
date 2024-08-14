@@ -1208,8 +1208,15 @@ class MailCase(MockEmail):
                 if json_dump(expected) == notification:
                     break
             else:
-                raise AssertionError('No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s' %
-                    (json_dump(expected), ",\n".join(notif_messages)))
+                matching_notifs = [m for m in notif_messages if json.loads(m).get("type") == expected.get("type")]
+                if len(matching_notifs) == 1:
+                    self.assertEqual(expected, json.loads(matching_notifs[0]))
+                if not matching_notifs:
+                    matching_notifs = notif_messages
+                raise AssertionError(
+                    "No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s"
+                    % (json_dump(expected), ",\n".join(matching_notifs))
+                )
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs
@@ -1518,10 +1525,30 @@ class MailCommon(common.TransactionCase, MailCase):
             **attach_values,
         } for x in range(count)]
 
-    def _filter_persona_fields(self, data):
-        """ Remove store persona data dependant on other modules if they are not not installed.
+    def _filter_messages_fields(self, /, *messages_data):
+        """ Remove store message data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        if "rating.rating" not in self.env:
+            for data in messages_data:
+                data.pop("rating_id", None)
+        return list(messages_data)
+
+    def _filter_partners_fields(self, /, *partners_data):
+        """ Remove store partner data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
         if "hr.leave" not in self.env:
-            data.pop("out_of_office_date_end")
-        return data
+            for data in partners_data:
+                data.pop("out_of_office_date_end", None)
+        return list(partners_data)
+
+    def _filter_threads_fields(self, /, *threads_data):
+        """ Remove store thread data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        if "rating.rating" not in self.env:
+            for data in threads_data:
+                data.pop("rating_avg", None)
+                data.pop("rating_count", None)
+        return list(threads_data)

@@ -67,12 +67,13 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store, for_current_user = false, add_followers = false) {
+    _to_store(ids, store, fields, for_current_user, add_followers) {
         const kwargs = getKwArgs(arguments, "ids", "store", "for_current_user", "add_followers");
         ids = kwargs.ids;
         store = kwargs.store;
-        for_current_user = kwargs.for_current_user;
-        add_followers = kwargs.add_followers;
+        fields = kwargs.fields;
+        for_current_user = kwargs.for_current_user ?? false;
+        add_followers = kwargs.add_followers ?? false;
 
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
@@ -99,28 +100,28 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
+        if (!fields) {
+            fields = [
+                "body",
+                "create_date",
+                "date",
+                "is_discussion",
+                "is_note",
+                "message_type",
+                "model",
+                "pinned_at",
+                "res_id",
+                "subject",
+                "subtype_description",
+                "write_date",
+            ];
+        }
+
         const notifications = MailNotification._filtered_for_web_client(
             MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
         );
         for (const message of MailMessage.browse(ids)) {
-            const [data] = this.read(
-                message.id,
-                [
-                    "body",
-                    "create_date",
-                    "date",
-                    "is_discussion",
-                    "is_note",
-                    "message_type",
-                    "model",
-                    "pinned_at",
-                    "res_id",
-                    "subject",
-                    "subtype_description",
-                    "write_date",
-                ],
-                makeKwArgs({ load: false })
-            );
+            const [data] = this.read(message.id, fields, makeKwArgs({ load: false }));
             const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             if (thread) {
                 const thread_data = { module_icon: "/base/static/description/icon.png" };

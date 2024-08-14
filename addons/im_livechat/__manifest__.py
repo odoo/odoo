@@ -93,6 +93,7 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/discuss/typing/**/*',
             'mail/static/src/utils/common/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
+            "rating/static/src/core/common/**/*",
             'im_livechat/static/src/core/common/**/*',
             'im_livechat/static/src/embed/common/**/*',
         ],

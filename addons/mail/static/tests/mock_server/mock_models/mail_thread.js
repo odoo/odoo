@@ -604,13 +604,13 @@ export class MailThread extends models.ServerModel {
             fields = [];
         }
         const [thread] = this.env[this._name].browse(id);
-        const res = { id: thread.id, model: this._name };
+        const [res] = this.read(thread.id, fields, makeKwArgs({ load: false }));
         if (request_list) {
             res.hasReadAccess = true;
             res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default
             res["canPostOnReadonly"] = this._mail_post_access === "read";
         }
-        if (this.has_activities) {
+        if (request_list && request_list.includes("activities") && this.has_activities) {
             res["activities"] = mailDataHelpers.Store.many(
                 MailActivity.browse(thread.activity_ids)
             );

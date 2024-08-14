@@ -4546,7 +4546,9 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         if fields is None:
             fields = []
-        res = {}
+        res = self._read_format(
+            [field for field in fields if field not in ["display_name", "modelName"]], load=False
+        )[0]
         if request_list:
             res["hasReadAccess"] = True
             res["hasWriteAccess"] = False

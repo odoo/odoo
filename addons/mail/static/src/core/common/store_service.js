@@ -347,6 +347,10 @@ export class Store extends BaseStore {
                     );
                 }
                 const modelName = pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
+                if (!store[modelName]) {
+                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
+                    continue;
+                }
                 const insertData = [];
                 for (const vals of Array.isArray(data) ? data : [data]) {
                     const extraFields = addFieldsByPyModel[pyOrJsModelName];

@@ -21,6 +21,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.maxDiff = None
         cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
@@ -82,7 +83,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "type": "discuss.channel/new_message",
                         "payload": {
                             "data": {
-                                "mail.message": [
+                                "mail.message": self._filter_messages_fields(
                                     {
                                         "attachments": [],
                                         "author": {
@@ -105,6 +106,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "notifications": [],
                                         "parentMessage": False,
                                         "pinned_at": False,
+                                        "rating_id": False,
                                         "reactions": [],
                                         "recipients": [],
                                         "record_name": "Channel",
@@ -115,15 +117,17 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "thread": {"id": channel.id, "model": "discuss.channel"},
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
-                                ],
-                                "mail.thread": [
+                                ),
+                                "mail.thread": self._filter_threads_fields(
                                     {
                                         "id": channel.id,
                                         "model": "discuss.channel",
                                         "module_icon": "/mail/static/description/icon.png",
+                                        "rating_avg": 0.0,
+                                        "rating_count": 0,
                                     },
-                                ],
-                                "res.partner": [
+                                ),
+                                "res.partner": self._filter_partners_fields(
                                     {
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": True,
@@ -132,7 +136,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "userId": self.env.user.id,
                                         "write_date": emp_partner_write_date,
                                     },
-                                ],
+                                ),
                             },
                             "id": channel.id,
                         },
@@ -152,22 +156,20 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "thread": {"id": channel.id, "model": "discuss.channel"},
                                 },
                             ],
-                            "res.partner": [
-                                self._filter_persona_fields(
-                                    {
-                                        "active": True,
-                                        "email": "test_customer@example.com",
-                                        "id": self.test_partner.id,
-                                        "im_status": "im_partner",
-                                        "isInternalUser": False,
-                                        "is_company": False,
-                                        "name": "Test Partner",
-                                        "out_of_office_date_end": False,
-                                        "userId": False,
-                                        "write_date": test_partner_write_date,
-                                    }
-                                ),
-                            ],
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "active": True,
+                                    "email": "test_customer@example.com",
+                                    "id": self.test_partner.id,
+                                    "im_status": "im_partner",
+                                    "isInternalUser": False,
+                                    "is_company": False,
+                                    "name": "Test Partner",
+                                    "out_of_office_date_end": False,
+                                    "userId": False,
+                                    "write_date": test_partner_write_date,
+                                },
+                            ),
                         },
                     },
                 ],
@@ -198,22 +200,20 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "thread": {"id": channel.id, "model": "discuss.channel"},
                                 }
                             ],
-                            "res.partner": [
-                                self._filter_persona_fields(
-                                    {
-                                        "active": True,
-                                        "email": "test_customer@example.com",
-                                        "id": self.test_partner.id,
-                                        "im_status": "im_partner",
-                                        "isInternalUser": False,
-                                        "is_company": False,
-                                        "name": "Test Partner",
-                                        "out_of_office_date_end": False,
-                                        "userId": False,
-                                        "write_date": test_partner_write_date,
-                                    }
-                                ),
-                            ],
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "active": True,
+                                    "email": "test_customer@example.com",
+                                    "id": self.test_partner.id,
+                                    "im_status": "im_partner",
+                                    "isInternalUser": False,
+                                    "is_company": False,
+                                    "name": "Test Partner",
+                                    "out_of_office_date_end": False,
+                                    "userId": False,
+                                    "write_date": test_partner_write_date,
+                                }
+                            ),
                         },
                     },
                 ],
@@ -421,12 +421,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": self.user_admin.partner_id.id,
                                 "name": self.user_admin.partner_id.name,
                             },
-                        ],
+                        ),
                     },
                 },
                 {
@@ -440,12 +440,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "thread": {"id": chat.id, "model": "discuss.channel"},
                             },
                         ],
-                        "res.partner": [
+                        "res.partner": self._filter_partners_fields(
                             {
                                 "id": self.user_admin.partner_id.id,
                                 "name": self.user_admin.partner_id.name,
                             },
-                        ],
+                        ),
                     },
                 },
             ],

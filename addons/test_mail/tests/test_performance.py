@@ -1368,7 +1368,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.message": [
+                            "mail.message": self._filter_messages_fields(
                                 {
                                     "attachments": [],
                                     "author": {
@@ -1389,6 +1389,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "needaction": True,
                                     "notifications": [{"id": notif_1.id}, {"id": notif_2.id}],
                                     "pinned_at": False,
+                                    "rating_id": False,
                                     "reactions": [],
                                     "recipients": [],
                                     "record_name": "Test",
@@ -1401,7 +1402,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "trackingValues": [],
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
-                            ],
+                            ),
                             "mail.notification": [
                                 {
                                     "failure_type": False,
@@ -1426,7 +1427,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.thread": [
+                            "mail.thread": self._filter_threads_fields(
                                 {
                                     "id": record.id,
                                     "model": "mail.test.simple",
@@ -1434,8 +1435,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "name": "Test",
                                     "selfFollower": {"id": follower_1.id},
                                 },
-                            ],
-                            "res.partner": [
+                            ),
+                            "res.partner": self._filter_partners_fields(
                                 {
                                     "displayName": "Paulette Testouille",
                                     "id": self.user_test_inbox.partner_id.id,
@@ -1450,9 +1451,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "is_company": False,
                                     "name": "OdooBot",
                                     "userId": self.env.user.id,
-                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                    "write_date": fields.Datetime.to_string(
+                                        self.env.user.write_date
+                                    ),
                                 },
-                            ],
+                            ),
                         },
                     },
                     {
@@ -1468,7 +1471,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.message": [
+                            "mail.message": self._filter_messages_fields(
                                 {
                                     "attachments": [],
                                     "author": {
@@ -1489,6 +1492,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "needaction": True,
                                     "notifications": [{"id": notif_1.id}, {"id": notif_2.id}],
                                     "pinned_at": False,
+                                    "rating_id": False,
                                     "reactions": [],
                                     "recipients": [],
                                     "record_name": "Test",
@@ -1501,7 +1505,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "trackingValues": [],
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
-                            ],
+                            ),
                             "mail.notification": [
                                 {
                                     "failure_type": False,
@@ -1526,7 +1530,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "mail.thread": [
+                            "mail.thread": self._filter_threads_fields(
                                 {
                                     "id": record.id,
                                     "model": "mail.test.simple",
@@ -1534,8 +1538,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "name": "Test",
                                     "selfFollower": {"id": follower_2.id},
                                 },
-                            ],
-                            "res.partner": [
+                            ),
+                            "res.partner": self._filter_partners_fields(
                                 {
                                     "displayName": "Jeannette Testouille",
                                     "id": self.user_test_inbox_2.partner_id.id,
@@ -1550,9 +1554,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "is_company": False,
                                     "name": "OdooBot",
                                     "userId": self.env.user.id,
-                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                    "write_date": fields.Datetime.to_string(
+                                        self.env.user.write_date
+                                    ),
                                 },
-                            ],
+                            ),
                         },
                     },
                 ],
