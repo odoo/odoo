@@ -80,9 +80,30 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         message = self.make_jsonrpc_request(
             "/websocket/peek_notifications",
-            {"channels": [], "last": 0, "is_first_poll": True},
+            {
+                "channels": [f"odoo-presence-res.partner_{self.partner_demo.id}"],
+                "last": 0,
+                "is_first_poll": True,
+            },
             headers=headers,
         )["notifications"][0]["message"]
         self.assertEqual(message["type"], "bus.bus/im_status_updated")
         self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
         self.assertEqual(message["payload"]["im_status"], "offline")
+
+    def test_receive_missed_presences_on_peek_notifications(self):
+        session = self.authenticate("demo", "demo")
+        headers = {"Cookie": f"session_id={session.sid};"}
+        self.env["bus.presence"].create({"user_id": self.user_demo.id, "status": "online"})
+        message = self.make_jsonrpc_request(
+            "/websocket/peek_notifications",
+            {
+                "channels": [f"odoo-presence-res.partner_{self.partner_demo.id}"],
+                "last": self.env["bus.bus"]._bus_last_id(),
+                "is_first_poll": True,
+            },
+            headers=headers,
+        )["notifications"][0]["message"]
+        self.assertEqual(message["type"], "bus.bus/im_status_updated")
+        self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
+        self.assertEqual(message["payload"]["im_status"], "online")
