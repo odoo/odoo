@@ -29,13 +29,8 @@ class TestIrWebsocket(WebsocketCase):
         websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
         self.subscribe(websocket, [], self.env["bus.bus"]._bus_last_id())
         # offline => online
-        websocket.send(
-            json.dumps(
-                {
-                    "event_name": "update_presence",
-                    "data": {"inactivity_period": 0, "im_status_ids_by_model": {}},
-                }
-            )
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="user_id", identity_value=bob.id
         )
         self.trigger_notification_dispatching([group_user])
         message = json.loads(websocket.recv())[0]["message"]
@@ -45,16 +40,8 @@ class TestIrWebsocket(WebsocketCase):
         # online => away
         away_timer_later = datetime.now() + timedelta(seconds=AWAY_TIMER + 1)
         with freeze_time(away_timer_later):
-            websocket.send(
-                json.dumps(
-                    {
-                        "event_name": "update_presence",
-                        "data": {
-                            "inactivity_period": (AWAY_TIMER + 1) * 1000,
-                            "im_status_ids_by_model": {},
-                        },
-                    }
-                )
+            self.env["bus.presence"]._update_presence(
+                inactivity_period=(AWAY_TIMER + 1) * 1000, identity_field="user_id", identity_value=bob.id
             )
             self.trigger_notification_dispatching([group_user])
             message = json.loads(websocket.recv())[0]["message"]
@@ -64,13 +51,8 @@ class TestIrWebsocket(WebsocketCase):
         # away => online
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
-            websocket.send(
-                json.dumps(
-                    {
-                        "event_name": "update_presence",
-                        "data": {"inactivity_period": 0, "im_status_ids_by_model": {}},
-                    }
-                )
+            self.env["bus.presence"]._update_presence(
+                inactivity_period=0, identity_field="user_id", identity_value=bob.id
             )
             self.trigger_notification_dispatching([self.env.ref("base.group_user")])
             message = json.loads(websocket.recv())[0]["message"]
@@ -80,13 +62,8 @@ class TestIrWebsocket(WebsocketCase):
         # online => online, nothing happens
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
-            websocket.send(
-                json.dumps(
-                    {
-                        "event_name": "update_presence",
-                        "data": {"inactivity_period": 0, "im_status_ids_by_model": {}},
-                    }
-                )
+            self.env["bus.presence"]._update_presence(
+                inactivity_period=0, identity_field="user_id", identity_value=bob.id
             )
             self.trigger_notification_dispatching([group_user])
             with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
