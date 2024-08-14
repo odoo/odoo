@@ -26,6 +26,7 @@ class StockPickingType(models.Model):
                                         help="A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
                                              "Leave this value as '0' if no transfer limit.")
     batch_auto_confirm = fields.Boolean("Auto-confirm", default=True)
+    batch_properties_definition = fields.PropertiesDefinition('Batch Properties')
 
     def _compute_picking_count(self):
         super()._compute_picking_count()
