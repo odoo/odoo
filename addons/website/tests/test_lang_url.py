@@ -29,12 +29,12 @@ class TestLangUrl(HttpCase):
         url = '/fr_WHATEVER/contactus'
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.url.endswith('/fr/contactus'), f"fr_WHATEVER should be forwarded to 'fr_FR' lang as closest match, url: {r.url}")
+        self.assertURLEqual(r.url, '/fr/contactus', f"fr_WHATEVER should be forwarded to 'fr_FR' lang as closest match, url: {r.url}")
 
         url = '/fr_FR/contactus'
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.url.endswith('/fr/contactus'), f"lang in url should use url_code ('fr' in this case), url: {r.url}")
+        self.assertURLEqual(r.url, '/fr/contactus', f"lang in url should use url_code ('fr' in this case), url: {r.url}")
 
     def test_03_url_cook_lang_not_available(self):
         """ An activated res.lang should not be displayed in the frontend if not a website lang. """

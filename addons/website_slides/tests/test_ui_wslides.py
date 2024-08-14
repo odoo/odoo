@@ -121,7 +121,7 @@ class TestUi(TestUICommon):
         )
         for url in urls:
             response = self.url_open(url, allow_redirects=False)
-            self.assertTrue(response.headers.get("Location", "").endswith("/slides?invite_error=no_rights"))
+            self.assertURLEqual(response.headers.get("Location"), "/slides?invite_error=no_rights")
 
         # auth="user" has priority
         urls = (
@@ -130,7 +130,8 @@ class TestUi(TestUICommon):
         )
         for url in urls:
             response = self.url_open(url, allow_redirects=False)
-            self.assertIn("/web/login", response.headers.get("Location", ""))
+            location = self.parse_http_location(response.headers.get("Location"))
+            self.assertEqual(location.path, "/web/login")
 
     def test_course_member_employee(self):
         user_demo = self.user_demo

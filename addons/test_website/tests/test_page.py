@@ -35,7 +35,7 @@ class WithContext(HttpCase):
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.history[0].status_code, 303)
-        self.assertEqual(r.url, contactus_url_full)
+        self.assertURLEqual(r.url, contactus_url_full)
         self.assertIn(contactus_content, r.content)
 
         # same with 403
@@ -55,5 +55,5 @@ class WithContext(HttpCase):
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.history[0].status_code, 303)
-        self.assertEqual(r.url, contactus_url_full)
+        self.assertURLEqual(r.url, contactus_url_full)
         self.assertIn(contactus_content, r.content)
