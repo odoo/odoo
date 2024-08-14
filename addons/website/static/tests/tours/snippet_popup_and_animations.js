@@ -16,7 +16,7 @@ const snippets = [
     {
         id: "s_three_columns",
         name: "Columns",
-        groupName: "Content",
+        groupName: "Columns",
     },
 ];
 
@@ -91,8 +91,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        content: "Drag the Content snippet group and drop it at the bottom of the popup.",
-        trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        content: "Drag the Columns snippet group and drop it at the bottom of the popup.",
+        trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     {
