@@ -5,7 +5,7 @@ import io
 import json
 
 from PyPDF2 import PdfFileReader, PdfFileWriter
-from PyPDF2.generic import NameObject, createStringObject
+from PyPDF2.generic import NameObject, NumberObject, createStringObject
 
 from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
@@ -205,12 +205,24 @@ class IrActionsReport(models.Model):
         for page_id in range(reader.getNumPages()):
             page = reader.getPage(page_id)
             if prefix and page.get('/Annots'):
-                # Prefix all form fields in the document with the document identifier.
-                # This is necessary to know which value needs to be taken when filling the forms.
+                # Modifying the annots that hold every information about the form fields
                 for j in range(len(page['/Annots'])):
                     reader_annot = page['/Annots'][j].getObject()
                     if reader_annot.get('/T') in field_names:
+                        # Prefix all form fields in the document with the document identifier.
+                        # This is necessary to know which value needs to be taken when filling the forms.
                         form_key = reader_annot.get('/T')
                         new_key = prefix + form_key
-                        reader_annot.update({NameObject("/T"): createStringObject(new_key)})
+
+                        # Modifying the form flags to force some characteristics
+                        initial_ff_value = reader_annot.get('/Ff', 0)
+                        b = 1  # 1st bit to 1: mark as visible, to avoid the blue overlay
+                        new_ff_value = initial_ff_value | b
+                        b = 1 << 12  # 13th bit to 1: allow multiline
+                        new_ff_value |= b
+
+                        reader_annot.update({
+                            NameObject("/T"): createStringObject(new_key),
+                            NameObject("/Ff"): NumberObject(new_ff_value)
+                        })
             writer.addPage(page)
