@@ -4,6 +4,9 @@
 <!-- Event -->
 <template id="layout" name="Event">
     <t t-call="website.layout">
+        <!-- Utils -->
+        <t t-set="website_visitor" t-value="request.env['website.visitor']._get_visitor_from_request() or request.env['website.visitor']"/>
+        <t t-set="website_visitor_timezone" t-value="website_visitor.timezone or request.env['website.visitor']._get_visitor_timezone()"/>
         <!-- Options -->
         <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
         <div id="wrap" t-attf-class="o_wevent_event js_event d-flex flex-column h-100 #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">

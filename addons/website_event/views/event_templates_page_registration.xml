@@ -162,7 +162,7 @@
             Registrations will open on
             <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM dd, y'}"/>, at
             <b t-out="event.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'h:mm a'}"/>
-            <small>(<t t-out="event.date_tz"/> time)</small>
+            <small t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/> time)</small>
         </div>
         <!-- Sold Out -->
         <div t-elif="event.event_registrations_sold_out" class="alert alert-danger mb-3 small" role="status">
@@ -186,6 +186,7 @@
                     <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                     <i class="fa fa-long-arrow-right mx-1 text-muted" role="img"/>
                     <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                    <span t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                 </div>
             </div>
 
@@ -198,6 +199,7 @@
                             <div class="small">
                                 <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                                 <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                <small t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                             </div>
                         </div>
                     </div>
@@ -208,6 +210,7 @@
                             <div class="small">
                                 <time t-field="event.date_end" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
                                 <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                <small t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                             </div>
                         </div>
                     </div>
@@ -359,6 +362,9 @@
                                 t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
+                    <div class="row">
+                        <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
+                    </div>
                     <div class="mt-4">
                         <h5 t-field="event.address_id" class="text-secondary fw-bold" t-options='{
                             "widget": "contact",
@@ -383,9 +389,13 @@
 <template id="registration_ticket_access" name="Registration Ticket Access">
     <div class="row mb-3 o_wevent_registration_ticket_access">
         <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
-            <a class="btn btn-primary o_wevent_download_ticket_btn" title="Download All Tickets" target="_blank"
+            <a t-if="event.address_id" class="btn btn-primary" title="Download All Tickets" target="_blank"
                 t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
                 Download Tickets <i class="ms-1 fa fa-download"/>
+            </a>
+            <a t-else="" class="btn btn-primary" title="Join online" target="_blank"
+                t-att-href="event.event_url or event.website_url">
+                Join online <i class="ms-1 fa fa-globe"/>
             </a>
         </div>
     </div>
@@ -440,13 +450,13 @@
                                         class="text-muted me-3" itemprop="availabilityEnds">Sales end on
                                         <span itemprop="priceValidUntil" t-out="ticket.end_sale_datetime"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                                        (<span t-out="ticket.event_id.date_tz"/>)
+                                        <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
                                     <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired"
                                         class="text-muted me-3" itemprop="availabilityEnds">
                                         Sales start on <span itemprop="priceValidUntil" t-out="ticket.start_sale_datetime"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                                        (<span t-out="ticket.event_id.date_tz"/>)
+                                        <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
                                 </div>
                                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
@@ -496,7 +506,7 @@
                                     Sales end on
                                     <span itemprop="priceValidUntil" t-out="tickets.end_sale_datetime"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
-                                    (<span t-out="tickets.event_id.date_tz"/>)
+                                    <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                 </small>
                             </div>
                             <div class="col-md-4 d-flex align-items-center justify-content-between p-0">

@@ -78,7 +78,7 @@
                         <span>This room is not open right now!</span><br />
                         Join us here on the
                         <strong itemprop="startDate" t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'medium'}"/>
-                        <strong>(<t t-out="event.date_tz"/>)</strong>
+                        <strong t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</strong>
                         to have a chat with us!
                     </t>
                     <t t-else="">
@@ -184,7 +184,7 @@
                     <p class="small">
                         Room creation will be available when event starts at <span class="fw-bold" t-field="event.with_context(tz=event.date_tz).date_begin"
                             t-options="{'format': 'medium'}"/>
-                        <span class="small">(<t t-out="event.date_tz"/>)</span>
+                        <span t-if="website_visitor_timezone != event.date_tz" class="small">(<t t-out="event.date_tz"/>)</span>
                     </p>
                 </div>
             </div>

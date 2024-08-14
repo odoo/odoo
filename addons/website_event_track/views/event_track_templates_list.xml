@@ -248,7 +248,7 @@
                         <div class="small">
                             <div class="lh-1 fw-bold" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'MMMM YYYY'}"/>
                             <span class="lh-1" t-out="tracks_date" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
-                            <span class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
+                            <span t-if="website_visitor_timezone != event.date_tz" class="d-none d-md-inline small lh-1 text-muted">(timezone: <t t-out="event.date_tz"/>)</span>
                         </div>
                     </time>
                     <div class="d-flex flex-grow-1" t-elif="tracks_header_name">
