@@ -18,13 +18,13 @@
     
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='notification-list']" position="before">
-            <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+            <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
                 <t t-if="!ui.isSmall">
                     <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                     <t t-else="">
-                        <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
-                        <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
-                        <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
                         <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
                         <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                     </t>
@@ -54,8 +54,8 @@
                     <t t-set-slot="requestContent">
                         <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
                         <t t-else="">
-                            <a class="btn btn-primary">Install</a>
-                            <span t-if="!hasTouch()" t-on-click.stop="() => this.pwa.decline()" class="text-dark bg-transparent fa fa-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                            <a class="btn btn-primary px-2 py-1 smaller">Install</a>
+                            <span t-if="!hasTouch()" t-on-click.stop="() => this.pwa.decline()" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
                         </t>
                     </t>
                 </NotificationItem>
