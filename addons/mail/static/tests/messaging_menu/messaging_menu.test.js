@@ -222,7 +222,7 @@ test("installation of the PWA request can be dismissed", async () => {
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem .fa-close");
+    await click(".o-mail-NotificationItem .oi-close");
     await assertSteps([
         "getItem pwa.installationState",
         'installationState value:  {"/odoo":"dismissed"}',
