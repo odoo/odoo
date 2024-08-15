@@ -24,7 +24,12 @@ class Partner extends models.Model {
     ];
 }
 
-defineModels([Partner]);
+// Required for the select create dialog
+class Users extends models.Model {
+    _name = "res.users";
+    has_group = () => true;
+}
+defineModels([Partner, Users]);
 
 async function mountMultiRecordSelector(props) {
     class Parent extends Component {
@@ -238,4 +243,28 @@ test("Backspace do nothing when the input is currently edited", async () => {
     press("Backspace");
     await animationFrame();
     expect(".o_tag").toHaveCount(2);
+});
+
+// Desktop only because a kanban view is used instead of a list in mobile
+test.tags("desktop")("Can pass domain to search more", async () => {
+    Partner._records.push(
+        { id: 4, name: "David" },
+        { id: 5, name: "Eve" },
+        { id: 6, name: "Frank" },
+        { id: 7, name: "Grace" },
+        { id: 8, name: "Helen" },
+        { id: 9, name: "Ivy" },
+    );
+    Partner._views["list,false"] = /* xml */ `<tree><field name="name"/></tree>`;
+    Partner._views["search,false"] = /* xml */ `<search/>`;
+    await mountMultiRecordSelector({
+        resModel: "partner",
+        resIds: [],
+        domain: [["id", "not in", [1]]],
+    });
+    click(".o-autocomplete input");
+    await animationFrame();
+    click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(8, { message: "should contain 8 records" });
 });
