@@ -29,7 +29,12 @@ class Users extends models.Model {
     _name = "res.users";
     has_group = () => true;
 }
+<<<<<<< 18.0
 
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+defineModels([Partner]);
+=======
+>>>>>>> 1944eee50e1bb1537800c22dfd0723d52a84ca09
 defineModels([Partner, Users]);
 
 async function mountMultiRecordSelector(props) {
@@ -247,6 +252,7 @@ test("Backspace do nothing when the input is currently edited", async () => {
 });
 
 // Desktop only because a kanban view is used instead of a list in mobile
+<<<<<<< 18.0
 test.tags("desktop");
 test("Can pass domain to search more", async () => {
     Partner._records.push(
@@ -270,5 +276,28 @@ test("Can pass domain to search more", async () => {
     await click(".o_multi_record_selector .o_m2o_dropdown_option");
     await animationFrame();
 
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+=======
+test.tags("desktop")("Can pass domain to search more", async () => {
+    Partner._records.push(
+        { id: 4, name: "David" },
+        { id: 5, name: "Eve" },
+        { id: 6, name: "Frank" },
+        { id: 7, name: "Grace" },
+        { id: 8, name: "Helen" },
+        { id: 9, name: "Ivy" },
+    );
+    Partner._views["list,false"] = /* xml */ `<tree><field name="name"/></tree>`;
+    Partner._views["search,false"] = /* xml */ `<search/>`;
+    await mountMultiRecordSelector({
+        resModel: "partner",
+        resIds: [],
+        domain: [["id", "not in", [1]]],
+    });
+    click(".o-autocomplete input");
+    await animationFrame();
+    click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await animationFrame();
+>>>>>>> 1944eee50e1bb1537800c22dfd0723d52a84ca09
     expect(".o_data_row").toHaveCount(8, { message: "should contain 8 records" });
 });
