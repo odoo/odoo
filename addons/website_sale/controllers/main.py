@@ -243,6 +243,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         ppr = website.shop_ppr or 4
 
+        gap = website.shop_gap or "16px"
+
         request_args = request.httprequest.args
         attrib_list = request_args.getlist('attribute_value')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
@@ -404,6 +406,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'bins': lazy(lambda: TableCompute().process(products, ppg, ppr)),
             'ppg': ppg,
             'ppr': ppr,
+            'gap': gap,
             'categories': categs,
             'attributes': attributes,
             'keep': keep,
@@ -2081,7 +2084,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         current_website = request.env['website'].get_current_website()
         # Restrict options we can write to.
         writable_fields = {
-            'shop_ppg', 'shop_ppr', 'shop_default_sort',
+            'shop_ppg', 'shop_ppr', 'shop_default_sort', 'shop_gap',
             'product_page_image_layout', 'product_page_image_width',
             'product_page_grid_columns', 'product_page_image_spacing'
         }
