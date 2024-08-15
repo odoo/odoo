@@ -83,6 +83,8 @@ class Website(models.Model):
     )
     shop_ppr = fields.Integer(string="Number of grid columns on the shop", default=4)
 
+    shop_gap = fields.Char(string="Grid-gap on the shop", default="16px", required=False)
+
     shop_default_sort = fields.Selection(
         selection='_get_product_sort_mapping', required=True, default='website_sequence asc')
 

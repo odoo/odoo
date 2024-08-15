@@ -187,9 +187,14 @@
             <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None)) + selected_attributes_hash" />
             <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
 
-            <div class="oe_product_image position-relative h-100 flex-grow-0 overflow-hidden">
+            <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                <a t-att-href="product_href" class="oe_product_image_link d-block h-100 position-relative" itemprop="url" contenteditable="false">
+                <a
+                    t-att-href="product_href"
+                    class="oe_product_image_link d-block position-relative"
+                    itemprop="url"
+                    contenteditable="false"
+                >
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
                         t-options="{'widget': 'image', 'preview_image': image_type, 'itemprop': 'image', 'class': 'h-100 w-100 position-absolute'}"
@@ -206,17 +211,17 @@
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
-                <div class="o_wsale_product_information_text flex-grow-1">
-                    <h6 class="o_wsale_products_item_title mb-2">
+                <div class="o_wsale_product_information_text">
+                    <h6 class="o_wsale_products_item_title mb-2 text-break">
                         <a class="text-primary text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
                             Unpublished
                         </a>
                     </h6>
                 </div>
-                <div class="o_wsale_product_sub d-flex justify-content-between align-items-end gap-2 flex-wrap pb-1">
+                <div class="o_wsale_product_sub d-flex justify-content-between align-items-end gap-2 flex-wrap">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
-                    <div class="o_wsale_product_btn"/>
+                    <div class="o_wsale_product_btn d-flex gap-2"/>
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <span class="h6 mb-0"
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
@@ -237,6 +242,9 @@
     </template>
 
     <template id="products_description" inherit_id="website_sale.products_item" active="False" name="Product Description">
+         <xpath expr="//form" position="attributes">
+            <attribute name="class" add="oe_product_cart_has_description" separator=" "/>
+        </xpath>
         <xpath expr="//*[hasclass('o_wsale_products_item_title')]" position="after">
             <div class="oe_subdescription mb-2 text-muted small" contenteditable="false">
                 <div itemprop="description" t-field="product.description_sale"/>
@@ -250,8 +258,14 @@
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
             <input name="product_template_id" t-att-value="product.id" type="hidden"/>
             <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
-                <a t-if="product._website_show_quick_add()"
-                   href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
+                <a
+                    t-if="product._website_show_quick_add()"
+                    href="#"
+                    role="button"
+                    class="btn btn-light a-submit"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
                     <span class="fa fa-shopping-cart"/>
                 </a>
             </t>
@@ -408,33 +422,52 @@
                             </t>
 
                             <div t-if="products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
-                                <table class="table table-borderless h-100 m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
-                                    <colgroup t-ignore="true">
-                                        <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
-                                        <col t-foreach="ppr" t-as="p"/>
-                                    </colgroup>
-                                    <tbody>
-                                        <tr t-foreach="bins" t-as="tr_product">
-                                            <t t-foreach="tr_product" t-as="td_product">
-                                                <t t-if="td_product">
-                                                    <!-- We use t-attf-class here to allow easier customization -->
-                                                    <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
-                                                        t-att-rowspan="td_product['y'] != 1 and td_product['y']"
-                                                        t-attf-class="oe_product"
-                                                        t-att-data-ribbon-id="td_product['ribbon'].id"
-                                                        t-att-data-name="product_block_name">
-                                                        <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                            <t t-call="website_sale.products_item">
-                                                                <t t-set="product" t-value="td_product['product']"/>
-                                                            </t>
-                                                        </div>
-                                                    </td>
-                                                </t>
-                                                <td t-else=""/>
+                                <t t-set="grid_md_allow_custom_cols" t-value="hasLeftColumn"/>
+                                <t t-set="grid_md_use_3col"
+                                   t-value="not hasLeftColumn and ppr == 4"/>
+
+                                <section
+                                    id="o_wsale_products_grid"
+                                    t-attf-class="o_wsale_products_grid_table grid {{grid_md_allow_custom_cols and 'o_wsale_products_grid_table_md'}}"
+                                    t-attf-style="--o-wsale-products-grid-gap: {{gap}}; --o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}"
+                                    t-att-data-ppg="ppg"
+                                    t-att-data-ppr="ppr"
+                                    t-att-data-default-sort="website.shop_default_sort"
+                                    t-att-data-name="grid_block_name"
+                                >
+                                    <t t-foreach="bins" t-as="tr_product">
+                                        <t t-foreach="tr_product" t-as="td_product">
+                                            <t t-if="td_product">
+                                                <t t-set="col_height" t-value="td_product['y']"/>
+                                                <t t-set="col_width"
+                                                   t-value="12 // ppr * td_product['x']"/>
+                                                <t t-set="col_class_lg"
+                                                   t-value="'g-col-lg-' + str(col_width)"/>
+                                                <t t-set="col_class_md"
+                                                   t-value="grid_md_allow_custom_cols and ('g-col-md-' + str(col_width)) or grid_md_use_3col and 'g-col-md-4' or 'g-col-md-6'"/>
+                                                <t t-set="col_is_stretched"
+                                                   t-value="(td_product['x'] &gt;= td_product['y'] * 2)"/>
+                                                <t t-set="col_is_custom_portrait"
+                                                   t-value="not col_is_stretched and (col_height &gt; td_product['x'])"/>
+                                                <div
+                                                    t-attf-class="oe_product {{col_is_custom_portrait and 'oe_product_custom_portrait'}} g-col-6 {{col_class_md}} {{col_class_lg}} {{col_is_stretched and 'oe_product_size_stretch'}}"
+                                                    t-attf-style="--o-wsale-products-grid-product-col-height: {{col_height}};"
+                                                    t-att-data-ribbon-id="td_product['ribbon'].id"
+                                                    t-att-data-colspan="td_product['x'] != 1 and td_product['x']"
+                                                    t-att-data-rowspan="td_product['y'] != 1 and td_product['y']"
+                                                    t-att-data-name="product_block_name"
+                                                >
+                                                    <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                                        <t t-call="website_sale.products_item">
+                                                            <t t-set="product"
+                                                               t-value="td_product['product']"/>
+                                                        </t>
+                                                    </div>
+                                                </div>
                                             </t>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                        </t>
+                                    </t>
+                                </section>
                             </div>
                             <div t-else="" class="text-center text-muted mt128 mb256">
                                 <t t-if="not search">
@@ -462,42 +495,42 @@
 
     <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
     <template id="products_design_card" name="Card Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_design_cards" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_design_cards" separator=" "/>
         </xpath>
     </template>
     <template id="products_design_thumbs" name="Thumbnails Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_design_thumbs" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_design_thumbs" separator=" "/>
         </xpath>
     </template>
     <template id="products_design_grid" name="Grid Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_design_grid" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_design_grid" separator=" "/>
         </xpath>
     </template>
 
     <!-- (Options) Products: Define products' default image ratio -->
     <template id="products_thumb_4_3" name="thumb_4_3" inherit_id="website_sale.products" active="False">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_context_thumb_4_3" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_context_thumb_4_3" separator=" "/>
         </xpath>
     </template>
     <template id="products_thumb_4_5" name="thumb_4_5" inherit_id="website_sale.products" active="False">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_context_thumb_4_5" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_context_thumb_4_5" separator=" "/>
         </xpath>
     </template>
     <template id="products_thumb_2_3" name="thumb_2_3" inherit_id="website_sale.products" active="False">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_context_thumb_2_3" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_context_thumb_2_3" separator=" "/>
         </xpath>
     </template>
 
     <!-- (Option) Products: Define products' images filling mode -->
     <template id="products_thumb_cover" name="thumb_cover" inherit_id="website_sale.products" active="True">
-        <xpath expr="//table" position="attributes">
-            <attribute name="class" add="o_wsale_context_thumb_cover" separator=" "/>
+        <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_context_thumb_cover" separator=" "/>
         </xpath>
     </template>
 

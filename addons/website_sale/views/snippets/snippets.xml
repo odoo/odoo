@@ -17,8 +17,15 @@
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
         <!-- All products page -->
-        <div data-js="WebsiteSaleGridLayout" data-page-options="true" groups="website.group_website_designer" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
-            string="Products Page" data-target="#products_grid .o_wsale_products_grid_table_wrapper > table">
+        <div
+            data-js="WebsiteSaleGridLayout"
+            data-page-options="true"
+            groups="website.group_website_designer"
+            data-selector="main:has(.o_wsale_products_page)"
+            data-no-check="true"
+            string="Products Page"
+            data-target="#products_grid .o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
+        >
             <we-select string="Layout" data-no-preview="true" data-reload="/">
                 <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
                 <we-button data-customize-website-views="website_sale.products_list_view">List</we-button>
@@ -32,6 +39,18 @@
                     <we-button data-set-ppr="4">4</we-button>
                 </we-select>
             </we-row>
+
+            <we-range
+                string="Gap" class="o_we_sublevel_1"
+                data-select-style="0"
+                data-set-gap=""
+                data-css-property="--o-wsale-products-grid-gap"
+                data-display-range-value="true"
+                data-display-range-value-unit="px"
+                data-unit="px"
+                data-min="0"
+                data-max="28"
+            />
             <we-select string="Style" class="o_we_sublevel_1">
                 <we-button data-select-class=""
                            data-customize-website-views="">
@@ -183,7 +202,6 @@
                     </table>
                 </we-row>
             </div>
-
             <we-row string="Re-order" data-no-preview="true">
                 <we-button title="Push to top" data-change-sequence="top" class="fa fa-fw fa-angle-double-left"/>
                 <we-button title="Push up" data-change-sequence="up" class="fa fa-fw fa-angle-left"/>
