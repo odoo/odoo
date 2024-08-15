@@ -11,12 +11,12 @@
         'account',
     ],
     'data': [
+        'data/account.account.tag.csv',
+        'data/res.country.state.csv',
         'data/account_tax_report_data.xml',
         'views/menu_items.xml',
     ],
     'demo': [
-        'data/account.account.tag.csv',
-        'data/res.country.state.csv',
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
