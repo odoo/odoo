@@ -9,6 +9,8 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { Component, useState, xml } from "@odoo/owl";
 import { nameService } from "@web/core/name_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import { viewService } from "@web/views/view_service";
 
 QUnit.module("Web Components", (hooks) => {
     QUnit.module("RecordSelector");
@@ -50,6 +52,17 @@ QUnit.module("Web Components", (hooks) => {
                 this.state.resId = resId;
             }
         }
+<<<<<<< saas-17.2:addons/web/static/tests/legacy/core/record_selectors/record_selector_tests.js
+||||||| f63eadaa8e403dbc8b0231b5173ca51a9b3fb879:addons/web/static/tests/core/record_selectors/record_selector_tests.js
+        Parent.components = { RecordSelector };
+        Parent.template = xml`
+        <RecordSelector t-props="recordProps" />`;
+=======
+        Parent.components = { RecordSelector, MainComponentsContainer };
+        Parent.template = xml`
+        <MainComponentsContainer />
+        <RecordSelector t-props="recordProps" />`;
+>>>>>>> 7471658bf2e4117e26f257d86c2803b6facce6b8:addons/web/static/tests/core/record_selectors/record_selector_tests.js
 
         const env = await makeTestEnv({ serverData, mockRPC });
         await mount(Parent, target, { env });
@@ -156,5 +169,61 @@ QUnit.module("Web Components", (hooks) => {
         });
         const input = target.querySelector(".o_record_selector input");
         assert.strictEqual(input.placeholder, "Select a partner");
+    });
+
+    QUnit.test("domain is passed to search more", async (assert) => {
+        serverData.models.partner.records = [...new Array(10)].map((el, i) => {
+            return {
+                id: i + 1,
+                display_name: `a_${i + 1}`,
+            };
+        });
+        serverData.views = {
+            "partner,false,list": `<tree><field name="display_name" /></tree>`,
+            "partner,false,search": "<search />",
+        };
+
+        const fakeService = {
+            start() {},
+        };
+        registry.category("services").add("view", viewService);
+        registry.category("services").add("action", {
+            start() {
+                return { doAction: () => {} };
+            },
+        });
+        registry.category("services").add("field", fakeService);
+        registry.category("services").add("company", {
+            start() {
+                return { currentCompany: {} };
+            },
+        });
+        registry.category("services").add("notification", fakeService);
+
+        await makeRecordSelector(
+            {
+                resModel: "partner",
+                resId: false,
+                domain: [["display_name", "!=", "some name"]],
+                placeholder: "Select a partner",
+            },
+            {
+                mockRPC: (route, args) => {
+                    if (args.method === "web_search_read") {
+                        assert.step("web_search_read");
+                        assert.deepEqual(args.kwargs.domain, [
+                            "&",
+                            ["display_name", "!=", "some name"],
+                            "!",
+                            ["id", "in", []],
+                        ]);
+                    }
+                },
+            }
+        );
+        await click(target, ".o-autocomplete--input.o_input");
+        await click(target, ".o_m2o_dropdown_option a");
+        assert.containsOnce(target, ".modal .o_list_view");
+        assert.verifySteps(["web_search_read"]);
     });
 });
