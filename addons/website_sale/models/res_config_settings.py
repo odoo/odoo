@@ -87,7 +87,7 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             website = record.with_context(website_id=record.website_id.id).website_id
             record.enabled_extra_checkout_step = website.is_view_active(
-                'website_sale.extra_info_option'
+                'website_sale.extra_info'
             )
             record.enabled_buy_now_button = website.is_view_active(
                 'website_sale.product_buy_now'
