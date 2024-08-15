@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.FileSelectorControlPanel">
-    <div class="o_we_file_selector_control_panel sticky-top d-flex flex-wrap gap-2 mb-1 p-3 align-items-end">
+    <div class="o_we_file_selector_control_panel sticky-top d-flex flex-wrap gap-2 mb-1 py-2 align-items-end">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
         <div class="d-flex gap-3 justify-content-start align-items-center">
             <div t-if="props.showOptimizedOption" class="flex-shrink-0 form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">

@@ -44,16 +44,17 @@
                 <field name="id"/>
                 <field name="name"/>
                 <field name="image_1920"/>
+                <field name="video_url"/>
                 <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="card oe_kanban_global_click p-0">
+                        <div class="card p-0">
                             <div class="o_squared_image">
-                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.raw_value)" t-att-alt="record.name.value"/>
+                                <field class="card-img-top" name="image_1920" widget="multi_media_image"/>
                             </div>
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">
-                                    <small><field name="name"/></small>
+                                    <small t-attf-title="#{record.name.value}"><field name="name" class="text-truncate d-block"/></small>
                                 </h4>
                             </div>
                             <!-- below 100 Kb: good -->
@@ -71,7 +72,7 @@
                                 <t t-set="size_status" t-value="'text-bg-danger'"/>
                                 <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
                             </t>
-                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_1920.value" t-att-title="message"/>
+                            <span t-attf-class="badge #{size_status} o_product_image_size" t-att-title="message"> </span>
                         </div>
                     </t>
                 </templates>
