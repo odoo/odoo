@@ -3,7 +3,6 @@ import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
 import { useService } from "@web/core/utils/hooks";
-import { SearchBar } from "../search_bar/search_bar";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useCommand } from "@web/core/commands/command_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -15,9 +14,10 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { makeContext } from "@web/core/context";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Transition } from "@web/core/transition";
+import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
+import { SearchBar } from "../search_bar/search_bar";
 
 import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
-import { Breadcrumbs } from "@web/webclient/breadcrumbs/breadcrumbs";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
