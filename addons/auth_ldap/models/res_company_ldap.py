@@ -243,3 +243,85 @@ class CompanyLDAP(models.Model):
         except ldap.LDAPError as e:
             _logger.error('An LDAP exception occurred: %s', e)
         return changed
+
+    def test_ldap_connection(self):
+        """
+        Test the LDAP connection using the current configuration.
+        """
+        conf = {
+            'ldap_server': self.ldap_server,
+            'ldap_server_port': self.ldap_server_port,
+            'ldap_binddn': self.ldap_binddn,
+            'ldap_password': self.ldap_password,
+            'ldap_base': self.ldap_base,
+            'ldap_tls': self.ldap_tls
+        }
+        try:
+            conn = self._connect(conf)
+            conn.simple_bind_s(to_text(self.ldap_binddn), to_text(self.ldap_password))
+            conn.unbind()
+            _logger.info("LDAP connection test successful for server %s at port %d.", self.ldap_server,
+                         self.ldap_server_port)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'success',
+                    'title': _('Connection Test Successful!'),
+                    'message': _("Successfully connected to LDAP server at %(server)s:%(port)d",
+                                 server=self.ldap_server, port=self.ldap_server_port),
+                    'sticky': False,
+                }
+            }
+        except ldap.SERVER_DOWN:
+            _logger.error("LDAP connection test failed: cannot contact LDAP server at %s:%d", self.ldap_server,
+                          self.ldap_server_port)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'title': _('Connection Test Failed!'),
+                    'message': _("Cannot contact LDAP server at %(server)s:%(port)d", server=self.ldap_server,
+                                 port=self.ldap_server_port),
+                    'sticky': False,
+                }
+            }
+        except ldap.INVALID_CREDENTIALS:
+            _logger.error("LDAP connection test failed: invalid credentials for bind DN %s", self.ldap_binddn)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'title': _('Connection Test Failed!'),
+                    'message': _("Invalid credentials for bind DN %(binddn)s", binddn=self.ldap_binddn),
+                    'sticky': False,
+                }
+            }
+        except ldap.TIMEOUT:
+            _logger.error("LDAP connection test failed: connection to server %s at port %d timed out.",
+                          self.ldap_server, self.ldap_server_port)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'title': _('Connection Test Failed!'),
+                    'message': _("Connection to LDAP server at %(server)s:%(port)d timed out", server=self.ldap_server,
+                                 port=self.ldap_server_port),
+                    'sticky': False,
+                }
+            }
+        except ldap.LDAPError as e:
+            _logger.error('LDAP connection test failed: %s', e)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'title': _('Connection Test Failed!'),
+                    'message': _("An error occurred: %(error)s", error=e),
+                    'sticky': False,
+                }
+            }
