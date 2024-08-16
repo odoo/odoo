@@ -61,8 +61,7 @@ const odooNumberDateAdapter = {
 const odooDayAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         const serverDayValue = getGroupStartingDay(field, groupBy, readGroupResult);
-        const date = deserializeDate(serverDayValue).reconfigure({ numberingSystem: "latn" });
-        return date.toFormat("MM/dd/yyyy");
+        return toNumber(serverDayValue, DEFAULT_LOCALE);
     },
     increment(normalizedValue, step) {
         return normalizedValue + step;
