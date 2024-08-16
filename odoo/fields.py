@@ -3451,7 +3451,7 @@ class Properties(Field):
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
-         'separator',
+        'separator',
     )
 
     def _setup_attrs(self, model_class, name):
@@ -3997,7 +3997,6 @@ class PropertiesDefinition(Field):
             'string': 'Color Code',
             'type': 'char',
             'default': 'blue',
-            'default': 'red',
         }, {
             'name': 'aa34746a6851ee4e',
             'string': 'Partner',
