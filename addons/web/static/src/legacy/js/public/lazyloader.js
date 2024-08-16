@@ -2,7 +2,7 @@ import {
     BUTTON_HANDLER_SELECTOR,
     makeAsyncHandler,
     makeButtonHandler,
-} from '@web/legacy/js/core/minimal_dom';
+} from '@web/legacy/js/public/minimal_dom';
 
 // Track when all JS files have been lazy loaded. Will allow to unblock the
 // related DOM sections when the whole JS have been loaded and executed.
