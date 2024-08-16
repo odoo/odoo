@@ -137,7 +137,7 @@ class TestLinkPreview(MailCommon):
                                     {
                                         "id": message.link_preview_ids.id,
                                         "image_mimetype": False,
-                                        "message": {"id": message.id},
+                                        "message": message.id,
                                         "og_description": self.og_description,
                                         "og_image": self.og_image,
                                         "og_mimetype": False,
@@ -150,7 +150,7 @@ class TestLinkPreview(MailCommon):
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "id": message.id,
-                                        "linkPreviews": [{"id": message.link_preview_ids.id}],
+                                        "linkPreviews": [message.link_preview_ids.id],
                                     },
                                 ),
                             },

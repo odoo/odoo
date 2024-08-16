@@ -622,7 +622,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [["ADD", [{"id": member_0.id}]]],
+                "invitedMembers": [["ADD", [member_0.id]]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
@@ -630,9 +630,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "group restricted channel 1",
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "rtcInvitingSession": {"id": member_2.sudo().rtc_session_ids.id},
+                "rtcInvitingSession": member_2.sudo().rtc_session_ids.id,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "rtcSessions": [["ADD", [{"id": member_2.sudo().rtc_session_ids.id}]]],
+                "rtcSessions": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "state": "closed",
@@ -836,7 +836,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
-                "livechatChannel": {"id": self.im_livechat_channel.id},
+                "livechatChannel": self.im_livechat_channel.id,
                 "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "test1 Ernest Employee",
@@ -871,7 +871,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
-                "livechatChannel": {"id": self.im_livechat_channel.id},
+                "livechatChannel": self.im_livechat_channel.id,
                 "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "anon 2 Ernest Employee",
@@ -918,7 +918,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_channel_public_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "fetched_message_id": {"id": last_message.id},
+                "fetched_message_id": last_message.id,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
@@ -926,13 +926,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "seen_message_id": {"id": last_message.id},
+                "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_public_2 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "fetched_message_id": {"id": last_message.id},
+                "fetched_message_id": last_message.id,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
@@ -940,13 +940,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "seen_message_id": {"id": last_message.id},
+                "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_group_1 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "fetched_message_id": {"id": last_message.id},
+                "fetched_message_id": last_message.id,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
@@ -954,7 +954,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "seen_message_id": {"id": last_message.id},
+                "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_channel_group_1 and partner == self.users[2].partner_id:
@@ -966,7 +966,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_channel_group_2 and partner == self.users[0].partner_id:
             return {
                 "create_date": member_0_create_date,
-                "fetched_message_id": {"id": last_message.id},
+                "fetched_message_id": last_message.id,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
@@ -974,7 +974,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
-                "seen_message_id": {"id": last_message.id},
+                "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_group_1 and partner == self.users[0].partner_id:
@@ -1116,11 +1116,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "create_date": fields.Datetime.to_string(member_1.create_date),
                 "last_seen_dt": fields.Datetime.to_string(member_1.last_seen_dt),
-                "fetched_message_id": {"id": last_message.id},
+                "fetched_message_id": last_message.id,
                 "id": member_1.id,
                 "is_bot": False,
                 "persona": {"id": self.users[1].partner_id.id, "type": "partner"},
-                "seen_message_id": {"id": last_message.id},
+                "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         if channel == self.channel_livechat_2 and partner == self.users[0].partner_id:
@@ -1142,11 +1142,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "create_date": fields.Datetime.to_string(member_g.create_date),
                 "last_seen_dt": fields.Datetime.to_string(member_g.last_seen_dt),
-                "fetched_message_id": {"id": last_message.id},
+                "fetched_message_id": last_message.id,
                 "id": member_g.id,
                 "is_bot": False,
                 "persona": {"id": guest.id, "type": "guest"},
-                "seen_message_id": {"id": last_message.id},
+                "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
             }
         return {}
@@ -1184,7 +1184,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": True,
-                "notifications": [{"id": last_message.notification_ids.id}],
+                "notifications": [last_message.notification_ids.id],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
@@ -1367,7 +1367,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "failure_type": False,
                 "id": last_message.notification_ids.id,
-                "message": {"id": last_message.id},
+                "message": last_message.id,
                 "notification_status": "sent",
                 "notification_type": "inbox",
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
@@ -1511,7 +1511,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_channel_group_1 and user == self.users[2]:
             return {
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "channelMember": {"id": member_2.id},
+                "channelMember": member_2.id,
                 "id": member_2.sudo().rtc_session_ids.id,
                 "isCameraOn": False,
                 "isDeaf": False,
