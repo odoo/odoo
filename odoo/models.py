@@ -1118,6 +1118,7 @@ class BaseModel(metaclass=MetaModel):
             batch_xml_ids.clear()
 
             # try to create in batch
+            global_error_message = None
             try:
                 with cr.savepoint():
                     recs = self._load_records(data_list, mode == 'update')
@@ -1130,7 +1131,7 @@ class BaseModel(metaclass=MetaModel):
                     messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'", e)))
                 return
             except UserError as e:
-                messages.append(dict(data_list[0]['info'], type='error', message=str(e)))
+                global_error_message = dict(data_list[0]['info'], type='error', message=str(e))
             except Exception:
                 pass
 
@@ -1152,8 +1153,7 @@ class BaseModel(metaclass=MetaModel):
                     errors += 1
                 except UserError as e:
                     info = rec_data['info']
-                    if dict(info, type='error', message=str(e)) not in messages:
-                        messages.append(dict(info, type='error', message=str(e)))
+                    messages.append(dict(info, type='error', message=str(e)))
                     errors += 1
                 except Exception as e:
                     _logger.debug("Error while loading record", exc_info=True)
@@ -1170,6 +1170,9 @@ class BaseModel(metaclass=MetaModel):
                         'message': _(u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
                     })
                     break
+            if errors > 0 and global_error_message and global_error_message not in messages:
+                # If we cannot create the records 1 by 1, we display the error raised when we created the records simultaneously
+                messages.insert(0, global_error_message)
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
