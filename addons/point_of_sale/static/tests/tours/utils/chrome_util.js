@@ -69,3 +69,6 @@ export function fillTextArea(target, value) {
         run: `edit ${value}`,
     };
 }
+export function createFloatingOrder() {
+    return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
+}
