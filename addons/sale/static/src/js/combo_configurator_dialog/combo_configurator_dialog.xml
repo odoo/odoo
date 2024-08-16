@@ -26,7 +26,7 @@
                 <button
                     name="sale_combo_configurator_confirm_button"
                     class="btn btn-primary"
-                    t-att-disabled="!areAllCombosSelected"
+                    t-att-disabled="!areAllCombosSelected || state.isLoading"
                     t-on-click="confirm"
                 >
                     Confirm

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo.http import request, route
 from odoo.tools import float_is_zero
 
@@ -114,6 +112,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
         :param dict main_product: The main product to add.
         :param list(dict) optional_products: The optional products to add.
+        :param dict kwargs: Locally unused data passed to `_cart_update`.
         :rtype: dict
         :return: A dict containing information about the cart update.
         """
@@ -122,7 +121,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             request.session['sale_order_id'] = None
             order_sudo = request.website.sale_get_order(force_create=True)
 
-        main_product = json.loads(main_product)
         # The main product could theoretically have a parent, but we ignore it to avoid
         # circularities in the linked line ids.
         values = order_sudo._cart_update(
@@ -132,12 +130,11 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             no_variant_attribute_value_ids=[
                 int(value_id) for value_id in main_product['no_variant_attribute_value_ids']
             ],
-            **kwargs
+            **kwargs,
         )
         line_ids = {main_product['product_template_id']: values['line_id']}
 
         if optional_products and values['line_id']:
-            optional_products = json.loads(optional_products)
             for option in optional_products:
                 option_values = order_sudo._cart_update(
                     product_id=option['product_id'],
@@ -149,7 +146,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                     # Using `line_ids[...]` instead of `line_ids.get(...)` ensures that this throws
                     # if an optional product contains bad data.
                     linked_line_id=line_ids[option['parent_product_template_id']],
-                    **kwargs
+                    **kwargs,
                 )
                 line_ids[option['product_template_id']] = option_values['line_id']
 

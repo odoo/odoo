@@ -40,6 +40,7 @@ export class ComboConfiguratorDialog extends Component {
             selectedComboItems: new Map(),
             quantity: this.props.quantity,
             basePrice: this.props.price,
+            isLoading: false,
         });
         if (this.props.edit) this._initSelectedComboItems();
         this._selectSingleComboItems();
@@ -143,7 +144,10 @@ export class ComboConfiguratorDialog extends Component {
     }
 
     async confirm(options) {
-        await this.props.save(this._comboProductData, this._selectedComboItems, options);
+        this.state.isLoading = true;
+        await this.props.save(this._comboProductData, this._selectedComboItems, options).finally(
+            () => this.state.isLoading = false
+        )
         this.props.close();
     }
 
@@ -180,8 +184,9 @@ export class ComboConfiguratorDialog extends Component {
     }
 
     get _totalPrice() {
-        const extraPrice = this.state.selectedComboItems.values().map(
-            comboItem => comboItem.extra_price + comboItem.product.selectedNoVariantPtavsPriceExtra
+        const extraPrice = Array.from(
+            this.state.selectedComboItems.values(),
+            comboItem => comboItem.extra_price + comboItem.product.selectedNoVariantPtavsPriceExtra,
         ).reduce((price, comboItemExtraPrice) => price + comboItemExtraPrice, 0);
         return this.state.quantity * (this.state.basePrice + extraPrice);
     }

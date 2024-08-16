@@ -40,7 +40,7 @@ class ProductCatalogMixin(models.AbstractModel):
         :returns: A list of tuples that represents a domain.
         :rtype: list
         """
-        return [('company_id', 'in', [self.company_id.id, False])]
+        return [('company_id', 'in', [self.company_id.id, False]), ('type', '!=', 'combo')]
 
     def _get_product_catalog_record_lines(self, product_ids, child_field=False, **kwargs):
         """ Returns the record's lines grouped by product.

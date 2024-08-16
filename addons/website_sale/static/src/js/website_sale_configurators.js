@@ -2,8 +2,6 @@
 
 import { rpc } from '@web/core/network/rpc';
 import { serializeDateTime } from '@web/core/l10n/dates';
-import { WebsiteSale } from '@website_sale/js/website_sale';
-import wSaleUtils from '@website_sale/js/website_sale_utils';
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -11,6 +9,9 @@ import { ProductCombo } from "@sale/js/models/product_combo";
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
+import { serializeComboItem } from '@sale/js/sale_utils';
+import { WebsiteSale } from '@website_sale/js/website_sale';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 const { DateTime } = luxon;
 
@@ -73,8 +74,8 @@ WebsiteSale.include({
                 this._trackProducts([mainProduct, ...optionalProducts]);
 
                 const values = await rpc('/website_sale/product_configurator/update_cart', {
-                    main_product: JSON.stringify(this._serializeProduct(mainProduct)),
-                    optional_products: JSON.stringify(optionalProducts.map(this._serializeProduct)),
+                    main_product: this._serializeProduct(mainProduct),
+                    optional_products: optionalProducts.map(this._serializeProduct),
                     ...this._getAdditionalRpcParams(),
                 });
                 this._onConfigured(options, values);
@@ -110,7 +111,7 @@ WebsiteSale.include({
                 const values = await rpc('/website_sale/combo_configurator/update_cart', {
                     combo_product_id: this.rootProduct.product_id,
                     quantity: comboProductData.quantity,
-                    selected_combo_items: selectedComboItems.map(this._serializeComboItem),
+                    selected_combo_items: selectedComboItems.map(serializeComboItem),
                 });
                 this._onConfigured(options, values);
             },
@@ -133,7 +134,7 @@ WebsiteSale.include({
     /**
      * Hook to append additional props in overriding modules.
      *
-     * @return {Object} - The additional props.
+     * @return {Object} The additional props.
      */
     _getAdditionalDialogProps() {
         return {};
@@ -142,7 +143,7 @@ WebsiteSale.include({
     /**
      * Hook to append additional RPC params in overriding modules.
      *
-     * @return {Object} - The additional RPC params.
+     * @return {Object} The additional RPC params.
      */
     _getAdditionalRpcParams() {
         return {};
@@ -151,8 +152,8 @@ WebsiteSale.include({
     /**
      * Serialize a product into a format understandable by the server.
      *
-     * @param {Object} product - The product to serialize.
-     * @return {Object} - The serialized product.
+     * @param {Object} product The product to serialize.
+     * @return {Object} The serialized product.
      */
     _serializeProduct(product) {
         let serializedProduct = {
@@ -187,26 +188,6 @@ WebsiteSale.include({
             .flatMap(ptal => ptal.selected_attribute_value_ids);
 
         return serializedProduct;
-    },
-
-    /**
-     * Serialize a combo item into a format understandable by the server.
-     *
-     * @param {ProductComboItem} comboItem - The combo item to serialize.
-     * @return {Object} - The serialized combo item.
-     */
-    _serializeComboItem(comboItem) {
-        return {
-            combo_item_id: comboItem.id,
-            product_id: comboItem.product.id,
-            product_custom_attribute_values: comboItem.product.selectedCustomPtavs.map(
-                customPtav => ({
-                    custom_product_template_attribute_value_id: customPtav.id,
-                    custom_value: customPtav.value,
-                })
-            ),
-            no_variant_attribute_value_ids: comboItem.product.selectedNoVariantPtavIds,
-        }
     },
 
     _trackProducts: function (products) {

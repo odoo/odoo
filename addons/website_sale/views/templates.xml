@@ -1847,9 +1847,13 @@
                             </button>
                         </div>
                         <t t-if="line.product_type == 'combo'">
-                            <t t-foreach="line.linked_line_ids" t-as="combo_item_line">
+                            <div
+                                t-foreach="line.linked_line_ids"
+                                t-as="combo_item_line"
+                                t-attf-class="{{'' if combo_item_line_last else 'pb-2'}}"
+                            >
                                 <t t-call="website_sale.cart_combo_item_line"/>
-                            </t>
+                            </div>
                         </t>
                     </div>
                     <div class="d-flex flex-column align-items-end">
@@ -1959,12 +1963,12 @@
         <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
         <t
             t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-            t-set='product_price'
+            t-set="product_price"
             t-value="line._get_combo_price_subtotal() if is_combo else line.price_subtotal"
         />
         <t
             t-else=""
-            t-set='product_price'
+            t-set="product_price"
             t-value="line._get_combo_price_total() if is_combo else line.price_total"
         />
         <span

@@ -70,7 +70,7 @@
                             <field name="sale_ok"/>
                             <label for="sale_ok"/>
                         </span>
-                        <span class="d-inline-block">
+                        <span class="d-inline-block" invisible="type == 'combo'">
                             <field name="purchase_ok"/>
                             <label for="purchase_ok"/>
                         </span>
@@ -105,18 +105,18 @@
                                             class="oe_inline"
                                             widget="monetary"
                                             options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                            <span
-                                                name="uom_span"
-                                                groups="uom.group_uom"
-                                                invisible="type == 'combo'"
-                                            >
-                                                per
-                                                <field
-                                                    name="uom_id"
-                                                    class="oe_inline" style="max-width:136px"
-                                                    options="{'no_create': True}"
-                                                />
-                                            </span>
+                                        <span
+                                            name="uom_span"
+                                            groups="uom.group_uom"
+                                            invisible="type == 'combo'"
+                                        >
+                                            per
+                                            <field
+                                                name="uom_id"
+                                                class="oe_inline" style="max-width:136px"
+                                                options="{'no_create': True}"
+                                            />
+                                        </span>
                                     </div>
                                     <label
                                         for="standard_price"
@@ -225,6 +225,7 @@
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Goods" name="goods" domain="[('type', '=', 'consu')]"/>
+                <filter string="Combo" name="combo" domain="[('type', '=', 'combo')]"/>
                 <separator/>
                 <filter string="Sales" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
                 <filter string="Purchase" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
