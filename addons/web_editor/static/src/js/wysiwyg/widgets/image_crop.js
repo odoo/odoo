@@ -12,7 +12,7 @@ import {
     markup,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -93,7 +93,31 @@ export class ImageCrop extends Component {
                 this.aspectRatio = '0/0';
                 this.$cropperImage.cropper('setAspectRatio', this.aspectRatios[this.aspectRatio].value);
             }
-            await this._save(false);
+            await this._save();
+        }
+    }
+
+    /**
+     * Crops the image into a 1:1 ratio or resets the crop, depending on the
+     * preview mode.
+     *
+     *  @param {boolean} previewMode "reset", true or false.
+     */
+    async cropSquare(previewMode) {
+        if(previewMode === "reset"){
+            if (this.$cropperImage) {
+                this.$cropperImage.cropper("setAspectRatio", this.aspectRatios[this.aspectRatio].value);
+                await this._save(false);
+            }
+        } else {
+            const ratio = "1/1";
+            if (this.$cropperImage) {
+                if (this.aspectRatio !== ratio) {
+                    this.aspectRatio = previewMode ? this.aspectRatio : ratio;
+                    this.$cropperImage.cropper("setAspectRatio", this.aspectRatios[ratio].value);
+                }
+                await this._save(false);
+            }
         }
     }
 
@@ -190,9 +214,9 @@ export class ImageCrop extends Component {
      * attachments will be created).
      *
      * @private
-     * @param {boolean} [cropped=true]
+     * @param {boolean} [refreshOptions=true]
      */
-    async _save(cropped = true) {
+    async _save(refreshOptions = true) {
         // Mark the media for later creation of cropped attachment
         this.media.classList.add('o_modified_image_to_save');
 
@@ -205,8 +229,11 @@ export class ImageCrop extends Component {
         });
         delete this.media.dataset.resizeWidth;
         this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
+        const cropped = this.aspectRatio !== "0/0";
         this.media.classList.toggle('o_we_image_cropped', cropped);
-        this.$media.trigger('image_cropped');
+        if(refreshOptions){
+            this.$media.trigger('image_cropped');
+        }
         this._closeCropper();
     }
     /**
@@ -238,21 +265,10 @@ export class ImageCrop extends Component {
         const rect = this.media.getBoundingClientRect();
         const viewportTop = this.document.documentElement.scrollTop || 0;
         const viewportBottom = viewportTop + window.innerHeight;
-        const closestScrollable = el => {
-            if (!el) {
-                return null;
-            }
-            if (el.scrollHeight > el.clientHeight) {
-                return $(el);
-            } else {
-                return closestScrollable(el.parentElement);
-            }
-        };
         // Give priority to the closest scrollable element (e.g. for images in
         // HTML fields, the element to scroll is different from the document's
         // scrolling element).
-        const $scrollable = closestScrollable(this.media);
-        const scrollable = $scrollable?.get(0);
+        const scrollable = closestScrollableY(this.media);
 
         // The image must be in a position that allows access to it and its crop
         // options buttons. Otherwise, the crop widget container can be scrolled
@@ -260,7 +276,7 @@ export class ImageCrop extends Component {
         if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
             await scrollTo(this.media, {
                 behavior: "smooth",
-                ...(scrollable && { scrollable: scrollable }),
+                ...(scrollable && { scrollable }),
             });
         }
     }

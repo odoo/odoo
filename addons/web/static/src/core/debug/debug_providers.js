@@ -20,7 +20,7 @@ commandProviderRegistry.add("debug", {
             }
             result.push({
                 action() {
-                    router.pushState({ debug: undefined }, { reload: true });
+                    router.pushState({ debug: 0 }, { reload: true });
                 },
                 category: "debug",
                 name: _t("Deactivate debug mode"),
@@ -49,6 +49,13 @@ commandProviderRegistry.add("debug", {
         } else {
             const debugKey = "debug";
             if (options.searchValue.toLowerCase() === debugKey) {
+                result.push({
+                    action() {
+                        router.pushState({ debug: "1" }, { reload: true });
+                    },
+                    category: "debug",
+                    name: `${_t("Activate debug mode")} (${debugKey})`,
+                });
                 result.push({
                     action() {
                         router.pushState({ debug: "assets" }, { reload: true });

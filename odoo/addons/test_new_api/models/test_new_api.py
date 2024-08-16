@@ -353,6 +353,10 @@ class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
     _description = 'Test New API Mixed'
 
+    foo = fields.Char()
+    text = fields.Text()
+    truth = fields.Boolean()
+    count = fields.Integer()
     number = fields.Float(digits=(10, 2), default=3.14)
     number2 = fields.Float(digits='New API Precision')
     date = fields.Date()
@@ -517,6 +521,17 @@ class ComputeInverse(models.Model):
             self._context.get('log', []).append('constraint')
 
 
+class ComputeSudo(models.Model):
+    _name = 'test_new_api.compute.sudo'
+    _description = 'Model with a compute_sudo field'
+
+    name_for_uid = fields.Char(compute='_compute_name_for_uid', compute_sudo=True)
+
+    @api.depends_context('uid')
+    def _compute_name_for_uid(self):
+        for record in self:
+            record.name_for_uid = self.env.user.name
+
 class MultiComputeInverse(models.Model):
     """ Model with the same inverse method for several fields. """
     _name = 'test_new_api.multi_compute_inverse'
@@ -634,6 +649,7 @@ class CompanyDependent(models.Model):
     _description = 'Test New API Company'
 
     foo = fields.Char(company_dependent=True)
+    text = fields.Text(company_dependent=True)
     date = fields.Date(company_dependent=True)
     moment = fields.Datetime(company_dependent=True)
     tag_id = fields.Many2one('test_new_api.multi.tag', company_dependent=True)

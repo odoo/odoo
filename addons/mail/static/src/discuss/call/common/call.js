@@ -72,10 +72,10 @@ export class Call extends Component {
     }
 
     get minimized() {
-        if (this.state.isFullscreen || this.props.compact || this.props.thread.activeRtcSession) {
+        if (this.state.isFullscreen || this.props.thread.activeRtcSession) {
             return false;
         }
-        if (!this.isActiveCall || this.props.thread.videoCount === 0) {
+        if (!this.isActiveCall || this.props.thread.videoCount === 0 || this.props.compact) {
             return true;
         }
         return false;

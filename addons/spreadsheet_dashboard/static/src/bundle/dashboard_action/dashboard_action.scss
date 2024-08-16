@@ -4,21 +4,37 @@
     align-items: center;
 
     ul {
-        padding-inline-start: 0px
+        padding-inline-start: 0px;
     }
 
     li {
         padding: 4px 8px 4px 12px;
         list-style-type: none;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
 
         &:hover:not(.active) {
             background-color: $o-gray-100;
         }
+
+        .o_dashboard_name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 8px;
+        }
+
+        .o_edit_dashboard {
+            padding: 0;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s ease-in-out;
+        }
     }
 
+    .o_search_panel_category_value:hover .o_edit_dashboard,
+    .o_search_panel_category_value:focus-within .o_edit_dashboard {
+        visibility: visible;
+        opacity: 1;
+    }
 }
 
 .o_spreadsheet_dashboard_action {
@@ -73,7 +89,7 @@
             .o_multi_record_selector {
                 width: 100%;
 
-                .o_input{
+                .o_input {
                     flex: 1 0 1rem;
                 }
             }

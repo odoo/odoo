@@ -73,4 +73,4 @@ class MicrosoftOutlookController(http.Controller):
             'microsoft_outlook_access_token_expiration': expiration,
         })
 
-        return request.redirect(f'/web?#id={rec_id}&model={model_name}&view_type=form')
+        return request.redirect(f'/odoo/{model_name}/{rec_id}')

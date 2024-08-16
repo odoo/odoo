@@ -11,7 +11,7 @@ function openRoot() {
         trigger: 'body',
         run() {
             document.querySelector("body").classList.add("wait");
-            window.location = '/web';
+            window.location = '/odoo';
         }
     }, {
         content: "wait for client reload",
@@ -74,7 +74,7 @@ function closeProfileDialog({content, totp_state}) {
 
 registry.category("web_tour.tours").add('totp_tour_setup', {
     test: true,
-    url: '/web',
+    url: '/odoo',
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_enable_wizard]',
@@ -82,7 +82,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 },
 {
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -95,11 +94,9 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, {
     content: "Check the wizard has opened",
     trigger: '.modal li:contains("When requested to do so")',
-    in_modal: false,
 }, {
     content: "Get secret from collapsed div",
     trigger: `.modal a:contains("Cannot scan it?")`,
-    in_modal: false,
     async run(helpers) {
         const secret = this.anchor
             .closest("div")
@@ -117,7 +114,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, 
 {
     trigger: ".modal button.btn-primary:contains(Activate)",
-    in_modal: false,
     run: "click",
 },
 {
@@ -223,13 +219,9 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: '.dropdown-item[data-menu=logout]',
     run: "click",
 }, {
-    content: "check that we're back on the login page or go to it",
-    trigger: 'input#login, a:contains(Log in)', 
-    run: "edit Test",
-}, {
-    content: "input login again",
-    trigger: 'input#login',
-    run: "edit demo",
+    content: "check that we're back on the quick login page",
+    trigger: ".o_user_switch .o_user_avatar",
+    run: "click",
 }, {
     content: 'input password again',
     trigger: 'input#password',
@@ -253,16 +245,18 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },
 {
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
-    trigger: '[name=password] input',
+    trigger: ".modal [name=password] input",
     run: "edit demo",
 }, {
     content: "Confirm",
-    trigger: "button:contains(Confirm Password)",
+    trigger: ".modal button:contains(Confirm Password)",
     run: "click",
+},
+{
+    trigger: "body:not(:has(.modal))",
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),
@@ -304,7 +298,7 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 const columns = {};
 registry.category("web_tour.tours").add('totp_admin_disables', {
     test: true,
-    url: '/web',
+    url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     content: 'Go to settings',
     trigger: '[data-menu-xmlid="base.menu_administration"]',
@@ -343,17 +337,14 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
 },
 {
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 },
 { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
     trigger: '.modal [name=password] input',
-    in_modal: false,
     run: "edit admin",
 }, {
     content: "Confirm",
     trigger: ".modal button:contains(Confirm Password)",
-    in_modal: false,
     run: "click",
 }, 
 {

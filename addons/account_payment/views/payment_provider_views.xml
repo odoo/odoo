@@ -15,6 +15,7 @@
                 <field name="journal_id"
                     context="{'default_type': 'bank'}"
                     required="state != 'disabled' and code not in ['none', 'custom']"/>
+                <field name="support_refund" groups="base.group_no_one"/>
             </group>
         </field>
     </record>

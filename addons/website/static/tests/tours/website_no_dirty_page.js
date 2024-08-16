@@ -7,6 +7,7 @@ const makeSteps = (steps = []) => [
     ...wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
+        groupName: "Content",
     }), {
         content: "Click on Discard",
         trigger: '.o_we_website_top_actions [data-action="cancel"]',
@@ -105,6 +106,7 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }), 
     {
         // Ensure the test keeps testing what it should test (eg if we ever

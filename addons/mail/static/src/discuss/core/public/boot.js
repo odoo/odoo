@@ -1,4 +1,4 @@
-import { DiscussPublic } from "@mail/discuss/core/public/discuss_public";
+import { DiscussClientAction } from "@mail/core/public_web/discuss_client_action";
 
 import { mount, whenReady } from "@odoo/owl";
 
@@ -11,7 +11,7 @@ import { makeEnv, startServices } from "@web/env";
     await whenReady();
 
     const mainComponentsRegistry = registry.category("main_components");
-    mainComponentsRegistry.add("DiscussPublic", { Component: DiscussPublic });
+    mainComponentsRegistry.add("DiscussClientAction", { Component: DiscussClientAction });
 
     const env = makeEnv();
     await startServices(env);

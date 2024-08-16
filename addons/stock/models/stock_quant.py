@@ -69,7 +69,7 @@ class StockQuant(models.Model):
     sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated', help="If the same SN is in another Quant")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
-        domain="[('location_id', '=', location_id)]",
+        domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), '&', ('package_use', '=', 'reusable'), ('quant_ids', '=', False)]",
         help='The package containing this quant', ondelete='restrict', check_company=True, index=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
@@ -243,6 +243,9 @@ class StockQuant(models.Model):
         else:
             domain_operator = 'in'
         return [('id', domain_operator, quant_query)]
+
+    def copy(self, default=None):
+        raise UserError(_('You cannot duplicate stock quants.'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -936,8 +939,7 @@ class StockQuant(models.Model):
             quant = self._gather(
                 self.product_id, self.location_id, lot_id=self.lot_id,
                 package_id=self.package_id, owner_id=self.owner_id, strict=True)
-            if quant:
-                self.quantity = sum(quant.filtered(lambda q: q.lot_id == self.lot_id).mapped('quantity'))
+            self.quantity = sum(quant.filtered(lambda q: q.lot_id == self.lot_id).mapped('quantity'))
 
             # Special case: directly set the quantity to one for serial numbers,
             # it'll trigger `inventory_quantity` compute.
@@ -1613,3 +1615,28 @@ class QuantPackage(models.Model):
                 or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
             return False
         return True
+
+    def _get_weight(self, picking_id=False):
+        res = {}
+        if picking_id:
+            package_weights = defaultdict(float)
+            res_groups = self.env['stock.move.line']._read_group(
+                [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', picking_id)],
+                ['result_package_id', 'product_id', 'product_uom_id', 'quantity'],
+                ['__count'],
+            )
+            for result_package, product, product_uom, quantity, count in res_groups:
+                package_weights[result_package.id] += (
+                    count
+                    * product_uom._compute_quantity(quantity, product.uom_id)
+                    * product.weight
+                )
+        for package in self:
+            weight = package.package_type_id.base_weight or 0.0
+            if picking_id:
+                res[package] = weight + package_weights[package.id]
+            else:
+                for quant in package.quant_ids:
+                    weight += quant.quantity * quant.product_id.weight
+                res[package] = weight
+        return res

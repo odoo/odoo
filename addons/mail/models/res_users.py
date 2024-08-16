@@ -145,16 +145,10 @@ class Users(models.Model):
                 )
         if 'notification_type' in vals:
             for user in user_notification_type_modified:
-                self.env["bus.bus"]._sendone(
+                user._bus_send_store(
                     user.partner_id,
-                    "mail.record/insert",
-                    Store(
-                        "res.partner",
-                        {
-                            "id": user.partner_id.id,
-                            "notification_preference": user.notification_type,
-                        },
-                    ).get_result(),
+                    fields=["notification_type"],
+                    main_user_by_partner={user.partner_id: user},
                 )
 
         return write_res
@@ -266,52 +260,40 @@ class Users(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def _init_store_data(self, store):
+    def _init_store_data(self, store: Store, /):
         """Initialize the store of the user."""
-        # sudo: res.partner - exposing OdooBot data
-        odoobot = self.env.ref("base.partner_root").sudo()
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
-        store.add(odoobot)
         store.add(
             {
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
-                "odoobot": {"id": odoobot.id, "type": "partner"},
+                # sudo: res.partner - exposing OdooBot data is considered acceptable
+                "odoobot": Store.one(self.env.ref("base.partner_root").sudo()),
             }
         )
-        guest = self.env["mail.guest"]._get_guest_from_context()
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add(
-                "res.partner",
                 {
-                    "id": self.env.user.partner_id.id,
-                    "isAdmin": self.env.user._is_admin(),
-                    "isInternalUser": not self.env.user.share,
-                    "name": self.env.user.partner_id.name,
-                    "notification_preference": self.env.user.notification_type,
-                    "userId": self.env.user.id,
-                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                },
-            )
-            store.add(
-                {
-                    "self": {"id": self.env.user.partner_id.id, "type": "partner"},
+                    "self": Store.one(
+                        self.env.user.partner_id,
+                        fields=[
+                            "active",
+                            "isAdmin",
+                            "name",
+                            "notification_type",
+                            "user",
+                            "write_date",
+                        ],
+                        main_user_by_partner={self.env.user.partner_id: self.env.user},
+                    ),
                     "settings": settings._res_users_settings_format(),
                 }
             )
-        elif guest:
-            store.add(
-                "mail.guest",
-                {
-                    "id": guest.id,
-                    "name": guest.name,
-                    "write_date": fields.Datetime.to_string(guest.write_date),
-                },
-            )
-            store.add({"self": {"id": guest.id, "type": "guest"}})
+        elif guest := self.env["mail.guest"]._get_guest_from_context():
+            store.add({"self": Store.one(guest, fields=["name", "write_date"])})
 
     def _init_messaging(self, store):
         self.ensure_one()

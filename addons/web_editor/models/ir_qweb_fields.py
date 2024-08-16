@@ -8,27 +8,25 @@ as well as render a few fields differently.
 Also, adds methods to convert values back to Odoo models.
 """
 
-import babel
 import base64
 import io
 import json
 import logging
 import os
 import re
+from datetime import datetime
 
+import babel
 import pytz
 import requests
-from datetime import datetime
 from lxml import etree, html
+from markupsafe import Markup, escape_silent
 from PIL import Image as I
 from werkzeug import urls
 
-import odoo.modules
-
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import ustr, posix_to_ldml, pycompat
-from odoo.tools import html_escape as escape
+from odoo.tools import posix_to_ldml
 from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -79,16 +77,22 @@ class IrQWeb(models.AbstractModel):
         view = self.env['ir.ui.view']._get(key).sudo()
         name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
+        image_preview = el.attrib.pop('t-image-preview', None)
         # Forbid sanitize contains the specific reason:
         # - "true": always forbid
         # - "form": forbid if forms are sanitized
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
-        div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s>' % (
-            escape(pycompat.to_text(name)),
-            escape(pycompat.to_text(thumbnail)),
-            escape(pycompat.to_text(view.id)),
-            escape(pycompat.to_text(el.findtext('keywords'))),
-            f'data-oe-forbid-sanitize="{forbid_sanitize}"' if forbid_sanitize else '',
+        snippet_group = el.attrib.pop('snippet-group', None)
+        group = el.attrib.pop('group', None)
+        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s %s %s>') % (
+            name,
+            escape_silent(image_preview),
+            thumbnail,
+            view.id,
+            escape_silent(el.findtext('keywords')),
+            Markup('data-oe-forbid-sanitize="%s"') % forbid_sanitize if forbid_sanitize else '',
+            Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
+            Markup('data-o-group="%s"') % group if group else '',
         )
         self._append_text(div, compile_context)
         code = self._compile_node(el, compile_context, indent)
@@ -104,15 +108,19 @@ class IrQWeb(models.AbstractModel):
     def _compile_directive_install(self, el, compile_context, indent):
         key = el.attrib.pop('t-install')
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
+        image_preview = el.attrib.pop('t-image-preview', None)
+        group = el.attrib.pop('group', None)
         if self.env.user.has_group('base.group_system'):
             module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (
-                escape(pycompat.to_text(name)),
+            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s><section/></div>') % (
+                name,
                 module.id,
-                escape(pycompat.to_text(thumbnail))
+                escape_silent(image_preview),
+                thumbnail,
+                Markup('data-o-group="%s"') % group if group else '',
             )
             self._append_text(div, compile_context)
         return []
@@ -283,7 +291,7 @@ class Date(models.AbstractModel):
 
             if record[field_name]:
                 date = fields.Date.from_string(record[field_name])
-                value_format = pycompat.to_text(babel.dates.format_date(date, format=babel_format, locale=locale))
+                value_format = babel.dates.format_date(date, format=babel_format, locale=locale)
 
             attrs['data-oe-original-with-format'] = value_format
         return attrs
@@ -322,7 +330,7 @@ class DateTime(models.AbstractModel):
             if value:
                 # convert from UTC (server timezone) to user timezone
                 value = fields.Datetime.context_timestamp(self.with_context(tz=tz), timestamp=value)
-                value_format = pycompat.to_text(babel.dates.format_datetime(value, format=babel_format, locale=locale))
+                value_format = babel.dates.format_datetime(value, format=babel_format, locale=locale)
                 value = fields.Datetime.to_string(value)
 
             attrs['data-oe-original'] = value
@@ -383,8 +391,6 @@ class Selection(models.AbstractModel):
         value = element.text_content().strip()
         selection = field.get_description(self.env)['selection']
         for k, v in selection:
-            if isinstance(v, str):
-                v = ustr(v)
             if value == v:
                 return k
 

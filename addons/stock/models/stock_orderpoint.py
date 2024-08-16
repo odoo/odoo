@@ -54,10 +54,12 @@ class StockWarehouseOrderpoint(models.Model):
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Min Quantity', digits='Product Unit of Measure', required=True, default=0.0,
+        compute='_compute_product_min_qty', readonly=False, store=True,
         help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity above of this Min Quantity.")
     product_max_qty = fields.Float(
         'Max Quantity', digits='Product Unit of Measure', required=True, default=0.0,
+        compute='_compute_product_max_qty', readonly=False, store=True,
         help="When the virtual stock goes below the Min Quantity, Odoo generates "
              "a procurement to bring the forecasted quantity up to (or near to) the Max Quantity specified for this field (or to Min Quantity, whichever is bigger).")
     qty_multiple = fields.Float(
@@ -127,6 +129,18 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(orderpoint.location_id, route_ids=orderpoint.route_id)
 
+    @api.depends('product_max_qty')
+    def _compute_product_min_qty(self):
+        for orderpoint in self:
+            if orderpoint.product_max_qty < orderpoint.product_min_qty or not orderpoint.product_min_qty:
+                orderpoint.product_min_qty = orderpoint.product_max_qty
+
+    @api.depends('product_min_qty')
+    def _compute_product_max_qty(self):
+        for orderpoint in self:
+            if orderpoint.product_max_qty < orderpoint.product_min_qty or not orderpoint.product_max_qty:
+                orderpoint.product_max_qty = orderpoint.product_min_qty
+
     @api.depends('route_id', 'product_id')
     def _compute_visibility_days(self):
         self.visibility_days = 0
@@ -143,6 +157,11 @@ class StockWarehouseOrderpoint(models.Model):
         ''' Check if the UoM has the same category as the product standard UoM '''
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
             raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
+
+    @api.constrains('product_min_qty', 'product_max_qty')
+    def _check_min_max_qty(self):
+        if any(orderpoint.product_min_qty > orderpoint.product_max_qty for orderpoint in self):
+            raise ValidationError(_('The minimum quantity must be less than or equal to the maximum quantity.'))
 
     @api.depends('location_id', 'company_id')
     def _compute_warehouse_id(self):
@@ -184,11 +203,20 @@ class StockWarehouseOrderpoint(models.Model):
         if self.route_id:
             self.qty_multiple = self._get_qty_multiple_to_order()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any(val.get('snoozed_until', False) and val.get('trigger', self.default_get(['trigger'])['trigger']) == 'auto' for val in vals_list):
+            raise UserError(_("You can not create a snoozed orderpoint that is not manually triggered."))
+        return super().create(vals_list)
+
     def write(self, vals):
         if 'company_id' in vals:
             for orderpoint in self:
                 if orderpoint.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        if 'snoozed_until' in vals:
+            if any(orderpoint.trigger == 'auto' for orderpoint in self):
+                raise UserError(_("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
         return super().write(vals)
 
     def action_product_forecast_report(self):
@@ -516,7 +544,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': move.picking_id.name,
-                        'url': f'/web#action={action.id}&id={move.picking_id.id}&model=stock.picking&view_type=form'
+                        'url': f'/odoo/action-stock.stock_picking_action_picking_type/{move.picking_id.id}'
                     }],
                     'sticky': False,
                     'next': {'type': 'ir.actions.act_window_close'},

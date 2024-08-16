@@ -46,8 +46,8 @@
         'views/mailing_contact_views.xml',
         'views/mailing_list_views.xml',
         'views/mailing_mailing_views.xml',
-        'views/mailing_subscription_views.xml',
         'views/mailing_subscription_optout_views.xml',
+        'views/mailing_subscription_views.xml',
         'views/res_config_settings_views.xml',
         'views/utm_campaign_views.xml',
         'views/mailing_menus.xml',
@@ -132,6 +132,9 @@
             'mass_mailing/static/src/xml/mass_mailing.xml',
             'mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml',
             'mass_mailing/static/src/js/tours/**/*',
+        ],
+        'web.assets_backend_lazy': [
+            'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',

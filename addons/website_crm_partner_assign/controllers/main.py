@@ -8,7 +8,6 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo import http
 from odoo.http import request
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
@@ -187,7 +186,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
     _references_per_page = 40
 
     def _get_gmap_domains(self, **kw):
-        domains = super()._get_gmap_domains(**kw)
+        if kw.get('dom', '') != "website_crm_partner_assign.partners":
+            return super()._get_gmap_domains(**kw)
         current_grade = kw.get('current_grade')
         current_country = kw.get('current_country')
 
@@ -201,26 +201,27 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         if current_grade:
             domain += [('grade_id', '=', int(current_grade))]
 
-        domains['website_crm_partner_assign.partners'] = domain
-        return domains
+        return domain
 
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
             yield {'loc': '/partners'}
 
         slug = env['ir.http']._slug
-        Grade = env['res.partner.grade']
-        dom = [('website_published', '=', True)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/grade/', field=Grade._rec_name)
-        for grade in env['res.partner.grade'].search(dom):
+        base_partner_domain = [
+            ('is_company', '=', True),
+            ('grade_id', '!=', False),
+            ('website_published', '=', True),
+            ('grade_id.website_published', '=', True),
+            ('grade_id.active', '=', True),
+        ]
+        grades = env['res.partner'].sudo()._read_group(base_partner_domain, groupby=['grade_id'])
+        for [grade] in grades:
             loc = '/partners/grade/%s' % slug(grade)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
-
-        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True),
-                        ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
-        countries = env['res.partner'].sudo()._read_group(partners_dom, groupby=['country_id'])
+        country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
+        countries = env['res.partner'].sudo()._read_group(country_partner_domain, groupby=['country_id'])
         for [country] in countries:
             loc = '/partners/country/%s' % slug(country)
             if not qs or qs.lower() in loc:
@@ -245,7 +246,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         country_obj = request.env['res.country']
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
+        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
@@ -332,7 +333,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             offset=pager['offset'], limit=self._references_per_page)
         partners = partner_ids.sudo()
 
-        google_map_partner_ids = ','.join(str(p.id) for p in partners)
         google_maps_api_key = request.website.google_maps_api_key
 
         values = {
@@ -342,7 +342,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             'grades': grades,
             'current_grade': grade,
             'partners': partners,
-            'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
             'search_path': "%s" % werkzeug.urls.url_encode(post),

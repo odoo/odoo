@@ -23,10 +23,6 @@ class MessageSeenIndicatorDialog extends Component {
             true
         );
     }
-
-    get SEEN_BY() {
-        return _t("Seen by:");
-    }
 }
 
 /**
@@ -51,6 +47,8 @@ export class MessageSeenIndicator extends Component {
         const seenMembers = this.props.message.channelMemberHaveSeen;
         const [user1, user2, user3] = seenMembers.map((member) => member.name);
         switch (seenMembers.length) {
+            case 0:
+                return _t("Sent");
             case 1:
                 return _t("Seen by %(user)s", { user: user1 });
             case 2:
@@ -74,6 +72,9 @@ export class MessageSeenIndicator extends Component {
     }
 
     openDialog() {
+        if (this.props.message.channelMemberHaveSeen.length === 0) {
+            return;
+        }
         this.dialog.add(MessageSeenIndicatorDialog, { message: this.props.message });
     }
 }

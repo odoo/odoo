@@ -11,15 +11,17 @@
                             </t>
                             <button t-else=""
                                 class="btn btn-light"
-                                t-attf-class="btn btn-light
-                                    {{button.icon ? 'fa fa-fw ps-1 pe-3 mx-1 ' + button.icon : 'px-1'}}
-                                    {{ state.buttonsActiveState[button.id] ? 'active': ''}}
-                                    {{ state.buttonsDisabledState[button.id] ? 'disabled': ''}}"
+                                t-att-class="{
+                                    active: state.buttonsActiveState[button.id],
+                                    disabled: state.buttonsDisabledState[button.id]
+                                }"
                                 t-att-title="button.name"
                                 t-att-name="button.id"
-                                t-on-click="() => button.action(this.props.toolbar.dispatch)">
-                                    <t t-esc="button.text"/>
-                                </button>
+                                t-on-click="() => button.action(this.props.toolbar.dispatch)"
+                            >
+                                <span t-if="button.icon" class="fa fa-fw" t-att-class="button.icon"/>
+                                <span t-if="button.text" t-esc="button.text"/>
+                            </button>
                         </t>
                     </t>
                 </div>

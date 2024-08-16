@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="snailmail.SnailmailError">
-        <Dialog contentClass="'o-snailmail-SnailmailError'" title="title">
+        <Dialog contentClass="'o-snailmail-SnailmailError'" title.translate="Failed letter">
             <t t-if="props.failureType === 'sn_credit'">
                 <p class="mx-3 mb-3">
                     The letter could not be sent due to insufficient credits on your IAP account.

@@ -42,7 +42,7 @@
                             </setting>
                         </block>
                         <block title="Taxes" name="default_taxes_setting_container">
-                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied to local transactions" title="These taxes are set in any new product created."
+                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied when creating new products." title="These taxes are set in any new product created."
                                 documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                 <div class="content-group">
                                     <div class="row mt16">
@@ -52,6 +52,10 @@
                                     <div class="row">
                                         <label string="Purchase Tax" for="purchase_tax_id" class="col-lg-3 o_light_label"/>
                                         <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all'))]"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Prices" for="account_price_include" class="col-lg-3 o_light_label"/>
+                                        <field name="account_price_include" readonly="has_accounting_entries"/>
                                     </div>
                                 </div>
                             </setting>
@@ -99,7 +103,7 @@
                             </setting>
                         </block>
                         <block title="Customer Invoices" id="invoicing_settings">
-                            <setting id="default_setting_options" string="Default Sending Options" help="Those options will be selected by default when clicking &quot;Send &amp; Print&quot; on invoices">
+                            <setting id="default_setting_options" string="Default Sending Options" help="Those options will be selected by default when clicking &quot;Print &amp; Send&quot; on invoices">
                                 <div class="mt16">
                                     <div class="content-group" id="send_default">
                                         <div>
@@ -223,6 +227,9 @@
                         <block title="Vendor Bills" id="account_vendor_bills">
                             <setting id="show_purchase_receipts" help="Activate to create purchase receipt">
                                 <field name="group_show_purchase_receipts"/>
+                            </setting>
+                            <setting id="autopost_bills" help="After importing three bills for a vendor without making changes, Odoo will suggest automatically validating future bills. You can toggle this feature at any time in the vendor's profile.">
+                                <field name="autopost_bills"/>
                             </setting>
                         </block>
                         <block title="Vendor Payments" id="print_vendor_checks_setting_container">

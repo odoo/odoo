@@ -56,7 +56,7 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
     Attachment;
     /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
-    CannedResponse;
+    ["mail.canned.response"];
     /** @type {typeof import("@mail/core/common/channel_member_model").ChannelMember} */
     ChannelMember;
     /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
@@ -110,13 +110,6 @@ export class Store extends BaseStore {
     hasMessageTranslationFeature;
     imStatusTrackedPersonas = Record.many("Persona", {
         inverse: "storeAsTrackedImStatus",
-        /** @this {import("models").Store} */
-        onUpdate() {
-            this.env.services["im_status"].registerToImStatus(
-                "res.partner",
-                this.imStatusTrackedPersonas.map((p) => p.id)
-            );
-        },
     });
     hasLinkPreviewFeature = true;
     // messaging menu
@@ -156,6 +149,83 @@ export class Store extends BaseStore {
     }
 
     messagePostMutex = new Mutex();
+
+    menuThreads = Record.many("Thread", {
+        /** @this {import("models").Store} */
+        compute() {
+            /** @type {import("models").Thread[]} */
+            const searchTerm = cleanTerm(this.discuss.searchTerm);
+            let threads = Object.values(this.Thread.records).filter(
+                (thread) =>
+                    (thread.displayToSelf ||
+                        (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
+                    cleanTerm(thread.displayName).includes(searchTerm)
+            );
+            const tab = this.discuss.activeTab;
+            if (tab !== "main") {
+                threads = threads.filter(({ channel_type }) =>
+                    this.tabToThreadType(tab).includes(channel_type)
+                );
+            } else if (tab === "main" && this.env.inDiscussApp) {
+                threads = threads.filter(({ channel_type }) =>
+                    this.tabToThreadType("mailbox").includes(channel_type)
+                );
+            }
+            return threads;
+        },
+        /**
+         * @this {import("models").Store}
+         * @param {import("models").Thread} a
+         * @param {import("models").Thread} b
+         */
+        sort(a, b) {
+            /**
+             * Ordering:
+             * - threads with needaction
+             * - unread channels
+             * - read channels
+             * - odoobot chat
+             *
+             * In each group, thread with most recent message comes first
+             */
+            const aOdooBot = a.isCorrespondentOdooBot;
+            const bOdooBot = b.isCorrespondentOdooBot;
+            if (aOdooBot && !bOdooBot) {
+                return 1;
+            }
+            if (bOdooBot && !aOdooBot) {
+                return -1;
+            }
+            const aNeedaction = a.needactionMessages.length;
+            const bNeedaction = b.needactionMessages.length;
+            if (aNeedaction > 0 && bNeedaction === 0) {
+                return -1;
+            }
+            if (bNeedaction > 0 && aNeedaction === 0) {
+                return 1;
+            }
+            const aUnread = a.selfMember?.message_unread_counter;
+            const bUnread = b.selfMember?.message_unread_counter;
+            if (aUnread > 0 && bUnread === 0) {
+                return -1;
+            }
+            if (bUnread > 0 && aUnread === 0) {
+                return 1;
+            }
+            const aMessageDatetime = a.newestPersistentNotEmptyOfAllMessage?.datetime;
+            const bMessageDateTime = b.newestPersistentNotEmptyOfAllMessage?.datetime;
+            if (!aMessageDatetime && bMessageDateTime) {
+                return 1;
+            }
+            if (!bMessageDateTime && aMessageDatetime) {
+                return -1;
+            }
+            if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
+                return bMessageDateTime - aMessageDatetime;
+            }
+            return b.localId > a.localId ? 1 : -1;
+        },
+    });
 
     /**
      * @param {Object} params post message data
@@ -262,27 +332,44 @@ export class Store extends BaseStore {
      * @template T
      * @param {T} [dataByModelName={}]
      * @param {Object} [options={}]
-     * @returns {{ [K in keyof T]: T[K] extends Array ? import("models").Models[K][] : import("models").Models[K] }}
+     * @returns {{ [K in keyof T]: import("models").Models[K][] }}
      */
     insert(dataByModelName = {}, options = {}) {
         const store = this;
         const pyModels = Object.values(pyToJsModels);
         return Record.MAKE_UPDATE(function storeInsert() {
             const res = {};
+            const recordsDataToDelete = [];
             for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
                 if (pyModels.includes(pyOrJsModelName)) {
                     console.warn(
                         `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
                     );
                 }
+                const modelName = pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
+                if (!store[modelName]) {
+                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
+                    continue;
+                }
+                const insertData = [];
                 for (const vals of Array.isArray(data) ? data : [data]) {
                     const extraFields = addFieldsByPyModel[pyOrJsModelName];
                     if (extraFields) {
                         Object.assign(vals, extraFields);
                     }
+                    if (vals._DELETE) {
+                        delete vals._DELETE;
+                        recordsDataToDelete.push([modelName, vals]);
+                    } else {
+                        insertData.push(vals);
+                    }
                 }
-                const modelName = pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
-                res[modelName] = store[modelName].insert(data, options);
+                res[modelName] = store[modelName].insert(insertData, options);
+            }
+            // Delete after all inserts to make sure a relation potentially registered before the
+            // delete doesn't re-add the deleted record by mistake.
+            for (const [modelName, vals] of recordsDataToDelete) {
+                store[modelName].get(vals)?.delete();
             }
             return res;
         });
@@ -304,6 +391,40 @@ export class Store extends BaseStore {
      */
     tabToThreadType(tab) {
         return tab === "chat" ? ["chat", "group"] : [tab];
+    }
+
+    handleClickOnLink(ev, thread) {
+        const model = ev.target.dataset.oeModel;
+        const id = Number(ev.target.dataset.oeId);
+        if (ev.target.closest(".o_channel_redirect") && model && id) {
+            ev.preventDefault();
+            this.Thread.getOrFetch({ model, id }).then((thread) => {
+                if (thread) {
+                    thread.open();
+                }
+            });
+            return true;
+        } else if (ev.target.closest(".o_mail_redirect") && id) {
+            ev.preventDefault();
+            this.openChat({ partnerId: id });
+            return true;
+        } else if (ev.target.tagName === "A" && model && id) {
+            ev.preventDefault();
+            Promise.resolve(
+                this.env.services.action.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: model,
+                    views: [[false, "form"]],
+                    res_id: id,
+                })
+            ).then(() => {
+                if (!this.env.isSmall) {
+                    thread.open(true, { autofocus: false });
+                }
+            });
+            return true;
+        }
+        return false;
     }
 
     setup() {
@@ -614,7 +735,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui"],
+    dependencies: ["bus_service", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

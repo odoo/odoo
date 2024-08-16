@@ -179,7 +179,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         })
 
         self.pos_table_1 = self.env['restaurant.table'].create({
-            'name': '1',
+            'table_number': 1,
             'floor_id': self.pos_main_floor.id,
             'seats': 4,
             'shape': 'square',

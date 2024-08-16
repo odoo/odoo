@@ -5,7 +5,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("crm_rainbowman", {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             run: "click",
         },
         {
-            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
+            trigger: ".o_kanban_record:contains('Test Lead 1')",
             content: "move to won stage",
             run: "drag_and_drop (.o_opportunity_kanban .o_kanban_group:eq(3))",
         },
@@ -75,16 +75,16 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             run: "click",
         },
         {
-            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
+            trigger: ".o_kanban_record:contains('Test Lead 2')",
         },
         {
             // move first test back to new stage to be able to test rainbowman a second time
-            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
+            trigger: ".o_kanban_record:contains('Test Lead 1')",
             content: "move back to new stage",
             run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(0) ",
         },
         {
-            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
+            trigger: ".o_kanban_record:contains('Test Lead 2')",
             content: "click on second lead",
             run: "click",
         },

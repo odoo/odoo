@@ -3,11 +3,15 @@
 import logging
 
 from werkzeug.urls import url_encode
+from werkzeug.exceptions import NotFound, Unauthorized
 
 from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
+from odoo.addons.mail.controllers.discuss.public_page import PublicPageController
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -17,7 +21,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
+        url = '/odoo/action-mail.action_discuss'
         return request.redirect(url)
 
     @classmethod
@@ -83,7 +87,7 @@ class MailController(http.Controller):
                     #   _get_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
                     #   - Merge the suggested company with the companies on the cookie
-                    # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
+                    # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     if not suggested_company:
                         raise AccessError('')
@@ -121,22 +125,16 @@ class MailController(http.Controller):
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
 
-        url_params = {
-            'model': model,
-            'id': res_id,
-            'active_id': res_id,
-            'action': record_action.get('id'),
-        }
+        url_params = {}
         menu_id = request.env['ir.ui.menu']._get_best_backend_root_menu_id_for_model(model)
         if menu_id:
             url_params['menu_id'] = menu_id
         view_id = record_sudo.get_formview_id()
         if view_id:
             url_params['view_id'] = view_id
-
         if cids:
             request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
-        url = '/web?#%s' % url_encode(url_params)
+        url = f'/odoo/{model}/{res_id}?{url_encode(url_params)}'
         return request.redirect(url)
 
     @http.route('/mail/view', type='http', auth='public')
@@ -197,3 +195,41 @@ class MailController(http.Controller):
             'model_name': request.env['ir.model'].sudo()._get(model).display_name,
             'access_url': record._notify_get_action_link('view', model=model, res_id=res_id) if display_link else False,
         })
+
+    @http.route('/mail/message/<int:message_id>', type='http', auth='public')
+    @add_guest_to_context
+    def mail_thread_message_redirect(self, message_id, **kwargs):
+        message = request.env['mail.message'].search([('id', '=', message_id)])
+        if not message:
+            if request.env.user._is_public():
+                return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
+            raise Unauthorized()
+
+        # sudo: public user can access some relational fields of mail.message
+        if message.sudo()._filter_empty():
+            raise NotFound()
+        if not request.env.user._is_internal():
+            thread = request.env[message.model].search([('id', '=', message.res_id)])
+            if message.model == 'discuss.channel':
+                store = Store({'isChannelTokenSecret': True})
+                store.add(thread, {'highlightMessage': Store.one(message, only_id=True)})
+                return PublicPageController()._response_discuss_channel_invitation(store, thread)
+            elif hasattr(thread, '_get_share_url'):
+                return request.redirect(thread._get_share_url(share_token=False))
+            else:
+                raise Unauthorized()
+
+        url_params = {
+            'highlight_message_id': message_id,
+        }
+        if message.model == 'discuss.channel':
+            url_params['active_id'] = message.res_id
+            url_params['action'] = 'mail.action_discuss'
+        else:
+            url_params.update({
+                'model': message.model,
+                'id': message.res_id,
+                'view_type': 'form',
+            })
+        url = '/web#%s' % url_encode(url_params)
+        return request.redirect(url)

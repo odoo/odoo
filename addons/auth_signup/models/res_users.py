@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
@@ -11,11 +10,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.misc import ustr
 from odoo.http import request
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.addons.auth_signup.models.res_partner import SignupError, now
+from odoo.addons.auth_signup.models.res_partner import SignupError
 
 _logger = logging.getLogger(__name__)
 
@@ -133,13 +131,10 @@ class ResUsers(models.Model):
 
     def _notify_inviter(self):
         for user in self:
-            invite_partner = user.create_uid.partner_id
-            if invite_partner:
-                # notify invite user that new user is connected
-                self.env['bus.bus']._sendone(invite_partner, 'res.users/connection', {
-                    'username': user.name,
-                    'partnerId': user.partner_id.id,
-                })
+            # notify invite user that new user is connected
+            user.create_uid._bus_send(
+                "res.users/connection", {"username": user.name, "partnerId": user.partner_id.id}
+            )
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
@@ -159,7 +154,7 @@ class ResUsers(models.Model):
                 return template_user.with_context(no_reset_password=True).copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.
-            raise SignupError(ustr(e))
+            raise SignupError(str(e))
 
     def reset_password(self, login):
         """ retrieve the user corresponding to login (login or email),

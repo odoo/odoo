@@ -1,6 +1,3 @@
-/** @odoo-module **/
-
-import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from '@web/core/utils/hooks';
 import { Mutex } from "@web/core/utils/concurrency";
 import { Dialog } from '@web/core/dialog/dialog';
@@ -50,7 +47,6 @@ export class MediaDialog extends Component {
     setup() {
         this.size = 'xl';
         this.contentClass = 'o_select_media_dialog h-100';
-        this.title = _t("Select a media");
         this.modalRef = useChildRef();
 
         this.orm = useService('orm');

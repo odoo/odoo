@@ -514,6 +514,26 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_d01-image.jpg"/>
         </record>
 
+        <record id="product_product_local_delivery" model="product.product">
+            <field name="name">Local Delivery</field>
+            <field name="default_code">Delivery_010</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">10.0</field>
+        </record>
+
+        <record id="product_product_furniture" model="product.product">
+            <field name="name">Furniture Assembly</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">2000.00</field>
+            <field name="standard_price">2500.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+        </record>
+
         <record id="product_template_dining_table" model="product.template">
             <field name="name">Outdoor dining table</field>
             <field name="categ_id" ref="product_category_outdoor_furniture"/>
@@ -525,6 +545,156 @@
                     'value_ids': [Command.set([ref('pav_warranty'), ref('pav_cleaning_kit'), ref('pav_protection_kit')])],
                 }),
             ]"/>
+        </record>
+
+        <record id="desk_organizer" model="product.product">
+            <field name="list_price">5.10</field>
+            <field name="name">Desk Organizer</field>
+            <field name="description_sale">
+                The desk organiser is perfect for storing all kinds of small things and since the 5
+                boxes are loose, you can move and place them in the way that suits you and your
+                things best.
+            </field>
+            <field name="default_code">FURN_0001</field>
+            <field name="barcode">2300001000008</field>
+            <field name="weight">0.01</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="product/static/img/desk_organizer.png"/>
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'product.desk_organizer_product_template',
+                    'record': obj().env.ref('product.desk_organizer').product_tmpl_id,
+                    'noupdate': True,
+                }]"
+            />
+        </function>
+        <record id="desk_organizer_size" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product.desk_organizer_product_template"/>
+            <field name="attribute_id" ref="size_attribute"/>
+            <field
+                name="value_ids"
+                eval="[(6, 0, [
+                    ref('size_attribute_s'),
+                    ref('size_attribute_m'),
+                    ref('size_attribute_l'),
+                ])]"
+            />
+        </record>
+        <record id="desk_organizer_fabric" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product.desk_organizer_product_template"/>
+            <field name="attribute_id" ref="fabric_attribute"/>
+            <field
+                name="value_ids"
+                eval="[(6, 0, [
+                    ref('fabric_attribute_plastic'),
+                    ref('fabric_attribute_leather'),
+                    ref('fabric_attribute_custom'),
+                ])]"
+            />
+        </record>
+
+        <record id="desk_pad" model="product.product">
+            <field name="list_price">1.98</field>
+            <field name="name">Desk Pad</field>
+            <field name="default_code">FURN_0002</field>
+            <field name="weight">0.01</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="product/static/img/desk_pad.png"/>
+        </record>
+
+        <record id="monitor_stand" model="product.product">
+            <field name="list_price">3.19</field>
+            <field name="name">Monitor Stand</field>
+            <field name="default_code">FURN_0006</field>
+            <field name="weight">0.01</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="product/static/img/monitor_stand.png"/>
+        </record>
+
+        <record id="desk_accessories_combo" model="product.combo">
+            <field name="name">Desk Accessories Combo</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product.desk_organizer'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.desk_pad'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.monitor_stand'),
+                        'extra_price': 2,
+                    }),
+                ]"
+            />
+        </record>
+
+        <record id="desks_combo" model="product.combo">
+            <field name="name">Desks Combo</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product.product_product_3'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.product_product_5'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
+        </record>
+
+        <record id="chairs_combo" model="product.combo">
+            <field name="name">Chairs Combo</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product.product_product_11'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.product_product_11b'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.product_product_12'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
+        </record>
+
+        <record id="office_combo" model="product.product">
+            <field name="list_price">160</field>
+            <field name="name">Office Combo</field>
+            <field name="type">combo</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="product/static/img/office_combo.png"/>
+            <field
+                name="combo_ids"
+                eval="[(6, 0, [
+                    ref('desks_combo'),
+                    ref('chairs_combo'),
+                    ref('desk_accessories_combo'),
+                ])]"
+            />
         </record>
 
         <function model="product.template" name="_demo_configure_variants"/>

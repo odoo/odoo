@@ -3,7 +3,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { FormController } from "@web/views/form/form_controller";
-import { TodoEditableBreadcrumbName } from "@project_todo/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name";
 import { TodoDoneCheckmark } from "@project_todo/components/todo_done_checkmark/todo_done_checkmark";
 import { PriorityField } from "@web/views/fields/priority/priority_field";
 
@@ -18,7 +17,6 @@ export class TodoFormController extends FormController {
     static template = "project_todo.TodoFormView";
     static components = {
         ...FormController.components,
-        TodoEditableBreadcrumbName,
         TodoDoneCheckmark,
         PriorityField,
     };

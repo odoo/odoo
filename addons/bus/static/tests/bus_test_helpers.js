@@ -1,11 +1,20 @@
-/** @odoo-module **/
+import { busService } from "@bus/services/bus_service";
 
 import { after, expect } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 import { MockServer, defineModels, webModels } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
 import { BusBus } from "./mock_server/mock_models/bus_bus";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
+
+import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
+import { logger } from "@web/../lib/hoot/core/logger";
+
+patch(busService, {
+    _onMessage(id, type, payload) {
+        logger.logDebug("bus:", id, type, payload);
+    },
+});
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -108,10 +117,13 @@ export function waitUntilSubscribe() {
 export function waitForChannels(channels, { operation = "add" } = {}) {
     const { env } = MockServer.current;
     const def = new Deferred();
+    let done = false;
 
     function check({ crashOnFail = false } = {}) {
         const userChannels = new Set(env["bus.bus"].channelsByUser[env.uid]);
-        const success = channels.every((c) => userChannels.has(c));
+        const success = channels.every((c) =>
+            operation === "add" ? userChannels.has(c) : !userChannels.has(c)
+        );
         if (!success && !crashOnFail) {
             return;
         }
@@ -128,10 +140,15 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
         } else {
             def.reject(new Error(message));
         }
+        done = true;
     }
 
     const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
-    after(() => check({ crashOnFail: true }));
+    after(() => {
+        if (!done) {
+            check({ crashOnFail: true });
+        }
+    });
     onWebsocketEvent("subscribe", check);
     check();
     return def;

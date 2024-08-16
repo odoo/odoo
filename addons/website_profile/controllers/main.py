@@ -45,12 +45,15 @@ class WebsiteProfile(http.Controller):
         # User can access - no matter what - his own profile
         if user_sudo.id == request.env.user.id:
             return user_sudo, False
-        if request.env.user.karma < request.website.karma_profile_min:
-            return False, _("Not have enough karma to view other users' profile.")
+
+        # Profile being published is more specific than general karma requirement (check it first!)
+        if not user_sudo.website_published:
+            return False, _('This profile is private!')
         elif not user_sudo.exists():
             raise request.not_found()
-        elif user_sudo.karma == 0 or not user_sudo.website_published:
-            return False, _('This profile is private!')
+
+        elif request.env.user.karma < request.website.karma_profile_min:
+            return False, _("Not have enough karma to view other users' profile.")
         return user_sudo, False
 
     def _prepare_user_values(self, **kwargs):

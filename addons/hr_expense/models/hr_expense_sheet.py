@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, Command, models, _
-from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.exceptions import AccessError, UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import clean_context
 from odoo.tools import format_date
 
@@ -243,7 +243,7 @@ class HrExpenseSheet(models.Model):
                     # when the sheet is paid by the company, the state/amount of the related account_move_ids are not relevant
                     # unless all moves have been reversed
                     sheet.amount_residual = 0.
-                    if sheet.account_move_ids - sheet.account_move_ids.filtered('reversal_move_id'):
+                    if sheet.account_move_ids - sheet.account_move_ids.filtered('reversal_move_ids'):
                         sheet.payment_state = 'paid'
                     else:
                         sheet.payment_state = 'reversed'
@@ -392,7 +392,7 @@ class HrExpenseSheet(models.Model):
         )
         is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
         for sheet in self:
-            if sheet.state not in {'draft', 'submit'}:
+            if sheet.state not in {'draft', 'submit', 'approve'}:
                 # Not editable
                 sheet.is_editable = False
                 continue
@@ -477,11 +477,6 @@ class HrExpenseSheet(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    def _read_format(self, fnames, load='_classic_read'):
-        # setting the context in the field on the view is not enough
-        self = self.with_context(show_payment_journal_id=True)
-        return super()._read_format(fnames, load)
-
     @api.model_create_multi
     def create(self, vals_list):
         context = clean_context(self.env.context)
@@ -495,11 +490,19 @@ class HrExpenseSheet(models.Model):
 
     def write(self, values):
         res = super().write(values)
+
+        user_is_accountant = self.env.user.has_group('account.group_account_user')
+        edit_lines = 'expense_line_ids' in values
+        edit_states = 'state' in values or 'approval_state' in values
+        # Forbids (un)linking expenses from an approved sheet if you're not an accountant
+        if edit_lines and not user_is_accountant and set(self.mapped('state')) - {'draft', 'submit'}:
+            raise AccessError(_("You do not have the rights to add or remove any expenses on an approved or paid expense report."))
+
         # Ensures there is no empty expense report in a state different from draft or cancel
-        if 'state' in values or 'expense_line_ids' in values or 'approval_state' in values:
+        if edit_states or edit_lines:
             for sheet in self.filtered(lambda sheet: not sheet.expense_line_ids):
                 if sheet.state in {'submit', 'approve', 'post', 'done'}:  # Empty expense report in a state different from draft or cancel
-                    if 'expense_line_ids' in values and not sheet.expense_line_ids:  # If you try to remove all expenses from the sheet
+                    if edit_lines and not sheet.expense_line_ids:  # If you try to remove all expenses from the sheet
                         raise UserError(_("You cannot remove all expenses from a submitted, approved or paid expense report."))
                     else:  # If you try to submit, approve, post or pay an empty sheet
                         raise UserError(_("This expense report is empty. You cannot submit or approve an empty expense report."))
@@ -790,7 +793,7 @@ class HrExpenseSheet(models.Model):
         if most_recent_expense >= start_month:
             return today
 
-        lock_date = self.company_id._get_user_fiscal_lock_date()
+        lock_date = self.company_id._get_user_fiscal_lock_date(self.journal_id)
 
         return min(
             max(
@@ -809,7 +812,6 @@ class HrExpenseSheet(models.Model):
             'ref': self.name,
             'move_type': 'in_invoice',
             'partner_id': self.employee_id.sudo().work_contact_id.id,
-            'partner_bank_id': self.employee_id.sudo().bank_account_id.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
             'attachment_ids': [

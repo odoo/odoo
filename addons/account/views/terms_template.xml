@@ -12,7 +12,7 @@
         <t t-call="web.frontend_layout">
             <t t-set="o_portal_fullwidth_alert" groups="account.group_account_manager">
                 <t t-call="account.account_terms_conditions_setting_banner">
-                    <t t-set="backend_url" t-value="'/web#action=account.action_open_settings&amp;model=res.config.settings'"/>
+                    <t t-set="backend_url" t-value="'/odoo/action-account.action_open_settings'"/>
                 </t>
             </t>
             <div class="oe_structure" id="oe_structure_terms_conditions"/>

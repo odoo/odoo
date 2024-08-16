@@ -19,7 +19,7 @@
                     <t t-call="web.embeddedActionsDropdown" />
                 </div>
             </Transition>
-            <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
+            <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-1 gap-lg-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">
                         <div t-if="env.isSmall" class="btn-group o_control_panel_collapsed_create">
@@ -44,10 +44,32 @@
                             <t t-slot="control-panel-status-indicator" />
                         </section>
                     </t>
+                    <t t-elif="env.isSmall">
+                        <!--
+                            Here be dragons...
+                            REFACTORME: this `t-portal` introduces an implicit
+                            dependency between the ControlPanel and the NavBar,
+                            which the impact is only mitigated by the fallback
+                            below. This is a call to refactor the breadcrumbs
+                            management to allow the proper instanciation of the
+                            Breadcrumbs component in the NavBar.
+                        -->
+                        <div class="o_fallback_breadcrumbs d-contents"/>
+                        <Breadcrumbs breadcrumbs="breadcrumbs" t-portal="'.o_navbar_breadcrumbs, .o_fallback_breadcrumbs'"/>
+                        <section class="o_control_panel_breadcrumbs_actions d-contents">
+                            <t t-slot="control-panel-additional-actions"/>
+                            <t t-slot="control-panel-status-indicator" />
+                        </section>
+                    </t>
                     <t t-else="">
-                        <t t-slot="control-panel-breadcrumb">
-                            <t t-call="web.Breadcrumbs"/>
-                        </t>
+                        <Breadcrumbs breadcrumbs="breadcrumbs">
+                            <t t-set-slot="breadcrumb-status-indicator">
+                                <t t-slot="control-panel-status-indicator" />
+                            </t>
+                            <t t-set-slot="breadcrumb-additional-actions">
+                                <t t-slot="control-panel-additional-actions"/>
+                            </t>
+                        </Breadcrumbs>
                     </t>
                     <div t-if="!env.isSmall" class="me-auto"/> <!-- Spacer -->
                 </div>
@@ -123,7 +145,7 @@
                     </DropdownItem>
                 </t>
                 <div role="separator" class="dropdown-divider"/>
-                <AccordionItem class="'o_save_current_view'" description="'Save View'">
+                <AccordionItem class="'o_save_current_view'" description.translate="Save View">
                     <div class="px-2 py-2">
                         <input type="text"
                             t-ref="newActionNameRef"
@@ -142,72 +164,6 @@
                 </AccordionItem>
             </t>
         </Dropdown>
-    </t> 
-
-    <t t-name="web.Breadcrumbs">
-        <t t-set="currentBreadcrumbs" t-value="breadcrumbs.slice(-1)"/>
-        <t t-set="visiblePathBreadcrumbs" t-value="breadcrumbs.slice(-3, -1)"/>
-        <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -3).reverse()"/>
-        <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
-
-        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
-            <t t-if="env.isSmall">
-                <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.slice(-1)"/>
-                <button class="o_back_button btn btn-link d-print-none px-1" t-on-click.prevent="() => this.onBreadcrumbClicked(previousBreadcrumb.jsId)">
-                    <i class="oi oi-fw oi-arrow-left"/>
-                </button>
-            </t>
-            <t t-else="">
-                <ol class="breadcrumb flex-nowrap text-nowrap lh-sm">
-                    <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex min-w-0">
-                        <Dropdown>
-                            <button class="btn btn-light btn-sm px-1 p-0">
-                                <i class="fa fa-ellipsis-h"/>
-                            </button>
-                            <t t-set-slot="content">
-                                <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                                    <DropdownItem onSelected="() => this.onBreadcrumbClicked(breadcrumb.jsId)" attrs="{ href: breadcrumb.url}">
-                                        <t t-call="web.Breadcrumb.Name"/>
-                                    </DropdownItem>
-                                </t>
-                            </t>
-                        </Dropdown>
-                    </li>
-                    <t t-foreach="visiblePathBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                        <li class="breadcrumb-item d-inline-flex min-w-0" t-att-class="{ o_back_button: breadcrumb_last }" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
-                            <a t-att-href="breadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;'"><t t-call="web.Breadcrumb.Name"/></a>
-                        </li>
-                    </t>
-                </ol>
-            </t>
-            <div class="d-flex gap-1 text-truncate">
-                <div class="o_last_breadcrumb_item active d-flex gap-2 align-items-center min-w-0 lh-sm">
-                    <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
-                </div>
-                <t t-call="web.Breadcrumb.Actions"/>
-            </div>
-        </div>
-
-        <div t-else="" class="o_breadcrumb d-flex gap-1 text-truncate">
-            <div class="o_last_breadcrumb_item active d-flex fs-4 min-w-0 align-items-center">
-                <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
-            </div>
-            <t t-call="web.Breadcrumb.Actions"/>
-        </div>
-
-        <t t-slot="control-panel-status-indicator" />
-    </t>
-
-    <t t-name="web.Breadcrumb.Actions">
-        <div class="o_control_panel_breadcrumbs_actions d-inline-flex d-print-none">
-            <t t-slot="control-panel-additional-actions"/>
-        </div>
-    </t>
-
-    <t t-name="web.Breadcrumb.Name">
-        <t t-if="breadcrumb.name" t-out="breadcrumb.name"/>
-        <em t-else="" class="text-warning">Unnamed</em>
-        <t t-slot="control-panel-additional-breadcrums"/>
     </t>
 
 </templates>

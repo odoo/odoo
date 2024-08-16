@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2html
+from odoo.tools import email_normalize, html2plaintext, plaintext2html
 
 from markupsafe import Markup
 
@@ -41,7 +41,7 @@ class DiscussChannel(models.Model):
         super()._to_store(store)
         chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
         for channel in self:
-            channel_info = {"id": channel.id}
+            channel_info = {}
             if channel.chatbot_current_step_id:
                 # sudo: chatbot.script.step - returning the current script/step of the channel
                 current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=chatbot_lang)
@@ -54,7 +54,7 @@ class DiscussChannel(models.Model):
                 ), None) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else None
                 current_step = {
                     'scriptStep': current_step_sudo._format_for_frontend(),
-                    'message': {'id': step_message.id} if step_message else None,
+                    "message": Store.one_id(step_message),
                     'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
                 }
                 channel_info["chatbot"] = {
@@ -69,14 +69,14 @@ class DiscussChannel(models.Model):
                 'name': channel.country_id.name,
             } if channel.country_id else False
             if channel.channel_type == "livechat":
-                operator = channel.livechat_operator_id
-                store.add(operator, fields=["user_livechat_username", "write_date"])
-                channel_info["operator"] = (
-                    {"id": operator.id, "type": "partner"} if operator else False
+                channel_info["operator"] = Store.one(
+                    channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
                 )
-            if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
-                channel_info['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
-            store.add("discuss.channel", channel_info)
+            if channel.channel_type == "livechat" and self.env.user._is_internal():
+                channel_info["livechatChannel"] = Store.one(
+                    channel.livechat_channel_id, fields=["name"]
+                )
+            store.add(channel, channel_info)
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
@@ -97,20 +97,16 @@ class DiscussChannel(models.Model):
     def _execute_command_help_message_extra(self):
         msg = super()._execute_command_help_message_extra()
         if self.channel_type == 'livechat':
-            return msg + html_escape(
-                _("%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned response in your message.")
-            ) % {"bold_start": Markup("<b>"), "bold_end": Markup("</b>"), "new_line": Markup("<br>")}
+            return msg + _(
+                "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned response in your message.",
+                bold_start=Markup("<b>"),
+                bold_end=Markup("</b>"),
+                new_line=Markup("<br>"),
+            )
         return msg
 
     def execute_command_history(self, **kwargs):
-        self.env['bus.bus']._sendone(self, 'im_livechat.history_command', {'id': self.id})
-
-    def _send_history_message(self, pid, page_history):
-        message_body = _('No history found')
-        if page_history:
-            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (html_escape(page), html_escape(page)) for page in page_history]
-            message_body = '<ul>%s</ul>' % (''.join(html_links))
-        self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
+        self._bus_send("im_livechat.history_command", {"id": self.id})
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor left the conversation.')

@@ -40,10 +40,14 @@
                         <h2 class="lh-1" t-if="attendee" t-field="attendee.name"/>
                         <h2 class="lh-1" t-elif="not attendee">John Doe</h2>
                         <div t-if="attendee" class="mt-3 py-2">
-                            <span t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
-                                t-attf-class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer">
-                                <t t-out="answer.display_name"/>
-                            </span>
+                            <span t-foreach="attendee.registration_answer_choice_ids"
+                                class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                                t-as="answer" t-out="answer.display_name"/>
+                        </div>
+                        <div t-else="">
+                            <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
+                                class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                                t-as="question" t-out="question.answer_ids[0].name"/>
                         </div>
                     </div>
                 </div>
@@ -151,17 +155,19 @@
                             <div class="o_event_full_page_left_details_top mb-3">
                                 <h2 class="o_event_full_page_ticket_event_name fw-bold pt-3" t-field="event.name"/>
                                 <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
-                                <h4 t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type" t-field="attendee.event_ticket_id"/>
+                                <h4 t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type" t-field="attendee.event_ticket_id.name"/>
                                 <h4 t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
                                 <h4 class="fw-bold mb-3 pb-2" t-if="attendee" t-field="attendee.name"/>
                                 <h4 class="fw-bold mb-3 pb-2" t-elif="not attendee"><span>John Doe</span></h4>
-                                <div t-if="attendee">
-                                    <div class="mb-3">
-                                        <span t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
-                                            t-attf-class="#{'badge' if responsive_html else 'px-2 py-1 d-inline-block'} bg-200 text-black my-1 me-1 fw-semibold o_event_full_page_ticket_answer">
-                                            <t t-out="answer.display_name"/>
-                                        </span>
-                                    </div>
+                                <t t-set="answer_badge_classes" t-valuef="#{'badge' if responsive_html else 'px-2 py-1 d-inline-block'} bg-200 text-black my-1 me-1 fw-semibold o_event_full_page_ticket_answer"/>
+                                <div t-if="attendee" class="mb-3">
+                                    <span t-foreach="attendee.registration_answer_choice_ids" t-att-class="answer_badge_classes"
+                                        t-as="answer" t-out="answer.display_name"/>
+                                </div>
+                                <div t-else="" class="mb-3">
+                                    <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
+                                        t-att-class="answer_badge_classes"
+                                        t-as="question" t-out="question.answer_ids[0].name"/>
                                 </div>
                             </div>
                             <div t-attf-class="row gy-0 gx-2 #{'o_event_full_page_left_details_bottom_qr_only' if not event.use_barcode else ''}">
@@ -177,17 +183,17 @@
                                     <div class="d-flex">
                                         <i class="fa fa-calendar fa-2x fa-fw me-2 mt-1"/>
                                         <div t-if="event.is_one_day">
-                                            <span t-field="event.date_begin"
+                                            <span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'/><br/>
-                                            <span class="me-1">from</span><span t-field="event.date_begin"
+                                            <span class="me-1">from</span><span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
-                                            <span class="me-1">to</span><span t-field="event.date_end"
+                                            <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
                                         </div>
                                         <div t-else="">
-                                            <span t-field="event.date_begin"
+                                            <span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
-                                            <span class="me-1">to</span><span t-field="event.date_end"
+                                            <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
                                         </div>
                                     </div>

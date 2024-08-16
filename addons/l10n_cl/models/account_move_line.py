@@ -18,8 +18,13 @@ class AccountMoveLine(models.Model):
         invoice = self.move_id
         included_taxes = self.tax_ids.filtered(lambda x: x.l10n_cl_sii_code == 14) if self.move_id._l10n_cl_include_sii() else self.tax_ids
         if not included_taxes:
-            price_unit = self.tax_ids.with_context(round=False).compute_all(
-                self.price_unit, invoice.currency_id, 1.0, self.product_id, invoice.partner_id)
+            price_unit = self.tax_ids.compute_all(
+                self.price_unit,
+                currency=invoice.currency_id,
+                product=self.product_id,
+                partner=invoice.partner_id,
+                rounding_method='round_globally',
+            )
             price_unit = price_unit['total_excluded']
             price_subtotal = self.price_subtotal
         else:

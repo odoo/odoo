@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
-import json
 import os
 import logging
 import re
@@ -9,8 +8,10 @@ import requests
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
+import zipfile
 
 from hashlib import md5
+from io import BytesIO
 from itertools import islice
 from lxml import etree, html
 from textwrap import shorten
@@ -20,16 +21,17 @@ from xml.etree import ElementTree as ET
 import odoo
 
 from odoo import http, models, fields, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
+from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.addons.http_routing.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.website.tools import get_base_domain
+from odoo.tools.json import scriptsafe as json
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,8 @@ logger = logging.getLogger(__name__)
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
+MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
+SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 
 
 class QueryURL:
@@ -826,6 +830,34 @@ class Website(Home):
     # Themes
     # ------------------------------------------------------
 
+    @http.route('/website/google_font_metadata', type='json', auth='user', website=True)
+    def google_font_metadata(self):
+        """ Avoid CORS by caching google fonts metadata on server """
+        Attachment = request.env['ir.attachment']
+        metadata = Attachment.search([
+            ('name', '=', 'googleFontMetadata'),
+            ('public', '=', True),
+        ], limit=1)
+        yesterday = fields.Datetime.add(fields.Datetime.now(), days=-1)
+        if not metadata or metadata.write_date < yesterday:
+            req = requests.get('https://fonts.google.com/metadata/fonts', timeout=5)
+            if req.status_code != requests.codes.ok:
+                return {
+                    'familyMetadataList': [],
+                }
+            json_content = req.content
+            if metadata:
+                metadata.raw = json_content
+            else:
+                metadata = Attachment.create({
+                    'public': True,
+                    'name': 'googleFontMetadata',
+                    'type': 'binary',
+                    'mimetype': 'application/json',
+                    'raw': json_content,
+                })
+        return json.loads(metadata.raw)
+
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'
         Model = request.env[model].with_context(active_test=False)
@@ -869,6 +901,83 @@ class Website(Home):
     # ------------------------------------------------------
     # Server actions
     # ------------------------------------------------------
+
+    @http.route(['/website/theme_upload_font'], type='json', auth='user', website=True)
+    def theme_upload_font(self, name, data):
+        """
+        Uploads font binary data and returns metadata about accessing individual fonts.
+        :param name: name of the uploaded file
+        :param data: binary content of the uploaded file
+        :return: list of dict describing each contained font with:
+            - name
+            - mimetype
+            - attachment id
+            - attachment URL
+        """
+        def check_content(filename, data):
+            """ Returns True only if data matches the font extension. """
+            # Do not pollute general guess_mimetype with this.
+            ext = filename.rsplit('.')[-1].lower()
+            if ext == 'otf':
+                return data.startswith(b'OTTO')
+            elif ext == 'woff':
+                return data.startswith(b'wOFF')
+            elif ext == 'woff2':
+                return data.startswith(b'wOF2')
+            elif ext == 'ttf':
+                # Based on https://docs.fileformat.com/font/ttf/#true-type-file-format-specifications
+                TOC_OFFSET = 12
+                TOC_ENTRY_LENGTH = 16
+                table_size = int.from_bytes(data[4:6], 'big') * TOC_ENTRY_LENGTH
+                if TOC_OFFSET + table_size > len(data):
+                    return False
+                mandatory_tags = {b'cmap', b'glyf', b'head', b'hhea', b'hmtx', b'loca', b'maxp', b'name', b'post'}
+                for offset in range(TOC_OFFSET, TOC_OFFSET + table_size, TOC_ENTRY_LENGTH):
+                    tag = data[offset:offset + 4]
+                    mandatory_tags.discard(tag)
+                return not mandatory_tags
+            return False
+
+        def create_attachment(font, data):
+            """ Creates font attachments right away to avoid keeping
+            several extracted contents in memory. """
+            ext = font['name'].rsplit('.')[-1].lower()
+            font['mimetype'] = f'font/{ext}'
+            attachment = request.env['ir.attachment'].create({
+                'name': font['name'],
+                'mimetype': font['mimetype'],
+                'raw': data,
+                'public': True,
+            })
+            font['id'] = attachment.id
+            font['url'] = f"/web/content/{attachment.id}/{font['name']}"
+            return font
+
+        result = []
+        binary_data = base64.b64decode(data, validate=True)
+        readable_data = BytesIO(binary_data)
+        if zipfile.is_zipfile(readable_data):
+            with zipfile.ZipFile(readable_data, "r") as zip_file:
+                for entry in zip_file.filelist:
+                    if entry.file_size > MAX_FONT_FILE_SIZE:
+                        raise UserError(_("File '%s' exceeds maximum allowed file size", entry.filename))
+                    if entry.filename.rsplit('.', 1)[-1].lower() not in SUPPORTED_FONT_EXTENSIONS \
+                            or entry.filename.startswith('__MACOSX') \
+                            or '/.' in entry.filename:
+                        continue
+                    data = zip_file.read(entry)
+                    if not check_content(entry.filename, data):
+                        continue
+                    result.append(create_attachment({
+                        'name': f'{name}-{entry.filename.replace("/", "-")}',
+                    }, data))
+        elif name.rsplit('.', 1)[-1].lower() in SUPPORTED_FONT_EXTENSIONS and check_content(name, binary_data):
+            result.append(create_attachment({
+                'name': name,
+            }, binary_data))
+        if not result:
+            raise UserError(_("File '%s' is not recognized as a font", name))
+        return result
 
     @http.route([
         '/website/action/<path_or_xml_id_or_id>',

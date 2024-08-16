@@ -16,7 +16,7 @@ export function checkBtn(buttonName) {
 export function checkIsNoBtn(buttonName) {
     return {
         content: `Check if '${buttonName}' do not exist`,
-        trigger: `.btn`,
+        trigger: `body`,
         run: () => {
             const element = document.querySelectorAll(".btn");
 

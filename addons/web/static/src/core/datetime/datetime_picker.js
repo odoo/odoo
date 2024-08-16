@@ -421,8 +421,10 @@ export class DateTimePicker extends Component {
             throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
         }
 
-        const timeValues = this.values.map((val) => [
-            (val || DateTime.local()).hour,
+        const timeValues = this.values.map((val, index) => [
+            index === 1 && !this.values[1]
+                ? (val || DateTime.local()).hour + 1
+                : (val || DateTime.local()).hour,
             val?.minute || 0,
             val?.second || 0,
         ]);
@@ -480,11 +482,7 @@ export class DateTimePicker extends Component {
      * @param {number} focusedDateIndex
      */
     adjustFocus(values, focusedDateIndex) {
-        if (
-            !this.shouldAdjustFocusDate &&
-            this.state.focusDate &&
-            focusedDateIndex === this.props.focusedDateIndex
-        ) {
+        if (!this.shouldAdjustFocusDate && this.state.focusDate) {
             return;
         }
 

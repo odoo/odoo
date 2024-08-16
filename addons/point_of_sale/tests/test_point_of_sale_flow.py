@@ -1361,7 +1361,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # Make sure the invoice contains the payment method used
         # TODO: We might want to test the whole PDF content in another test
-        invoice_pdf_content = str(order.account_move.get_invoice_pdf_report_attachment()[0])
+        invoice_pdf_content = str(order.account_move._get_invoice_legal_documents('pdf', allow_fallback=True).get('content'))
         self.assertTrue("using Cash" in invoice_pdf_content)
 
         # I create a refund
@@ -2053,9 +2053,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'chart_template': self.env.company.chart_template,
         })
 
-        outstanding_receipts = self.env.company.account_journal_payment_debit_account_id.copy()
-        outstanding_receipts.company_id = branch
-
+        outstanding_receipts = self.env.company.account_journal_payment_debit_account_id.with_company(branch).copy(
+            {'company_ids': [Command.set(branch.ids)]}
+        )
         self.env.cr.precommit.run()
         branch.account_journal_payment_debit_account_id = outstanding_receipts
 

@@ -7,6 +7,8 @@ export class RestaurantTable extends Base {
     setup(vals) {
         super.setup(vals);
 
+        this.table_number = vals.table_number || 0;
+
         this.uiState = {
             orderCount: 0,
             changeCount: 0,
@@ -31,7 +33,7 @@ export class RestaurantTable extends Base {
         if (!this.parent_id) {
             return this.position_h;
         }
-        const parent_side = this.getParentSide();
+        const parent_side = this.parent_side || this.getParentSide();
         if (["top", "bottom"].includes(parent_side)) {
             return this.parent_id.getX();
         }
@@ -44,7 +46,8 @@ export class RestaurantTable extends Base {
         if (!this.parent_id) {
             return this.position_v;
         }
-        const parent_side = this.getParentSide();
+        const parent_side = this.parent_side || this.getParentSide();
+        this.parent_side = parent_side;
         if (["left", "right"].includes(parent_side)) {
             return this.parent_id.getY();
         }
@@ -61,6 +64,17 @@ export class RestaurantTable extends Base {
     }
     getOrder() {
         return this["<-pos.order.table_id"][0];
+    }
+    setPositionAsIfLinked(parent, side) {
+        // console.log("132")
+        this.parent_id = parent;
+        this.parent_side = side;
+        this.position_h = this.getX();
+        this.position_v = this.getY();
+        this.parent_id = null;
+    }
+    getName() {
+        return this.table_number.toString();
     }
 }
 registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);

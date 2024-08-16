@@ -16,32 +16,38 @@ import { reactive } from "@odoo/owl";
 
 export class ColorPlugin extends Plugin {
     static name = "color";
-    static dependencies = ["selection", "split", "history", "zws"];
+    static dependencies = ["selection", "split", "history", "format"];
+    static shared = ["colorElement"];
+    /** @type { (p: ColorPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        toolbarGroup: {
+        toolbarCategory: {
             id: "color",
             sequence: 25,
-            buttons: [
-                {
-                    id: "forecolor",
-                    Component: ColorSelector,
-                    props: {
-                        type: "foreground",
-                        getUsedCustomColors: () => p.getUsedCustomColors("color"),
-                        getSelectedColors: () => p.selectedColors,
-                    },
-                },
-                {
-                    id: "backcolor",
-                    Component: ColorSelector,
-                    props: {
-                        type: "background",
-                        getUsedCustomColors: () => p.getUsedCustomColors("background"),
-                        getSelectedColors: () => p.selectedColors,
-                    },
-                },
-            ],
         },
+        toolbarItems: [
+            {
+                id: "forecolor",
+                category: "color",
+                Component: ColorSelector,
+                props: {
+                    type: "foreground",
+                    getUsedCustomColors: () => p.getUsedCustomColors("color"),
+                    getSelectedColors: () => p.selectedColors,
+                },
+            },
+            {
+                id: "backcolor",
+                category: "color",
+
+                Component: ColorSelector,
+                props: {
+                    type: "background",
+                    getUsedCustomColors: () => p.getUsedCustomColors("background"),
+                    getSelectedColors: () => p.selectedColors,
+                },
+            },
+        ],
+
         onSelectionChange: p.updateSelectedColor.bind(p),
         removeFormat: p.removeAllColor.bind(p),
     });
@@ -125,15 +131,11 @@ export class ColorPlugin extends Plugin {
      * @param {string} mode 'color' or 'backgroundColor'
      */
     applyColor(color, mode) {
-        const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
-            (node) => node.isContentEditable
-        );
-        if (selectedTds.length && mode === "backgroundColor") {
-            for (const td of selectedTds) {
-                this.colorElement(td, color, mode);
+        for (const cb of this.resources.colorApply || []) {
+            if (cb(color, mode)) {
+                return;
             }
         }
-
         let selection = this.shared.getEditableSelection();
         let selectionNodes;
         // Get the <font> nodes to color
@@ -159,7 +161,7 @@ export class ColorPlugin extends Plugin {
             selection = this.shared.splitSelection();
             selectionNodes = this.shared
                 .getSelectedNodes()
-                .filter((node) => closestElement(node).isContentEditable);
+                .filter((node) => closestElement(node).isContentEditable && node.nodeName !== "T");
             if (isEmptyBlock(selection.endContainer)) {
                 selectionNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }

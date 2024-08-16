@@ -108,6 +108,9 @@ class EventEvent(models.Model):
             result['date_end'] = result['date_begin'] + timedelta(days=1)
         return result
 
+    def get_kiosk_url(self):
+        return self.get_base_url() + "/odoo/registration-desk"
+
     def _get_default_stage_id(self):
         return self.env['event.stage'].search([], limit=1)
 

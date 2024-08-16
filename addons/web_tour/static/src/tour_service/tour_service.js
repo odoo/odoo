@@ -5,85 +5,62 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { MacroEngine } from "@web/core/macro";
 import { registry } from "@web/core/registry";
-import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { compileTourToMacro } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
 import { TourInteractive } from "./tour_interactive";
+import { TourAutomatic } from "./tour_automatic";
 
-/**
- * @typedef {string} HootSelector
- * @typedef {import("./tour_compilers").RunCommand} RunCommand
- *
- * @typedef Tour
- * @property {string} url
- * @property {string} name
- * @property {() => TourStep[]} steps
- * @property {boolean} [rainbowMan]
- * @property {number} [sequence]
- * @property {boolean} [test]
- * @property {Promise<any>} [wait_for]
- * @property {string} [saveAs]
- * @property {string} [fadeout]
- * @property {number} [checkDelay]
- * @property {string|undefined} [shadow_dom]
- *
- * @typedef TourStep
- * @property {"enterprise"|"community"|"mobile"|"desktop"|HootSelector[][]} isActive Active the step following {@link isActiveStep} filter
- * @property {string} [id]
- * @property {HootSelector} trigger The node on which the action will be executed.
- * @property {string} [content] Description of the step.
- * @property {"top" | "botton" | "left" | "right"} [position] The position where the UI helper is shown.
- * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
- * @property {boolean} [allowInvisible] Allow trigger nodes (any of them) to be invisible
- * @property {boolean} [in_modal] When true, check that trigger node is present in the last visible .modal.
- * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
- * You can change this value to lengthen or shorten the time before the error occurs [ms].
- * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
- * @property {string} [title]
+const StepSchema = {
+    id: { type: String, optional: true },
+    content: { type: [String, Object], optional: true }, //allow object(_t && markup)
+    debugHelp: { type: String, optional: true },
+    isActive: { type: Array, element: String, optional: true },
+    run: { type: [String, Function], optional: true },
+    timeout: {
+        optional: true,
+        validate(value) {
+            return value >= 0 && value <= 60000;
+        },
+    },
+    tooltipPosition: {
+        optional: true,
+        validate(value) {
+            return ["top", "bottom", "left", "right"].includes(value);
+        },
+    },
+    trigger: { type: String },
+    //ONLY IN DEBUG MODE
+    pause: { type: Boolean, optional: true },
+    break: { type: Boolean, optional: true },
+};
 
- * @typedef {"manual" | "auto"} TourMode
- */
+const TourSchema = {
+    checkDelay: { type: Number, optional: true },
+    fadeout: {
+        optional: true,
+        validate(value) {
+            return ["fast", "medium", "slow", "no"].includes(value);
+        },
+    },
+    name: { type: String, optional: true },
+    rainbowManMessage: { type: [String, Function, Boolean], optional: true },
+    saveAs: { type: String, optional: true },
+    sequence: { type: Number, optional: true },
+    steps: Function,
+    test: { type: Boolean, optional: true },
+    url: { type: String, optional: true },
+    wait_for: { type: [Function, Object], optional: true },
+};
 
-/**
- * Check properties of tourStep
- * @param {TourStep} tourStep
- */
-function checkTourStepKeyValues(tourStep) {
-    const stepschema = {
-        id: { type: String, optional: true },
-        trigger: { type: String },
-        isActive: { type: Array, element: String, optional: true },
-        content: { type: [String, Object], optional: true }, //allow object for _t && markup
-        position: { type: String, optional: true },
-        run: { type: [String, Function], optional: true },
-        allowInvisible: { type: Boolean, optional: true },
-        in_modal: { type: Boolean, optional: true },
-        timeout: { type: Number, optional: true },
-        consumeEvent: { type: String, optional: true },
-        title: { type: String, optional: true },
-        debugHelp: { type: String, optional: true },
-        noPrepend: { type: Boolean, optional: true },
-        pause: { type: Boolean, optional: true }, //ONLY IN DEBUG MODE
-        break: { type: Boolean, optional: true }, //ONLY IN DEBUG MODE
-    };
-
-    try {
-        validate(tourStep, stepschema);
-        return true;
-    } catch (error) {
-        console.error(`Error for step ${JSON.stringify(tourStep, null, 4)}\n${error.message}`);
-        return false;
-    }
-}
+registry.category("web_tour.tours").addValidation(TourSchema);
 
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
-    dependencies: ["orm", "effect", "ui", "overlay", "localization"],
-    start: async (_env, { orm, effect, ui, overlay }) => {
+    dependencies: ["orm", "effect", "overlay", "localization"],
+    start: async (_env, { orm, effect, overlay }) => {
         await whenReady();
         const toursEnabled = "tour_disable" in session && !session.tour_disable;
         const consumedTours = new Set(session.web_tours);
@@ -94,21 +71,26 @@ export const tourService = {
         function register(name, tour) {
             name = tour.saveAs || name;
             const wait_for = tour.wait_for || Promise.resolve();
-            let steps;
             tours[name] = {
                 wait_for,
                 name,
                 get steps() {
-                    if (typeof tour.steps !== "function") {
-                        throw new Error(`tour.steps has to be a function that returns TourStep[]`);
-                    }
-                    if (!steps) {
-                        steps = tour.steps().filter(checkTourStepKeyValues);
+                    const steps = [];
+                    for (const step of tour.steps()) {
+                        try {
+                            validate(step, StepSchema);
+                        } catch (error) {
+                            console.error(
+                                `Error in schema for TourStep ${JSON.stringify(step, null, 4)}\n${
+                                    error.message
+                                }`
+                            );
+                        }
+                        steps.push(step);
                     }
                     return steps;
                 },
                 url: tour.url,
-                rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
                 rainbowManMessage: tour.rainbowManMessage,
                 fadeout: tour.fadeout || "medium",
                 sequence: tour.sequence || 1000,
@@ -146,7 +128,6 @@ export const tourService = {
 
         const bus = new EventBus();
         const macroEngine = new MacroEngine({ target: document });
-        const tourInteractive = new TourInteractive();
 
         const pointers = reactive({});
         /** @type {Set<string>} */
@@ -207,42 +188,10 @@ export const tourService = {
             };
         }
 
-        /**
-         * @param {Tour} tour
-         * @param {ReturnType<typeof createPointer>} pointer
-         * @param {Object} options
-         * @param {TourMode} options.mode
-         * @param {number} options.stepDelay
-         * @param {boolean} options.keepWatchBrowser - do not close watch browser when the tour failed
-         * @param {number} options.showPointerDuration
-         * - Useful when watching auto tour.
-         * - Show the pointer for some duration before performing calling the run method.
-         */
-        function convertToMacro(
-            tour,
-            pointer,
-            { mode, stepDelay, keepWatchBrowser, showPointerDuration }
-        ) {
-            const filteredSteps = tour.steps;
-            return compileTourToMacro(tour, {
-                filteredSteps,
-                mode,
-                pointer,
-                stepDelay,
-                keepWatchBrowser,
-                showPointerDuration,
-                onStepConsummed(tour, step) {
-                    bus.trigger("STEP-CONSUMMED", { tour, step });
-                },
-                onTourEnd: (tour) => {
-                    transitionConfig.disabled = false;
-                    pointer.stop();
-                    endTour(tour);
-                },
-            });
-        }
-
-        function endTour({ name, rainbowManMessage, fadeout }) {
+        function showSuccessMessage({ rainbowManMessage, fadeout }) {
+            if (!rainbowManMessage) {
+                return;
+            }
             let message;
             if (typeof rainbowManMessage === "function") {
                 message = rainbowManMessage({
@@ -256,6 +205,9 @@ export const tourService = {
                 );
             }
             effect.add({ type: "rainbow_man", message, fadeout });
+        }
+
+        function endTour({ name }) {
             bus.trigger("TOUR-FINISHED");
             // Used to signal the python test runner that the tour finished without error.
             browser.console.log("tour succeeded");
@@ -265,16 +217,9 @@ export const tourService = {
             msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
             msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
             browser.console.log(`\n\n${msg.join("\n")}\n`);
+            consumedTours.add(name);
             runningTours.delete(name);
             tourState.clear(name);
-        }
-
-        /**
-         * @param {Macro} macro
-         */
-        function activateMacro(macro) {
-            transitionConfig.disabled = true;
-            macroEngine.activate(macro, true);
         }
 
         function startTour(tourName, options = {}) {
@@ -320,17 +265,17 @@ export const tourService = {
 
             if (!willUnload) {
                 if (options.mode === "auto") {
-                    const macro = convertToMacro(tour, pointer, options);
-                    pointer.start();
-                    activateMacro(macro);
-                } else {
-                    tourInteractive.loadTour(tour, pointer, () => {
+                    new TourAutomatic(tour, macroEngine).start(pointer, () => {
                         pointer.stop();
-                        consumedTours.add(tour.name);
-                        orm.call("web_tour.tour", "consume", [[tour.name]]);
                         endTour(tour);
                     });
-                    tourInteractive.start();
+                } else {
+                    new TourInteractive(tour).start(pointer, () => {
+                        pointer.stop();
+                        orm.call("web_tour.tour", "consume", [[tour.name]]);
+                        showSuccessMessage(tour);
+                        endTour(tour);
+                    });
                 }
             }
         }
@@ -341,30 +286,23 @@ export const tourService = {
             }
             runningTours.add(tourName);
             const tour = tours[tourName];
-            const stepDelay = tourState.get(tourName, "stepDelay");
             const keepWatchBrowser = tourState.get(tourName, "keepWatchBrowser");
-            const showPointerDuration = tourState.get(tourName, "showPointerDuration");
             const mode = tourState.get(tourName, "mode");
             const pointer = createPointer(tourName, {
                 bounce: !(mode === "auto" && keepWatchBrowser),
             });
             if (mode === "auto") {
-                const macro = convertToMacro(tour, pointer, {
-                    mode,
-                    stepDelay,
-                    keepWatchBrowser,
-                    showPointerDuration,
-                });
-                pointer.start();
-                activateMacro(macro);
-            } else {
-                tourInteractive.loadTour(tour, pointer, () => {
+                new TourAutomatic(tour, macroEngine).start(pointer, () => {
                     pointer.stop();
-                    consumedTours.add(tour.name);
-                    orm.call("web_tour.tour", "consume", [[tour.name]]);
                     endTour(tour);
                 });
-                tourInteractive.start(tourState.get(tourName, "currentIndex"));
+            } else {
+                new TourInteractive(tour).start(pointer, () => {
+                    pointer.stop();
+                    orm.call("web_tour.tour", "consume", [[tour.name]]);
+                    showSuccessMessage(tour);
+                    endTour(tour);
+                });
             }
         }
 
@@ -375,6 +313,10 @@ export const tourService = {
         }
 
         if (!window.frameElement) {
+            const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
+            if (paramsTourName && paramsTourName in tours) {
+                startTour(paramsTourName, { mode: "manual " });
+            }
             // Resume running tours.
             for (const tourName of tourState.getActiveTourNames()) {
                 if (tourName in tours) {

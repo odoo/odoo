@@ -3,6 +3,7 @@ import { Setting } from "@web/views/form/setting/setting";
 import { onMounted, useRef, useState } from "@odoo/owl";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { HighlightText } from "../highlight_text/highlight_text";
+import { browser } from "@web/core/browser/browser";
 
 export class SearchableSetting extends Setting {
     static template = "web.SearchableSetting";
@@ -16,6 +17,7 @@ export class SearchableSetting extends Setting {
         this.state = useState({
             search: this.env.searchState,
             showAllContainer: this.env.showAllContainer,
+            highlightClass: {},
         });
         this.labels = [];
         this.labels.push(this.labelString, this.props.help);
@@ -27,13 +29,17 @@ export class SearchableSetting extends Setting {
                     this.labels.push(st.getAttribute("searchableText"));
                 });
             }
+            if (browser.location.hash.substring(1) === this.props.id) {
+                this.state.highlightClass = { o_setting_highlight: true };
+                setTimeout(() => (this.state.highlightClass = {}), 5000);
+            }
         });
     }
 
     get classNames() {
         const classNames = super.classNames;
         classNames.o_searchable_setting = Boolean(this.labels.length);
-        return classNames;
+        return { ...classNames, ...this.state.highlightClass };
     }
 
     visible() {

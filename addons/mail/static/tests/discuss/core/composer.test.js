@@ -49,6 +49,18 @@ test('do not send typing notification on typing after selecting suggestion from 
     await assertSteps([]); // No rpc done"
 });
 
+test("send is_typing on adding emoji", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
+    onRpcBefore("/discuss/channel/notify_typing", () => step("notify_typing"));
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await insertText("input[placeholder='Search for an emoji']", "Santa Claus");
+    await click(".o-Emoji", { text: "🎅" });
+    await assertSteps(["notify_typing"]);
+});
+
 test("add an emoji after a command", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

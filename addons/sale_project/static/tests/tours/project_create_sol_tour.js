@@ -3,7 +3,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_create_sol_tour', {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
     stepUtils.showAppsMenuItem(), {
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
@@ -43,7 +43,11 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         trigger: ".o_field_widget[name=sale_line_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create a",
         content: "Create an Sales Order Item in the autocomplete dropdown.",
         run: "click",
-    }, {
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
+    {
         trigger: ".o_form_button_save:enabled",
         content: "Save project",
         run: "click",

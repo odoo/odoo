@@ -628,7 +628,6 @@ class Picking(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs')
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
-    hide_picking_type = fields.Boolean(compute='_compute_hide_picking_type')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
         check_company=True, index='btree_not_null')
@@ -710,11 +709,6 @@ class Picking(models.Model):
     def _compute_has_deadline_issue(self):
         for picking in self:
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
-
-    @api.depends('state')
-    def _compute_hide_picking_type(self):
-        for picking in self:
-            picking.hide_picking_type = picking.state != "draft" and picking.ids and 'default_picking_type_id' in picking.env.context
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -857,16 +851,17 @@ class Picking(models.Model):
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
+            packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
             picking.shipping_weight = (
                 picking.weight_bulk +
-                sum(pack.shipping_weight or pack.weight for pack in picking.move_line_ids.result_package_id.sudo())
+                sum(pack.shipping_weight or packages_weight[pack] for pack in picking.move_line_ids.result_package_id)
             )
 
     def _compute_shipping_volume(self):
         for picking in self:
             volume = 0
             for move in picking.move_ids:
-                volume += move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                volume += move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id) * move.product_id.volume
             picking.shipping_volume = volume
 
     @api.depends('move_ids.date_deadline', 'move_type')
@@ -928,7 +923,7 @@ class Picking(models.Model):
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_id(self):
         for picking in self:
-            if picking.state != 'draft' or picking.return_id:
+            if picking.state in ('cancel', 'done') or picking.return_id:
                 continue
             picking = picking.with_company(picking.company_id)
             if picking.picking_type_id:
@@ -1085,7 +1080,7 @@ class Picking(models.Model):
         return pickings
 
     def write(self, vals):
-        if vals.get('picking_type_id') and any(picking.state != 'draft' for picking in self):
+        if vals.get('picking_type_id') and any(picking.state in ('done', 'cancel') for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
         # set partner as a follower and unfollow old partner
         if vals.get('partner_id'):
@@ -1158,13 +1153,7 @@ class Picking(models.Model):
         )
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
-        # If a package level is done when confirmed its location can be different than where it will be reserved.
-        # So we remove the move lines created when confirmed to set quantity done to the new reserved ones.
-        package_level_done = self.mapped('package_level_ids').filtered(lambda pl: pl.is_done and pl.state == 'confirmed')
-        package_level_done.write({'is_done': False})
         moves._action_assign()
-        package_level_done.write({'is_done': True})
-
         return True
 
     def action_cancel(self):

@@ -1,3 +1,5 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { getKwArgs, makeKwArgs, webModels } from "@web/../tests/web_test_helpers";
 
 export class IrAttachment extends webModels.IrAttachment {
@@ -11,7 +13,7 @@ export class IrAttachment extends webModels.IrAttachment {
         delete kwargs.ids;
         force = kwargs.force ?? true;
 
-        const [attachment] = this._filter([["id", "in", ids]]);
+        const [attachment] = this.browse(ids);
         if (!attachment.res_model) {
             return true; // dummy value for mock server
         }
@@ -30,29 +32,55 @@ export class IrAttachment extends webModels.IrAttachment {
     }
 
     /** @param {number} ids */
-    _to_store(ids, store) {
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+        fields = kwargs.fields;
+
         /** @type {import("mock_models").DiscussVoiceMetadata} */
         const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
+
+        if (!fields) {
+            fields = [
+                "checksum",
+                "create_date",
+                "filename",
+                "mimetype",
+                "name",
+                "res_name",
+                "size",
+                "thread",
+            ];
+        }
 
         for (const attachment of this.browse(ids)) {
             const [data] = this.read(
                 attachment.id,
-                ["checksum", "create_date", "mimetype", "name"],
+                fields.filter((field) => !["filename", "size", "thread"].includes(field)),
                 makeKwArgs({ load: false })
             );
-            Object.assign(data, {
-                filename: attachment.name,
-                size: attachment.file_size,
-                thread:
-                    attachment.res_id && attachment.model !== "mail.compose.message"
-                        ? { id: attachment.res_id, model: attachment.res_model }
-                        : false,
-            });
-            const voice = DiscussVoiceMetadata._filter([["attachment_id", "=", attachment.id]])[0];
+            if (fields.includes("filename")) {
+                data.filename = attachment.name;
+            }
+            if (fields.includes("size")) {
+                data.size = attachment.file_size;
+            }
+            if (fields.includes("thread")) {
+                data.thread =
+                    attachment.model !== "mail.compose.message" && attachment.res_id
+                        ? mailDataHelpers.Store.one(
+                              this.env[attachment.res_model].browse(attachment.res_id),
+                              makeKwArgs({
+                                  as_thread: true,
+                                  only_id: true,
+                              })
+                          )
+                        : false;
+            }
+            const voice = DiscussVoiceMetadata.browse(attachment.id)[0];
             if (voice) {
                 data.voice = true;
             }
-            store.add("ir.attachment", data);
+            store.add(this.browse(attachment.id), data);
         }
     }
 }

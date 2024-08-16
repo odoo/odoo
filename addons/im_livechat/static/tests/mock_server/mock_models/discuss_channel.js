@@ -1,4 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
@@ -9,39 +11,32 @@ export class DiscussChannel extends mailModels.DiscussChannel {
      * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
      */
     _to_store(ids, store) {
-        /** @type {import("mock_models").LivechatChannel} */
-        const LivechatChannel = this.env["im_livechat.channel"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
         super._to_store(...arguments);
-        const channels = this._filter([["id", "in", ids]]);
+        const channels = this.browse(ids);
         for (const channel of channels) {
-            const channelInfo = { id: channel.id };
+            const channelInfo = {};
             channelInfo["anonymous_name"] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === "livechat") {
                 // add the operator id
                 if (channel.livechat_operator_id) {
-                    store.add(
+                    // livechat_username ignored for simplicity
+                    channelInfo.operator = mailDataHelpers.Store.one(
                         ResPartner.browse(channel.livechat_operator_id),
                         makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
                     );
-                    // livechat_username ignored for simplicity
-                    channelInfo.operator = { id: channel.livechat_operator_id, type: "partner" };
                 } else {
                     channelInfo.operator = false;
                 }
-                if (channel.livechat_channel_id) {
-                    channelInfo.livechatChannel = LivechatChannel.search_read([
-                        ["id", "=", channel.livechat_channel_id],
-                    ]).map((c) => ({
-                        id: c.id,
-                        name: c.name,
-                    }))[0];
-                }
+                channelInfo.livechatChannel = mailDataHelpers.Store.one(
+                    this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
+                    makeKwArgs({ fields: ["name"] })
+                );
             }
-            store.add("discuss.channel", channelInfo);
+            store.add(this.browse(channel.id), channelInfo);
         }
     }
     /** @param {import("mock_models").DiscussChannel} channel */

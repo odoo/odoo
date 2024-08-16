@@ -22,7 +22,7 @@ patch(TicketScreen.prototype, {
                 floorAndTable = `${table.floor_id.name}/`;
             }
 
-            floorAndTable += table.name;
+            floorAndTable += table.getName();
             return floorAndTable;
         }
     },
@@ -33,9 +33,9 @@ patch(TicketScreen.prototype, {
         }
         return Object.assign({}, super._getSearchFields(...arguments), {
             TABLE: {
-                repr: (order) => order.table_id?.name || "",
+                repr: (order) => order.table_id?.getName() || "",
                 displayName: _t("Table"),
-                modelField: "table_id.name",
+                modelField: "table_id.table_number",
             },
         });
     },
@@ -125,11 +125,11 @@ patch(TicketScreen.prototype, {
     async onDoRefund() {
         const order = this.getSelectedOrder();
         if (this.pos.config.module_pos_restaurant && order && !this.pos.selectedTable) {
-            this.pos.setTable(
+            await this.pos.setTable(
                 order.table ? order.table : this.pos.models["restaurant.table"].getAll()[0]
             );
         }
-        super.onDoRefund(...arguments);
+        await super.onDoRefund(...arguments);
     },
     isDefaultOrderEmpty(order) {
         if (this.pos.config.module_pos_restaurant) {

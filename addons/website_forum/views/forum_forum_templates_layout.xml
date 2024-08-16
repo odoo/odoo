@@ -45,7 +45,7 @@
                     <h3 t-attf-class="col-lg-10 my-0" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
-                        <span t-elif="not question.active" class="badge bg-danger">
+                        <span t-elif="not question.active" class="badge text-bg-danger">
                             <t t-if="question.state!='offensive'">Deleted</t>
                             <t t-if="question.state=='offensive'">Offensive</t>
                             <t t-if="question.state=='offensive' and question.closed_reason_id">
@@ -334,12 +334,12 @@
                 <small>(View all)</small>
             </a>
         </div>
-        <span t-foreach="forum.tag_most_used_ids" t-as="tag"
-             t-attf-data-post="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', 'filters', prevent_redirect=True) }"
-             t-attf-class="post_link cursor-pointer nav-link my-1 py-1 text-reset">
+        <a t-foreach="forum.tag_most_used_ids" t-as="tag"
+            t-attf-href="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', 'filters') }"
+            t-attf-class="nav-link my-1 py-1 text-reset">
             <i class="fa fa-tag fa-fw small opacity-50"/>
             <t t-out="tag.name"/>
-        </span>
+        </a>
     </div>
     <div t-if="my_other_forums" class="o_wforum_sidebar_section pt-3">
         <div class="px-3 pb-1 fw-bold">My forums</div>

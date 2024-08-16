@@ -259,7 +259,7 @@
 
     <template id="address_layout">
         <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ms-auto'"/>
-        <div t-if="address" t-attf-class="address row mb-4 {{snail_mail_compatibility and 'o_snail_mail'}}" title="This block is not always present depending on the printed document.">
+        <div t-if="address" t-attf-class="address row mb-4" title="This block is not always present depending on the printed document.">
             <t t-if="information_block">
                 <t t-set="colclass" t-value="'col-5 offset-1'"/>
                 <div name="information_block" class="col-6">
@@ -319,15 +319,13 @@
             </div>
         </div>
 
-        <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped o_table_striped {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+        <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped o_table_striped o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
              t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
                            '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout">
-                <t t-set="snail_mail_compatibility" t-value="true"/>
-            </t>
+            <t t-call="web.address_layout"/>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -375,15 +373,13 @@
             </div>
         </div>
 
-        <div t-attf-class="article o_report_layout_boxed o_table_boxed o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+        <div t-attf-class="article o_report_layout_boxed o_table_boxed o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
              t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
                            '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout">
-                <t t-set="snail_mail_compatibility" t-value="true"/>
-            </t>
+            <t t-call="web.address_layout"/>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -434,15 +430,13 @@
             </div>
         </div>
 
-        <div t-attf-class="article o_report_layout_bold o_table_bold o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+        <div t-attf-class="article o_report_layout_bold o_table_bold o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
              t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
                            '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout">
-                <t t-set="snail_mail_compatibility" t-value="true"/>
-            </t>
+            <t t-call="web.address_layout"/>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -494,15 +488,13 @@
             </div>
         </div>
 
-        <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+        <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
              t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
                            '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout">
-                <t t-set="snail_mail_compatibility" t-value="true"/>
-            </t>
+            <t t-call="web.address_layout"/>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>

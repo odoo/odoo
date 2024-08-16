@@ -42,15 +42,13 @@ patch(Composer.prototype, {
             );
         }
     },
-    /**
-     * @param {InputEvent} ev
-     */
-    onInput(ev) {
-        if (this.thread?.model === "discuss.channel" && ev.target.value.startsWith("/")) {
-            const [firstWord] = ev.target.value.substring(1).split(/\s/);
+    detectTyping() {
+        const value = this.props.composer.text;
+        if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
+            const [firstWord] = value.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (
-                ev.target.value === "/" || // suggestions not yet started
+                value === "/" || // suggestions not yet started
                 this.hasSuggestions ||
                 (command &&
                     (!command.channel_types ||
@@ -60,7 +58,7 @@ patch(Composer.prototype, {
                 return;
             }
         }
-        if (!this.typingNotified && ev.target.value) {
+        if (!this.typingNotified && value) {
             this.typingNotified = true;
             this.notifyIsTyping();
             browser.setTimeout(() => (this.typingNotified = false), LONG_TYPING);
@@ -79,5 +77,9 @@ patch(Composer.prototype, {
             this.typingNotified = false;
             this.notifyIsTyping(false);
         }
+    },
+    addEmoji(str) {
+        super.addEmoji(str);
+        this.detectTyping();
     },
 });

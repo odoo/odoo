@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="pos_self_order_kiosk_read_only_form_dialog" model="ir.ui.view">
-        <field name="name">pos.self.order.kiosk.read.only.form.dialog</field>
-        <field name="model">pos.config</field>
-        <field name="arch" type="xml">
-            <form>
-                <div class="text-center">
-                    <div class="fs-2 mb-2">From your Kiosk, open this URL:</div>
-                    <field name="self_ordering_url" readonly="1" />
-                </div>
-                <footer class="justify-content-end">
-                    <button class="btn btn-secondary" special="cancel">Close</button>
-                    <button class="btn btn-primary" name="action_open_kiosk" type="object">Open in New Tab</button>
-                </footer>
-            </form>
-        </field>
-    </record>
-
     <record id="pos_self_order_search_view" model="ir.ui.view">
         <field name="name">pos.self.order.search.view</field>
         <field name="model">pos.config</field>

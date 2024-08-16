@@ -3,10 +3,10 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setContent, getContent, setSelection } from "../_helpers/selection";
 import { setupEditor } from "../_helpers/editor";
 import { waitUntil, waitFor, click, queryOne, press, select } from "@odoo/hoot-dom";
-import { browser } from "@web/core/browser/browser";
 import { insertText, splitBlock, insertLineBreak } from "../_helpers/user_actions";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { cleanLinkArtifacts } from "../_helpers/format";
+import { markup } from "@odoo/owl";
 
 describe("should open a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
@@ -142,7 +142,7 @@ describe("popover should edit,copy,remove the link", () => {
         expect(".o_notification_body").toHaveCount(1);
         await animationFrame();
         expect(".o-we-linkpopover").toHaveCount(0);
-        expect(browser.navigator.clipboard.readTextSync()).toBe("http://test.com/");
+        await expect(navigator.clipboard.readText()).resolves.toBe("http://test.com/");
     });
     test("when edit a link's label and URL to '', the link should be removed", async () => {
         const { editor, el } = await setupEditor(
@@ -279,7 +279,7 @@ describe("Link creation", () => {
             // press("Enter");
             splitBlock(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>ab<a href="#">link</a></p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>'
+                `<p>ab<a href="#">link</a></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
             );
         });
         test("should insert a link then create a new <p>, and another character", async () => {
@@ -540,6 +540,60 @@ describe("shortcut", () => {
         press("Enter");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.com">li[]nk</a></p>'
+        );
+    });
+});
+
+describe("link preview", () => {
+    test("test internal link preview", async () => {
+        onRpc("/html_editor/link_preview_internal", () => {
+            return {
+                description: markup("<p>Test description</p>"),
+                link_preview_name: "Task name | Project name",
+            };
+        });
+        onRpc("/odoo/project/1/tasks/8", () => new Response("", { status: 200 }));
+        const { editor, el } = await setupEditor(`<p>[]</p>`);
+        insertText(editor, "/link");
+        await animationFrame();
+        click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill(
+            window.location.origin + "/odoo/project/1/tasks/8"
+        );
+        await animationFrame();
+        expect(".o_we_replace_title_btn").toHaveCount(1);
+        expect(".o_we_url_link").toHaveText("Task name | Project name");
+        expect(".o_we_description_link_preview").toHaveText("Test description");
+
+        click(".o_we_replace_title_btn");
+        await animationFrame();
+
+        expect(".o_we_replace_title_btn").toHaveCount(0);
+        expect(cleanLinkArtifacts(el.textContent)).toBe("Task name | Project name");
+    });
+    test("test external link preview", async () => {
+        onRpc("/html_editor/link_preview_external", () => {
+            return {
+                og_description:
+                    "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+                og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+                og_title: "Open Source ERP and CRM | Odoo",
+                og_type: "website",
+                og_site_name: "Odoo",
+                source_url: "http://odoo.com/",
+            };
+        });
+        const { editor } = await setupEditor(`<p>[]</p>`);
+        insertText(editor, "/link");
+        await animationFrame();
+        click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://odoo.com/");
+        await animationFrame();
+        expect(".o_we_replace_title_btn").toHaveCount(1);
+        expect(".o_extra_info_card").toHaveCount(1);
+        expect(".o_we_url_link").toHaveText("Open Source ERP and CRM | Odoo");
+        expect(".o_we_description_link_preview").toHaveText(
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business."
         );
     });
 });

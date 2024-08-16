@@ -282,7 +282,7 @@ class AccountMoveLine(models.Model):
     account_root_id = fields.Many2one(
         related='account_id.root_id',
         string="Account Root",
-        store=True,
+        depends_context='company',
     )
     product_category_id = fields.Many2one(related='product_id.product_tmpl_id.categ_id')
 
@@ -576,13 +576,15 @@ class AccountMoveLine(models.Model):
                   ORDER BY property.company_id, property.name, account_id
                 ),
                 fallback AS (
-                    SELECT DISTINCT ON (account.company_id, account.account_type)
+                    SELECT DISTINCT ON (account_companies.res_company_id, account.account_type)
                            'res.company' AS model,
-                           account.company_id AS id,
+                           account_companies.res_company_id AS id,
                            account.account_type AS account_type,
                            account.id AS account_id
                       FROM account_account account
-                     WHERE account.company_id = ANY(%(company_ids)s)
+                      JOIN account_account_res_company_rel account_companies
+                           ON account_companies.account_account_id = account.id
+                     WHERE account_companies.res_company_id = ANY(%(company_ids)s)
                        AND account.account_type IN ('asset_receivable', 'liability_payable')
                        AND account.deprecated = 'f'
                 )
@@ -627,11 +629,13 @@ class AccountMoveLine(models.Model):
                 elif line.move_id.is_purchase_document(include_receipts=True):
                     line.account_id = accounts['expense'] or line.account_id
             elif line.partner_id:
-                line.account_id = self.env['account.account']._get_most_frequent_account_for_partner(
+                account_id = self.env['account.account']._get_most_frequent_account_for_partner(
                     company_id=line.company_id.id,
                     partner_id=line.partner_id.id,
                     move_type=line.move_id.move_type,
                 )
+                if account_id:
+                    line.account_id = account_id
         for line in self:
             if not line.account_id and line.display_type not in ('line_section', 'line_note'):
                 previous_two_accounts = line.move_id.line_ids.filtered(
@@ -681,10 +685,14 @@ class AccountMoveLine(models.Model):
                     from_currency=line.company_currency_id,
                     to_currency=line.currency_id,
                     company=line.company_id,
-                    date=line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
+                    date=line._get_rate_date(),
                 )
             else:
                 line.currency_rate = 1
+
+    def _get_rate_date(self):
+        self.ensure_one()
+        return self.move_id.invoice_date or self.move_id.date or fields.Date.context_today(self)
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
@@ -811,7 +819,11 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id')
     def _compute_product_uom_id(self):
         for line in self:
-            line.product_uom_id = line.product_id.uom_id
+            # vendor bills should have the product purchase UOM
+            if line.move_id.is_purchase_document():
+                line.product_uom_id = line.product_id.uom_po_id
+            else:
+                line.product_uom_id = line.product_id.uom_id
 
     @api.depends('display_type')
     def _compute_quantity(self):
@@ -1323,12 +1335,23 @@ class AccountMoveLine(models.Model):
         return self.tax_ids or self.tax_line_id or self.tax_tag_ids.filtered(lambda x: x.applicability == "taxes")
 
     def _check_tax_lock_date(self):
-        for line in self.filtered(lambda l: l.move_id.state == 'posted'):
+        for line in self:
             move = line.move_id
-            if move.company_id.max_tax_lock_date and move.date <= move.company_id.max_tax_lock_date and line._affect_tax_report():
+            if move.state != 'posted':
+                continue
+            violated_lock_dates = move.company_id._get_lock_date_violations(
+                move.date,
+                fiscalyear=False,
+                sale=False,
+                purchase=False,
+                tax=True,
+                hard=True,
+            )
+            if violated_lock_dates and line._affect_tax_report():
                 raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
-                                  "Please change the journal entry date or the tax lock date set in the settings (%s) to proceed.",
-                                  format_date(self.env, move.company_id.max_tax_lock_date)))
+                                  "Please change the journal entry date or the following lock dates to proceed: %(lock_date_info)s.",
+                                  lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates)))
+        return True
 
     def _check_reconciliation(self):
         for line in self:
@@ -1569,9 +1592,7 @@ class AccountMoveLine(models.Model):
             lines = super().create([self._sanitize_vals(vals) for vals in vals_list])
             container['records'] = lines
 
-        for line in lines:
-            if line.move_id.state == 'posted':
-                line._check_tax_lock_date()
+        lines._check_tax_lock_date()
 
         if not self.env.context.get('tracking_disable'):
             # Log changes to move lines on each move
@@ -1625,7 +1646,7 @@ class AccountMoveLine(models.Model):
 
             # Check the lock date.
             if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['fiscal']):
-                line.move_id._check_fiscalyear_lock_date()
+                line.move_id._check_fiscal_lock_dates()
 
             # Check the tax lock date.
             if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['tax']):
@@ -1715,7 +1736,7 @@ class AccountMoveLine(models.Model):
         self._check_reconciliation()
 
         # Check the lock date. (Only relevant if the move is posted)
-        self.move_id.filtered(lambda m: m.state == 'posted')._check_fiscalyear_lock_date()
+        self.move_id.filtered(lambda m: m.state == 'posted')._check_fiscal_lock_dates()
 
         # Check the tax lock date.
         self._check_tax_lock_date()
@@ -1793,17 +1814,27 @@ class AccountMoveLine(models.Model):
             return {}
 
         # Override in order to not read the complete move line table and use the index instead
-        query = self._search(domain, limit=1)
-        query.add_where('account.id = account_move_line.account_id')
-        id_rows = self.env.execute_query(SQL("""
-            SELECT account.root_id
-              FROM account_account account,
-                   LATERAL (%s) line
-             WHERE account.company_id IN %s
-        """, query.select(), tuple(self.env.companies.ids)))
+        query_account = self.env['account.account']._search([('company_ids', '=', self.env.companies.ids)])
+        account_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
+
+        query_line = self._search(domain, limit=1)
+        query_line.add_where('account_account.id = account_move_line.account_id')
+
+        account_codes = self.env.execute_query(SQL(
+            """
+            SELECT %(account_code_alias)s AS code
+              FROM %(account_table)s,
+                   LATERAL (%(line_select)s) line
+             WHERE %(where_clause)s
+            """,
+            account_code_alias=account_code_alias,
+            account_table=query_account.from_clause,
+            line_select=query_line.select(),
+            where_clause=query_account.where_clause,
+        ))
         return {
-            root.id: {'id': root.id, 'display_name': root.display_name}
-            for root in self.env['account.root'].browse(id_ for [id_] in id_rows)
+            (root := self.env['account.root']._from_account_code(code)).id: {'id': root.id, 'display_name': root.display_name}
+            for code, in account_codes
         }
 
     # -------------------------------------------------------------------------
@@ -2475,13 +2506,13 @@ class AccountMoveLine(models.Model):
             partials[index].exchange_move_id = exchange_move
 
         # ==== Create entries for cash basis taxes ====
-        def is_cash_basis_needed(account):
-            return account.company_id.tax_exigibility \
-                and account.account_type in ('asset_receivable', 'liability_payable')
+        def is_cash_basis_needed(amls):
+            return any(amls.company_id.mapped('tax_exigibility')) \
+                and amls.account_id.account_type in ('asset_receivable', 'liability_payable')
 
         if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             for plan in plan_list:
-                if is_cash_basis_needed(plan['amls'].account_id):
+                if is_cash_basis_needed(plan['amls']):
                     plan['partials']._create_tax_cash_basis_moves()
 
         # ==== Prepare full reconcile creation ====
@@ -2569,7 +2600,7 @@ class AccountMoveLine(models.Model):
                 # If we are fully reversing the entry, no need to fix anything since the journal entry
                 # is exactly the mirror of the source journal entry.
                 caba_lines_to_reconcile = None
-                if is_cash_basis_needed(involved_amls.account_id) and not self._context.get('move_reverse_cancel'):
+                if is_cash_basis_needed(involved_amls) and not self._context.get('move_reverse_cancel'):
                     caba_lines_to_reconcile = involved_amls._add_exchange_difference_cash_basis_vals(exchange_diff_values)
 
                 # Prepare the exchange difference.

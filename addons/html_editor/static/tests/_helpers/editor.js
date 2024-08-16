@@ -4,6 +4,7 @@ import { queryOne } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
+import { animationFrame } from "@odoo/hoot-mock";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -96,16 +97,24 @@ export async function setupEditor(content, options = {}) {
     // awaiting for mountWithCleanup is not enough when mounted in an iframe,
     // @see Wysiwyg.onMounted
     const editor = await attachedEditor;
+    const plugins = new Map(
+        editor.plugins.map((plugin) => {
+            return [plugin.constructor.name, plugin];
+        })
+    );
+    if (plugins.get("embedded_components")) {
+        // await an extra animation frame for embedded components mounting
+        // TODO @phoenix: would be more accurate to register mounting
+        // promises in embedded_component_plugin and await them, change this
+        // if there is an issue.
+        await animationFrame();
+    }
 
     // @todo: return editor, tests can destructure const { editable } = ... if they want
     return {
         el: editor.editable,
         editor,
-        plugins: new Map(
-            editor.plugins.map((plugin) => {
-                return [plugin.constructor.name, plugin];
-            })
-        ),
+        plugins,
     };
 }
 

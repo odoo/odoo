@@ -4,13 +4,6 @@
         <xpath expr="//*[@t-ref='content']" position="before">
             <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         </xpath>
-        <xpath expr="//*[@t-ref='core']" position="before">
-            <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
-            <DiscussSidebar t-else=""/>
-        </xpath>
-        <xpath expr="//*[@t-ref='root']" position="inside">
-            <MessagingMenu t-if="ui.isSmall"/>
-        </xpath>
         <xpath expr="//*[@t-ref='root']" position="replace">
             <div class="h-100 d-flex flex-column">
                 <ControlPanel t-if="!ui.isSmall"/>
@@ -26,23 +19,7 @@
         <xpath expr="//*[@name='thread']" position="inside">
             <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
         </xpath>
-        <xpath expr="//*[@t-ref='header']" position="replace">
-            <div t-if="!ui.isSmall" class="d-flex w-100">
-                <span class="o-mail-Discuss-headerStartMeeting d-flex justify-content-center flex-shrink-0 p-2 border-end o-mail-discussSidebarBgColor">
-                    <button class="btn btn-primary rounded" t-on-click="store.startMeeting" data-hotkey="m">Start a meeting</button>
-                </span>
-                <t>$0</t>
-            </div>
-            <t t-else="">$0</t>
-        </xpath>
     </t>
-
-    <t t-name="mail.Discuss.loading">
-        <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
-            <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
-        </div>
-    </t>
-
     <t t-name="mail.Discuss.mobileTopbar">
         <div class="btn-group d-flex w-100 p-1">
             <t t-call="mail.MobileMailbox" >

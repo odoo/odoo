@@ -149,12 +149,6 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 
-# FIXME: holy shit this whole thing needs to be cleaned up hard it's a mess
-def encode(s):
-    assert isinstance(s, str)
-    return s
-
-
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
@@ -937,23 +931,16 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
                 and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
-            # Do not export terms contained on the Component directive of OWL
-            # attributes in this context are most of the time variables,
-            # not real HTML attributes.
-            # Node tags starting with a capital letter are considered OWL Components
-            # and a widespread convention and good practice for DOM tags is to write
-            # them all lower case.
-            # https://www.w3schools.com/html/html5_syntax.asp
-            # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
-            if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
-                for att in TRANSLATED_ATTRS:
-                    if att in el.attrib:
-                        _push(callback, el.attrib[att], el.sourceline)
+            # heuristic: tags with names starting with an uppercase letter are
+            # component nodes
+            is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
+            for attr in el.attrib:
+                if (not is_component and attr in TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
+                    _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
@@ -1057,7 +1044,7 @@ class TranslationReader:
 
     def __iter__(self):
         for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
-            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
+            yield (module, ttype, name, res_id, source, value, comments)
 
     def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
         """ Insert a translation that will be used in the file generation
@@ -1308,7 +1295,7 @@ class TranslationModuleReader(TranslationReader):
                 lineno, message, comments = extracted[:3]
                 value = translations.get(message, '')
                 self._push_translation(module, trans_type, display_path, lineno,
-                                 encode(message), comments + extra_comments, value=value)
+                                       message, comments + extra_comments, value=value)
         except Exception:
             _logger.exception("Failed to extract terms from %s", fabsolutepath)
         finally:
@@ -1634,7 +1621,7 @@ def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None =
         po_names.insert(1, 'es_419')
     po_paths = [
         join(module_name, dir_, filename + '.po')
-        for filename in po_names
+        for filename in OrderedSet(po_names)
         for dir_ in ('i18n', 'i18n_extra')
     ]
     for path in po_paths:

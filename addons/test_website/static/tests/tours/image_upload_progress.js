@@ -38,25 +38,27 @@ const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, {
 
 let unpatchMediaDialog = null;
 
-const setupSteps = [{
-    content: "reload to load patch",
-    trigger: ".o_website_preview",
-    run: () => {
-        unpatchMediaDialog = patchMediaDialog();
-    },
-}, {
-    content: "drop a snippet",
-    trigger: "#oe_snippets .oe_snippet[name='Text - Image'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    run: "drag_and_drop :iframe #wrap",
-}, 
-{
-    trigger: "body.editor_has_snippets",
-},
-{
-    content: "drop a snippet",
-    trigger: "#oe_snippets .oe_snippet[name='Image Gallery'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    run: "drag_and_drop :iframe #wrap",
-}];
+const setupSteps = function () {
+    return [
+        {
+            content: "reload to load patch",
+            trigger: ".o_website_preview",
+            run: () => {
+                unpatchMediaDialog = patchMediaDialog();
+            },
+        },
+        ...wTourUtils.dragNDrop({
+            id: "s_text_image",
+            name: "Text - Image",
+            groupName: "Content",
+        }),
+        ...wTourUtils.dragNDrop({
+            id: "s_image_gallery",
+            name: "Image Gallery",
+            groupName: "Images",
+        })
+    ];
+};
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg, .webp";
 
@@ -65,7 +67,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     test: true,
     edition: true,
 }, () => [
-    ...setupSteps,
+    ...setupSteps(),
     // 1. Check multi image upload
     {
         content: "click on dropped snippet",
@@ -86,23 +88,18 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "check upload progress bar is correctly shown (1)",
         trigger: `.o_we_progressbar:contains('icon.ico'):contains('${formatErrorMsg}')`,
-        in_modal: false,
     }, {
         content: "check upload progress bar is correctly shown (2)",
         trigger: ".o_we_progressbar:contains('image.webp'):contains('File has been uploaded')",
-        in_modal: false,
     }, {
         content: "check upload progress bar is correctly shown (3)",
         trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
-        in_modal: false,
     }, {
         content: "check upload progress bar is correctly shown (4)",
         trigger: ".o_we_progressbar:contains('image.jpeg'):contains('File has been uploaded')",
-        in_modal: false,
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
-        in_modal: false,
         run: () => {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
@@ -112,7 +109,6 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "close notification",
         trigger: '.o_notification_close',
-        in_modal: false,
         run: "click",
     }, {
         content: "close media dialog",
@@ -139,11 +135,9 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "check upload progress bar is correctly shown",
         trigger: ".o_we_progressbar:contains('image.png')",
-        in_modal: false,
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
-        in_modal: false,
         run: () => {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
@@ -172,7 +166,6 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
-        in_modal: false,
         run: () => {
             patchWithError = true;
             // This will trigger upload of dummy files for test purpose, as a
@@ -183,14 +176,12 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "check upload progress bar is correctly shown",
         trigger: `.o_we_progressbar:contains('icon.ico'):contains('${formatErrorMsg}')`,
-        in_modal: false,
         run: function () {
             patchWithError = false;
         },
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
-        in_modal: false,
         run: () => {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
@@ -207,7 +198,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     test: true,
     edition: true,
 }, () => [
-    ...setupSteps,
+    ...setupSteps(),
     // 1. Check multi image upload
     {
         content: "click on dropped snippet",
@@ -233,11 +224,9 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         content: "check that the upload progress bar is correctly shown",
         // ensure it is there so we are sure next step actually test something
         trigger: ".o_we_progressbar:contains('fox'):contains('File has been uploaded')",
-        in_modal: false,
     }, {
         content: "notification should close after 3 seconds",
         trigger: 'body:not(:has(.o_notification_close))',
-        in_modal: false,
         run: "click",
     }, {
         content: "unsplash image (mocked to logo) should have been used",

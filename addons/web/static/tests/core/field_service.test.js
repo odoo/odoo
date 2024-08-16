@@ -41,7 +41,7 @@ class Tortoise extends models.Model {
     name = fields.Char();
     age = fields.Integer();
     location_id = fields.Many2one({ string: "Location", relation: "location" });
-    species = fields.Many2one({ string: "Species", relation: "species" });
+    species = fields.Many2one({ relation: "species" });
     property_field = fields.Properties({
         string: "Properties",
         definition_record: "species",

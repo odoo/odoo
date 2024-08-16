@@ -149,7 +149,7 @@ class PaymentProvider(models.Model):
 
     # Feature support fields
     support_tokenization = fields.Boolean(
-        string="Tokenization Supported", compute='_compute_feature_support_fields'
+        string="Tokenization", compute='_compute_feature_support_fields'
     )
     support_manual_capture = fields.Selection(
         string="Manual Capture Supported",
@@ -157,11 +157,16 @@ class PaymentProvider(models.Model):
         compute='_compute_feature_support_fields',
     )
     support_express_checkout = fields.Boolean(
-        string="Express Checkout Supported", compute='_compute_feature_support_fields'
+        string="Express Checkout", compute='_compute_feature_support_fields'
     )
     support_refund = fields.Selection(
-        string="Type of Refund Supported",
-        selection=[('full_only', "Full Only"), ('partial', "Partial")],
+        string="Refund",
+        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
+        selection=[
+            ('none', "Unsupported"),
+            ('full_only', "Full Only"),
+            ('partial', "Full & Partial"),
+        ],
         compute='_compute_feature_support_fields',
     )
 
@@ -232,12 +237,12 @@ class PaymentProvider(models.Model):
 
         :return: None
         """
-        self.update(dict.fromkeys((
-            'support_express_checkout',
-            'support_manual_capture',
-            'support_refund',
-            'support_tokenization',
-        ), None))
+        self.update({
+            'support_express_checkout': None,
+            'support_manual_capture': None,
+            'support_tokenization': None,
+            'support_refund': 'none',
+        })
 
     #=== ONCHANGE METHODS ===#
 

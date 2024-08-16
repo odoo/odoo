@@ -2,14 +2,13 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { LinkPreviewList } from "@mail/core/common/link_preview_list";
-import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { MessageInReply } from "@mail/core/common/message_in_reply";
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { MessageSeenIndicator } from "@mail/core/common/message_seen_indicator";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/common/format";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -27,18 +26,20 @@ import {
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { useMessageActions } from "./message_actions";
+import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
+import { useLongTouchPress } from "@mail/utils/common/hooks";
+import { MessageActionMenuMobile } from "./message_action_menu_mobile";
+import { discussComponentRegistry } from "./discuss_component_registry";
 
 /**
  * @typedef {Object} Props
@@ -78,6 +79,7 @@ export class Message extends Component {
         showDates: true,
     };
     static props = [
+        "asCard?",
         "registerMessageRef?",
         "hasActions?",
         "isInChatWindow?",
@@ -104,6 +106,8 @@ export class Message extends Component {
             expandOptions: false,
             emailHeaderOpen: false,
             showTranslation: false,
+            actionMenuMobileOpen: false,
+            longTouching: false,
         });
         /** @type {ShadowRoot} */
         this.shadowRoot;
@@ -123,6 +127,7 @@ export class Message extends Component {
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        useLongTouchPress("root", () => this.openMobileActions());
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -130,7 +135,7 @@ export class Message extends Component {
         useEffect(
             (editingMessage) => {
                 if (this.props.message.eq(editingMessage)) {
-                    this.enterEditMode();
+                    messageActionsRegistry.get("edit").onClick(this);
                 }
             },
             () => [this.props.messageEdition?.editingMessage]
@@ -190,18 +195,26 @@ export class Message extends Component {
     get attClass() {
         return {
             [this.props.className]: true,
+            "o-card p-2 mt-2 bg-view": this.props.asCard,
+            "pt-1": !this.props.asCard,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected": this.props.messageToReplyTo?.isSelected(
                 this.props.thread,
                 this.props.message
             ),
             "o-squashed": this.props.squashed,
-            "mt-1": !this.props.squashed && this.props.thread && !this.env.messageCard,
+            "mt-1":
+                !this.props.squashed &&
+                this.props.thread &&
+                !this.env.messageCard &&
+                !this.props.asCard,
             "px-2": this.props.isInChatWindow,
             "opacity-50": this.props.messageToReplyTo?.isNotSelected(
                 this.props.thread,
                 this.props.message
             ),
+            "o-longTouching": this.state.longTouching,
+            "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
         };
     }
 
@@ -243,8 +256,9 @@ export class Message extends Component {
         return this.props.message;
     }
 
+    /** Max amount of quick actions, including "..." */
     get quickActionCount() {
-        return this.env.inChatter ? 2 : 3;
+        return this.env.inChatter ? 3 : this.env.inChatWindow ? 2 : 4;
     }
 
     get showSeenIndicator() {
@@ -275,37 +289,6 @@ export class Message extends Component {
         return _t("Message");
     }
 
-    get canAddReaction() {
-        return Boolean(!this.message.is_transient && this.message.thread);
-    }
-
-    get deletable() {
-        return this.editable;
-    }
-
-    get editable() {
-        if (!this.props.hasActions) {
-            return false;
-        }
-        return this.message.editable;
-    }
-
-    get canReplyTo() {
-        return this.props.messageToReplyTo;
-    }
-
-    get canToggleStar() {
-        return Boolean(
-            !this.message.is_transient && this.message.thread && this.store.self.type === "partner"
-        );
-    }
-
-    get showUnfollow() {
-        return Boolean(
-            this.message.thread?.selfFollower && this.props.thread?.model === "mail.box"
-        );
-    }
-
     get isActive() {
         return (
             this.state.isHovered ||
@@ -319,22 +302,15 @@ export class Message extends Component {
         return Boolean(this.env.inChatWindow && this.props.message.isSelfAuthored);
     }
 
+    get isMobileOS() {
+        return isMobileOS();
+    }
+
     get isOriginThread() {
         if (!this.props.thread) {
             return false;
         }
         return this.props.thread.eq(this.message.thread);
-    }
-
-    get isInInbox() {
-        if (!this.props.thread) {
-            return false;
-        }
-        return this.props.thread.id === "inbox";
-    }
-
-    get translatable() {
-        return this.store.hasMessageTranslationFeature && this.env.inChatter;
     }
 
     get translatedFromText() {
@@ -370,76 +346,15 @@ export class Message extends Component {
         return true;
     }
 
-    onClickDelete() {
-        const message = toRaw(this.message);
-        this.dialog.add(
-            MessageConfirmDialog,
-            {
-                message,
-                messageComponent: Message,
-                prompt: _t("Are you sure you want to delete this message?"),
-                onConfirm: () => message.remove(),
-            },
-            { context: this }
-        );
-    }
-
-    onClickReplyTo(ev) {
-        const message = toRaw(this.props.message);
-        const thread = toRaw(this.props.thread);
-        this.props.messageToReplyTo.toggle(thread, message);
-    }
-
     async onClickAttachmentUnlink(attachment) {
         await toRaw(attachment).remove();
-    }
-
-    onClickMarkAsUnread() {
-        const message = toRaw(this.message);
-        const thread = toRaw(this.props.thread);
-        if (!thread.selfMember || thread.selfMember?.new_message_separator === message.id) {
-            return;
-        }
-        return rpc("/discuss/channel/mark_as_unread", {
-            channel_id: message.thread.id,
-            message_id: message.id,
-        });
     }
 
     /**
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        const model = ev.target.dataset.oeModel;
-        const id = Number(ev.target.dataset.oeId);
-        const store = toRaw(this.store);
-        if (ev.target.closest(".o_channel_redirect")) {
-            ev.preventDefault();
-            const thread = store.Thread.insert({ model, id });
-            thread.open();
-            return;
-        }
-        if (ev.target.closest(".o_mail_redirect")) {
-            ev.preventDefault();
-            const partnerId = Number(ev.target.dataset.oeId);
-            if (user.partnerId !== partnerId) {
-                this.store.openChat({ partnerId });
-            }
-            return;
-        }
-        if (ev.target.tagName === "A") {
-            if (model && id) {
-                ev.preventDefault();
-                await this.env.services.action.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: model,
-                    views: [[false, "form"]],
-                    res_id: id,
-                });
-                if (!this.env.isSmall) {
-                    this.props.thread.open(true, { autofocus: false });
-                }
-            }
+        if (this.store.handleClickOnLink(ev, this.props.thread)) {
             return;
         }
         if (
@@ -463,21 +378,6 @@ export class Message extends Component {
 
     /** @param {HTMLElement} bodyEl */
     prepareMessageBody(bodyEl) {}
-
-    enterEditMode() {
-        const message = toRaw(this.props.message);
-        const text = convertBrToLineBreak(message.body);
-        message.composer = {
-            mentionedPartners: message.recipients,
-            text,
-            selection: {
-                start: text.length,
-                end: text.length,
-                direction: "none",
-            },
-        };
-        this.state.isEditing = true;
-    }
 
     getAuthorAttClass() {
         return { "opacity-50": this.message.isPending };
@@ -513,9 +413,44 @@ export class Message extends Component {
         });
     }
 
-    openReactionMenu() {
+    onTouchstart() {
+        clearTimeout(this.longTouchingTimeoutId);
+        this.longTouchingTimeoutId = setTimeout(() => (this.state.longTouching = true), 150);
+    }
+
+    onTouchend() {
+        clearTimeout(this.longTouchingTimeoutId);
+        this.state.longTouching = false;
+    }
+
+    /** @param {MouseEvent} [ev] */
+    openMobileActions(ev) {
+        if (!isMobileOS()) {
+            return;
+        }
+        ev?.stopPropagation();
+        this.state.actionMenuMobileOpen = true;
+        this.dialog.add(
+            MessageActionMenuMobile,
+            {
+                message: this.props.message,
+                thread: this.props.thread,
+                isFirstMessage: this.props.isFirstMessage,
+                messageToReplyTo: this.props.messageToReplyTo,
+                openReactionMenu: () => this.openReactionMenu(),
+                state: this.state,
+            },
+            { context: this, onClose: () => (this.state.actionMenuMobileOpen = false) }
+        );
+    }
+
+    openReactionMenu(reaction) {
         const message = toRaw(this.props.message);
-        this.dialog.add(MessageReactionMenu, { message }, { context: this });
+        this.dialog.add(
+            MessageReactionMenu,
+            { message, initialReaction: reaction },
+            { context: this }
+        );
     }
 
     async onClickToggleTranslation() {
@@ -532,3 +467,5 @@ export class Message extends Component {
             !this.state.showTranslation && Boolean(message.translationValue);
     }
 }
+
+discussComponentRegistry.add("Message", Message);

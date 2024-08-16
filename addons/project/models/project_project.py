@@ -778,6 +778,7 @@ class Project(models.Model):
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
             'currency_id': self.currency_id.id,
             'show_project_profitability_helper': show_profitability and self._show_profitability_helper(),
+            'show_milestones': self.allow_milestones,
         }
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
@@ -906,7 +907,7 @@ class Project(models.Model):
 
     @api.model
     def _get_values_analytic_account_batch(self, project_vals):
-        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.project_plan'))
+        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.analytic_plan_projects'))
 
         if not project_plan_id:
             project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
@@ -1020,19 +1021,13 @@ class Project(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _thread_to_store(self, store: Store, request_list, **kwargs):
+    def _thread_to_store(self, store: Store, /, *, request_list=None, **kwargs):
         super()._thread_to_store(store, request_list=request_list, **kwargs)
-        if "followers" in request_list:
+        if request_list and "followers" in request_list:
             store.add(
-                "mail.thread",
-                {
-                    "collaborator_ids": [
-                        {"id": partner.id, "type": "partner"}
-                        for partner in self.collaborator_ids.partner_id
-                    ],
-                    "id": self.id,
-                    "model": "project.project",
-                },
+                self,
+                {"collaborator_ids": Store.many(self.collaborator_ids.partner_id, only_id=True)},
+                as_thread=True,
             )
 
     @api.depends('task_count', 'open_task_count')

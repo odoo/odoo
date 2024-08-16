@@ -29,7 +29,7 @@ patch(ReceiptScreen.prototype, {
         }
 
         this.state.mode = mode;
-        this.state.input = this.currentOrder.partner_id?.phone || "";
+        this.state.input = this.currentOrder.partner_id?.phone || this.state.input || "";
     },
     get isValidInput() {
         return this.state.mode === "phone"

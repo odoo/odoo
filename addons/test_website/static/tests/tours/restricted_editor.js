@@ -8,20 +8,22 @@ const checkNoTranslate = {
 };
 const translate = [{
     content: "Open Edit menu",
-    trigger: ".o_menu_systray .o_edit_website_container button",
+    trigger: ".o_menu_systray .o_edit_website_container button:contains(edit)",
     run: "click",
 }, {
     content: "Click on translate button",
-    trigger: ".o_popover .o_translate_website_dropdown_item",
+    trigger: ".o_popover .o_translate_website_dropdown_item:contains(translate)",
     run: "click",
 }];
 const closeErrorDialog = [{
     content: "Check has error dialog",
-    trigger: "div.o_error_dialog.modal-content",
+    trigger: ".modal:contains(error) .o_error_dialog.modal-content",
 }, {
     content: "Close error dialog",
-    trigger: ".modal-footer button.btn.btn-primary",
+    trigger: ".modal .modal-footer button.btn.btn-primary",
     run: "click",
+}, {
+    trigger: "body:not(:has(.modal))",
 }];
 const switchTo = (lang) => {
     return [{
@@ -51,7 +53,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_only', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Check icons cannot be dragged",
-        trigger: "#oe_snippets .oe_snippet[name='Banner'].o_disabled",
+        trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
     ...wTourUtils.clickOnSave(),
     ...switchTo('fr'),
@@ -64,7 +66,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_only', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Check icons cannot be dragged",
-        trigger: "#oe_snippets .oe_snippet[name='Banner'].o_disabled",
+        trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
     ...switchTo('fr'),
     ...translate,
@@ -80,7 +82,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Check icons cannot be dragged",
-        trigger: "#oe_snippets .oe_snippet[name='Banner'].o_disabled",
+        trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
     ...wTourUtils.clickOnSave(),
     ...switchTo('fr'),
@@ -93,12 +95,17 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Check icons can be dragged",
-        trigger: "#oe_snippets .oe_snippet[name='Banner']:not(.o_disabled)",
+        trigger: "#oe_snippets .oe_snippet[name='Intro']:not(.o_disabled)",
     },
     {
-        content: "Drag the banner block",
-        trigger: `#oe_snippets .oe_snippet[name="Banner"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        content: "Drag the Intro snippet group",
+        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         run: "drag_and_drop :iframe [data-oe-expression='record.website_description']",
+    },
+    {
+        content: "Click on the s_banner snippet in the dialog",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_banner"]',
+        run: "click",
     },
     {
         content: "Change name",
@@ -110,8 +117,12 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     ...translate,
     {
         content: "Close the dialog",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal .modal-footer .btn-primary",
         run: "click",
+    },
+    {
+        content: "Assure the modal is well closed",
+        trigger: "body:not(:has(.modal))",
     },
     {
         content: "Translate name",
@@ -121,7 +132,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     {
         content: "Translate some banner text",
         trigger: ":iframe [data-oe-expression='record.website_description'] strong.o_default_snippet_text",
-        run: "editor Facilement.",
+        run: "editor potentiel.",
     },
     ...wTourUtils.clickOnSave(),
 ]);

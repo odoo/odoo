@@ -21,7 +21,7 @@ class Partner extends models.Model {
     _name = "res.partner";
     _rec_name = "display_name";
 
-    foo = fields.Text({ string: "Foo", searchable: true, default: "My little Foo Value" });
+    foo = fields.Text({ default: "My little Foo Value" });
 
     _records = [
         { id: 1, foo: "yop" },
@@ -143,7 +143,7 @@ test("leaving an untouched record with an unset ace field should not write", asy
 });
 
 test("AceEditorField only trigger onchanges when blurred", async () => {
-    Partner._fields.foo = fields.Text({ onChange: () => {} });
+    Partner._onChanges.foo = () => {};
     for (const record of Partner._records) {
         record.foo = false;
     }

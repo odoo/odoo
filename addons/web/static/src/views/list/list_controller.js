@@ -76,11 +76,11 @@ export class ListController extends Component {
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
-        const openFormView = this.props.editable ? this.archInfo.openFormView : false;
-        this.onOpenFormView = openFormView ? this.openRecord.bind(this) : undefined;
         this.activeActions = this.archInfo.activeActions;
         this.editable =
             this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
+        this.onOpenFormView = this.openRecord.bind(this);
+        this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
         this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
@@ -226,6 +226,18 @@ export class ListController extends Component {
                 onWillSaveMulti: this.onWillSaveMulti.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
+        };
+    }
+
+    get actionMenuProps() {
+        return {
+            getActiveIds: () => this.model.root.selection.map((r) => r.resId),
+            context: this.props.context,
+            domain: this.props.domain,
+            items: this.actionMenuItems,
+            isDomainSelected: this.model.root.isDomainSelected,
+            resModel: this.model.root.resModel,
+            onActionExecuted: () => this.model.load(),
         };
     }
 

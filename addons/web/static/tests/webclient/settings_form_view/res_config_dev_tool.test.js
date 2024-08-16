@@ -16,7 +16,7 @@ import { redirect } from "@web/core/utils/urls";
 
 class ResConfigSettings extends models.Model {
     _name = "res.config.settings";
-    bar = fields.Boolean({ string: "Bar" });
+    bar = fields.Boolean();
 }
 defineModels([ResConfigSettings]);
 
@@ -156,6 +156,6 @@ test("Activate the developer modeddd (with tests assets)", async () => {
 
     await click("a:contains('Deactivate the developer mode')");
     await tick();
-    expect(router.current).toEqual({});
+    expect(router.current).toEqual({ debug: 0 });
     expect.verifySteps(["location reload"]);
 });

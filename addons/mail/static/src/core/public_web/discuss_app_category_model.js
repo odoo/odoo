@@ -36,6 +36,8 @@ export class DiscussAppCategory extends Record {
     /** @type {string} */
     extraClass;
     /** @string */
+    icon;
+    /** @string */
     id;
     /** @type {string} */
     name;
@@ -50,7 +52,7 @@ export class DiscussAppCategory extends Record {
     _openLocally = false;
     localStateKey = Record.attr(null, {
         compute() {
-            if (this.serverStateKey) {
+            if (this.saveStateToServer) {
                 return null;
             }
             return `discuss_sidebar_category_${this.id}_open`;
@@ -67,11 +69,17 @@ export class DiscussAppCategory extends Record {
     sequence;
 
     get open() {
-        return this.serverStateKey ? this.store.settings[this.serverStateKey] : this._openLocally;
+        return this.saveStateToServer
+            ? this.store.settings[this.serverStateKey]
+            : this._openLocally;
+    }
+
+    get saveStateToServer() {
+        return this.serverStateKey && this.store.self?.type === "partner";
     }
 
     set open(value) {
-        if (this.serverStateKey) {
+        if (this.saveStateToServer) {
             this.store.settings[this.serverStateKey] = value;
             this.store.env.services.orm.call(
                 "res.users.settings",

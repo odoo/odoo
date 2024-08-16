@@ -11,18 +11,18 @@
     }, () => [{
         content: _t("Click here to add new content to your website."),
         trigger: ".o_menu_systray .o_new_content_container > a",
-        position: 'bottom',
+        tooltipPosition: 'bottom',
         run: "click",
     }, {
         trigger: "a[data-module-xml-id='base.module_website_event']",
         content: _t("Click here to create a new event."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         trigger: '.modal-dialog div[name="name"] input',
         content: markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
         run: "edit Technical Training",
-        position: "left",
+        tooltipPosition: "left",
     }, {
         trigger: '.modal-dialog div[name=date_begin]',
         content: _t("Open date range picker. Pick a Start date for your event"),
@@ -43,21 +43,21 @@
     {
         trigger: '.modal-footer button.btn-primary',
         content: markup(_t("Click <em>Continue</em> to create the event.")),
-        position: "right",
+        tooltipPosition: "right",
         run: "click",
-    }, {
-        trigger: "#oe_snippets.o_loaded #snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",
-        content: _t("Drag this block and drop it in your page."),
-        position: "bottom",
-        run: `drag_and_drop(:iframe #wrapwrap > main)`,
-    }, {
+    },
+    ...wTourUtils.dragNDrop({
+        id: "s_image_text",
+        name: "Image - Text",
+        groupName: "Content",
+    }), {
         // Wait until the drag and drop is resolved (causing a history step)
         // before clicking save.
         trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",
     }, {
         trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {
@@ -66,10 +66,10 @@
     {
         trigger: ".o_menu_systray_item.o_website_publish_container a",
         content: _t("Click to publish your event."),
-        position: "top",
+        tooltipPosition: "top",
         run: "click",
     }, {
         trigger: ".o_website_edit_in_backend > a",
         content: _t("Click here to customize your event further."),
-        position: "bottom",
+        tooltipPosition: "bottom",
     }]);

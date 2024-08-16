@@ -17,7 +17,7 @@ class Location(models.Model):
     _description = "Inventory Locations"
     _parent_name = "location_id"
     _parent_store = True
-    _order = 'sequence, complete_name, id'
+    _order = 'complete_name, id'
     _rec_name = 'complete_name'
     _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
@@ -96,7 +96,6 @@ class Location(models.Model):
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight
     net_weight = fields.Float('Net Weight', compute="_compute_weight")
     forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
-    sequence = fields.Integer(string="Sequence", related='warehouse_id.sequence', store=True)
     is_empty = fields.Boolean('Is Empty', compute='_compute_is_empty', search='_search_is_empty')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company!'),
@@ -462,17 +461,28 @@ class Location(models.Model):
         result = defaultdict(lambda: defaultdict(float))
         if not excluded_sml_ids:
             excluded_sml_ids = set()
-        for location in self:
-            quants = location.quant_ids
-            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            for quant in quants:
-                result[location]['net_weight'] += quant.product_id.weight * quant.quantity
-            result[location]['forecast_weight'] = result[location]['net_weight']
-            for line in incoming_move_lines:
-                result[location]['forecast_weight'] += line.product_id.weight * line.quantity_product_uom
-            for line in outgoing_move_lines:
-                result[location]['forecast_weight'] -= line.product_id.weight * line.quantity_product_uom
+        Product = self.env['product.product']
+        StockMoveLine = self.env['stock.move.line']
+
+        quants = self.env['stock.quant'].read_group([('location_id', 'in', self.ids)], ['quantity'], ['location_id', 'product_id'], lazy=False)
+        base_domain = [('state', 'not in', ['draft', 'done', 'cancel']), ('id', 'not in', tuple(excluded_sml_ids))]
+        outgoing_move_lines = StockMoveLine.read_group(expression.AND([[('location_id', 'in', self.ids)], base_domain]), ['quantity_product_uom'], ['location_id', 'product_id'], lazy=False)
+        incoming_move_lines = StockMoveLine.read_group(expression.AND([[('location_dest_id', 'in', self.ids)], base_domain]), ['quantity_product_uom'], ['location_dest_id', 'product_id'], lazy=False)
+
+        product_ids = {record['product_id'][0] for record in quants + outgoing_move_lines + incoming_move_lines}
+        weight_per_product = {weight['id']: weight['weight'] for weight in Product.browse(product_ids).read(['weight'])}
+
+        for quant in quants:
+            weight = quant['quantity'] * weight_per_product[quant['product_id'][0]]
+            result[self.browse(quant['location_id'][0])]['net_weight'] += weight
+            result[self.browse(quant['location_id'][0])]['forecast_weight'] += weight
+
+        for line in outgoing_move_lines:
+            result[self.browse(line['location_id'][0])]['forecast_weight'] -= line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
+
+        for line in incoming_move_lines:
+            result[self.browse(line['location_dest_id'][0])]['forecast_weight'] += line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
+
         return result
 
 

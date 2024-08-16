@@ -11,6 +11,7 @@ import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
+import { cookie } from "@web/core/browser/cookie";
 import {
     Component,
     markRaw,
@@ -29,7 +30,6 @@ viewRegistry.addValidation({
     Controller: { validate: (c) => c.prototype instanceof Component },
     "*": true,
 });
-const DEFAULT_LAZY_BUNDLE = "web.assets_backend_lazy";
 
 /** @typedef {Object} Config
  *  @property {integer|false} actionId
@@ -325,7 +325,11 @@ export class View extends Component {
             ? archXmlDoc.getAttribute("js_class")
             : props.jsClass || type;
         if (!viewRegistry.contains(jsClass)) {
-            await loadBundle(DEFAULT_LAZY_BUNDLE);
+            await loadBundle(
+                cookie.get("color_scheme") === "dark"
+                    ? "web.assets_backend_lazy_dark"
+                    : "web.assets_backend_lazy"
+            );
         }
         const descr = viewRegistry.get(jsClass);
 

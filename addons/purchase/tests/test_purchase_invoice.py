@@ -328,12 +328,12 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertInvoiceValues(move, [
             {
                 'display_type': 'product',
-                'amount_currency': 1000,
-                'balance': 1000,
-            }, {
-                'display_type': 'product',
                 'amount_currency': 500,
                 'balance': 500,
+            }, {
+                'display_type': 'product',
+                'amount_currency': 1000,
+                'balance': 1000,
             }, {
                 'display_type': 'payment_term',
                 'amount_currency': -1500,
@@ -846,6 +846,90 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             ['other_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
         self.assertTrue(invoice.id not in po.invoice_ids.ids)
+
+    def test_manual_matching(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order], post=True)
+
+        self.env['account.move.line'].flush_model()  # necessary to get the bill lines
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+
+        expected_ids = po.order_line.ids + [-lid for lid in bill.invoice_line_ids.ids]
+        self.assertListEqual(match_lines.ids, expected_ids)
+
+        match_lines.action_match_lines()
+        self.assertEqual(bill.invoice_line_ids.purchase_line_id, po.order_line)
+        self.assertEqual(po.order_line.qty_invoiced, bill.invoice_line_ids.quantity)
+
+    def test_manual_matching_multi(self):
+        po_1 = self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
+        po_2 = self.init_purchase(confirm=True, products=[self.service_deliver])
+        po_3 = self.init_purchase(confirm=True, products=[self.service_order])
+        bill_1 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order], post=True)
+        bill_2 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_var_name, self.service_deliver], post=True)
+        bill_3 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_deliver])
+
+        self.env['account.move.line'].flush_model()
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines.action_match_lines()
+
+        self.env.flush_all()
+        self.assertEqual((bill_1 + bill_2).invoice_line_ids.purchase_line_id, (po_1 + po_2).order_line)
+
+        remaining_match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        expected_ids = po_3.order_line.ids + [-bill_3.invoice_line_ids.id]
+        self.assertListEqual(remaining_match_lines.ids, expected_ids)
+
+        po_4 = po_3.copy()
+        po_4.button_confirm()
+
+        self.env.flush_all()
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        action = match_lines.action_match_lines()
+        self.assertTrue(action.get('type') == 'ir.actions.client' and action.get('tag') == 'display_notification')
+
+    def test_add_bill_to_po(self):
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_var_name, self.service_deliver], post=True)
+        self.env['account.move.line'].flush_model()
+
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+
+        # Use wizard to create a new PO
+        action = match_lines.action_add_to_po()
+        wizard = self.env['bill.to.po.wizard'].with_context({**action['context'], 'active_ids': match_lines.ids}).create({})
+        self.assertEqual(wizard.partner_id, self.partner_a)
+        self.assertFalse(wizard.purchase_order_id)
+
+        action = wizard.action_add_to_po()
+        po = self.env['purchase.order'].browse(action['res_id'])
+        self.assertEqual(po.partner_id, self.partner_a)
+        self.assertTrue(po.order_line.taxes_id)
+        self.assertEqual(po.order_line.taxes_id, bill.invoice_line_ids.tax_ids)
+        self.assertEqual(po.order_line.product_id, bill.invoice_line_ids.product_id)
+        self.assertEqual(po.order_line.product_id, self.product_order_var_name + self.service_deliver)
+
+        bill_2 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_other_price], post=False)
+        bill_2.invoice_line_ids.write({
+            'discount': 2.0,
+            'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+        })
+        bill_2.action_post()
+        self.env['account.move.line'].flush_model()
+
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+
+        # Use wizard to add lines to existing PO
+        match_lines.action_add_to_po()
+        wizard = self.env['bill.to.po.wizard'].with_context({
+            'default_purchase_order_id': po.id,
+            'active_ids': match_lines.ids
+        }).create({})
+
+        action = wizard.action_add_to_po()
+        self.assertEqual(action['res_id'], po.id)
+        self.assertEqual(len(po.order_line), 3)
+        self.assertEqual(po.order_line[-1:].product_id, self.product_order_other_price)
+        self.assertListEqual(po.order_line.mapped('price_total'), (bill + bill_2).invoice_line_ids.mapped('price_total'))
 
     def test_onchange_partner_currency(self):
         """

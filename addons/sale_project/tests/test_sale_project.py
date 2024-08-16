@@ -106,10 +106,10 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
 
     def test_task_create_sol_ui(self):
-        self.start_tour('/web', 'task_create_sol_tour', login='admin')
+        self.start_tour('/odoo', 'task_create_sol_tour', login='admin')
 
     def test_project_create_sol_ui(self):
-        self.start_tour('/web', 'project_create_sol_tour', login='admin')
+        self.start_tour('/odoo', 'project_create_sol_tour', login='admin')
 
     def test_sale_order_with_project_task(self):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
@@ -853,3 +853,44 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
         action = sale_order_2.action_view_task()
         self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
+
+    def test_creating_AA_when_adding_service_to_confirmed_so(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': self.product_a.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+        })
+
+        sale_order.action_confirm()
+
+        self.env['sale.order.line'].create({
+            'product_id': self.product_order_service4.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+        })
+
+        self.assertTrue(sale_order.analytic_account_id)
+
+    def test_cancel_multiple_quotations(self):
+        quotations = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': self.product.id}),
+                ],
+            },
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': self.product.id}),
+                ],
+            }
+        ])
+        quotations._action_cancel()
+        self.assertEqual(set(quotations.mapped('state')), {'cancel'}, "Both quotations are in 'cancel' state.")

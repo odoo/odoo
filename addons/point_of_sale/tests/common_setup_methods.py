@@ -1,4 +1,7 @@
-def setup_pos_combo_items(self):
+from odoo.fields import Command
+
+
+def setup_product_combo_items(self):
     tax10 = self.env["account.tax"].create(
         {
             "name": "10%",
@@ -56,40 +59,22 @@ def setup_pos_combo_items(self):
         }
     )
 
-    desk_organizer_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_1.id,
-            "combo_price": 0,
-        }
-    )
-
-    desk_pad_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_2.id,
-            "combo_price": 0,
-        }
-    )
-
-    monitor_stand_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_3.id,
-            "combo_price": 2,
-        }
-    )
-
-    self.desk_accessories_combo = self.env["pos.combo"].create(
+    self.desk_accessories_combo = self.env["product.combo"].create(
         {
             "name": "Desk Accessories Combo",
-            "combo_line_ids": [
-                (
-                    6,
-                    0,
-                    [
-                        desk_organizer_combo_line.id,
-                        desk_pad_combo_line.id,
-                        monitor_stand_combo_line.id,
-                    ],
-                )
+            "combo_item_ids": [
+                Command.create({
+                    "product_id": combo_product_1.id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": combo_product_2.id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": combo_product_3.id,
+                    "extra_price": 2,
+                }),
             ],
         }
     )
@@ -114,25 +99,18 @@ def setup_pos_combo_items(self):
         }
     )
 
-    product_4_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_4.id,
-            "combo_price": 0,
-        }
-    )
-
-    product_5_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_5.id,
-            "combo_price": 2,
-        }
-    )
-
-    self.desks_combo = self.env["pos.combo"].create(
+    self.desks_combo = self.env["product.combo"].create(
         {
             "name": "Desks Combo",
-            "combo_line_ids": [
-                (6, 0, [product_4_combo_line.id, product_5_combo_line.id])
+            "combo_item_ids": [
+                Command.create({
+                    "product_id": combo_product_4.id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": combo_product_5.id,
+                    "extra_price": 2,
+                }),
             ],
         }
     )
@@ -167,40 +145,22 @@ def setup_pos_combo_items(self):
         }
     )
 
-    product_6_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_6.id,
-            "combo_price": 0,
-        }
-    )
-
-    product_7_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_7.id,
-            "combo_price": 0,
-        }
-    )
-
-    product_8_combo_line = self.env["pos.combo.line"].create(
-        {
-            "product_id": combo_product_8.id,
-            "combo_price": 5,
-        }
-    )
-
-    self.chairs_combo = self.env["pos.combo"].create(
+    self.chairs_combo = self.env["product.combo"].create(
         {
             "name": "Chairs Combo",
-            "combo_line_ids": [
-                (
-                    6,
-                    0,
-                    [
-                        product_6_combo_line.id,
-                        product_7_combo_line.id,
-                        product_8_combo_line.id,
-                    ],
-                )
+            "combo_item_ids": [
+                Command.create({
+                    "product_id": combo_product_6.id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": combo_product_7.id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": combo_product_8.id,
+                    "extra_price": 5,
+                }),
             ],
         }
     )

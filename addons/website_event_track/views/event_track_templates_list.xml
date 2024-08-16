@@ -198,7 +198,7 @@
         <p t-if="search_key">We could not find any track matching your search for: <strong t-out="search_key"/>.</p>
         <p t-else="">We could not find any track at this moment.</p>
         <div class="o_not_editable my-3" groups="event.group_event_user">
-            <a class="o_wevent_cta btn" target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
+            <a class="o_wevent_cta btn" target="_blank" t-att-href="'/odoo/%s/action-website_event_track.action_event_track_from_event' % event.id">
                 <span class="fa fa-plus me-1"/> Schedule Tracks
             </a>
         </div>
@@ -268,23 +268,29 @@
                 <div t-attf-class="collapse {{ '' if tracks_info['default_collapsed'] else 'show' }}"
                     t-attf-id="collapse_session_list_{{ tracks_info_index }}">
                     <div t-foreach="tracks" t-as="track"
-                        t-att-class="'o_wesession_list_item o_event_color_light p-3 o_event_color_%d' % (track.color)">
+                        t-att-class="'o_wesession_list_item p-3 o_color_%d' % (track.color)">
                         <div class="row g-0">
                             <div class="col-12 d-flex justify-content-between">
                                 <!-- Hour: Live > Remaining > Hour: desktop only -->
-                                <div t-if="tracks_date and today_tz &lt;= tracks_date"
-                                    >
-                                    <span t-if="track.is_track_live and not track.is_track_done"
-                                        class="alert alert-danger px-2 py-1">Live</span>
-                                    <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
-                                        <span t-out="track.track_start_remaining"
-                                            t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
-                                                        'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
-                                    </span>
-                                    <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
-                                        t-out="track.date"
-                                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
-                                    <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
+                                <div class="d-flex align-items-center gap-1 flex-wrap">
+                                    <div t-if="tracks_date and today_tz &lt;= tracks_date"
+                                        >
+                                        <span t-if="track.is_track_live and not track.is_track_done"
+                                            class="alert alert-danger px-2 py-1">Live</span>
+                                        <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
+                                            <span t-out="track.track_start_remaining"
+                                                t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
+                                                            'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
+                                        </span>
+                                        <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
+                                            t-out="track.date"
+                                            t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
+                                        <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
+                                    </div>
+                                    <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>
+                                    <div t-if="track.location_id">
+                                        <i class="fa fa-map-marker" role="img"/> <span t-field="track.location_id"/>
+                                    </div>
                                 </div>
                                 <!-- reminder -->
                                 <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
@@ -458,23 +464,23 @@
             slug(event),
             keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
         )"
-        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_badge_color_0')"
+        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_color_0')"
         t-out="tag.name"/>
     <span t-else=""
         t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
             keep_query('*', tags=str(tag.ids), prevent_redirect=True)
         )"
-        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_badge_color_%s' % (tag.color)"
+        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_color_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 
 <template id="track_tag_badge_info" name="Track: Tag Badge Info">
     <span t-if="search_tags"
-        t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_badge_color_0')"
+        t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_color_0')"
         t-out="tag.name"/>
     <span t-else=""
-        t-att-class="'badge rounded-pill o_badge_color_%s' % (tag.color)"
+        t-att-class="'badge rounded-pill o_color_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 

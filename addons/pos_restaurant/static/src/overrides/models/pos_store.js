@@ -3,8 +3,6 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -132,7 +130,7 @@ patch(PosStore.prototype, {
         const json = super.getReceiptHeaderData(...arguments);
         if (this.config.module_pos_restaurant && order) {
             if (order.getTable()) {
-                json.table = order.getTable().name;
+                json.table = order.getTable().table_number;
             }
             json.customer_count = order.getCustomerCount();
         }
@@ -174,20 +172,6 @@ patch(PosStore.prototype, {
             }
         }
         return super.closePos(...arguments);
-    },
-    showBackButton() {
-        if (this.orderToTransferUuid) {
-            return true;
-        }
-        if (this.config.module_pos_restaurant) {
-            const screenWoBackBtn = [ReceiptScreen, FloorScreen, TicketScreen];
-            return (
-                !screenWoBackBtn.includes(this.mainScreen.component) ||
-                (this.ui.isSmall && this.mainScreen.component === TicketScreen)
-            );
-        } else {
-            return super.showBackButton(...arguments);
-        }
     },
     //@override
     async afterProcessServerData() {
@@ -242,16 +226,16 @@ patch(PosStore.prototype, {
                     floor.table_ids.map((table) => table.id)
                 )
             );
-            return await this.syncAllOrders({ table_ids: tableIds });
-        } else {
-            return await super.getServerOrders();
+            await this.syncAllOrders({ table_ids: tableIds });
         }
+        //Need product details from backand to UI for urbanpiper
+        return await super.getServerOrders();
     },
     getDefaultSearchDetails() {
         if (this.selectedTable && this.selectedTable.id) {
             return {
                 fieldName: "TABLE",
-                searchTerm: this.selectedTable.name,
+                searchTerm: this.selectedTable.getName(),
             };
         }
         return super.getDefaultSearchDetails();
@@ -281,6 +265,29 @@ patch(PosStore.prototype, {
                 } else {
                     this.add_new_order();
                 }
+            }
+        }
+    },
+    async setTableFromUi(table, orderUuid = null) {
+        try {
+            this.tableSyncing = true;
+            await this.setTable(table, orderUuid);
+        } catch (e) {
+            if (!(e instanceof ConnectionLostError)) {
+                throw e;
+            }
+            // Reject error in a separate stack to display the offline popup, but continue the flow
+            Promise.reject(e);
+        } finally {
+            this.tableSyncing = false;
+            const orders = this.getTableOrders(table.id);
+            if (orders.length > 0) {
+                this.set_order(orders[0]);
+                this.orderToTransferUuid = null;
+                this.showScreen(orders[0].get_screen_data().name);
+            } else {
+                this.add_new_order();
+                this.showScreen("ProductScreen");
             }
         }
     },

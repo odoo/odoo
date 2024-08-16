@@ -7,7 +7,6 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         this.initChannelsUnreadCounter = 0;
-        this.channels = this.makeCachedFetchData({ channels_as_member: true });
     },
     onStarted() {
         super.onStarted();

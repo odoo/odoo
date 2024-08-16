@@ -19,8 +19,8 @@ from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
+from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.http_routing.models import ir_http
-from odoo.addons.http_routing.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
@@ -343,13 +343,14 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
+        req_page_with_qs = request.httprequest.environ['REQUEST_URI']
         domain = [
             ('redirect_type', 'in', ('301', '302')),
             # trailing / could have been removed by server_page
-            '|', ('url_from', '=', req_page.rstrip('/')), ('url_from', '=', req_page + '/')
+            ('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
         ]
         domain += request.website.website_domain()
-        return request.env['website.rewrite'].sudo().search(domain, limit=1)
+        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
 
     @classmethod
     def _serve_fallback(cls):

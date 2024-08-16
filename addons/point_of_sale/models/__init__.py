@@ -6,6 +6,7 @@ from . import pos_load_mixin
 from . import account_payment
 from . import account_journal
 from . import account_tax
+from . import account_tax_group
 from . import account_move
 from . import pos_bus_mixin
 from . import barcode_rule
@@ -16,9 +17,9 @@ from . import pos_category
 from . import pos_config
 from . import pos_order
 from . import pos_session
-from . import pos_combo
-from . import pos_combo_line
 from . import product
+from . import product_combo
+from . import product_combo_item
 from . import res_partner
 from . import res_company
 from . import res_config_settings
@@ -40,3 +41,4 @@ from . import account_fiscal_position
 from . import account_fiscal_position_tax
 from . import res_currency
 from . import ir_ui_view
+from . import mail_compose_message

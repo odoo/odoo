@@ -45,7 +45,7 @@
                                         <div class="d-flex px-1">
                                             <button class="o_portal_chatter_attachment_btn btn fa fa-paperclip border-0" type="button" title="Add attachment"/>
                                         </div>
-                                        <button t-out="widget.options['send_button_label']" t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary o-last rounded-3" type="submit"/>
+                                        <button t-out="widget.options['send_button_label']" t-attf-data-action="/mail/message/post" class="o_portal_chatter_composer_btn btn btn-primary o-last rounded-3" type="submit"/>
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                         <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 
                         <div class="o_portal_chatter_message_title">
-                            <h5 class='mb-1'><t t-esc="message.author_id[1]"/></h5>
+                            <h5 class='mb-1'><t t-esc="message.author[1]"/></h5>
                             <p class="o_portal_chatter_puslished_date">Published on <t t-esc="message.published_date_str"/></p>
                         </div>
                         <t t-out="message.body"/>

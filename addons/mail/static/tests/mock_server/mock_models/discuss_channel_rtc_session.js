@@ -14,11 +14,11 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
         const sessionIds = super.create(...arguments);
-        const rtcSessions = this._filter([["id", "in", sessionIds]]);
+        const rtcSessions = this.browse(sessionIds);
         /** @type {Record<string, DiscussChannelRtcSession>} */
         const sessionsByChannelId = {};
         for (const session of rtcSessions) {
-            const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
+            const [member] = DiscussChannelMember.browse(session.channel_member_id);
             if (!sessionsByChannelId[member.channel_id]) {
                 sessionsByChannelId[member.channel_id] = [];
             }
@@ -27,12 +27,16 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const notifications = [];
         for (const [channelId, sessions] of Object.entries(sessionsByChannelId)) {
             const [channel] = DiscussChannel.search_read([["id", "=", Number(channelId)]]);
-            const store = new mailDataHelpers.Store("discuss.channel", {
-                id: channel.id,
-                rtcSessions: [["ADD", sessions.map((session) => ({ id: session.id }))]],
-            });
-            store.add(sessions.map((session) => session.id));
-            notifications.push([channel, "mail.record/insert", store.get_result()]);
+            notifications.push([
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
+                    rtcSessions: mailDataHelpers.Store.many(
+                        this.browse(sessions.map((session) => session.id)),
+                        "ADD"
+                    ),
+                }).get_result(),
+            ]);
         }
         BusBus._sendmany(notifications);
         return sessionIds;
@@ -52,11 +56,10 @@ export class DiscussChannelRtcSession extends models.ServerModel {
 
         for (const rtcSession of this.browse(ids)) {
             const [data] = this.read(rtcSession.id, [], makeKwArgs({ load: false }));
-            store.add(
+            data.channelMember = mailDataHelpers.Store.one(
                 DiscussChannelMember.browse(rtcSession.channel_member_id),
-                makeKwArgs({ fields: { channel: true, persona: ["name", "im_status"] } })
+                makeKwArgs({ fields: { channel: [], persona: ["name", "im_status"] } })
             );
-            data.channelMember = { id: rtcSession.channel_member_id };
             if (extra) {
                 Object.assign(data, {
                     isCameraOn: rtcSession.is_camera_on,
@@ -65,7 +68,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                     isScreenSharingOn: rtcSession.is_screen_sharing_on,
                 });
             }
-            store.add("discuss.channel.rtc.session", data);
+            store.add(this.browse(rtcSession.id), data);
         }
     }
 
@@ -89,8 +92,8 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const DiscussChannelRtcSession = this.env["discuss.channel.rtc.session"];
 
         this.write([id], values);
-        const [session] = DiscussChannelRtcSession._filter([["id", "=", id]]);
-        const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
+        const [session] = DiscussChannelRtcSession.browse(id);
+        const [member] = DiscussChannelMember.browse(session.channel_member_id);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
             data: new mailDataHelpers.Store(DiscussChannelRtcSession.browse(id)).get_result(),

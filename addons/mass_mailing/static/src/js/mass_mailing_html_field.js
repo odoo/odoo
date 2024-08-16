@@ -13,6 +13,7 @@ import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { onWillStart, reactive, useSubEnv, status } from "@odoo/owl";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -51,8 +52,8 @@ export class MassMailingHtmlField extends HtmlField {
         this.dialog = useService('dialog');
 
         useRecordObserver((record) => {
-            if (record.data.mailing_model_id && this.wysiwyg) {
-                this._hideIrrelevantTemplates(record);
+            if ("mailing_model_id" in record.data) {
+                this._onModelChange(record);
             }
         });
     }
@@ -204,12 +205,16 @@ export class MassMailingHtmlField extends HtmlField {
         this.onIframeUpdated();
     }
 
+    _onModelChange(record) {
+        this._hideIrrelevantTemplates(record);
+    }
+
     async _onSnippetsLoaded() {
         if (status(this) === 'destroyed') return;
         if ($(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
             // In full width form mode, ensure the snippets menu's scrollable is
             // in the form view, not in the iframe.
-            this.fieldConfig.$scrollable = this.wysiwyg.$el.closestScrollable();
+            this.fieldConfig.$scrollable = $(closestScrollableY(this.wysiwyg.$el[0]));
             // Ensure said scrollable keeps its scrollbar at all times to
             // prevent the scrollbar from appearing at awkward moments (ie: when
             // previewing an option)
@@ -447,6 +452,9 @@ export class MassMailingHtmlField extends HtmlField {
      * @private
      */
     _hideIrrelevantTemplates(record) {
+        if (!this.wysiwyg) {
+            return;
+        }
         const iframeContent = this.wysiwyg.$iframe.contents();
 
         const mailing_model_id = record.data.mailing_model_id[0];

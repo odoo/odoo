@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillDestroy, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillStart, useRef, useState } from "@odoo/owl";
+import { ensureJQuery } from "@web/core/ensure_jquery";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 
@@ -49,6 +50,11 @@ export class Wysiwyg extends Component {
         this.editor = this.props.editor;
         const config = {
             ...this.props.config,
+            // TODO ABD TODO @phoenix: check if there is too much info in the wysiwyg env.
+            // i.e.: env has X because of parent component,
+            // embedded component descendant sometimes uses X from env which is set conditionally:
+            // -> it will override the one one from the parent => OK.
+            // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
             embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
             getLocalOverlayContainer: () => overlayRef?.el,
             disableFloatingToolbar: this.props.toolbar,
@@ -56,6 +62,7 @@ export class Wysiwyg extends Component {
         this.editor = new Editor(config, this.env.services);
         this.props.onLoad(this.editor);
 
+        onWillStart(ensureJQuery);
         onMounted(() => {
             // now that component is mounted, editor is attached to el, and
             // plugins are started, so we can allow the toolbar to be displayed

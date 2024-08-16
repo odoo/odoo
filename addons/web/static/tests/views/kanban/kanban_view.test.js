@@ -17,7 +17,7 @@ import {
     setInputFiles,
 } from "@odoo/hoot-dom";
 import { FileInput } from "@web/core/file_input/file_input";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -1102,7 +1102,7 @@ test.tags("desktop")("pager, ungrouped, with limit given in options on desktop",
         limit: 2,
     });
     expect(getPagerValue()).toEqual([1, 2]);
-    expect(getPagerLimit(), 4).toBe(4);
+    expect(getPagerLimit()).toBe(4);
 });
 
 test("pager, ungrouped, with limit set on arch and given in options", async () => {
@@ -1147,7 +1147,7 @@ test.tags("desktop")(
         });
 
         expect(getPagerValue()).toEqual([1, 3]);
-        expect(getPagerLimit(), 4).toBe(4);
+        expect(getPagerLimit()).toBe(4);
     }
 );
 
@@ -1953,7 +1953,7 @@ test.tags("desktop")("quick create record with quick_create_view", async () => {
         groupBy: ["bar"],
     });
 
-    expect(".o_control_panel", "should have one control panel").toHaveCount(1);
+    expect(".o_control_panel").toHaveCount(1);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
 
     // click on 'Create' -> should open the quick create in the first column
@@ -7661,7 +7661,7 @@ test.tags("desktop")("kanban with sample data: do an on_create action", async ()
     await createKanbanRecord();
     expect(".modal").toHaveCount(1);
 
-    await contains(".modal .o_cp_buttons .o_form_button_save").click();
+    await contains(".modal .o_form_button_save").click();
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
@@ -8974,6 +8974,7 @@ test('column progressbars: "false" bar is clickable', async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -9028,6 +9029,9 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "web_search_read",
         "web_read_group",
         "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
     ]);
 });
 
@@ -9242,6 +9246,7 @@ test("column progressbars with an active filter are working with load more", asy
         "web_read_group",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
         "web_search_read",
     ]);
@@ -9435,10 +9440,20 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         "web_read_group", // recomputes aggregates
         "web_search_read",
         'web_read_group domain ["&",["bar","=",true],["foo","=","yop"]]', // perform read_group only on second column (bar=true)
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
+        "web_read_group domain []",
+        'web_read_group domain ["&",["bar","=",true],["foo","=","yop"]]',
         // activate filter
         "web_read_group", // recomputes aggregates
         "web_search_read",
         'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform read_group only on second column (bar=true)
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
+        "web_read_group domain []",
+        'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]',
         // activate another filter (switching)
         "web_search_read",
     ]);
@@ -9604,6 +9619,7 @@ test("progress bar subgroup count recompute", async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -9696,7 +9712,7 @@ test("progress bar recompute after filter selection", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["1", "4"]);
-    expect.verifySteps(["web_search_read"]);
+    expect.verifySteps(["web_search_read", "read_progress_bar"]);
 
     // Add search domain to something restricting progressbars' values (records still in filtered group)
     await toggleSearchBarMenu();
@@ -9754,6 +9770,9 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
     expect.verifySteps([
         "web_read_group", // recomputes aggregates
         "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
     ]);
 
     // Add searchdomain to something restricting progressbars' values (records still in filtered group)
@@ -10077,6 +10096,9 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
         "web_search_read",
         "web_read_group",
         "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
         "get_views",
         "onchange",
         "web_save",
@@ -11209,6 +11231,7 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         "web_search_read",
         "web_search_read",
         "read_progress_bar",
+        "read_progress_bar",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
@@ -11295,6 +11318,7 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         "web_search_read",
         "web_search_read",
         "read_progress_bar",
+        "read_progress_bar",
         "web_read_group",
         "web_search_read",
         "web_search_read",
@@ -11368,6 +11392,7 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_save",
         "read_progress_bar",
         "/web/dataset/resequence",
@@ -11423,7 +11448,7 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
     expect(queryAllTexts(".o_column_title")).toEqual(["No", "Yes"]);
     expect(".o_kanban_group.o_kanban_group_show .o_kanban_record").toHaveCount(1);
     expect(getKanbanRecordTexts(1)).toEqual(["1yop"]);
-    expect.verifySteps(["web_search_read"]);
+    expect.verifySteps(["web_search_read", "read_progress_bar"]);
 
     // Drag out its only record onto the first column
     await contains(".o_kanban_group.o_kanban_group_show .o_kanban_record").dragAndDrop(
@@ -12191,8 +12216,11 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -12281,10 +12309,13 @@ test("update field on which progress bars are computed", async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_save",
         "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -13342,12 +13373,51 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
 
     await contains(getKanbanProgressBars(0)[0]).click();
 
-    expect.verifySteps(["web_read_group", "web_search_read", "scrolled"]);
+    expect.verifySteps([
+        "web_read_group",
+        "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
+        "scrolled",
+    ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
     await contains(getKanbanColumn(1)).click();
 
     expect.verifySteps(["web_search_read", "scrolled"]);
+});
+
+test.tags("desktop")(`kanban view: press "hotkey" to execute header button action`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`);
+        },
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban class="o_kanban_test">
+                <header>
+                    <button name="display" type="object" class="display" string="display" display="always" data-hotkey="a"/>
+                </header>
+                <field name="bar" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="foo" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    press(["alt", "a"]);
+    await tick();
+    expect.verifySteps(["execute_action: display"]);
 });
 
 test.tags("desktop")("action button in controlPanel with display='always'", async () => {

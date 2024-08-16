@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 /**
@@ -72,56 +71,79 @@ var discoverRoomSteps = function (roomName) {
  * REGISTER STEPS
  */
 
-var registerSteps = [{
-    content: 'Open ticket modal',
-    trigger: 'button.btn-primary:contains("Register")',
-    run: "click",
-}, {
-    content: "Select 2 units of 'Standard' ticket type",
-    trigger: '.o_wevent_ticket_selector select',
-    run: "select 2",
-}, {
-    content: "Click on 'Register' button",
-    trigger: '#o_wevent_tickets .btn-primary:contains("Register"):not(:disabled)',
-    run: 'click',
-}, {
-    content: "Fill attendees details",
-    trigger: 'form[id="attendee_registration"] .btn[type=submit]',
-    run: function () {
-            document.querySelector("input[name*='1-name']").value = "Raoulette Poiluchette";
-            document.querySelector("input[name*='1-phone']").value = "0456112233";
-            document.querySelector("input[name*='1-email']").value = "raoulette@example.com";
-            document.querySelector("select[name*='1-simple_choice']").value = queryOne(
-                "select[name*='1-simple_choice'] option:contains('Consumers')"
-            ).value;
-            document.querySelector("input[name*='2-name']").value = "Michel Tractopelle";
-            document.querySelector("input[name*='2-phone']").value = "0456332211";
-            document.querySelector("input[name*='2-email']").value = "michel@example.com";
-            document.querySelector("select[name*='2-simple_choice']").value = queryOne(
-                "select[name*='1-simple_choice'] option:contains('Research')"
-            ).value;
-            document.querySelector("textarea[name*='text_box']").textContent =
-                "An unicorn told me about you. I ate it afterwards.";
+const registerSteps = [
+    {
+        content: "Open ticket modal",
+        trigger: "button.btn-primary:contains(Register):enabled",
+        run: "click",
     },
-}, 
-{
-    trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
-},
-{
-    content: "Validate attendees details",
-    trigger: 'button[type=submit]',
-    run: 'click',
-}, {
-    trigger: 'div.o_wereg_confirmed_attendees span:contains("Raoulette Poiluchette")',
-}, {
-    trigger: 'div.o_wereg_confirmed_attendees span:contains("Michel Tractopelle")',
-},  {
-    content: "Click on 'register favorites talks' button",
-    trigger: 'a:contains("register to your favorites talks now")',
-    run: 'click',
-},  {
-    trigger: 'h5:contains("Book your talks")',
-}];
+    {
+        content: "Select 2 units of 'Standard' ticket type",
+        trigger: ".modal .o_wevent_ticket_selector select",
+        run: "select 2",
+    },
+    {
+        content: "Click on 'Register' button",
+        trigger: ".modal #o_wevent_tickets .btn-primary:contains(Register):enabled",
+        run: "click",
+    },
+    {
+        content: "Fill attendees details",
+        trigger: '.modal form[id="attendee_registration"] .btn[type=submit]',
+    },
+    {
+        trigger: ".modal input[name*='1-name']",
+        run: "edit Raoulette Poiluchette",
+    },
+    {
+        trigger: ".modal input[name*='1-phone']",
+        run: "edit 0456112233",
+    },
+    {
+        trigger: ".modal input[name*='1-email']",
+        run: "edit raoulette@example.com",
+    },
+    {
+        trigger: ".modal select[name*='1-simple_choice']",
+        run: "selectByLabel Consumers",
+    },
+    {
+        trigger: ".modal input[name*='2-name']",
+        run: "edit Michel Tractopelle",
+    },
+    {
+        trigger: ".modal input[name*='2-phone']",
+        run: "edit 0456332211",
+    },
+    {
+        trigger: ".modal input[name*='2-email']",
+        run: "edit michel@example.com",
+    },
+    {
+        trigger: ".modal select[name*='2-simple_choice']",
+        run: "selectByLabel Research",
+    },
+    {
+        trigger: ".modal textarea[name*='text_box']",
+        run: "edit An unicorn told me about you. I ate it afterwards.",
+    },
+    {
+        trigger: ".modal input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
+    },
+    {
+        content: "Validate attendees details",
+        trigger: ".modal button[type=submit]:enabled",
+        run: "click",
+    },
+    {
+        content: "Click on 'register favorites talks' button",
+        trigger: "a:contains(register to your favorites talks now)",
+        run: "click",
+    },
+    {
+        trigger: "h5:contains(Book your talks)",
+    },
+];
 
 /**
  * MAIN STEPS

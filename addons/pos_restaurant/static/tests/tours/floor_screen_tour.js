@@ -1,6 +1,5 @@
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
@@ -34,7 +33,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             //test copy floor
             FloorScreen.clickFloor("Main Floor"),
-            FloorScreen.clickEditButton("Copy"),
+            FloorScreen.clickEditButton("Clone"),
             FloorScreen.selectedFloorIs("Main Floor (copy)"),
             FloorScreen.hasTable("2"),
             FloorScreen.hasTable("4"),
@@ -55,25 +54,27 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             // test add table
             FloorScreen.clickFloor("Main Floor"),
-            FloorScreen.clickEditButton("Add"),
+            {
+                trigger: `.edit-buttons i[aria-label="Add Table"]`,
+                run: "click",
+            },
             FloorScreen.selectedTableIs("1"),
             FloorScreen.clickEditButton("Rename"),
 
-            TextInputPopup.inputText("100"),
-            // pressing enter should confirm the text input popup
-            { trigger: "textarea", run: "press Enter", in_modal: true },
-            FloorScreen.clickTable("100"),
+            NumberPopup.enterValue("100"),
+            NumberPopup.isShown("100"),
+            Dialog.confirm(),
             FloorScreen.selectedTableIs("100"),
 
             // test duplicate table
-            FloorScreen.clickEditButton("Copy"),
+            FloorScreen.clickEditButton("Clone"),
             // the name is the first number available on the floor
             FloorScreen.selectedTableIs("1"),
             FloorScreen.clickEditButton("Rename"),
 
-            TextInputPopup.inputText("1111"),
+            NumberPopup.enterValue("1111"),
+            NumberPopup.isShown("1111"),
             Dialog.confirm(),
-            FloorScreen.clickTable("1111"),
             FloorScreen.selectedTableIs("1111"),
 
             // switch floor, switch back and check if
@@ -87,7 +88,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.selectedTableIs("1"),
             FloorScreen.ctrlClickTable("3"),
             FloorScreen.selectedTableIs("3"),
-            FloorScreen.clickEditButton("Copy"),
+            FloorScreen.clickEditButton("Clone"),
             FloorScreen.selectedTableIs("2"),
             FloorScreen.selectedTableIs("4"),
 
@@ -116,34 +117,32 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             NumberPopup.enterValue("9"),
             NumberPopup.isShown("9"),
             Dialog.confirm(),
-            FloorScreen.table({ name: "4", numOfSeats: "9" }),
+            FloorScreen.table({ name: "4" }),
 
             // change number of seat when the input is already selected
-            FloorScreen.clickTable("4"),
             FloorScreen.selectedTableIs("4"),
             FloorScreen.clickEditButton("Seats"),
             NumberPopup.enterValue("15"),
             NumberPopup.isShown("15"),
             Dialog.confirm(),
-            FloorScreen.table({ name: "4", numOfSeats: "15" }),
+            FloorScreen.table({ name: "4" }),
 
             // change shape
-            FloorScreen.clickTable("4"),
-            FloorScreen.clickEditButton("MakeRound"),
+            FloorScreen.clickEditButton("Make Round"),
 
             // Opening product screen in main floor should go back to main floor
-            FloorScreen.clickEditButton("Close"),
+            FloorScreen.clickSaveEditButton(),
             FloorScreen.table({ name: "4", withoutClass: ".selected" }),
             FloorScreen.clickTable("4"),
             ProductScreen.isShown(),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
 
             // Opening product screen in second floor should go back to second floor
             FloorScreen.clickFloor("Second Floor"),
             FloorScreen.hasTable("3"),
             FloorScreen.clickTable("3"),
             ProductScreen.isShown(),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.selectedFloorIs("Second Floor"),
 
             // Check the linking of tables

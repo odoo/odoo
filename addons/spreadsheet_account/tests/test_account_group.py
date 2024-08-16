@@ -14,7 +14,7 @@ class SpreadsheetAccountGroupTest(AccountTestInvoicingCommon):
 
     def test_group_with_no_account(self):
         self.env['account.account']\
-            .search([('account_type', '=', 'income_other'), ('company_id', '=', self.env.company.id)])\
+            .search([('account_type', '=', 'income_other'), ('company_ids', '=', self.env.company.id)])\
             .unlink()
         self.assertEqual(self.env["account.account"].get_account_group(['income_other']), [[]])
 

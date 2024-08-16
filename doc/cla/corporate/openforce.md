@@ -12,10 +12,8 @@ Silvio Gregorini silviogregorini@openforce.it https://github.com/SilvioGregorini
 
 List of contributors:
 
-Francesco Apruzzese francescoapruzzese@openforce.it https://github.com/OpenCode
 Alessandro Camilli alessandrocamilli@openforce.it https://github.com/alessandrocamilli
-Andrea Colangelo andreacolangelo@openforce.it https://github.com/warp10
-Silvio Gregorini silviogregorini@openforce.it https://github.com/SilvioGregorini
 Matteo Mircoli matteomircoli@openforce.it https://github.com/matteoopenf
 Susanna Ortini susannaortini@openforce.it https://github.com/suassa
 Dario Del Zozzo dariodelzozzo@openforce.it https://github.com/ddzopenforce
+Patrick Trabocchi patricktrabocchi@openforce.it https://github.com/patrickt-oforce

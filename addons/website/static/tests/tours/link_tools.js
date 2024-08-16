@@ -18,6 +18,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     {
         content: "Replace first paragraph, to insert a new link",
@@ -132,6 +133,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.dragNDrop({
         id: 's_three_columns',
         name: 'Columns',
+        groupName: "Content",
     }),
     {
         content: "Click on the first image.",
@@ -210,13 +212,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Enter mega menu name",
         trigger: ".modal .modal-body input",
-        in_modal: false,
         run: "edit Mega",
     },
     {
         content: "Clicking on the OK button",
         trigger: ".modal button:contains(ok)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -238,7 +238,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Clicking on the OK button",
         trigger: ".modal button:contains(Save)",
-        in_modal: false,
         run: "click",
     },
     wTourUtils.clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),

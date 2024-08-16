@@ -1,3 +1,4 @@
+import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import { session } from "@web/session";
@@ -126,3 +127,29 @@ export function _makeUser(session) {
 }
 
 export const user = _makeUser(session);
+
+const LAST_CONNECTED_USER_KEY = "web.lastConnectedUser";
+
+export const getLastConnectedUsers = () => {
+    const lastConnectedUsers = browser.localStorage.getItem(LAST_CONNECTED_USER_KEY);
+    return lastConnectedUsers ? JSON.parse(lastConnectedUsers) : [];
+};
+
+export const setLastConnectedUsers = (users) => {
+    browser.localStorage.setItem(LAST_CONNECTED_USER_KEY, JSON.stringify(users.slice(0, 5)));
+};
+
+if (user.login && user.login !== "__system__") {
+    const users = getLastConnectedUsers();
+    const lastConnectedUsers = [
+        {
+            login: user.login,
+            name: user.name,
+            partnerId: user.partnerId,
+            partnerWriteDate: user.writeDate,
+            userId: user.userId,
+        },
+        ...users.filter((u) => u.userId !== user.userId),
+    ];
+    setLastConnectedUsers(lastConnectedUsers);
+}

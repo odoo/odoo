@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import Forbidden, NotFound
-from werkzeug.urls import url_encode
 
 from odoo import _
 from odoo.http import Controller, request, Response, route
@@ -70,9 +69,5 @@ class DigestController(Controller):
         digest = request.env['digest.digest'].browse(digest_id).exists()
         digest.action_set_periodicity(periodicity)
 
-        url_params = {
-            'model': digest._name,
-            'id': digest.id,
-            'active_id': digest.id,
-        }
-        return request.redirect('/web?#%s' % url_encode(url_params))
+        url = f"/odoo/{digest._name}/{digest.id}"
+        return request.redirect(url)

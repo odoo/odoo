@@ -312,18 +312,13 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                         },
                     },
                 ],
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group", sequence: 24, namespace: "aNamespace" },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        sequence: 24,
-                        namespace: "aNamespace",
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                name: "Test Button",
-                                icon: "fa-square",
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        name: "Test Button",
+                        icon: "fa-square",
                     },
                 ],
             };
@@ -339,27 +334,59 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     expect(".btn-group[name='test_group']").toHaveCount(0);
 });
 
+test("toolbar correctly process inheritance buttons chain", async () => {
+    class TestPlugin extends Plugin {
+        static name = "TestPlugin";
+        static resources(p) {
+            return {
+                toolbarCategory: { id: "test_group" },
+                toolbarItems: [
+                    {
+                        id: "test_btn",
+                        category: "test_group",
+                        name: "Test Button",
+                        icon: "fa-square",
+                    },
+                    {
+                        id: "test_btn2",
+                        category: "test_group",
+                        inherit: "test_btn",
+                        name: "Test Button 2",
+                    },
+                ],
+            };
+        }
+    }
+    await setupEditor("<p>[abc]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+    });
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='test_group']").toHaveCount(1);
+    expect("button[name='test_btn']").toHaveCount(1);
+    expect("button[name='test_btn'] span.fa").toHaveClass("fa-square");
+    expect("button[name='test_btn']").toHaveAttribute("title", "Test Button");
+
+    expect("button[name='test_btn2']").toHaveCount(1);
+    expect("button[name='test_btn2'] span.fa").toHaveClass("fa-square");
+    expect("button[name='test_btn2']").toHaveAttribute("title", "Test Button 2");
+});
+
 test("toolbar does not evaluate isFormatApplied when namespace does not match", async () => {
     class TestPlugin extends Plugin {
         static name = "TestPlugin";
         static resources(p) {
             return {
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group", sequence: 24, namespace: "image" },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        sequence: 24,
-                        namespace: "image",
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                action(dispatch) {
-                                    dispatch("test_cmd");
-                                },
-                                name: "Test Button",
-                                icon: "fa-square",
-                                isFormatApplied: () => expect.step("image format evaluated"),
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        action(dispatch) {
+                            dispatch("test_cmd");
+                        },
+                        name: "Test Button",
+                        icon: "fa-square",
+                        isFormatApplied: () => expect.step("image format evaluated"),
                     },
                 ],
             };
@@ -388,20 +415,16 @@ test("plugins can create buttons with text in toolbar", async () => {
         static name = "TestPlugin";
         static resources(p) {
             return {
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group", sequence: 24 },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        sequence: 24,
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                action(dispatch) {
-                                    dispatch("test_cmd");
-                                },
-                                name: "Test Button",
-                                text: "Text button",
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        action(dispatch) {
+                            dispatch("test_cmd");
+                        },
+                        name: "Test Button",
+                        text: "Text button",
                     },
                 ],
             };
@@ -412,4 +435,38 @@ test("plugins can create buttons with text in toolbar", async () => {
     });
     await waitFor(".o-we-toolbar");
     expect("button[name='test_btn']").toHaveText("Text button");
+});
+
+test("toolbar buttons should have rounded corners at the edges of a group", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const buttonGroups = queryAll(".o-we-toolbar .btn-group");
+    for (const group of buttonGroups) {
+        for (let i = 0; i < group.children.length; i++) {
+            const button = group.children[i];
+            const computedStyle = getComputedStyle(button);
+            const borderRadius = Object.fromEntries(
+                ["top-left", "top-right", "bottom-left", "bottom-right"].map((corner) => [
+                    corner,
+                    Number.parseInt(computedStyle[`border-${corner}-radius`]),
+                ])
+            );
+            // Should have rounded corners on the left only if first button
+            if (i === 0) {
+                expect(borderRadius["top-left"]).toBeGreaterThan(0);
+                expect(borderRadius["bottom-left"]).toBeGreaterThan(0);
+            } else {
+                expect(borderRadius["top-left"]).toBe(0);
+                expect(borderRadius["bottom-left"]).toBe(0);
+            }
+            // Should have rounded corners on the right only if last button
+            if (i === group.children.length - 1) {
+                expect(borderRadius["top-right"]).toBeGreaterThan(0);
+                expect(borderRadius["bottom-right"]).toBeGreaterThan(0);
+            } else {
+                expect(borderRadius["top-right"]).toBe(0);
+                expect(borderRadius["bottom-right"]).toBe(0);
+            }
+        }
+    }
 });

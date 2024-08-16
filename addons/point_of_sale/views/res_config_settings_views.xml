@@ -34,7 +34,7 @@
                         A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
                         <button class="btn-link" style="padding:0" name="pos_open_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
                     </div>
-                    <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
+                    <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template or chart_template" role="alert">
                         There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
                     </div>
                     <div invisible="not pos_config_id">
@@ -67,7 +67,7 @@
                                 <div class="content-group mt16" invisible="not pos_cash_rounding">
                                     <div class="row mt16">
                                         <label string="Rounding Method" for="pos_rounding_method" class="col-lg-3 o_light_label" />
-                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]" readonly="pos_has_active_session"/>
+                                        <field name="pos_rounding_method" required="pos_cash_rounding" readonly="pos_has_active_session"/>
                                     </div>
                                     <div class="row mt16">
                                         <div class="col">
@@ -319,13 +319,6 @@
                             </setting>
                             <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
                                 <field name="module_pos_stripe"/>
-                            </setting>
-                            <setting id="vantiv_payment_terminal_setting" title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method." string="Vantiv (US &amp; Canada)" documentation="/applications/sales/point_of_sale/payment_methods/terminals/vantiv.html" help="Accept payments with a Vantiv payment terminal">
-                                <field name="module_pos_mercury"/>
-                                <div class="content-group" invisible="not module_pos_mercury">
-                                    <div class="mt16" id="btn_use_pos_mercury">
-                                    </div>
-                                </div>
                             </setting>
                             <setting title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method." string="Six" documentation="/applications/sales/point_of_sale/payment_methods/terminals/six.html" help="Accept payments with a Six payment terminal">
                                 <field name="module_pos_six"/>

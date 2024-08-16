@@ -396,7 +396,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Added into the wishlist",
-            trigger: '.my_wish_quantity.text-bg-primary:contains(1)',
+            trigger: '.my_wish_quantity.bg-primary:contains(1)',
         },
         {
             content: "Go to '/shop",

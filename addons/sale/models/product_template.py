@@ -88,6 +88,7 @@ class ProductTemplate(models.Model):
                 return _("You can invoice goods before they are delivered.")
             elif self.type == 'service':
                 return _("Invoice ordered quantities as soon as this service is sold.")
+        return ""
 
     def _prepare_service_tracking_tooltip(self):
         return ""
@@ -222,7 +223,10 @@ class ProductTemplate(models.Model):
                 ):
                     has_optional_products = True
                     break
-            res.update({'has_optional_products': has_optional_products})
+            res.update({
+                'has_optional_products': has_optional_products,
+                'is_combo': self.type == 'combo',
+            })
         if self.sale_line_warn != 'no-message':
             res['sale_warning'] = {
                 'type': self.sale_line_warn,

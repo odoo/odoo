@@ -45,7 +45,7 @@ class BaseLanguageImport(models.TransientModel):
                     raise UserError(
                         _('File "%(file_name)s" not imported due to format mismatch or a malformed file.'
                           ' (Valid formats are .csv, .po)\n\nTechnical Details:\n%(error_message)s',
-                          file_name=base_lang_import.filename, error_message=tools.ustr(e)),
+                          file_name=base_lang_import.filename, error_message=e),
                     )
             translation_importer.save(overwrite=overwrite)
         return True

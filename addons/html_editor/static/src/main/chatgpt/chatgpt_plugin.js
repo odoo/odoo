@@ -3,28 +3,38 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "../../utils/dom_traversal";
 import { ChatGPTPromptDialog } from "./chatgpt_prompt_dialog";
 import { ChatGPTAlternativesDialog } from "./chatgpt_alternatives_dialog";
+import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
+import { LanguageSelector } from "./language_selector";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize"];
     static resources = (p) => ({
-        toolbarGroup: {
+        toolbarCategory: {
             id: "ai",
             sequence: 50,
-            buttons: [
-                {
-                    id: "chatgpt",
-                    action(dispatch) {
-                        dispatch("OPEN_CHATGPT_DIALOG");
-                    },
-                    icon: "fa-magic",
-                    name: "chatgpt",
-                    label: _t("Generate or transform content with AI."),
-                },
-            ],
         },
+        toolbarItems: [
+            {
+                id: "translate",
+                category: "ai",
+                Component: LanguageSelector,
+            },
+            {
+                id: "chatgpt",
+                category: "ai",
+                action(dispatch) {
+                    dispatch("OPEN_CHATGPT_DIALOG");
+                },
+                icon: "fa-magic",
+                name: "chatgpt",
+                label: _t("Generate or transform content with AI."),
+                text: "AI",
+            },
+        ],
+
         powerboxCategory: { id: "ai", name: _t("AI Tools"), sequence: 70 },
-        powerboxCommands: {
+        powerboxItems: {
             name: _t("ChatGPT"),
             description: _t("Generate or transform content with AI."),
             category: "ai",
@@ -36,22 +46,23 @@ export class ChatGPTPlugin extends Plugin {
         },
     });
 
-    handleCommand(command) {
+    handleCommand(command, payload) {
         switch (command) {
             case "OPEN_CHATGPT_DIALOG": {
-                this.openDialog();
+                this.openDialog(payload);
                 break;
             }
         }
     }
 
-    openDialog() {
+    openDialog(params = {}) {
         const selection = this.shared.getEditableSelection();
         const cursors = this.shared.preserveSelection();
         const onClose = cursors.restore;
-        const params = {
+        const dialogParams = {
             insert: (content) => {
                 const insertedNodes = this.shared.domInsert(content);
+                this.dispatch("ADD_STEP");
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);
@@ -88,19 +99,24 @@ export class ChatGPTPlugin extends Plugin {
                     setTimeout(() => div.remove(), 2000);
                 }
             },
+            ...params,
         };
         // collapse to end
         const sanitize = this.shared.sanitize;
         if (selection.isCollapsed) {
-            this.services.dialog.add(ChatGPTPromptDialog, { ...params, sanitize }, { onClose });
+            this.services.dialog.add(
+                ChatGPTPromptDialog,
+                { ...dialogParams, sanitize },
+                { onClose }
+            );
         } else {
             const range = new Range();
             range.setStart(selection.startContainer, selection.startOffset);
             range.setEnd(selection.endContainer, selection.endOffset);
             const originalText = range.toString() || "";
             this.services.dialog.add(
-                ChatGPTAlternativesDialog,
-                { ...params, originalText, sanitize },
+                params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
+                { ...dialogParams, originalText, sanitize },
                 { onClose }
             );
         }

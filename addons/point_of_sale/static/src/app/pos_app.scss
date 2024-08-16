@@ -66,23 +66,31 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.h-12{
-    height: 12%;
-}
-
 @media screen and (max-width: 575px) {
     .pos .modal-dialog{
-        max-height: 90vh;
+        margin: 0;
+        max-height: 92dvh;
     }
     .pos .modal-content{
-        max-height: 90vh;
+        max-height: 92dvh;
+        border-radius: 1rem 1rem 0 0;
+        animation: popUp 0.2s ease-in-out forwards;
     }
     .pos .modal-body{
-        overflow: scroll;
+        overflow: auto;
     }
     .modal-dialog-centered {
-        display: flex;
-        align-items: end !important;
-        min-height: subtract(100%, $modal-dialog-margin * 2);
+        position: fixed;
+        inset: auto 0 0 0;
+        min-height: unset;
+    }
+}
+
+@keyframes popUp {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0);
     }
 }

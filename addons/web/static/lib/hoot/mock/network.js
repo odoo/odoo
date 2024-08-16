@@ -2,6 +2,7 @@
 
 import { makeNetworkLogger } from "../core/logger";
 import { ensureArray, makePublicListeners } from "../hoot_utils";
+import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
 import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time";
 
 //-----------------------------------------------------------------------------
@@ -65,7 +66,6 @@ const makeWorkerScope = (worker) => {
     return { execute, load };
 };
 
-const BODY_SYMBOL = Symbol("body");
 const DEFAULT_URL = "https://www.hoot.test/";
 const HEADER = {
     blob: "application/octet-stream",
@@ -417,7 +417,7 @@ export class MockHistory {
     }
 }
 
-export class MockLocation {
+export class MockLocation extends EventTarget {
     _anchor = document.createElement("a");
     /** @type {(() => any)[]} */
     _onReload = [];
@@ -490,21 +490,18 @@ export class MockLocation {
     }
 
     constructor() {
+        super();
         this.href = DEFAULT_URL;
+
+        makePublicListeners(this, ["reload"]);
     }
 
     assign(url) {
         this.href = url;
     }
 
-    onReload(callback) {
-        this._onReload.push(callback);
-    }
-
     reload() {
-        for (const callback of this._onReload) {
-            callback();
-        }
+        this.dispatchEvent(new CustomEvent("reload"));
     }
 
     replace(url) {
@@ -565,8 +562,6 @@ export class MockMessagePort extends EventTarget {
 }
 
 export class MockRequest extends Request {
-    [BODY_SYMBOL] = null;
-
     /**
      * @param {RequestInfo} input
      * @param {RequestInit} [init]
@@ -574,29 +569,27 @@ export class MockRequest extends Request {
     constructor(input, init) {
         super(input, init);
 
-        this[BODY_SYMBOL] = init?.body ?? null;
+        setSyncValue(this, init?.body ?? null);
     }
 
     arrayBuffer() {
-        return new TextEncoder().encode(this[BODY_SYMBOL]);
+        return new TextEncoder().encode(getSyncValue(this));
     }
 
     blob() {
-        return new Blob([this[BODY_SYMBOL]]);
+        return new MockBlob([getSyncValue(this)]);
     }
 
     json() {
-        return JSON.parse(this[BODY_SYMBOL]);
+        return JSON.parse(getSyncValue(this));
     }
 
     text() {
-        return this[BODY_SYMBOL];
+        return getSyncValue(this);
     }
 }
 
 export class MockResponse extends Response {
-    [BODY_SYMBOL] = null;
-
     /**
      * @param {BodyInit} body
      * @param {ResponseInit} [init]
@@ -604,23 +597,23 @@ export class MockResponse extends Response {
     constructor(body, init) {
         super(body, init);
 
-        this[BODY_SYMBOL] = body ?? null;
+        setSyncValue(this, body ?? null);
     }
 
     arrayBuffer() {
-        return new TextEncoder().encode(this[BODY_SYMBOL]).buffer;
+        return new TextEncoder().encode(getSyncValue(this)).buffer;
     }
 
     blob() {
-        return new Blob([this[BODY_SYMBOL]]);
+        return new MockBlob([getSyncValue(this)]);
     }
 
     json() {
-        return JSON.parse(this[BODY_SYMBOL]);
+        return JSON.parse(getSyncValue(this));
     }
 
     text() {
-        return this[BODY_SYMBOL];
+        return getSyncValue(this);
     }
 }
 

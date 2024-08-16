@@ -106,7 +106,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check a template is listed",
-            in_modal: false,
             trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
         },
         {

@@ -6,11 +6,10 @@ import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
 function selectNthOrder(n) {
     return [
-        ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation/Order"),
         {
             content: `select nth order`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row:nth-child(${n}) td`,
-            in_modal: false,
             run: "click",
         },
     ];
@@ -22,7 +21,6 @@ export function settleNthOrder(n) {
         {
             content: `Choose to settle the order`,
             trigger: `.modal:not(.o_inactive_modal) .selection-item:contains('Settle the order')`,
-            in_modal: false,
             run: "click",
         },
         {
@@ -31,7 +29,7 @@ export function settleNthOrder(n) {
     ];
 }
 
-export function downPaymentFirstOrder() {
+export function downPaymentFirstOrder(amount) {
     return [
         ...selectNthOrder(1),
         {
@@ -39,7 +37,17 @@ export function downPaymentFirstOrder() {
             trigger: `.selection-item:contains('Apply a down payment')`,
             run: "click",
         },
-        Numpad.click("+10"),
-        Dialog.confirm(),
+        Numpad.click(amount),
+        Dialog.confirm("Ok"),
+    ];
+}
+
+export function checkOrdersListEmpty() {
+    return [
+        ...ProductScreen.clickControlButton("Quotation/Order"),
+        {
+            content: "Check that the orders list is empty",
+            trigger: "p:contains(No record found)",
+        },
     ];
 }

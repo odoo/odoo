@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
-            <xpath expr="//button[@type='submit']" position="after">
-                <div class="justify-content-between mt-2 d-flex small">
-                    <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}">Don't have an account?</a>
-                    <a t-if="reset_password_enabled" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
-                </div>
+            <xpath expr="//div[hasclass('oe_login_buttons')]" position="after">
+                <p class="mt-2 text-center">
+                    <a t-if="signup_enabled" class="btn btn-link btn-sm" t-attf-href="/web/signup?{{ keep_query() }}">Don't have an account?</a>
+                </p>
+            </xpath>
+            <xpath expr="//label[@for='password']" position="inside">
+                <a t-if="reset_password_enabled" class="btn btn-link btn-sm" tabindex="1" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
             </xpath>
         </template>
 

@@ -43,6 +43,7 @@ class MailMail(models.Model):
         body = super()._prepare_outgoing_body()
 
         if body and self.mailing_id and self.mailing_trace_ids:
+            Wrapper = body.__class__
             for match in set(re.findall(tools.mail.URL_REGEX, body)):
                 href = match[0]
                 url = match[1]
@@ -50,8 +51,8 @@ class MailMail(models.Model):
                 parsed = werkzeug.urls.url_parse(url, scheme='http')
 
                 if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
-                    new_href = href.replace(url, url + '/m/' + str(self.mailing_trace_ids[0].id))
-                    body = body.replace(href, new_href)
+                    new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")
+                    body = body.replace(Wrapper(href), Wrapper(new_href))
 
             # generate tracking URL
             tracking_url = self._get_tracking_url()

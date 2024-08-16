@@ -144,8 +144,7 @@ class GeoCoder(models.AbstractModel):
             state,
             country
         ]
-        address_list = [item for item in address_list if item]
-        return tools.ustr(', '.join(address_list))
+        return ', '.join(filter(None, address_list))
 
     @api.model
     def _geo_query_address_googlemap(self, street=None, zip=None, city=None, state=None, country=None):

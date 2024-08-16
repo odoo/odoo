@@ -1,5 +1,8 @@
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { WebClient } from "@web/webclient/webclient";
+import { mountWithCleanup } from "./component_test_helpers";
 
 class TestClientAction extends Component {
     static template = xml`
@@ -18,4 +21,14 @@ export function useTestClientAction() {
         type: "ir.actions.client",
         params: { description: "Id 1" },
     };
+}
+
+export async function mountWebClient(options) {
+    await mountWithCleanup(WebClient, options);
+    // Wait for visual changes caused by a potential loadState
+    await animationFrame();
+    // wait for BlankComponent
+    await animationFrame();
+    // wait for the regular rendering
+    await animationFrame();
 }

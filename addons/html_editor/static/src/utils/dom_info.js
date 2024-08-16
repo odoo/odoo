@@ -1,5 +1,5 @@
 import { closestBlock, isBlock } from "./blocks";
-import { ancestors, closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
+import { closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
 import { DIRECTIONS, nodeSize } from "./position";
 
 export function isEmpty(el) {
@@ -247,7 +247,7 @@ export function isVisible(node) {
         ((node.nodeType === Node.TEXT_NODE && isVisibleTextNode(node)) ||
             isSelfClosingElement(node) ||
             // @todo: handle it in resources?
-            isIconElement(node) ||
+            isMediaElement(node) ||
             hasVisibleContent(node))
     );
 }
@@ -271,55 +271,6 @@ export const isNotEditableNode = (node) =>
     node.getAttribute &&
     node.getAttribute("contenteditable") &&
     node.getAttribute("contenteditable").toLowerCase() === "false";
-
-export function isUnbreakable(node) {
-    if (!node || node.nodeType === Node.TEXT_NODE) {
-        return false;
-    }
-    if (node.nodeType !== Node.ELEMENT_NODE) {
-        return true;
-    }
-    return (
-        isUnremovable(node) || // An unremovable node is always unbreakable.
-        // @todo @phoenix: move the specific part in a proper plugin.
-        ["TABLE", "THEAD", "TBODY", "TFOOT", "TR", "TH", "TD", "SECTION", "DIV"].includes(
-            node.tagName
-        ) ||
-        node.hasAttribute("t") ||
-        (node.nodeType === Node.ELEMENT_NODE &&
-            (node.nodeName === "T" ||
-                node.getAttribute("t-if") ||
-                node.getAttribute("t-esc") ||
-                node.getAttribute("t-elif") ||
-                node.getAttribute("t-else") ||
-                node.getAttribute("t-foreach") ||
-                node.getAttribute("t-value") ||
-                node.getAttribute("t-out") ||
-                node.getAttribute("t-raw"))) ||
-        node.getAttribute("t-field") ||
-        node.classList.contains("oe_unbreakable")
-    );
-}
-
-// @todo @phoenix: adapt .oid parts
-export function isUnremovable(node) {
-    return (
-        (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) ||
-        node.oid === "root" ||
-        // @todo @phoenix: move the specific part in a proper plugin.
-        (node.nodeType === Node.ELEMENT_NODE &&
-            (node.classList.contains("o_editable") ||
-                node.getAttribute("t-set") ||
-                node.getAttribute("t-call"))) ||
-        (node.classList && node.classList.contains("oe_unremovable")) ||
-        (node.nodeName === "SPAN" &&
-            node.parentElement &&
-            node.parentElement.getAttribute("data-oe-type") === "monetary") ||
-        (node.ownerDocument &&
-            node.ownerDocument.defaultWindow &&
-            !ancestors(node).find((ancestor) => ancestor.oid === "root")) // Node is in DOM but not in editable.
-    );
-}
 
 const iconTags = ["I", "SPAN"];
 // @todo @phoenix: move the specific part in a proper plugin.
@@ -585,10 +536,7 @@ export function getDeepestPosition(node, offset) {
     let direction = DIRECTIONS.RIGHT;
     let next = node;
     while (next) {
-        if (
-            (isVisible(next) && (!isBlock(next) || next.isContentEditable)) ||
-            (isZWS(next) && closestElement(next).isContentEditable)
-        ) {
+        if (isTangible(next) || (isZWS(next) && closestElement(next).isContentEditable)) {
             // Valid node: update position then try to go deeper.
             if (next !== node) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
@@ -596,13 +544,13 @@ export function getDeepestPosition(node, offset) {
             // First switch direction to left if offset is at the end.
             direction = offset < node.childNodes.length;
             next = node.childNodes[direction ? offset : offset - 1];
-        } else if (direction && next.nextSibling) {
+        } else if (direction && next.nextSibling && closestBlock(node).contains(next.nextSibling)) {
             // Invalid node: skip to next sibling (without crossing blocks).
             next = next.nextSibling;
         } else {
             // Invalid node: skip to previous sibling (without crossing blocks).
             direction = DIRECTIONS.LEFT;
-            next = !isBlock(next.previousSibling) && next.previousSibling;
+            next = closestBlock(node).contains(next.previousSibling) && next.previousSibling;
         }
         // Avoid too-deep ranges inside self-closing elements like [BR, 0].
         next = !isSelfClosingElement(next) && next;

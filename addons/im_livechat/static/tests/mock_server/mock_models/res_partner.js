@@ -1,5 +1,6 @@
-import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
+
+import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
 
 export class ResPartner extends mailModels.ResPartner {
     /**
@@ -21,18 +22,16 @@ export class ResPartner extends mailModels.ResPartner {
         const ResUsers = this.env["res.users"];
 
         super._search_for_channel_invite_to_store(ids, store, channel_id);
-        const [channel] = DiscussChannel._filter([["id", "=", channel_id]]);
+        const [channel] = DiscussChannel.browse(channel_id);
         if (channel.channel_type !== "livechat") {
             return;
         }
         const activeLivechatPartners = LivechatChannel._filter([])
             .map(({ available_operator_ids }) => available_operator_ids)
             .flat()
-            .map((userId) => ResUsers._filter([["id", "=", userId]])[0].partner_id);
-        const partners = ResPartner._filter([["id", "in", ids]]);
-        for (const partner of partners) {
+            .map((userId) => ResUsers.browse(userId)[0].partner_id);
+        for (const partner of ResPartner.browse(ids)) {
             const data = {
-                id: partner.id,
                 invite_by_self_count: DiscussChannelMember.search_count([
                     ["partner_id", "=", partner.id],
                     ["create_uid", "=", serverState.userId],
@@ -42,7 +41,7 @@ export class ResPartner extends mailModels.ResPartner {
             if (partner.lang) {
                 data.lang_name = ResLang.search_read([["code", "=", partner.lang]])[0].name;
             }
-            store.add("res.partner", data);
+            store.add(this.browse(partner.id), data);
         }
     }
     /**

@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-from psycopg2 import ProgrammingError, errorcodes
+from psycopg2.errors import InsufficientPrivilege
 
 import odoo
 
@@ -69,6 +69,11 @@ def report_configuration():
     replica_port = config['db_replica_port']
     if replica_host is not False or replica_port:
         _logger.info('replica database: %s@%s:%s', user, replica_host or 'default', replica_port or 'default')
+    if sys.version_info[:2] > odoo.MAX_PY_VERSION:
+        _logger.warning("Python %s is not officially supported, please use Python %s instead",
+            '.'.join(map(str, sys.version_info[:2])),
+            '.'.join(map(str, odoo.MAX_PY_VERSION))
+        )
 
 def rm_pid_file(main_pid):
     config = odoo.tools.config
@@ -145,15 +150,12 @@ def main(args):
             try:
                 odoo.service.db._create_empty_database(db_name)
                 config['init']['base'] = True
-            except ProgrammingError as err:
-                if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
-                    # We use an INFO loglevel on purpose in order to avoid
-                    # reporting unnecessary warnings on build environment
-                    # using restricted database access.
-                    _logger.info("Could not determine if database %s exists, "
-                                 "skipping auto-creation: %s", db_name, err)
-                else:
-                    raise err
+            except InsufficientPrivilege as err:
+                # We use an INFO loglevel on purpose in order to avoid
+                # reporting unnecessary warnings on build environment
+                # using restricted database access.
+                _logger.info("Could not determine if database %s exists, "
+                             "skipping auto-creation: %s", db_name, err)
             except odoo.service.db.DatabaseExists:
                 pass
 

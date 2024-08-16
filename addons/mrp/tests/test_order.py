@@ -4241,6 +4241,35 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo.date_start, dt)
         self.assertEqual(wo.date_finished, dt + timedelta(hours=0, minutes=30))
 
+    def test_update_qty_producing_done_MO_with_lot(self):
+        """
+        Test that increasing the qty producing of a done MO for a product tracked by lot
+        will create an additional sml for the final product with the same producing lot
+        """
+        tracked_product = self.env['product.template'].create({
+            'name': 'Super Product',
+            'tracking': 'lot',
+            'is_storable': True,
+            'bom_ids': [Command.create({
+                'product_qty': 2.0,
+                'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 2.0})],
+            })],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': tracked_product.product_variant_ids.id,
+            'product_uom_qty': 2.0,
+        })
+        mo.action_confirm()
+        mo.action_generate_serial()
+        producing_lot = mo.lot_producing_id
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_finished_ids.lot_ids, producing_lot)
+        self.assertEqual(mo.move_finished_ids.move_line_ids.mapped('lot_id'), producing_lot)
+        mo.qty_producing = 3.0
+        self.assertTrue(all(sml.lot_id == producing_lot for sml in mo.move_finished_ids.move_line_ids))
+        self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 3.0)
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
@@ -4254,8 +4283,62 @@ class TestTourMrpOrder(HttpCase):
         })
 
         self.assertEqual(len(mo.move_raw_ids), 0)
-        action = self.env.ref('mrp.mrp_production_action')
-        url = '/web#model=mrp.production&view_type=form&action=%s&id=%s' % (str(action.id), str(mo.id))
+        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
 
         self.start_tour(url, 'test_mrp_production_product_catalog', login='admin')
         self.assertEqual(len(mo.move_raw_ids), 1)
+
+    def test_manufacturing_and_byproduct_sm_to_sml_synchronization(self):
+        """ Test the synchronization between stock moves and stock move lines within
+            the detailed operation modal for manufacturings and by-products.
+        """
+
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        self.env['res.config.settings'].create({'group_mrp_byproducts': True}).execute()
+
+        location = self.env.ref('stock.stock_location_stock')
+        product = self.env['product.product']
+        product_finish = product.create({
+            'name': 'product1',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        component = product.create({
+            'name': 'product2',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        by_product = product.create({
+            'name': 'product2',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+
+        self.env['stock.quant']._update_available_quantity(component, location, 50)
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_finish.id,
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 5}),
+            ],
+            'byproduct_ids': [
+                (0, 0, {'product_id': by_product.id, 'product_qty': 2, 'product_uom_id': by_product.uom_id.id})
+            ],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finish
+        mo_form.product_qty = 1
+        mo_form.bom_id = bom
+        mo = mo_form.save()
+
+        action_id = self.env.ref('mrp.menu_mrp_production_action').action
+        url = f'/web#model=mrp.production&view_type=form&action={action_id.id}&id={mo.id}'
+        self.start_tour(url, "test_manufacturing_and_byproduct_sm_to_sml_synchronization", login="admin", timeout=100)
+        self.assertEqual(mo.move_raw_ids.quantity, 7)
+        self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
+        self.assertEqual(mo.move_byproduct_ids.quantity, 7)
+        self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)

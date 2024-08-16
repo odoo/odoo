@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     test: true,
     steps: () => [
         {
-            trigger: ".o-mail-DiscussPublic",
+            trigger: ".o-mail-Discuss",
         },
         {
             content: "Check that we are on channel page",
@@ -65,6 +65,36 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Check message contains the attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+        },
+        {
+            trigger: ".o-mail-Message [title='Add a Reaction']",
+            run: "click",
+        },
+        {
+            trigger: ".o-EmojiPicker .o-Emoji:contains('🙂')",
+            run: "click",
+        },
+        {
+            content: "Reload page (fetch reactions)",
+            trigger: ".o-mail-Message",
+            run() {
+                location.reload();
+            },
+        },
+        {
+            content: "Remove reaction",
+            trigger: ".o-mail-MessageReaction:contains('🙂')",
+            run: "click",
+        },
+        {
+            content: "Reload page (fetch reactions)",
+            trigger: ".o-mail-Message",
+            run() {
+                location.reload();
+            },
+        },
+        {
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
         },
         {
             content: "Click on more menu",

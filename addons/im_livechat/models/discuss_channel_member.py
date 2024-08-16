@@ -20,16 +20,16 @@ class ChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.write({'unpin_dt': fields.Datetime.now()})
-        self.env['bus.bus']._sendmany([(member.partner_id, 'discuss.channel/unpin', {'id': member.channel_id.id}) for member in sessions_to_be_unpinned])
+        for member in sessions_to_be_unpinned:
+            member._bus_send("discuss.channel/unpin", {"id": member.channel_id.id})
 
     def _to_store(self, store: Store, **kwargs):
         super()._to_store(store, **kwargs)
         for member in self.filtered(lambda m: m.channel_id.channel_type == "livechat"):
             # sudo: mail.channel - reading livechat channel to check whether current member is a bot is allowed
             store.add(
-                "discuss.channel.member",
+                member,
                 {
-                    "id": member.id,
                     "is_bot": member.partner_id
                     in member.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_partner_id,
                 },

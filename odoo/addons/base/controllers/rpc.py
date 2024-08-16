@@ -10,7 +10,7 @@ from markupsafe import Markup
 import odoo
 from odoo.http import Controller, route, dispatch_rpc, request, Response
 from odoo.fields import Date, Datetime, Command
-from odoo.tools import lazy, ustr
+from odoo.tools import lazy
 from odoo.tools.misc import frozendict
 
 # ==========================================================
@@ -45,7 +45,7 @@ def xmlrpc_handle_exception_int(e):
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpc.client.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
 
-    return xmlrpc.client.dumps(fault, allow_none=None)
+    return dumps(fault)
 
 
 def xmlrpc_handle_exception_string(e):
@@ -65,7 +65,7 @@ def xmlrpc_handle_exception_string(e):
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpc.client.Fault(odoo.tools.exception_to_unicode(e), formatted_info)
 
-    return xmlrpc.client.dumps(fault, allow_none=None, encoding=None)
+    return dumps(fault)
 
 
 class OdooMarshaller(xmlrpc.client.Marshaller):
@@ -78,9 +78,8 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     # By default, in xmlrpc, bytes are converted to xmlrpc.client.Binary object.
     # Historically, odoo is sending binary as base64 string.
     # In python 3, base64.b64{de,en}code() methods now works on bytes.
-    # Convert them to str to have a consistent behavior between python 2 and python 3.
     def dump_bytes(self, value, write):
-        self.dump_unicode(ustr(value), write)
+        self.dump_unicode(value.decode(), write)
 
     def dump_datetime(self, value, write):
         # override to marshall as a string for backwards compatibility
@@ -111,8 +110,14 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
 
 
-# monkey-patch xmlrpc.client's marshaller
-xmlrpc.client.Marshaller = OdooMarshaller
+def dumps(params: list | tuple | xmlrpc.client.Fault) -> str:
+    response = OdooMarshaller(allow_none=False).dumps(params)
+    return f"""\
+<?xml version="1.0"?>
+<methodResponse>
+{response}
+</methodResponse>
+"""
 
 # ==========================================================
 # RPC Controller
@@ -130,9 +135,9 @@ class RPC(Controller):
         """Common method to handle an XML-RPC request."""
         _check_request()
         data = request.httprequest.get_data()
-        params, method = xmlrpc.client.loads(data)
+        params, method = xmlrpc.client.loads(data, use_datetime=True)
         result = dispatch_rpc(service, method, params)
-        return xmlrpc.client.dumps((result,), methodresponse=1, allow_none=False)
+        return dumps((result,))
 
     @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_1(self, service):

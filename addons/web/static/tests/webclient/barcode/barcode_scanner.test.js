@@ -8,7 +8,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
-import { BarcodeDialog, scanBarcode } from "@web/webclient/barcode/barcode_scanner";
+import { scanBarcode } from "@web/webclient/barcode/barcode_dialog";
+import { BarcodeVideoScanner } from "@web/webclient/barcode/barcode_video_scanner";
 import { WebClient } from "@web/webclient/webclient";
 
 /* global ZXing */
@@ -59,7 +60,7 @@ test("Barcode scanner crop overlay", async () => {
         },
     });
 
-    patchWithCleanup(BarcodeDialog.prototype, {
+    patchWithCleanup(BarcodeVideoScanner.prototype, {
         async isVideoReady() {
             await super.isVideoReady(...arguments);
             videoReady.resolve();

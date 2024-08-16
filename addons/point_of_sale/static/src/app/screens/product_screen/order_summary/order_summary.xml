@@ -6,7 +6,7 @@
           tax="!env.utils.floatIsZero(currentOrder.get_total_tax()) and env.utils.formatCurrency(currentOrder.get_total_tax()) or ''">
           <t t-set="line" t-value="scope.line" />
           <Orderline line="line.getDisplayData()"
-              t-on-click="() => this.selectLine(line)"
+              t-on-click="(event) => this.clickLine(event, line)"
               class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }">
               <t t-set-slot="product-name">
                 <!-- FIXME: pos_sale does not always correctly import orders -->

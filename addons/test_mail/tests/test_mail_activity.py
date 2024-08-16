@@ -1076,7 +1076,7 @@ class TestTours(HttpCase):
             """,
         })
         self.start_tour(
-            "/web?debug=1",
+            "/odoo?debug=1",
             "mail_activity_view",
             login="admin",
         )

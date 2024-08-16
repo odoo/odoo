@@ -3,6 +3,7 @@
     <template id="s_dynamic_snippet_products" name="Products">
         <t t-call="website.s_dynamic_snippet_template">
             <t t-set="snippet_name" t-value="'s_dynamic_snippet_products'"/>
+            <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
     </template>
     <template id="s_dynamic_snippet_products_options" inherit_id="website.snippet_options">

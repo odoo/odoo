@@ -22,6 +22,7 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * @property {string | ReturnType<typeof import("@odoo/owl").useRef>} [target]
  * @property {(component, options) => import("../popover/popover_hook").PopoverHookReturnType} [createPopover]
  * @property {() => boolean} [ensureVisibility=() => env.isSmall]
+ * @property {boolean} [showSeconds]
  *
  * @typedef {import("./datetime_picker").DateTimePickerProps} DateTimePickerProps
  */
@@ -84,7 +85,6 @@ export const datetimePickerService = {
                         return;
                     }
 
-                    lastInitialProps = null; // Next pickerProps are considered final
                     inputsChanged = ensureArray(pickerProps.value).map(() => false);
 
                     hookParams.onApply?.(pickerProps.value);
@@ -273,7 +273,11 @@ export const datetimePickerService = {
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
                     try {
                         return [
-                            convertFn(value, { format: hookParams.format, tz: pickerProps.tz }),
+                            convertFn(value, {
+                                format: hookParams.format,
+                                tz: pickerProps.tz,
+                                showSeconds: hookParams.showSeconds ?? true,
+                            }),
                             null,
                         ];
                     } catch (error) {
@@ -475,13 +479,16 @@ export const datetimePickerService = {
                                 editableInputs++;
                             }
                         }
-                        const calendarIconGroupEl = getInput(0)?.parentElement
-                            .querySelector(".o_input_group_date_icon");
+                        const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
+                            ".o_input_group_date_icon"
+                        );
                         if (calendarIconGroupEl) {
                             calendarIconGroupEl.classList.add("cursor-pointer");
-                            cleanups.push(addListener(calendarIconGroupEl, "click", () => {
-                                openPicker(0);
-                            }));
+                            cleanups.push(
+                                addListener(calendarIconGroupEl, "click", () => {
+                                    openPicker(0);
+                                })
+                            );
                         }
                         if (!editableInputs && popover.isOpen) {
                             saveAndClose();

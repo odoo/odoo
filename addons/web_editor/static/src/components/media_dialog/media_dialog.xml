@@ -3,7 +3,7 @@
 <t t-name="web_editor.MediaDialog">
     <Dialog contentClass="contentClass"
         size="size"
-        title="title"
+        title.translate="Select a media"
         modalRef="modalRef">
         <Notebook pages="tabs" onPageUpdate.bind="onTabChange" defaultPage="state.activeTab"/>
         <t t-set-slot="footer">

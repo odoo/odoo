@@ -1,8 +1,9 @@
-import { tourState } from "./tour_state";
+import { tourState } from "@web_tour/tour_service/tour_state";
 import { debounce } from "@web/core/utils/timing";
-import { getScrollParent, isActive } from "./tour_utils";
+import { getScrollParent } from "@web_tour/tour_service/tour_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
+import { TourStep } from "./tour_step";
 
 /**
  * @typedef ConsumeEvent
@@ -12,34 +13,32 @@ import { utils } from "@web/core/ui/ui_service";
  */
 
 export class TourInteractive {
-    constructor() {
-        this.anchorEl;
-        this.currentAction;
-        this.currentActionIndex;
-        this.removeListeners = () => {};
+    mode = "manual";
+    anchorEl;
+    currentAction;
+    currentActionIndex;
+    removeListeners = () => {};
+
+    /**
+     * @param {Tour} data
+     */
+    constructor(data) {
+        Object.assign(this, data);
+        this.steps = this.steps.map((step) => new TourStep(step, this));
+        this.actions = this.steps.flatMap((s) => this.getSubActions(s));
     }
 
     /**
-     * @param {import("./tour_service").Tour} tour
      * @param {import("@web_tour/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
      */
-    loadTour(tour, pointer, onTourEnd) {
-        this.tourName = tour.name;
-        this.actions = tour.steps.flatMap((s) => this.getSubActions(s));
+    start(pointer, onTourEnd) {
         this.pointer = pointer;
         this.debouncedToggleOpen = debounce(this.pointer.showContent, 50, true);
         this.onTourEnd = onTourEnd;
-    }
-
-    /**
-     *
-     * @param {Number} stepAt Step to start at
-     */
-    start(stepAt = 0) {
         this.pointer.start();
         this.observerDisconnect = hoot.observe(document.body, () => this._onMutation());
-        this.currentActionIndex = stepAt;
+        this.currentActionIndex = tourState.get(this.name, "currentIndex") || 0;
         this.play();
     }
 
@@ -50,7 +49,7 @@ export class TourInteractive {
         while (!tempAnchor && tempIndex >= 0) {
             tempIndex--;
             tempAction = this.actions.at(tempIndex);
-            if (!isActive({ isActive: tempAction.isActive }, "manual")) {
+            if (!tempAction.step.active) {
                 continue;
             }
             tempAnchor = tempAction && hoot.queryFirst(tempAction.anchor);
@@ -62,6 +61,17 @@ export class TourInteractive {
         }
     }
 
+    /**
+     * @returns {HTMLElement[]}
+     */
+    findTriggers() {
+        return this.currentAction.anchor
+            .split(/,\s*(?![^(]*\))/)
+            .map((part) => hoot.queryFirst(part, { visible: true }))
+            .filter((el) => !!el)
+            .map((el) => this.getAnchorEl(el, this.currentAction.event));
+    }
+
     play() {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
@@ -71,17 +81,25 @@ export class TourInteractive {
         }
 
         this.currentAction = this.actions.at(this.currentActionIndex);
-        if (!isActive({ isActive: this.currentAction.isActive }, "manual")) {
+
+        if (this.currentAction.event === "warn") {
+            console.warn(`Step '${this.currentAction.anchor}' ignored because no 'run'`);
+            this.currentActionIndex++;
+            this.play();
+        }
+
+        if (!this.currentAction.step.active) {
             this.currentActionIndex++;
             this.play();
             return;
         }
 
         console.log(this.currentAction.event, this.currentAction.anchor);
-        this.anchorEl = hoot.queryFirst(this.currentAction.anchor, { visible: true });
 
-        tourState.set(this.tourName, "currentIndex", this.currentActionIndex);
-        this.setActionListeners();
+        tourState.set(this.name, "currentIndex", this.currentActionIndex);
+        const anchorEls = this.findTriggers();
+        this.setActionListeners(anchorEls);
+        this.updatePointer();
     }
 
     updatePointer() {
@@ -96,16 +114,15 @@ export class TourInteractive {
         });
     }
 
-    setActionListeners() {
-        if (this.anchorEl) {
-            this.anchorEl = this.getAnchorEl(this.anchorEl, this.currentAction.event);
-            const consumeEvents = this.getConsumeEventType(this.anchorEl, this.currentAction.event);
-            this.removeListeners = this.setupListeners({
-                anchorEl: this.anchorEl,
-                consumeEvents,
-                onMouseEnter: () => this.pointer.showContent(true),
-                onMouseLeave: () => this.pointer.showContent(false),
-                onScroll: () => this.updatePointer(),
+    /**
+     * Set listeners for each anchor element.
+     * @param {HTMLElement[]} anchorEls
+     */
+    setActionListeners(anchorEls) {
+        const cleanups = anchorEls.flatMap((anchorEl, index) => {
+            const toListen = {
+                anchorEl,
+                consumeEvents: this.getConsumeEventType(anchorEl, this.currentAction.event),
                 onConsume: () => {
                     this.pointer.hide();
                     this.currentActionIndex++;
@@ -118,9 +135,25 @@ export class TourInteractive {
                         this.play();
                     }
                 },
-            });
-            this.updatePointer();
-        }
+            };
+            if (index === 0) {
+                this.anchorEl = anchorEl;
+                return this.setupListeners({
+                    ...toListen,
+                    onMouseEnter: () => this.pointer.showContent(true),
+                    onMouseLeave: () => this.pointer.showContent(false),
+                    onScroll: () => this.updatePointer(),
+                });
+            } else {
+                return this.setupListeners(toListen);
+            }
+        });
+        this.removeListeners = () => {
+            delete this.anchorEl;
+            while (cleanups.length) {
+                cleanups.pop()();
+            }
+        };
     }
 
     /**
@@ -176,11 +209,7 @@ export class TourInteractive {
             cleanups.push(() => scrollEl.removeEventListener("scroll", debouncedOnScroll));
         }
 
-        return () => {
-            while (cleanups.length) {
-                cleanups.pop()();
-            }
-        };
+        return cleanups;
     }
 
     /**
@@ -189,16 +218,18 @@ export class TourInteractive {
      * @returns {{
      *  event: string,
      *  anchor: string,
-     *  altAnchor: string?,
-     *  isActive: string[]?,
-     *  inModal: boolean?,
-     *  pointerInfo: { position: string?, content: string? },
+     *  pointerInfo: { tooltipPosition: string?, content: string? },
      * }[]}
      */
     getSubActions(step) {
         const actions = [];
         if (!step.run || typeof step.run === "function") {
-            return [];
+            actions.push({
+                step,
+                event: "warn",
+                anchor: step.trigger,
+            });
+            return actions;
         }
 
         for (const todo of step.run.split("&&")) {
@@ -210,27 +241,24 @@ export class TourInteractive {
             const anchor = m.groups?.arguments || step.trigger;
             const pointerInfo = {
                 content: step.content,
-                position: step.position,
+                tooltipPosition: step.tooltipPosition,
             };
 
             if (action === "drag_and_drop") {
                 actions.push({
+                    step,
                     event: "drag",
                     anchor: step.trigger,
                     pointerInfo,
-                    isActive: step.isActive,
-                    inModal: step.in_modal,
                 });
                 action = "drop";
             }
 
             actions.push({
+                step,
                 event: action,
                 anchor: action === "edit" ? step.trigger : anchor,
-                altAnchor: step.alt_trigger,
                 pointerInfo,
-                isActive: step.isActive,
-                inModal: step.in_modal,
             });
         }
 
@@ -360,18 +388,12 @@ export class TourInteractive {
 
     _onMutation() {
         if (this.currentAction) {
-            let tempAnchor = hoot.queryFirst(this.currentAction.anchor, { visible: true });
-            tempAnchor = tempAnchor && this.getAnchorEl(tempAnchor, this.currentAction.event);
-            if (
-                (!this.anchorEl && tempAnchor) ||
-                (this.anchorEl && tempAnchor && tempAnchor !== this.anchorEl)
-            ) {
-                this.anchorEl = tempAnchor;
+            const tempAnchors = this.findTriggers();
+            if (tempAnchors.length && (!this.anchorEl || !tempAnchors.includes(this.anchorEl))) {
                 this.removeListeners();
-                this.setActionListeners();
-            } else if (!tempAnchor && this.anchorEl) {
+                this.setActionListeners(tempAnchors);
+            } else if (!tempAnchors.length && this.anchorEl) {
                 this.pointer.hide();
-                this.anchorEl = tempAnchor;
                 if (!hoot.queryFirst(".o_home_menu", { visible: true })) {
                     this.backward();
                 }

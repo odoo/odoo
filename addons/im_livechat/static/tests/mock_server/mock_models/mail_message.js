@@ -1,4 +1,5 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { makeKwArgs } from "@web/../tests/web_test_helpers";
 
@@ -25,15 +26,13 @@ export class MailMessage extends mailModels.MailMessage {
             store
         );
         for (const message of messages_w_author_livechat) {
-            store.add(
-                ResPartner.browse(message.author_id),
-                makeKwArgs({
-                    fields: ["is_company", "user_livechat_username", "user", "write_date"],
-                })
-            );
-            store.add("mail.message", {
-                id: message.id,
-                author: { id: message.author_id, type: "partner" },
+            store.add(this.browse(message.id), {
+                author: mailDataHelpers.Store.one(
+                    ResPartner.browse(message.author_id),
+                    makeKwArgs({
+                        fields: ["is_company", "user_livechat_username", "user", "write_date"],
+                    })
+                ),
             });
         }
     }

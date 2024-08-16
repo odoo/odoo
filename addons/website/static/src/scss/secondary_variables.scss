@@ -248,6 +248,20 @@ $o-theme-font-configs: map-merge($o-base-theme-font-configs, $o-theme-font-confi
     ));
 }
 
+// Add locally hosted uploaded fonts
+@each $font-name, $font-attach-id in (o-website-value('uploaded-local-fonts') or ()) {
+    // If a font exists both remotely and locally, we remove the remote font to
+    // prioritize the local font.
+    $o-theme-font-configs: map-remove($o-theme-font-configs, $font-name);
+    $o-theme-font-configs: map-merge($o-theme-font-configs, (
+        $font-name: (
+            'family': (quote($font-name), sans-serif),
+            'attachment': $font-attach-id,
+            'name': quote($font-name),
+        ),
+    ));
+}
+
 // Add odoo unicode support for all fonts
 @each $font-name, $font-config in $o-theme-font-configs {
     $o-theme-font-configs: map-merge($o-theme-font-configs, (

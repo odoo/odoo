@@ -27,6 +27,7 @@
                             icon="button.icon"
                             string="button.string"
                             title="button.title"
+                            attrs="button.attrs"
                         />
                     </t>
                 </t>
@@ -55,17 +56,11 @@
                                 icon="button.icon"
                                 string="button.string"
                                 title="button.title"
+                                attrs="button.attrs"
                             />
                         </t>
                         <t t-if="props.info.actionMenus">
-                            <ActionMenus
-                                getActiveIds="() => model.root.selection.map((r) => r.resId)"
-                                context="props.context"
-                                domain="props.domain"
-                                items="actionMenuItems"
-                                isDomainSelected="model.root.isDomainSelected"
-                                resModel="model.root.resModel"
-                                onActionExecuted="() => model.load()"/>
+                            <ActionMenus t-props="this.actionMenuProps"/>
                         </t>
                     </div>
                 </t>
@@ -75,7 +70,8 @@
                     archInfo="archInfo"
                     allowSelectors="props.allowSelectors"
                     editable="editable"
-                    onOpenFormView="onOpenFormView" 
+                    onOpenFormView="onOpenFormView"
+                    hasOpenFormViewButton="hasOpenFormViewButton"
                     openRecord.bind="openRecord"
                     noContentHelp="props.info.noContentHelp"
                     onAdd.bind="createRecord"

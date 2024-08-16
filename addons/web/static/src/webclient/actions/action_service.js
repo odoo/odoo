@@ -509,7 +509,7 @@ export function makeActionManager(env, router = _router) {
                     type: "ir.actions.act_window",
                     views: [[state.view_id ? state.view_id : false, "form"]],
                 };
-            } else if (state.view_type) {
+            } else {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
                 const storedAction = browser.sessionStorage.getItem("current_action");
@@ -631,6 +631,22 @@ export function makeActionManager(env, router = _router) {
         if (typeof groupBy === "string") {
             groupBy = [groupBy];
         }
+        const openFormView = (resId, { activeIds, mode } = {}) => {
+            if (target !== "new") {
+                if (_getView("form")) {
+                    return switchView("form", { mode, resId, resIds: activeIds });
+                } else {
+                    return doAction(
+                        {
+                            type: "ir.actions.act_window",
+                            res_model: action.res_model,
+                            views: [[false, "form"]],
+                        },
+                        { props: { mode, resId, resIds: activeIds } }
+                    );
+                }
+            }
+        };
         const viewProps = Object.assign({}, props, {
             context,
             display: { mode: target === "new" ? "inDialog" : target },
@@ -640,16 +656,8 @@ export function makeActionManager(env, router = _router) {
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
-            selectRecord: async (resId, { activeIds, mode }) => {
-                if (target !== "new" && _getView("form")) {
-                    await switchView("form", { mode, resId, resIds: activeIds });
-                }
-            },
-            createRecord: async () => {
-                if (target !== "new" && _getView("form")) {
-                    await switchView("form", { resId: false });
-                }
-            },
+            selectRecord: openFormView,
+            createRecord: () => openFormView(false),
         });
         const currentState = {
             resId: viewProps.resId,
@@ -1528,7 +1536,7 @@ export function makeActionManager(env, router = _router) {
                 throw new Error("Attempted to restore a virtual controller whose state is invalid");
             }
             const { actionRequest, options } = actionParams;
-            options.index = index;
+            controllerStack = controllerStack.slice(0, index);
             return doAction(actionRequest, options);
         }
         if (controller.action.type === "ir.actions.act_window") {
@@ -1555,7 +1563,12 @@ export function makeActionManager(env, router = _router) {
         if (actionParams) {
             // Params valid => performs a "doAction"
             const { actionRequest, options } = actionParams;
-            options.newStack = newStack;
+            if (options.index) {
+                options.newStack = newStack.slice(0, options.index);
+                delete options.index;
+            } else {
+                options.newStack = newStack;
+            }
             await doAction(actionRequest, options);
             return true;
         }

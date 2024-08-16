@@ -30,6 +30,7 @@ import {
     useRef,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 const formatters = registry.category("formatters");
 
@@ -79,6 +80,7 @@ export class ListRenderer extends Component {
         "allowSelectors?",
         "editable?",
         "onOpenFormView?",
+        "hasOpenFormViewButton?",
         "noContentHelp?",
         "nestedKeyOptionalFieldsData?",
         "optionalActiveFields?",
@@ -87,7 +89,9 @@ export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
         this.notificationService = useService("notification");
-        this.keyOptionalFields = this.createKeyOptionalFields();
+        const key = this.createViewKey();
+        this.keyOptionalFields = `optional_fields,${key}`;
+        this.keyDebugOpenView = `debug_open_view,${key}`;
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
@@ -129,6 +133,7 @@ export class ListRenderer extends Component {
         onWillRender(() => {
             this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
             Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
+            this.debugOpenView = exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView));
             this.columns = this.getActiveColumns(this.props.list);
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
         });
@@ -254,11 +259,19 @@ export class ListRenderer extends Component {
     }
 
     get hasOpenFormViewColumn() {
-        return !!this.props.onOpenFormView;
+        return this.props.hasOpenFormViewButton || this.debugOpenView;
+    }
+
+    get hasOptionalOpenFormViewColumn() {
+        return this.props.editable && this.env.debug && !this.props.hasOpenFormViewButton;
     }
 
     get hasActionsColumn() {
-        return !!(this.displayOptionalFields || this.activeActions.onDelete);
+        return !!(
+            this.displayOptionalFields ||
+            this.activeActions.onDelete ||
+            this.hasOptionalOpenFormViewColumn
+        );
     }
 
     add(params) {
@@ -282,8 +295,8 @@ export class ListRenderer extends Component {
             .filter(
                 (field) =>
                     field.relatedPropertyField &&
-                    field.relatedPropertyField.fieldName === column.name
-                    && field.type !== 'separator'
+                    field.relatedPropertyField.fieldName === column.name &&
+                    field.type !== "separator"
             )
             .map((propertyField) => {
                 return {
@@ -437,7 +450,7 @@ export class ListRenderer extends Component {
         });
     }
 
-    createKeyOptionalFields() {
+    createViewKey() {
         let keyParts = {
             fields: this.props.list.fieldNames, // FIXME: use something else?
             model: this.props.list.resModel,
@@ -455,7 +468,7 @@ export class ListRenderer extends Component {
         }
 
         const parts = ["model", "viewMode", "viewId", "relationalField", "subViewType"];
-        const viewIdentifier = ["optional_fields"];
+        const viewIdentifier = [];
         parts.forEach((partName) => {
             if (partName in keyParts) {
                 viewIdentifier.push(keyParts[partName]);
@@ -910,7 +923,7 @@ export class ListRenderer extends Component {
         } else {
             colspan = this.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }
-        if (this.props.onOpenFormView) {
+        if (this.hasOpenFormViewColumn) {
             colspan++;
         }
         return colspan;
@@ -1714,6 +1727,12 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
+        this.render();
+    }
+
+    toggleDebugOpenView() {
+        this.debugOpenView = !this.debugOpenView;
+        browser.localStorage.setItem(this.keyDebugOpenView, this.debugOpenView);
         this.render();
     }
 

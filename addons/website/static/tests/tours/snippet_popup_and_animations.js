@@ -6,14 +6,17 @@ const snippets = [
     {
         id: "s_popup",
         name: "Popup",
+        groupName: "Content",
     },
     {
         id: "s_media_list",
         name: "Media List",
+        groupName: "Content",
     },
     {
         id: "s_three_columns",
         name: "Columns",
+        groupName: "Content",
     },
 ];
 
@@ -42,8 +45,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         run: "click",
     },
     {
-        trigger: ":iframe #website_cookies_bar:not(.d-none)",
-        allowInvisible: true,
+        trigger: ":iframe #website_cookies_bar:not(.d-none):not(:visible)",
     },
     {
         content: "Scroll to top",
@@ -89,9 +91,14 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        content: "Drag the Columns building block and drop it at the bottom of the popup.",
-        trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        content: "Drag the Content snippet group and drop it at the bottom of the popup.",
+        trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
+    },
+    {
+        content: "Click on the s_three_columns snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_three_columns"]',
+        run: "click",
     },
     wTourUtils.clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),

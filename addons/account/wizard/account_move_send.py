@@ -693,21 +693,14 @@ class AccountMoveSend(models.TransientModel):
                 invoice_data['proforma_pdf_attachment'] = self.env['ir.attachment']\
                     .create(invoice_data.pop('proforma_pdf_attachment_values'))
 
-    def _download(self, attachment_ids, moves_data=None):
-        """ Download the PDF or the zip of PDF if we are in 'multi' mode. """
-        if len(attachment_ids) == 1:
-            return {
-                'type': 'ir.actions.act_url',
-                'url': f"/web/content/{attachment_ids[0]}?download=true",
-                'close': True,  # close the wizard
-            }
-        else:
-            filename = next(iter(moves_data))._get_invoice_report_filename(extension='zip') if len(moves_data) == 1 else _('invoices') + '.zip'
-            return {
-                'type': 'ir.actions.act_url',
-                'url': f"/account/export_zip_documents?{url_encode({'ids': attachment_ids, 'filename': filename})}",
-                'close': True,
-            }
+    @api.model
+    def _action_download(self, attachments):
+        """ Download the PDF attachment, or a zip of attachments if there are more than one. """
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_invoice_attachments/{",".join(map(str, attachments.ids))}',
+            'close': True,
+        }
 
     @api.model
     def _process_send_and_print(self, moves, wizard=None, allow_fallback_pdf=False, **kwargs):
@@ -753,13 +746,11 @@ class AccountMoveSend(models.TransientModel):
 
         to_download = {move: move_data for move, move_data in moves_data.items() if move_data.get('download')}
         if to_download:
-            attachment_ids = []
+            attachments = self.env['ir.attachment']
             for move, move_data in to_download.items():
-                attachment_ids += self._get_invoice_extra_attachments(move).ids or move_data.get('proforma_pdf_attachment').ids
-            if attachment_ids:
-                if kwargs.get('bypass_download'):
-                    return attachment_ids
-                return self._download(attachment_ids, to_download)
+                attachments += self._get_invoice_extra_attachments(move) or move_data.get('proforma_pdf_attachment')
+            if attachments:
+                return self._action_download(attachments)
 
         return {'type': 'ir.actions.act_window_close'}
 

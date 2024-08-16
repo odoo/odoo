@@ -7,21 +7,13 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
+registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
     test: true,
     steps: () =>
         [
             Dialog.confirm("Open session"),
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
-            {
-                content: "check that amount is not displayed if zero",
-                trigger: `article.product .product-content:not(:has(.price-tag:contains("0")))`,
-            },
-            {
-                content: "check that amount is properly displayed when it is not 0",
-                trigger: `article.product .product-content .product-name:contains("Combo Product 3") ~.price-tag:contains("2.60")`,
-            },
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
@@ -80,7 +72,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
+registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
     test: true,
     url: "/pos/ui",
     steps: () =>
@@ -96,5 +88,43 @@ registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.0", "0.96"),
             ProductScreen.totalAmountIs("7.00"),
             ProductScreen.clickPayButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductComboChangeFP", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+
+            ProductScreen.selectedOrderlineHas("Office Combo"),
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "8.33"),
+            ProductScreen.clickOrderline("Combo Product 4"),
+            ProductScreen.selectedOrderlineHas("Combo Product 4", "1.0", "16.67"),
+            ProductScreen.clickOrderline("Combo Product 6"),
+            ProductScreen.selectedOrderlineHas("Combo Product 6", "1.0", "25.00"),
+            ProductScreen.totalAmountIs("50.00"),
+            inLeftSide(Order.hasTax("4.55")),
+
+            // Test than changing the fp, doesn't change the price of the combo
+            ProductScreen.clickFiscalPosition("test fp"),
+            ProductScreen.clickOrderline("Office Combo"),
+            ProductScreen.selectedOrderlineHas("Office Combo"),
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "8.33"),
+            ProductScreen.clickOrderline("Combo Product 4"),
+            ProductScreen.selectedOrderlineHas("Combo Product 4", "1.0", "16.67"),
+            ProductScreen.clickOrderline("Combo Product 6"),
+            ProductScreen.selectedOrderlineHas("Combo Product 6", "1.0", "25.00"),
+            ProductScreen.totalAmountIs("50.00"),
+            inLeftSide(Order.hasTax("2.38")),
+            ProductScreen.isShown(),
         ].flat(),
 });

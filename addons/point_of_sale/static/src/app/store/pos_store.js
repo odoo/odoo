@@ -14,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
@@ -25,12 +26,11 @@ import {
 import { deserializeDate } from "@web/core/l10n/dates";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
-import { computeComboLines } from "../models/utils/compute_combo_lines";
+import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
-import { ReceiptScreen } from "../screens/receipt_screen/receipt_screen";
-import { PaymentScreen } from "../screens/payment_screen/payment_screen";
+import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 
 const { DateTime } = luxon;
 
@@ -50,6 +50,7 @@ export class PosStore extends Reactive {
         "printer",
         "action",
         "alert",
+        "sound",
     ];
     constructor() {
         super();
@@ -70,6 +71,7 @@ export class PosStore extends Reactive {
             pos_data,
             action,
             alert,
+            sound,
         }
     ) {
         this.env = env;
@@ -82,6 +84,7 @@ export class PosStore extends Reactive {
         this.data = pos_data;
         this.action = action;
         this.alert = alert;
+        this.sound = sound;
         this.notification = notification;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
@@ -407,7 +410,7 @@ export class PosStore extends Reactive {
     get productListViewMode() {
         const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
         if (viewMode === "grid") {
-            return "d-grid gap-1";
+            return "d-grid gap-2";
         } else {
             return "";
         }
@@ -606,7 +609,7 @@ export class PosStore extends Reactive {
                 return;
             }
 
-            const comboPrices = computeComboLines(
+            const comboPrices = computeComboItems(
                 values.product_id,
                 payload,
                 order.pricelist_id,
@@ -614,24 +617,24 @@ export class PosStore extends Reactive {
                 this.data.models["product.template.attribute.value"].getAllBy("id")
             );
 
-            values.combo_line_ids = comboPrices.map((comboLine) => [
+            values.combo_line_ids = comboPrices.map((comboItem) => [
                 "create",
                 {
-                    product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => [
+                    product_id: comboItem.combo_item_id.product_id,
+                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
                         "link",
                         tax,
                     ]),
-                    combo_line_id: comboLine.combo_line_id,
-                    price_unit: comboLine.price_unit,
+                    combo_item_id: comboItem.combo_item_id,
+                    price_unit: comboItem.price_unit,
                     order_id: order,
                     qty: 1,
-                    attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => [
+                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
                     ]),
                     custom_attribute_value_ids: Object.entries(
-                        comboLine.attribute_custom_values
+                        comboItem.attribute_custom_values
                     ).map(([id, cus]) => {
                         return [
                             "create",
@@ -690,6 +693,7 @@ export class PosStore extends Reactive {
             if (values.product_id.isScaleAvailable) {
                 const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen, {
                     product: values.product_id,
+                    taxIncluded: this.config.iface_tax_included === "total",
                 });
                 if (!weight) {
                     return;
@@ -877,6 +881,7 @@ export class PosStore extends Reactive {
 
         const order = this.createNewOrder(data);
         this.selectedOrderUuid = order.uuid;
+        this.searchProductWord = "";
         return order;
     }
 
@@ -1562,13 +1567,25 @@ export class PosStore extends Reactive {
     }
 
     showBackButton() {
-        const screenWoBackBtn = [ProductScreen, ReceiptScreen, PaymentScreen, TicketScreen];
-        const screenWoBackBtnMobile = [ProductScreen, ReceiptScreen];
         return (
-            !screenWoBackBtn.includes(this.mainScreen.component) ||
-            (this.ui.isSmall && !screenWoBackBtnMobile.includes(this.mainScreen.component)) ||
+            (this.ui.isSmall && this.mainScreen.component !== ProductScreen) ||
             (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
         );
+    }
+    async onClickBackButton() {
+        if (this.mainScreen.component === TicketScreen) {
+            if (this.ticket_screen_mobile_pane == "left") {
+                this.closeScreen();
+            } else {
+                this.ticket_screen_mobile_pane = "left";
+            }
+        } else if (
+            this.mobile_pane == "left" ||
+            [PaymentScreen, ActionScreen].includes(this.mainScreen.component)
+        ) {
+            this.mobile_pane = this.mainScreen.component === PaymentScreen ? "left" : "right";
+            this.showScreen("ProductScreen");
+        }
     }
 
     showSearchButton() {
@@ -1663,7 +1680,7 @@ export class PosStore extends Reactive {
     }
 
     redirectToBackend() {
-        window.location = "/web#action=point_of_sale.action_client_pos_menu";
+        window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
     }
 
     getDisplayDeviceIP() {

@@ -1,4 +1,5 @@
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
 export function confirmPopup() {
     return [Dialog.confirm()];
@@ -6,7 +7,7 @@ export function confirmPopup() {
 export function clickMenuButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".pos-rightheader button.fa-bars",
+        trigger: ".pos-rightheader button:has(.fa-bars)",
         run: "click",
     };
 }
@@ -38,5 +39,17 @@ export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
         trigger: "body",
+    };
+}
+export function isSyncStatusConnected() {
+    return {
+        trigger: negate(".oe_status", ".pos-rightheader .status-buttons"),
+    };
+}
+export function clickPlanButton() {
+    return {
+        content: "go back to the floor screen",
+        trigger: ".pos-leftheader .back-button",
+        run: "click",
     };
 }

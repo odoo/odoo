@@ -217,6 +217,7 @@
                                 <kanban color="color">
                                     <field name="color"/>
                                     <field name="type"/>
+                                    <field name="is_company"/>
                                     <templates>
                                         <t t-name="kanban-card" class="flex-row">
                                             <aside class="o_kanban_aside_full">
@@ -413,7 +414,7 @@
                             </aside>
                             <main class="ps-2 ps-md-0">
                                 <div class="mb-1">
-                                    <field name="display_name" class="mb-0 h5"/>
+                                    <field name="display_name" class="mb-0 fw-bold fs-5"/>
                                     <field t-if="record.parent_id.raw_value and !record.function.raw_value" class="text-muted" name="parent_id"/>
                                     <field t-elif="!record.parent_id.raw_value and record.function.raw_value" class="text-muted" name="function"/>
                                     <div t-elif="record.parent_id.raw_value and record.function.raw_value" class="text-muted">

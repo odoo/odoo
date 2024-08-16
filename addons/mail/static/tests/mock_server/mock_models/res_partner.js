@@ -9,6 +9,7 @@ export class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
 
     description = fields.Char({ string: "Description" });
+    hasWriteAccess = fields.Boolean({ default: true });
     message_main_attachment_id = fields.Many2one({
         relation: "ir.attachment",
         string: "Main attachment",
@@ -72,7 +73,7 @@ export class ResPartner extends webModels.ResPartner {
 
         // add main suggestions based on users
         const partnersFromUsers = ResUsers._filter([])
-            .map((user) => this._filter([["id", "=", user.partner_id]])[0])
+            .map((user) => this.browse(user.partner_id)[0])
             .filter((partner) => partner);
         const mainMatchingPartnerIds = mentionSuggestionsFilter(partnersFromUsers, search, limit);
 
@@ -145,7 +146,7 @@ export class ResPartner extends webModels.ResPartner {
 
         // add main suggestions based on users
         const partnersFromUsers = ResUsers._filter([])
-            .map((user) => this._filter([["id", "=", user.partner_id]])[0])
+            .map((user) => this.browse(user.partner_id)[0])
             .filter((partner) => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
         let extraMatchingPartners = [];
@@ -190,7 +191,7 @@ export class ResPartner extends webModels.ResPartner {
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartnersIds = ResUsers._filter([])
             .filter((user) => {
-                const partner = this._filter([["id", "=", user.partner_id]])[0];
+                const [partner] = this.browse(user.partner_id);
                 // user must have a partner
                 if (!partner) {
                     return false;
@@ -237,7 +238,16 @@ export class ResPartner extends webModels.ResPartner {
         for (const partner of this.browse(ids)) {
             const [data] = this.read(
                 partner.id,
-                fields.filter((field) => !["country", "display_name", "user"].includes(field)),
+                fields.filter(
+                    (field) =>
+                        ![
+                            "country",
+                            "display_name",
+                            "isAdmin",
+                            "notification_type",
+                            "user",
+                        ].includes(field)
+                ),
                 false
             );
             if (fields.includes("country")) {
@@ -254,7 +264,7 @@ export class ResPartner extends webModels.ResPartner {
                 data.displayName = partner.display_name || partner.name;
             }
             if (fields.includes("user")) {
-                const users = ResUsers._filter([["id", "in", partner.user_ids]]);
+                const users = ResUsers.browse(partner.user_ids);
                 const internalUsers = users.filter((user) => !user.share);
                 let mainUser;
                 if (internalUsers.length > 0) {
@@ -264,8 +274,14 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 data.userId = mainUser ? mainUser.id : false;
                 data.isInternalUser = mainUser ? !mainUser.share : false;
+                if (fields.includes("isAdmin")) {
+                    data.isAdmin = true; // mock server simplification
+                }
+                if (fields.includes("notification_type")) {
+                    data.notification_preference = mainUser.notification_type;
+                }
             }
-            store.add("res.partner", data);
+            store.add(this.browse(partner.id), data);
         }
     }
 
@@ -294,7 +310,7 @@ export class ResPartner extends webModels.ResPartner {
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartnersIds = ResUsers._filter([])
             .filter((user) => {
-                const partner = this._filter([["id", "=", user.partner_id]])[0];
+                const [partner] = this.browse(user.partner_id);
                 // user must have a partner
                 if (!partner) {
                     return false;
@@ -332,7 +348,7 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const partner = this._filter([["id", "=", id]])[0];
+        const [partner] = this.browse(id);
         return MailNotification._filter([
             ["res_partner_id", "=", partner.id],
             ["is_read", "=", false],
@@ -348,6 +364,6 @@ export class ResPartner extends webModels.ResPartner {
         if (ResUsers._is_public(this.env.uid)) {
             return [null, MailGuest._get_guest_from_context()];
         }
-        return [this._filter([["id", "=", this.env.user.partner_id]])[0], null];
+        return [this.browse(this.env.user.partner_id)[0], null];
     }
 }

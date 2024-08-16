@@ -25,8 +25,6 @@ from types import CodeType
 import werkzeug
 from psycopg2 import OperationalError
 
-from .misc import ustr
-
 import odoo
 
 unsafe_eval = eval
@@ -100,6 +98,8 @@ _CONST_OPCODES = set(to_opcodes([
     'COPY', 'SWAP',
     # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
+    'RETURN_CONST',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -124,7 +124,6 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'GEN_START',  # added in 3.10 but already removed from 3.11.
     # Added in 3.11, replacing all BINARY_* and INPLACE_*
     'BINARY_OP',
-    'RETURN_CONST',
     'BINARY_SLICE',
 ])) - _BLACKLIST
 
@@ -169,7 +168,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'PUSH_EXC_INFO',
     'NOP',
     'FORMAT_VALUE', 'BUILD_STRING',
-    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#new-opcodes
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
     'END_FOR',
     'LOAD_FAST_AND_CLEAR', 'LOAD_FAST_CHECK',
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
@@ -252,7 +251,7 @@ def test_expr(expr, allowed_codes, mode="eval", filename=None):
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
-        raise ValueError('"%s" while compiling\n%r' % (ustr(e), expr))
+        raise ValueError('%r while compiling\n%r' % (e, expr))
     assert_valid_codeobj(allowed_codes, code_obj, expr)
     return code_obj
 
@@ -401,7 +400,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except ZeroDivisionError:
         raise
     except Exception as e:
-        raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
+        raise ValueError('%r while evaluating\n%r' % (e, expr))
 def test_python_expr(expr, mode="eval"):
     try:
         test_expr(expr, _SAFE_OPCODES, mode=mode)
@@ -416,7 +415,7 @@ def test_python_expr(expr, mode="eval"):
             }
             msg = "%s : %s at line %d\n%s" % (type(err).__name__, error['message'], error['lineno'], error['error_line'])
         else:
-            msg = ustr(err)
+            msg = str(err)
         return msg
     return False
 
@@ -465,13 +464,20 @@ import dateutil
 mods = ['parser', 'relativedelta', 'rrule', 'tz']
 for mod in mods:
     __import__('dateutil.%s' % mod)
+# make sure to patch pytz before exposing
+from odoo._monkeypatches.pytz import patch_pytz  # noqa: E402, F401
+patch_pytz()
+
 datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
 dateutil = wrap_module(dateutil, {
-    mod: getattr(dateutil, mod).__all__
-    for mod in mods
+    "tz": ["UTC", "tzutc"],
+    "parser": ["isoparse", "parse"],
+    "relativedelta": ["relativedelta", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
+    "rrule": ["rrule", "rruleset", "rrulestr", "YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
 time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])
+dateutil.tz.gettz = pytz.timezone

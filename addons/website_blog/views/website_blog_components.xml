@@ -102,12 +102,12 @@
         <div t-if="not hide_title and categ_title" class="text-muted mb-1 h6" t-esc="categ_title"/>
         <t t-foreach="tags" t-as="tag">
             <t t-if="tag.post_ids">
-                <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline border d-inline-flex ps-2 rounded mb-2 fs-6 o_tag #{'o_tag_color_%s' % tag.color}">
-                    <i class="fa fa-tag me-2 text-muted"/>
+                <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
+                    <i class="fa fa-tag me-2"/>
                     <t t-esc="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_tag_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
             </t>
         </t>
     </t>
@@ -300,14 +300,14 @@ Display a sidebar beside the post content.
             <t t-if="blog_post.tag_ids">
                 <div class="h5">
                     <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                        <a t-attf-class="badge border post_link text-decoration-none text-primary o_tag o_tag_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
+                        <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
                     </t>
                 </div>
             </t>
             <t t-else="">
                 <div class="mb-4 bg-100 py-2 px-3 border" groups="website.group_website_designer">
                     <h6 class="text-muted"><em>No tags defined</em></h6>
-                    <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
+                    <a role="menuitem" t-attf-href="/odoo/action-{action}/{main_object.id}?menu_id={menu or main_object.env.ref('website.menu_website_configuration').id}"
                         title='Edit in backend' id="edit-in-backend">Add some</a>
                 </div>
             </t>

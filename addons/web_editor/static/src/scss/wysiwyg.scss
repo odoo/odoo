@@ -298,10 +298,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             min-width: 0;
         }
 
-        &:not(.colorpicker-menu) > li:last-child {
-            margin-bottom: 1em;
-        }
-
         &.colorpicker-menu {
             margin-top: 0;
             min-width: 222px !important;
@@ -769,7 +765,9 @@ textarea.o_codeview {
 button.o-message-insert {
     line-height: 1;
 }
-.o-chatgpt-message > div > *:last-child, .o-chatgpt-alternative > *:last-child {
+.o-chatgpt-message > div > *:last-child,
+.o-chatgpt-alternative > *:last-child,
+.o-chatgpt-translated > *:last-child {
     margin-bottom: 0;
 }
 .o-message-error {

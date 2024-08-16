@@ -9,9 +9,10 @@ import { Plugin } from "../../plugin";
 export class SearchPowerboxPlugin extends Plugin {
     static name = "search_powerbox";
     static dependencies = ["powerbox", "selection", "history"];
+    /** @type { (p: SearchPowerboxPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        onBeforeInput: p.onBeforeInput.bind(p),
-        onInput: p.onInput.bind(p),
+        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
+        onInput: { handler: p.onInput.bind(p) },
     });
     setup() {
         const categoryIds = new Set();
@@ -22,7 +23,7 @@ export class SearchPowerboxPlugin extends Plugin {
             categoryIds.add(category.id);
         }
         this.categories = this.resources.powerboxCategory.sort((a, b) => a.sequence - b.sequence);
-        this.commands = this.resources.powerboxCommands.map((command) => ({
+        this.commands = this.resources.powerboxItems.map((command) => ({
             ...command,
             categoryName: this.categories.find((category) => category.id === command.category).name,
         }));

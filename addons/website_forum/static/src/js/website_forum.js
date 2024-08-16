@@ -11,7 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -54,7 +54,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-start').removeClass('float-start');
 
         // welcome message action button
-        var forumLogin = `${window.location.origin}/web?redirect=${encodeURIComponent(window.location.href)}`
+        var forumLogin = `${window.location.origin}/odoo?redirect=${encodeURIComponent(window.location.href)}`
         $('.forum_register_url').attr('href', forumLogin);
 
         // Initialize forum's tooltips
@@ -173,7 +173,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
             const replyEl = document.querySelector('#post_reply');
-            const scrollingElement = $(replyEl.parentNode).closestScrollable()[0];
+            const scrollingElement = closestScrollableY(replyEl.parentNode);
             scrollTo(replyEl, {
                 behavior: "smooth",
                 offset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
@@ -378,7 +378,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     if (countFlaggedPosts) {
                         countFlaggedPosts.classList.remove('bg-light');
                         countFlaggedPosts.classList.remove('d-none');
-                        countFlaggedPosts.classList.add('bg-danger');
+                        countFlaggedPosts.classList.add('text-bg-danger');
                         countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
                     }
                     $(elem).nextAll('.flag_validator').removeClass('d-none');

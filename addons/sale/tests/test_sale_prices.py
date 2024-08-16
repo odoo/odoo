@@ -19,6 +19,7 @@ class TestSalePrices(SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls._enable_discounts()
         cls.discount = 10  # %
 
         # Needed when run without demo data
@@ -269,10 +270,10 @@ class TestSalePrices(SaleCommon):
 
         self.pricelist.write({
             'item_ids': [Command.create({
-                'compute_price': 'formula',
+                'compute_price': 'percentage',
                 'base': 'pricelist',
                 'base_pricelist_id': base_pricelist.id,
-                'price_discount': 10,
+                'percent_price': 10,
                 'applied_on': '3_global',
                 'name': 'Second discount',
             })],
@@ -505,7 +506,7 @@ class TestSalePrices(SaleCommon):
         ]
         sale_order._recompute_prices()
 
-        self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
+        self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
         self.assertEqual(sale_order.amount_undiscounted, so_amount)
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
@@ -994,3 +995,84 @@ class TestSalePrices(SaleCommon):
             line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision))
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
         self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))
+
+    def test_show_discount(self):
+        """
+            Test that discount is shown only when compute_price is percentage
+            If compute_price is formula, discount should be included in price.
+        """
+        test_product_discount = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100.0,
+            'taxes_id': None,
+        })
+        test_product_incl_discount = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100.0,
+            'taxes_id': None,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': test_product_discount.id,
+                    'product_uom_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': test_product_incl_discount.id,
+                    'product_uom_qty': 1,
+                })
+            ]
+        })
+
+        self.assertEqual(200, sale_order.amount_total)
+        base_discount_pricelist = self.env['product.pricelist'].create({
+            'name': 'Base Discount Pricelist',
+            'item_ids': [
+                Command.create({
+                    'name': 'Discount',
+                    'applied_on': '1_product',
+                    'product_tmpl_id':  test_product_discount.product_tmpl_id.id,
+                    'compute_price': 'percentage',
+                    'percent_price': 10,
+                }),
+                Command.create({
+                    'name': 'Formula',
+                    'applied_on': '1_product',
+                    'product_tmpl_id':  test_product_incl_discount.product_tmpl_id.id,
+                    'compute_price': 'formula',
+                    'price_discount': 10,
+                }),
+            ]})
+
+        sale_order.pricelist_id = base_discount_pricelist
+        sale_order._recompute_prices()
+        show_discount_line = sale_order.order_line[0]
+        included_discount_line = sale_order.order_line[1]
+
+        self.assertEqual(show_discount_line.price_unit, 100)
+        self.assertEqual(show_discount_line.price_subtotal, show_discount_line.price_unit * 0.9)
+        self.assertEqual(show_discount_line.discount, 10)
+        self.assertEqual(included_discount_line.price_unit, included_discount_line.price_subtotal)
+        self.assertEqual(included_discount_line.discount, 0)
+
+        # Test with discount based on other pricelist
+        discount_pricelist = self.env['product.pricelist'].create({
+            'name': 'Discount Pricelist',
+            'item_ids': [
+                Command.create({
+                    'name': 'Discount based on pricelist',
+                    'applied_on': '1_product',
+                    'product_tmpl_id': test_product_discount.product_tmpl_id.id,
+                    'compute_price': 'percentage',
+                    'percent_price': 10,
+                    'base': 'pricelist',
+                    'base_pricelist_id': base_discount_pricelist.id,
+                }),
+            ]})
+        sale_order.pricelist_id = discount_pricelist
+        sale_order._recompute_prices()
+
+        self.assertEqual(show_discount_line.price_unit, 100)
+        self.assertEqual(show_discount_line.price_subtotal, show_discount_line.price_unit * 0.81)
+        self.assertEqual(show_discount_line.discount, 19)

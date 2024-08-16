@@ -6,6 +6,7 @@ patch(MockPosData.prototype, {
         const data = super.data;
         data["models"]["loyalty.reward"] = { relations: {}, fields: {}, data: [] };
         data["models"]["loyalty.program"] = { relations: {}, fields: {}, data: [] };
+        data["models"]["loyalty.rule"] = { relations: {}, fields: {}, data: [] };
         return data;
     },
 });

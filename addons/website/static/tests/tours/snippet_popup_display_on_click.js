@@ -8,11 +8,10 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
-    ...wTourUtils.dragNDrop({id: "s_popup", name: "Popup"}),
+    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
+    ...wTourUtils.dragNDrop({id: "s_popup", name: "Popup", groupName: "Content"}),
     {
         content: "Click inside the popup to access its options menu.",
-        in_modal: false,
         trigger: ":iframe .s_popup .s_banner",
         run: "click",
     },
@@ -20,7 +19,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "Click on the display 'On Click' option",
         trigger: "#oe_snippets we-button[data-name='onclick_opt']",
-        in_modal: false,
         run(helpers) {
             // Patch and ignore write on clipboard in tour as we don't have permissions
             const oldWriteText = browser.navigator.clipboard.writeText;
@@ -52,7 +50,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens after clicked the button.",
-        in_modal: false,
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
         run: "click",
     },
@@ -68,7 +65,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         run: () => null, // it"s a check
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
+    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
     wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Add a link to the homepage in the URL input",
@@ -92,7 +89,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     },
     {
         content: "Verify that the popup opens when the homepage page loads.",
-        in_modal: false,
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
     },
 ]);

@@ -56,7 +56,7 @@
 
 <t t-name="mail.ActivityViewBody">
     <tbody>
-        <t t-foreach="activityResIds" t-as="resId" t-key="resId">
+        <t t-foreach="props.activityResIds" t-as="resId" t-key="resId">
             <t t-call="mail.ActivityViewRow"/>
         </t>
     </tbody>

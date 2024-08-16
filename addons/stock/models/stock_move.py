@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+from ast import literal_eval
 from collections import defaultdict
 from datetime import timedelta
 from operator import itemgetter
@@ -78,10 +78,10 @@ class StockMove(models.Model):
         help='The operations brings product to this location', readonly=False,
         index=True, store=True, compute='_compute_location_dest_id', precompute=True, inverse='_set_location_dest_id')
     location_final_id = fields.Many2one(
-        'stock.location', 'Destination Location',
+        'stock.location', 'Final Location',
         readonly=False, store=True,
         help="The operation brings the products to the intermediate location."
-        "But this operation is part of a chain of operations targeting the destination location.",
+        "But this operation is part of a chain of operations targeting the final location.",
         auto_join=True, index=True, check_company=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
@@ -708,6 +708,15 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move_to_check_location.procure_method = 'make_to_stock'
                     move_to_check_location.move_orig_ids = [Command.clear()]
                     ml.unlink()
+        if 'location_id' in vals or 'location_dest_id' in vals:
+            wh_by_moves = defaultdict(self.env['stock.move'].browse)
+            for move in self:
+                move_warehouse = move.location_id.warehouse_id or move.location_dest_id.warehouse_id
+                if move_warehouse == move.warehouse_id:
+                    continue
+                wh_by_moves[move_warehouse] |= move
+            for warehouse, moves in wh_by_moves.items():
+                moves.warehouse_id = warehouse.id
         if move_to_confirm:
             move_to_confirm._action_assign()
         if receipt_moves_to_reassign:
@@ -1002,12 +1011,22 @@ Please change the quantity done or the rounding precision of your unit of measur
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
-            else:
-                procurement_group = self.env['procurement.group'].sudo()
+
+            ProcurementGroup = self.env['procurement.group']
+            if move.location_dest_id.company_id != self.env.company:
+                ProcurementGroup = self.env['procurement.group'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
-                rule = procurement_group._search_rule(move.route_ids, move.product_packaging_id, move.product_id, False, domain)
+                warehouse_id = False
+
+            rule = ProcurementGroup._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+
+            excluded_rule_ids = []
+            while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
+                excluded_rule_ids.append(rule.id)
+                rule = ProcurementGroup._search_rule(
+                    move.route_ids, move.product_packaging_id, move.product_id, warehouse_id,
+                    expression.AND([[('id', 'not in', excluded_rule_ids)], domain]))
+
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
@@ -2070,14 +2089,14 @@ Please change the quantity done or the rounding precision of your unit of measur
             taken_qty = min(qty, ml_qty)
             # Convert taken qty into move line uom
             if ml.product_uom_id != self.product_uom:
-                taken_qty = self.product_uom._compute_quantity(ml_qty, ml.product_uom_id, round=False)
+                taken_qty = self.product_uom._compute_quantity(taken_qty, ml.product_uom_id, round=False)
 
             # Assign qty_done and explicitly round to make sure there is no inconsistency between
             # ml.qty_done and qty.
             taken_qty = float_round(taken_qty, precision_rounding=ml.product_uom_id.rounding)
             res.append((1, ml.id, {'quantity': taken_qty}))
             if ml.product_uom_id != self.product_uom:
-                taken_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
+                taken_qty = ml.product_uom_id._compute_quantity(taken_qty, self.product_uom, round=False)
             qty -= taken_qty
 
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
@@ -2172,8 +2191,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 ('location_id', 'parent_of', move.location_id.id),
                 ('company_id', '=', move.company_id.id),
                 '!', ('location_id', 'parent_of', move.location_dest_id.id),
-                '|', ('snoozed_until', '=', False),
-                ('snoozed_until', '<=', fields.Date.today()),
             ], limit=1)
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint

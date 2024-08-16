@@ -5,7 +5,9 @@ import { parseRegExp } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { EXCLUDE_PREFIX } from "../core/url";
 import { formatTime, getFuzzyScore, normalize } from "../hoot_utils";
+import { HootLogCounters } from "./hoot_log_counters";
 import { HootJobButtons } from "./hoot_job_buttons";
+import { HootTechnicalValue } from "./hoot_technical_value";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
 
@@ -43,20 +45,53 @@ const COLORS = {
 
 /** @extends {Component<HootReportingProps, import("../hoot").Environment>} */
 export class HootReporting extends Component {
-    static components = { HootJobButtons, HootTestPath, HootTestResult };
+    static components = {
+        HootLogCounters,
+        HootJobButtons,
+        HootTechnicalValue,
+        HootTestPath,
+        HootTestResult,
+    };
 
     static props = {};
 
     static template = xml`
         <div class="${HootReporting.name} flex-1 overflow-y-auto">
+            <!-- Errors -->
+            <t t-foreach="runnerState.globalErrors" t-as="key" t-key="key">
+                <t t-set="error" t-value="runnerState.globalErrors[key]" />
+                <div
+                    class="flex flex-col justify-center px-3 py-2 gap-2 border-muted border-b text-fail bg-fail-900"
+                    t-att-title="error.message"
+                >
+                    <h3 class="flex items-center gap-1 whitespace-nowrap">
+                        <span class="min-w-3 min-h-3 rounded-full bg-fail" />
+                        Global <t t-esc="error.name" />
+                        <span t-if="error.count > 1">
+                            (x<t t-esc="error.count" />)
+                        </span>:
+                        <small class="ms-auto text-muted whitespace-nowrap italic font-normal">
+                            stack trace available in the console
+                        </small>
+                    </h3>
+                    <ul>
+                        <t t-foreach="error.message.split('\n')" t-as="messagePart" t-key="messagePart_index">
+                            <li class="truncate" t-esc="messagePart" />
+                        </t>
+                    </ul>
+                </div>
+            </t>
+
+            <!-- Test results -->
             <t t-set="resultStart" t-value="uiState.resultsPage * uiState.resultsPerPage" />
             <t t-foreach="filteredResults.slice(resultStart, resultStart + uiState.resultsPerPage)" t-as="result" t-key="result.id">
                 <HootTestResult
                     open="state.openTests.includes(result.test.id)"
                     test="result.test"
                 >
-                    <div class="flex gap-2 overflow-hidden">
+                    <div class="flex items-center gap-2 overflow-hidden">
                         <HootTestPath canCopy="true" showStatus="true" test="result.test" />
+                        <HootLogCounters logs="result.test.logs" />
                     </div>
                     <div class="flex items-center ms-1 gap-2">
                         <small
@@ -77,11 +112,13 @@ export class HootReporting extends Component {
                     </div>
                 </HootTestResult>
             </t>
+
+            <!-- "No test" panel -->
             <t t-if="!filteredResults.length">
-                <em class="text-center text-muted w-full p-4 whitespace-nowrap">
+                <div class="flex items-center justify-center h-full">
                     <t t-set="message" t-value="getEmptyMessage()" />
                     <t t-if="message">
-                        <div>
+                        <em class="p-5 rounded bg-gray-200 dark:bg-gray-800 whitespace-nowrap text-muted">
                             No
                             <span
                                 t-if="message.statusFilter"
@@ -97,21 +134,69 @@ export class HootReporting extends Component {
                                 in suite
                                 <strong class="text-primary" t-esc="message.selectedSuiteName" />
                             </t>.
-                        </div>
+                        </em>
                     </t>
                     <t t-else="">
-                        <div class="mb-2">
-                            No tests to show.
-                        </div>
-                        <div>
-                            Click on a
-                            <span class="text-primary">suite</span>
-                            or toggle
-                            <span class="text-primary">filters</span>
-                            to see tests.
+                        <div class="flex flex-col gap-3 p-5 rounded bg-gray-200 dark:bg-gray-800">
+                            <h3 class="border-b border-muted pb-1">
+                                <strong class="text-primary" t-esc="runnerReporting.tests" />
+                                /
+                                <span class="text-primary" t-esc="runnerState.tests.length" />
+                                tests completed
+                            </h3>
+                            <ul class="flex flex-col gap-2">
+                                <t t-if="runnerReporting.passed">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-pass"
+                                            t-on-click="() => this.filterResults('passed')"
+                                        >
+                                            <i class="fa fa-check-circle" />
+                                            <strong t-esc="runnerReporting.passed" />
+                                        </button>
+                                        tests passed
+                                    </li>
+                                </t>
+                                <t t-if="runnerReporting.failed">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-fail"
+                                            t-on-click="() => this.filterResults('failed')"
+                                        >
+                                            <i class="fa fa-times-circle" />
+                                            <strong t-esc="runnerReporting.failed" />
+                                        </button>
+                                        tests failed
+                                    </li>
+                                </t>
+                                <t t-if="runnerReporting.skipped">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-skip"
+                                            t-on-click="() => this.filterResults('skipped')"
+                                        >
+                                            <i class="fa fa-pause-circle" />
+                                            <strong t-esc="runnerReporting.skipped" />
+                                        </button>
+                                        tests skipped
+                                    </li>
+                                </t>
+                                <t t-if="runnerReporting.todo">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-todo"
+                                            t-on-click="() => this.filterResults('todo')"
+                                        >
+                                            <i class="fa fa-exclamation-circle" />
+                                            <strong t-esc="runnerReporting.todo" />
+                                        </button>
+                                        tests to do
+                                    </li>
+                                </t>
+                            </ul>
                         </div>
                     </t>
-                </em>
+                </div>
             </t>
         </div>
     `;
@@ -123,6 +208,7 @@ export class HootReporting extends Component {
         const { runner, ui } = this.env;
 
         this.config = useState(runner.config);
+        this.runnerReporting = useState(runner.reporting);
         this.runnerState = useState(runner.state);
         this.state = useState({
             /** @type {string[]} */
@@ -207,6 +293,18 @@ export class HootReporting extends Component {
         return results.sort(
             sortResults === "asc" ? sortByDurationAscending : sortByDurationDescending
         );
+    }
+
+    /**
+     * @param {typeof this.uiState.statusFilter} status
+     */
+    filterResults(status) {
+        this.uiState.resultsPage = 0;
+        if (this.uiState.statusFilter === status) {
+            this.uiState.statusFilter = null;
+        } else {
+            this.uiState.statusFilter = status;
+        }
     }
 
     getEmptyMessage() {

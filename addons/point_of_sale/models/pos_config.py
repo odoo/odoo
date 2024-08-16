@@ -25,11 +25,8 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        return self.env['account.journal'].search([
-            *self.env['account.journal']._check_company_domain(self.env.company),
-            ('type', 'in', ('sale', 'general')),
-            ('code', '=', 'POSS'),
-        ], limit=1)
+        journal = self.env['account.journal']._ensure_company_account_journal()
+        return journal
 
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([
@@ -50,6 +47,9 @@ class PosConfig(models.Model):
         non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
         available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
                                                                             ('config_ids', '=', False)], limit=1)
+        if not (non_cash_pm or available_cash_pm):
+            _dummy, payment_methods = self._create_journal_and_payment_methods()
+            return self.env['pos.payment.method'].browse(payment_methods)
         return non_cash_pm | available_cash_pm
 
     def _get_group_pos_manager(self):
@@ -158,7 +158,6 @@ class PosConfig(models.Model):
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
-    module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
@@ -322,7 +321,7 @@ class PosConfig(models.Model):
                 if pm.journal_id and pm.journal_id.currency_id and pm.journal_id.currency_id != config.currency_id:
                     raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
-            if config.use_pricelist and config.pricelist_id and any(config.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != config.currency_id)):
+            if config.use_pricelist and any(config.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != config.currency_id)):
                 raise ValidationError(_("All available pricelists must be in the same currency as the company or"
                                         " as the Sales Journal set on this point of sale if you use"
                                         " the Accounting application."))
@@ -757,7 +756,7 @@ class PosConfig(models.Model):
         product_ids = [r[0] for r in self.env.execute_query(sql)]
         products = self.env['product.product'].browse(product_ids)
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
-        product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
+        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
         products_available = products | product_in_combo
         return products_available.read(fields, load=False)
 

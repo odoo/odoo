@@ -8,117 +8,181 @@
             <t t-set="cta_btn_text" t-value="False"/>
             <t t-set="cta_btn_href">/contactus</t>
 
-            <snippets id="snippet_structure" string="Structure">
-                <t t-snippet="website.s_banner" string="Banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.svg">
-                    <keywords>hero, jumbotron</keywords>
-                </t>
-                <t t-snippet="website.s_cover" string="Cover" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.svg">
-                    <keywords>hero, jumbotron</keywords>
-                </t>
-                <t t-snippet="website.s_text_cover" string="Text Cover" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_cover.svg">
-                    <keywords>hero, jumbotron</keywords>
-                </t>
-                <t t-snippet="website.s_text_image" string="Text - Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_image.svg">
-                    <keywords>content</keywords>
-                </t>
-                <t t-snippet="website.s_image_text" string="Image - Text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_text.svg">
-                    <keywords>content</keywords>
-                </t>
-                <t t-snippet="website.s_title" string="Title" t-thumbnail="/website/static/src/img/snippets_thumbs/s_title.svg">
-                    <keywords>heading, h1</keywords>
-                </t>
-                <t t-snippet="website.s_text_block" string="Text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.svg">
-                    <keywords>content</keywords>
-                </t>
-                <t t-snippet="website.s_numbers" string="Numbers" t-thumbnail="/website/static/src/img/snippets_thumbs/s_numbers.svg">
-                    <keywords>statistics, stats, KPI</keywords>
-                </t>
-                <t t-snippet="website.s_picture" string="Title - Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_picture.svg">
-                    <keywords>image, media, illustration, picture</keywords>
-                </t>
-                <t t-snippet="website.s_three_columns" string="Columns" t-thumbnail="/website/static/src/img/snippets_thumbs/s_three_columns.svg">
-                    <keywords>columns, description</keywords>
-                </t>
-                <t t-snippet="website.s_color_blocks_2" string="Big Boxes" t-thumbnail="/website/static/src/img/snippets_thumbs/s_color_blocks_2.svg">
-                    <keywords>big</keywords>
-                </t>
-                <t t-snippet="website.s_features" string="Features" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features.svg">
-                    <keywords>promotion, characteristic, quality</keywords>
-                </t>
-                <t t-snippet="website.s_masonry_block" string="Masonry" t-thumbnail="/website/static/src/img/snippets_thumbs/s_masonry_block.svg">
-                    <keywords>masonry, grid</keywords>
-                </t>
-                <t t-snippet="website.s_image_gallery" string="Image Gallery" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_gallery.svg">
-                    <keywords>gallery, carousel</keywords>
-                </t>
-                <t t-snippet="website.s_images_wall" string="Images Wall" t-thumbnail="/website/static/src/img/snippets_thumbs/s_images_wall.svg"/>
-                <t t-snippet="website.s_carousel" string="Carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_carousel.svg">
-                    <keywords>gallery, carousel</keywords>
-                </t>
-                <t t-snippet="website.s_media_list" string="Media List" t-thumbnail="/website/static/src/img/snippets_thumbs/s_media_list.svg"/>
-                <t t-snippet="website.s_parallax" string="Parallax" t-thumbnail="/website/static/src/img/snippets_thumbs/s_parallax.svg"/>
+            <!-- Snippet groups -->
+            <snippets id="snippet_groups" string="Categories">
+                <t snippet-group="custom" t-snippet="website.s_snippet_group" string="Custom"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_media_list.svg"/>
+                <t snippet-group="intro" t-snippet="website.s_snippet_group" string="Intro"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.svg"/>
+                <t snippet-group="content" t-snippet="website.s_snippet_group" string="Content"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_three_columns.svg"/>
+                <t snippet-group="images" t-snippet="website.s_snippet_group" string="Images"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_picture.svg"/>
+                <t snippet-group="people" t-snippet="website.s_snippet_group" string="People"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_company_team.svg"/>
+                <t snippet-group="text" t-snippet="website.s_snippet_group" string="Text"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.svg"/>
+                <t snippet-group="contact_and_forms" t-snippet="website.s_snippet_group" string="Contact &amp; Forms"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
+                <t snippet-group="social" t-snippet="website.s_snippet_group" string="Social"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_page.svg"/>
+                <t t-if="debug" snippet-group="debug" t-snippet="website.s_snippet_group" string="Debug"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_debug_group.png"/>
+                <t id="installed_snippets_hook"/>
+                <t snippet-group="products" string="Products" t-install="website_sale"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_products.svg"/>
+                <t snippet-group="blogs" string="Blogs" t-install="website_blog"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_blog_posts.svg"/>
+                <t snippet-group="events" string="Events" t-install="website_event"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
             </snippets>
 
-            <snippets id="snippet_feature" string="Features">
-                <t t-snippet="website.s_showcase" string="Showcase" t-thumbnail="/website/static/src/img/snippets_thumbs/s_showcase.svg"/>
-                <t t-snippet="website.s_comparisons" string="Comparisons" t-thumbnail="/website/static/src/img/snippets_thumbs/s_comparisons.svg">
-                    <keywords>pricing</keywords>
+            <snippets id="snippet_structure" string="Structure">
+
+                <!-- Intro group -->
+                <t t-snippet="website.s_banner" string="Banner" group="intro">
+                    <keywords>hero, jumbotron</keywords>
                 </t>
-                <t t-snippet="website.s_company_team" string="Team" t-thumbnail="/website/static/src/img/snippets_thumbs/s_company_team.svg">
-                    <keywords>organization, structure</keywords>
+                <t t-snippet="website.s_cover" string="Cover" group="intro">
+                    <keywords>hero, jumbotron</keywords>
                 </t>
-                <t t-snippet="website.s_call_to_action" string="Call to Action" t-thumbnail="/website/static/src/img/snippets_thumbs/s_call_to_action.svg">
+                <t t-snippet="website.s_text_cover" string="Text Cover" group="intro">
+                    <keywords>hero, jumbotron</keywords>
+                </t>
+                <t t-snippet="website.s_carousel" string="Carousel" group="intro">
+                    <keywords>gallery, carousel</keywords>
+                </t>
+
+                <!-- Content group -->
+                <t t-snippet="website.s_text_image" string="Text - Image" group="content">
+                    <keywords>content</keywords>
+                </t>
+                <t t-snippet="website.s_image_text" string="Image - Text" group="content">
+                    <keywords>content</keywords>
+                </t>
+                <t t-snippet="website.s_call_to_action" string="Call to Action" group="content">
                     <keywords>CTA</keywords>
                 </t>
-                <t t-snippet="website.s_references" string="References" t-thumbnail="/website/static/src/img/snippets_thumbs/s_references.svg">
-                    <keywords>customers, clients</keywords>
+                <t t-snippet="website.s_cta_box" string="Box Call to Action" group="content">
+                    <keywords>CTA, button, btn, action, engagement, link, offer, appeal, call to action, prompt, interact, trigger</keywords>
                 </t>
-                <t t-snippet="website.s_faq_collapse" string="Accordion" t-thumbnail="/website/static/src/img/snippets_thumbs/s_faq_collapse.svg">
-                    <keywords>common answers, common questions</keywords>
-                </t>
-                <t t-snippet="website.s_features_grid" string="Features Grid" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features_grid.svg"/>
-                <t t-snippet="website.s_table_of_content" string="Table of Content" t-thumbnail="/website/static/src/img/snippets_thumbs/s_table_of_content.svg"/>
-                <t t-snippet="website.s_product_catalog" string="Pricelist" t-thumbnail="/website/static/src/img/snippets_thumbs/s_product_catalog.svg">
+                <t t-snippet="website.s_product_catalog" string="Pricelist" group="content">
                     <keywords>menu, pricing</keywords>
                 </t>
-                <t t-snippet="website.s_product_list" string="Items" t-thumbnail="/website/static/src/img/snippets_thumbs/s_product_list.svg"/>
-                <t t-snippet="website.s_tabs" string="Tabs" t-thumbnail="/website/static/src/img/snippets_thumbs/s_tabs.svg"/>
-                <t t-snippet="website.s_timeline" string="Timeline" t-thumbnail="/website/static/src/img/snippets_thumbs/s_timeline.svg"/>
-                <t t-snippet="website.s_process_steps" string="Steps" t-thumbnail="/website/static/src/img/snippets_thumbs/s_process_steps.svg"
-                    t-forbid-sanitize="true"/>
-                <t t-snippet="website.s_quotes_carousel" string="Quotes" t-thumbnail="/website/static/src/img/snippets_thumbs/s_quotes_carousel.svg">
-                    <keywords>testimonials</keywords>
+                <t t-snippet="website.s_searchbar" string="Search" t-forbid-sanitize="form" group="content"/>
+                <t t-snippet="website.s_color_blocks_2" string="Big Boxes" group="content">
+                    <keywords>big</keywords>
                 </t>
-            </snippets>
-
-            <snippets id="snippet_effect" string="Dynamic Content">
-                <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
-                <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
-                <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
-                <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
-                <t t-if="debug" t-snippet="website.s_dynamic_snippet" string="Dynamic Snippet" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_snippet.svg"/>
-                <t t-if="debug" t-snippet="website.s_dynamic_snippet_carousel" string="Dynamic Carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_carousel.svg"/>
-                <t id="sale_products_hook"/>
-                <t t-snippet="website.s_searchbar" string="Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar.svg" t-forbid-sanitize="form"/>
-                <t id="blog_posts_hook"/>
-                <t id="event_upcoming_snippet_hook"/>
-                <t id="snippet_google_map_hook"/>
-                <t id="mass_mailing_newsletter_block_hook"/>
-                <t id="mass_mailing_newsletter_popup_hook"/>
-                <t t-snippet="website.s_popup" string="Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/s_popup.svg"/>
-                <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
-                <t t-snippet="website.s_instagram_page" string="Instagram Page" t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_page.svg">
-                    <keywords>social media, ig, feed</keywords>
-                </t>
-                <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
+                <t t-snippet="website.s_popup" string="Popup" group="content"/>
+                <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg" group="content">
                     <keywords>celebration, launch</keywords>
                 </t>
-                <t id="mail_group_hook"/>
-                <t id="twitter_favorite_tweets_hook"/>
-                <t t-snippet="website.s_embed_code" string="Embed Code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true"/>
+                <t t-snippet="website.s_embed_code" string="Embed Code" t-forbid-sanitize="true"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_embed_code_preview.png" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" group="content"/>
+                <t t-snippet="website.s_numbers" string="Numbers" group="content">
+                    <keywords>statistics, stats, KPI</keywords>
+                </t>
+                <t t-snippet="website.s_three_columns" string="Columns" group="content">
+                    <keywords>columns, description</keywords>
+                </t>
+                <t t-snippet="website.s_features" string="Features" group="content">
+                    <keywords>promotion, characteristic, quality</keywords>
+                </t>
+                <t t-snippet="website.s_media_list" string="Media List" group="content"/>
+                <t t-snippet="website.s_showcase" string="Showcase" group="content"/>
+                <t t-snippet="website.s_comparisons" string="Comparisons" group="content">
+                    <keywords>pricing</keywords>
+                </t>
+                <t t-snippet="website.s_features_grid" string="Features Grid" group="content"/>
+                <t t-snippet="website.s_product_list" string="Items" group="content"/>
+                <t t-snippet="website.s_tabs" string="Tabs" group="content"/>
+                <t t-snippet="website.s_timeline" string="Timeline" group="content"/>
+                <t t-snippet="website.s_process_steps" string="Steps" t-forbid-sanitize="true" group="content"/>
+                <t t-snippet="website.s_numbers_showcase" string="Numbers Showcase" group="content">
+                    <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, performance, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results, analytics, cta, call to action, button</keywords>
+                </t>
+
+                <!-- Images group -->
+                <t t-snippet="website.s_picture" string="Title - Image" group="images">
+                    <keywords>image, media, illustration, picture</keywords>
+                </t>
+                <t t-snippet="website.s_masonry_block" string="Masonry" group="images">
+                    <keywords>masonry, grid</keywords>
+                </t>
+                <t t-snippet="website.s_image_gallery" string="Image Gallery" group="images">
+                    <keywords>gallery, carousel</keywords>
+                </t>
+                <t t-snippet="website.s_images_wall" string="Images Wall" group="images"/>
+                <t t-snippet="website.s_parallax" string="Parallax" group="images"/>
+                <t t-snippet="website.s_unveil" string="Unveil" group="images">
+                    <keywords>reveal, showcase, launch, presentation, announcement, content, picture, photo, illustration, media, visual, article, combination</keywords>
+                </t>
+
+                <!-- People group -->
+                <t t-snippet="website.s_company_team" string="Team" group="people">
+                    <keywords>organization, structure</keywords>
+                </t>
+                <t t-snippet="website.s_references" string="References" group="people">
+                    <keywords>customers, clients</keywords>
+                </t>
+                <t t-snippet="website.s_quotes_carousel" string="Quotes" group="people">
+                    <keywords>testimonials</keywords>
+                </t>
+
+                <!-- Text group -->
+                <t t-snippet="website.s_title" string="Title" group="text">
+                    <keywords>heading, h1</keywords>
+                </t>
+                <t t-snippet="website.s_text_block" string="Text" group="text">
+                    <keywords>content</keywords>
+                </t>
+                <t t-snippet="website.s_faq_collapse" string="FAQ Block" group="text">
+                    <keywords>common answers, common questions</keywords>
+                </t>
+                <t t-snippet="website.s_table_of_content" string="Table of Content" group="text"/>
+
+                <!-- Contact & Forms group -->
+                <t t-snippet="website.s_website_form" string="Form" t-forbid-sanitize="form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" group="contact_and_forms"/>
+
+                <!-- Products group -->
+                <t id="sale_products_hook"/>
+
+                <!-- Blogs group -->
+                <t id="blog_posts_hook"/>
+
+                <!-- Events group -->
+                <t id="event_upcoming_snippet_hook"/>
+
+                <!-- Donation group -->
                 <t id="snippet_donation_hook"/>
+
+                <!-- Newsletter group -->
+                <t id="mass_mailing_newsletter_block_hook"/>
+                <t id="mass_mailing_newsletter_popup_hook"/>
+
+                <!-- Social group -->
+                <t t-snippet="website.s_instagram_page" string="Instagram Page" group="social"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_instagram_preview.jpg">
+                    <keywords>social media, ig, feed</keywords>
+                </t>
+                <!-- TODO: remove 'snippet_google_map_hook', it does not seem to be used -->
+                <t id="snippet_google_map_hook"/>
+                <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
+                <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg" group="social"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_map_preview.png"/>
+                <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" string="Map"
+                    t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg" group="social"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_map_preview.png"/>
+
+                <!-- Debug group -->
+                <t t-if="debug" t-snippet="website.s_dynamic_snippet" string="Dynamic Snippet" group="debug"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_preview.png"/>
+                <t t-if="debug" t-snippet="website.s_dynamic_snippet_carousel" string="Dynamic Carousel" group="debug"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_carousel_preview.png"/>
             </snippets>
 
+            <!-- Inner snippets -->
             <snippets id="snippet_content" string="Inner content">
                 <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg">
                     <keywords>button, action</keywords>
@@ -132,6 +196,7 @@
                 <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg">
                     <keywords>separator, divider</keywords>
                 </t>
+                <t t-snippet="website.s_accordion" string="Accordion" t-thumbnail="/website/static/src/img/snippets_thumbs/s_accordion.svg"/>
                 <t t-snippet="website.s_alert" string="Alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.svg"/>
                 <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg">
                     <keywords>valuation, rank</keywords>
@@ -139,8 +204,10 @@
                 <t t-snippet="website.s_card" string="Card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
                 <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
                 <t t-snippet="website.s_social_media" string="Social Media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_social_media.svg"/>
+                <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
                 <t t-snippet="website.s_searchbar_input" string="Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg" t-forbid-sanitize="form"/>
                 <t id="mass_mailing_newsletter_hook"/>
+                <t id="mail_group_hook"/>
                 <t t-snippet="website.s_text_highlight" string="Text Highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
                 <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg">
                     <keywords>chart, table, diagram, pie</keywords>
@@ -149,9 +216,19 @@
                     <keywords>evolution, growth</keywords>
                 </t>
                 <t t-snippet="website.s_badge" string="Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_badge.svg"/>
+                <t t-snippet="website.s_cta_badge" string="CTA Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cta_badge.svg">
+                    <keywords>cta, button, btn, action, engagement, link, appeal, trigger, promotion, promote</keywords>
+                </t>
                 <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg">
                     <keywords>cite</keywords>
                 </t>
+                <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
+                <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
+                    <keywords>celebration, launch</keywords>
+                </t>
+                <t t-snippet="website.s_embed_code" string="Embed Code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true"/>
+                <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
+                <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
                 <t id="event_speaker_bio_hook"/>
                 <t id="snippet_donation_button_hook"/>
                 <t id="snippet_add_to_cart_hook"/>
@@ -163,17 +240,25 @@
     <xpath expr="//div[@id='snippet_options']/t" position="attributes">
         <attribute name="t-call">website.snippet_options</attribute>
     </xpath>
+
+    <xpath expr="//snippets[@id='snippet_custom']" position="replace"/>
+    <xpath expr="//snippets[@id='snippet_content']" position="before">
+        <snippets id="snippet_custom" string="Custom Inner Content"/>
+    </xpath>
 </template>
 
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
-    <xpath expr="//snippets[@id='snippet_effect']" position="inside">
-        <t t-install="website_event" string="Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
-        <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
-        <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
-        <t t-install="website_payment" string="Donation" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation.svg"/>
+    <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+        <t t-install="mass_mailing" string="Newsletter Block" group="contact_and_forms"
+            t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_block_preview.png"/>
+        <t t-install="mass_mailing" string="Newsletter Popup" group="contact_and_forms"
+            t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_subscribe_popup_preview.png"/>
+        <t t-install="website_payment" string="Donation" group="contact_and_forms"
+            t-image-preview="/website/static/src/img/snippets_previews/s_donation_preview.png"/>
     </xpath>
     <xpath expr="//snippets[@id='snippet_content']" position="inside">
         <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
+        <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
         <t t-install="website_payment" string="Donation Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation_button.svg"/>
         <t t-install="website_sale" string="Add to Cart Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation_button.svg"/>
     </xpath>
@@ -424,7 +509,7 @@
     </div>
 
     <!-- COLOR | .s_cards -->
-    <div data-selector=".s_card, .accordion .card">
+    <div data-selector=".card:not(.s_card)">
         <we-colorpicker string="Color"
             data-select-style="true"
             data-css-property="background-color"
@@ -461,7 +546,7 @@
         <we-checkbox string="Color" data-select-class="no_icon_color|"/>
     </div>
 
-    <div id="so_width" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
+    <div id="so_width" data-selector=".s_alert, .s_blockquote, .s_text_highlight">
         <we-select string="Width">
             <we-button data-select-class="w-25">25%</we-button>
             <we-button data-select-class="w-50">50%</we-button>
@@ -533,13 +618,13 @@
     </div>
     <!-- Accordion -->
     <div data-js="collapse"
-         data-selector='.accordion > .card'
-         data-drop-in='.accordion:has(> .card)'/>
+         data-selector='.accordion > .accordion-item'
+         data-drop-in='.accordion:has(> .accordion-item)'/>
 
-    <div data-js="MultipleItems" data-selector=".s_faq_collapse">
-        <we-row string="Item">
-            <we-button data-add-item="" data-item=".accordion > .card:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
-                Add Item
+    <div data-js="MultipleItems" data-selector=".s_accordion">
+        <we-row string="Items">
+            <we-button data-add-item="" data-item=".accordion > .accordion-item:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
+                Add New
             </we-button>
         </we-row>
     </div>
@@ -571,7 +656,7 @@
     <div data-js="layout_column"
         data-selector="section, section.s_carousel_wrapper .carousel-item"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_showcase, .s_table_of_content, .s_process_steps, .s_image_gallery">
+        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
@@ -587,7 +672,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+    <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse" data-target=".row">
         <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
@@ -605,7 +690,7 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".accordion > .card">
+    <div data-js="SnippetMove" data-selector="section, .s_accordion .accordion-item, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".s_accordion .accordion-item">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
@@ -618,7 +703,7 @@
     </div>
 
     <!-- Background -->
-    <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr'"/>
+    <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge'"/>
     <t t-set="only_bg_color_exclude" t-value="'.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr'"/>
 
     <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>
@@ -691,14 +776,14 @@
     <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax, .s_hr</t>
     <div id="so_snippet_addition"
         t-att-data-selector="so_snippet_addition_selector"
-        data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
+        data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section:not(.s_snippet_group), > div:not(.o_hook_drop_zone)))"/>
         <!-- /!\ drop-in here is partly duplicated for s_popup (see dedicated options) -->
         <!-- TODO should be improved -->
 
     <t t-set="so_content_addition_selector" t-translation="off">
         blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
         .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
-        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image
+        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion
     </t>
 
     <div id="so_content_addition"

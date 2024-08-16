@@ -14,6 +14,7 @@ import { LinkPopoverWidget } from '@web_editor/js/wysiwyg/widgets/link_popover_w
 import { AltDialog } from '@web_editor/js/wysiwyg/widgets/alt_dialog';
 import { ChatGPTPromptDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_prompt_dialog';
 import { ChatGPTAlternativesDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_alternatives_dialog';
+import { ChatGPTTranslateDialog } from "@web_editor/js/wysiwyg/widgets/chatgpt_translate_dialog";
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
@@ -1483,7 +1484,7 @@ export class Wysiwyg extends Component {
                 ...this.options.linkOptions,
                 editable: this.odooEditor.editable,
                 link,
-                needLabel: true,
+                needLabel: true && !link.querySelector('img'),
                 focusField: link.innerHTML ? 'url' : '',
                 onSave: (data) => {
                     if (!data) {
@@ -1510,9 +1511,11 @@ export class Wysiwyg extends Component {
     /**
      * Open one of the ChatGPTDialogs to generate or modify content.
      *
-     * @param {'prompt'|'alternatives'} [mode='prompt']
+     * @param {'prompt'|'alternatives'|'translate'} [mode='prompt']
+     * @param {object} options
+     * @param {String} [options.language]
      */
-    openChatGPTDialog(mode = 'prompt') {
+    openChatGPTDialog(mode = 'prompt', options={}) {
         const restore = preserveCursor(this.odooEditor.document);
         const params = {
             insert: content => {
@@ -1553,12 +1556,15 @@ export class Wysiwyg extends Component {
                 }
             },
         };
-        if (mode === 'alternatives') {
+        if (mode === 'alternatives' || mode === 'translate') {
             params.originalText = this.odooEditor.document.getSelection().toString() || '';
+        }
+        if (mode === 'translate') {
+            params.language = options.language;
         }
         this.odooEditor.document.getSelection().collapseToEnd();
         this.env.services.dialog.add(
-            mode === 'prompt' ? ChatGPTPromptDialog : ChatGPTAlternativesDialog,
+            mode === 'prompt' ? ChatGPTPromptDialog : mode === 'translate' ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
             params,
             { onClose: restore },
         );
@@ -1905,10 +1911,17 @@ export class Wysiwyg extends Component {
                 return;
             }
             this.showImageFullscreen(this.lastMediaClicked.src);
-    })
+        });
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
         $toolbar.find('#open-chatgpt').click(openTools);
+        $toolbar.on('click', '#translate .lang', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            const language = e.target.dataset.value;
+            this.openChatGPTDialog('translate', { language });
+        });
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
             if (!this.lastMediaClicked) {
                 return;
@@ -2379,7 +2392,7 @@ export class Wysiwyg extends Component {
                 const bannerElement = parseHTML(this.odooEditor.document, `
                     <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" data-oe-protected="true">
                         <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="${_t(title)}">${emoji}</i>
-                        <div class="w-100 ms-3" data-oe-protected="false">
+                        <div class="w-100 px-3" data-oe-protected="false">
                             <p><br></p>
                         </div>
                     </div>
@@ -2635,8 +2648,8 @@ export class Wysiwyg extends Component {
         if (editorOptions.powerboxCategories) {
             categories.push(...editorOptions.powerboxCategories);
         }
-        if (editorOptions.powerboxCommands) {
-            commands.push(...editorOptions.powerboxCommands);
+        if (editorOptions.powerboxItems) {
+            commands.push(...editorOptions.powerboxItems);
         }
         return {commands, categories};
     }

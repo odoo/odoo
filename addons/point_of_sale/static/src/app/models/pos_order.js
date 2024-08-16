@@ -12,7 +12,7 @@ import {
 } from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
-import { computeComboLines } from "./utils/compute_combo_lines";
+import { computeComboItems } from "./utils/compute_combo_items";
 import { changesToOrder } from "./utils/order_change";
 
 const { DateTime } = luxon;
@@ -396,18 +396,18 @@ export class PosOrder extends Base {
             (line) => line.price_type === "original" && line.combo_line_ids?.length
         );
         for (const pLine of combo_parent_lines) {
-            attributes_prices[pLine.id] = computeComboLines(
+            attributes_prices[pLine.id] = computeComboItems(
                 pLine.product_id,
                 pLine.combo_line_ids.map((cLine) => {
                     if (cLine.attribute_value_ids) {
                         return {
-                            combo_line_id: cLine.combo_line_id,
+                            combo_item_id: cLine.combo_item_id,
                             configuration: {
                                 attribute_value_ids: cLine.attribute_value_ids,
                             },
                         };
                     } else {
-                        return { combo_line_id: cLine.combo_line_id };
+                        return { combo_item_id: cLine.combo_item_id };
                     }
                 }),
                 pricelist,
@@ -421,7 +421,7 @@ export class PosOrder extends Base {
         combo_children_lines.forEach((line) => {
             line.set_unit_price(
                 attributes_prices[line.combo_parent_id.id].find(
-                    (item) => item.combo_line_id.id === line.combo_line_id.id
+                    (item) => item.combo_item_id.id === line.combo_item_id.id
                 ).price_unit
             );
         });
@@ -460,14 +460,6 @@ export class PosOrder extends Base {
     }
 
     get_selected_orderline() {
-        const selected = this.lines.find(
-            (line) => line.uuid === this.uiState.selected_orderline_uuid
-        );
-
-        if (!selected && this.lines.length > 0) {
-            this.select_orderline(this.get_last_orderline());
-        }
-
         return this.lines.find((line) => line.uuid === this.uiState.selected_orderline_uuid);
     }
 
@@ -713,8 +705,8 @@ export class PosOrder extends Base {
                         tax_percentage: taxData.amount,
                     });
                 }
-                taxDetails[taxId].base += taxData.display_base;
-                taxDetails[taxId].amount += taxData.tax_amount_factorized;
+                taxDetails[taxId].base += taxData.base_amount;
+                taxDetails[taxId].amount += taxData.tax_amount;
             }
         }
         return Object.values(taxDetails);
@@ -1064,6 +1056,9 @@ export class PosOrder extends Base {
             })),
             change: this.get_change() && formatCurrency(this.get_change()),
         };
+    }
+    getFloatingOrderName() {
+        return this.note || this.tracking_number;
     }
 }
 

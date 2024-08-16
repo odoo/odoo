@@ -176,17 +176,14 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store("discuss.channel.rtc.session", {
-            id: sessionId,
+        new mailDataHelpers.Store(pyEnv["discuss.channel.rtc.session"].browse(sessionId), {
             channelMember: { id: memberId },
         })
-            .add("discuss.channel.member", {
-                id: memberId,
+            .add(pyEnv["discuss.channel.member"].browse(memberId), {
                 persona: { id: partnerId, type: "partner" },
                 thread: { id: channelId, model: "discuss.channel" },
             })
-            .add("discuss.channel", {
-                id: channelId,
+            .add(pyEnv["discuss.channel"].browse(channelId), {
                 rtcInvitingSession: { id: sessionId },
             })
             .get_result()
@@ -198,8 +195,7 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store("discuss.channel", {
-            id: channelId,
+        new mailDataHelpers.Store(pyEnv["discuss.channel"].browse(channelId), {
             rtcInvitingSession: false,
         }).get_result()
     );
@@ -371,4 +367,18 @@ test("Systray icon keeps track of earlier actions", async () => {
     await click("[title='Stop camera']");
     // stack: ["share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
+});
+
+test("show call participants in discuss sidebar", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-mail-DiscussSidebar", {
+        contains: [
+            ".o-mail-DiscussSidebarChannel:contains('General') ~ .o-mail-DiscussSidebarCallParticipants:contains(Mitchell Admin)",
+        ],
+    });
 });

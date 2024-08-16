@@ -148,11 +148,9 @@ test("readonly boolean field", async () => {
 });
 
 test("onchange return value before toggle checkbox", async () => {
-    Partner._fields.bar = fields.Boolean({
-        onChange(record) {
-            record["bar"] = true;
-        },
-    });
+    Partner._onChanges.bar = (record) => {
+        record["bar"] = true;
+    };
 
     await mountView({
         resModel: "partner",

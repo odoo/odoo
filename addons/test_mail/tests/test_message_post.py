@@ -1172,9 +1172,10 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         Test the message_main_attachment heuristics with an emphasis on the XML/Octet/PDF types.
         -> we don't want XML nor Octet-Stream files to be set as message_main_attachment
         """
-        xml_attachment, octet_attachment, pdf_attachment = [('List1', b'My xml attachment')], \
-                                                           [('List2', b'My octet-stream attachment')], \
-                                                           [('List3', b'My pdf attachment')]
+        xml_attachment, octet_attachment, pdf_attachment = (
+            [('List1', b'<xml>My xml attachment</xml>')],
+            [('List2', b'\x00\x01My octet-stream attachment\x03\x04')],
+            [('List3', b'%PDF My pdf attachment')])
 
         xml_attachment_data, octet_attachment_data, pdf_attachment_data = self.env['ir.attachment'].create(
             self._generate_attachments_data(3, 'mail.compose.message', 0)
@@ -1284,8 +1285,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(len(self._mails), 1)
         self.assertSentEmail(
             self.user_employee.partner_id, [self.partner_1],
-            attachments=[('List1', b'My first attachment', 'application/octet-stream'),
-                         ('List2', b'My second attachment', 'application/octet-stream'),
+            attachments=[('List1', b'My first attachment', 'text/plain'),
+                         ('List2', b'My second attachment', 'text/plain'),
                          ('AttFileName_00.txt', b'AttContent_00', 'text/plain'),
                          ('AttFileName_01.txt', b'AttContent_01', 'image/png'),
                          ('AttFileName_02.txt', b'AttContent_02', 'text/plain'),

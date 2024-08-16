@@ -55,7 +55,6 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     run: "selectByLabel A friend",
 }, {
     trigger: ".modal#modal_attendees_registration:not(.o_inactive_modal) button[type=submit].btn-primary",
-    in_modal: false,
     run: 'click'
 }, {
     // The tour stops too early and the registration fails if we don't wait the confirmation.

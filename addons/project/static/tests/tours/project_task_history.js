@@ -35,7 +35,7 @@ function changeDescriptionContentAndSave(newContent) {
 
 registry.category("web_tour.tours").add("project_task_history_tour", {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the project app",
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
@@ -89,7 +89,6 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",
         trigger: ".modal .html-history-dialog .revision-list .btn",
-        in_modal: false,
         run: function () {
             const items = document.querySelectorAll(".revision-list .btn");
             if (items.length !== 4) {
@@ -99,27 +98,22 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Verify that the active revision (revision 4) is related to the third edit",
         trigger: `.modal .history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
-        in_modal: false,
         run: "click",
     }, {
         content: "Go to the third revision related to the second edit",
         trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(2)",
-        in_modal: false,
         run: "click",
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
         trigger: `.modal .history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
-        in_modal: false,
         run: "click",
     }, {
         content: "Go to comparison tab",
         trigger: ".modal .history-container .nav-item:contains(Comparison) a",
-        in_modal: false,
         run: "click",
     }, {
         content: "Verify comparaison text",
         trigger: ".modal .history-container .tab-pane",
-        in_modal: false,
         run: function () {
             const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
             const correctHtml = `<p><added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed></p>`;
@@ -130,11 +124,9 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Click on Restore History btn to get back to the selected revision in the previous step",
         trigger: ".modal button.btn-primary:contains(/^Restore history$/)",
-        in_modal: false,
         run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
-        in_modal: false,
         trigger: ".modal button.btn-primary:contains(/^Restore$/)",
         run: "click",
     }, {
@@ -142,7 +134,6 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Verify that the description contains the right text after the restore",
         trigger: descriptionField,
-        in_modal: false,
         run: function () {
             const p = this.anchor?.innerText;
             const expected = `${baseDescriptionContent} 1`;

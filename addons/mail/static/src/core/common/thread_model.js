@@ -6,6 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef SuggestedRecipient
@@ -81,7 +82,8 @@ export class Thread extends Record {
         return (
             ["channel", "group"].includes(this.channel_type) &&
             !this.message_needaction_counter &&
-            !this.group_based_subscription
+            !this.group_based_subscription &&
+            this.store.self?.type === "partner"
         );
     }
     get canUnpin() {
@@ -306,6 +308,12 @@ export class Thread extends Record {
     });
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
+    /** @type {integer|null} */
+    highlightMessage = Record.one("Message", {
+        onAdd(msg) {
+            msg.thread = this;
+        },
+    });
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -354,10 +362,6 @@ export class Thread extends Record {
             this.typesAllowingCalls.includes(this.channel_type) &&
             !this.correspondent?.persona.eq(this.store.odoobot)
         );
-    }
-
-    get hasMemberList() {
-        return ["channel", "group"].includes(this.channel_type);
     }
 
     get hasAttachmentPanel() {
@@ -520,14 +524,6 @@ export class Thread extends Record {
         return !this.messages.some((message) => !message.isEmpty);
     }
 
-    offlineMembers = Record.many("ChannelMember", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
-        },
-        sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
-    });
-
     get nonEmptyMessages() {
         return this.messages.filter((message) => !message.isEmpty);
     }
@@ -587,20 +583,6 @@ export class Thread extends Record {
             return res;
         },
     });
-
-    onlineMembers = Record.many("ChannelMember", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.channelMembers.filter((member) => member.persona.im_status === "online");
-        },
-        sort(m1, m2) {
-            return this.store.Thread.sortOnlineMembers(m1, m2);
-        },
-    });
-
-    static sortOnlineMembers(m1, m2) {
-        return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
-    }
 
     get unknownMembersCount() {
         return this.memberCount - this.channelMembers.length;
@@ -947,7 +929,9 @@ export class Thread extends Record {
         );
         this.store.chatHub.opened.delete(cw);
         this.store.chatHub.opened.unshift(cw);
-        cw.focus();
+        if (!isMobileOS()) {
+            cw.focus();
+        }
         this.state = "open";
         cw.notifyState();
         return cw;

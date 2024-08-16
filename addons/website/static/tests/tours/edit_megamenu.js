@@ -46,7 +46,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Confirm the mega menu label",
         trigger: ".modal .modal-footer button:contains(ok)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -55,7 +54,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Save the website menu with a new mega menu",
         trigger: ".modal .modal-footer button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -102,7 +100,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         content: "The menu should still be visible. Edit a menu item.",
         trigger: ':iframe .o_mega_menu h4',
         // The content is removed in the previous step so it's now invisible.
-        allowInvisible: true,
         run: "editor New Menu Item",
     },
     {
@@ -155,7 +152,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Confirm the mega menu label",
         trigger: ".modal .modal-footer .btn-primary:contains(ok)",
-        in_modal: false,
         run: "click",
     },
     {

@@ -40,7 +40,6 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
             run: "click",
         }, {
             trigger: ".modal:not(.o_inactive_modal) button:contains(save & close)",
-            in_modal: false,
             content: "Save project",
             run: "click",
         });

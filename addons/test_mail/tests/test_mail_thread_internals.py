@@ -375,7 +375,7 @@ class TestDiscuss(MailCommon, TestRecipients):
         msg_2.with_user(self.user_employee).toggle_message_starred()
         self.assertIn(self.partner_admin, msg.starred_partner_ids)
         self.assertIn(self.partner_employee, msg.starred_partner_ids)
-        self.env["bus.bus"].search([]).unlink()
+        self._reset_bus()
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         self.test_record._message_update_content(message=msg, body="")
         self.assertFalse(msg.starred)
@@ -388,25 +388,29 @@ class TestDiscuss(MailCommon, TestRecipients):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "mail.thread": {
-                            "id": "starred",
-                            "messages": [["DELETE", [{"id": msg.id}]]],
-                            "model": "mail.box",
-                            "counter": 1,
-                            "counter_bus_id": bus_last_id,
-                        },
+                        "mail.thread": [
+                            {
+                                "counter": 1,
+                                "counter_bus_id": bus_last_id,
+                                "id": "starred",
+                                "messages": [["DELETE", [{"id": msg.id}]]],
+                                "model": "mail.box",
+                            }
+                        ],
                     },
                 },
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "mail.thread": {
-                            "id": "starred",
-                            "messages": [["DELETE", [{"id": msg.id}]]],
-                            "model": "mail.box",
-                            "counter": 0,
-                            "counter_bus_id": bus_last_id,
-                        },
+                        "mail.thread": [
+                            {
+                                "counter": 0,
+                                "counter_bus_id": bus_last_id,
+                                "id": "starred",
+                                "messages": [["DELETE", [{"id": msg.id}]]],
+                                "model": "mail.box",
+                            }
+                        ],
                     },
                 },
             ],

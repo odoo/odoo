@@ -96,25 +96,15 @@
                                 </tree>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
                                     <field name="event_id"/>
-                                    <field name="question_id"/>
                                     <field name="question_type"/>
-                                    <field name="value_answer_id"/>
-                                    <field name="value_text_box"/>
-
                                     <templates>
-                                        <t t-name="kanban-box">
-                                            <div class="d-flex flex-column justify-content-between">
-                                                <div class="o_kanban_record_title oe_kanban_details">
-                                                    <strong>
-                                                        <field name="question_id" domain="[('event_id', '=', event_id)]"/>
-                                                    </strong>
-                                                </div>
-                                                <field name="value_answer_id"
-                                                    invisible="question_type != 'simple_choice'"
-                                                    domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
-                                                <field name="value_text_box"
-                                                    invisible="question_type == 'simple_choice'"/>
-                                            </div>
+                                        <t t-name="kanban-card" class="justify-content-between">
+                                            <field class="fw-bold fs-5" name="question_id" domain="[('event_id', '=', event_id)]"/>
+                                            <field name="value_answer_id"
+                                                invisible="question_type != 'simple_choice'"
+                                                domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
+                                            <field name="value_text_box"
+                                                invisible="question_type == 'simple_choice'"/>
                                         </t>
                                     </templates>
                                 </kanban>
@@ -134,10 +124,7 @@
         <field name="arch" type="xml">
             <kanban class="o_event_attendee_kanban_view" default_order="name, create_date desc" sample="1">
                 <field name="name"/>
-                <field name="partner_id"/>
                 <field name="state"/>
-                <field name="email"/>
-                <field name="event_ticket_id"/>
                 <field name="active"/>
                 <templates>
                     <t t-name="event_attendees_kanban_icons_desktop">
@@ -170,37 +157,27 @@
                             </t>
                         </div>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="#{!record.active.raw_value ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click o_event_registration_kanban container-fluid">
-                            <div t-if="!record.active.raw_value" class="ribbon ribbon-top-right">
-                                <span class="text-bg-danger">Archived</span>
+                    <t t-name="kanban-card" class="row g-0">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="col-8 col-md-9">
+                            <field class="d-block fw-bold fs-5" name="name"/>
+                            <div class="o_kanban_event_registration_event_name">
+                                <field class="text-truncate text-primary" name="event_id" invisible="context.get('default_event_id')"/>
                             </div>
-                            <div class="row g-0 h-100">
-                                <div class="col-8 col-md-9">
-                                    <div class="oe_kanban_content h-100">
-                                        <div class="o_kanban_record_body h-100 d-flex flex-column">
-                                            <b class="o_kanban_record_title"><field name="name"/></b>
-                                            <div class="o_kanban_event_registration_event_name">
-                                                <field class="o_text_overflow text-primary" name="event_id" invisible="context.get('default_event_id')"/>
-                                            </div>
-                                            <span class="o_text_overflow" invisible="not company_name">
-                                                <i class="fa fa-building" title="Attendee Company"/> <field name="company_name"/>
-                                            </span>
-                                            <div id="event_ticket_id" class="o_field_many2many_tags o_field_widget d-flex mt-auto align-items-center">
-                                                <field name="registration_properties"/>
-                                                <t t-if="record.event_ticket_id.raw_value">
-                                                    <i class="fa fa-ticket" title="Ticket type"/>
-                                                    <b><span class="o_badge_text o_text_overflow ms-1"><t t-out="record.event_ticket_id.value"/></span></b>
-                                                </t>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="event_attendees_kanban_icons" class="col-4 col-md-3">
-                                    <t t-call="event_attendees_kanban_icons_desktop"/>
-                                    <t t-call="event_attendees_kanban_icons_mobile"/>
-                                </div>
+                            <span class="text-truncate" invisible="not company_name">
+                                <i class="fa fa-building" title="Attendee Company"/> <field name="company_name"/>
+                            </span>
+                            <div id="event_ticket_id">
+                                <field name="registration_properties"/>
+                                <t t-if="record.event_ticket_id.raw_value">
+                                    <i class="fa fa-ticket" title="Ticket type"/>
+                                    <field name="event_ticket_id" class="fw-bold text-truncate ms-1"/>
+                                </t>
                             </div>
+                        </div>
+                        <div id="event_attendees_kanban_icons" class="col-4 col-md-3">
+                            <t t-call="event_attendees_kanban_icons_desktop"/>
+                            <t t-call="event_attendees_kanban_icons_mobile"/>
                         </div>
                     </t>
                 </templates>

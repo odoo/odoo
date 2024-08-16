@@ -11,6 +11,8 @@ import {
     startServer,
     triggerHotkey,
     hover,
+    step,
+    assertSteps,
 } from "../mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
@@ -213,6 +215,31 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await contains(".o-mail-ChatBubble-preview", { text: "DemoYou: Hi" });
 });
 
+test("Chat bubble preview works on author as email address", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: null,
+        body: "Some email message",
+        email_from: "md@oilcompany.fr",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await click(".o-mail-ChatWindow [title='Fold']");
+    await hover(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble-preview", { text: "md@oilcompany.fr: Some email message" });
+});
+
 test("chat bubbles are synced between tabs", async () => {
     const pyEnv = await startServer();
     const marcPartnerId = pyEnv["res.partner"].create({ name: "Marc" });
@@ -312,22 +339,41 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
 });
 
 test("Can close all chat windows at once", async () => {
+    const closed = new Set();
+    onRpcBefore("/discuss/channel/fold", (args) => {
+        if (args.state === "closed") {
+            closed.add(args.channel_id);
+        }
+        if (closed.size === 20) {
+            step("ALL_CLOSED");
+        }
+    });
     const pyEnv = await startServer();
-    for (let i = 1; i <= 20; i++) {
-        pyEnv["discuss.channel"].create({
-            name: String(i),
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        });
-    }
+    const channelIds = pyEnv["discuss.channel"].create(
+        Array(20)
+            .keys()
+            .map((i) => ({
+                name: String(i),
+                channel_member_ids: [
+                    Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
+                ],
+            }))
+    );
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button.fa.fa-ellipsis-h[aria-label='Chat Hub Options']");
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
+    await assertSteps(["ALL_CLOSED"]);
+    const members = pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "in", channelIds],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    expect(members.map((member) => member.fold_state)).toEqual(
+        [...Array(20).keys()].map(() => "closed")
+    );
 });
 
 test("Can compact chat hub", async () => {
@@ -345,7 +391,7 @@ test("Can compact chat hub", async () => {
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button.fa.fa-ellipsis-h[aria-label='Chat Hub Options']");
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
     await contains(".o-mail-ChatBubble i.fa.fa-commenting");
     await click(".o-mail-ChatBubble i.fa.fa-commenting");
@@ -385,4 +431,21 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
     await click(".o-mail-ChatHub-hiddenBtn");
     await contains(".o-mail-ChatBubble i.fa.fa-commenting");
     await contains(".o-mail-ChatBubble .o-discuss-badge", { text: "9" });
+});
+
+test("Show IM status", async () => {
+    const pyEnv = await startServer();
+    const demoId = pyEnv["res.partner"].create({ name: "Demo User", im_status: "online" });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                fold_state: "folded",
+                partner_id: serverState.partnerId,
+            }),
+            Command.create({ partner_id: demoId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
 });

@@ -128,7 +128,7 @@
                             <group name="opportunity_partner" invisible="type == 'lead'">
                                 <field name="partner_id"
                                     widget="res_partner_many2one"
-                                    string="Customer"
+                                    string="Contact"
                                     context="{'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                                         'default_name': contact_name or partner_name,
                                         'default_street': street,
@@ -389,38 +389,19 @@
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" archivable="false" js_class="crm_kanban" sample="1">
-                    <field name="name"/>
-                    <field name="contact_name"/>
-                    <field name="priority"/>
-                    <field name="tag_ids"/>
-                    <field name="user_id"/>
-                    <field name="activity_ids"/>
-                    <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
-                                <div>
-                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                        <t t-name="kanban-card">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="contact_name"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <footer class="pt-1 mt-0 fs-6">
+                                <div class="d-flex mt-auto">
+                                    <field name="priority" widget="priority" class="me-2"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <div>
-                                    <span class="o_kanban_record_subtitle"><field name="contact_name"/></span>
-                                </div>
-                                <div>
-                                  <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                </div>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <field name="priority" widget="priority"/>
-                                        <div class="o_kanban_inline_block">
-                                            <field name="activity_ids" widget="kanban_activity"/>
-                                        </div>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                                    </div>
-                                </div>
-                            </div>
+                                <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="ms-auto"/>
+                            </footer>
                         </t>
                     </templates>
                 </kanban>
@@ -451,7 +432,7 @@
                     <group>
                         <field name="partner_id" widget="res_partner_many2one"
                             class="o_field_highlight"
-                            string='Organization / Contact'
+                            string='Contact'
                             context="{
                             'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
                             'default_name': contact_name or partner_name,
@@ -535,21 +516,11 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
+                <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
                     archivable="false" sample="1" js_class="crm_kanban">
-                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="probability"/>
-                    <field name="color"/>
-                    <field name="priority"/>
-                    <field name="expected_revenue"/>
-                    <field name="activity_date_deadline"/>
-                    <field name="user_id"/>
-                    <field name="partner_id"/>
-                    <field name="activity_summary"/>
                     <field name="active"/>
                     <field name="company_currency"/>
-                    <field name="activity_state" />
-                    <field name="activity_ids" />
                     <field name="recurring_revenue_monthly"/>
                     <field name="team_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'
@@ -557,55 +528,34 @@
                         help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-menu">
-                            <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                            <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit</a></t>
                             <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                            <field name="color" widget="kanban_color_picker"/>
                         </t>
-                        <t t-name="kanban-box">
+                        <t t-name="kanban-card">
                             <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
-                                <div class="ribbon ribbon-top-right"
-                                    invisible="probability &gt; 0 or active">
-                                    <span class="text-bg-danger">Lost</span>
-                                </div>
-
-                                <div class="oe_kanban_content flex-grow-1">
-                                    <div class="oe_kanban_details">
-                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                    </div>
-                                    <div class="o_kanban_record_subtitle">
-                                        <t t-if="record.expected_revenue.raw_value">
-                                            <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
-                                        </t>
-                                        <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                                            <field class="me-1" name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
-                                            <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
-                                        </t>
-                                    </div>
-                                    <div>
-                                        <span class="o_text_overflow" t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
-                                    </div>
-                                    <div>
-                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                    </div>
-                                    <div>
-                                        <field name="lead_properties" widget="properties"/>
-                                    </div>
-                                </div>
-                                <div class="oe_kanban_footer">
-                                    <div class="o_kanban_record_bottom">
-                                        <div class="oe_kanban_bottom_left">
-                                            <field name="priority" widget="priority" groups="base.group_user"/>
-                                            <field name="activity_ids" widget="kanban_activity"/>
-                                        </div>
-                                        <div class="oe_kanban_bottom_right">
-                                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"/>
+                            <widget name="web_ribbon" title="lost" bg_color="text-bg-danger" invisible="probability &gt; 0 or active"/>
+                            <field class="fw-bold fs-5" name="name"/>
+                            <div>
+                                <t t-if="record.expected_revenue.raw_value">
+                                    <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                    <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
+                                </t>
+                                <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
+                                    <field class="me-1" name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                                    <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
+                                </t>
                             </div>
+                            <field name="partner_id" class="text-truncate" />
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="lead_properties" widget="properties"/>
+                            <footer class="fs-6 pt-1">
+                                <div class="d-flex mt-auto align-items-center">
+                                    <field name="priority" widget="priority" groups="base.group_user" class="me-2"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                </div>
+                                <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="ms-auto"/>
+                            </footer>
                         </t>
                     </templates>
                 </kanban>
@@ -640,22 +590,12 @@
                 <xpath expr="//t[@t-set='lost_ribbon']" position="after">
                     <t t-set="won_ribbon" t-value="record.active.raw_value and record.probability and record.probability.raw_value == 100"/>
                 </xpath>
-                <xpath expr="//div[contains(@t-attf-class, 'oe_kanban_card')]" position="attributes">
-                    <attribute name="t-attf-class">
-                        #{!selection_mode ? kanban_color(record.color.raw_value) : ''}
-                        #{lost_ribbon || won_ribbon ? 'oe_kanban_card_ribbon' : ''}
-                        oe_kanban_global_click oe_kanban_card d-flex flex-column
-                    </attribute>
+                <xpath expr="//widget" position="replace">
+                    <widget t-if="won_ribbon" name="web_ribbon" title="Won" bg_color="text-bg-success" invisible="(probability &gt; 0 or active) and (probability &lt; 100 or not active)"/>
+                    <widget t-if="lost_ribbon" name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="(probability &gt; 0 or active) and (probability &lt; 100 or not active)"/>
                 </xpath>
-                <xpath expr="//div[hasclass('ribbon')]" position="replace">
-                    <div class="ribbon ribbon-top-right"
-                        invisible="(probability &gt; 0 or active) and (probability &lt; 100 or not active)">
-                        <span t-if="won_ribbon" class="text-bg-success">Won</span>
-                        <span t-elif="lost_ribbon" class="text-bg-danger">Lost</span>
-                    </div>
-                </xpath>
-                <xpath expr="//div[hasclass('o_kanban_record_subtitle')]" position="replace">
-                    <div class="o_kanban_record_subtitle">
+                <xpath expr="//div" position="replace">
+                    <div>
                         <t t-if="record.prorated_revenue.raw_value">
                             <field name="prorated_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>

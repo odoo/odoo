@@ -1,4 +1,6 @@
-import { Command, fields, models } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
+import { Command, fields, getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class LivechatChannel extends models.ServerModel {
     _name = "im_livechat.channel";
@@ -9,21 +11,29 @@ export class LivechatChannel extends models.ServerModel {
     /** @param {integer} id */
     action_join(id) {
         this.write([id], { user_ids: [Command.link(this.env.user.id)] });
-        const self = this.read([id])[0];
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
-        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
-            LivechatChannel: { id, name: self.name, hasSelfAsMember: true },
-        });
+        this.env["bus.bus"]._sendone(
+            partner,
+            "mail.record/insert",
+            new mailDataHelpers.Store(
+                this.browse(id),
+                makeKwArgs({ fields: ["are_you_inside", "name"] })
+            ).get_result()
+        );
     }
 
     /** @param {integer} id */
     action_quit(id) {
         this.write(id, { user_ids: [Command.unlink(this.env.user.id)] });
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
-        const self = this.read([id])[0];
-        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
-            LivechatChannel: { id, name: self.name, hasSelfAsMember: false },
-        });
+        this.env["bus.bus"]._sendone(
+            partner,
+            "mail.record/insert",
+            new mailDataHelpers.Store(
+                this.browse(id),
+                makeKwArgs({ fields: ["are_you_inside", "name"] })
+            ).get_result()
+        );
     }
 
     /** @param {integer} id */
@@ -31,8 +41,8 @@ export class LivechatChannel extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const livechatChannel = this._filter([["id", "=", id]])[0];
-        const users = ResUsers._filter([["id", "in", livechatChannel.user_ids]]);
+        const [livechatChannel] = this.browse(id);
+        const users = ResUsers.browse(livechatChannel.user_ids);
         return users.filter((user) => user.im_status === "online");
     }
     /** @param {integer} id */
@@ -81,5 +91,24 @@ export class LivechatChannel extends models.ServerModel {
             availableUsers.find((operator) => operator.partner_id === previous_operator_id) ??
             availableUsers[0]
         );
+    }
+
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+        fields = kwargs.fields;
+        if (!fields) {
+            fields = [];
+        }
+        for (const livechatChannel of this.browse(ids)) {
+            const [res] = this.read(
+                [livechatChannel.id],
+                fields.filter((field) => field !== "are_you_inside"),
+                false
+            );
+            if (fields.includes("are_you_inside")) {
+                res.are_you_inside = livechatChannel.user_ids.includes(this.env.user.id);
+            }
+            store.add(this.browse(livechatChannel.id), res);
+        }
     }
 }

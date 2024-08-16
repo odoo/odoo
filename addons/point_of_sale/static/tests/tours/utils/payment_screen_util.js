@@ -2,7 +2,6 @@ import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
-import { back } from "@point_of_sale/../tests/tours/utils/common";
 
 /**
  * Clicks on the payment method and then performs checks if necessary.
@@ -31,7 +30,7 @@ export function clickPaymentMethod(name, isCheckNeeded = false, options = {}) {
     const step = [
         {
             content: `click '${name}' payment method`,
-            trigger: `.paymentmethods .button.paymentmethod:contains("${name}")`,
+            trigger: `.paymentmethods .button.paymentmethod .payment-name:contains("${name}")`,
             run: "click",
         },
     ];
@@ -126,18 +125,16 @@ export function clickNumpad(keys) {
 export function clickBack() {
     return [
         {
-            isActive: ["desktop"],
             content: "click back button",
             trigger: ".back-button",
             run: "click",
         },
-        { ...back(), isActive: ["mobile"], run: "click" },
     ];
 }
 export function clickTipButton() {
     return [
         {
-            trigger: ".payment-screen .button.js_tip",
+            trigger: ".payment-screen .button:contains('Tip')",
             run: "click",
         },
     ];
@@ -353,7 +350,6 @@ export function clickPartnerButton() {
         {
             content: "partner screen is shown",
             trigger: `.modal ${PartnerList.clickPartner().trigger}`,
-            in_modal: false,
         },
     ];
 }

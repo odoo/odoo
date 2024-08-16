@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from statistics import mode
 import re
 
 from odoo import api, fields, models, _, _lt
@@ -16,14 +16,18 @@ class AccountAnalyticLine(models.Model):
         return [
             ('employee_id', '=', employee_id),
             ('project_id', '!=', False),
+            ('project_id.active', '=', True),
         ]
 
     @api.model
     def _get_favorite_project_id(self, employee_id=False):
-        last_timesheet_ids = self.search(self._get_favorite_project_id_domain(employee_id), limit=5)
-        if len(last_timesheet_ids.project_id) == 1:
-            return last_timesheet_ids.project_id.id
-        return False
+        last_timesheets = self.search_fetch(
+            self._get_favorite_project_id_domain(employee_id), ['project_id'], limit=5
+        )
+        if not last_timesheets:
+            internal_project = self.env.company.internal_project_id
+            return internal_project.active and internal_project.id
+        return mode([t.project_id.id for t in last_timesheets])
 
     @api.model
     def default_get(self, field_list):
@@ -68,6 +72,27 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(compute="_compute_readonly_timesheet", compute_sudo=True, export_string_translation=False)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
+    message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids', search='_search_message_partner_ids')
+
+    def _search_message_partner_ids(self, operator, value):
+        followed_ids_by_model = dict(self.env['mail.followers']._read_group([
+            ('partner_id', operator, value),
+            ('res_model', 'in', ('project.project', 'project.task')),
+        ], ['res_model'], ['res_id:array_agg']))
+        if not followed_ids_by_model:
+            return expression.FALSE_DOMAIN
+        domains = []
+        if project_ids := followed_ids_by_model.get('project.project'):
+            domains.append([('project_id', 'in', project_ids)])
+        if task_ids := followed_ids_by_model.get('project.task'):
+            domains.append([('task_id', 'in', task_ids)])
+        domain = expression.OR(domains)
+        return domain
+
+    @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
+    def _compute_message_partner_ids(self):
+        for line in self:
+            line.message_partner_ids = line.task_id.message_partner_ids | line.project_id.message_partner_ids
 
     @api.depends('project_id', 'task_id')
     def _compute_display_name(self):
@@ -275,17 +300,8 @@ class AccountAnalyticLine(models.Model):
             # Then, he is internal user, and we take the domain for this current user
             return self.env['ir.rule']._compute_domain(self._name)
         return [
-            '|',
-                '&',
-                    '|',
-                        ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                        ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                    ('task_id.project_id.privacy_visibility', '=', 'portal'),
-                '&',
-                    ('task_id', '=', False),
-                    '&',
-                        ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                        ('project_id.privacy_visibility', '=', 'portal')
+            ('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+            ('project_id.privacy_visibility', '=', 'portal'),
         ]
 
     def _timesheet_preprocess(self, vals_list):

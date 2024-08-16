@@ -1,6 +1,6 @@
 /** @odoo-module alias=@mail/../tests/helpers/webclient_setup default=false */
 
-import { DiscussClientAction } from "@mail/core/web/discuss_client_action";
+import { DiscussClientAction } from "@mail/core/public_web/discuss_client_action";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { rpc } from "@web/core/network/rpc";

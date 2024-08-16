@@ -20,10 +20,9 @@ class ProductReplenish(models.TransientModel):
 
     def _get_replenishment_order_notification_link(self, production):
         if production._name == 'mrp.production':
-            action = self.env.ref('mrp.action_mrp_production_form')
             return [{
                 'label': production.name,
-                'url': f'/web#action={action.id}&id={production.id}&model=mrp.production'
+                'url': f'/odoo/action-mrp.action_mrp_production_form/{production.id}'
             }]
         return super()._get_replenishment_order_notification_link(production)
 

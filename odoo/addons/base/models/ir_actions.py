@@ -195,7 +195,7 @@ class IrActions(models.Model):
             try:
                 action = self.env[action_model].sudo().browse(action_id)
                 fields = ['name', 'binding_view_types']
-                for field in ('groups_id', 'res_model', 'sequence'):
+                for field in ('groups_id', 'res_model', 'sequence', 'domain'):
                     if field in action._fields:
                         fields.append(field)
                 action = action.read(fields)[0]
@@ -203,6 +203,8 @@ class IrActions(models.Model):
                     # transform the list of ids into a list of xml ids
                     groups = self.env['res.groups'].browse(action['groups_id'])
                     action['groups_id'] = list(groups._ensure_xml_id().values())
+                if 'domain' in action and not action.get('domain'):
+                    action.pop('domain')
                 result[binding_type].append(frozendict(action))
             except (MissingError):
                 continue
@@ -229,11 +231,6 @@ class IrActions(models.Model):
         """
         self.ensure_one()
         readable_fields = self._get_readable_fields()
-        if (self.sudo().type == "ir.actions.act_window"):
-            result = self.sudo().read()[0]
-            embedded_actions = self.env["ir.embedded.actions"].browse(result["embedded_action_ids"]).read()
-            result.update({"embedded_action_ids": embedded_actions})
-            return result
         return {
             field: value
             for field, value in self.sudo().read()[0].items()
@@ -384,6 +381,18 @@ class IrActionsActWindow(models.Model):
             # this is used by frontend, with the document layout wizard before send and print
             "close_on_report_download",
         }
+
+    def _get_action_dict(self):
+        """ Override to return action content with detailed embedded actions data if available.
+
+            :return: A dict with updated action dictionary including embedded actions information.
+        """
+        result = super()._get_action_dict()
+        if embedded_action_ids := result["embedded_action_ids"]:
+            EmbeddedActions = self.env["ir.embedded.actions"]
+            embedded_fields = EmbeddedActions._get_readable_fields()
+            result["embedded_action_ids"] = EmbeddedActions.browse(embedded_action_ids).read(embedded_fields)
+        return result
 
 
 VIEW_TYPES = [

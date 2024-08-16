@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web_tour.ToursDialog">
-    <Dialog title="title">
+    <Dialog title.translate="Tours">
         <t t-call="web_tour.ToursDialog.Table">
             <t t-set="caption">Onboarding tours</t>
             <t t-set="tours" t-value="onboardingTours"/>
@@ -35,7 +35,16 @@
             <tbody>
                 <tr t-foreach="tours" t-as="tour" t-key="tour.name">
                     <td><t t-esc="tour.sequence"/></td>
-                    <td><t t-esc="tour.name"/></td>
+                    <td>
+                        <t t-esc="tour.name"/>
+                        <button
+                            class="btn btn-link fa fa-link o_copy_url_tour"
+                            t-att-data-name="tour.name"
+                            t-on-click.prevent="_copyUrlTour"
+                            title="Copy link to start tour"
+                            aria-label="Copy link to start tour"/>
+
+                    </td>
                     <td><t t-esc="tour.url"/></td>
                     <td>
                         <button type="button"

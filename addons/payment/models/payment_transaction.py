@@ -12,8 +12,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import consteq, format_amount, ustr
-from odoo.tools.misc import hmac as hmac_tool
+from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -294,8 +293,10 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'done' for tx in self):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_refund_request(amount_to_refund=amount_to_refund)
+            # In sudo mode because we need to be able to read on provider fields.
+            tx.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 

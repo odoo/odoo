@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 test("should do nothing if no format is set", async () => {
@@ -530,6 +530,13 @@ test("should remove multiple format (3)", async () => {
         contentAfter: "<div><p><b>a</b>[bc</p><p>de<br>fg<br></p><p>ijsd]fsf</p></div>",
     });
 });
+test("should remove format and keep attribute in a span", async () => {
+    await testEditor({
+        contentBefore: '<p><strong some-attr="1">[abc]</strong></p>',
+        stepFunction: (editor) => editor.dispatch("FORMAT_REMOVE_FORMAT"),
+        contentAfter: '<p><span some-attr="1">[abc]</span></p>',
+    });
+});
 test("should remove multiple color (1)", async () => {
     await testEditor({
         contentBefore:
@@ -596,13 +603,13 @@ describe("Toolbar", () => {
     async function removeFormatClick() {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveCount(1); // toolbar open
-        expect(".btn.fa-eraser").toHaveCount(1); // remove format
-        expect(".btn.fa-eraser:not(.disabled)").toHaveCount(1); // remove format button should not be disabled
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled"); // remove format button should not be disabled
 
-        click(".btn.fa-eraser");
+        click(".btn[name='remove_format']");
         await animationFrame();
         expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
-        expect(".btn.fa-eraser.disabled").toHaveCount(1); // remove format button should be disabled
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled
     }
 
     test("Should remove bold from selection", async () => {
@@ -619,7 +626,7 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(
             `<p>this <span style="color:red">is</span>[ a ]<span style="color:red">UX</span> test.</p>`
         );
-        click(".btn.fa-eraser");
+        click(".btn .fa-eraser");
         expect(getContent(el)).toBe(
             `<p>this <span style="color:red">is</span>[ a ]<span style="color:red">UX</span> test.</p>`
         );
@@ -651,15 +658,22 @@ describe("Toolbar", () => {
         );
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveCount(1); // toolbar open
-        expect(".btn.fa-eraser").toHaveCount(1); // remove format
-        expect(".btn.fa-eraser.disabled").toHaveCount(1); // remove format button should be disabled when no format
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled when no format
 
-        click(".btn.fa-eraser");
+        click(".btn[name='remove_format']");
         await animationFrame();
         expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
-        expect(".btn.fa-eraser.disabled").toHaveCount(1); // remove format button should still be disabled
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should still be disabled
         expect(getContent(el)).toBe(
             `<p>this <span class="random-class">is[ a ]UX</span> test.</p>`
         );
+    });
+
+    test("Remove format button should be the last one in the decoration button group", async () => {
+        await setupEditor("<p>[abc]</p>");
+        await waitFor(".o-we-toolbar");
+        const formatButtons = queryAll(".o-we-toolbar .btn-group[name='decoration'] .btn");
+        expect(formatButtons.at(-1)).toHaveAttribute("name", "remove_format");
     });
 });

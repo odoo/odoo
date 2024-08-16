@@ -38,10 +38,8 @@ test("reply: discard on reply button toggle", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
-    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer", { count: 0 });
 });
@@ -67,8 +65,7 @@ test("reply: discard on pressing escape [REQUIRE FOCUS]", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Reply']");
+    await click("[title='Reply']");
     await contains(".o-mail-Composer");
     // Escape on emoji picker does not stop replying
     await click(".o-mail-Composer button[aria-label='Emojis']");
@@ -111,7 +108,6 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-Composer-input", "Test");
@@ -144,7 +140,6 @@ test('"reply to" composer should send message if message replied to is not a not
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
     await insertText(".o-mail-Composer-input", "Test");
@@ -522,7 +517,6 @@ test("reply: stop replying button click", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
-    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
     await contains("i[title='Stop replying']");
@@ -549,7 +543,7 @@ test("error notifications should not be shown in Inbox", async () => {
     await openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Demo User" });
-    await contains(`.o-mail-Message-header a[href*='/web#model=res.partner&id=${partnerId}']`, {
+    await contains(`.o-mail-Message-header a[href*='/odoo/res.partner/${partnerId}']`, {
         text: "Demo User",
     });
     await contains(".o-mail-Message-notification", { count: 0 });
@@ -636,7 +630,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
     withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
-                body: `<a href="https://www.hoot.test/web#model=res.partner&amp;id=17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
+                body: `<a href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
                 message_type: "comment",
                 partner_ids: mention,
                 subtype_xmlid: "mail.mt_comment",

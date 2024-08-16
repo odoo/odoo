@@ -10,6 +10,10 @@
     &.o-minimized {
         height: 20%; // ensures that the view returns to the right height when resized
         min-height: #{"max(20%, 130px)"};
+        &.o-compact {
+            height: 10%;
+            min-height: #{"max(10%, 100px)"};
+        }
     }
 }
 

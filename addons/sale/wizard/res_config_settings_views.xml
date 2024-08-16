@@ -94,6 +94,7 @@
                         </setting>
                         <setting id="sale_pdf_quote_builder" string="PDF Quote builder" help="Make your quote attractive by adding header pages, product descriptions and footer pages to your quote.">
                             <field name="module_sale_pdf_quote_builder"/>
+                            <div class="mt8" name="sale_pdf_module_settings" invisible="not module_sale_pdf_quote_builder"/>
                         </setting>
                         <setting id="no_edit_order" help="No longer edit orders once confirmed">
                             <field name="group_auto_done_setting"/>
@@ -150,9 +151,12 @@
                         <setting id="automatic_invoicing" help="Generate the invoice automatically when the online payment is confirmed" invisible="default_invoice_policy != 'order' or not portal_confirmation_pay">
                             <field name="automatic_invoice"/>
                             <div  invisible="not automatic_invoice" groups="base.group_no_one">
-                                <label for="invoice_mail_template_id" class="o_light_label"/>
+                                <label for="invoice_mail_template_id" class="o_light_label me-2"/>
                                 <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                             </div>
+                        </setting>
+                        <setting id="setting_commission" help="Manage Sales &amp; teams targets and commissions">
+                            <field name="module_sale_commission" widget="upgrade_boolean"/>
                         </setting>
                     </block>
                     <block title="Connectors" id="connectors_setting_container">

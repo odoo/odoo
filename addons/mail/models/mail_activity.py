@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -9,8 +8,7 @@ from collections import defaultdict, Counter
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, exceptions, fields, models, _, Command
-from odoo.osv import expression
+from odoo import api, fields, models, _
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -298,16 +296,13 @@ class MailActivity(models.Model):
         # send notifications about activity creation
         todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
-            self.env['bus.bus']._sendmany([
-                (activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
-                for activity in todo_activities
-            ])
+            activity.user_id._bus_send("mail.activity/updated", {"activity_created": True})
         return activities
 
     def write(self, values):
         if values.get('user_id'):
             user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
-            pre_responsibles = user_changes.mapped('user_id.partner_id')
+            pre_responsibles = user_changes.user_id
         res = super(MailActivity, self).write(values)
 
         if values.get('user_id'):
@@ -320,23 +315,16 @@ class MailActivity(models.Model):
             # send bus notifications
             todo_activities = user_changes.filtered(lambda act: act.date_deadline <= fields.Date.today())
             if todo_activities:
-                self.env['bus.bus']._sendmany([
-                    [partner, 'mail.activity/updated', {'activity_created': True}]
-                    for partner in todo_activities.user_id.partner_id
-                ])
-                self.env['bus.bus']._sendmany([
-                    [partner, 'mail.activity/updated', {'activity_deleted': True}]
-                    for partner in pre_responsibles
-                ])
+                todo_activities.user_id._bus_send(
+                    "mail.activity/updated", {"activity_created": True}
+                )
+                pre_responsibles._bus_send("mail.activity/updated", {"activity_deleted": True})
         return res
 
     def unlink(self):
         todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
-            self.env['bus.bus']._sendmany([
-                [partner, 'mail.activity/updated', {'activity_deleted': True}]
-                for partner in todo_activities.user_id.partner_id
-            ])
+            todo_activities.user_id._bus_send("mail.activity/updated", {"activity_deleted": True})
         return super(MailActivity, self).unlink()
 
     @api.model
@@ -428,7 +416,7 @@ class MailActivity(models.Model):
     def action_done(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
-        return self.action_feedback()
+        return self.filtered(lambda r: r.active).action_feedback()
 
     def action_done_redirect_to_other(self):
         """ Mark activity as done and return action mail.mail_activity_without_access_action.
@@ -581,27 +569,27 @@ class MailActivity(models.Model):
     def action_snooze(self):
         today = date.today()
         for activity in self:
-            activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
+            if activity.active:
+                activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
+
+    def action_cancel(self):
+        for activity in self:
+            if activity.active:
+                activity.unlink()
 
     def activity_format(self):
         return Store(self).get_result()
 
     def _to_store(self, store: Store):
-        activities = self.read()
-        self.mail_template_ids.fetch(['name'])
-        self.attachment_ids.fetch(['name'])
-        store.add(self.user_id.partner_id)
-        for record, activity in zip(self, activities):
-            activity['mail_template_ids'] = [
-                {'id': mail_template.id, 'name': mail_template.name}
-                for mail_template in record.mail_template_ids
+        for activity in self:
+            data = activity.read()[0]
+            data["mail_template_ids"] = [
+                {"id": mail_template.id, "name": mail_template.name}
+                for mail_template in activity.mail_template_ids
             ]
-            activity['attachment_ids'] = [
-                {'id': attachment.id, 'name': attachment.name}
-                for attachment in record.attachment_ids
-            ]
-            activity["persona"] = {"id": record.user_id.partner_id.id, "type": "partner"}
-            store.add("mail.activity", activity)
+            data["attachment_ids"] = Store.many(activity.attachment_ids, fields=["name"])
+            data["persona"] = Store.one(activity.user_id.partner_id)
+            store.add(activity, data)
 
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):

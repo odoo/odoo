@@ -57,6 +57,10 @@ export class Test extends Job {
     static ABORTED = 3;
 
     code = "";
+    logs = reactive({
+        error: 0,
+        warn: 0,
+    });
     /** @type {import("./expect").TestResult[]} */
     results = reactive([]);
     /** @type {() => MaybePromise<void> | null} */
@@ -69,13 +73,13 @@ export class Test extends Job {
     }
 
     /**
-     * @param {import("./suite").Suite | null} parent
-     * @param {string} name
-     * @param {import("./tag").Tag[]} tags
+     * @param {ConstructorParameters<typeof Job>[0]} parent
+     * @param {ConstructorParameters<typeof Job>[1]} name
+     * @param {ConstructorParameters<typeof Job>[2]} config
      * @param {() => MaybePromise<void>} fn
      */
-    constructor(parent, name, tags, fn) {
-        super(parent, name, tags);
+    constructor(parent, name, config, fn) {
+        super(parent, name, config);
 
         this.setRunFn(fn);
     }

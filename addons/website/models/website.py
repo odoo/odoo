@@ -24,7 +24,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
-from odoo.tools import pycompat, SQL, Query, sql as sqltools
+from odoo.tools import SQL, Query, sql as sqltools
 from odoo.tools.translate import _, xml_translate
 
 logger = logging.getLogger(__name__)
@@ -778,7 +778,7 @@ class Website(models.Model):
                         shape_el = el.xpath("//*[hasclass('o_we_shape')]")
                         if shape_el:
                             shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
-                    rendered_snippet = pycompat.to_text(etree.tostring(el))
+                    rendered_snippet = etree.tostring(el, encoding='unicode')
                     rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
@@ -850,6 +850,8 @@ class Website(models.Model):
             #       to close to OXP.
             fallback_create_missing_industry_image('s_banner_default_image_2', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_banner_default_image_3', 's_product_list_default_image_1')
+            fallback_create_missing_industry_image('s_text_cover_default_image', 's_cover_default_image')
+            fallback_create_missing_industry_image('s_showcase_default_image', 's_image_text_default_image')
         except Exception:
             pass
 

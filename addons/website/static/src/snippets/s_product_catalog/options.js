@@ -16,8 +16,6 @@ options.registry.ProductCatalog = options.Class.extend({
      */
     toggleDescription: function (previewMode, widgetValue, params) {
         const $dishes = this.$('.s_product_catalog_dish');
-        const $name = $dishes.find('.s_product_catalog_dish_name');
-        $name.toggleClass('s_product_catalog_dish_dot_leaders', !widgetValue);
         if (widgetValue) {
             $dishes.toArray().forEach((el) => {
                 const $description = $(el).find('.s_product_catalog_dish_description');
@@ -25,10 +23,8 @@ options.registry.ProductCatalog = options.Class.extend({
                     $description.removeClass('d-none');
                 } else {
                     const descriptionEl = document.createElement('p');
-                    descriptionEl.classList.add('s_product_catalog_dish_description', 'border-top', 'text-muted', 'pt-1', 'o_default_snippet_text');
-                    const iEl = document.createElement('i');
-                    iEl.textContent = _t("Add a description here");
-                    descriptionEl.appendChild(iEl);
+                    descriptionEl.classList.add('s_product_catalog_dish_description', 'd-block', 'pe-5', 'text-muted', 'o_default_snippet_text');
+                    descriptionEl.textContent = _t("Add a description here");
                     el.appendChild(descriptionEl);
                 }
             });

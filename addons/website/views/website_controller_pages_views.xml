@@ -10,7 +10,7 @@
                 <group col="2" string="Page Details">
                     <group colspan="1" string="Page">
                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                        <field name="page_name"/>
+                        <field name="name"/>
                         <label for="name_slugified" string="URL"/>
                         <div>
                             <span>/model/</span>
@@ -23,7 +23,8 @@
                         <field name="website_published" />
                     </group>
                     <group colspan="1" string="Settings">
-                        <field name="model" invisible="1"/>
+                        <field name="model_id" readonly="id"/>
+                        <field name="model" invisible="1" />
                         <field name="record_domain" widget="domain" options="{'in_dialog': True, 'model': 'model'}"/>
                         <field name="page_type" required="1"/>
                         <field name="default_layout" invisible="page_type != 'listing'" />
@@ -53,17 +54,60 @@
     <field name="arch" type="xml">
         <tree>
             <field name="name" string="Page Title"/>
-            <field name="name_slugified"/>
-            <field name="page_type"/>
-            <field name="view_id" column_invisible="True"/>
-
             <!-- website_id should be shown only in multi website environment
             when the group is enabled, but we need the field to be there all the
             time for `PageRendererMixin`'s `recordFilter' to be able to filter
             correctly. -->
             <field name="website_id" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
+            <field name="url_demo"/>
+            <field name="page_type"/>
+            <field name="is_published" widget="boolean_toggle"/>
         </tree>
+    </field>
+</record>
+
+<record id="website_controller_pages_kanban_view" model="ir.ui.view">
+    <field name="name">website.controller.page.kanban</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <kanban class="o-website-controller-page-kanban">
+            <t t-name="kanban-card">
+                <field name="website_published" invisible="1" />
+                <widget name="web_ribbon" text="Published" invisible="not website_published" />
+                <widget name="web_ribbon" text="Unpublished" invisible="website_published" bg_color="text-bg-danger" />
+                    <div data-section="data">
+                        <div class="fw-bold" data-section="title"><field name="name"/> &#8212; <field name="page_type" /></div>
+                        <div data-section="name">
+                            <div>
+                                <span class="me-1">Exposes:</span>
+                                <field name="model_id"/>
+                            </div>
+                            <div invisible="website_id">On all websites</div>
+                            <div invisible="not website_id"><span class="me-1">On:</span><field name="website_id"/></div>
+                        </div>
+                    </div>
+                     <div class="d-md-flex align-items-center gap-3" data-section="more-info">
+                        <i class="fa fa-2x fa-arrow-right text-primary" title="URL" />
+                        <field name="url_demo" />
+                    </div>
+            </t>
+        </kanban>
+    </field>
+</record>
+
+<record id="website_controller_pages_search_view" model="ir.ui.view">
+    <field name="name">website.controller.page.search</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
+            <group expand="0" string="Group By" colspan="4">
+                <filter string="Page Type" name="page_type" domain="[]" context="{'group_by':'page_type'}"/>
+                <filter string="Model" name="page_model" domain="[]" context="{'group_by':'model'}"/>
+                <filter string="Website" name="page_website_id" domain="[]" context="{'group_by':'website_id'}"/>
+            </group>
+        </search>
     </field>
 </record>
 

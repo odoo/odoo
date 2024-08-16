@@ -22,7 +22,7 @@ class Rating(models.Model):
     def action_open_rated_object(self):
         action = super(Rating, self).action_open_rated_object()
         if self.res_model == 'discuss.channel':
-            if self.env[self.res_model].browse(self.res_id).is_member:
+            if self.env[self.res_model].browse(self.res_id):
                 ctx = self.env.context.copy()
                 ctx.update({'active_id': self.res_id})
                 return {

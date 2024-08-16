@@ -1,0 +1,78 @@
+.s_accordion {
+    .accordion {
+        --#{$prefix}accordion-btn-focus-box-shadow: inset 0 0 #{$focus-ring-blur} #{$focus-ring-width} #{$focus-ring-color};
+    }
+
+    .accordion-button {
+        &:not(:focus-visible) {
+            box-shadow: none;
+        }
+
+        // Replace the default chevron with our Odoo UI icon to
+        // have more control on its color depending on the
+        // preset applied
+        &:after {
+            margin: 0;
+            background: none;
+            font-family: 'odoo_ui_icons';
+            text-align: center;
+            content: '\e839';
+        }
+    }
+
+    .s_accordion_highlight {
+        .accordion-item {
+            border: 0;
+            border-radius: var(--#{$prefix}accordion-border-radius);
+            overflow: hidden;
+
+            // This removes the bg color when the item isn't displayed.
+            &:has(.collapsed) {
+                background: transparent !important;
+                color: inherit;
+            }
+
+            // The purpose of this pseudo-element is to add a default
+            // "light" background to the active item, which can be
+            // replaced by a color preset or a custom color.
+            // This avoids color conflicts and preserves the colors
+            // selected by the user when changing the accordion template.
+            &:not(:has(.collapsed))::before {
+                position: absolute;
+                inset: 0;
+                display: block;
+                background: rgba(0,0,0,0.4); // Fallback
+                background-color: fade-currentColor(4%);
+                content: '';
+                z-index: -1;
+            }
+        }
+    }
+
+    // Duplicated code from _accordion.scss
+    // This allows to have rounded corners for "Side border" accordion.
+    .accordion-flush .accordion-item {
+        &:first-of-type {
+            @include border-top-radius(var(--#{$prefix}accordion-border-radius));
+
+            >.accordion-header .accordion-button {
+                @include border-top-radius(var(--#{$prefix}accordion-inner-border-radius));
+            }
+        }
+
+        &:last-of-type {
+            @include border-bottom-radius(var(--#{$prefix}accordion-border-radius));
+
+            >.accordion-header .accordion-button {
+                &.collapsed {
+                    @include border-bottom-radius(var(--#{$prefix}accordion-inner-border-radius));
+                }
+            }
+
+            >.accordion-collapse {
+                @include border-bottom-radius(var(--#{$prefix}accordion-border-radius));
+            }
+        }
+    }
+}
+

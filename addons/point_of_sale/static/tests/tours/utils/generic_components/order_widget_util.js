@@ -38,7 +38,7 @@ export function hasLine({
         trigger += `:has(.product-name:contains("${productName}"))`;
     }
     if (quantity) {
-        trigger += `:has(em.qty:contains("${quantity}"))`;
+        trigger += `:has(.qty:contains("x${quantity}"))`;
     }
     if (price) {
         trigger += `:has(.price:contains("${price}"))`;
@@ -79,11 +79,18 @@ export function doesNotHaveLine(options = {}) {
 // TODO: there are instances where we have no selected orderline. Fix those instances
 
 export function hasTotal(amount) {
-    return {
-        content: `order total amount is '${amount}'`,
-        trigger: `.product-screen .order-summary .total:contains("${amount}")`,
-        allowInvisible: true,
-    };
+    return [
+        {
+            isActive: ["desktop"],
+            content: `order total amount is '${amount}'`,
+            trigger: `.product-screen .order-summary .total:contains("${amount}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: `order total amount is '${amount}'`,
+            trigger: `.product-screen .order-summary .total:contains("${amount}"):not(:visible)`,
+        },
+    ];
 }
 export function hasTax(amount) {
     return {

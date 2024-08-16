@@ -17,7 +17,7 @@
                 <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
-                        <sup t-attf-class="my_cart_quantity badge text-bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                        <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
                 </a>
@@ -780,18 +780,37 @@
                     <t t-if="category.parent_id" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
                     <t t-else="" t-set="backUrl" t-value="'/shop'"/>
 
-                    <li t-foreach="entries" t-as="c"
+                    <li
+                        t-foreach="entries"
+                        t-as="c"
                         t-attf-class="d-flex {{'pe-3' if not c_last else ''}}"
-                        t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)">
-                        <input type="radio" t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}" class="btn-check pe-none" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
-
-                        <div t-attf-class=" btn btn-{{navClass}} d-flex align-items-center {{'ps-2 pe-3' if c.image_128 else 'px-4'}} fs-6 fw-normal {{ 'border-primary' if c.id == category.id else '' }}" t-att-for="c.id">
-                            <div t-if="c.image_128"
-                                 t-attf-style="background-image:url('data:image/png;base64,#{c.image_128}')"
-                                 class="o_image_40_cover oe_img_bg o_bg_img_center rounded-3 me-3"
-                                 t-att-alt="c.name "/>
-                            <span t-field="c.name"/>
-                        </div>
+                    >
+                        <a
+                            t-att-href="keep('/shop/category/' + slug(c), category=0)"
+                            class="text-decoration-none"
+                        >
+                            <input
+                                type="radio"
+                                t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
+                                class="btn-check pe-none"
+                                t-att-id="c.id"
+                                t-att-value="c.id"
+                                t-att-checked="'true' if c.id == category.id else None"/>
+                            <div
+                                t-attf-class="d-flex align-items-center fs-6 fw-normal
+                                    btn btn-{{navClass}} {{'ps-2 pe-3' if c.image_128 else 'px-4'}}
+                                    {{ 'border-primary' if c.id == category.id else '' }}"
+                            >
+                                <div
+                                    t-if="c.image_128"
+                                    t-attf-style="background-image:url('data:image/png;base64,
+                                        #{c.image_128}')"
+                                    class="o_image_40_cover oe_img_bg o_bg_img_center
+                                        flex-shrink-0 rounded-3 me-3"
+                                    t-att-alt="c.name "/>
+                                <span class="text-nowrap" t-field="c.name"/>
+                            </div>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -815,10 +834,21 @@
     <template id="categorie_link" name="Category Link">
         <t t-if="isOffcanvas" t-set="parentCategoryId" t-valuef="offcanvas"/>
 
-        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="form-check d-inline-block">
-            <input type="radio" t-attf-name="wsale_categories_radios_{{parentCategoryId}}" class="form-check-input pe-none" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
-            <label class="form-check-label fw-normal" t-att-for="c.id" t-field="c.name"/>
-        </div>
+        <a
+            t-att-href="keep('/shop/category/' + slug(c), category=0)"
+            class="text-decoration-none p-0 text-900"
+        >
+            <div class="form-check d-inline-block">
+                <input
+                    type="radio"
+                    t-attf-name="wsale_categories_radios_{{parentCategoryId}}"
+                    class="form-check-input pe-none "
+                    t-att-id="c.id"
+                    t-att-value="c.id"
+                    t-att-checked="'true' if c.id == category.id else None"/>
+                <label class="form-check-label fw-normal" t-field="c.name"/>
+            </div>
+        </a>
     </template>
 
     <template id="website_sale.products_categories_list" active="True" name="eCommerce Categories">
@@ -827,10 +857,23 @@
         <div class="wsale_products_categories_list">
             <ul class="nav d-flex flex-column my-2">
                 <li class="nav-item mb-1">
-                    <div t-att-data-link-href="keep('/shop', category=0)" class="form-check d-inline-block">
-                        <input type="radio" t-attf-name="wsale_categories_radios{{_radioGroup}}" class="form-check-input pe-none o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
-                        <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
-                    </div>
+                    <a
+                        t-att-href="keep('/shop', category=0)"
+                        class="text-decoration-none p-0 text-900"
+                    >
+                        <div class="form-check d-inline-block">
+                            <input
+                                type="radio"
+                                t-attf-name="wsale_categories_radios{{_radioGroup}}"
+                                class="form-check-input pe-none o_not_editable"
+                                t-att-id="all_products"
+                                t-att-value="all_products"
+                                t-att-checked="'true' if not category else None"/>
+                            <label class="form-check-label fw-normal" t-att-for="all_products">
+                                All Products
+                            </label>
+                        </div>
+                    </a>
                 </li>
                 <t t-foreach="categories" t-as="c">
                     <t t-call="website_sale.categories_recursive"/>
@@ -1391,7 +1434,7 @@
                             <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="form-check-label fw-normal">
                                 <span t-out="combination_info['display_name']"/>
                                 <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
-                                <span t-attf-class="badge rounded-pill text-bg-{{navClass}} border" t-if="diff_price != 0">
+                                <span t-attf-class="badge text-bg-{{navClass}} border" t-if="diff_price != 0">
                                     <span class="sign_badge_price_extra" t-out="diff_price > 0 and '+' or '-'"/>
                                     <span t-out="abs(combination_info['price'] - template_combination_info['price'])"
                                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
@@ -1552,6 +1595,11 @@
                                 <i class="fa fa-trash-o"/>
                             </button>
                         </div>
+                        <t t-if="line.product_type == 'combo'">
+                            <t t-foreach="line.linked_line_ids" t-as="combo_item_line">
+                                <t t-call="website_sale.cart_combo_item_line"/>
+                            </t>
+                        </t>
                     </div>
                     <div class="d-flex flex-column align-items-end">
                         <div t-attf-class="css_quantity input-group mb-2"
@@ -1609,14 +1657,7 @@
                                      t-out="line._get_displayed_unit_price() * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
-                            <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                               t-set='product_price'
-                               t-value='line.price_subtotal'/>
-                            <t t-else=""
-                               t-set='product_price'
-                               t-value='line.price_total'/>
-                            <span t-out="product_price" style="white-space: nowrap;"
-                                  t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                            <t t-call="website_sale.cart_product_price"/>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                    class="cart_product_base_unit_price d-block text-muted"
                                    groups="website_sale.group_show_uom_price">
@@ -1631,6 +1672,55 @@
                 </t>
             </div>
         </div>
+    </template>
+
+    <template id="cart_combo_item_line">
+        <div class="d-flex align-items-center">
+            <div t-field="combo_item_line.product_id.image_128"
+                 t-options="{
+                    'widget': 'image',
+                    'qweb_img_responsive': False,
+                    'class': 'o_image_64_max rounded',
+                 }"
+            />
+            <div class="ms-3">
+                <a t-att-href="combo_item_line.product_id.website_url">
+                    <h6 class="d-inline align-top h6 fw-bold">
+                        <span t-out="combo_item_line._get_displayed_quantity()"/>
+                        x
+                        <span t-out="combo_item_line.name_short"/>
+                    </h6>
+                </a>
+                <t
+                    t-set="description_lines"
+                    t-value="combo_item_line.get_description_following_lines()"
+                />
+                <div t-if="description_lines" t-attf-class="text-muted d-none d-md-block small">
+                    <t t-foreach="description_lines" t-as="description_line">
+                        <span class="d-block" t-if="description_line" t-out="description_line"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="cart_product_price">
+        <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
+        <t
+            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+            t-set='product_price'
+            t-value="line._get_combo_price_subtotal() if is_combo else line.price_subtotal"
+        />
+        <t
+            t-else=""
+            t-set='product_price'
+            t-value="line._get_combo_price_total() if is_combo else line.price_total"
+        />
+        <span
+            t-out="product_price"
+            style="white-space: nowrap;"
+            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+        />
     </template>
 
     <!-- /shop/cart route -->
@@ -2337,12 +2427,7 @@
                                                         </t>
                                                         <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
                                                             name="website_sale_cart_summary_line_price">
-                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                                                                t-field="line.price_subtotal" style="white-space: nowrap;"
-                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                                                            <span t-else=""
-                                                                t-field="line.price_total" style="white-space: nowrap;"
-                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                                            <t t-call="website_sale.cart_product_price"/>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -2541,7 +2626,7 @@
                 'bg-danger'}">
                 <div class="card-header">
                     <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-end" target="_blank" aria-label="Edit" title="Edit"
-                            t-attf-href="/web#model=payment.provider&amp;id=#{tx_sudo.provider_id.id}&amp;action=payment.action_payment_provider&amp;view_type=form">
+                            t-attf-href="/odoo/action-payment.action_payment_provider/{tx_sudo.provider_id.id}">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="tx_sudo.state == 'pending'">

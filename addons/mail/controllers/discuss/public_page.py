@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from psycopg2 import IntegrityError
-from psycopg2.errorcodes import UNIQUE_VIOLATION
+import psycopg2.errors
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
@@ -76,9 +74,7 @@ class PublicPageController(http.Controller):
                         "uuid": create_token,
                     }
                 )
-            except IntegrityError as e:
-                if e.pgcode != UNIQUE_VIOLATION:
-                    raise
+            except psycopg2.errors.UniqueViolation:
                 # concurrent insert attempt: another request created the channel.
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
@@ -108,10 +104,9 @@ class PublicPageController(http.Controller):
             {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
-                "discuss_public_thread": {"id": channel.id, "model": "discuss.channel"},
+                "discuss_public_thread": Store.one(channel),
             }
         )
-        store.add(channel)
         return request.render(
             "mail.discuss_public_channel_template",
             {

@@ -504,7 +504,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 1
-        orderpoint_form.product_max_qty = 0.000
+        orderpoint_form.product_max_qty = 1.000
         orderpoint_form.save()
 
         self.env['procurement.group'].run_scheduler()

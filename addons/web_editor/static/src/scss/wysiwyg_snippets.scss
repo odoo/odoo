@@ -33,6 +33,7 @@
 
     .oe_snippet_thumbnail {
         width: 100%;
+        overflow: hidden;
 
         .oe_snippet_thumbnail_img {
             width: 100%;
@@ -391,6 +392,7 @@
 
                 &.o_snippet_install {
                     .btn.o_install_btn {
+                        z-index: 1;
                         @include o-position-absolute($top: 10px);
                     }
 
@@ -506,11 +508,13 @@
                 "typo typo style style colors"
                 "size align list list link"
                 "ai animate animate hilight hilight"
+                "translate translate . . ."
                 "options options options options options"
                 "options2 options2 options2 options2 options2"
                 "options3 options3 options3 options3 options3";
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             grid-template-rows:
+                minmax($o-we-sidebar-content-field-height, auto)
                 minmax($o-we-sidebar-content-field-height, auto)
                 minmax($o-we-sidebar-content-field-height, auto)
                 minmax($o-we-sidebar-content-field-height, auto)
@@ -761,6 +765,9 @@
 
             #chatgpt {
                 grid-area: ai;
+            }
+            #translate {
+                grid-area: translate;
             }
             #animate {
                 grid-area: animate;
@@ -2198,6 +2205,10 @@ we-select.o_we_border_preview_aligned_select {
         outline-offset: -$o-we-dropzone-border-width;
         z-index: $o-we-overlay-zindex;
     }
+    &.o_dropzone_highlighted {
+        filter: brightness(1.5);
+        transition: 200ms;
+    }
 }
 
 .oe_drop_zone:not(.oe_grid_zone) {
@@ -2789,5 +2800,156 @@ we-select.o_grid we-toggler {
         @include o-position-absolute(0, 0, 0, 0);
         animation: highlightPadding 2s;
         pointer-events: none;
+    }
+}
+
+// Add snippets dialog.
+.o_add_snippet_dialog {
+    max-height: $modal-lg !important;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+
+        .list-group {
+            min-width: 200px;
+            max-width: 250px;
+
+            button.active {
+                background-color: $o-brand-primary;
+                border-color: $o-brand-primary;
+            }
+        }
+    }
+}
+
+// Add snippets dialog iframe.
+.o_add_snippets_preview {
+    overflow-y: auto;
+    width: 30%;
+    height: 30%;
+    background-color: unset;
+
+    .o_snippets_preview_row {
+        transform: scale(0.3);
+        transform-origin: top left;
+        width: 333%;
+        height: 100%;
+
+        .o_snippet_preview_wrap {
+            min-height: 100px;
+            transition: all 150ms cubic-bezier(0.65, 0.05, 0.36, 1);
+            box-shadow: 0 0.5rem 6rem rgba(0, 0, 0, 0.2);
+            margin-bottom: 96px !important;
+            background-color: var(--body-bg);
+            cursor: pointer;
+
+            [data-snippet="s_carousel"],
+            [data-snippet="s_quotes_carousel"] {
+                height: 550px;
+            }
+            [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
+                /* In Travel theme. */
+                height: 500px !important;
+            }
+            .o_full_screen_height, .o_half_screen_height {
+                height: unset !important;
+                min-height: unset !important;
+            }
+            .o_full_screen_height {
+                aspect-ratio: 4 / 3;
+            }
+            .o_half_screen_height {
+                aspect-ratio: 8 / 3;
+            }
+            [data-snippet="s_map"], [data-snippet="s_google_map"] {
+                padding: 0 !important;
+            }
+            > [data-snippet] {
+                isolation: isolate;
+                pointer-events: none;
+                user-select: none;
+
+                &.s_popup {
+                    min-height: 660px;
+
+                    > .modal {
+                        --black-50: rgba(0, 0, 0, 0.25) !important;
+                        display: block;
+                        opacity: 1;
+                        position: absolute;
+
+                        .modal-dialog {
+                            transform: none;
+                        }
+                        .modal-content {
+                            box-shadow: 0rem 3.5rem 12rem rgba(0, 0, 0, 0.6);
+                        }
+                    }
+                }
+            }
+            &::after {
+                content: "";
+                @include o-position-absolute(0, 0, 0, 0);
+                outline: 6px solid transparent;
+                transition: all 150ms;
+                z-index: 1;
+            }
+            &:hover {
+                box-shadow: 0 1rem 6rem rgba(0, 0, 0, 0.25);
+                &::after {
+                    outline: 6px solid $o-we-handles-accent-color;
+                }
+            }
+            &.o_snippet_preview_install {
+                .s_dialog_preview_image {
+                    filter: saturate(0) blur(5px);
+                }
+                &:hover {
+                    .s_dialog_preview_image {
+                        opacity: 1;
+                        filter: saturate(0) brightness(0.6) blur(5px);
+                    }
+                     > .o_snippet_preview_install_btn {
+                        opacity: 1;
+                     }
+                }
+                > .o_snippet_preview_install_btn {
+                    z-index: 1;
+                    @include o-position-absolute(auto, 0, 0, 0);
+                    opacity: 0;
+                    transform: scale(3.33);
+                    width: max-content;
+                    font-size: 14px;
+                    font-family: $o-we-font-family;
+                    background-color: $o-we-color-info;
+                    transition: 0.3s;
+                }
+            }
+            .s_dialog_preview_image {
+                display: flex;
+                flex-direction: column;
+                img {
+                    max-width: 100%;
+                }
+            }
+        }
+        .o_custom_snippet_wrap {
+            margin-bottom: 96px !important;
+
+            .o_snippet_preview_wrap {
+                margin-bottom: 0px !important;
+            }
+            .o_custom_snippet_edit {
+                 > * {
+                    color: rgba(0, 0, 0, 0.6);
+                    font-size: 50px;
+                    font-family: $o-we-font-family;
+                 }
+                 .btn:hover {
+                    color: rgba(0, 0, 0, 0.8);
+                 }
+            }
+        }
     }
 }

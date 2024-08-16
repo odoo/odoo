@@ -12,9 +12,6 @@ class ProductTemplate(models.Model):
         help="If this product is available in the Self Order screens",
         default=True,
     )
-    description_self_order = fields.Html(
-        string="Product Description for Self Order",
-    )
 
     @api.onchange('available_in_pos')
     def _on_change_available_in_pos(self):
@@ -47,8 +44,34 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config_id):
         params = super()._load_pos_self_data_fields(config_id)
-        params += ['description_self_order']
+        params += ['public_description']
         return params
+
+    def _load_pos_self_data(self, data):
+        domain = self._load_pos_data_domain(data)
+
+        # Add custom fields for 'formula' taxes.
+        fields = set(self._load_pos_data_fields(data['pos.config']['data'][0]['id']))
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
+        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
+        fields = list(fields.union(product_fields))
+
+        config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        products = self.with_context(display_default_code=False).search_read(
+            domain,
+            fields,
+            limit=config.get_limited_product_count(),
+            order='sequence,default_code,name',
+            load=False
+        )
+
+        data['pos.config']['data'][0]['_product_default_values'] = \
+            self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
+
+        return {
+            'data': products,
+            'fields': fields,
+        }
 
     def _get_name(self) -> str:
         """

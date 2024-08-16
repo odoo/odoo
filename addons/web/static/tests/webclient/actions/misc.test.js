@@ -346,10 +346,10 @@ test('action with "no_breadcrumbs" set to true', async () => {
     ]);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
-    expect(".o_control_panel .o_breadcrumb").toHaveCount(1);
+    expect(".o_breadcrumb").toHaveCount(1);
     // push another action flagged with 'no_breadcrumbs=true'
     await getService("action").doAction(42);
-    expect(".o_control_panel .o_breadcrumb").toHaveCount(0);
+    expect(".o_breadcrumb").toHaveCount(0);
 });
 
 test("document's title is updated when an action is executed", async () => {
@@ -440,7 +440,7 @@ test.tags("desktop")('handles "history_back" event', async () => {
     list.env.config.historyBack();
     await animationFrame();
     expect(".o_breadcrumb span").toHaveCount(1);
-    expect(".o_control_panel .o_breadcrumb").toHaveText("Partners Action 4", {
+    expect(".o_breadcrumb").toHaveText("Partners Action 4", {
         message: "breadcrumbs should display the display_name of the action",
     });
 });

@@ -70,37 +70,19 @@
                     <button name="action_import" string="Import" type="object" display="always"
                         context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
                 </header>
-                <field name="name"/>
-                <field name="company_name"/>
-                <field name="email"/>
-                <field name="message_bounce"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title">
-                                        <t t-esc="record.name.value"/>
-                                    </strong>
-                                </div>
-                                <span class="badge rounded-pill" title="Number of bounced email.">
-                                    <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
-                                </span>
-                            </div>
-                            <div class="o_kanban_record_body">
-                                <field name="tag_ids"/>
-                            </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <strong>
-                                        <t t-esc="record.email.value"/>
-                                    </strong>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <t t-esc="record.company_name.value"/>
-                                </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex">
+                            <field name="name" class="fw-bolder fs-5"/>
+                            <div class="badge rounded-pill ms-auto" title="Number of bounced email.">
+                                <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <field name="message_bounce"/>
                             </div>
                         </div>
+                        <field name="tag_ids"/>
+                        <footer class="fs-6 pt-1">
+                            <field name="email" class="fw-bolder"/>
+                            <field name="company_name" class="ms-auto"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

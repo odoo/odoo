@@ -156,12 +156,12 @@ And here is the same: <a href="{self.base_url}/r/(\w+)+"><img src="https://www.o
     def test_shorten_links_html_including_base_url(self):
         content = f"""<p>
 This is a link: <a href="https://www.worldcommunitygrid.org">https://www.worldcommunitygrid.org</a><br/>
-This is another: <a href="{self.base_url}/web#debug=1&more=2">{self.base_url}</a><br/>
+This is another: <a href="{self.base_url}/odoo?debug=1&more=2">{self.base_url}</a><br/>
 And a third: <a href="{self.base_url}">Here</a>
 And a forth: <a href="{self.base_url}">Here</a>
 And a fifth: <a href="{self.base_url}">Here too</a>
-And a 6th: <a href="/web">Here2</a><br>
-And a 7th: <a href="{self.base_url}/web">Here2</a><br>
+And a 6th: <a href="/odoo">Here2</a><br>
+And a 7th: <a href="{self.base_url}/odoo">Here2</a><br>
 And a last, more complex: <a href="https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833">There!</a>
 </p>"""
 
@@ -222,7 +222,7 @@ And a last, more complex: <a href="{self.base_url}/r/(\w+)">There!</a>
     def test_shorten_links_text_including_base_url(self):
         content = f"""
 This is a link: https://www.worldcommunitygrid.org
-This is another: {self.base_url}/web#debug=1&more=2
+This is another: {self.base_url}/odoo?debug=1&more=2
 A third: {self.base_url}
 A forth: {self.base_url}
 And a last, with question mark: https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833"""

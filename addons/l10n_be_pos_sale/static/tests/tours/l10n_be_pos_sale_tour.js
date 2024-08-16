@@ -21,3 +21,16 @@ registry.category("web_tour.tours").add("PosSettleOrderIsInvoice", {
             PaymentScreen.isInvoiceButtonChecked(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleOrderTryInvoice", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.isInvoiceButtonChecked(),
+        ].flat(),
+});

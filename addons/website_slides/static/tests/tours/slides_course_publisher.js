@@ -25,22 +25,18 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
 }, {
     content: 'eLearning: set name',
     trigger: "modal:not(.o_inactive_modal) div[name=name] input",
-    in_modal: false,
     run: "edit How to Déboulonnate",
 }, {
     content: 'eLearning: click on tags',
     trigger: ".modal .o_field_many2many_tags input",
-    in_modal: false,
     run: "edit Gard",
 }, {
     content: 'eLearning: select gardener tag',
     trigger: ".modal .ui-autocomplete a:contains(Gardener)",
-    in_modal: false,
     run: "click",
 }, {
     content: 'eLearning: set description',
     trigger: 'modal .o_field_html[name="description"] .odoo-editor-editable p',
-    in_modal: false,
     run: "editor Déboulonnate is very common at Fleurus",
 }, {
     content: 'eLearning: we want reviews',
@@ -49,7 +45,6 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
 }, {
     content: 'eLearning: seems cool, create it',
     trigger: ".modal button:contains(Save)",
-    in_modal: false,
     run: "click",
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),

@@ -6,11 +6,13 @@ import { HootJobButtons } from "./hoot_job_buttons";
 
 /**
  * @typedef {{
+ *  multi?: number;
  *  name: string;
+ *  hasSuites: boolean;
  *  reporting: import("../hoot_utils").Reporting;
  *  selected: boolean;
  *  unfolded: boolean;
- * }} HootSideBarChevronProps
+ * }} HootSideBarSuiteProps
  *
  * @typedef {{
  *  reporting: import("../hoot_utils").Reporting;
@@ -32,24 +34,34 @@ const { Boolean, Object, String } = globalThis;
 //-----------------------------------------------------------------------------
 
 /**
- * @extends {Component<HootSideBarChevronProps, import("../hoot").Environment>}
+ * @extends {Component<HootSideBarSuiteProps, import("../hoot").Environment>}
  */
 export class HootSideBarSuite extends Component {
     static props = {
+        multi: { type: Number, optional: true },
         name: String,
+        hasSuites: Boolean,
         reporting: Object,
         selected: Boolean,
         unfolded: Boolean,
     };
 
     static template = xml`
-        <t t-if="props.reporting.suites">
+        <t t-if="props.hasSuites">
             <i
                 class="fa fa-chevron-right text-xs transition"
-                t-att-class="{ 'rotate-90': props.unfolded }"
+                t-att-class="{
+                    'rotate-90': props.unfolded,
+                    'opacity-25': !props.reporting.failed and !props.reporting.tests
+                }"
             />
         </t>
         <span t-att-class="getClassName()" t-esc="props.name" />
+        <t t-if="props.multi">
+            <strong class="text-abort whitespace-nowrap me-1">
+                x<t t-esc="props.multi" />
+            </strong>
+        </t>
     `;
 
     getClassName() {
@@ -76,7 +88,10 @@ export class HootSideBarCounter extends Component {
 
     static template = xml`
         <t t-set="info" t-value="getCounterInfo()" />
-        <span t-att-class="info[1] ? info[0] : 'text-muted'" t-esc="info[1]" />
+        <span
+            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-muted' }} {{ info[1] ? 'font-bold' : '' }}"
+            t-esc="info[1]"
+        />
     `;
 
     getCounterInfo() {
@@ -110,30 +125,34 @@ export class HootSideBar extends Component {
             t-on-click="onClick"
         >
             <ul>
-                <t t-foreach="state.items" t-as="item" t-key="item.id">
+                <t t-foreach="state.suites" t-as="suite" t-key="suite.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
-                            class="flex items-center w-full h-full px-2 overflow-hidden"
-                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': state.hovered === item.id or uiState.selectedSuiteId === item.id }"
-                            t-attf-style="margin-left: {{ (item.path.length - 1) + 'rem' }};"
-                            t-att-title="item.name"
-                            t-on-click="() => this.toggleItem(item.id)"
-                            t-on-pointerenter="() => state.hovered = item.id"
-                            t-on-pointerleave="() => state.hovered = null"
+                            class="hoot-sidebar-suite flex items-center w-full h-full px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
+                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
+                            t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
+                            t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
+                            t-on-click="() => this.toggleItem(suite.id)"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
-                                    name="item.name"
-                                    reporting="item.reporting"
-                                    selected="uiState.selectedSuiteId === item.id"
-                                    unfolded="state.unfolded.has(item.id)"
+                                    multi="suite.config.multi"
+                                    name="suite.name"
+                                    hasSuites="hasSuites(suite)"
+                                    reporting="suite.reporting"
+                                    selected="uiState.selectedSuiteId === suite.id"
+                                    unfolded="state.unfolded.has(suite.id)"
                                 />
+                                <span class="text-muted">
+                                    (<t t-esc="suite.totalTestCount" />)
+                                </span>
                             </div>
-                            <t t-if="state.hovered === item.id">
-                                <HootJobButtons job="item" />
-                            </t>
-                            <t t-else="">
-                                <HootSideBarCounter reporting="item.reporting" statusFilter="uiState.statusFilter" />
+                            <HootJobButtons hidden="true" job="suite" />
+                            <t t-if="env.runner.state.suites.includes(suite)">
+                                <HootSideBarCounter
+                                    reporting="suite.reporting"
+                                    statusFilter="uiState.statusFilter"
+                                />
                             </t>
                         </button>
                     </li>
@@ -142,14 +161,14 @@ export class HootSideBar extends Component {
         </div>
     `;
 
+    runningSuites = new Set();
+
     setup() {
         const { runner, ui } = this.env;
 
         this.uiState = useState(ui);
-        this.runnerState = useState(runner.state);
         this.state = useState({
-            hovered: null,
-            items: [],
+            suites: [],
             /** @type {Set<string>} */
             unfolded: new Set(),
         });
@@ -181,24 +200,31 @@ export class HootSideBar extends Component {
          * @param {Suite} suite
          */
         const addSuite = (suite) => {
-            this.state.items.push(suite);
+            if (!(suite instanceof Suite)) {
+                return;
+            }
+            this.state.suites.push(suite);
             if (!unfolded.has(suite.id)) {
                 return;
             }
             for (const child of suite.jobs) {
-                if (suites.includes(child)) {
-                    addSuite(child);
-                }
+                addSuite(child);
             }
         };
 
-        const { suites } = this.runnerState;
         const { unfolded } = this.state;
 
-        this.state.items = [];
+        this.state.suites = [];
         for (const suite of this.env.runner.rootSuites) {
             addSuite(suite);
         }
+    }
+
+    /**
+     * @param {import("../core/job").Job} job
+     */
+    hasSuites(job) {
+        return job.jobs.some((subJob) => subJob instanceof Suite);
     }
 
     /**

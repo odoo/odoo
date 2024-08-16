@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DebugMenu.SetDefaultDialog">
-        <Dialog title="title">
+        <Dialog title.translate="Set Defaults">
             <table style="width: 100%">
                 <tr>
                     <td>
@@ -62,7 +62,7 @@
     </t>
 
     <t t-name="web.DebugMenu.GetMetadataDialog">
-        <Dialog title="title">
+        <Dialog title.translate="View Metadata">
             <table class="table table-sm table-striped">
                 <tr>
                     <th>ID:</th>
@@ -114,7 +114,7 @@
     </t>
 
     <t t-name="web.DebugMenu.GetViewDialog">
-        <Dialog title="title">
+        <Dialog title.translate="Get View">
             <pre t-esc="props.arch"/>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Close</button>

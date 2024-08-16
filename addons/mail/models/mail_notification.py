@@ -130,15 +130,10 @@ class MailNotification(models.Model):
     def _to_store(self, store: Store, /):
         """Returns the current notifications in the format expected by the web
         client."""
-        store.add(self.res_partner_id, fields=["display_name"])
         for notif in self:
             data = notif._read_format(
                 ["failure_type", "notification_status", "notification_type"], load=False
             )[0]
-            data["message"] = {"id": notif.mail_message_id.id}
-            data["persona"] = (
-                {"id": notif.res_partner_id.id, "type": "partner"}
-                if notif.res_partner_id
-                else False
-            )
-            store.add("mail.notification", data)
+            data["message"] = Store.one(notif.mail_message_id, only_id=True)
+            data["persona"] = Store.one(notif.res_partner_id, fields=["display_name"])
+            store.add(notif, data)

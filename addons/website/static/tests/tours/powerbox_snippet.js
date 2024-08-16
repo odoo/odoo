@@ -8,6 +8,7 @@ wTourUtils.registerWebsitePreviewTour("website_powerbox_snippet",{
 ...wTourUtils.dragNDrop({
     id: "s_text_block",
     name: "Text",
+    groupName: "Text",
 }),
 ...wTourUtils.clickOnSnippet({
     id: "s_text_block",

@@ -13,6 +13,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import format_list, SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
+from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -52,7 +53,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'recurrence_id',
     'recurring_count',
     'duration_tracking',
-    'message_is_follower',
     'display_follow_button',
 }
 
@@ -299,6 +299,7 @@ class Task(models.Model):
             ! Set the task a high priority\n
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
     )
+    link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
 
     _sql_constraints = [
         ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent."),
@@ -779,6 +780,13 @@ class Task(models.Model):
                         extract_data(task)
                 task.name = task.display_name.strip()
 
+    def _compute_link_preview_name(self):
+        for task in self:
+            link_preview_name = task.display_name
+            if task.project_id:
+                link_preview_name += f' | {task.project_id.sudo().name}'
+            task.link_preview_name = link_preview_name
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
@@ -946,6 +954,8 @@ class Task(models.Model):
             project = self.env['project.project'].browse(project_id)
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
+            if 'company_id' in default_fields and 'default_project_id' not in self.env.context:
+                vals['company_id'] = project.sudo().company_id
         elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
@@ -1946,13 +1956,10 @@ class Task(models.Model):
         )
 
     def action_redirect_to_project_task_form(self):
+        menu_id = self.env.ref('project.menu_project_management_all_tasks').id
         return {
             'type': 'ir.actions.act_url',
-            'url': '/web#model=project.task&id=%s&active_id=1&menu_id=%s&action=%s&view_type=form' % (
-                self.id,
-                self.env.ref('project.menu_project_management_all_tasks').id,
-                self.env.ref('project.act_project_project_2_project_task_all').id,
-            ),
+            'url': f"/odoo/1/action-project.act_project_project_2_project_task_all/{self.id}?menu_id={menu_id}",
             'target': 'new',
         }
 
@@ -1988,3 +1995,12 @@ class Task(models.Model):
     def _compute_subtask_completion_percentage(self):
         for task in self:
             task.subtask_completion_percentage = task.subtask_count and task.closed_subtask_count / task.subtask_count
+
+    @api.model
+    def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
+        if project_sharing_id := kwargs.get("project_sharing_id"):
+            if token := ProjectSharingChatter._check_project_access_and_get_token(
+                self, project_sharing_id, self._name, thread_id, kwargs.get("token")
+            ):
+                kwargs["token"] = token
+        return super()._get_thread_with_access(thread_id, mode, **kwargs)

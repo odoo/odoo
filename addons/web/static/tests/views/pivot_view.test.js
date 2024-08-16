@@ -5,31 +5,31 @@ import { queryAll, queryAllTexts, queryFirst, queryOne, queryText } from "@odoo/
 import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import {
-    defineModels,
-    fields,
-    models,
-    onRpc,
-    mountView,
     contains,
-    toggleMenuItem,
-    toggleSearchBarMenu,
-    mockService,
+    defineModels,
+    editFavoriteName,
+    fields,
+    findComponent,
     getDropdownMenu,
+    getFacetTexts,
+    getService,
+    mockService,
+    models,
+    mountView,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+    saveFavorite,
+    toggleMenu,
+    toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
-    editFavoriteName,
-    saveFavorite,
-    mountWithCleanup,
-    getService,
-    toggleMenu,
-    getFacetTexts,
-    patchWithCleanup,
-    findComponent,
+    toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { download } from "@web/core/network/download";
-import { WebClient } from "@web/webclient/webclient";
-import { PivotController } from "@web/views/pivot/pivot_controller";
 import { _t } from "@web/core/l10n/translation";
+import { download } from "@web/core/network/download";
+import { PivotController } from "@web/views/pivot/pivot_controller";
+import { WebClient } from "@web/webclient/webclient";
 
 function getCurrentValues() {
     return queryAllTexts(".o_pivot_cell_value div").join();
@@ -236,8 +236,6 @@ class User extends models.Model {
 defineModels([Partner, Product, Customer, User]);
 
 test('pivot view without "string" attribute', async () => {
-    expect.assertions(1);
-
     const view = await mountView({
         type: "pivot",
         resModel: "partner",
@@ -254,6 +252,7 @@ test('pivot view without "string" attribute', async () => {
 
 test("simple pivot rendering", async () => {
     expect.assertions(4);
+
     onRpc("read_group", ({ kwargs }) => {
         expect(kwargs.lazy).toBe(false);
     });
@@ -823,9 +822,7 @@ test("pivot view can be reloaded", async () => {
 });
 
 test.tags("desktop")("basic folding/unfolding", async () => {
-    expect.assertions(7);
     let rpcCount = 0;
-
     onRpc("read_group", () => {
         rpcCount++;
     });
@@ -861,8 +858,6 @@ test.tags("desktop")("basic folding/unfolding", async () => {
 });
 
 test.tags("desktop")("more folding/unfolding", async () => {
-    expect.assertions(1);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -886,7 +881,6 @@ test.tags("desktop")("more folding/unfolding", async () => {
 });
 
 test("fold and unfold header group", async () => {
-    expect.assertions(3);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -910,8 +904,6 @@ test("fold and unfold header group", async () => {
 });
 
 test("unfold second header group", async () => {
-    expect.assertions(4);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -935,8 +927,6 @@ test("unfold second header group", async () => {
 });
 
 test("pivot renders group dropdown same as search groupby dropdown if group bys are specified in search arch", async () => {
-    expect.assertions(6);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1104,8 +1094,6 @@ test("pivot view without group by specified in search arch", async () => {
 });
 
 test("pivot view do not show custom group selection if there are no groupable fields", async () => {
-    expect.assertions(4);
-
     for (const fieldName of ["bar", "company_type", "customer", "date", "other_product_id"]) {
         delete Partner._fields[fieldName];
     }
@@ -1270,7 +1258,6 @@ test.tags("desktop")("no content helper when no data, part 3", async () => {
 });
 
 test("tries to restore previous state after domain change", async () => {
-    expect.assertions(7);
     let rpcCount = 0;
     onRpc(() => {
         rpcCount++;
@@ -1306,8 +1293,6 @@ test("tries to restore previous state after domain change", async () => {
 });
 
 test("can be grouped with the search view", async () => {
-    expect.assertions(4);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1321,8 +1306,8 @@ test("can be grouped with the search view", async () => {
 			</search>`,
     });
 
-    expect(".o_pivot_cell_value", "should have only 1 cell").toHaveCount(1);
-    expect("tbody tr", "should have 1 rows").toHaveCount(1);
+    expect(".o_pivot_cell_value").toHaveCount(1);
+    expect("tbody tr").toHaveCount(1);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Product");
@@ -1332,8 +1317,6 @@ test("can be grouped with the search view", async () => {
 });
 
 test("can sort data in a column by clicking on header", async () => {
-    expect.assertions(3);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1359,8 +1342,6 @@ test("can sort data in a column by clicking on header", async () => {
 });
 
 test("can expand all rows", async () => {
-    expect.assertions(7);
-
     let nbReadGroups = 0;
     onRpc("read_group", () => {
         nbReadGroups++;
@@ -1408,10 +1389,8 @@ test("can expand all rows", async () => {
 });
 
 test("expand all with a delay", async () => {
-    expect.assertions(4);
-
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1499,8 +1478,6 @@ test("download a file with single measure, measure row displayed in table", asyn
 });
 
 test("download button is disabled when there is no data", async () => {
-    expect.assertions(1);
-
     Partner._records = [];
 
     await mountView({
@@ -1829,8 +1806,6 @@ test("Adding a Favorite at anytime should modify the row/column groupby", async 
 });
 
 test("Unload Filter, reset display, load another filter", async () => {
-    expect.assertions(18);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1968,8 +1943,6 @@ test("Reload, group by columns, reload", async () => {
 });
 
 test("folded groups remain folded at reload", async () => {
-    expect.assertions(5);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2089,8 +2062,6 @@ test("Empty results keep groupbys", async () => {
 });
 
 test("correctly uses pivot_ keys from the context", async () => {
-    expect.assertions(7);
-
     // in this test, we use "foo" as a measure
     Partner._fields.foo = fields.Integer({
         string: "Foo",
@@ -2129,8 +2100,6 @@ test("correctly uses pivot_ keys from the context", async () => {
 });
 
 test.tags("desktop")("clear table cells data after closeGroup", async () => {
-    expect.assertions(2);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2159,8 +2128,6 @@ test.tags("desktop")("clear table cells data after closeGroup", async () => {
 });
 
 test("correctly group data after flip (1)", async () => {
-    expect.assertions(4);
-
     Partner._views["pivot,false"] = `<pivot/>`;
     Partner._views[
         "search,false"
@@ -2190,8 +2157,6 @@ test("correctly group data after flip (1)", async () => {
 });
 
 test("correctly group data after flip (2)", async () => {
-    expect.assertions(5);
-
     Partner._views["pivot,false"] = `<pivot/>`;
     Partner._views[
         "search,false"
@@ -2225,8 +2190,6 @@ test("correctly group data after flip (2)", async () => {
 });
 
 test("correctly uses pivot_ keys from the context (at reload)", async () => {
-    expect.assertions(8);
-
     // in this test, we use "foo" as a measure
     Partner._fields.foo = fields.Integer({
         string: "Foo",
@@ -2276,8 +2239,6 @@ test("correctly uses pivot_ keys from the context (at reload)", async () => {
 });
 
 test("correctly use group_by key from the context", async () => {
-    expect.assertions(7);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2301,8 +2262,6 @@ test("correctly use group_by key from the context", async () => {
 });
 
 test("correctly uses pivot_row_groupby key with default groupBy from the context", async () => {
-    expect.assertions(6);
-
     Partner._fields.amount = fields.Float({
         string: "Amount",
         aggregator: "sum",
@@ -2334,6 +2293,8 @@ test("correctly uses pivot_row_groupby key with default groupBy from the context
 });
 
 test("pivot still handles __count__ measure", async () => {
+    expect.assertions(4);
+
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
         aggregator: null,
@@ -2350,7 +2311,6 @@ test("pivot still handles __count__ measure", async () => {
 
     // for retro-compatibility reasons, the pivot view still handles
     // '__count__' measure.
-    expect.assertions(4);
 
     onRpc("read_group", ({ kwargs }) => {
         expect(kwargs.fields).toEqual(["__count"]);
@@ -2373,6 +2333,8 @@ test("pivot still handles __count__ measure", async () => {
 });
 
 test("not use a many2one as a measure by default", async () => {
+    expect.assertions(3);
+
     Partner._fields.computed_field = fields.Integer({
         string: "Computed and not stored",
         compute: true,
@@ -2385,7 +2347,6 @@ test("not use a many2one as a measure by default", async () => {
         aggregator: null,
         groupable: false,
     });
-    expect.assertions(3);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2403,8 +2364,6 @@ test("not use a many2one as a measure by default", async () => {
 });
 
 test("pivot view with many2one field as a measure", async () => {
-    expect.assertions(1);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2419,8 +2378,6 @@ test("pivot view with many2one field as a measure", async () => {
 });
 
 test("pivot view with reference field as a measure", async () => {
-    expect.assertions(1);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2435,8 +2392,6 @@ test("pivot view with reference field as a measure", async () => {
 });
 
 test.tags("desktop")("m2o as measure, drilling down into data", async () => {
-    expect.assertions(1);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2503,10 +2458,8 @@ test("Row and column groupbys plus a domain", async () => {
 });
 
 test("parallel data loading should discard all but the last one", async () => {
-    expect.assertions(6);
-
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2521,18 +2474,18 @@ test("parallel data loading should discard all but the last one", async () => {
 				</search>`,
     });
 
-    expect(".o_pivot_cell_value", "should have 1 cell initially").toHaveCount(1);
-    expect("tbody tr", "should have 1 row initially").toHaveCount(1);
+    expect(".o_pivot_cell_value").toHaveCount(1);
+    expect("tbody tr").toHaveCount(1);
 
     def = new Deferred();
     await toggleSearchBarMenu();
     await toggleMenuItem("Product");
     await toggleMenuItem("Customer");
 
-    expect(".o_pivot_cell_value", "should still have 1 cell").toHaveCount(1);
-    expect("tbody tr", "should still have 1 row").toHaveCount(1);
+    expect(".o_pivot_cell_value").toHaveCount(1);
+    expect("tbody tr").toHaveCount(1);
 
-    await def.resolve();
+    def.resolve();
     await animationFrame();
 
     expect(".o_pivot_cell_value").toHaveCount(6);
@@ -2546,7 +2499,6 @@ test("pivot measures should be alphabetically sorted", async () => {
         compute: true,
         groupable: false,
     });
-    expect.assertions(1);
 
     // It's important to compare capitalized and lowercased words
     // to be sure the sorting is effective with both of them
@@ -2577,8 +2529,6 @@ test("pivot measures should be alphabetically sorted", async () => {
 });
 
 test("pivot view should use default order for auto sorting", async () => {
-    expect.assertions(1);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2592,7 +2542,6 @@ test("pivot view should use default order for auto sorting", async () => {
 });
 
 test("pivot view can be flipped", async () => {
-    expect.assertions(5);
     var rpcCount = 0;
     onRpc(() => {
         rpcCount++;
@@ -2614,7 +2563,9 @@ test("pivot view can be flipped", async () => {
     await contains(".o_pivot_flip_button").click();
 
     expect(rpcCount).toBe(0);
-    expect("tbody tr", "should have 1 rows: 1 for the main header").toHaveCount(1);
+    expect("tbody tr").toHaveCount(1, {
+        message: "should have 1 rows: 1 for the main header",
+    });
 
     values = ["1", "3", "4"];
     expect(getCurrentValues()).toBe(values.join());
@@ -2782,7 +2733,7 @@ test("export data in excel with comparison", async () => {
     await toggleMenuItem("Date: Previous period");
 
     // With the data above, the time ranges contain no record.
-    expect("p.o_view_nocontent_empty_folder", "there should be no data").toHaveCount(1);
+    expect("p.o_view_nocontent_empty_folder").toHaveCount(1);
     // export data should be impossible since the pivot buttons
     // are deactivated (exception: the 'Measures' button).
     expect(".o_pivot_buttons button.o_pivot_download").not.toBeEnabled();
@@ -2824,8 +2775,6 @@ test("export data in excel with comparison", async () => {
 });
 
 test("rendering pivot view with comparison and count measure", async () => {
-    expect.assertions(2);
-
     let mockMock = false;
     let nbReadGroup = 0;
 
@@ -2843,7 +2792,7 @@ test("rendering pivot view with comparison and count measure", async () => {
                 // this modification is necessary because mockReadGroup does not
                 // properly reflect the server response when there is no record
                 // and a groupby list of length at least one.
-                return Promise.resolve([{}]);
+                return [{}];
             }
         }
     });
@@ -2871,8 +2820,6 @@ test("rendering pivot view with comparison and count measure", async () => {
 });
 
 test("can sort a pivot view with comparison by clicking on header", async () => {
-    expect.assertions(6);
-
     Partner._records[0].date = "2016-12-15";
     Partner._records[1].date = "2016-12-17";
     Partner._records[2].date = "2016-11-22";
@@ -3134,8 +3081,6 @@ test("can sort a pivot view with comparison by clicking on header", async () => 
 });
 
 test("Click on the measure list but not on a menu item", async () => {
-    expect.assertions(4);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3222,8 +3167,6 @@ test.tags("desktop")("Navigation list view for a group and back with breadcrumbs
 });
 
 test("Cell values are kept when flippin a pivot view in comparison mode", async () => {
-    expect.assertions(2);
-
     Partner._records[0].date = "2016-12-15";
     Partner._records[1].date = "2016-12-17";
     Partner._records[2].date = "2016-11-22";
@@ -3330,8 +3273,6 @@ test("Cell values are kept when flippin a pivot view in comparison mode", async 
 });
 
 test("Flip then compare, table col groupbys are kept", async () => {
-    expect.assertions(6);
-
     Partner._records[0].date = "2016-12-15";
     Partner._records[1].date = "2016-12-17";
     Partner._records[2].date = "2016-11-22";
@@ -3454,8 +3395,6 @@ test("correctly compute group domain when a date field has false value", async (
 });
 
 test("Does not identify 'false' with false as keys when creating group trees", async () => {
-    expect.assertions(2);
-
     Partner._fields.favorite_animal = fields.Char({
         string: "Favorite animal",
         store: true,
@@ -3480,8 +3419,6 @@ test("Does not identify 'false' with false as keys when creating group trees", a
 });
 
 test("group bys added via control panel and expand Header do not stack", async () => {
-    expect.assertions(8);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3523,8 +3460,6 @@ test("group bys added via control panel and expand Header do not stack", async (
 });
 
 test("display only one dropdown menu", async () => {
-    expect.assertions(1);
-
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3546,12 +3481,10 @@ test("display only one dropdown menu", async () => {
 });
 
 test("Server order is kept by default", async () => {
-    expect.assertions(1);
-
     let isSecondReadGroup = false;
     onRpc("read_group", () => {
         if (isSecondReadGroup) {
-            return Promise.resolve([
+            return [
                 {
                     customer: [2, "Second"],
                     foo: 18,
@@ -3564,7 +3497,7 @@ test("Server order is kept by default", async () => {
                     __count: 2,
                     __domain: [["customer", "=", 1]],
                 },
-            ]);
+            ];
         }
         isSecondReadGroup = true;
     });
@@ -3587,8 +3520,6 @@ test("Server order is kept by default", async () => {
 });
 
 test("pivot rendering with boolean field", async () => {
-    expect.assertions(4);
-
     Partner._fields.bar = fields.Boolean({
         string: "bar",
         store: true,
@@ -3836,7 +3767,7 @@ test.tags("desktop")("correctly handle concurrent reloads", async () => {
             readGroupCount++;
             if (readGroupCount === 2) {
                 // slow down last read_group of first reload
-                return Promise.resolve(def);
+                return def;
             }
         }
     });
@@ -3880,7 +3811,7 @@ test("consecutively toggle several measures", async () => {
         groupable: false,
         store: true,
     });
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3911,7 +3842,7 @@ test("consecutively toggle several measures", async () => {
 
 test("flip axis while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3948,7 +3879,7 @@ test("flip axis while loading a filter", async () => {
 
 test("sort rows while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3984,7 +3915,7 @@ test("sort rows while loading a filter", async () => {
 
 test("close a group while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -4021,7 +3952,7 @@ test("close a group while loading a filter", async () => {
 
 test("add a groupby while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -4058,7 +3989,7 @@ test("add a groupby while loading a filter", async () => {
 
 test("expand a group while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -4099,7 +4030,7 @@ test("expand a group while loading a filter", async () => {
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
     let def;
-    onRpc("read_group", () => Promise.resolve(def));
+    onRpc("read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -4468,8 +4399,6 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
 });
 
 test("group by properties in pivot view", async () => {
-    expect.assertions(15);
-
     onRpc("/web/dataset/call_kw/partner/web_search_read", (request) => {
         const { params } = request.json();
         if (params.kwargs.specification?.properties_definition) {

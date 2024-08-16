@@ -14,12 +14,15 @@ export class NumberPopup extends Component {
         startingValue: { type: [Number, String], optional: true },
         feedback: { type: Function, optional: true },
         formatDisplayedValue: { type: Function, optional: true },
+        placeholder: { type: String, optional: true },
+        isValid: { type: Function, optional: true },
         getPayload: Function,
         close: Function,
     };
     static defaultProps = {
         title: _t("Confirm?"),
         startingValue: "",
+        isValid: () => true,
         formatDisplayedValue: (x) => x,
         feedback: () => false,
     };
@@ -35,7 +38,7 @@ export class NumberPopup extends Component {
         });
     }
     confirm() {
-        this.props.getPayload(this.state.buffer || "0");
+        this.props.getPayload(this.state.buffer);
         this.props.close();
     }
 }

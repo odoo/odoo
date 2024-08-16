@@ -2011,10 +2011,11 @@ class TestErrorManagement(HttpCase):
         })
 
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.start_tour('/web', 'css_error_tour', login='admin')
+            self.start_tour('/odoo', 'css_error_tour', login='admin')
 
     def test_assets_bundle_css_error_frontend(self):
-        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params={'website_id': self.env['website'].search([], limit=1).id}).css() # force pregeneration so that we have the base style
+        whatever = {'website_id': website.search([], limit=1).id} if (website := self.env.get('website')) else {}
+        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params=whatever).css()  # force pregeneration so that we have the base style
         self.env['ir.asset'].create({
             'name': 'Css error',
             'bundle': 'web.assets_frontend',

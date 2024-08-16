@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from odoo import api, fields, models, _
 
 
@@ -20,11 +21,14 @@ class SaleOrder(models.Model):
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_ids(self):
         data = self.env['procurement.group']._read_group([('sale_id', 'in', self.ids)], ['sale_id'], ['id:recordset'])
-        mrp_productions = {}
+        production_order_by_sale_line = self.env['mrp.production']._read_group([('sale_line_id', 'in', self.order_line.ids)], ['sale_line_id'], ['id:recordset'])
+        mrp_productions = defaultdict(self.env['mrp.production'].browse)
         for sale, procurement_groups in data:
-            mrp_productions[sale.id] = procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
+            mrp_productions[sale.id] |= procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
+        for sale_line, production_id in production_order_by_sale_line:
+            mrp_productions[sale_line.order_id.id] |= production_id
         for sale in self:
-            mrp_production_ids = mrp_productions.get(sale.id, self.env['mrp.production'])
+            mrp_production_ids = mrp_productions[sale.id]
             sale.mrp_production_count = len(mrp_production_ids)
             sale.mrp_production_ids = mrp_production_ids
 

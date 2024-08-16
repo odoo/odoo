@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty } from "../utils/dom";
-import { isUnbreakable, isVisible } from "../utils/dom_info";
+import { isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex } from "../utils/position";
@@ -16,11 +16,23 @@ export class SplitPlugin extends Plugin {
         "splitAroundUntil",
         "splitTextNode",
         "splitSelection",
+        "isUnsplittable",
     ];
+    /** @type { (p: SplitPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        // @todo: get rules from separate plugins, get rid of isUnbreakable
-        unsplittable: (block) => isUnbreakable(block),
-        onBeforeInput: p.onBeforeInput.bind(p),
+        isUnsplittable: [
+            // An unremovable element is also unmergeable (as merging two
+            // elements results in removing one of them).
+            // An unmergeable element is unsplittable and vice-versa (as
+            // split and merge are reverse operations from one another).
+            // Therefore, unremovable nodes are also unsplittable.
+            (element) => p.resources.isUnremovable?.some((predicate) => predicate(element)),
+            // "Unbreakable" is a legacy term that means unsplittable and
+            // unmergeable.
+            (element) => element.classList.contains("oe_unbreakable"),
+            (element) => ["DIV", "SECTION"].includes(element.tagName),
+        ],
+        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
     });
 
     handleCommand(command, payload) {
@@ -87,6 +99,10 @@ export class SplitPlugin extends Plugin {
     splitElementBlock({ targetNode, targetOffset, blockToSplit }) {
         // If the block is unsplittable, insert a line break instead.
         if (this.isUnsplittable(blockToSplit)) {
+            // @todo: t-if, t-else etc are not blocks, but they are
+            // unsplittable.  The check must be done from the targetNode up to
+            // the block for unsplittables. There are apparently no tests for
+            // this.
             this.dispatch("INSERT_LINEBREAK_ELEMENT", { targetNode, targetOffset });
             return [undefined, undefined];
         }
@@ -115,11 +131,11 @@ export class SplitPlugin extends Plugin {
         return [beforeElement, afterElement];
     }
 
-    // @todo: t-if, t-else etc are not blocks, but they are unsplittable.
-    // The check must be done from the targetNode up to the block for unsplittables
-    // There are apparently no tests for this.
-    isUnsplittable(block) {
-        return this.resources.unsplittable.some((callback) => callback(block));
+    isUnsplittable(node) {
+        return (
+            node.nodeType === Node.ELEMENT_NODE &&
+            this.resources.isUnsplittable.some((predicate) => predicate(node))
+        );
     }
 
     /**

@@ -83,6 +83,7 @@ Odoo Web Editor widget.
             'web/static/lib/select2/select2.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
+            'web/static/src/core/utils/scrolling.js',
             'web/static/src/core/registry.js',
             'web/static/src/core/templates.js',
             'web/static/src/core/template_inheritance.js',
@@ -193,12 +194,14 @@ Odoo Web Editor widget.
             # widgets & plugins
             'web_editor/static/src/js/wysiwyg/widgets/**/*',
             'web_editor/static/src/js/editor/toolbar.js',
+            'web_editor/static/src/js/editor/add_snippet_dialog.js',
 
             # Launcher
             'web_editor/static/src/js/wysiwyg/wysiwyg_jquery_extention.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
 
+            'web_editor/static/src/xml/add_snippet_dialog.xml',
             'web_editor/static/src/xml/editor.xml',
             'web_editor/static/src/xml/grid_layout.xml',
             'web_editor/static/src/xml/snippets.xml',

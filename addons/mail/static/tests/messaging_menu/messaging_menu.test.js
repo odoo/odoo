@@ -165,12 +165,12 @@ test("rendering with PWA installation request", async () => {
     const pyEnv = await startServer();
     const [odoobot] = pyEnv["res.partner"].read(serverState.odoobotId);
     await start();
-    patchWithCleanup(getService("installPrompt"), {
+    patchWithCleanup(getService("pwa"), {
         show() {
             step("show prompt");
         },
     });
-    // This event must be triggered to initialize the installPrompt service properly
+    // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);
@@ -212,18 +212,21 @@ test("installation of the PWA request can be dismissed", async () => {
         },
     });
     await start();
-    patchWithCleanup(getService("installPrompt"), {
+    patchWithCleanup(getService("pwa"), {
         show() {
             step("show prompt should not be triggered");
         },
     });
-    // This event must be triggered to initialize the installPrompt service properly
+    // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem .fa-close");
-    await assertSteps(["installationState value:  dismissed"]);
+    await assertSteps([
+        "getItem pwa.installationState",
+        'installationState value:  {"/odoo":"dismissed"}',
+    ]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
@@ -237,13 +240,13 @@ test("rendering with PWA installation request (dismissed)", async () => {
             if (key === "pwa.installationState") {
                 step("getItem " + key);
                 // in this test, installation has been previously dismissed by the user
-                return "dismissed";
+                return `{"/odoo":"dismissed"}`;
             }
             return super.getItem(key);
         },
     });
     await start();
-    // This event must be triggered to initialize the installPrompt service properly
+    // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await assertSteps(["getItem pwa.installationState"]);
@@ -1158,13 +1161,67 @@ test("Can quick search when more than 20 items", async () => {
     await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
     await contains(".o-mail-NotificationItem", { text: "Cool channel" });
     await contains(".o-mail-NotificationItem", { text: "Nice channel" });
-    await click(".o-mail-MessagingMenu button .fa-search");
-    await insertText(".o-mail-MessagingMenu-header input", "nice");
+    await click("[title='Quick search']");
+    await insertText(".o-mail-MessagingMenu input", "nice");
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem", { text: "Nice channel" });
-    await click(".o-mail-MessagingMenu button .oi-close");
-    await click(".o-mail-MessagingMenu button .fa-search");
-    await insertText(".o-mail-MessagingMenu-header input", "admin");
+    await click("[title='Close search']");
+    await click("[title='Quick search']");
+    await insertText(".o-mail-MessagingMenu input", "admin");
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
+});
+
+test("keyboard navigation", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { channel_type: "chat" },
+        { name: "Channel-1" },
+        { name: "Channel-2" },
+    ]);
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem", { count: 3 }); // Expected order: Channel-2, Channel-1, Mitchell Admin
+    triggerHotkey("ArrowDown");
+    await contains(".o-mail-NotificationItem:eq(0).o-active", { name: "Channel-2" });
+    triggerHotkey("ArrowDown");
+    await contains(".o-mail-NotificationItem:eq(1).o-active", { name: "Channel-1" });
+    triggerHotkey("ArrowUp");
+    await contains(".o-mail-NotificationItem:eq(0).o-active", { name: "Channel-2" });
+    triggerHotkey("ArrowUp");
+    await contains(".o-mail-NotificationItem:last.o-active", { name: "Mitchell Admin" });
+    triggerHotkey("Enter");
+    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
+});
+
+test("keyboard navigation with quick search", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { channel_type: "chat" },
+        { name: "Channel-1" },
+        { name: "Channel-2" },
+    ]);
+    for (let id = 1; id <= 20; id++) {
+        // need at least 20 channels for enabling quick search
+        pyEnv["discuss.channel"].create({ name: `other-${id}` });
+    }
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem", { count: 23 });
+    triggerHotkey("ArrowDown");
+    await contains(".o-mail-NotificationItem:eq(0).o-active");
+    await click("[title='Quick search']");
+    await insertText(".o-mail-MessagingMenu input", "C");
+    await contains(".o-mail-NotificationItem", { count: 3 });
+    await contains(".o-mail-NotificationItem:eq(0).o-active");
+    triggerHotkey("ArrowDown");
+    await contains(".o-mail-NotificationItem:eq(1).o-active");
+    await insertText(".o-mail-MessagingMenu input", "ha");
+    await contains(".o-mail-NotificationItem", { count: 2 });
+    await contains(".o-mail-NotificationItem:eq(0).o-active");
+    triggerHotkey("ArrowDown");
+    await contains(".o-mail-NotificationItem:eq(1).o-active");
+    await insertText(".o-mail-MessagingMenu input", "", { replace: true });
+    await contains(".o-mail-NotificationItem", { count: 23 });
+    await contains(".o-mail-NotificationItem.o-active", { count: 0 });
 });

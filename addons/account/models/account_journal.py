@@ -317,8 +317,12 @@ class AccountJournal(models.Model):
         method_information_mapping = results['method_information_mapping']
         providers_per_code = results['providers_per_code']
 
-        # Compute the candidates for each journal.
-        for journal in self:
+        journal_bank_cash = self.filtered(lambda j: j.type in ('bank', 'cash'))
+        journal_other = self - journal_bank_cash
+        journal_other.available_payment_method_ids = False
+
+        # Compute the candidates for each bank/cash journal.
+        for journal in journal_bank_cash:
             commands = [Command.clear()]
             company = journal.company_id
 
@@ -334,12 +338,11 @@ class AccountJournal(models.Model):
                             protected_provider_ids.add(line.payment_provider_id.id)
 
             for pay_method in pay_methods:
-                values = method_information_mapping[pay_method.id]
-
-                # Get the domain of the journals on which the current method is usable.
-                method_domain = pay_method._get_payment_method_domain(pay_method.code)
-                if not journal.filtered_domain(method_domain):
+                # Check the partial domain of the payment method to make sure the type matches the current journal
+                if not journal._is_payment_method_available(pay_method.code, complete_domain=False):
                     continue
+
+                values = method_information_mapping[pay_method.id]
 
                 if values['mode'] == 'unique':
                     # 'unique' are linked to a single journal per company.
@@ -580,19 +583,19 @@ class AccountJournal(models.Model):
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default)
-        codes_by_company = {
-            company: set(self.env['account.journal'].with_context(active_test=False)._read_group(
-                domain=self.env['account.journal']._check_company_domain(company),
+        code_by_company_id = {
+            company_id: set(self.env['account.journal'].with_context(active_test=False)._read_group(
+                domain=self.env['account.journal']._check_company_domain(company_id),
                 aggregates=['code:array_agg'],
             )[0][0])
-            for company in self.company_id
+            for company_id, _ in groupby(vals_list, lambda v: v['company_id'])
         }
         for journal, vals in zip(self, vals_list):
             # Find a unique code for the copied journal
-            all_journal_codes = codes_by_company[journal.company_id]
+            all_journal_codes = code_by_company_id[vals['company_id']]
 
-            copy_code = journal.code
-            code_prefix = re.sub(r'\d+', '', journal.code).strip()
+            copy_code = vals['code']
+            code_prefix = re.sub(r'\d+', '', copy_code).strip()
             counter = 1
             while counter <= len(all_journal_codes) and copy_code in all_journal_codes:
                 counter_str = str(counter)
@@ -743,7 +746,7 @@ class AccountJournal(models.Model):
             'code': code,
             'account_type': 'asset_cash',
             'currency_id': vals.get('currency_id'),
-            'company_id': company.id,
+            'company_ids': [Command.link(company.id)],
         }
 
     @api.model
@@ -762,7 +765,7 @@ class AccountJournal(models.Model):
         vals['company_id'] = company.id
 
         # Don't get the digits on 'chart_template' since the chart template could be a custom one.
-        random_account = self.env['account.account'].search(
+        random_account = self.env['account.account'].with_company(company).search(
             self.env['account.account']._check_company_domain(company),
             limit=1,
         )
@@ -784,7 +787,7 @@ class AccountJournal(models.Model):
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
                 start_code = liquidity_account_prefix.ljust(digits, '0')
-                default_account_code = self.env['account.account']._search_new_account_code(start_code, company)
+                default_account_code = self.env['account.account'].with_company(company)._search_new_account_code(start_code)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 default_account = self.env['account.account'].create(default_account_vals)
                 self.env['ir.model.data']._update_xmlids([
@@ -805,10 +808,6 @@ class AccountJournal(models.Model):
             vals['code'] = code if not protected_codes or code not in protected_codes else self.get_next_bank_cash_default_code(journal_type, company, protected_codes)
             if not vals['code']:
                 raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
-
-        # === Fill missing refund_sequence ===
-        if 'refund_sequence' not in vals:
-            vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
         # === Fill missing alias name for sale / purchase, to force alias creation ===
         if journal_type in {'sale', 'purchase'}:
@@ -895,7 +894,7 @@ class AccountJournal(models.Model):
         # will create an invoice with a tentative to enhance with EDI / OCR..
         all_invoices = self.env['account.move']
         for attachment in attachments:
-            invoice = self.env['account.move'].create({
+            invoice = self.env['account.move'].with_context(skip_is_manually_modified=True).create({
                 'journal_id': self.id,
                 'move_type': move_type,
             })
@@ -910,6 +909,13 @@ class AccountJournal(models.Model):
             ).message_post(attachment_ids=attachment.ids)
 
             attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            if (
+                invoice.company_id.autopost_bills
+                and invoice.partner_id.autopost_bills == 'always'
+                and not invoice.abnormal_amount_warning
+                and not invoice.restrict_mode_hash_table
+            ):
+                invoice.action_post()
 
         return all_invoices
 
@@ -1004,10 +1010,15 @@ class AccountJournal(models.Model):
         else:
             return self.outbound_payment_method_line_ids
 
-    def _is_payment_method_available(self, payment_method_code):
+    def _is_payment_method_available(self, payment_method_code, complete_domain=True):
         """ Check if the payment method is available on this journal. """
         self.ensure_one()
-        return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
+        method_domain = self.env['account.payment.method']._get_payment_method_domain(
+            code=payment_method_code,
+            with_country=complete_domain,
+            with_currency=complete_domain,
+        )
+        return self.filtered_domain(method_domain)
 
     def _process_reference_for_sale_order(self, order_reference):
         '''

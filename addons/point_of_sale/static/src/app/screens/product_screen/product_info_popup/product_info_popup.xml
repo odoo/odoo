@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
-        <Dialog title="'Product information'">
+        <Dialog title.translate="Product information">
             <ProductInfoBanner product="props.product" info="props.info"/>
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="!isVariant and props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
@@ -95,10 +95,8 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <div class="d-flex w-100 justify-content-start gap-2">
-                    <button class="btn btn-primary" t-on-click="props.close">Ok</button>
-                    <button t-if="allowProductEdition" class="btn btn-secondary" t-on-click="editProduct">Edit</button>
-                </div>
+                <button class="btn btn-primary btn-lg lh-lg" t-on-click="props.close">Ok</button>
+                <button t-if="allowProductEdition" class="btn btn-secondary btn-lg lh-lg" t-on-click="editProduct">Edit</button>
             </t>
         </Dialog>
     </t>

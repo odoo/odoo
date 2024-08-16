@@ -8,7 +8,7 @@ from odoo.tools import frozendict, mute_logger, date_utils
 
 import re
 from collections import defaultdict
-from psycopg2 import sql, DatabaseError
+from psycopg2 import sql, errors as pgerrors
 
 
 class SequenceMixin(models.AbstractModel):
@@ -24,10 +24,22 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
-    _sequence_year_range_regex = r'^(?:(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D)(?P<year_end>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix3>\D+?))?(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
+
+    prefix = r'(?P<prefix1>.*?)'
+    prefix2 = r'(?P<prefix2>\D)'
+    prefix3 = r'(?P<prefix3>\D+?)'
+    seq = r'(?P<seq>\d*)'
+    month = r'(?P<month>(0[1-9]|1[0-2]))'
+    # `(19|20|21)` is for catching 19 20 and 21 century prefixes
+    year = r'(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))'
+    year_end = r'(?P<year_end>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))'
+    suffix = r'(?P<suffix>\D*?)'
+
+    _sequence_year_range_monthly_regex = fr'^{prefix}{year}{prefix2}{year_end}(?P<prefix3>\D){month}(?P<prefix4>\D+?){seq}{suffix}$'
+    _sequence_year_range_regex = fr'^(?:{prefix}{year}{prefix2}{year_end}{prefix3})?{seq}{suffix}$'
+    _sequence_monthly_regex = fr'^{prefix}{year}(?P<prefix2>\D*?){month}{prefix3}{seq}{suffix}$'
+    _sequence_yearly_regex = fr'^{prefix}(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{{2}}))(?P<prefix2>\D+?){seq}{suffix}$'
+    _sequence_fixed_regex = fr'^{prefix}(?P<seq>\d{{0,9}}){suffix}$'
 
     sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
     sequence_number = fields.Integer(compute='_compute_split_sequence', store=True)
@@ -51,19 +63,19 @@ class SequenceMixin(models.AbstractModel):
 
     def _get_sequence_date_range(self, reset):
         ref_date = fields.Date.to_date(self[self._sequence_date_field])
-        if reset in ('year', 'year_range'):
-            return (date(ref_date.year, 1, 1), date(ref_date.year, 12, 31))
+        if reset in ('year', 'year_range', 'year_range_month'):
+            return (date(ref_date.year, 1, 1), date(ref_date.year, 12, 31), None, None)
         if reset == 'month':
-            return date_utils.get_month(ref_date)
+            return date_utils.get_month(ref_date) + (None, None)
         if reset == 'never':
-            return (date(1, 1, 1), date(9999, 1, 1))
+            return (date(1, 1, 1), date(9999, 12, 31), None, None)
         raise NotImplementedError(reset)
 
     def _must_check_constrains_date_sequence(self):
         return True
 
-    def _year_match(self, format_value, date):
-        return format_value == self._truncate_year_to_length(date.year, len(str(format_value)))
+    def _year_match(self, format_value, year):
+        return format_value == self._truncate_year_to_length(year, len(str(format_value)))
 
     def _truncate_year_to_length(self, year, length):
         return year % (10 ** length)
@@ -78,10 +90,10 @@ class SequenceMixin(models.AbstractModel):
 
         format_values = self._get_sequence_format_param(sequence)[1]
         sequence_number_reset = self._deduce_sequence_number_reset(sequence)
-        year_start, year_end = self._get_sequence_date_range(sequence_number_reset)
+        date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
         year_match = (
-            (not format_values["year"] or self._year_match(format_values["year"], year_start))
-            and (not format_values["year_end"] or self._year_match(format_values["year_end"], year_end))
+            (not format_values["year"] or self._year_match(format_values["year"], forced_year_start or date_start.year))
+            and (not format_values["year_end"] or self._year_match(format_values["year_end"], forced_year_end or date_end.year))
         )
         month_match = not format_values['month'] or format_values['month'] == date.month
         return year_match and month_match
@@ -117,7 +129,8 @@ class SequenceMixin(models.AbstractModel):
     def _compute_split_sequence(self):
         for record in self:
             sequence = record[record._sequence_field] or ''
-            regex = re.sub(r"\?P<\w+>", "?:", record._sequence_fixed_regex.replace(r"?P<seq>", ""))  # make the seq the only matching group
+            # make the seq the only matching group
+            regex = self._make_regex_non_capturing(record._sequence_fixed_regex.replace(r"?P<seq>", ""))
             matching = re.match(regex, sequence)
             record.sequence_prefix = sequence[:matching.start(1)]
             record.sequence_number = int(matching.group(1) or 0)
@@ -131,6 +144,7 @@ class SequenceMixin(models.AbstractModel):
             sequence.
         """
         for regex, ret_val, requirements in [
+            (self._sequence_year_range_monthly_regex, 'year_range_month', ['seq', 'year', 'year_end', 'month']),
             (self._sequence_monthly_regex, 'month', ['seq', 'month', 'year']),
             (self._sequence_year_range_regex, 'year_range', ['seq', 'year', 'year_end']),
             (self._sequence_yearly_regex, 'year', ['seq', 'year']),
@@ -154,6 +168,22 @@ class SequenceMixin(models.AbstractModel):
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
             r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
         ))
+
+    def _make_regex_non_capturing(self, regex):
+        r""" Replace the "named capturing group" found in the regex by
+        "non-capturing group" instead.
+
+        Example:
+        `^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$` will become
+        `^(?:.*?)(?:\d{0,9})(?:\D*?)$`
+        - `(?P<name>...)` = Named capturing groups
+        - `(?:...)` = Non-capturing group
+
+        :param regex: the regex to modify
+
+        :return: the modified regex
+        """
+        return re.sub(r"\?P<\w+>", "?:", regex)
 
     def _get_last_sequence_domain(self, relaxed=False):
         """Get the sql domain to retreive the previous sequence number.
@@ -242,6 +272,8 @@ class SequenceMixin(models.AbstractModel):
             regex = self._sequence_year_range_regex
         elif sequence_number_reset == 'month':
             regex = self._sequence_monthly_regex
+        elif sequence_number_reset == 'year_range_month':
+            regex = self._sequence_year_range_monthly_regex
         format_values = re.match(regex, previous).groupdict()
         format_values['seq_length'] = len(format_values['seq'])
         format_values['year_length'] = len(format_values.get('year') or '')
@@ -282,11 +314,11 @@ class SequenceMixin(models.AbstractModel):
         format_string, format_values = self._get_sequence_format_param(last_sequence)
         sequence_number_reset = self._deduce_sequence_number_reset(last_sequence)
         if new:
-            date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
+            date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
             format_values['seq'] = 0
-            format_values['year'] = self._truncate_year_to_length(date_start.year, format_values['year_length'])
-            format_values['year_end'] = self._truncate_year_to_length(date_end.year, format_values['year_end_length'])
-            format_values['month'] = date_start.month
+            format_values['year'] = self._truncate_year_to_length(forced_year_start or date_start.year, format_values['year_length'])
+            format_values['year_end'] = self._truncate_year_to_length(forced_year_end or date_end.year, format_values['year_end_length'])
+            format_values['month'] = self[self._sequence_date_field].month
 
         # before flushing inside the savepoint (which may be rolled back!), make sure everything
         # is already flushed, otherwise we could lose non-sequence fields values, as the ORM believes
@@ -311,11 +343,8 @@ class SequenceMixin(models.AbstractModel):
                     self[self._sequence_field] = sequence
                     self.flush_recordset([self._sequence_field])
                     break
-            except DatabaseError as e:
-                # 23P01 ExclusionViolation
-                # 23505 UniqueViolation
-                if e.pgcode not in ('23P01', '23505'):
-                    raise e
+            except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
+                pass
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
 

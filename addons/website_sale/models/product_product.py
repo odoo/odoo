@@ -69,8 +69,11 @@ class Product(models.Model):
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
         for product in self:
-            attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.product_attribute_value_id.ids)
-            product.website_url = "%s#attribute_values=%s" % (product.product_tmpl_id.website_url, attributes)
+            url = product.product_tmpl_id.website_url
+            if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
+                pav_ids = [str(pav.id) for pav in pavs]
+                url = f'{url}#attribute_values={",".join(pav_ids)}'
+            product.website_url = url
 
     #=== CONSTRAINT METHODS ===#
 
@@ -136,3 +139,10 @@ class Product(models.Model):
         website = self.env['website'].get_current_website()
         return (is_product_salable and website.has_ecommerce_access()) \
                or self.env.user.has_group('base.group_system')
+
+    @api.onchange('public_categ_ids')
+    def _onchange_public_categ_ids(self):
+        if self.public_categ_ids:
+            self.website_published = True
+        else:
+            self.website_published = False

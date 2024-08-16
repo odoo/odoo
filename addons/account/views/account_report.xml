@@ -3,7 +3,7 @@
     <data>
         <!-- QWeb Reports -->
         <record id="account_invoices" model="ir.actions.report">
-            <field name="name">Invoices</field>
+            <field name="name">PDF</field>
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">account.report_invoice_with_payments</field>
@@ -11,8 +11,7 @@
             <field name="is_invoice_report">True</field>
             <field name="print_report_name">(object._get_report_base_filename())</field>
             <field name="attachment"/>
-            <field name="binding_model_id" ref="model_account_move"/>
-            <field name="binding_type">report</field>
+            <field name="binding_model_id" eval="False"/>  <!-- removes the action from the Print menu (forced False value for update) -->
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),
  (4, ref('account.group_account_readonly'))]"/>
         </record>
@@ -26,11 +25,11 @@
             <field name="report_file">account.report_original_vendor_bill</field>
             <field name="attachment">'original_vendor_bill.pdf'</field>
             <field name="attachment_use">True</field>
-            <field name="binding_view_types">list</field>
+            <field name="domain" eval="[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('message_main_attachment_id', '!=', False)]"/>
         </record>
 
         <record id="account_invoices_without_payment" model="ir.actions.report">
-            <field name="name">Invoices without Payment</field>
+            <field name="name">PDF without Payment</field>
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">account.report_invoice</field>
@@ -39,6 +38,7 @@
             <field name="attachment"/>
             <field name="binding_model_id" ref="model_account_move"/>
             <field name="binding_type">report</field>
+            <field name="domain" eval="[('move_type', '!=', 'entry')]"/>
         </record>
 
         <record id="action_report_payment_receipt" model="ir.actions.report">

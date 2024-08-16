@@ -417,7 +417,7 @@
                 <a
                     t-if="request.env.company.country_id.is_stripe_supported_country"
                     name="activate_stripe"
-                    href="/web#action=payment.action_activate_stripe"
+                    href="/odoo/action-payment.action_activate_stripe"
                     role="button"
                     class="btn btn-primary"
                 > ACTIVATE STRIPE </a>
@@ -425,7 +425,7 @@
                     role="button"
                     type="action"
                     class="btn-link alert-warning ps-2"
-                    href="/web#action=payment.action_payment_provider"
+                    href="/odoo/action-payment.action_payment_provider"
                 >
                     <strong><i class="oi oi-arrow-right"></i> View alternatives </strong>
                 </a>

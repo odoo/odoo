@@ -22,23 +22,15 @@ class MailMessage(models.Model):
         if format_reply:
             # sudo: mail.message: access to parent is allowed
             for message in self.sudo().filtered(lambda message: message.model == "discuss.channel"):
-                if message.parent_id:
-                    store.add(message.parent_id, format_reply=False)
                 store.add(
-                    "mail.message",
-                    {
-                        "id": message.id,
-                        "parentMessage": (
-                            {"id": message.parent_id.id} if message.parent_id else False
-                        ),
-                    },
+                    message, {"parentMessage": Store.one(message.parent_id, format_reply=False)}
                 )
 
-    def _bus_notification_target(self):
+    def _bus_channel(self):
         self.ensure_one()
         if self.model == "discuss.channel" and self.res_id:
-            return self.env["discuss.channel"].browse(self.res_id)
+            return self.env["discuss.channel"].browse(self.res_id)._bus_channel()
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
-            return guest
-        return super()._bus_notification_target()
+            return guest._bus_channel()
+        return super()._bus_channel()

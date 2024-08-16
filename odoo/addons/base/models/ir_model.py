@@ -17,7 +17,7 @@ from psycopg2.sql import Identifier, SQL, Placeholder
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, pycompat, unique, OrderedSet, sql as sqltools
+from odoo.tools import format_list, unique, OrderedSet, sql as sqltools
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -433,7 +433,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = pycompat.to_text(model_data['model'])
+            _name = model_data['model']
             _description = model_data['name']
             _module = False
             _custom = True
@@ -1780,20 +1780,20 @@ class IrModelConstraint(models.Model):
         self.check_access_rule('unlink')
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
-            name = tools.ustr(data.name)
+            name = data.name
             if data.model.model in self.env:
                 table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
-            typ = data.type
 
             # double-check we are really going to delete all the owners of this schema element
-            self._cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
+            self._cr.execute("""SELECT id from ir_model_constraint where name=%s""", [name])
             external_ids = set(x[0] for x in self._cr.fetchall())
             if external_ids - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
+            typ = data.type
             if typ == 'f':
                 # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
@@ -1927,12 +1927,12 @@ class IrModelRelation(models.Model):
         ids_set = set(self.ids)
         to_drop = tools.OrderedSet()
         for data in self.sorted(key='id', reverse=True):
-            name = tools.ustr(data.name)
+            name = data.name
 
             # double-check we are really going to delete all the owners of this schema element
-            self._cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
-            external_ids = set(x[0] for x in self._cr.fetchall())
-            if external_ids - ids_set:
+            self._cr.execute("""SELECT id from ir_model_relation where name = %s""", [name])
+            external_ids = {x[0] for x in self._cr.fetchall()}
+            if not external_ids.issubset(ids_set):
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -2032,26 +2032,22 @@ class IrModelAccess(models.Model):
     def _get_allowed_models(self, mode='read'):
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
+        group_ids = self.env.user._get_group_ids()
         self.flush_model()
-        self.env.cr.execute(f"""
+        rows = self.env.execute_query(sqltools.SQL("""
             SELECT m.model
               FROM ir_model_access a
               JOIN ir_model m ON (m.id = a.model_id)
-             WHERE a.perm_{mode}
+             WHERE a.perm_%s
                AND a.active
                AND (
                     a.group_id IS NULL OR
-                    -- use subselect fo force a better query plan. See #99695 --
-                    a.group_id IN (
-                        SELECT gu.gid
-                            FROM res_groups_users_rel gu
-                            WHERE gu.uid = %s
-                    )
+                    a.group_id IN %s
                 )
             GROUP BY m.model
-        """, (self.env.uid,))
+        """, sqltools.SQL(mode), tuple(group_ids) or (None,)))
 
-        return frozenset(v[0] for v in self.env.cr.fetchall())
+        return frozenset(v[0] for v in rows)
 
     @api.model
     def check(self, model, mode='read', raise_exception=True):

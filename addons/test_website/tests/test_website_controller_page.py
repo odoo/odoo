@@ -45,7 +45,7 @@ class TestWebsiteControllerPage(HttpCase):
         })
 
         cls.listing_controller_page = cls.env["website.controller.page"].create({
-            "page_name": "Exposed Model",
+            "name": "Exposed Model",
             "page_type": "listing",
             "view_id": cls.listing_view.id,
             "record_domain": "[('name', '=ilike', 'test_partner_%')]",
@@ -61,7 +61,7 @@ class TestWebsiteControllerPage(HttpCase):
         })
 
         cls.single_controller_page = cls.env["website.controller.page"].create({
-            "page_name": "Exposed Model",
+            "name": "Exposed Model",
             "page_type": "single",
             "website_id": False,
             "view_id": cls.single_view.id,
@@ -77,7 +77,7 @@ class TestWebsiteControllerPage(HttpCase):
 
         with self.assertRaises(AccessError) as cm:
             self.env["website.controller.page"].with_user(2).create({
-                "page_name": "Exposed Model",
+                "name": "Exposed Model",
                 "page_type": "single",
                 "website_id": False,
                 "view_id": self.single_view.id,

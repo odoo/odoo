@@ -18,7 +18,14 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    Deferred,
+    mockDate,
+    mockTimeZone,
+    runAllTimers,
+    tick,
+} from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -448,6 +455,7 @@ test(`non-editable list with open_form_view`, async () => {
         type: "list",
         arch: `<tree open_form_view="1"><field name="foo"/></tree>`,
     });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
         message: "button to open form view should not be present on non-editable list",
     });
@@ -473,12 +481,91 @@ test(`editable list with open_form_view`, async () => {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
     });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
         message: "button to open form view should be present on each rows",
     });
 
     await contains(`td.o_list_record_open_form_view`).click();
     expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
+});
+
+test(`editable list with open_form_view in debug`, async () => {
+    serverState.debug = true;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree editable="top" open_form_view="1"><field name="foo"/></tree>`,
+    });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
+    expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
+        message: "button to open form view should be present on each rows",
+    });
+});
+
+test(`editable list without open_form_view in debug`, async () => {
+    patchWithCleanup(localStorage, {
+        getItem(key) {
+            const value = super.getItem(...arguments);
+            if (key.startsWith("debug_open_view")) {
+                expect.step(["getItem", key, value]);
+            }
+            return value;
+        },
+        setItem(key, value) {
+            if (key.startsWith("debug_open_view")) {
+                expect.step(["setItem", key, value]);
+            }
+            super.setItem(...arguments);
+        },
+    });
+    serverState.debug = true;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        selectRecord(resId, options) {
+            expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
+        },
+    });
+    const localStorageKey = "debug_open_view,foo,list,123456789,foo";
+    expect.verifySteps([["getItem", localStorageKey, null]]);
+    expect(`td.o_list_record_open_form_view`).toHaveCount(0);
+    expect(".o_optional_columns_dropdown").toHaveCount(1);
+    await contains(".o_optional_columns_dropdown button").click();
+    expect(".o-dropdown-item:contains('View Button')").toHaveCount(1);
+    await contains(".o-dropdown-item:contains('View Button')").click();
+    expect.verifySteps([
+        ["setItem", localStorageKey, true],
+        ["getItem", localStorageKey, "true"],
+    ]);
+
+    expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
+        message: "button to open form view should be present on each rows",
+    });
+
+    await contains(`td.o_list_record_open_form_view`).click();
+    expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
+
+    await contains(".o_optional_columns_dropdown button").click();
+    await contains(".o-dropdown-item:contains('View Button')").click();
+    expect.verifySteps([
+        ["setItem", localStorageKey, false],
+        ["getItem", localStorageKey, "false"],
+    ]);
+    expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
+        message: "button to open form view should no longer be present",
+    });
+});
+
+test(`non-editable list in debug`, async () => {
+    serverState.debug = true;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree><field name="foo"/></tree>`,
+    });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
 });
 
 test(`editable readonly list with open_form_view`, async () => {
@@ -1015,6 +1102,31 @@ test(`list view: action button executes action on click with domain selected: co
     expect.verifySteps(["search", "doActionButton", "execute_action"]);
 });
 
+test(`list view: press "hotkey" to execute header button action`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`);
+        },
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <header>
+                    <button name="toDo" type="object" string="toDo" display="always" data-hotkey="a"/>
+                </header>
+                <field name="foo"/>
+            </tree>
+        `,
+    });
+    press(["alt", "a"]);
+    await tick();
+    expect.verifySteps(["execute_action: toDo"]);
+});
+
 test(`column names (noLabel, label, string and default)`, async () => {
     const charField = registry.category("fields").get("char");
 
@@ -1355,33 +1467,6 @@ test(`save a record with an required field computed by another`, async () => {
     await contains(`.o_list_view`).click();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(0);
-});
-
-test(`field header cells have a tooltip`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
-    });
-    expect(`thead th[data-name=foo]`).toHaveAttribute("data-tooltip", "Foo");
-});
-
-test(`boolean field has no title (data-tooltip)`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<tree><field name="bar"/></tree>`,
-    });
-    expect(`.o_data_cell`).not.toHaveAttribute("data-tooltip");
-});
-
-test(`text field has no title (data-tooltip)`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<tree><field name="text"/></tree>`,
-    });
-    expect(`.o_data_cell`).not.toHaveAttribute("data-tooltip");
 });
 
 test(`field with nolabel has no title`, async () => {
@@ -5601,6 +5686,8 @@ test(`display a tooltip on a field`, async () => {
     hover(`th[data-name="foo"]`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(0);
+    expect(`.o-tooltip`).toHaveCount(1);
+    expect(`.o-tooltip`).toHaveText("Foo");
 
     serverState.debug = true;
 
@@ -5615,6 +5702,20 @@ test(`display a tooltip on a field`, async () => {
     );
     expect(`.o-tooltip--technical > li[data-item="label"]`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="label"]`).toHaveText("Label:Bar");
+});
+
+test("field (with help) tooltip in non debug mode", async function () {
+    serverState.debug = false;
+    Foo._fields.foo.help = "This is a foo field";
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `<tree><field name="foo"/></tree>`,
+    });
+    hover(`th[data-name="foo"]`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(1);
+    expect(`.o-tooltip`).toHaveText("Foo\nThis is a foo field");
 });
 
 test(`support row decoration`, async () => {
@@ -7753,7 +7854,7 @@ test(`edit list line after line deletion`, async () => {
     expect(`.o_selected_row`).toHaveCount(1, { message: "no other row should be selected" });
 });
 
-test(`pressing TAB in editable list with several fields [REQUIRE FOCUS]`, async () => {
+test(`pressing TAB in editable list with several fields`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -7781,7 +7882,7 @@ test(`pressing TAB in editable list with several fields [REQUIRE FOCUS]`, async 
     expect(`.o_data_row:eq(1) .o_data_cell:eq(0) input`).toBeFocused();
 });
 
-test(`pressing SHIFT-TAB in editable list with several fields [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with several fields`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -8034,7 +8135,7 @@ test(`edition, then navigation with tab (with a readonly field and onchange)`, a
     expect.verifySteps(["onchange:bar"]);
 });
 
-test(`pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with a readonly field`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -8056,7 +8157,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]`
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 });
 
-test(`pressing SHIFT-TAB in editable list with a readonly field in first column [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with a readonly field in first column`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -8078,7 +8179,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in first column 
     expect(`.o_data_row [name=qux] input`).toBeFocused();
 });
 
-test(`pressing SHIFT-TAB in editable list with a readonly field in last column [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with a readonly field in last column`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",

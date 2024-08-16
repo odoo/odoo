@@ -40,7 +40,7 @@
                 <tree string="Users" editable="bottom" create="false" delete="false">
                     <field name="user_id" column_invisible="True"/> <!-- required field, needed when updating the password -->
                     <field name="user_login" force_save="1"/>
-                    <field name="new_passwd" password="True" width="20px"/>
+                    <field name="new_passwd" password="True"/>
                 </tree>
             </field>
         </record>
@@ -268,35 +268,31 @@
             <field name="model">res.users</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="id"/>
-                    <field name="name"/>
-                    <field name="login"/>
-                    <field name="lang"/>
                     <field name="active"/>
                     <field name="login_date"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="o_kanban_image">
-                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'avatar_128', record.id.raw_value)"/>
+                        <t t-name="kanban-card" class="flex-row">
+                            <aside class="w-25 p-1">
+                                <field name="avatar_128" widget="image" alt="Avatar"/>
+                            </aside>
+                            <main class="w-100 ps-2 pt-1">
+                                <div>
+                                    <div t-if="record.active.raw_value" class="text-success float-end mb4">
+                                        <i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i>
+                                    </div>
+                                    <div t-else="" class="text-danger float-end mb4">
+                                        <i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i>
+                                    </div>
+                                    <field class="fw-bold" name="name"/>
                                 </div>
-                                <div class="oe_kanban_details">
-                                    <ul>
-                                        <li class="text-success float-end mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
-                                        <li class="text-danger float-end mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
-                                        <li class="mb4">
-                                            <strong><field name="name"/></strong>
-                                        </li>
-                                        <li class="d-flex flex-wrap">
-                                            <span class="mb4 text-truncate" title="Login">
-                                                <i class="fa fa-envelope me-1" role="img" aria-label="Login"/>
-                                                <field name="login"/>
-                                            </span>
-                                            <field class="badge rounded-pill mb4 ms-auto" name="lang"/>
-                                        </li>
-                                    </ul>
+                                <div>
+                                    <span class="mb4 text-truncate" title="Login">
+                                        <i class="fa fa-envelope me-1" role="img" aria-label="Login"></i>
+                                        <field name="login"/>
+                                    </span>
+                                    <field class="badge rounded-pill float-end" name="lang"/>
                                 </div>
-                            </div>
+                            </main>
                         </t>
                     </templates>
                 </kanban>

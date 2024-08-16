@@ -19,15 +19,6 @@ class WebClient(WebclientController):
     def _process_request_for_internal_user(self, store, **kwargs):
         super()._process_request_for_internal_user(store, **kwargs)
         if kwargs.get("livechat_channels"):
-            livechat_channels = (
-                request.env["im_livechat.channel"]
-                .search([])
-                .mapped(
-                    lambda c: {
-                        "id": c.id,
-                        "name": c.name,
-                        "hasSelfAsMember": request.env.user in c.user_ids,
-                    }
-                )
+            store.add(
+                request.env["im_livechat.channel"].search([]), fields=["are_you_inside", "name"]
             )
-            store.add("LivechatChannel", livechat_channels)

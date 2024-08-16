@@ -111,6 +111,9 @@ class PosOrder(models.Model):
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):
                 if all(is_product_uom_qty_zero(move) for move in picking.move_ids):
                     picking.action_cancel()
+                else:
+                    # We make sure that the original picking still has the correct quantity reserved
+                    picking.action_assign()
 
         return data
 
@@ -188,3 +191,10 @@ class PosOrderLine(models.Model):
         params = super()._load_pos_data_fields(config_id)
         params += ['sale_order_origin_id', 'sale_order_line_id', 'down_payment_details']
         return params
+
+    def _launch_stock_rule_from_pos_order_lines(self):
+        orders = self.mapped('order_id')
+        for order in orders:
+            for line in order.lines:
+                line.sale_order_line_id.move_ids.mapped("move_line_ids").unlink()
+        return super()._launch_stock_rule_from_pos_order_lines()

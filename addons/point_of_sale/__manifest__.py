@@ -27,7 +27,7 @@
         'views/pos_note_view.xml',
         'views/pos_order_view.xml',
         'views/pos_category_view.xml',
-        'views/pos_combo_view.xml',
+        'views/product_combo_views.xml',
         'views/product_view.xml',
         'views/account_journal_view.xml',
         'views/pos_payment_method_views.xml',
@@ -127,6 +127,7 @@
             ('include', 'point_of_sale.base_app'),
 
             'web/static/src/core/colorlist/colorlist.scss',
+            'web/static/src/webclient/webclient_layout.scss',
 
             'web/static/src/webclient/icons.scss',
 
@@ -145,7 +146,8 @@
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
             'web/static/src/views/fields/parsers.js',
-            'web/static/src/webclient/barcode/barcode_scanner.*',
+            'web/static/src/webclient/barcode/barcode_dialog.*',
+            'web/static/src/webclient/barcode/barcode_video_scanner.*',
             'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',
             'web/static/src/webclient/barcode/crop_overlay.*',
             # report download utils
@@ -162,6 +164,7 @@
             'web/static/src/legacy/js/libs/jquery.js',
             # account
             'account/static/src/helpers/*.js',
+            'account/static/src/services/account_move_service.js',
 
             "web/static/src/core/browser/router.js",
             "web/static/src/core/debug/**/*",
@@ -169,6 +172,7 @@
             'web/static/src/views/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/actions/**/*',
+            'web/static/src/webclient/breadcrumbs/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'web/static/src/webclient/company_service.js',

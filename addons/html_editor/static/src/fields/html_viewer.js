@@ -20,7 +20,7 @@ function retargetLinks(container) {
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
     static props = {
-        value: { type: Object },
+        value: { type: [Object, String] },
         hasFullHtml: { type: Boolean, optional: true },
         cssAssetId: { type: String, optional: true },
     };

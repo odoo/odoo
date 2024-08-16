@@ -11,7 +11,7 @@ import {
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
     editor.destroy();
     expect(getContent(el)).toBe("<p>[]</p>");
 });
@@ -22,7 +22,7 @@ test("powerbox hint is display when the selection is in the editor", async () =>
 
     setContent(el, "<p>[]</p>");
     await tick();
-    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
 
     moveSelectionOutsideEditor();
     await tick();
@@ -35,7 +35,7 @@ test("placeholder is display when the selection is outside of the editor", async
 
     setContent(el, "<p>[]</p>");
     await tick();
-    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
 
     moveSelectionOutsideEditor();
     await tick();
@@ -49,13 +49,13 @@ test("placeholder must not be visible if there is content in the editor", async 
 
 test("should not lose track of temporary hints on split block", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
     editor.dispatch("SPLIT_BLOCK");
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
     const [firstP, secondP] = el.children;
@@ -63,7 +63,7 @@ test("should not lose track of temporary hints on split block", async () => {
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
-            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
             <p><br></p>
         `)
     );
@@ -72,7 +72,7 @@ test("should not lose track of temporary hints on split block", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
 });
@@ -80,7 +80,7 @@ test("should not lose track of temporary hints on split block", async () => {
 test("temporary hint should not be displayed where there's a permanent one", async () => {
     const { el, editor } = await setupEditor("<p>[]<br></p>", {});
     expect(getContent(el)).toBe(
-        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     editor.dispatch("SET_TAG", { tagName: "H1" });
     await animationFrame();
@@ -91,7 +91,7 @@ test("temporary hint should not be displayed where there's a permanent one", asy
     expect(getContent(el)).toBe(
         unformat(`
             <h1 placeholder="Heading 1" class="o-we-hint"><br></h1>
-            <p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>
+            <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
     const h1 = el.firstElementChild;

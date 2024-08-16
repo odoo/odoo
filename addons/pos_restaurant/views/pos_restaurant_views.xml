@@ -17,10 +17,14 @@
                             <field name="background_color" groups="base.group_no_one" />
                         </group>
                         <field name="table_ids">
-                            <tree string='Tables'>
-                                <field name="name" />
+                            <tree string='Tables' editable="bottom">
+                                <field name="table_number" />
                                 <field name="seats" />
                                 <field name="shape" />
+                                <field name="height" optional="hide" />
+                                <field name="width" optional="hide" />
+                                <field name="color" widget="color" optional="hide" />
+                                <field name="active" optional="hide" />
                             </tree>
                         </field>
                     </sheet>
@@ -56,13 +60,11 @@
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="pos_config_ids" />
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
-                                <div><strong>Point of Sales: </strong><t t-esc="record.pos_config_ids.value"/></div>
+                        <t t-name="kanban-card">
+                            <div><strong>Floor Name: </strong><field name="name"/></div>
+                            <div class="d-flex">
+                                <strong>Point of Sales:</strong><field name="pos_config_ids" class="ms-1"/>
                             </div>
                         </t>
                     </templates>
@@ -91,7 +93,7 @@
                 <form string="Restaurant Table">
                     <sheet>
                         <group col="2">
-                            <field name="name" />
+                            <field name="table_number" />
                             <field name="seats" />
                         </group>
                         <group col="4" string="Appearance" groups="base.group_no_one">

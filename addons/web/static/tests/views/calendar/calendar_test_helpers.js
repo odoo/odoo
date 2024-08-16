@@ -500,6 +500,38 @@ export async function resizeEventToTime(eventId, dateTime) {
 }
 
 /**
+ * @param {number} eventId
+ * @param {string} date
+ * @returns {Promise<void>}
+ */
+export async function resizeEventToDate(eventId, date) {
+    const event = findEvent(eventId);
+    const slot = findAllDaySlot(date);
+
+    instantScrollTo(event);
+    hover(queryFirst('.fc-event-main', { root: event }));
+    await animationFrame();
+
+    // Show the resizer
+    const resizer = queryFirst('.fc-event-resizer-end', { root: event });
+    Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
+
+    instantScrollTo(slot);
+
+    // Find the date cell and calculate the positions for dragging
+    const dateCell = findDateCell(date);
+    const columnRect = queryRect(dateCell);
+    const startRow = queryRect(resizer);
+
+    // Perform the drag-and-drop operation
+    const { moveTo, drop } = drag(resizer, { relative: true, position: { y: 0, x: 0 } });
+    moveTo(dateCell, { relative: true, position: { y: startRow.y - columnRect.y, x: 0 } });
+    drop();
+
+    await advanceTime(500);
+}
+
+/**
  * @param {"day" | "week" | "month" | "year"} scale
  * @returns {Promise<void>}
  */

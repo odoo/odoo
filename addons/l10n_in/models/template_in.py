@@ -78,7 +78,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Export/SEZ'),
                 'sequence': 3,
                 'auto_apply': True,
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals(),
+                'tax_ids': self._get_l10n_in_fiscal_tax_vals(use_sez_exp_igst=True),
             },
             'fiscal_position_in_lut_sez': {
                 'name': _('LUT - Export/SEZ'),
@@ -87,11 +87,11 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    def _get_l10n_in_fiscal_tax_vals(self, use_zero_rated_igst=False):
+    def _get_l10n_in_fiscal_tax_vals(self, use_zero_rated_igst=False, use_sez_exp_igst=False):
         return [Command.clear()] + [
             Command.create({
                 'tax_src_id': f"sgst_{tax_type}_{rate}",
-                'tax_dest_id': f"igst_{tax_type}_{rate if not use_zero_rated_igst else 0}",
+                'tax_dest_id': f"igst_{tax_type}_{rate if not use_zero_rated_igst else 0}{'_sez_exp' if use_sez_exp_igst else ''}",
             })
             for tax_type in ["sale", "purchase"]
             for rate in [1, 2, 5, 12, 18, 28]  # Available existing GST Rates

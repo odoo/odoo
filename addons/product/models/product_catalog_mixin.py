@@ -91,7 +91,7 @@ class ProductCatalogMixin(models.AbstractModel):
         order_line_info = {}
         default_data = self._default_order_line_values(child_field)
 
-        for product, record_lines in self._get_product_catalog_record_lines(product_ids).items():
+        for product, record_lines in self._get_product_catalog_record_lines(product_ids, child_field=child_field, **kwargs).items():
             order_line_info[product.id] = {
                **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
                'productType': product.type,

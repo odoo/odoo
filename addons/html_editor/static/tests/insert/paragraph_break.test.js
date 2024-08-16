@@ -74,6 +74,20 @@ describe("Selection collapsed", () => {
                 contentAfter: "<p>abc</p><p>[]<br></p>",
             });
         });
+        test("should split block without afecting the uploaded document link", async () => {
+            await testEditor({
+                contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a>[]def</p>`,
+                stepFunction: splitBlock,
+                contentAfter: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a></p><p>[]def</p>`,
+            });
+        });
+        test("should split block without afecting the uploaded document link (2)", async () => {
+            await testEditor({
+                contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a>[]</p>`,
+                stepFunction: splitBlock,
+                contentAfter: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a></p><p>[]<br></p>`,
+            });
+        });
     });
 
     describe("Pre", () => {
@@ -396,8 +410,7 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a></p>",
                 stepFunction: splitBlock,
-                contentAfterEdit:
-                    '<p>\ufeff<a>\ufeffab\ufeff</a>\ufeff</p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>',
+                contentAfterEdit: `<p>\ufeff<a>\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: "<p><a>ab</a></p><p>[]<br></p>",
             });
             await testEditor({

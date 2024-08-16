@@ -4,7 +4,7 @@
 from contextlib import contextmanager
 
 import psycopg2
-import psycopg2.errorcodes
+import psycopg2.errors
 
 import odoo
 from odoo.exceptions import UserError
@@ -92,15 +92,13 @@ class TestIrSequenceNoGap(BaseCase):
         """ Try to draw a number from two transactions.
         This is expected to not work.
         """
-        with environment() as env0:
-            with environment() as env1:
-                # NOTE: The error has to be an OperationalError
-                # s.t. the automatic request retry (service/model.py) works.
-                with self.assertRaises(psycopg2.OperationalError) as e:
-                    n0 = env0['ir.sequence'].next_by_code('test_sequence_type_2')
-                    self.assertTrue(n0)
-                    n1 = env1['ir.sequence'].next_by_code('test_sequence_type_2')
-                self.assertEqual(e.exception.pgcode, psycopg2.errorcodes.LOCK_NOT_AVAILABLE, msg="postgresql returned an incorrect errcode")
+        with environment() as env0, environment() as env1:
+            # NOTE: The error has to be an OperationalError
+            # s.t. the automatic request retry (service/model.py) works.
+            with self.assertRaises(psycopg2.errors.LockNotAvailable, msg="postgresql returned an incorrect errcode"):
+                n0 = env0['ir.sequence'].next_by_code('test_sequence_type_2')
+                self.assertTrue(n0)
+                env1['ir.sequence'].next_by_code('test_sequence_type_2')
 
     @classmethod
     def tearDownClass(cls):

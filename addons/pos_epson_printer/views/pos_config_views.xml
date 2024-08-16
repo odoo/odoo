@@ -9,8 +9,12 @@
                 <div class="content-group" invisible="not other_devices">
                     <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
                     <div class="row" invisible="epson_printer_ip in [False, '']">
-                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
-                        <field name="iface_cashdrawer"/>
+                        <div class="col-lg-5 o_light_label">
+                            <label string="Cashdrawer" for="iface_cashdrawer"/>
+                        </div>
+                        <div class="col-lg-7">
+                            <field name="iface_cashdrawer"/>
+                        </div>
                     </div>
                 </div>
                 <div role="alert" class="alert alert-warning" invisible="not iface_print_via_proxy or not other_devices or epson_printer_ip in [False, '']">

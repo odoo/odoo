@@ -51,6 +51,18 @@
         <field name="model">stock.picking.type</field>
         <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="inside">
+                <div role="menuitem">
+                    <a name="action_batch" type="object" context="{'view_mode':'form'}">
+                        Prepare Batches
+                    </a>
+                </div>
+                <div role="menuitem" groups="stock.group_stock_picking_wave">
+                    <a name="get_action_picking_type_operations" type="object">
+                        Prepare Waves
+                    </a>
+                </div>
+            </xpath>
             <xpath expr="//button[@name='get_action_picking_tree_ready']" position="before">
                 <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary mr8 mb4 align-top" name="action_batch" type="object">
                     <field name="count_picking_batch"/> Batches

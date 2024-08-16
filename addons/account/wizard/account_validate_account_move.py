@@ -61,4 +61,6 @@ class ValidateAccountMove(models.TransientModel):
         if self.force_post:
             self.move_ids.auto_post = 'no'
         self.move_ids._post(not self.force_post)
+        if autopost_bills_wizard := self.move_ids._show_autopost_bills_wizard():
+            return autopost_bills_wizard
         return {'type': 'ir.actions.act_window_close'}

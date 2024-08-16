@@ -24,10 +24,30 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: 's_table_of_content', name: 'Table of Content'}),
-    ...wTourUtils.dragNDrop({id: 's_table_of_content', name: 'Table of Content'}),
+    ...wTourUtils.dragNDrop({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
+    // We don't use the dragNDrop function here to avoid snippets being dropped inside the toc's.
+    {
+        content: "Drag the Text snippet group and drop it.",
+        trigger: '#oe_snippets .oe_snippet[name="Text"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        run: "drag_and_drop :iframe #wrap",
+    },
+    {
+        content: "Click on the s_table_of_content snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_table_of_content"]',
+        run: "click",
+    },
     // To make sure that the public widgets of the two previous ones started.
-    ...wTourUtils.dragNDrop({id: 's_banner', name: 'Banner'}),
+    ...wTourUtils.dragNDrop({id: "s_banner", name: "Banner", groupName: "Intro"}),
+    {
+        content: "Drag the Intro snippet group and drop it.",
+        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        run: "drag_and_drop :iframe #wrap",
+    },
+    {
+        content: "Click on the s_banner snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_banner"]',
+        run: "click",
+    },
     ...wTourUtils.clickOnSave(),
     checkTOCNavBar(0, 0),
     checkTOCNavBar(1, 0),

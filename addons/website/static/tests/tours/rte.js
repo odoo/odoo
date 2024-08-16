@@ -66,7 +66,6 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 }, {
     content: "insert file name",
     trigger: '.modal .modal-dialog .modal-body input[type="text"]',
-    in_modal: false,
     run: "edit rte_translator.xml",
 },
 {
@@ -75,7 +74,6 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 {
     content: "create file",
     trigger: ".modal button.btn-primary:contains(create)",
-    in_modal: false,
     run: "click",
 }, {
     content: "click on the 'page manager' button",
@@ -100,7 +98,6 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 }, {
     content: "insert page name",
     trigger: '.modal .modal-dialog .modal-body input[type="text"]',
-    in_modal: false,
     run: "edit rte_translator",
 },
 {
@@ -109,7 +106,6 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 {
     content: "create page",
     trigger: ".modal button.btn-primary:contains(create)",
-    in_modal: false,
     run: "click",
 },
 {
@@ -117,7 +113,8 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 },
 ...wTourUtils.dragNDrop({
     id: "s_cover",
-    name: "Cover"
+    name: "Cover",
+    groupName: "Intro",
 }), {
     content: "change content",
     trigger: ':iframe #wrap',
@@ -208,7 +205,6 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     run: "edit test Parseltongue default value",
 },
 {
-    in_modal: false,
     trigger: '.modal input:value("test Parseltongue placeholder")',
 },
 {

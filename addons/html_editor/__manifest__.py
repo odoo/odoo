@@ -16,16 +16,28 @@ This addon provides an extensible, maintainable editor.
     'depends': ['base', 'bus', 'web'],
     'auto_install': True,
     'assets': {
+        'web.assets_frontend': [
+            ('include', 'html_editor.assets_media_dialog')
+        ],
         'web.assets_backend': [
             'html_editor/static/src/**/*',
+            ('include', 'html_editor.assets_media_dialog'),
             'html_editor/static/lib/DOMpurify.js',
+        ],
+        'web._assets_jquery': [
             'html_editor/static/lib/jQuery.transfo.js',
+        ],
+        'web.assets_unit_tests_setup': [
+            'html_editor/static/lib/jQuery.transfo.js',
+        ],
+        'html_editor.assets_media_dialog': [
+            # Bundle to use the media dialog in the backend and the frontend
+            'html_editor/static/src/main/media/media_dialog/**/*',
+            'html_editor/static/src/utils/**/*',
+
         ],
         'web.assets_unit_tests': [
             'html_editor/static/tests/**/*',
-        ],
-        'web_editor.assets_media_dialog': [
-            'html_editor/static/src/main/media/upload_progress_toast/**/*',
         ],
         'html_editor.assets_image_cropper': [
             'html_editor/static/lib/cropperjs/cropper.css',

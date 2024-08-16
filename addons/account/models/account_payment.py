@@ -106,6 +106,7 @@ class AccountPayment(models.Model):
         string="Customer/Vendor",
         store=True, readonly=False, ondelete='restrict',
         compute='_compute_partner_id',
+        inverse='_inverse_partner_id',
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
         tracking=True,
         check_company=True)
@@ -113,6 +114,7 @@ class AccountPayment(models.Model):
         comodel_name='account.account',
         string="Outstanding Account",
         store=True,
+        index='btree_not_null',
         compute='_compute_outstanding_account_id',
         check_company=True)
     destination_account_id = fields.Many2one(
@@ -490,9 +492,13 @@ class AccountPayment(models.Model):
         '''
         for pay in self:
             available_payment_method_lines = pay.available_payment_method_line_ids
-
-            # Select the first available one by default.
-            if pay.payment_method_line_id in available_payment_method_lines:
+            inbound_payment_method = pay.partner_id.property_inbound_payment_method_line_id
+            outbound_payment_method = pay.partner_id.property_outbound_payment_method_line_id
+            if pay.payment_type == 'inbound' and inbound_payment_method.id in available_payment_method_lines.ids:
+                pay.payment_method_line_id = inbound_payment_method
+            elif pay.payment_type == 'outbound' and outbound_payment_method.id in available_payment_method_lines.ids:
+                pay.payment_method_line_id = outbound_payment_method
+            elif pay.payment_method_line_id.id in available_payment_method_lines.ids:
                 pay.payment_method_line_id = pay.payment_method_line_id
             elif available_payment_method_lines:
                 pay.payment_method_line_id = available_payment_method_lines[0]._origin
@@ -567,7 +573,7 @@ class AccountPayment(models.Model):
                 if pay.partner_id:
                     pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_receivable_id
                 else:
-                    pay.destination_account_id = self.env['account.account'].search([
+                    pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
                         ('account_type', '=', 'asset_receivable'),
                         ('deprecated', '=', False),
@@ -577,7 +583,7 @@ class AccountPayment(models.Model):
                 if pay.partner_id:
                     pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_payable_id
                 else:
-                    pay.destination_account_id = self.env['account.account'].search([
+                    pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
                         ('account_type', '=', 'liability_payable'),
                         ('deprecated', '=', False),
@@ -837,6 +843,25 @@ class AccountPayment(models.Model):
         # recomputed correctly if we change the journal or the date, leading to inconsitencies
         if not self.move_id:
             self.name = False
+
+    @api.onchange('partner_id')
+    def _inverse_partner_id(self):
+        """
+            The goal of this inverse is that when changing the partner, the payment method line is recomputed, and it can
+            happen that the journal that was set doesn't have that particular payment method line, so we have to change
+            the journal otherwise the user will have an UserError.
+        """
+        for payment in self:
+            partner = payment.partner_id
+            payment_type = payment.payment_type if payment.payment_type in ('inbound', 'outbound') else None
+            if not partner or not payment_type:
+                continue
+
+            field_name = f'property_{payment_type}_payment_method_line_id'
+            default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
+            journal = default_payment_method_line.journal_id
+            if journal:
+                payment.journal_id = journal
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS

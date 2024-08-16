@@ -39,8 +39,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.cashierNameIs("Mitchell Admin"),
-            PosHr.clickLockButton(),
-            PosHr.clickLoginButton(),
+            PosHr.clickCashierName(),
             SelectionPopup.has("Pos Employee2", { run: "click" }),
             NumberPopup.enterValue("12"),
             NumberPopup.isShown("••"),
@@ -83,5 +82,27 @@ registry.category("web_tour.tours").add("PosHrTour", {
             // Close register should be accessible by the admin user.
             Chrome.clickMenuOption("Close Register"),
             Dialog.is("Closing Register"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CashierStayLogged", {
+    test: true,
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Pos Employee1"),
+            SelectionPopup.has("Pos Employee2"),
+            SelectionPopup.has("Mitchell Admin"),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open session"),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            PosHr.refreshPage(),
+            ProductScreen.isShown(),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.clickMenuButton(),
+            PosHr.clickLockButton(),
+            PosHr.refreshPage(),
+            PosHr.loginScreenIsShown(),
         ].flat(),
 });

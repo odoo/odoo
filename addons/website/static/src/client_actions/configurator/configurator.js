@@ -470,7 +470,7 @@ class ThemeSelectionScreen extends ApplyConfiguratorScreen {
                         }, {once: true});
                     }));
                 }
-                $(this.themeSVGPreviews[idx].el).append(svgEl);
+                this.themeSVGPreviews[idx].el.appendChild(svgEl);
             });
             // When all the images inside the svgs are loaded then remove the
             // loading effect.
@@ -596,7 +596,7 @@ class Store {
                 color2: color2,
                 color3: mixCssColors('#FFFFFF', color2, 0.9),
                 color4: '#FFFFFF',
-                color5: mixCssColors(color1, '#000000', 0.75),
+                color5: mixCssColors(color1, '#000000', 0.125),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
                 recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];

@@ -13,7 +13,7 @@ import {
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Component, useState, xml } from "@odoo/owl";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { click, queryFirst } from "@odoo/hoot-dom";
+import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
@@ -124,17 +124,17 @@ test("Step Tour validity", async () => {
         steps: () => steps,
     });
     await makeMockEnv({});
-    const waited_error1 = `Error for step ${JSON.stringify(
+    const waited_error1 = `Error in schema for TourStep ${JSON.stringify(
         steps[0],
         null,
         4
     )}\nInvalid object: unknown key 'Belgium', unknown key 'wins', unknown key 'EURO2024'`;
-    const waited_error2 = `Error for step ${JSON.stringify(
+    const waited_error2 = `Error in schema for TourStep ${JSON.stringify(
         steps[1],
         null,
         4
     )}\nInvalid object: unknown key 'my_title', unknown key 'doku'`;
-    const waited_error3 = `Error for step ${JSON.stringify(
+    const waited_error3 = `Error in schema for TourStep ${JSON.stringify(
         steps[2],
         null,
         4
@@ -170,8 +170,6 @@ test("points to next step", async () => {
             },
         ],
     });
-    await makeMockEnv();
-
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -199,7 +197,6 @@ test("next step with new anchor at same position", async () => {
             { trigger: "button.bar", run: "click" },
         ],
     });
-    await makeMockEnv();
 
     class Dummy extends Component {
         static props = ["*"];
@@ -255,7 +252,6 @@ test("a failing tour logs the step that failed in run", async () => {
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -288,13 +284,13 @@ test("a failing tour logs the step that failed in run", async () => {
     getService("tour_service").startTour("tour2", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour2 on step: '.button0'"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour2 on step: '.button1'"]);
     await advanceTime(750);
 
     const expectedError = [
-        `error: Tour tour2 failed at step .button1. Element has been found. The error seems to be with step.run`,
+        "log: [1/2] Tour tour2 → Step .button0",
+        `log: [2/2] Tour tour2 → Step .button1`,
+        "error: FAILED: [2/2] Tour tour2 → Step .button1. Element has been found. The error seems to be with step.run",
         "error: Cannot read properties of null (reading 'click')",
         "error: tour not succeeded",
     ];
@@ -307,7 +303,6 @@ test("a failing tour with disabled element", async () => {
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -343,13 +338,15 @@ test("a failing tour with disabled element", async () => {
     await advanceTime(750);
     await advanceTime(750);
     await advanceTime(750);
-    await advanceTime(10000);
-    expect.verifySteps([
-        `error: Tour tour3 failed at step .button1. Element has been found. The error seems to be with step.run`,
+    const expectedError = [
+        `error: FAILED: [2/3] Tour tour3 → Step .button1. Element has been found. The error seems to be with step.run`,
         `error: Element can't be disabled when you want to click on it.
 Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
-        `error: Tour tour3 failed at step .button2. The cause is that trigger (.button2) element cannot be found in DOM.`,
-    ]);
+        `error: FAILED: [3/3] Tour tour3 → Step .button2. The cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
+        `error: tour not succeeded`,
+    ];
+    await advanceTime(10000);
+    expect.verifySteps(expectedError);
 });
 
 test("a failing tour logs the step that failed", async () => {
@@ -358,7 +355,6 @@ test("a failing tour logs the step that failed", async () => {
         warn: (s) => expect.step(`warn: ${s.replace(/[ \n\-/\r\t]/gi, "")}`),
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
 
     class Root extends Component {
         static components = {};
@@ -431,24 +427,23 @@ test("a failing tour logs the step that failed", async () => {
     getService("tour_service").startTour("tour1", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button0)'"]);
+    expect.verifySteps(["log: [1/9] Tour tour1 → Step content (trigger: .button0)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button1)'"]);
+    expect.verifySteps(["log: [2/9] Tour tour1 → Step content (trigger: .button1)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button2)'"]);
+    expect.verifySteps(["log: [3/9] Tour tour1 → Step content (trigger: .button2)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button3)'"]);
+    expect.verifySteps(["log: [4/9] Tour tour1 → Step content (trigger: .button3)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .wrong_selector)'"]);
+    expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
     await advanceTime(10000);
-    const expectedWarning = `warn: Tourtour1failedatstepcontent(trigger:.wrong_selector){"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILINGSTEP(59){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`;
-    const expectedError = `error: Tour tour1 failed at step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM.`;
-    expect.verifySteps([expectedWarning, expectedError]);
+    expect.verifySteps([
+        `warn: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[59]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
+        "error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+    ]);
 });
 
 test("check tour with inactive steps", async () => {
-    await makeMockEnv();
-
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -509,7 +504,6 @@ test("pointer is added on top of overlay's stack", async () => {
             { trigger: ".btn-primary", run: "click" },
         ],
     });
-    await makeMockEnv({});
     class DummyDialog extends Component {
         static props = ["*"];
         static components = { Dialog };
@@ -548,8 +542,6 @@ test("pointer is added on top of overlay's stack", async () => {
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
     patchWithCleanup(session, { tour_disable: false });
-    await makeMockEnv();
-
     class Root extends Component {
         static components = { Counter };
         static template = xml/*html*/ `
@@ -578,8 +570,6 @@ test("registering test tour after service is started doesn't auto-start the tour
 
 test("registering non-test tour after service is started auto-starts the tour", async () => {
     patchWithCleanup(session, { tour_disable: false });
-    await makeMockEnv();
-
     class Root extends Component {
         static components = { Counter };
         static template = xml/*html*/ `
@@ -620,7 +610,6 @@ test("hovering to the anchor element should show the content", async () => {
             },
         ],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -650,6 +639,9 @@ test("hovering to the anchor element should show the content", async () => {
 });
 
 test("should show only 1 pointer at a time", async () => {
+    patchWithCleanup(browser.console, {
+        error: (s) => {},
+    });
     registry.category("web_tour.tours").add("milan_sanremo", {
         sequence: 10,
         steps: () => [
@@ -668,7 +660,6 @@ test("should show only 1 pointer at a time", async () => {
             },
         ],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -705,7 +696,6 @@ test("perform edit on next step", async () => {
             },
         ],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -746,8 +736,6 @@ test("scrolling to next step should update the pointer's height", async (assert)
             },
         ],
     });
-    await makeMockEnv();
-
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -818,7 +806,6 @@ test("scroller pointer to reach next step", async () => {
         sequence: 10,
         steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -880,9 +867,111 @@ test("scroller pointer to reach next step", async () => {
     expect(".o_tour_pointer").toHaveCount(0);
 });
 
+test("automatic tour with invisible element", async () => {
+    patchWithCleanup(browser.console, {
+        warn: (s) => {},
+        error: (s) => expect.step(`error: ${s}`),
+    });
+    await makeMockEnv();
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">Button 0</button>
+                    <button class="button1" style="display:none;">Button 1</button>
+                    <button class="button2">Button 2</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    registry.category("web_tour.tours").add("tour_de_wallonie", {
+        test: true,
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    getService("tour_service").startTour("tour_de_wallonie", { mode: "auto" });
+    await animationFrame();
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(10000);
+    expect.verifySteps([
+        "error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1. The cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+    ]);
+});
+
+test("automatic tour with invisible element but use :not(:visible))", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            s.includes("tour succeeded") ? expect.step(`succeeded`) : false;
+        },
+        warn: (s) => {},
+        error: (s) => expect.step(`error: ${s}`),
+    });
+    await makeMockEnv();
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">Button 0</button>
+                    <button class="button1" style="display:none;">Button 1</button>
+                    <button class="button2">Button 2</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    registry.category("web_tour.tours").add("tour_de_wallonie", {
+        test: true,
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1:not(:visible)",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    getService("tour_service").startTour("tour_de_wallonie", { mode: "auto" });
+    await animationFrame();
+    await advanceTime(750);
+    await animationFrame();
+    await advanceTime(750);
+    await animationFrame();
+    await advanceTime(750);
+    expect.verifySteps(["succeeded"]);
+});
+
 test("manual tour with inactive steps", async () => {
     registry.category("web_tour.tours").add("tour_de_wallonie", {
-        rainbowMessage: "bravo",
+        rainbowManMessage: "bravo",
         sequence: 10,
         steps: () => [
             {
@@ -946,7 +1035,7 @@ test("manual tour with inactive steps", async () => {
 test("automatic tour with alternative trigger", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => {
-            if (s.includes("on step")) {
+            if (s.includes("→ Step")) {
                 expect.step("on step");
             } else if (s.toLowerCase().includes("tour tour_des_flandres succeeded")) {
                 expect.step("succeeded");
@@ -996,6 +1085,59 @@ test("automatic tour with alternative trigger", async () => {
     expect.verifySteps(["on step", "on step", "on step", "on step", "succeeded"]);
 });
 
+test("manual tour with alternative trigger", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            !s.includes("═") ? expect.step(s) : "";
+        },
+    });
+    registry.category("web_tour.tours").add("tour_des_flandres_2", {
+        test: false,
+        sequence: 93,
+        steps: () => [
+            {
+                trigger: ".button1, .button2",
+                run: "click",
+            },
+            {
+                trigger: "body:not(:visible), .button4, .button3",
+                run: "click",
+            },
+            {
+                trigger: ".interval1, .interval2, .button5",
+                run: "click",
+            },
+            {
+                trigger: "button:contains(0, hello):enabled, button:contains(2, youpi)",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">0, hello</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">2, youpi</button>
+                    <button class="button3">Button 3</button>
+                    <button class="button4">Button 4</button>
+                    <button class="button5">Button 5</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("tour_des_flandres_2", { mode: "manual" });
+    await contains(".button2").click();
+    await contains(".button3").click();
+    await contains(".button5").click();
+    await contains(".button2").click();
+    expect.verifySteps(["click", "click", "click", "click", "tour succeeded"]);
+});
+
 test("Tour backward when the pointed element disappear", async () => {
     registry.category("web_tour.tours").add("tour1", {
         sequence: 10,
@@ -1037,4 +1179,257 @@ test("Tour backward when the pointed element disappear", async () => {
     await contains("button.bar").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("Tour backward when the pointed element disappear and ignore warn step", async () => {
+    patchWithCleanup(console, {
+        warn: (msg) => expect.step(msg),
+    });
+
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar" },
+            { trigger: "button.bar", run: "click" },
+        ],
+    });
+
+    class Dummy extends Component {
+        static props = ["*"];
+        state = useState({ bool: true });
+        static components = {};
+        static template = xml`
+            <button class="fool" t-on-click="() => { state.bool = true; }">You fool</button>
+            <button class="foo" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
+            <button class="bar" t-if="!state.bool">Bar</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    getService("tour_service").startTour("tour1", { mode: "manual" });
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.foo").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.fool").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.foo").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.bar").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+    expect.verifySteps([
+        "Step 'button.bar' ignored because no 'run'",
+        "Step 'button.bar' ignored because no 'run'",
+    ]);
+});
+
+test("Tour started by the URL", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        sequence: 10,
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar", run: "click" },
+        ],
+    });
+
+    browser.location.href = `${browser.location.origin}?tour=tour1`;
+
+    class Dummy extends Component {
+        static props = ["*"];
+        state = useState({ bool: true });
+        static components = {};
+        static template = xml`
+            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!state.bool">Bar</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.foo").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.bar").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("Log a warning if step ignored", async () => {
+    patchWithCleanup(console, {
+        warn: (msg) => expect.step(msg),
+    });
+
+    registry.category("web_tour.tours").add("tour1", {
+        sequence: 10,
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar" },
+            { trigger: "button.bar", run: "click" },
+        ],
+    });
+
+    class Dummy extends Component {
+        static props = ["*"];
+        state = useState({ bool: true });
+        static components = {};
+        static template = xml`
+            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!state.bool">Bar</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    getService("tour_service").startTour("tour1", { mode: "manual" });
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.foo").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await contains("button.bar").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+
+    expect.verifySteps(["Step 'button.bar' ignored because no 'run'"]);
+});
+
+test("check tooltip position", async () => {
+    registry.category("web_tour.tours").add("tour_des_tooltip", {
+        sequence: 93,
+        steps: () => [
+            {
+                trigger: ".button0",
+                tooltipPosition: "right",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                tooltipPosition: "left",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                tooltipPosition: "bottom",
+                run: "click",
+            },
+            {
+                trigger: ".button3",
+                tooltipPosition: "top",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0">Button 0</button></div>
+                    <div class="p-3"><button class="button1">Button 1</button></div>
+                    <div class="p-3"><button class="button2">Button 2</button></div>
+                    <div class="p-3"><button class="button3">Button 3</button></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    let tooltip;
+    getService("tour_service").startTour("tour_des_tooltip", { mode: "manual" });
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button0 = await waitFor(".button0");
+    expect(tooltip.getBoundingClientRect().left).toBeGreaterThan(
+        button0.getBoundingClientRect().right
+    );
+    await contains(".button0").click();
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button1 = await waitFor(".button1");
+    expect(tooltip.getBoundingClientRect().right).toBeLessThan(
+        button1.getBoundingClientRect().left
+    );
+    await contains(".button1").click();
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button2 = await waitFor(".button2");
+    expect(tooltip.getBoundingClientRect().top).toBeGreaterThan(
+        button2.getBoundingClientRect().bottom
+    );
+    await contains(".button2").click();
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button3 = await waitFor(".button3");
+    expect(tooltip.getBoundingClientRect().bottom).toBeLessThan(
+        button3.getBoundingClientRect().top
+    );
+});
+
+test("check rainbowManMessage", async () => {
+    registry.category("web_tour.tours").add("rainbow_tour", {
+        sequence: 87,
+        fadeout: "no",
+        rainbowManMessage: () => {
+            return "Congratulations !";
+        },
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0">Button 0</button></div>
+                    <div class="p-3"><button class="button1">Button 1</button></div>
+                    <div class="p-3"><button class="button2">Button 2</button></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await contains(".button0").click();
+    await contains(".button1").click();
+    await contains(".button2").click();
+    const rainbowMan = await waitFor(".o_reward_rainbow_man");
+    expect(rainbowMan.getBoundingClientRect().width).toBe(400);
+    expect(rainbowMan.getBoundingClientRect().height).toBe(400);
+    expect(".o_reward_msg_content").toHaveText("Congratulations !");
 });

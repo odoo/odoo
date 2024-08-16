@@ -277,7 +277,8 @@ class AccountEdiFormat(models.Model):
 
             invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
             if invoice.is_sale_document():
-                info['IDFactura']['IDEmisorFactura'] = {'NIF': invoice.company_id.vat[2:]}
+                nif = invoice.company_id.vat[2:] if invoice.company_id.vat.startswith('ES') else invoice.company_id.vat
+                info['IDFactura']['IDEmisorFactura'] = {'NIF': nif}
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.name[:60]
                 if not is_simplified:
                     invoice_node['Contraparte'] = {
@@ -465,7 +466,7 @@ class AccountEdiFormat(models.Model):
             'IDVersionSii': '1.1',
             'Titular': {
                 'NombreRazon': company.name[:120],
-                'NIF': company.vat[2:],
+                'NIF': company.vat[2:] if company.vat.startswith('ES') else company.vat,
             },
             'TipoComunicacion': 'A1' if csv_number else 'A0',
         }

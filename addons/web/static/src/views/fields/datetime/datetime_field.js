@@ -8,6 +8,7 @@ import {
     formatDateTime,
     today,
 } from "@web/core/l10n/dates";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
@@ -26,6 +27,10 @@ import { standardFieldProps } from "../standard_field_props";
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
+ *  showSeconds?: boolean;
+ *  showTime?: boolean;
+ *  minPrecision?: string;
+ *  maxPrecision?: string;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -44,6 +49,22 @@ export class DateTimeField extends Component {
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
+        showSeconds: { type: Boolean, optional: true },
+        showTime: { type: Boolean, optional: true },
+        minPrecision: {
+            type: String,
+            optional: true,
+            validate: (props) => ["days", "months", "years", "decades"].includes(props),
+        },
+        maxPrecision: {
+            type: String,
+            optional: true,
+            validate: (props) => ["days", "months", "years", "decades"].includes(props),
+        },
+    };
+    static defaultProps = {
+        showSeconds: true,
+        showTime: true,
     };
 
     static template = "web.DateTimeField";
@@ -93,12 +114,21 @@ export class DateTimeField extends Component {
             }
             if (!isNaN(this.props.rounding)) {
                 pickerProps.rounding = this.props.rounding;
+            } else if (!this.props.showSeconds) {
+                pickerProps.rounding = 0;
+            }
+            if (this.props.maxPrecision) {
+                pickerProps.maxPrecision = this.props.maxPrecision;
+            }
+            if (this.props.minPrecision) {
+                pickerProps.minPrecision = this.props.minPrecision;
             }
             return pickerProps;
         };
 
         const dateTimePicker = useDateTimePicker({
             target: "root",
+            showSeconds: this.props.showSeconds,
             get pickerProps() {
                 return getPickerProps();
             },
@@ -142,7 +172,9 @@ export class DateTimeField extends Component {
      */
     async addDate(valueIndex) {
         const values = this.values;
-        values[valueIndex] = values[valueIndex ? 0 : 1];
+        values[valueIndex] = valueIndex
+            ? values[0].plus({ hours: 1 })
+            : values[1].minus({ hours: 1 });
 
         this.state.focusedDateIndex = valueIndex;
         this.state.value = values;
@@ -157,9 +189,9 @@ export class DateTimeField extends Component {
     getFormattedValue(valueIndex) {
         const value = this.values[valueIndex];
         return value
-            ? this.field.type === "date"
+            ? this.field.type === "date" || !this.props.showTime
                 ? formatDate(value)
-                : formatDateTime(value)
+                : formatDateTime(value, { showSeconds: this.props.showSeconds })
             : "";
     }
 
@@ -278,6 +310,34 @@ export const dateField = {
             type: "boolean",
             help: _t(`Displays a warning icon if the input dates are in the future.`),
         },
+        {
+            label: _t("Minimal precision"),
+            name: "min_precision",
+            type: "selection",
+            help: _t(
+                `Choose which minimal precision (days, months, ...) you want in the datetime picker.`
+            ),
+            choices: [
+                { label: _t("Days"), value: "days" },
+                { label: _t("Months"), value: "months" },
+                { label: _t("Years"), value: "years" },
+                { label: _t("Decades"), value: "decades" },
+            ],
+        },
+        {
+            label: _t("Maximal precision"),
+            name: "max_precision",
+            type: "selection",
+            help: _t(
+                `Choose which maximal precision (days, months, ...) you want in the datetime picker.`
+            ),
+            choices: [
+                { label: _t("Days"), value: "days" },
+                { label: _t("Months"), value: "months" },
+                { label: _t("Years"), value: "years" },
+                { label: _t("Decades"), value: "decades" },
+            ],
+        },
     ],
     supportedTypes: ["date"],
     extractProps: ({ attrs, options }, dynamicInfo) => ({
@@ -290,6 +350,8 @@ export const dateField = {
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: exprToBoolean(options.warn_future),
+        minPrecision: options.min_precision,
+        maxPrecision: options.max_precision,
     }),
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
@@ -331,7 +393,26 @@ export const dateTimeField = {
                 `Control the number of minutes in the time selection. E.g. set it to 15 to work in quarters.`
             ),
         },
+        {
+            label: _t("Show seconds"),
+            name: "show_seconds",
+            type: "boolean",
+            default: true,
+            help: _t(`Displays or hides the seconds in the datetime value.`),
+        },
+        {
+            label: _t("Show time"),
+            name: "show_time",
+            type: "boolean",
+            default: true,
+            help: _t(`Displays or hides the time in the datetime value.`),
+        },
     ],
+    extractProps: ({ attrs, options }, dynamicInfo) => ({
+        ...dateField.extractProps({ attrs, options }, dynamicInfo),
+        showSeconds: exprToBoolean(options.show_seconds ?? true),
+        showTime: exprToBoolean(options.show_time ?? true),
+    }),
     supportedTypes: ["datetime"],
 };
 
@@ -364,6 +445,31 @@ export const dateRangeField = {
     ],
     supportedTypes: ["date", "datetime"],
     listViewWidth: ({ type }) => (type === "datetime" ? 294 : 180),
+    isValid: (record, fieldname, fieldInfo) => {
+        if (fieldInfo.widget === "daterange") {
+            if (
+                !record.data[fieldInfo.options[END_DATE_FIELD_OPTION]] !==
+                    !record.data[fieldname] &&
+                evaluateBooleanExpr(
+                    record.activeFields[fieldInfo.options[END_DATE_FIELD_OPTION]]?.required,
+                    record.evalContextWithVirtualIds
+                )
+            ) {
+                return false;
+            }
+            if (
+                !record.data[fieldInfo.options[START_DATE_FIELD_OPTION]] !==
+                    !record.data[fieldname] &&
+                evaluateBooleanExpr(
+                    record.activeFields[fieldInfo.options[START_DATE_FIELD_OPTION]]?.required,
+                    record.evalContextWithVirtualIds
+                )
+            ) {
+                return false;
+            }
+        }
+        return !record.isFieldInvalid(fieldname);
+    },
 };
 
 registry

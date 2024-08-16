@@ -1,5 +1,8 @@
+// $o-discuss-talkingColor: mix($white, darken($o-enterprise-action-color, 5%), 35%);
+$o-discuss-talkingColor: lighten($success, 5%);
+
 .o-mail-discussSidebarBgColor {
-    background-color: mix($white, $o-gray-100);
+    background-color: $white;
 }
 
 .o-mail-brighter {
@@ -14,10 +17,18 @@
     --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
     color: white !important;
     background-color: var(--o-discuss-badge-bg) !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.1ch;
 
     &.o-muted {
         --o-discuss-badge-bg: #{$gray-400};
     }
+}
+
+.o-discuss-mobileContextMenu {
+    top: auto !important;
+    border-top: $border-width solid $border-color !important;
 }
 
 .o-discuss-separator {
@@ -28,6 +39,7 @@
     display: flex;
     transform: translate(0, 0) !important; // cancel systray style on badge
     font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
+    user-select: none;
 }
 
 .o-min-height-0 {
@@ -36,10 +48,6 @@
 
 .o-min-width-0 {
     min-width: 0;
-}
-
-.o-smaller {
-    font-size: smaller;
 }
 
 .o-hover-text-underline:hover {

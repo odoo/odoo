@@ -212,14 +212,19 @@ class Partner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def _to_store(self, store: Store, /, *, fields=None):
+    def _to_store(self, store: Store, /, *, fields=None, main_user_by_partner=None):
         if fields is None:
             fields = ["active", "email", "im_status", "is_company", "name", "user", "write_date"]
         if not self.env.user._is_internal() and "email" in fields:
             fields.remove("email")
         for partner in self:
             data = partner._read_format(
-                [field for field in fields if field not in ["country", "display_name", "user"]],
+                [
+                    field
+                    for field in fields
+                    if field
+                    not in ["country", "display_name", "isAdmin", "notification_type", "user"]
+                ],
                 load=False,
             )[0]
             if "country" in fields:
@@ -228,12 +233,22 @@ class Partner(models.Model):
             if "display_name" in fields:
                 data["displayName"] = partner.display_name
             if 'user' in fields:
-                users = partner.with_context(active_test=False).user_ids
-                internal_users = users - users.filtered('share')
-                main_user = internal_users[0] if len(internal_users) > 0 else users[0] if len(users) > 0 else self.env['res.users']
+                main_user = main_user_by_partner and main_user_by_partner.get(partner)
+                if not main_user:
+                    users = partner.with_context(active_test=False).user_ids
+                    internal_users = users - users.filtered("share")
+                    main_user = (
+                        internal_users[0]
+                        if len(internal_users) > 0
+                        else users[0] if len(users) > 0 else self.env["res.users"]
+                    )
                 data['userId'] = main_user.id
                 data["isInternalUser"] = not main_user.share if main_user else False
-            store.add("res.partner", data)
+                if "isAdmin" in fields:
+                    data["isAdmin"] = main_user._is_admin()
+                if "notification_type" in fields:
+                    data["notification_preference"] = main_user.notification_type
+            store.add(partner, data)
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):

@@ -1,6 +1,8 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
+import { Within } from "./tree_editor_components";
+import { memoize } from "../utils/functions";
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -79,6 +81,9 @@ const EXCHANGE = {
 };
 
 const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is not"];
+
+const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
 
 export class Expression {
     constructor(ast) {
@@ -746,6 +751,86 @@ function createBetweenOperators(tree) {
  * @param {Tree} tree
  * @returns {Tree}
  */
+function createWithinOperators(tree, options = {}) {
+    if (tree.children) {
+        return {
+            ...tree,
+            children: tree.children.map((child) => createWithinOperators(child, options)),
+        };
+    }
+    const fieldType = options.getFieldDef?.(tree.path)?.type;
+    if (tree.operator !== "between" || !["date", "datetime"].includes(fieldType)) {
+        return tree;
+    }
+    const isTodayDateTimeExpr = (expression) =>
+        expression._expr === DATETIME_TODAY_STRING_EXPRESSION;
+    const isTodayDateExpr = (expression) => expression._expr === DATE_TODAY_STRING_EXPRESSION;
+    const processDeltaExpr = memoize(function processDeltaExpr(
+        expression,
+        regex,
+        periodShouldBePositive = true
+    ) {
+        const matches = regex.exec(expression._expr);
+        if (!matches || matches.length !== 3) {
+            return false;
+        }
+        const [, period, amount] = matches;
+        if (!Within.options.some((o) => o[0] === period)) {
+            return false;
+        }
+        const periodAmount = parseInt(amount);
+        if (
+            (periodAmount < 0 && periodShouldBePositive) ||
+            (periodAmount > 0 && !periodShouldBePositive)
+        ) {
+            return false;
+        }
+        return [periodAmount, period];
+    });
+    const processDeltaDateExpr = (expression, periodShouldBePositive = true) => {
+        const regex =
+            /^\(context_today\(\)\s*\+\s*relativedelta\(\s*(\w+)\s*=\s*(-?\d+)\s*\)\)\.strftime\("%Y-%m-%d"\)$/;
+        return processDeltaExpr(expression, regex, periodShouldBePositive);
+    };
+    const processDeltaDateTimeExpr = (expression, periodShouldBePositive = true) => {
+        const regex =
+            /^datetime\.datetime\.combine\(context_today\(\)\s*\+\s*relativedelta\(\s*(\w+)\s*=\s*(-?\d+)\s*\),\s*datetime\.time\(0,\s*0,\s*0\)\)\.to_utc\(\)\.strftime\("%Y-%m-%d\s%H:%M:%S"\)$/;
+        return processDeltaExpr(expression, regex, periodShouldBePositive);
+    };
+
+    const newTree = { ...tree };
+
+    if (fieldType === "date") {
+        if (isTodayDateExpr(newTree.value[0]) && processDeltaDateExpr(newTree.value[1])) {
+            newTree.operator = "within";
+            newTree.value = [...processDeltaDateExpr(newTree.value[1]), "date"];
+        } else if (
+            isTodayDateExpr(newTree.value[1]) &&
+            processDeltaDateExpr(newTree.value[0], false)
+        ) {
+            newTree.operator = "within";
+            newTree.value = [...processDeltaDateExpr(newTree.value[0], false), "date"];
+        }
+    }
+    if (fieldType === "datetime") {
+        if (isTodayDateTimeExpr(newTree.value[0]) && processDeltaDateTimeExpr(newTree.value[1])) {
+            newTree.operator = "within";
+            newTree.value = [...processDeltaDateTimeExpr(newTree.value[1]), "datetime"];
+        } else if (
+            isTodayDateTimeExpr(newTree.value[1]) &&
+            processDeltaDateTimeExpr(newTree.value[0], false)
+        ) {
+            newTree.operator = "within";
+            newTree.value = [...processDeltaDateTimeExpr(newTree.value[0], false), "datetime"];
+        }
+    }
+    return newTree;
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 export function removeBetweenOperators(tree) {
     if (tree.type === "complex_condition") {
         return tree;
@@ -771,6 +856,40 @@ export function removeBetweenOperators(tree) {
         addChild(newTree, processedChildren[i]);
     }
     return newTree;
+}
+
+export function removeWithinOperators(tree) {
+    if (tree.type === "complex_condition") {
+        return tree;
+    }
+    if (tree.type === "condition") {
+        if (tree.operator !== "within") {
+            return tree;
+        }
+        const { negate, path, value } = tree;
+        const fieldType = value[2];
+        const dateExpressions = {
+            today: expression(DATE_TODAY_STRING_EXPRESSION),
+            delta: expression(
+                `(context_today() + relativedelta(${value[1]}=${value[0]})).strftime('%Y-%m-%d')`
+            ),
+        };
+        const dateTimeExpressions = {
+            today: expression(DATETIME_TODAY_STRING_EXPRESSION),
+            delta: expression(
+                `datetime.datetime.combine(context_today() + relativedelta(${value[1]}=${value[0]}), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+            ),
+        };
+        const expressions = fieldType === "date" ? dateExpressions : dateTimeExpressions;
+        return condition(
+            path,
+            "between",
+            value[0] > 0 ? Object.values(expressions) : Object.values(expressions).reverse(),
+            negate
+        );
+    }
+    const processedChildren = tree.children.map(removeWithinOperators);
+    return { ...tree, children: processedChildren };
 }
 
 /**
@@ -881,7 +1000,10 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return createVirtualOperators(createBetweenOperators(tree), options);
+    return createVirtualOperators(
+        createWithinOperators(createBetweenOperators(tree), options),
+        options
+    );
 }
 
 /**
@@ -891,7 +1013,7 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = createComplexConditions(
-        removeBetweenOperators(removeVirtualOperators(tree))
+        removeBetweenOperators(removeWithinOperators(removeVirtualOperators(tree)))
     );
     return _expressionFromTree(simplifiedTree, options, true);
 }
@@ -902,7 +1024,7 @@ export function expressionFromTree(tree, options = {}) {
  */
 export function domainFromTree(tree) {
     const simplifiedTree = removeBetweenOperators(
-        removeVirtualOperators(removeComplexConditions(tree))
+        removeWithinOperators(removeVirtualOperators(removeComplexConditions(tree)))
     );
     const domainAST = {
         type: 4,
@@ -920,7 +1042,10 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return createVirtualOperators(createBetweenOperators(tree), options);
+    return createVirtualOperators(
+        createWithinOperators(createBetweenOperators(tree), options),
+        options
+    );
 }
 
 /**

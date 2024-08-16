@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import ustr
 
 class LoyaltyRule(models.Model):
     _name = 'loyalty.rule'
@@ -31,25 +30,21 @@ class LoyaltyRule(models.Model):
             'reward_point_amount', 'reward_point_split', 'reward_point_mode',
             'minimum_qty', 'minimum_amount', 'minimum_amount_tax_mode', 'mode', 'code']
 
-    @api.depends('product_ids', 'product_category_id', 'product_tag_id') #TODO later: product tags
+    @api.depends('product_ids', 'product_category_id', 'product_tag_id', 'product_domain')  # TODO later: product tags
     def _compute_valid_product_ids(self):
-        domain_products = {}
-        for rule in self:
-            if rule.product_ids or\
-                rule.product_category_id or\
-                rule.product_tag_id or\
-                rule.product_domain not in ('[]', "[['sale_ok', '=', True]]"):
-                domain = rule._get_valid_product_domain()
-                domain = expression.AND([[('available_in_pos', '=', True)], domain])
-                product_ids = domain_products.get(ustr(domain))
-                if product_ids is None:
-                    product_ids = self.env['product.product'].search(domain, order="id")
-                    domain_products[ustr(domain)] = product_ids
-                rule.valid_product_ids = product_ids
-                rule.any_product = False
+        for key, rules in self.grouped(lambda rule: (
+            tuple(rule.product_ids.ids),
+            rule.product_category_id.id,
+            rule.product_tag_id.id,
+            '' if rule.product_domain in ('[]', "[['sale_ok', '=', True]]") else rule.product_domain,
+        )).items():
+            if any(key):
+                domain = expression.AND([[('available_in_pos', '=', True)], rules[:1]._get_valid_product_domain()])
+                rules.valid_product_ids = self.env['product.product'].search(domain, order="id")
+                rules.any_product = False
             else:
-                rule.any_product = True
-                rule.valid_product_ids = self.env['product.product']
+                rules.valid_product_ids = self.env['product.product']
+                rules.any_product = True
 
     @api.depends('code')
     def _compute_promo_barcode(self):

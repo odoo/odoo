@@ -41,7 +41,6 @@ export class ProductScreen extends Component {
         ProductCard,
         CameraBarcodeScanner,
     };
-    static numpadActionName = _t("Payment");
     static props = {};
 
     setup() {
@@ -113,9 +112,15 @@ export class ProductScreen extends Component {
     }
 
     getNumpadButtons() {
+        const colorClassMap = {
+            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
+            Backspace: "o_colorlist_item_color_transparent_1",
+            "-": "o_colorlist_item_color_transparent_3",
+        };
+
         return getButtons(DEFAULT_LAST_ROW, [
             { value: "quantity", text: _t("Qty") },
-            { value: "discount", text: _t("% Disc"), disabled: !this.pos.config.manual_discount },
+            { value: "discount", text: _t("%"), disabled: !this.pos.config.manual_discount },
             {
                 value: "price",
                 text: _t("Price"),
@@ -124,7 +129,17 @@ export class ProductScreen extends Component {
             BACKSPACE,
         ]).map((button) => ({
             ...button,
-            class: this.pos.numpadMode === button.value ? "active border-primary" : "",
+            class: `
+                ${colorClassMap[button.value] || ""}
+                ${this.pos.numpadMode === button.value ? "active" : ""}
+                ${button.value === "quantity" ? "numpad-qty rounded-0 rounded-top mb-0" : ""}
+                ${button.value === "price" ? "numpad-price rounded-0 rounded-bottom mt-0" : ""}
+                ${
+                    button.value === "discount"
+                        ? "numpad-discount my-0 rounded-0 border-top border-bottom"
+                        : ""
+                }
+            `,
         }));
     }
     onNumpadClick(buttonValue) {
@@ -377,17 +392,24 @@ export class ProductScreen extends Component {
         }
 
         this.pos.setSelectedCategory(0);
+        const domain = [
+            "|",
+            "|",
+            ["name", "ilike", searchProductWord],
+            ["default_code", "ilike", searchProductWord],
+            ["barcode", "ilike", searchProductWord],
+            ["available_in_pos", "=", true],
+            ["sale_ok", "=", true],
+        ];
+
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const categIds = iface_available_categ_ids.map((categ) => categ.id);
+            domain.push(["pos_categ_ids", "in", categIds]);
+        }
         const product = await this.pos.data.searchRead(
             "product.product",
-            [
-                "&",
-                ["available_in_pos", "=", true],
-                "|",
-                "|",
-                ["name", "ilike", searchProductWord],
-                ["default_code", "ilike", searchProductWord],
-                ["barcode", "ilike", searchProductWord],
-            ],
+            domain,
             this.pos.data.fields["product.product"],
             {
                 context: { display_default_code: false },

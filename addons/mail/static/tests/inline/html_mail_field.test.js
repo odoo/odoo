@@ -54,7 +54,7 @@ beforeEach(() => {
 test("HtmlMail save inline html", async function () {
     onRpc("web_save", ({ args }) => {
         expect(args[1].body.replace(/font-size: (\d+(\.\d+)?)px/, "font-size: []px")).toBe(
-            `<h1 style="margin: 0px 0px 8px; box-sizing: border-box; font-size: []px; font-weight: 500; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, 'Noto Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; line-height: 1.2;">first</h1>`
+            `<h1 style="margin: 0px 0px 8px; box-sizing: border-box; font-size: []px; line-height: 1.2; font-weight: 500; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, 'Noto Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';">first</h1>`
         );
         expect.step("web_save");
     });

@@ -6,7 +6,7 @@ const today = luxon.DateTime.now();
 
 registry.category("web_tour.tours").add('crm_forecast', {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
     stepUtils.showAppsMenuItem(),
     {
@@ -51,17 +51,17 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click"
     }, {
-        trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
+        trigger: ".o_kanban_record:contains('Test Opportunity 1')",
         content: "move to the next month",
         async run(helpers) {
             const undefined_groups = queryAll('.o_column_title:contains("None")').length;
             await helpers.drag_and_drop(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
         },
     }, {
-        trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
+        trigger: ".o_kanban_record:contains('Test Opportunity 1')",
         content: "edit lead",
         run: "click"
     }, {
@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click"
     }, {
         trigger: '.o_kanban_add_column',

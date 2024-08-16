@@ -23,10 +23,6 @@ export class ImportDataContent extends Component {
         previewError: { type: String, optional: true },
     };
 
-    setup() {
-        this.searchPlaceholder = _t("Search a field...");
-    }
-
     getGroups(column) {
         const groups = [
             { choices: this.makeChoices(column.fields.basic) },

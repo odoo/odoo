@@ -2,6 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 const CLASS_NAME_DROPDOWN_ITEM = 'dropdown-item';
 const CLASS_NAME_ACTIVE = 'active';
@@ -63,7 +64,7 @@ const TableOfContent = publicWidget.Widget.extend({
     async start() {
         this._stripNavbarStyles();
         await this._super(...arguments);
-        this._scrollElement = this.$target.closest(".s_table_of_content").closestScrollable()[0];
+        this._scrollElement = closestScrollableY(this.$target.closest(".s_table_of_content")[0]);
         this._scrollTarget = $().getScrollingTarget(this._scrollElement)[0];
         this._tocElement = this.el.querySelector('.s_table_of_content_navbar');
         this.previousPosition = -1;

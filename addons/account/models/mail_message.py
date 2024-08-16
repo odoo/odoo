@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from markupsafe import Markup
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
+bypass_token = object()
 DOMAINS = {
     'account.move': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
-    'account.account': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
+    'account.account': lambda operator, value: [('company_ids.check_account_audit_trail', operator, value)],
     'account.tax': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
     'res.partner': lambda operator, value: [
         '|', ('company_id', '=', False), ('company_id.check_account_audit_trail', operator, value),
@@ -21,7 +19,7 @@ DOMAINS = {
 class Message(models.Model):
     _inherit = 'mail.message'
 
-    account_audit_log_preview = fields.Html(string="Description", compute="_compute_account_audit_log_preview")
+    account_audit_log_preview = fields.Text(string="Description", compute="_compute_account_audit_log_preview")
     account_audit_log_move_id = fields.Many2one(
         comodel_name='account.move',
         string="Journal Entry",
@@ -60,23 +58,20 @@ class Message(models.Model):
 
     @api.depends('tracking_value_ids')
     def _compute_account_audit_log_preview(self):
-        move_messages = self.filtered(lambda m: m.model == 'account.move' and m.res_id)
-        (self - move_messages).account_audit_log_preview = False
-        for message in move_messages:
+        audit_messages = self.filtered('account_audit_log_activated')
+        (self - audit_messages).account_audit_log_preview = False
+        for message in audit_messages:
             title = message.subject or message.preview
             tracking_value_ids = message.sudo().tracking_value_ids._filter_has_field_access(self.env)
             if not title and tracking_value_ids:
                 title = _("Updated")
             if not title and message.subtype_id and not message.subtype_id.internal:
                 title = message.subtype_id.display_name
-            audit_log_preview = Markup("<div>%s</div>") % (title or '')
-            audit_log_preview += Markup("<br>").join(
-                Markup(
-                    "%(old_value)s <i class='o_TrackingValue_separator fa fa-long-arrow-right mx-1 text-600' title='%(title)s' role='img' aria-label='%(title)s'></i>%(new_value)s (%(field)s)"
-                ) % {
+            audit_log_preview = (title or '') + '\n'
+            audit_log_preview += "\n".join(
+                "%(old_value)s ⇨ %(new_value)s (%(field)s)" % {
                     'old_value': fmt_vals['oldValue']['value'],
                     'new_value': fmt_vals['newValue']['value'],
-                    'title': _("Changed"),
                     'field': fmt_vals['changedField'],
                 }
                 for fmt_vals in tracking_value_ids._tracking_value_format()
@@ -152,6 +147,8 @@ class Message(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_log(self):
+        if self.env.context.get('bypass_audit') is bypass_token:
+            return
         for message in self:
             if message.account_audit_log_activated and not (
                 message.account_audit_log_move_id
@@ -160,6 +157,10 @@ class Message(models.Model):
                 raise UserError(_("You cannot remove parts of the audit trail. Archive the record instead."))
 
     def write(self, vals):
-        if vals.keys() & {'res_id', 'res_model', 'subject', 'message_type', 'subtype_id'}:
+        if (
+            vals.keys() & {'res_id', 'res_model', 'message_type', 'subtype_id'}
+            or ('subject' in vals and any(self.mapped('subject')))
+            or ('body' in vals and any(self.mapped('body')))
+        ):
             self._except_audit_log()
         return super().write(vals)

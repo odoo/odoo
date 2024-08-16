@@ -8,6 +8,7 @@ import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dial
 import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
 
 patch(PosStore.prototype, {
     async onClickSaleOrder(clickedOrderId) {
@@ -63,8 +64,9 @@ patch(PosStore.prototype, {
             this.get_order().set_partner(sale_order.partner_id);
         }
         selectedOption == "settle"
-            ? this.settleSO(sale_order, orderFiscalPos)
-            : this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
+            ? await this.settleSO(sale_order, orderFiscalPos)
+            : await this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
+        this.selectOrderLine(this.get_order(), this.get_order().lines.at(-1));
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];
@@ -96,10 +98,16 @@ patch(PosStore.prototype, {
                 }
                 continue;
             }
+
+            if (line.is_downpayment) {
+                line.product_id = this.config.down_payment_product_id;
+            }
+
             const newLineValues = {
                 product_id: line.product_id,
                 qty: line.product_uom_qty,
                 price_unit: line.price_unit,
+                price_type: "automatic",
                 tax_ids:
                     orderFiscalPos || !line.tax_id
                         ? undefined
@@ -207,26 +215,52 @@ patch(PosStore.prototype, {
             });
             proposed_down_payment = sale_order.amount_unpaid || 0;
         }
-        const new_line = await this.addLineToCurrentOrder({
-            order_id: this.get_order(),
-            product_id: this.config.down_payment_product_id,
-            price_unit: proposed_down_payment,
-            sale_order_origin_id: sale_order,
-            down_payment_details: sale_order.order_line
-                .filter(
-                    (line) =>
-                        line.product_id &&
-                        line.product_id.id !== this.config.down_payment_product_id.id
-                )
-                .map((line) => ({
-                    product_name: line.product_id.display_name,
-                    product_uom_qty: line.product_uom_qty,
-                    price_unit: line.price_unit,
-                    total: line.price_total,
-                })),
+        this._createDownpaymentLines(sale_order, proposed_down_payment);
+    },
+    async _createDownpaymentLines(sale_order, total_down_payment) {
+        //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
+        const grouped = Object.groupBy(sale_order.order_line, (ol) => {
+            return ol.tax_id.map((tax_id) => tax_id.id).sort((a, b) => a - b);
         });
-        new_line.price_type = "automatic";
-        new_line.set_unit_price(proposed_down_payment);
+        Object.keys(grouped).forEach(async (key) => {
+            const group = grouped[key];
+
+            // Compute the part of the downpayment that should be assigned to this group
+            const total_price = group.reduce((total, line) => (total += line.price_total), 0);
+            const ratio = total_price / sale_order.amount_total;
+            const down_payment_line_price = total_down_payment * ratio;
+            // We apply the taxes and keep the same price
+            const new_price = compute_price_force_price_include(
+                group[0].tax_id,
+                down_payment_line_price,
+                this.config.down_payment_product_id,
+                this.config._product_default_values,
+                this.company,
+                this.currency,
+                this.models
+            );
+            const new_line = await this.addLineToCurrentOrder({
+                order_id: this.get_order(),
+                product_id: this.config.down_payment_product_id,
+                price_unit: new_price,
+                sale_order_origin_id: sale_order,
+                tax_ids: [["link", ...group[0].tax_id]],
+                down_payment_details: sale_order.order_line
+                    .filter(
+                        (line) =>
+                            line.product_id &&
+                            line.product_id.id !== this.config.down_payment_product_id.id
+                    )
+                    .map((line) => ({
+                        product_name: line.product_id.display_name,
+                        product_uom_qty: line.product_uom_qty,
+                        price_unit: line.price_unit,
+                        total: line.price_total,
+                    })),
+            });
+            new_line.price_type = "automatic";
+            new_line.set_unit_price(new_price);
+        });
     },
     selectOrderLine(order, line) {
         super.selectOrderLine(...arguments);

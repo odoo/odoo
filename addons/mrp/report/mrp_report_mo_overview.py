@@ -263,10 +263,7 @@ class ReportMoOverview(models.AbstractModel):
                 real_cost = current_cost
             elif workorder.operation_id:
                 operation = workorder.operation_id
-                capacity = operation.workcenter_id._get_capacity(production.product_id)
-                operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
-                bom_duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
-                    operation.workcenter_id._get_expected_duration(production.product_id)
+                bom_duration_expected = operation._get_duration_expected(production.product_id, production.product_uom_qty, production.product_uom_id)
                 real_cost = expected_cost / (workorder.duration_expected or 1) * bom_duration_expected
             else:
                 real_cost = expected_cost
@@ -543,6 +540,7 @@ class ReportMoOverview(models.AbstractModel):
                 'currency_id': currency.id,
                 'currency': currency,
             }
+            forecast_line['already_used'] = True
             if doc_in._name == 'mrp.production':
                 replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
                 replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
@@ -558,7 +556,6 @@ class ReportMoOverview(models.AbstractModel):
             replenishment['summary']['mo_cost_decorator'] = self._get_comparison_decorator(replenishment['summary']['real_cost'], replenishment['summary']['mo_cost'], replenishment['summary']['currency'].rounding)
             replenishment['summary']['formatted_state'] = self._format_state(doc_in, replenishment['components']) if doc_in._name == 'mrp.production' else self._format_state(doc_in)
             replenishments.append(replenishment)
-            forecast_line['already_used'] = True
             total_ordered += replenishment['summary']['quantity']
 
         # Add "In transit" line if necessary

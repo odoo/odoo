@@ -6,7 +6,7 @@ import time
 import re
 import logging
 
-from psycopg2 import sql, DatabaseError
+from psycopg2 import sql, errors as pgerrors
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -607,10 +607,33 @@ class ResPartner(models.Model):
     # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0, copy=False)
     customer_rank = fields.Integer(default=0, copy=False)
+    autopost_bills = fields.Selection(
+        selection=[('always', 'Always'), ('ask', 'Ask after 3 validations without edits'), ('never', 'Never')],
+        string='Auto-post bills',
+        help="Automatically post bills for this trusted partner",
+        default='ask',
+        required=True,
+    )
 
     # Technical field holding the amount partners that share the same account number as any set on this partner.
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
+    )
+
+    property_outbound_payment_method_line_id = fields.Many2one(
+        comodel_name='account.payment.method.line',
+        company_dependent=True,
+        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', '=', self.env.company.id)],
+        help="Preferred payment method when buying from this vendor. This will be set by default on all"
+             " outgoing payments created for this vendor",
+    )
+
+    property_inbound_payment_method_line_id = fields.Many2one(
+        comodel_name='account.payment.method.line',
+        company_dependent=True,
+        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', '=', self.env.company.id)],
+        help="Preferred payment method when selling to this customer. This will be set by default on all"
+             " incoming payments created for this customer",
     )
 
     def _compute_bank_count(self):
@@ -762,11 +785,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     self.invalidate_recordset([field])
-            except DatabaseError as e:
-                # 55P03 LockNotAvailable
-                # 40001 SerializationFailure
-                if e.pgcode not in ('55P03', '40001'):
-                    raise e
+            except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
                 _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 
     @api.model

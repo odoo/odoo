@@ -551,7 +551,7 @@ test("sidebar: basic channel rendering", async () => {
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
     );
     await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave this channel']"
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave Channel']"
     );
 });
 
@@ -691,13 +691,7 @@ test("rendering of inbox message", async () => {
     await contains("[title='Add a Reaction']");
     await contains("[title='Mark as Todo']");
     await contains("[title='Mark as Read']");
-    await click("[title='Expand']");
-    await contains(".o-mail-Message-actions i", { count: 4 });
-    await contains(".o-mail-Message-moreMenu i", { count: 1 });
     await contains("[title='Reply']");
-    await contains("[title='Mark as Todo']");
-    await contains("[title='Mark as Read']");
-    await contains("[title='Expand']");
 });
 
 test("Unfollow message", async function () {
@@ -728,39 +722,36 @@ test("Unfollow message", async function () {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message", { count: 3 });
-    await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
-    await contains(":nth-child(1 of .o-mail-Message)", {
+    await click(".o-mail-Message:eq(0) [title='Expand']");
+    await contains(".o-mail-Message:eq(0)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 1 });
-    await click(":nth-child(2 of .o-mail-Message) button[title='Expand']");
-    await contains(":nth-child(2 of .o-mail-Message)", {
+    await contains("[title='Unfollow']", { count: 1 });
+    await click(".o-mail-Message:eq(1) [title='Expand']");
+    await contains(".o-mail-Message:eq(1)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 1 });
-    await click(":nth-child(3 of .o-mail-Message) button[title='Expand']");
-    await contains(":nth-child(3 of .o-mail-Message)", {
+    await contains("[title='Unfollow']", { count: 1 });
+    await contains(".o-mail-Message:eq(2) [title='Expand']", { count: 0 });
+    await contains(".o-mail-Message:eq(2)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
-    await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 0 });
-    await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
-    await click("span[title='Unfollow']");
+    await contains(".o-mail-Message:eq(2) [title='Unfollow']", { count: 0 });
+    await click(".o-mail-Message:eq(0) [title='Expand']");
+    await click("[title='Unfollow']");
     await contains(".o-mail-Message", { count: 2 }); // Unfollowing message 0 marks it as read -> Message removed
-    await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
-    await contains(":nth-child(1 of .o-mail-Message)", {
+    await contains(".o-mail-Message:eq(0)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
-    await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 0 });
-    await click(":nth-child(2 of .o-mail-Message) button[title='Expand']");
-    await contains(":nth-child(2 of .o-mail-Message)", {
+    await contains(".o-mail-Message:eq(0) [title='Expand']", { count: 0 });
+    await contains(".o-mail-Message:eq(0) [title='Unfollow']", { count: 0 });
+    await contains(".o-mail-Message:eq(1)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
-    await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 0 });
+    await contains(".o-mail-Message:eq(1) [title='Expand']", { count: 0 });
+    await contains(".o-mail-Message:eq(1) [title='Unfollow']", { count: 0 });
 });
 
 test('messages marked as read move to "History" mailbox', async () => {
@@ -1776,7 +1767,7 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
     await start();
     await openDiscuss();
     await contains("button", { text: "General" });
-    await contains("[title='Leave this channel']", { count: 0 });
+    await contains("[title='Leave Channel']", { count: 0 });
 });
 
 test("restore thread scroll position", async () => {

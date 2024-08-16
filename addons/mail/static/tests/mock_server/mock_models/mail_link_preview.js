@@ -1,3 +1,5 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailLinkPreview extends models.ServerModel {
@@ -19,8 +21,11 @@ export class MailLinkPreview extends models.ServerModel {
                 ],
                 makeKwArgs({ load: false })
             );
-            data.message = linkPreview.message_id ? { id: linkPreview.message_id } : false;
-            store.add("mail.link.preview", data);
+            data.message = mailDataHelpers.Store.one(
+                this.env["mail.message"].browse(linkPreview.message_id),
+                makeKwArgs({ only_id: true })
+            );
+            store.add(this.browse(linkPreview.id), data);
         }
     }
 }

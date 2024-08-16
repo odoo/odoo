@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import html
+from http import HTTPStatus
 
 import odoo
 from odoo.tests import tagged
@@ -72,7 +73,7 @@ class TestHttpModels(TestHttpBase):
 
 
         milky_way.invalidate_recordset()
-        res = self.url_open(f'/test_http/{milky_way.id}/setname-rw', {
+        res = self.url_open(f'/test_http/{milky_way.id}/setname?readonly=0', {
             'name': "Wilky May",
             'csrf_token': odoo.http.Request.csrf_token(self),
         })
@@ -88,7 +89,7 @@ class TestHttpModels(TestHttpBase):
 
         with self.assertLogs('odoo.http', 'WARNING') as capture_http,\
              self.assertLogs('odoo.sql_db', 'WARNING') as capture_sql_db:
-            res = self.url_open(f'/test_http/{milky_way.id}/setname-ro', {
+            res = self.url_open(f'/test_http/{milky_way.id}/setname?readonly=1', {
                 'name': "Wilky May",
                 'csrf_token': odoo.http.Request.csrf_token(self),
             })
@@ -104,3 +105,9 @@ class TestHttpModels(TestHttpBase):
             [rec.msg % rec.args for rec in capture_sql_db.records],
             [Like('bad query:...UPDATE "test_http_galaxy"...ERROR: cannot execute UPDATE in a read-only transaction')],
         )
+
+    def test_models5_max_upload_too_large(self):
+        res = self.url_open('/test_http/1/setname', {
+            'name': "too much data" * 1000  # 1.3kB
+        })
+        self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)

@@ -98,6 +98,7 @@ var PortalChatter = publicWidget.Widget.extend({
     preprocessMessages(messages) {
         messages.forEach((m) => {
             m['body'] = markup(m.body);
+            m.author = m.author_id ? m.author_id : m.author_guest_id;
         });
         return messages;
     },
@@ -210,10 +211,6 @@ var PortalChatter = publicWidget.Widget.extend({
                 'hash': self.options['hash'],
                 'pid': self.options['pid'],
             });
-        }
-        // add domain
-        if (this.get('domain')) {
-            data['domain'] = this.get('domain');
         }
         return data;
     },

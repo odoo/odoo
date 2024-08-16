@@ -18,6 +18,7 @@
             <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
             <field name="list_id" ref="mass_mailing.mailing_list_data"/>
             <field name="opt_out">True</field>
+            <field name="opt_out_reason_id" ref="mass_mailing.mailing_subscription_optout_data_1"/>
         </record>
         <record id="mailing_list_data_sub_contact_5" model="mailing.subscription">
             <field name="contact_id" ref="mass_mailing.mass_mail_contact_5"/>
@@ -27,6 +28,13 @@
             <field name="contact_id" ref="mass_mailing.mass_mail_contact_6"/>
             <field name="list_id" ref="mass_mailing.mailing_list_data"/>
             <field name="opt_out">True</field>
+            <field name="opt_out_reason_id" ref="mass_mailing.mailing_subscription_optout_data_3"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_7" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_7"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="opt_out">True</field>
+            <field name="opt_out_reason_id" ref="mass_mailing.mailing_subscription_optout_data_3"/>
         </record>
         <!-- Subscription to 'mailing_list_1' -->
         <record id="mailing_list_1_sub_contact_3" model="mailing.subscription">

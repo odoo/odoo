@@ -6,7 +6,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('account_tax_group', {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
     ...accountTourSteps.goToAccountMenu("Go to Invoicing"),
     {

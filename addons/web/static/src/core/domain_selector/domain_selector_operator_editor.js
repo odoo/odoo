@@ -26,7 +26,7 @@ export function getDomainDisplayedOperators(fieldDef) {
             return ["=", "!=", "ilike", "not ilike", "in", "not in", "set", "not_set"];
         case "date":
         case "datetime":
-            return ["=", "!=", ">", ">=", "<", "<=", "between", "set", "not_set"];
+            return ["=", "!=", ">", ">=", "<", "<=", "between", "within", "set", "not_set"];
         case "integer":
         case "float":
         case "monetary":

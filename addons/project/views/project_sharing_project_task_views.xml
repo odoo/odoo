@@ -52,8 +52,8 @@
                 <t t-name="kanban-box">
                     <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                         <div class="oe_kanban_content">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
+                            <div class="o_kanban_record_top" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
+                                <div class="o_kanban_record_headings text-muted">
                                     <strong class="o_kanban_record_title">
                                         <s t-if="!record.active.raw_value"><field name="name" widget="name_with_subtask_count"/></s>
                                         <t t-else=""><field name="name" widget="name_with_subtask_count"/></t>
@@ -117,6 +117,9 @@
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>
+            <xpath expr="//field[@name='milestone_id']" position="attributes">
+                <attribute name="column_invisible">not context.get('allow_milestones', True)</attribute>
+            </xpath>
             <field name="partner_id" position="attributes">
                 <attribute name="column_invisible">0</attribute>
             </field>
@@ -175,7 +178,12 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
+                            <div class="d-flex justify-content-end o_state_container" invisible="not active">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            </div>
+                            <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            </div>
                         </h1>
                     </div>
                     <group>
@@ -202,7 +210,7 @@
                             <field name="allow_task_dependencies" invisible="1" />
                             <field name="current_user_same_company_partner" invisible="1"/>
                             <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
-                            <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date"/>
+                            <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                             <field name="recurring_task" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task" groups="project.group_project_recurring_tasks"/>
                             <div invisible="not recurring_task" class="d-flex" groups="project.group_project_recurring_tasks">
@@ -219,7 +227,8 @@
                     </group>
                     <notebook>
                         <page name="description_page" string="Description">
-                            <field name="description" type="html" options="{'collaborative': true, 'disableImage': true, 'disableVideo': true, 'allowCommandFile': false}"/>
+                            <field name="description" type="html" placeholder="Add details about this task..."
+                                options="{'collaborative': true, 'disableImage': true, 'disableVideo': true, 'allowCommandFile': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{
@@ -227,14 +236,16 @@
                                 'default_milestone_id': allow_milestones and milestone_id, 'default_partner_id': partner_id,
                                 'form_view_ref' : 'project.project_sharing_project_task_view_form',
                             }">
-                                <tree editable="bottom">
+                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="display_in_project" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="20px"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px"/>
-                                    <field name="name"/>
+                                    <field name="subtask_count" column_invisible="1"/>
+                                    <field name="closed_subtask_count" column_invisible="1"/>
+                                    <field name="name" widget="name_with_subtask_count"/>
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
@@ -243,10 +254,10 @@
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
                                     <field name="user_ids" column_invisible="True" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
-                                    <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date" optional="show"/>
+                                    <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
@@ -263,12 +274,14 @@
                                     'search_view_ref': 'project.project_sharing_project_task_view_search',
                                     'search_default_project_id': project_id,
                             }">
-                                <tree editable="bottom">
+                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" readonly="1"/>
-                                    <field name="name"/>
+                                    <field name="subtask_count" column_invisible="1"/>
+                                    <field name="closed_subtask_count" column_invisible="1"/>
+                                    <field name="name" widget="name_with_subtask_count"/>
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
@@ -279,7 +292,7 @@
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
-                                    <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="show"/>
+                                    <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"

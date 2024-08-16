@@ -16,7 +16,7 @@ import odoo.modules.registry
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
-from odoo.tools import lazy_property, osutil, pycompat
+from odoo.tools import lazy_property, osutil
 from odoo.tools.misc import xlsxwriter
 from odoo.tools.translate import _
 
@@ -221,11 +221,11 @@ class ExportXlsxWriter:
                 # here. xlsxwriter does not support bytes values in Python 3 ->
                 # assume this is base64 and decode to a string, if this
                 # fails note that you can't export
-                cell_value = pycompat.to_text(cell_value)
+                cell_value = cell_value.decode()
             except UnicodeDecodeError:
-                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
+                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column]) from None
         elif isinstance(cell_value, (list, tuple, dict)):
-            cell_value = pycompat.to_text(cell_value)
+            cell_value = str(cell_value)
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:
@@ -324,7 +324,7 @@ class Export(http.Controller):
             fields['id'] = parent_field
 
         fields_sequence = sorted(fields.items(),
-            key=lambda field: odoo.tools.ustr(field[1].get('string', '').lower()))
+            key=lambda field: field[1]['string'].lower())
 
         records = []
         for field_name, field in fields_sequence:
@@ -542,11 +542,15 @@ class CSVExport(ExportFormat, http.Controller):
         for data in rows:
             row = []
             for d in data:
+                if d is None or d is False:
+                    d = ''
+                elif isinstance(d, bytes):
+                    d = d.decode()
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
                 if isinstance(d, str) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
-                row.append(pycompat.to_text(d))
+                row.append(d)
             writer.writerow(row)
 
         return fp.getvalue()

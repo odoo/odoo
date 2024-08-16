@@ -1837,6 +1837,52 @@ describe("internal links", () => {
         expect(defaultPrevented).toBe(true);
     });
 
+    test("click on internal link with hash (anchor)", async () => {
+        redirect("/odoo");
+        createRouter({
+            onPushState: (_data, _unused, url) => {
+                expect.step("pushState: " + url);
+            },
+            onReplaceState: () => expect.step("replaceState"),
+        });
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        link.href = "/odoo/1/action-114/22#anchorId";
+        fixture.appendChild(link);
+
+        expect(router.current).toEqual({});
+
+        let defaultPrevented;
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            defaultPrevented = ev.defaultPrevented;
+            ev.preventDefault();
+        });
+        click("a");
+        await tick();
+        expect.verifySteps([
+            "pushState: https://www.hoot.test/odoo/1/action-114/22#anchorId",
+            "click",
+        ]);
+        expect(router.current).toEqual({
+            action: 114,
+            active_id: 1,
+            actionStack: [
+                {
+                    active_id: 1,
+                    action: 114,
+                },
+                {
+                    active_id: 1,
+                    resId: 22,
+                    action: 114,
+                },
+            ],
+            resId: 22,
+        });
+        expect(defaultPrevented).toBe(true);
+    });
+
     test("click on internal link with target _blank doesn't do a loadState", async () => {
         redirect("/odoo");
         createRouter({ onPushState: () => expect.step("pushState") });

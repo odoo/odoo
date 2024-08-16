@@ -21,5 +21,4 @@ class IrWebsocket(models.AbstractModel):
         if self.env.user and not self.env.user._is_public():
             store = Store()
             self._im_status_to_store(store, im_status_ids_by_model=im_status_ids_by_model)
-            if res := store.get_result():
-                self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", res)
+            self.env.user._bus_send_store(store)

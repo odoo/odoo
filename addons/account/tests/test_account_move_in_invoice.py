@@ -5,7 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 from odoo.osv import expression
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import date
 
 from collections import defaultdict
@@ -1551,6 +1551,35 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             self.assertFalse(wiz_form._get_modifier('group_payment', 'invisible'))
             self.assertFalse(wiz_form._get_modifier('group_payment', 'readonly'))
 
+        # We can also force the registration of the payment of a draft move with a button hidden
+        # in the gear icon menu.
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2023-01-30'),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                }),
+            ],
+        })
+        action_register_payment = move.action_force_register_payment()  # should not raise an error on non-posted move
+        self.assertTrue(action_register_payment)
+        wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
+
+        action_create_payment = wizard.action_create_payments()
+        payment = self.env[action_create_payment['res_model']].browse(action_create_payment['res_id'])
+
+        move.action_post()
+        self.assertFalse(move.payment_ids)  # don't auto reconcile payments
+
+        # Reconcile manually, the move is now fully paid
+        (move.line_ids[-1] | payment.line_ids.filtered(lambda line: line.account_id == move.line_ids[-1].account_id)).reconcile()
+
+        # If the move is already fully paid, we should alert the user
+        with self.assertRaisesRegex(UserError, r"You can only register payments for \(partially\) unpaid documents."):
+            move.action_force_register_payment()
+
     def test_in_invoice_switch_type_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund,
         # then switching it back to an in_invoice.
@@ -1950,19 +1979,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'code': 'TWAIT',
             'account_type': 'liability_current',
             'reconcile': True,
-            'company_id': self.company_data['company'].id,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
             'code': 'TDEDUCT',
             'account_type': 'asset_current',
-            'company_id': self.company_data['company'].id,
         })
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
             'account_type': 'asset_current',
-            'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
@@ -2076,20 +2102,17 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'code': 'TWAIT',
             'account_type': 'liability_current',
             'reconcile': True,
-            'company_id': self.company_data['company'].id,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
             'code': 'TDEDUCT',
             'account_type': 'asset_current',
-            'company_id': self.company_data['company'].id,
         })
         default_expense_account = self.company_data['default_account_expense']
         not_default_expense_account = self.env['account.account'].create({
             'name': 'NOT_DEFAULT_EXPENSE',
             'code': 'NDE',
             'account_type': 'expense',
-            'company_id': self.company_data['company'].id,
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
@@ -2656,3 +2679,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'product_id': product_no_branch_tax.id, 'tax_ids': (tax_a + tax_b).ids},
             {'product_id': product_no_tax.id, 'tax_ids': []},
         ])
+
+    def test_purchase_uom_on_vendor_bills(self):
+        uom_gram = self.env.ref('uom.product_uom_gram')
+        uom_kgm = self.env.ref('uom.product_uom_kgm')
+
+        # product with different sale and purchase UOM
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': uom_gram.id,
+            'uom_po_id': uom_kgm.id,
+            'standard_price': 110.0,
+        })
+        # customer invoice should have sale uom
+        invoice = self.init_invoice(move_type='out_invoice', products=[product])
+        invoice_uom = invoice.invoice_line_ids[0].product_uom_id
+        self.assertEqual(invoice_uom, uom_gram)
+        # vendor bill should have purchase uom
+        bill = self.init_invoice(move_type='in_invoice', products=[product])
+        bill_uom = bill.invoice_line_ids[0].product_uom_id
+        self.assertEqual(bill_uom, uom_kgm)

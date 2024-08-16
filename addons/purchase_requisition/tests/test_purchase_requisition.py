@@ -548,3 +548,41 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
         self.assertEqual(orig_po.order_line.taxes_id, alt_po.order_line.taxes_id)
+
+    def test_alternative_purchase_order_merge(self):
+        group_purchase_alternatives = self.env.ref('purchase_requisition.group_purchase_alternatives')
+        self.env.user.write({'groups_id': [(4, group_purchase_alternatives.id, 0)]})
+        po_1 = Form(self.env['purchase.order'])
+        res_partner_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
+        res_partner_3 = self.env['res.partner'].create({'name': 'Vendor 3'})
+        po_1.partner_id = self.res_partner_1
+        with po_1.order_line.new() as po_line:
+            po_line.product_id = self.product_09
+            po_line.product_qty = 1
+            po_line.price_unit = 100
+        po_1 = po_1.save()
+
+        action = po_1.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wiz.partner_id = res_partner_2
+        alt_po_wiz.copy_products = True
+        alt_po_wiz = alt_po_wiz.save()
+        alt_po_wiz.action_create_alternative()
+        po_2 = Form(self.env['purchase.order'])
+        po_2.partner_id = res_partner_3
+        with po_2.order_line.new() as po_line_1:
+            po_line_1.product_id = self.product_09
+            po_line_1.product_qty = 5
+            po_line_1.price_unit = 100
+        po_2 = po_2.save()
+
+        action = po_2.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wiz.partner_id = res_partner_2
+        alt_po_wiz.copy_products = True
+        alt_po_wiz = alt_po_wiz.save()
+        alt_po_wiz.action_create_alternative()
+        po_orders = self.env['purchase.order'].search([('partner_id', '=', res_partner_2.id)])
+        merger_alternative_orders = po_orders[0] | po_orders[1]
+        merger_alternative_orders.action_merge()
+        self.assertEqual(len(po_orders[0].alternative_po_ids), 4)

@@ -1013,7 +1013,7 @@ test("Activity view: apply progressbar filter", async () => {
     });
     await contains(".o_activity_view tbody .o_activity_filter_planned", { count: 5 });
     const tr = document.querySelectorAll(".o_activity_view tbody tr")[1];
-    expect(tr.querySelectorAll("td")[1]).toHaveClass("o_activity_empty_cell");
+    expect(tr.querySelectorAll("td")[2]).toHaveClass("o_activity_empty_cell");
 });
 
 test("Activity view: hide/show columns", async () => {

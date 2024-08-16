@@ -52,6 +52,7 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  displayed?: boolean;
  *  exact?: number;
  *  root?: HTMLElement;
+ *  viewPort?: boolean;
  *  visible?: boolean;
  * }} QueryOptions
  *
@@ -306,6 +307,16 @@ const isNodeDisplayed = (node) => {
 
 /**
  * @param {Window | Node} node
+ */
+const isNodeInViewPort = (node) => {
+    const element = ensureElement(node);
+    const { x, y } = getNodeRect(element);
+
+    return y > 0 && y < currentDimensions.height && x > 0 && x < currentDimensions.width;
+};
+
+/**
+ * @param {Window | Node} node
  * @param {"x" | "y"} [axis]
  */
 const isNodeScrollable = (node, axis) => {
@@ -337,10 +348,8 @@ const isNodeVisible = (node) => {
     let visible = false;
 
     // Check size (width & height)
-    if (typeof element.getBoundingClientRect === "function") {
-        const { width, height } = getNodeRect(element);
-        visible = width > 0 && height > 0;
-    }
+    const { width, height } = getNodeRect(element);
+    visible = width > 0 && height > 0;
 
     // Check content (if display=contents)
     if (!visible && getStyle(element)?.display === "contents") {
@@ -1344,24 +1353,7 @@ export function isFocusable(target, options) {
  *  isInDOM(document.createElement("div")); // false
  */
 export function isInDOM(target) {
-    target = ensureElement(target);
-    if (!target) {
-        return false;
-    }
-    const frame = getParentFrame(target);
-    if (frame) {
-        return isInDOM(frame);
-    }
-    while (target) {
-        if (target === document) {
-            return true;
-        }
-        target = target.parentNode;
-        if (target?.host) {
-            target = target.host.parentNode;
-        }
-    }
-    return false;
+    return ensureElement(target)?.isConnected;
 }
 
 /**
@@ -1611,7 +1603,7 @@ export function queryAll(target, options) {
         return queryAll(String.raw(...arguments));
     }
 
-    const { exact, displayed, root, visible } = options || {};
+    const { exact, displayed, root, viewPort, visible } = options || {};
 
     /** @type {Node[]} */
     let nodes = [];
@@ -1635,29 +1627,32 @@ export function queryAll(target, options) {
         }
     }
 
-    /** @type {string[]} */
-    const prefixes = [];
-    if (visible) {
-        nodes = nodes.filter(isNodeVisible);
-        prefixes.push("visible");
+    /** @type {string} */
+    let prefix, suffix;
+    if (visible + displayed > 1) {
+        throw new HootDomError(
+            `cannot use more than one visibility modifier ('visible' implies 'displayed')`
+        );
     }
-    if (displayed) {
-        if (visible) {
-            throw new HootDomError(
-                `cannot use both 'visible' and 'displayed' ('visible' always implies 'displayed')`
-            );
-        }
+    if (viewPort) {
+        nodes = nodes.filter(isNodeInViewPort);
+        suffix = "in viewport";
+    } else if (visible) {
+        nodes = nodes.filter(isNodeVisible);
+        prefix = "visible";
+    } else if (displayed) {
         nodes = nodes.filter(isNodeDisplayed);
-        prefixes.push("displayed");
+        prefix = "displayed";
     }
 
     const count = nodes.length;
     if ($isInteger(exact) && count !== exact) {
         const s = count === 1 ? "" : "s";
-        const strPrefix = prefixes.length ? ` ${and(prefixes)}` : "";
+        const strPrefix = prefix ? `${prefix} ` : "";
+        const strSuffix = suffix ? ` ${suffix}` : "";
         const strSelector = typeof target === "string" ? `(selector: "${target}")` : "";
         throw new HootDomError(
-            `found ${count}${strPrefix} node${s} instead of ${exact} ${strSelector}`
+            `found ${count} ${strPrefix}node${s}${strSuffix} instead of ${exact} ${strSelector}`
         );
     }
 

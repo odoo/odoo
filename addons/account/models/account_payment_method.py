@@ -37,26 +37,25 @@ class AccountPaymentMethod(models.Model):
         return payment_methods
 
     @api.model
-    def _get_payment_method_domain(self, code):
+    def _get_payment_method_domain(self, code, with_currency=True, with_country=True):
         """
-        :return: The domain specyfying which journal can accomodate this payment method.
+        :param code: string of the payment method line code to check.
+        :param with_currency: if False (default True), ignore the currency_id domain if it exists.
+        :return: The domain specifying which journal can accommodate this payment method.
         """
         if not code:
             return []
         information = self._get_payment_method_information().get(code)
+        journal_types = information.get('type', ('bank', 'cash'))
+        domains = [[('type', 'in', journal_types)]]
 
-        currency_ids = information.get('currency_ids')
-        country_id = information.get('country_id')
-        default_domain = [('type', 'in', ('bank', 'cash'))]
-        domains = [information.get('domain', default_domain)]
-
-        if currency_ids:
+        if with_currency and (currency_ids := information.get('currency_ids')):
             domains += [expression.OR([
                 [('currency_id', '=', False), ('company_id.currency_id', 'in', currency_ids)],
-                [('currency_id', 'in', currency_ids)]],
-            )]
+                [('currency_id', 'in', currency_ids)],
+            ])]
 
-        if country_id:
+        if with_country and (country_id := information.get('country_id')):
             domains += [[('company_id.account_fiscal_country_id', '=', country_id)]]
 
         return expression.AND(domains)
@@ -66,16 +65,17 @@ class AccountPaymentMethod(models.Model):
         """
         Contains details about how to initialize a payment method with the code x.
         The contained info are:
-            mode: Either unique if we only want one of them at a single time (payment providers for example)
-                   or multi if we want the method on each journal fitting the domain.
-            domain: The domain defining the eligible journals.
-            currency_id: The id of the currency necessary on the journal (or company) for it to be eligible.
-            country_id: The id of the country needed on the company for it to be eligible.
-            hidden: If set to true, the method will not be automatically added to the journal,
-                    and will not be selectable by the user.
+
+        - ``mode``: One of the following:
+          "unique" if the method cannot be used twice on the same company,
+          "electronic" if the method cannot be used twice on the same company for the same 'payment_provider_id',
+          "multi" if the method can be duplicated on the same journal.
+        - ``type``: Tuple containing one or both of these items: "bank" and "cash"
+        - ``currency_ids``: The ids of the currency necessary on the journal (or company) for it to be eligible.
+        - ``country_id``: The id of the country needed on the company for it to be eligible.
         """
         return {
-            'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
+            'manual': {'mode': 'multi', 'type': ('bank', 'cash')},
         }
 
     @api.model
@@ -123,10 +123,7 @@ class AccountPaymentMethodLine(models.Model):
     available_payment_method_ids = fields.Many2many(related='journal_id.available_payment_method_ids')
 
     @api.depends('journal_id')
-    @api.depends_context('show_payment_journal_id')
     def _compute_display_name(self):
-        if not self.env.context.get('show_payment_journal_id'):
-            return super()._compute_display_name()
         for method in self:
             method.display_name = f"{method.name} ({method.journal_id.name})"
 

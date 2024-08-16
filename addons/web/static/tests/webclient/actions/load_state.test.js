@@ -11,6 +11,7 @@ import {
     makeMockEnv,
     models,
     mountWithCleanup,
+    mountWebClient,
     onRpc,
     patchWithCleanup,
     stepAllNetworkCalls,
@@ -21,12 +22,12 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
-import { router, startRouter } from "@web/core/browser/router";
+import { router, routerBus, startRouter } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -56,15 +57,6 @@ function logHistoryInteractions() {
 /**
  * @param {{ env: import("@web/env").OdooEnv }} [options]
  */
-async function mountWebClient(options) {
-    await mountWithCleanup(WebClient, options);
-    // Wait for visual changes caused by a potential loadState
-    await animationFrame();
-    // wait for BlankComponent
-    await animationFrame();
-    // wait for the regular rendering
-    await animationFrame();
-}
 
 defineActions([
     {
@@ -284,7 +276,7 @@ describe(`new urls`, () => {
         });
 
         await animationFrame();
-        expect.verifySteps(["/web/action/load"], "pushState was not called");
+        expect.verifySteps(["/web/action/load"]);
     });
 
     test(`initial loading take complete context`, async () => {
@@ -325,7 +317,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/__test__client__action__", {
             message: "url did not change",
         });
-        expect.verifySteps([], "pushState was not called");
+        expect.verifySteps([]);
     });
 
     test(`fallback on home action if no action found`, async () => {
@@ -407,7 +399,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-wowl.client_action", {
             message: "action in target new doesn't affect the URL",
         });
-        expect.verifySteps([], "pushState was not called");
+        expect.verifySteps([]);
     });
 
     test(`should not crash on invalid state`, async () => {
@@ -817,11 +809,7 @@ describe(`new urls`, () => {
         await contains(`.o_control_panel .breadcrumb a`).click();
         expect(`.o_list_view`).toHaveCount(1);
         expect(`.o_form_view`).toHaveCount(0);
-        expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["web_search_read", "has_group"]);
 
         await animationFrame(); // pushState is debounced
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
@@ -1055,7 +1043,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-2/2", {
             message: "url did not change",
         });
-        expect.verifySteps(["action: 2"], "pushState was not called");
+        expect.verifySteps(["action: 2"]);
     });
 
     test(`state with integer active_ids should not crash`, async () => {
@@ -1107,10 +1095,7 @@ describe(`new urls`, () => {
 
         await animationFrame(); // pushState is debounced
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
-        expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
-            "pushState http://example.com/odoo/action-3",
-        ]);
+        expect.verifySteps(["pushState http://example.com/odoo/action-3"]);
     });
 
     test(`initial action crashes`, async () => {
@@ -1167,6 +1152,26 @@ describe(`new urls`, () => {
         );
         // pushState was not called
         expect.verifySteps([]);
+    });
+
+    test("all actions crashes", async () => {
+        expect.errors(2);
+        redirect("/odoo/m-partner/2/m-partner/1");
+        logHistoryInteractions();
+        stepAllNetworkCalls();
+        onRpc("web_read", () => Promise.reject());
+
+        await mountWebClient();
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+            "/web/action/load_breadcrumbs",
+            "get_views",
+            "web_read",
+            "web_read",
+        ]);
+        expect.verifyErrors([/RPC_ERROR/, /RPC_ERROR/]);
+        expect(queryFirst(`.o_action_manager`).childElementCount).toBe(0);
     });
 
     test(`initial loading with multiple path segments loads the breadcrumbs`, async () => {
@@ -1284,6 +1289,84 @@ describe(`new urls`, () => {
             "web_search_read",
             "has_group",
             "pushState http://example.com/odoo/action-3",
+        ]);
+    });
+
+    test("properly load previous action when error", async () => {
+        // In this test, the _getActionParams, will not return m-partner as an actionRequest
+        // because, there is not id, or an action on the session storage.
+        // So it will try to perform the previous action : action-3 with id 1.
+        // This one will give an error, and it should directly try the previous one : action-3
+        expect.errors(1);
+        redirect("/odoo/action-3/1/m-partner");
+        logHistoryInteractions();
+        stepAllNetworkCalls();
+        onRpc("web_read", () => Promise.reject());
+
+        await mountWebClient();
+        expect(`.o_list_view`).toHaveCount(1);
+        expect.verifyErrors([/RPC_ERROR/]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+            "/web/action/load_breadcrumbs",
+            "/web/action/load",
+            "get_views",
+            "web_read",
+            "web_search_read",
+            "has_group",
+            "pushState http://example.com/odoo/action-3",
+        ]);
+    });
+
+    test("properly reload dynamic actions from sessionStorage", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        onRpc("/web/dataset/call_button/partner/object", () => ({
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            views: [[1, "kanban"]],
+        }));
+        await mountWebClient();
+
+        await getService("action").doAction({
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        });
+
+        expect(`.o_form_view`).toHaveCount(1);
+
+        await contains(`.o_statusbar_buttons .btn-secondary[type='object']`).click();
+        await animationFrame();
+
+        expect(`.o_kanban_view`).toHaveCount(1);
+        expect.verifySteps([
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","res_id":1,"views":[[false,"form"]]}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
+        ]);
+
+        expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1/m-partner");
+
+        // Emulate a Reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await animationFrame();
+        await animationFrame();
+        expect(`.o_kanban_view`).toHaveCount(1);
+        expect.verifySteps([
+            'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
         ]);
     });
 });

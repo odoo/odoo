@@ -4,7 +4,7 @@ import pytz
 from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
-from odoo.tools._monkeypatches_pytz import _tz_mapping
+from odoo._monkeypatches.pytz import _tz_mapping
 
 _logger = logging.getLogger(__name__)
 

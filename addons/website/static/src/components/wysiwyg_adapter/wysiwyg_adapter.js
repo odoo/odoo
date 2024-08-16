@@ -482,7 +482,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             document: this.websiteService.pageDocument,
             sideAttach: true,
             isWebsite: true, // If set to true, it will trigger isolated behaviours in website patches. (.include)
-            powerboxCommands: powerboxItems[0],
+            powerboxItems: powerboxItems[0],
             powerboxCategories: powerboxItems[1],
             bindLinkTool: true,
             showEmptyElementHint: false,
@@ -977,7 +977,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             }
             const modelName = await this.websiteService.getUserModelName(resModel);
             const recordNameEl = imageEl.closest("body").querySelector(`[data-oe-model="${resModel}"][data-oe-id="${resID}"][data-oe-field="name"]`);
-            const recordName = recordNameEl ? `'${recordNameEl.textContent}'` : resID;
+            const recordName = recordNameEl ? `'${recordNameEl.textContent.replaceAll("/", "")}'` : resID;
             const attachment = await rpc(
                 '/web_editor/attachment/add_data',
                 {
@@ -1147,7 +1147,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             if (
                 isDirty &&
                 (!canPublish ||
-                    (canPublish && this.websiteService.currentWebsite.metadata.isPublished))
+                    (canPublish && this.websiteService.currentWebsite.metadata.isPublished)) &&
+                this.websiteService.currentWebsite.metadata.canOptimizeSeo
             ) {
                 const {
                     mainObject: { id, model },

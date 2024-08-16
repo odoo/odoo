@@ -2,9 +2,10 @@
 
 import itertools
 import logging
+
 from collections import defaultdict
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.image import is_image_size_above
@@ -18,6 +19,7 @@ class ProductTemplate(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product"
     _order = "is_favorite desc, name"
+    _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
     @tools.ormcache()
@@ -49,12 +51,21 @@ class ProductTemplate(models.Model):
         'Sales Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
-    type = fields.Selection([
-        ('consu', 'Goods'),
-        ('service', 'Service')], string='Product Type', default='consu', required=True,
-        help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
-             'A consumable product is a product for which stock is not managed.\n'
-             'A service is a non-material product you provide.')
+    type = fields.Selection(
+        string="Product Type",
+        help="Goods are tangible materials and merchandise you provide.\n"
+             "A service is a non-material product you provide.",
+        selection=[
+            ('consu', "Goods"),
+            ('service', "Service"),
+            ('combo', "Combo"),
+        ],
+        required=True,
+        default='consu',
+    )
+    combo_ids = fields.Many2many(
+        string="Combo Choices", comodel_name='product.combo', check_company=True
+    )
     service_tracking = fields.Selection(selection=[
             ('no', 'Nothing'),
         ],
@@ -432,7 +443,12 @@ class ProductTemplate(models.Model):
 
     def _prepare_tooltip(self):
         self.ensure_one()
-        return ""
+        tooltip = ""
+        if self.type == 'combo':
+            tooltip = _(
+                "Combos allow to choose one product amongst a selection of choices per category."
+            )
+        return tooltip
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
@@ -451,7 +467,11 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
-        # Do nothing but needed for inheritance
+        if self.type == 'combo':
+            if self.attribute_line_ids:
+                raise UserError(_("Combo products can't have attributes"))
+            self.taxes_id = False
+            self.supplier_taxes_id = False
         return {}
 
     def _get_related_fields_variant_template(self):

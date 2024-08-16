@@ -27,8 +27,8 @@
         <field name="model">account.move</field>
         <field name="arch" type="xml">
             <tree string="Invoices" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
-                <field name="made_sequence_hole" column_invisible="True"/>
-                <field name="name" decoration-bf="1" decoration-danger="made_sequence_hole"/>
+                <field name="made_sequence_gap" column_invisible="True"/>
+                <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap"/>
                 <field name="invoice_partner_display_name" string="Customer"/>
                 <field name="invoice_date" string="Invoice Date"/>
                 <field name="date" string="Accounting Date" optional="hidden"/>

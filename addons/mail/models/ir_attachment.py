@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
 
-from odoo import _, api, models, SUPERUSER_ID
+from odoo import _, models, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.tools import consteq
@@ -66,16 +65,30 @@ class IrAttachment(models.Model):
         if message:
             # sudo: mail.message - safe write just updating the date, because guests don't have the rights
             message.sudo().write({})  # to make sure write_date on the message is updated
-        self.env['bus.bus']._sendmany((attachment._bus_notification_target(), 'ir.attachment/delete', {
-            'id': attachment.id, 'message': {'id': message.id, 'write_date': message.write_date} if message else None
-        }) for attachment in self)
+        for attachment in self:
+            attachment._bus_send(
+                "ir.attachment/delete",
+                {
+                    "id": attachment.id,
+                    "message": (
+                        {"id": message.id, "write_date": message.write_date} if message else None
+                    ),
+                },
+            )
         self.unlink()
 
-    def _bus_notification_target(self):
-        self.ensure_one()
-        return self.env.user.partner_id
-
-    def _to_store(self, store: Store, *, access_token=False):
+    def _to_store(self, store: Store, /, *, fields=None, access_token=False):
+        if fields is None:
+            fields = [
+                "checksum",
+                "create_date",
+                "filename",
+                "mimetype",
+                "name",
+                "res_name",
+                "size",
+                "thread",
+            ]
         safari = (
             request
             and request.httprequest.user_agent
@@ -83,17 +96,30 @@ class IrAttachment(models.Model):
         )
         for attachment in self:
             data = attachment._read_format(
-                ["checksum", "create_date", "mimetype", "name", "res_name"], load=False
+                [field for field in fields if field not in ["filename", "size", "thread"]],
+                load=False,
             )[0]
-            data["filename"] = attachment.name
-            if safari and attachment.mimetype and "video" in attachment.mimetype:
+            if "filename" in fields:
+                data["filename"] = attachment.name
+            if (
+                "mimetype" in fields
+                and safari
+                and attachment.mimetype
+                and "video" in attachment.mimetype
+            ):
                 data["mimetype"] = "application/octet-stream"
-            data["size"] = attachment.file_size
-            data["thread"] = (
-                {"id": attachment.res_id, "model": attachment.res_model}
-                if attachment.res_id and attachment.res_model != "mail.compose.message"
-                else False
-            )
+            if "size" in fields:
+                data["size"] = attachment.file_size
+            if "thread" in fields:
+                data["thread"] = (
+                    Store.one(
+                        self.env[attachment.res_model].browse(attachment.res_id),
+                        as_thread=True,
+                        only_id=True,
+                    )
+                    if attachment.res_model != "mail.compose.message" and attachment.res_id
+                    else False
+                )
             if access_token:
                 data["accessToken"] = attachment.access_token
-            store.add("ir.attachment", data)
+            store.add(attachment, data)

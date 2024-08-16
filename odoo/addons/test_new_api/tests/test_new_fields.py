@@ -1452,6 +1452,34 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_27_company_dependent(self):
         """ test company-dependent fields. """
+        # Company-dependent field variants should handle 0, '' and NULL database values
+        # in the same way as their 'normal' (non-company-dependent) variants.
+        # This section relies on there being no company defaults, so it needs to run first.
+        null_record = self.env['test_new_api.company'].create({})
+        null_record_normal = self.env['test_new_api.mixed'].create({})
+        null_record.invalidate_recordset()
+        null_record_normal.invalidate_recordset()
+        field_correspondence = [
+            ('foo', 'foo', ''),
+            ('text', 'text', ''),
+            ('date', 'date', False),
+            ('moment', 'moment', False),
+            ('truth', 'truth', False),
+            ('count', 'count', 0),
+            ('phi', 'number2', 0.0),
+            ('html1', 'comment1', ''),
+        ]
+        # Check null values
+        for field, normal_field, value_to_write in field_correspondence:
+            self.assertEqual(null_record[field], null_record_normal[normal_field])
+            null_record[field] = null_record_normal[normal_field] = value_to_write
+
+        # Check empty / 0 values
+        null_record.invalidate_recordset()
+        null_record_normal.invalidate_recordset()
+        for field, normal_field, _ in field_correspondence:
+            self.assertEqual(null_record[field], null_record_normal[normal_field])
+
         # consider three companies
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A'})
@@ -4494,6 +4522,12 @@ class TestComputeQueries(TransactionCase):
         ) as patch_compute:
             order.line_ids.mapped('has_been_rewarded')
             self.assertEqual(patch_compute.call_count, 1)
+
+
+class TestComputeSudo(TransactionCaseWithUserDemo):
+    def test_compute_sudo_depends_context_uid(self):
+        record = self.env['test_new_api.compute.sudo'].create({})
+        self.assertEqual(record.with_user(self.user_demo).name_for_uid, self.user_demo.name)
 
 
 class test_shared_cache(TransactionCaseWithUserDemo):

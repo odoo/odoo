@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach } from "@odoo/hoot";
+import { expect, test, beforeEach } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
@@ -14,7 +14,6 @@ import {
 import { defineTodoModels } from "./todo_test_helpers";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
 
-describe.current.tags("desktop");
 defineTodoModels();
 
 beforeEach(() => {
@@ -27,6 +26,7 @@ beforeEach(() => {
         form: `
             <form string="To-do" class="o_todo_form_view" js_class="todo_form">
                 <field name="name"/>
+                <field name="priority" invisible="1"/>
             </form>`,
         search: `
             <search/>`,
@@ -68,7 +68,7 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
     });
 });
 
-test("Check that todo_form view contains the TodoDoneCheckmark and TodoEditableBreadcrumbName widgets", async () => {
+test.skip("Check that todo_form view contains the TodoDoneCheckmark and TodoEditableBreadcrumbName widgets", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "To-do",

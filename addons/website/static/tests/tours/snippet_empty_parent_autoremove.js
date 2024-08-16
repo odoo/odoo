@@ -19,6 +19,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     {
         content: "Click on second column",
@@ -41,6 +42,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     ...wTourUtils.dragNDrop({
         id: 's_cover',
         name: 'Cover',
+        groupName: "Intro",
     }),
     ...wTourUtils.clickOnSnippet({
         id: 's_cover',

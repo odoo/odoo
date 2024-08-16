@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, onMounted, useRef, useState, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import { createURL } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
@@ -44,14 +44,15 @@ export class HootMain extends Component {
 
     static template = xml`
         <t t-if="env.runner.config.headless">
-            Running in headless mode
-            <a class="text-primary hoot-link" t-att-href="createURL({ headless: null })">
-                Run with UI
-            </a>
+            <div class="flex justify-center items-center text-3xl w-full h-full gap-3">
+                Running in headless mode
+                <a class="text-primary hoot-link" t-att-href="createURL({ headless: null })">
+                    Run with UI
+                </a>
+            </div>
         </t>
         <t t-else="">
             <main
-                t-ref="root"
                 class="${HootMain.name} flex flex-col w-full h-full bg-base relative"
                 t-att-class="{ 'hoot-animations': env.runner.config.fun }"
             >
@@ -92,51 +93,21 @@ export class HootMain extends Component {
             debugTest: null,
         });
 
-        if (!runner.config.headless) {
-            // Since Chrome 125 and for God knows why the "pointer" event listeners
-            // are all ignored in the HOOT UI, so the buttons appearing on hover
-            // are never displayed.
-            //
-            // Now for some reason adding a SINGLE listener on ANY button seems
-            // to solve this issue. I've looked into it for hours already and this
-            // is as far as I'll go on this matter. Good luck to anyone trying to
-            // debug this mess.
-            const unstuckListeners = () => {
-                if (listenersUnstuck || !rootRef.el) {
-                    return;
-                }
-                listenersUnstuck = true;
-                rootRef.el.querySelector("button").addEventListener(
-                    "pointerenter",
-                    () => {
-                        // Leave this empty (CALLBACK CANNOT BE NULL OR UNDEFINED)
-                    },
-                    { once: true }
-                );
-            };
+        runner.beforeAll(() => {
+            if (!runner.debug) {
+                return;
+            }
+            if (runner.debug === true) {
+                this.state.debugTest = runner.state.tests[0];
+            } else {
+                this.state.debugTest = runner.debug;
+            }
+        });
+        runner.afterAll(() => {
+            this.state.debugTest = null;
+        });
 
-            const rootRef = useRef("root");
-            let listenersUnstuck = false;
-
-            runner.beforeAll(() => {
-                if (!runner.debug) {
-                    return;
-                }
-                if (runner.debug === true) {
-                    this.state.debugTest = runner.state.tests[0];
-                } else {
-                    this.state.debugTest = runner.debug;
-                }
-            });
-            runner.afterAll(() => {
-                this.state.debugTest = null;
-
-                unstuckListeners();
-            });
-
-            onMounted(unstuckListeners);
-            useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev), { capture: true });
-        }
+        useWindowListener("keydown", (ev) => this.onWindowKeyDown(ev), { capture: true });
     }
 
     /**

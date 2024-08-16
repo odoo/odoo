@@ -13,7 +13,7 @@
                     <p t-if="search_key">We could not find any track matching your search for: <strong t-out="search_key"/>.</p>
                     <p t-else="">We could not find any track at this moment.</p>
                     <div class="o_not_editable my-3" groups="event.group_event_user">
-                        <a class="o_wevent_cta btn" target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
+                        <a class="o_wevent_cta btn" target="_blank" t-att-href="'/odoo/%s/action-website_event_track.action_event_track_from_event' % event.id">
                             <span class="fa fa-plus me-1"/> Schedule Tracks
                         </a>
                     </div>
@@ -131,8 +131,8 @@
                                 <t t-if="tracks">
                                     <t t-foreach="tracks" t-as="track">
                                         <t t-set="_classes"
-                                            t-value="'o_event_color_light text-center %s %s %s' % (
-                                                'o_event_color_%s' % (track.color or 0),
+                                            t-value="'text-center %s %s %s' % (
+                                                'o_color_%s' % (track.color or 0),
                                                 'event_track h-100' if track else '',
                                                 'o_location_size_%d' % len(locations),
                                             )"/>
@@ -168,26 +168,14 @@
             <span class="o_we_online_agenda_overlay py-5 px-3 pe-none z-1"/>
         </div>
     </section>
+
+    <div class="position-sticky bottom-0 w-100 overflow-x-scroll o_we_agenda_horizontal_scroller_container">
+        <div class="o_we_agenda_horizontal_scroller"/>
+    </div>
 </template>
 
 <template id="agenda_main_track" name="Track Agenda: Track">
     <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
-        <div class="d-flex justify-content-end flex-wrap-reverse align-items-center o_weagenda_track_badges">
-            <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
-                class="mx-1 badge text-bg-danger rounded-1">Live
-            </small>
-            <small t-if="not track.website_published and is_event_user"
-                   title="Unpublished"
-                   class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
-            <span t-if="option_track_wishlist">
-                <t t-call="website_event_track.track_widget_reminder">
-                    <t t-set="reminder_light" t-value="False"/>
-                    <t t-set="reminder_small" t-value="True"/>
-                    <t t-set="light_theme" t-value="False"/>
-                </t>
-            </span>
-        </div>
-
         <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title mb-1">
                 <t t-if="track.website_published or is_event_user">
@@ -205,18 +193,35 @@
                 <small t-out="track.partner_tag_line"/>
             </div>
         </div>
-        <div class="o_we_agenda_card_filter_badges d-flex justify-content-center flex-wrap pb-1">
-            <t t-foreach="track.tag_ids" t-as="tag">
-                <span t-if="tag.color" t-att-title="tag.name"
-                        t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_badge_color_'+str(tag.color)}" t-out="tag.name"
+        <div class="o_we_agenda_card_filter_badges d-flex justify-content-center align-items-end gap-1 pb-1">
+            <div>
+                <t t-foreach="track.tag_ids" t-as="tag">
+                    <span t-if="tag.color" t-att-title="tag.name"
+                        t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_color_'+str(tag.color)}" t-out="tag.name"
                         t-attf-onclick="
                         var value = '#{tag.name}' ;
                         var target = $('#event_track_search');
                         if (target.val() == value) { target.val(''); } else { target.val(value); }
                         target.trigger('input');
                         "
-                />
-            </t>
+                    />
+                </t>
+            </div>
+            <div class="d-flex justify-content-end flex-wrap-reverse ms-auto align-items-center gap-1 o_weagenda_track_badges">
+                <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
+                    class="mx-1 badge text-bg-danger rounded-1">Live
+                </small>
+                <small t-if="not track.website_published and is_event_user"
+                    title="Unpublished"
+                    class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
+                <span t-if="option_track_wishlist">
+                    <t t-call="website_event_track.track_widget_reminder">
+                        <t t-set="reminder_light" t-value="False"/>
+                        <t t-set="reminder_small" t-value="True"/>
+                        <t t-set="light_theme" t-value="False"/>
+                    </t>
+                </span>
+            </div>
         </div>
     </div>
 </template>

@@ -12,7 +12,7 @@ import { beforeEach, test, expect } from "@odoo/hoot";
 import { click, waitFor } from "@odoo/hoot-dom";
 
 class Partner extends models.Model {
-    display_name = fields.Char({ string: "Name" });
+    display_name = fields.Char();
     product_id = fields.Many2one({ string: "Product Name", relation: "product" });
     sign = fields.Binary({ string: "Signature" });
     _records = [

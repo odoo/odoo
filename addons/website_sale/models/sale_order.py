@@ -160,13 +160,6 @@ class SaleOrder(models.Model):
 
     #=== ACTION METHODS ===#
 
-    def action_confirm(self):
-        res = super().action_confirm()
-        for order in self:
-            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
-                order._send_order_confirmation_mail()
-        return res
-
     def action_preview_sale_order(self):
         action = super().action_preview_sale_order()
         if action['url'].startswith('/'):
@@ -333,6 +326,7 @@ class SaleOrder(models.Model):
 
         if (
             order_line
+            and order_line.product_template_id.type != 'combo'
             and order_line.price_unit == 0
             and self.website_id.prevent_zero_price_sale
             and product.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
@@ -410,6 +404,7 @@ class SaleOrder(models.Model):
     def _prepare_order_line_values(
         self, product_id, quantity, linked_line_id=False,
         no_variant_attribute_value_ids=None, product_custom_attribute_values=None,
+        combo_item_id=None,
         **kwargs
     ):
         self.ensure_one()
@@ -435,6 +430,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': quantity,
             'order_id': self.id,
             'linked_line_id': linked_line_id,
+            'combo_item_id': combo_item_id,
         }
 
         # add no_variant attributes that were not received
@@ -485,9 +481,6 @@ class SaleOrder(models.Model):
     def _update_cart_line_values(self, order_line, update_values):
         self.ensure_one()
         order_line.write(update_values)
-
-    def _validate_zero_amount_cart(self):
-        self.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """

@@ -27,7 +27,6 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     {
         content: 'select Parseltongue',
         trigger: '.dropdown-item:contains(Parseltongue)',
-        in_modal: false,
         run: "click",
     },
     {

@@ -7,6 +7,7 @@ import { HootLink } from "./hoot_link";
 
 /**
  * @typedef {{
+ *  hidden?: boolean;
  *  job: Job;
  * }} HootJobButtonsProps
  */
@@ -16,12 +17,13 @@ export class HootJobButtons extends Component {
     static components = { HootLink };
 
     static props = {
+        hidden: { type: Boolean, optional: true },
         job: Job,
     };
 
     static template = xml`
         <t t-set="type" t-value="getType()" />
-        <div class="${HootJobButtons.name} flex items-center gap-1">
+        <div class="${HootJobButtons.name} items-center gap-1" t-att-class="props.hidden ? 'hidden' : 'flex'">
             <HootLink
                 type="type"
                 id="props.job.id"

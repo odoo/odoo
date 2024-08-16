@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailCannedResponse(models.Model):
@@ -66,18 +67,16 @@ class MailCannedResponse(models.Model):
         return res
 
     def unlink(self):
-        self._broadcast("delete")
+        self._broadcast(delete=True)
         return super().unlink()
 
-    def _broadcast(self, method="insert"):
-        notif_type = "mail.record/insert" if method == "insert" else "mail.record/delete"
-        field_names = ["id", "source", "substitution"] if method == "insert" else ["id"]
-        notifications = []
+    def _broadcast(self, /, *, delete=False):
         for canned_response in self:
-            targets = [self.env.user.partner_id]
-            if self.env.user != canned_response.create_uid:
-                targets.append(canned_response.create_uid.partner_id)
-            targets.extend(canned_response.group_ids)
-            payload = {"CannedResponse": canned_response._read_format(field_names)}
-            notifications.extend((target, notif_type, payload) for target in targets)
-        self.env["bus.bus"]._sendmany(notifications)
+            store = Store(canned_response, delete=delete)
+            (self.env.user | canned_response.create_uid)._bus_send_store(store)
+            canned_response.group_ids._bus_send_store(store)
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        if fields is None:
+            fields = ["source", "substitution"]
+        store.add(self._name, self._read_format(fields))

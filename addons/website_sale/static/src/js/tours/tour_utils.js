@@ -101,7 +101,7 @@ function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
     return {
         content: _t("Go to cart"),
         trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }

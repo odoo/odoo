@@ -144,14 +144,15 @@ class LivechatController(http.Controller):
         if not channel_vals:
             return False
         if not persisted:
-            operator_partner = request.env['res.partner'].sudo().browse(channel_vals['livechat_operator_id'])
-            store.add(operator_partner, fields=["user_livechat_username", "write_date"])
             channel_info = {
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
                 "name": channel_vals["name"],
+                "operator": Store.one(
+                    request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"]),
+                    fields=["user_livechat_username", "write_date"],
+                ),
                 "scrollUnread": False,
-                "operator": {"id": operator_partner.id, "type": "partner"},
                 "state": "open",
                 "channel_type": "livechat",
                 "chatbot": (
@@ -186,10 +187,7 @@ class LivechatController(http.Controller):
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             store.add(channel)
-            store.add(
-                "discuss.channel",
-                {"id": channel.id, "isLoaded": not chatbot_script, "scrollUnread": False},
-            )
+            store.add(channel, {"isLoaded": not chatbot_script, "scrollUnread": False})
             if guest:
                 store.add({"guest_token": guest._format_auth_cookie()})
         request.env["res.users"]._init_store_data(store)
@@ -206,7 +204,13 @@ class LivechatController(http.Controller):
             'rating_url': rating.rating_image_url,
             'reason': reason,
         }
-        channel.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_comment')
+        # sudo: discuss.channel - not necessary for posting, but necessary to update related rating
+        channel.sudo().message_post(
+            body=body,
+            message_type="notification",
+            rating_id=rating.id,
+            subtype_xmlid="mail.mt_comment",
+        )
 
     @http.route("/im_livechat/feedback", type="json", auth="public")
     @add_guest_to_context
@@ -235,7 +239,8 @@ class LivechatController(http.Controller):
                 rating = request.env['rating.rating'].sudo().create(values)
             else:
                 rating = channel.rating_ids[0]
-                rating.write(values)
+                # sudo: rating.rating - guest or portal user can update their livechat rating
+                rating.sudo().write(values)
             self._post_feedback_message(channel, rating, reason)
             return rating.id
         return False
@@ -243,10 +248,9 @@ class LivechatController(http.Controller):
     @http.route("/im_livechat/history", type="json", auth="public")
     @add_guest_to_context
     def history_pages(self, pid, channel_id, page_history=None):
-        partner_ids = (pid, request.env.user.partner_id.id)
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            channel._send_history_message(pid, page_history)
-        return True
+            if pid in channel.sudo().channel_member_ids.partner_id.ids:
+                request.env["res.partner"].browse(pid)._bus_send_history_message(channel, page_history)
 
     @http.route("/im_livechat/email_livechat_transcript", type="json", auth="public")
     @add_guest_to_context

@@ -153,6 +153,8 @@ var PortalComposer = publicWidget.Widget.extend({
             post_data: {
                 body: this.$('textarea[name="message"]').val(),
                 attachment_ids: this.attachments.map((a) => a.id),
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
             },
             attachment_tokens: this.attachments.map((a) => a.access_token),
             token: this.options.token,

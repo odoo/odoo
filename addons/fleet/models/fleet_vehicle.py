@@ -15,7 +15,7 @@ MODEL_FIELDS_TO_VEHICLE = {
     'color': 'color', 'seats': 'seats', 'doors': 'doors', 'trailer_hook': 'trailer_hook',
     'default_co2': 'co2', 'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type',
     'power': 'power', 'horsepower': 'horsepower', 'horsepower_tax': 'horsepower_tax', 'category_id': 'category_id',
-    'vehicle_range': 'vehicle_range'
+    'vehicle_range': 'vehicle_range', 'power_unit': 'power_unit'
 }
 
 class FleetVehicle(models.Model):
@@ -85,6 +85,10 @@ class FleetVehicle(models.Model):
         [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
         compute='_compute_model_fields', store=True, readonly=False)
     fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_model_fields', store=True, readonly=False)
+    power_unit = fields.Selection([
+        ('power', 'kW'),
+        ('horsepower', 'Horsepower')
+        ], 'Power Unit', default='power', required=True)
     horsepower = fields.Integer(compute='_compute_model_fields', store=True, readonly=False)
     horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
     power = fields.Integer('Power', help='Power in kW of the vehicle', compute='_compute_model_fields', store=True, readonly=False)

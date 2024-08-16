@@ -65,15 +65,17 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
              */
             addons.add("odoo");
         }
-        const joinedAddons = [...addons].sort().join(",");
-        const filter = (path) => joinedAddons.includes(getAddonName(path));
+        const filter = (path) => addons.has(getAddonName(path));
+
         // Module names are cached for each configuration of addons
+        const joinedAddons = [...addons].sort().join(",");
         if (!moduleNamesCache.has(joinedAddons)) {
             moduleNamesCache.set(
                 joinedAddons,
                 sortedModuleNames.filter((name) => !name.endsWith(TEST_SUFFIX) && filter(name))
             );
         }
+
         moduleSet.filter = filter;
         moduleSet.moduleNames = moduleNamesCache.get(joinedAddons);
     }
@@ -361,36 +363,34 @@ const runTests = async () => {
  * @param {number} [testCount]
  */
 const __gcAndLogMemory = (label, testCount) => {
-    const canRunGc = typeof window.gc === "function";
-    if (canRunGc) {
-        // Cleanup last retained textarea
-        const textarea = document.createElement("textarea");
-        document.body.appendChild(textarea);
-        textarea.value = "aaa";
-        textarea.focus();
-        textarea.remove();
-
-        // Run garbage collection
-        window.gc();
+    if (typeof window.gc !== "function") {
+        return;
     }
 
-    const { memory } = window.performance;
-    if (memory) {
-        // Log memory usage
-        const logs = [
-            `[MEMINFO] ${label}${canRunGc ? " (after GC)" : ""}`,
-            "- used:",
-            memory.usedJSHeapSize,
-            "- total:",
-            memory.totalJSHeapSize,
-            "- limit:",
-            memory.jsHeapSizeLimit,
-        ];
-        if (Number.isInteger(testCount)) {
-            logs.push("- tests:", testCount);
-        }
-        console.log(...logs);
+    // Cleanup last retained textarea
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    textarea.value = "aaa";
+    textarea.focus();
+    textarea.remove();
+
+    // Run garbage collection
+    window.gc();
+
+    // Log memory usage
+    const logs = [
+        `[MEMINFO] ${label} (after GC)`,
+        "- used:",
+        window.performance.memory.usedJSHeapSize,
+        "- total:",
+        window.performance.memory.totalJSHeapSize,
+        "- limit:",
+        window.performance.memory.jsHeapSizeLimit,
+    ];
+    if (Number.isInteger(testCount)) {
+        logs.push("- tests:", testCount);
     }
+    console.log(...logs);
 };
 
 /** @extends {ModuleLoader} */
@@ -537,19 +537,6 @@ let dependencyBatch = [];
 /** @type {Promise<Record<string, string[]>> | null} */
 let dependencyBatchPromise = null;
 let nextRpcId = 1e9;
-
-// Patch `console.warn` to throw errors instead of log warnings.
-// This is done because warnings make runbot builds fail, and we want to be noticed
-// as soon as possible.
-const originalWarn = console.warn;
-console.warn = function throwInsteadOfWarn(...args) {
-    const message = args.join(" ");
-    if (message.includes("[HOOT]")) {
-        originalWarn(...args);
-    } else {
-        throw new Error(message);
-    }
-};
 
 // Invoke tests after the module loader finished loading.
 setTimeout(runTests);

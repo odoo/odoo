@@ -115,12 +115,14 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 FALLBACK_PAYMENT_METHOD_CODES = {
     'wallets_india',
     'paylater_india',
+    'emi_india',
 }
 
 # Mapping of payment method codes to Razorpay codes.
 PAYMENT_METHODS_MAPPING = {
     'wallets_india': 'wallet',
     'paylater_india': 'paylater',
+    'emi_india': 'emi',
 }
 
 # The maximum amount in INR that can be paid through an eMandate.

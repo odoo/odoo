@@ -9,6 +9,8 @@ import { capitalize } from "../utils/strings";
 
 import { Component, useRef, useState, markup } from "@odoo/owl";
 
+const { DateTime } = luxon;
+
 // This props are added by the error handler
 export const standardErrorDialogProps = {
     traceback: { type: [String, { value: null }], optional: true },
@@ -19,6 +21,9 @@ export const standardErrorDialogProps = {
     subType: { type: [String, { value: null }], optional: true },
     code: { type: [Number, String, { value: null }], optional: true },
     type: { type: [String, { value: null }], optional: true },
+    serverHost: { type: [String, { value: null }], optional: true },
+    id: { type: [Number, { value: null }], optional: true },
+    model: { type: [String, { value: null }], optional: true },
     close: Function, // prop added by the Dialog service
 };
 
@@ -42,6 +47,8 @@ export class ErrorDialog extends Component {
     static template = "web.ErrorDialog";
     static components = { Dialog };
     static title = _t("Odoo Error");
+    static showTracebackButtonText = _t("See technical details");
+    static hideTracebackButtonText = _t("Hide technical details");
     static props = { ...standardErrorDialogProps };
 
     setup() {
@@ -50,6 +57,13 @@ export class ErrorDialog extends Component {
         });
         this.copyButtonRef = useRef("copyButton");
         this.popover = usePopover(Tooltip);
+        this.contextDetails = `Occured ${
+            this.props.serverHost ? `on ${this.props.serverHost} ` : ""
+        }${
+            this.props.model && this.props.id
+                ? `on model ${this.props.model} and id ${this.props.id} `
+                : ""
+        }on ${DateTime.now().setZone("UTC").toFormat("yyyy-MM-dd HH:mm:ss")} GMT`;
     }
 
     showTooltip() {
@@ -59,7 +73,7 @@ export class ErrorDialog extends Component {
 
     onClickClipboard() {
         browser.navigator.clipboard.writeText(
-            `${this.props.name}\n${this.props.message}\n${this.props.traceback}`
+            `${this.props.name}\n\n${this.props.message}\n\n${this.contextDetails}\n\n${this.props.traceback}`
         );
         this.showTooltip();
     }
@@ -114,7 +128,7 @@ export class RPCErrorDialog extends ErrorDialog {
 
     onClickClipboard() {
         browser.navigator.clipboard.writeText(
-            `${this.props.name}\n${this.props.message}\n${this.traceback}`
+            `${this.props.name}\n\n${this.props.message}\n\n${this.contextDetails}\n\n${this.traceback}`
         );
         this.showTooltip();
     }
@@ -185,7 +199,6 @@ export class RedirectWarningDialog extends Component {
 export class Error504Dialog extends Component {
     static template = "web.Error504Dialog";
     static components = { Dialog };
-    static title = _t("Request timeout");
     static props = { ...standardErrorDialogProps };
 }
 
@@ -195,7 +208,6 @@ export class Error504Dialog extends Component {
 export class SessionExpiredDialog extends Component {
     static template = "web.SessionExpiredDialog";
     static components = { Dialog };
-    static title = _t("Odoo Session Expired");
     static props = { ...standardErrorDialogProps };
 
     onClick() {

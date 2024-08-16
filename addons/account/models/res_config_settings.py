@@ -48,6 +48,14 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
     )
+    account_price_include = fields.Selection(
+        string='Default Sales Price Include',
+        related='company_id.account_price_include',
+        readonly=False,
+        required=True,
+        help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
+    )
+
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     account_journal_suspense_account_id = fields.Many2one(
@@ -221,6 +229,9 @@ class ResConfigSettings(models.TransientModel):
 
     # Audit trail
     check_account_audit_trail = fields.Boolean(string='Audit Trail', related='company_id.check_account_audit_trail', readonly=False)
+
+    # Autopost of bills
+    autopost_bills = fields.Boolean(related='company_id.autopost_bills', readonly=False)
 
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):

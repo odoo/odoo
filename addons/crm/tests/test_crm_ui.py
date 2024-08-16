@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestUi(HttpCase):
+class TestUi(HttpCase, TestCrmCommon):
 
     def test_01_crm_tour(self):
         # TODO: The tour is raising a JS error when selecting Brandon Freeman
@@ -21,16 +22,16 @@ class TestUi(HttpCase):
             'name': "Zizizbroken",
             'type': 'opportunity',
             'partner_id': brandon.id,
-            'stage_id': self.env.ref('crm.stage_lead1').id,
+            'stage_id': self.stage_team1_1.id,
             'user_id': self.env.ref('base.user_admin').id,
         }, {
             'name': "Zizizbroken 2",
             'type': 'opportunity',
             'partner_id': brandon.id,
-            'stage_id': self.env.ref('crm.stage_lead2').id,
+            'stage_id': self.stage_gen_1.id,
             'user_id': self.env.ref('base.user_admin').id,
         }])
-        self.start_tour("/web", 'crm_tour', login="admin")
+        self.start_tour("/odoo", 'crm_tour', login="admin")
 
     def test_02_crm_tour_rainbowman(self):
         # we create a new user to make sure they get the 'Congrats on your first deal!'
@@ -44,10 +45,10 @@ class TestUi(HttpCase):
                     self.ref('sales_team.group_sale_salesman')
                 ])]
         })
-        self.start_tour("/web", 'crm_rainbowman', login="temp_crm_user")
+        self.start_tour("/odoo", 'crm_rainbowman', login="temp_crm_user")
 
     def test_03_crm_tour_forecast(self):
-        self.start_tour("/web", 'crm_forecast', login="admin")
+        self.start_tour("/odoo", 'crm_forecast', login="admin")
 
     def test_email_and_phone_propagation_edit_save(self):
         """Test the propagation of the email / phone on the partner.
@@ -79,7 +80,7 @@ class TestUi(HttpCase):
         self.assertTrue(lead.partner_email_update)
         self.assertTrue(lead.partner_phone_update)
 
-        self.start_tour('/web', 'crm_email_and_phone_propagation_edit_save', login='admin')
+        self.start_tour('/odoo', 'crm_email_and_phone_propagation_edit_save', login='admin')
 
         self.assertEqual(lead.email_from, 'test@example.com', 'Should not have changed the lead email')
         self.assertEqual(lead.phone, '+32 494 44 44 44', 'Should not have changed the lead phone')
@@ -115,7 +116,7 @@ class TestUi(HttpCase):
         self.assertFalse(lead.partner_email_update)
         self.assertFalse(lead.partner_phone_update)
 
-        self.start_tour('/web', 'crm_email_and_phone_propagation_remove_email_and_phone', login='admin')
+        self.start_tour('/odoo', 'crm_email_and_phone_propagation_remove_email_and_phone', login='admin')
 
         self.assertFalse(lead.email_from, 'Should have removed the email')
         self.assertFalse(lead.phone, 'Should have removed the phone')

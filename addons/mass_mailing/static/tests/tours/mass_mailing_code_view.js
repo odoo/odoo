@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
-    url: '/web?debug=tests',
+    url: '/odoo?debug=tests',
     test: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
         }, {
             trigger: 'input#subject_0',
             content: markup('Pick the <b>email subject</b>.'),
-            position: 'bottom',
+            tooltipPosition: 'bottom',
             run: "edit Test",
         }, {
             trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',

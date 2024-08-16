@@ -43,22 +43,19 @@ class MailMessage(models.Model):
                 )
                 if chatbot_message.script_step_id:
                     store.add(
-                        "mail.message",
+                        message,
                         {
-                            "id": message.id,
                             "chatbotStep": {
-                                "message": {"id": message.id},
-                                "scriptStep": {"id": chatbot_message.script_step_id.id},
+                                "message": Store.one_id(message),
+                                "scriptStep": Store.one_id(chatbot_message.script_step_id),
                                 "chatbot": {
-                                    "script": {
-                                        "id": chatbot_message.script_step_id.chatbot_script_id.id
-                                    },
-                                    "thread": {"id": channel.id, "model": "discuss.channel"},
+                                    "script": Store.one_id(
+                                        chatbot_message.script_step_id.chatbot_script_id
+                                    ),
+                                    "thread": Store.one_id(channel),
                                 },
-                                "selectedAnswer": (
-                                    {"id": chatbot_message.user_script_answer_id.id}
-                                    if chatbot_message.user_script_answer_id
-                                    else False
+                                "selectedAnswer": Store.one_id(
+                                    chatbot_message.user_script_answer_id
                                 ),
                                 "operatorFound": channel.chatbot_current_step_id.step_type
                                 == "forward_operator"
@@ -80,13 +77,11 @@ class MailMessage(models.Model):
         super(MailMessage, self - messages_w_author_livechat)._author_to_store(store)
         for message in messages_w_author_livechat:
             store.add(
-                message.author_id,
-                fields=["is_company", "user_livechat_username", "user", "write_date"],
-            )
-            store.add(
-                "mail.message",
+                message,
                 {
-                    "id": message.id,
-                    "author": {"id": message.author_id.id, "type": "partner"},
+                    "author": Store.one(
+                        message.author_id,
+                        fields=["is_company", "user_livechat_username", "user", "write_date"],
+                    ),
                 },
             )

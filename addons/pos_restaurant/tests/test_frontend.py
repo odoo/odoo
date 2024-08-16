@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
@@ -72,14 +72,14 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         })
 
         cls.main_floor_table_5 = cls.env['restaurant.table'].create([{
-            'name': '5',
+            'table_number': 5,
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
         }])
         cls.env['restaurant.table'].create([{
-            'name': '4',
+            'table_number': 4,
             'floor_id': main_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -87,7 +87,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'position_v': 100,
         },
         {
-            'name': '2',
+            'table_number': 2,
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 250,
@@ -95,7 +95,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         },
         {
 
-            'name': '1',
+            'table_number': 1,
             'floor_id': second_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -103,7 +103,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'position_v': 150,
         },
         {
-            'name': '3',
+            'table_number': 3,
             'floor_id': second_floor.id,
             'seats': 4,
             'position_h': 100,
@@ -261,10 +261,10 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.start_pos_tour('RefundStayCurrentTableTour')
 
     def test_09_combo_split_bill(self):
-        setup_pos_combo_items(self)
+        setup_product_combo_items(self)
         self.office_combo.write({'lst_price': 40})
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('SplitBillScreenTour4PosCombo')
+        self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 
     def test_10_save_last_preparation_changes(self):
         self.pos_config.write({'printer_ids': False})

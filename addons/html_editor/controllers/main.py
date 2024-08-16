@@ -15,6 +15,7 @@ from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
+from odoo.addons.mail.tools import link_preview
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -246,6 +247,15 @@ class HTML_Editor(http.Controller):
                 'type': 'url',
                 'url': url,
             })
+            # The code issues a HEAD request to retrieve headers from the URL.
+            # This approach is beneficial when the URL doesn't conclude with an
+            # image extension. By verifying the MIME type, the code ensures that
+            # only supported image types are incorporated into the data.
+            response = requests.head(url, timeout=10)
+            if response.status_code == 200:
+                mime_type = response.headers['content-type']
+                if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                    attachment_data['mimetype'] = mime_type
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
@@ -303,13 +313,12 @@ class HTML_Editor(http.Controller):
 
     @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='json', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
-                       hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
+                       hide_controls=False, hide_fullscreen=False,
                        hide_dm_logo=False, hide_dm_share=False):
         return get_video_url_data(
             video_url, autoplay=autoplay, loop=loop,
             hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
-            hide_yt_logo=hide_yt_logo, hide_dm_logo=hide_dm_logo,
-            hide_dm_share=hide_dm_share
+            hide_dm_logo=hide_dm_logo, hide_dm_share=hide_dm_share
         )
 
     @http.route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='json', auth='user', methods=['POST'], website=True)
@@ -547,3 +556,42 @@ class HTML_Editor(http.Controller):
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
+    @http.route('/html_editor/link_preview_external', type="json", auth="public", methods=['POST'])
+    def link_preview_metadata(self, preview_url):
+        return link_preview.get_link_preview_from_url(preview_url)
+
+    @http.route('/html_editor/link_preview_internal', type="json", auth="user", methods=['POST'])
+    def link_preview_metadata_internal(self, preview_url):
+        try:
+            Actions = request.env['ir.actions.actions']
+            context = dict(request.env.context)
+            words = preview_url.strip('/').split('/')
+
+            record_id = int(words.pop())
+            action_name = words.pop()
+            action = Actions.sudo().search([('path', '=', action_name)])
+            if not action:
+                return {'error_msg': _("Action %s not found, link preview is not available, please check your url is correct", action_name)}
+            action_type = action.type
+            if action_type != 'ir.actions.act_window':
+                return {'other_error_msg': _("Action %s is not a window action, link preview is not available", action_name)}
+            action = request.env[action_type].browse(action.id)
+
+            model = request.env[action.res_model].with_context(context)
+            record = model.browse(record_id)
+
+            result = {}
+            if 'description' in record:
+                result['description'] = record.description
+
+            if 'link_preview_name' in record:
+                result['link_preview_name'] = record.link_preview_name
+            elif 'display_name' in record:
+                result['display_name'] = record.display_name
+
+            return result
+        except (MissingError) as e:
+            return {'error_msg': _("Link preview is not available because %s, please check if your url is correct", str(e))}
+        # catch all other exceptions and return the error message to display in the console but not blocking the flow
+        except Exception as e:  # noqa: BLE001
+            return {'other_error_msg': str(e)}

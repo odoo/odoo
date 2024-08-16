@@ -100,7 +100,11 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
             Dialog.confirm("Open session"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             TextInputPopup.inputText("044123456"),
-            Dialog.confirm(),
+            // pressing enter should confirm the text input popup
+            {
+                trigger: ".modal textarea",
+                run: "press Enter",
+            },
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),
             ProductScreen.clickPartnerButton(),
@@ -110,5 +114,22 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.pointsAwardedAre("100"),
             PosLoyalty.finalizeOrder("Cash", "50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.inputText("044123456"),
+            Dialog.confirm(),
+            PosLoyalty.orderTotalIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
+            ProductScreen.clickDisplayedProduct("Test Product A"),
+            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.orderTotalIs("50.00"),
+            ProductScreen.checkTaxAmount("-6.52"),
         ].flat(),
 });

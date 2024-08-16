@@ -15,11 +15,25 @@ from odoo.exceptions import ValidationError
 
 from ..utils.cloud_storage_google_utils import generate_signed_url_v4
 
+CloudStorageGoogleCredentials = {}  # {db_name: (account_info, credential)}
+
+
+def get_cloud_storage_google_credential(env):
+    """ Get the credentials object of currently used account info.
+    This method is cached to because from_service_account_info is slow.
+    """
+    cached_account_info, cached_credential = CloudStorageGoogleCredentials.get(env.registry.db_name, (None, None))
+    account_info = json.loads(env['ir.config_parameter'].sudo().get_param('cloud_storage_google_account_info'))
+    if cached_account_info == account_info:
+        return cached_credential
+    credential = service_account.Credentials.from_service_account_info(account_info)
+    CloudStorageGoogleCredentials[env.registry.db_name] = (account_info, credential)
+    return credential
+
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
     _cloud_storage_google_url_pattern = re.compile(r'https://storage\.googleapis\.com/(?P<bucket_name>[\w\-.]+)/(?P<blob_name>[^?]+)')
-    __cloud_storage_credentials = {}  # {db_name: (account_info, credential)}
 
     def _get_cloud_storage_google_info(self):
         match = self._cloud_storage_google_url_pattern.match(self.url)
@@ -30,18 +44,6 @@ class IrAttachment(models.Model):
             'blob_name': unquote(match['blob_name']),
         }
 
-    def _get_cloud_storage_google_credential(self):
-        """ Get the credentials object of currently used account info.
-        This method is cached to because from_service_account_info is slow.
-        """
-        cached_account_info, cached_credential = self.__cloud_storage_credentials.get(self.env.registry.db_name, (None, None))
-        account_info = json.loads(self.env['ir.config_parameter'].sudo().get_param('cloud_storage_google_account_info'))
-        if cached_account_info == account_info:
-            return cached_credential
-        credential = service_account.Credentials.from_service_account_info(account_info)
-        self.__cloud_storage_credentials[self.env.registry.db_name] = (account_info, credential)
-        return credential
-
     def _generate_cloud_storage_google_url(self, blob_name):
         bucket_name = self.env['ir.config_parameter'].get_param('cloud_storage_google_bucket_name')
         return f"https://storage.googleapis.com/{bucket_name}/{quote(blob_name)}"
@@ -49,7 +51,7 @@ class IrAttachment(models.Model):
     def _generate_cloud_storage_google_signed_url(self, bucket_name, blob_name, **kwargs):
         quote_blob_name = quote(blob_name)
         return generate_signed_url_v4(
-            credentials=self._get_cloud_storage_google_credential(),
+            credentials=get_cloud_storage_google_credential(self.env),
             resource=f'/{bucket_name}/{quote_blob_name}',
             **kwargs,
         )

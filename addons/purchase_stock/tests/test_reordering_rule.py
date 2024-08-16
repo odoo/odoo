@@ -6,9 +6,11 @@ from datetime import timedelta as td
 from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID, Command
+from odoo.fields import Date
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import UserError
+from odoo.tools.date_utils import add
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
@@ -257,6 +259,20 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(purchase_order, 'No purchase order created.')
         self.assertEqual(len(purchase_order.order_line), 1, 'Not enough purchase order lines created.')
         purchase_order.button_confirm()
+
+    def test_reordering_rule_4(self):
+        """ Test that a reordering rule where the min qty is larger than
+         the max qty cannot be created """
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        with self.assertRaises(ValidationError, msg="The minimum quantity must be less than or equal to the maximum quantity."):
+            self.env['stock.warehouse.orderpoint'].create({
+                'warehouse_id': warehouse_1.id,
+                'location_id': warehouse_1.lot_stock_id.id,
+                'product_id': self.product_01.id,
+                'product_min_qty': 2,
+                'product_max_qty': 1,
+            })
 
     def test_reordering_rule_triggered_two_times(self):
         """
@@ -904,7 +920,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': p.id,
             'product_min_qty': 1,
-            'product_max_qty': 0,
+            'product_max_qty': 1,
         } for p in [self.product_01, product_02]])
 
         op_01.action_replenish()
@@ -1037,7 +1053,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 5,
-            'product_max_qty': 0,
+            'product_max_qty': 5,
         })
         # run the scheduler
         self.env['procurement.group'].run_scheduler()
@@ -1085,7 +1101,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 500,
-            'product_max_qty': 0,
+            'product_max_qty': 500,
         })
         product.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
         self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
@@ -1116,7 +1132,7 @@ class TestReorderingRule(TransactionCase):
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 10,
-            'product_max_qty': 0,
+            'product_max_qty': 10,
         })
         # run the scheduler
         self.env['procurement.group'].run_scheduler()
@@ -1125,3 +1141,36 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(len(po_line), 1, 'There should be only one PO line')
         self.assertEqual(po_line.product_qty, 10, 'The PO line quantity should be 10')
         self.assertTrue(po_line.taxes_id)
+
+    def test_forbid_snoozing_auto_trigger_orderpoint(self):
+        """
+        Check that you can not snooze an auto-trigger reoredering rule
+        """
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'is_storable': True,
+            'route_ids': [Command.set(buy_route.ids)],
+        })
+
+        # check that you can not create a snoozed auto-trigger reoredering rule
+        with self.assertRaises(UserError):
+            orderpoint = self.env['stock.warehouse.orderpoint'].create({
+                'name': 'Super product RR',
+                'route_id': buy_route.id,
+                'product_id': product.id,
+                'product_min_qty': 0,
+                'product_max_qty': 5,
+                'snoozed_until': add(Date.today(), days=1),
+            })
+
+        # check that you can not snooze an existing one
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Super product RR',
+            'route_id': buy_route.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        with self.assertRaises(UserError):
+            orderpoint.snoozed_until = add(Date.today(), days=1)

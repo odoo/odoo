@@ -7,7 +7,7 @@ import socket
 from itertools import product
 from freezegun import freeze_time
 from unittest.mock import patch
-from werkzeug.urls import url_parse, url_decode
+from werkzeug.urls import url_parse
 
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.tests.common import MailCommon
@@ -434,9 +434,8 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                         # Logged into company main, try accessing record in other
                         # company -> _redirect_to_record should redirect to
                         # messaging as the user doesn't have any access
-                        fragment = url_parse(response.url).fragment
-                        action = url_decode(fragment)['action']
-                        self.assertEqual(action, 'mail.action_discuss')
+                        parsed_url = url_parse(response.url)
+                        self.assertEqual(parsed_url.path, '/odoo/action-mail.action_discuss')
                     else:
                         # Logged into company main, try accessing record in same
                         # company -> _redirect_to_record should add company in

@@ -19,7 +19,7 @@ import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
 import { EventBus, toRaw } from "@odoo/owl";
 import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { _t } from "@web/core/l10n/translation";
-import { useGetTreeDescription } from "@web/core/tree_editor/utils";
+import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
 
@@ -178,6 +178,7 @@ export class SearchModel extends EventBus {
         this.orderByCount = false;
 
         this.getDomainTreeDescription = useGetTreeDescription(fieldService, nameService);
+        this.makeGetFieldDef = useMakeGetFieldDef(fieldService);
 
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();
@@ -810,7 +811,8 @@ export class SearchModel extends EventBus {
             context = makeContext(contexts);
         }
 
-        const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode });
+        const getFieldDef = await this.makeGetFieldDef(this.resModel, treeFromDomain(domain));
+        const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode, getFieldDef });
         const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
         const promises = trees.map(async (tree) => {
             const description = await this.getDomainTreeDescription(this.resModel, tree);
@@ -1844,10 +1846,16 @@ export class SearchModel extends EventBus {
      * of a search item of type 'field'.
      */
     _getFieldDomain(field, autocompleteValues) {
-        const domains = autocompleteValues.map(({ label, value, operator }) => {
+        const domains = autocompleteValues.map(({ label, value, operator, enforceEqual }) => {
             let domain;
             if (field.filterDomain) {
-                domain = new Domain(field.filterDomain).toList({
+                let filterDomain = field.filterDomain;
+                if (enforceEqual) {
+                    filterDomain = field.filterDomain
+                        .replaceAll("'ilike'", "'='")
+                        .replaceAll('"ilike"', '"="');
+                }
+                domain = new Domain(filterDomain).toList({
                     self: label.trim(),
                     raw_value: value,
                 });

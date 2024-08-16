@@ -28,7 +28,8 @@
                         <div class="o_move_handle fa fa-arrows"/>
                     </div>
                     <div class="o_overlay_edit_options">
-                        <button type="button" class="oe_snippet_remove o_we_bg_danger fa fa-trash"/>
+                        <button class="o_snippet_replace o_we_bg_warning fa fa-exchange d-none"/>
+                        <button class="oe_snippet_remove o_we_bg_danger fa fa-trash"/>
                     </div>
                 </div>
             </div>
@@ -155,7 +156,7 @@
                 </button>
             </div>
 
-            <div class="o_snippet_search_filter" t-att-class="{ 'd-none': state.currentTab !== constructor.tabs.BLOCKS }">
+            <div t-if="!this.hasSnippetGroups" class="o_snippet_search_filter" t-att-class="{ 'd-none': state.currentTab !== constructor.tabs.BLOCKS }">
                 <input type="text" class="o_snippet_search_filter_input" t-ref="search-input" t-model="state.search" placeholder="Search for a block (e.g. numbers, image wall, ...)"/>
                 <i role="button" class="fa fa-times o_snippet_search_filter_reset" t-att-class="{ 'd-none': state.search === ''}" t-on-click="() => state.search = ''"/>
             </div>
@@ -168,15 +169,17 @@
                             <span t-esc="category.text"/>
                         </div>
                         <div t-att-id="category.id === 'snippet_custom' ? 'snippet_custom_body' : ''" class="o_panel_body" t-on-pointerup="_onMouseUp">
-                            <t t-foreach="category_value" t-as="snippet" t-key="snippet.id">
+                            <t t-foreach="category_value" t-as="snippet" t-key="snippet.key">
                                 <div t-if="snippet.visible"
                                     class="oe_snippet"
                                     t-att-class="{ 'o_disabled': snippet.disabled, 'o_snippet_install': snippet.installable, 'o_we_draggable': !snippet.renaming and !snippet.installable and !snippet.disabled }"
                                     t-att-name="snippet.displayName"
                                     t-att-data-oe-snippet-id="snippet.id"
                                     t-att-data-module-id="snippet.moduleId"
-                                    t-on-click="_onSnippetClick"
-                                    t-att-data-tooltip="snippet.disabled ? disabledTooltip : false">
+                                    t-on-click="this._onSnippetClick"
+                                    t-att-data-tooltip="snippet.disabled ? disabledTooltip : false"
+                                    t-att-data-snippet-group="snippet.snippetGroup"
+                                    t-att-data-snippet-key="snippet.key">
                                     <t t-if="snippet.disabled">
                                         <img src="/web_editor/static/src/img/snippet_disabled.svg" class="o_snippet_undroppable"/>
                                     </t>
@@ -200,10 +203,10 @@
                                     </div>
                                     <t t-if="snippet.isCustom and !snippet.renaming">
                                         <!-- t-on-pointerup with empty handle to prevent pointerup from menu -->
-                                        <we-button class="o_rename_btn fa fa-pencil btn o_we_hover_success" t-att-data-tooltip="snippet.renameTitle" t-att-data-snippet-id="snippet.id"
+                                        <we-button class="o_rename_btn fa fa-pencil btn o_we_hover_success" t-att-data-tooltip="snippet.renameTitle" t-att-data-snippet-key="snippet.key"
                                             t-on-click.stop="_onRenameBtnClick"
                                             t-on-pointerup.stop=""/>
-                                        <we-button class="o_delete_btn fa fa-trash btn o_we_hover_danger" t-att-data-tooltip="snippet.deleteTitle" t-att-data-snippet-id="snippet.id"
+                                        <we-button class="o_delete_btn fa fa-trash btn o_we_hover_danger" t-att-data-tooltip="snippet.deleteTitle" t-att-data-snippet-key="snippet.key"
                                             t-on-click.stop="_onDeleteBtnClick"
                                             t-on-pointerup.stop=""/>
                                     </t>

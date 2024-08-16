@@ -11143,13 +11143,11 @@ test.tags("desktop")(
     }
 );
 
-test.tags("desktop")(
-    "navigating through an editable list with custom controls [REQUIRE FOCUS]",
-    async () => {
-        await mountView({
-            type: "form",
-            resModel: "partner",
-            arch: `
+test.tags("desktop")("navigating through an editable list with custom controls", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
                 <form>
                     <field name="name"/>
                     <field name="p">
@@ -11163,38 +11161,37 @@ test.tags("desktop")(
                     </field>
                     <field name="int_field"/>
                 </form>`,
-        });
+    });
 
-        expect("[name=name] input").toBeFocused();
+    expect("[name=name] input").toBeFocused();
 
-        expect("[name=p] .o_selected_row").toHaveCount(0);
+    expect("[name=p] .o_selected_row").toHaveCount(0);
 
-        // press tab to navigate to the list
-        expect(getNextFocusableElement()).toBe(queryFirst(".o_field_x2many_list_row_add a"));
-        press("Tab");
+    // press tab to navigate to the list
+    expect(getNextFocusableElement()).toBe(queryFirst(".o_field_x2many_list_row_add a"));
+    press("Tab");
 
-        expect(".o_field_x2many_list_row_add a:eq(0)").toBeFocused();
+    expect(".o_field_x2many_list_row_add a:eq(0)").toBeFocused();
 
-        // press right to focus the second control
-        press("ArrowRight");
-        await animationFrame();
+    // press right to focus the second control
+    press("ArrowRight");
+    await animationFrame();
 
-        expect(".o_field_x2many_list_row_add a:eq(1)").toBeFocused();
+    expect(".o_field_x2many_list_row_add a:eq(1)").toBeFocused();
 
-        // press left to come back to first control
-        press("ArrowLeft");
-        await animationFrame();
+    // press left to come back to first control
+    press("ArrowLeft");
+    await animationFrame();
 
-        expect(".o_field_x2many_list_row_add a:eq(0)").toBeFocused();
-        expect(getNextFocusableElement()).toBe(queryOne(".o_field_x2many_list_row_add a:eq(1)"));
-        press("Tab");
-        expect(".o_field_x2many_list_row_add a:eq(1)").toBeFocused();
+    expect(".o_field_x2many_list_row_add a:eq(0)").toBeFocused();
+    expect(getNextFocusableElement()).toBe(queryOne(".o_field_x2many_list_row_add a:eq(1)"));
+    press("Tab");
+    expect(".o_field_x2many_list_row_add a:eq(1)").toBeFocused();
 
-        expect(getNextFocusableElement()).toBe(queryOne("[name=int_field] input"));
-        press("Tab");
-        expect("[name=int_field] input").toBeFocused();
-    }
-);
+    expect(getNextFocusableElement()).toBe(queryOne("[name=int_field] input"));
+    press("Tab");
+    expect("[name=int_field] input").toBeFocused();
+});
 
 test("be able to press a key on the keyboard when focusing a column header without crashing", async () => {
     await mountView({
@@ -11386,13 +11383,16 @@ test("open a one2many record containing a one2many", async () => {
     expect.verifySteps([
         "localStorage getItem pwa.installationState", // from install_prompt service
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
+        "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
     ]);
 
     await contains(".o_data_cell").click();
     expect(".modal .o_data_row").toHaveCount(1);
     expect.verifySteps([
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
+        "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
         "localStorage getItem optional_fields,partner,form,123456789,turtles,list,name",
+        "localStorage getItem debug_open_view,partner,form,123456789,turtles,list,name",
     ]);
 });
 
@@ -12023,8 +12023,48 @@ test.tags("desktop")("one2many, form view dialog with custom footer", async () =
 
     // open it again
     await contains(".o_data_row td[name=name]").click();
+    expect(".modal-footer button").toHaveCount(0);
     expect(".modal-footer .my_span").toHaveCount(1);
 });
+
+test.tags("desktop")(
+    "one2many, form view dialog with added custom footer (replace='0')",
+    async () => {
+        Partner._records[0].p = [1];
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="p">
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                    <form>
+                        <field name="name"/>
+                        <footer replace="0">
+                            <button class="btn btn-primary my_button">Hello</button>
+                        </footer>
+                    </form>
+                </field>
+            </form>`,
+            resId: 1,
+        });
+
+        await contains(".o_data_row td[name=name]").click();
+        expect(".modal-footer .my_button").toHaveCount(1);
+        expect(".modal-footer button").toHaveCount(3);
+
+        await contains(".modal-header .btn-close").click();
+        expect(".modal").toHaveCount(0);
+
+        // open it again
+        await contains(".o_data_row td[name=name]").click();
+        expect(".modal-footer .my_button").toHaveCount(1);
+        expect(".modal-footer button").toHaveCount(3);
+    }
+);
 
 test('Add a line, click on "Save & New" with an invalid form', async () => {
     mockService("notification", {

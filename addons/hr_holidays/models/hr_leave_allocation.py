@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
@@ -12,7 +11,6 @@ from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
-from odoo.osv import expression
 
 
 MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
@@ -36,6 +34,11 @@ class HolidaysAllocation(models.Model):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             return [('requires_allocation', '=', 'yes')]
         return [('employee_requests', '=', 'yes')]
+
+    def _domain_employee_id(self):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            return []
+        return [('leave_manager_id', '=', self.env.user.id)]
 
     name = fields.Char(
         string='Description',
@@ -63,7 +66,7 @@ class HolidaysAllocation(models.Model):
         default=_default_holiday_status_id)
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
-        index=True, ondelete="restrict", required=True, tracking=True)
+        index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
@@ -101,6 +104,7 @@ class HolidaysAllocation(models.Model):
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
     already_accrued = fields.Boolean()
+    yearly_accrued_amount = fields.Float(export_string_translation=False)
     allocation_type = fields.Selection([
         ('regular', 'Regular Allocation'),
         ('accrual', 'Accrual Allocation')
@@ -195,7 +199,8 @@ class HolidaysAllocation(models.Model):
     @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for allocation in self:
-            allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
+            hours_per_day = allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY
+            allocation.number_of_hours_display = allocation.number_of_days * hours_per_day
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -299,9 +304,18 @@ class HolidaysAllocation(models.Model):
     def _add_days_to_allocation(self, current_level, current_level_maximum_leave, leaves_taken, period_start, period_end):
         days_to_add = self._process_accrual_plan_level(
             current_level, period_start, self.lastcall, period_end, self.nextcall)
-        self.number_of_days += days_to_add
+        if current_level.cap_accrued_time_yearly:
+            hours_per_day = self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY
+            maximum_leave_yearly = current_level.maximum_leave_yearly\
+                if current_level.added_value_type != 'hour'\
+                else current_level.maximum_leave_yearly / hours_per_day
+            yearly_remaining_amount = maximum_leave_yearly - self.yearly_accrued_amount
+            days_to_add = min(days_to_add, yearly_remaining_amount)
         if current_level.cap_accrued_time:
-            self.number_of_days = min(self.number_of_days, current_level_maximum_leave + leaves_taken)
+            capped_total_balance = leaves_taken + current_level_maximum_leave
+            days_to_add = min(days_to_add, capped_total_balance - self.number_of_days)
+        self.number_of_days += days_to_add
+        self.yearly_accrued_amount += days_to_add
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
@@ -444,6 +458,7 @@ class HolidaysAllocation(models.Model):
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, period_end)
                 # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
                 if allocation.nextcall == carryover_date:
+                    allocation.yearly_accrued_amount = 0
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
                         allocation_days = allocation.number_of_days + leaves_taken
                         allocation_max_days = current_level.postpone_max_days + leaves_taken

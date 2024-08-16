@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -45,26 +44,18 @@ class ResUsersSettings(models.Model):
         return res
 
     def _notify_mute(self):
-        notifications = []
         for setting in self:
-            notifications.append(
-                (
-                    setting.user_id.partner_id,
-                    "res.users.settings",
-                    {"mute_until_dt": setting.mute_until_dt},
-                )
-            )
+            setting._bus_send("res.users.settings", {"mute_until_dt": setting.mute_until_dt})
             if setting.mute_until_dt and setting.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_users_settings_unmute")._trigger(setting.mute_until_dt)
-        self.env["bus.bus"]._sendmany(notifications)
 
     def set_custom_notifications(self, custom_notifications):
         self.set_res_users_settings({"channel_notifications": custom_notifications})
 
     def set_res_users_settings(self, new_settings):
-        formated = super().set_res_users_settings(new_settings)
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings', formated)
-        return formated
+        formatted = super().set_res_users_settings(new_settings)
+        self._bus_send("res.users.settings", formatted)
+        return formatted
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
         """
@@ -87,4 +78,6 @@ class ResUsersSettings(models.Model):
                 'partner_id': partner_id,
                 'guest_id': guest_id,
             })
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings.volumes', volume_setting._discuss_users_settings_volume_format())
+        self._bus_send(
+            "res.users.settings.volumes", volume_setting._discuss_users_settings_volume_format()
+        )

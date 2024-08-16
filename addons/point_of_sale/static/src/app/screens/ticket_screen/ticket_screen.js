@@ -5,6 +5,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
+import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
@@ -39,6 +40,7 @@ export class TicketScreen extends Component {
         ReprintReceiptButton,
         SearchBar,
         Numpad,
+        BackButton,
     };
     static props = {
         destinationOrder: { type: Object, optional: true },
@@ -54,8 +56,6 @@ export class TicketScreen extends Component {
         reuseSavedUIState: false,
         ui: {},
     };
-    static numpadActionName = _t("Refund");
-    static searchPlaceholder = _t("Search Orders...");
 
     setup() {
         this.pos = usePos();
@@ -240,6 +240,10 @@ export class TicketScreen extends Component {
             }
         }
     }
+    async addAdditionalRefundInfo(order, destinationOrder) {
+        // used by L10N, e.g: add a refund reason using a specific L10N field
+        return Promise.resolve();
+    }
     async onDoRefund() {
         const order = this.getSelectedOrder();
 
@@ -321,9 +325,15 @@ export class TicketScreen extends Component {
         if (this.pos.get_order().uuid !== destinationOrder.uuid) {
             this.pos.set_order(destinationOrder);
         }
+        await this.addAdditionalRefundInfo(order, destinationOrder);
+
+        this.postRefund(destinationOrder);
 
         this.closeTicketScreen();
     }
+
+    postRefund(destinationOrder) {}
+
     setPartnerToRefundOrder(partner, destinationOrder) {
         if (partner && !destinationOrder.get_partner()) {
             destinationOrder.set_partner(partner);

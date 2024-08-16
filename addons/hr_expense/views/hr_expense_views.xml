@@ -247,7 +247,7 @@
                                    invisible="not accounting_date or state not in ['approved', 'done']"
                                    readonly="not is_editable"/>
                             <field name="account_id" options="{'no_create': True}"
-                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', company_id)]"
+                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False)]"
                                    groups="account.group_account_readonly" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
@@ -835,7 +835,6 @@
                                    context="{'default_company_id': company_id}"/>
                             <field name="selectable_payment_method_line_ids" invisible="1"/>
                             <field name="payment_method_line_id"
-                                   context="{'show_payment_journal_id': 1}"
                                    options="{'no_open': True, 'no_create': True}"
                                    invisible="payment_mode != 'company_account'"
                                    readonly="not is_editable"

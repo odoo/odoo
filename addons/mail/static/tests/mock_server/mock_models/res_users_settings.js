@@ -29,7 +29,7 @@ export class ResUsersSettings extends models.ServerModel {
             return settings;
         }
         const settingsId = this.create({ user_id: userId });
-        return this._filter([["id", "=", settingsId]])[0];
+        return this.browse(settingsId)[0];
     }
 
     /**
@@ -45,7 +45,7 @@ export class ResUsersSettings extends models.ServerModel {
         /** @type {import("mock_models").ResUsersSettingsVolumes} */
         const ResUsersSettingsVolumes = this.env["res.users.settings.volumes"];
 
-        const [settings] = this._filter([["id", "=", id]]);
+        const [settings] = this.browse(id);
         const filterPredicate = fields_to_format
             ? ([fieldName]) => fields_to_format.includes(fieldName)
             : ([fieldName]) => !ORM_AUTOMATIC_FIELDS.has(fieldName);
@@ -81,7 +81,7 @@ export class ResUsersSettings extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         const [id] = ensureArray(idOrIds);
-        const oldSettings = this._filter([["id", "=", id]])[0];
+        const [oldSettings] = this.browse(id);
         const changedSettings = {};
         for (const setting in new_settings) {
             if (setting in oldSettings && new_settings[setting] !== oldSettings[setting]) {

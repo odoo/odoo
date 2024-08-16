@@ -9,6 +9,8 @@ import "./helpers/time.test.js";
 import "./hoot-dom/dom.test.js";
 import "./hoot-dom/events.test.js";
 import "./hoot_utils.test.js";
+import "./mock/navigator.test.js";
 import "./mock/network.test.js";
+import "./ui/hoot_technical_value.test.js";
 
 whenReady(() => start());

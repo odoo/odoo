@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
@@ -179,6 +179,43 @@ test("should insert a span zws when toggling a formatting command twice", () => 
         // complex with the current implementation.
         contentAfterEdit: `<p>${span(`[]\u200B`, "first")}</p>`,
     });
+});
+
+// This test uses execCommand to reproduce as closely as possible the browser's
+// default behaviour when typing in a contenteditable=true zone.
+test("should type in bold", async () => {
+    function typeChar(editor, char) {
+        manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
+        manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+            inputType: "insertText",
+            data: char,
+        });
+        // Simulate text insertion as done by the contenteditable.
+        editor.document.execCommand("insertText", false, char);
+        // Input event is dispatched and handlers are called synchronously.
+        manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
+    }
+
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    // Toggle bold on.
+    bold(editor);
+    expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
+
+    // Simulate text insertion as done by the contenteditable.
+    typeChar(editor, "x");
+    // Check that character was inserted inside the strong tag.
+    expect(getContent(el)).toBe(`<p>ab${strong("x[]")}cd</p>`);
+
+    // Keep typing.
+    typeChar(editor, "y");
+    expect(getContent(el)).toBe(`<p>ab${strong("xy[]")}cd</p>`);
+
+    // Toggle bold off and type more.
+    bold(editor);
+    expect(getContent(el)).toBe(`<p>ab${strong("xy")}${span("[]\u200B", "first")}cd</p>`);
+    typeChar(editor, "z");
+    expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
 });
 
 const styleContentBold = `.boldClass { font-weight: bold; }`;

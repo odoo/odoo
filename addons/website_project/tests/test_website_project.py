@@ -26,6 +26,9 @@ class TestWebsiteProject(HttpCase):
             'description': 'This test task is created by Portal',
             'project_id': self.test_project.id,
             'csrf_token': http.Request.csrf_token(self),
+            'partner_phone': '+5 555-555-555',
+            'partner_name': 'Bagha kumar',
+            'partner_company_name': 'Boulangerie Vortex',
         }
         response = self.url_open('/website/form/project.task', data=task_data)
         task = self.env['project.task'].browse(response.json().get('id'))
@@ -47,6 +50,9 @@ class TestWebsiteProject(HttpCase):
             'description': 'This test task is created by Admin',
             'project_id': self.test_project.id,
             'csrf_token': http.Request.csrf_token(self),
+            'partner_phone': '+5 555-555-555',
+            'partner_name': 'Bagha kumar',
+            'partner_company_name': 'Boulangerie Vortex',
         }
         response = self.url_open('/website/form/project.task', data=task_data)
         task = self.env['project.task'].browse(response.json().get('id'))

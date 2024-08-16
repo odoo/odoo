@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from markupsafe import Markup
+
+from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -27,12 +29,11 @@ class Partners(models.Model):
         )
         for partner in self:
             store.add(
-                "res.partner",
+                partner,
                 {
                     "invite_by_self_count": invite_by_self_count_by_partner_id.get(partner, 0),
                     "is_available": partner in active_livechat_partners,
                     "lang_name": lang_name_by_code[partner.lang],
-                    "id": partner.id,
                 },
             )
 
@@ -41,9 +42,21 @@ class Partners(models.Model):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
 
-    def _to_store(self, store: Store, /, *, fields=None):
+    def _to_store(self, store: Store, /, *, fields=None, **kwargs):
         """Override to add name when user_livechat_username is not set."""
-        super()._to_store(store, fields=fields)
+        super()._to_store(store, fields=fields, **kwargs)
         if fields and "user_livechat_username" in fields:
             if partners := self.filtered(lambda p: not p.user_livechat_username):
                 super(Partners, partners)._to_store(store, fields=["name"])
+
+    def _bus_send_history_message(self, channel, page_history):
+        message_body = _("No history found")
+        if page_history:
+            message_body = Markup("<ul>%s</ul>") % (
+                Markup("").join(
+                    Markup('<li><a href="%(page)s" target="_blank">%(page)s</a></li>')
+                    % {"page": page}
+                    for page in page_history
+                )
+            )
+        self._bus_send_transient_message(channel, message_body)

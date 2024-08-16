@@ -33,7 +33,7 @@ class MailTemplate(models.Model):
     # description
     name = fields.Char('Name', translate=True)
     description = fields.Text(
-        'Template description', translate=True,
+        'Template Description', translate=True,
         help="This field is used for internal description of the template's usage.")
     active = fields.Boolean(default=True)
     template_category = fields.Selection(

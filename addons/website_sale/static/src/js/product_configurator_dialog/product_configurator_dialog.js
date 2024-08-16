@@ -11,9 +11,9 @@ patch(ProductConfiguratorDialog, {
         ...ProductConfiguratorDialog.props,
         isFrontend: { type: Boolean, optional: true },
         options: {
-            type: Object,
-            optional: true,
+            ...ProductConfiguratorDialog.props.options,
             shape: {
+                ...ProductConfiguratorDialog.props.options.shape,
                 isMainProductConfigurable: { type: Boolean, optional: true },
             },
         },

@@ -2670,6 +2670,8 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
             const inputValueAsNumber = Number(inputValue);
             const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
             this.outputEl.value = `${ratio.toFixed(2)}x`;
+        } else if (this.el.dataset.displayRangeValueUnit) {
+            this.outputEl.value = inputValue + this.el.dataset.displayRangeValueUnit;
         } else {
             this.outputEl.value = inputValue;
         }
@@ -6619,6 +6621,46 @@ registry.ImageTools = ImageHandlerOption.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Toggles the ratio of the image between 0:0 (no crop) and 1:1, in order to
+     * make it appear squared when needed (with `data-unstretch=true` shapes).
+     *
+     * @see this.selectClass for parameters
+     */
+    async removeStretch(previewMode, widgetValue, params) {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
+        this.trigger_up("disable_loading_effect");
+        // Preserve the cursor to be able to replace the image afterwards.
+        const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
+        const img = this._getImg();
+        const document = this.el.ownerDocument;
+        const imageCropWrapperElement = document.createElement("div");
+        imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
+        document.body.append(imageCropWrapperElement);
+        const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
+            activeOnStart: true,
+            media: img,
+            mimetype: this._getImageMimetype(img),
+        });
+        await imageCropWrapper.component.mountedPromise;
+        if (widgetValue) {
+            await imageCropWrapper.component.reset();
+        } else {
+            await imageCropWrapper.component.cropSquare(false);
+            if (isGif(this._getImageMimetype(img))) {
+                img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+            }
+        }
+        await this._reapplyCurrentShape();
+        imageCropWrapper.destroy();
+        imageCropWrapperElement.remove();
+        restoreCursor();
+        this.trigger_up("enable_loading_effect");
+        if (!widgetValue) {
+            this._onImageCropped();
+        }
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+    },
+    /**
      * Displays the image cropping tools
      *
      * @see this.selectClass for parameters
@@ -6701,6 +6743,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // the component to be mounted before calling reset, mount it
         // temporarily into the body.
         const imageCropWrapperElement = document.createElement('div');
+        imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
         document.body.append(imageCropWrapperElement);
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             activeOnStart: true,
@@ -6728,7 +6771,57 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async setImgShape(previewMode, widgetValue, params) {
+        this.trigger_up("disable_loading_effect");
         const img = this._getImg();
+        let clonedImgEl;
+
+        // If the shape needs the image to be square (1:1 ratio) and if not
+        // already the case, crop the image before applying the shape.
+        const isCropRequired = params.unstretch;
+        if ((isCropRequired && img.dataset.aspectRatio !== "1/1" && previewMode !== "reset")
+                || this.hasCroppedPreview) {
+            // Preserve the cursor to be able to replace the image afterwards.
+            const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
+            // Replace the image by its clone to avoid flickering.
+            clonedImgEl = img.cloneNode(true);
+            img.insertAdjacentElement("afterend", clonedImgEl);
+            img.classList.add("d-none");
+
+            const document = this.el.ownerDocument;
+            const imageCropWrapperElement = document.createElement("div");
+            imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
+            document.body.append(imageCropWrapperElement);
+            const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
+                activeOnStart: true,
+                media: img,
+                mimetype: this._getImageMimetype(img),
+            });
+            await imageCropWrapper.component.mountedPromise;
+            await imageCropWrapper.component.cropSquare(previewMode);
+            if (previewMode === false) {
+                if (isGif(this._getImageMimetype(img))) {
+                    img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+                }
+                this.isImageCropped = true;
+            }
+            await this._reapplyCurrentShape();
+            imageCropWrapper.destroy();
+            imageCropWrapperElement.remove();
+
+            restoreCursor();
+
+            if (previewMode === true) {
+                this.hasCroppedPreview = true;
+            } else {
+                delete this.hasCroppedPreview;
+            }
+        }
+        // Re-rendering the options after selecting a "cropping" shape.
+        if (this.isImageCropped && previewMode === "reset") {
+            delete this.isImageCropped;
+            this._onImageCropped();
+        }
+
         const saveData = previewMode === false;
         if (img.dataset.hoverEffect && !widgetValue) {
             // When a shape is removed and there is a hover effect on the
@@ -6787,6 +6880,12 @@ registry.ImageTools = ImageHandlerOption.extend({
             weUtils.forwardToThumbnail(img);
         }
         img.classList.add('o_modified_image_to_save');
+        // Remove the image clone, if any.
+        if (clonedImgEl) {
+            clonedImgEl.remove();
+            img.classList.remove("d-none");
+        }
+        this.trigger_up("enable_loading_effect");
     },
     /**
      * Handles color assignment on the shape. Widget is a color picker.
@@ -7326,6 +7425,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
             return !shapeImgSquareWidget.isActive();
         }
+        if (widgetName === "toggle_stretch_opt") {
+            return this._isCropRequired();
+        }
         return this._super(...arguments);
     },
     /**
@@ -7370,6 +7472,10 @@ registry.ImageTools = ImageHandlerOption.extend({
             case 'setHoverEffectColor': {
                 const imgEl = this._getImg();
                 return imgEl.dataset.hoverEffectColor || "";
+            }
+            case "removeStretch": {
+                const imgEl = this._getImg();
+                return imgEl.dataset.aspectRatio !== "1/1";
             }
         }
         return this._super(...arguments);
@@ -7596,6 +7702,16 @@ registry.ImageTools = ImageHandlerOption.extend({
     _isAnimatedShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return shapeImgWidget?.getMethodsParams().animated;
+    },
+    /**
+     * Checks if squaring of image is required before application of shape.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isCropRequired() {
+        const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
+        return shapeImgWidget?.getMethodsParams().unstretch;
     },
     /**
      * Checks if the shape can have a hover effect.
@@ -9317,6 +9433,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                 cancel: () => resolve(false),
                 confirmLabel: _t("Save and Reload"),
                 confirm: () => {
+                    let targetCopyEl = null;
                     const isButton = this.$target[0].matches("a.btn");
                     const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
                     let thumbnailURL;
@@ -9328,6 +9445,12 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     this.trigger_up('context_get', {
                         callback: ctx => context = ctx,
                     });
+                    if (this.$target[0].matches("[data-snippet=s_popup]")) {
+                        // Do not "cleanForSave" the popup before copying the
+                        // HTML, otherwise the popup will be saved invisible and
+                        // therefore not visible in the "add snippet" dialog.
+                        targetCopyEl = this.$target[0].cloneNode(true);
+                    }
                     this.trigger_up('request_save', {
                         reloadEditor: true,
                         invalidateSnippetCache: true,
@@ -9335,7 +9458,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             const defaultSnippetName = !isButton
                                 ? _t("Custom %s", this.data.snippetName)
                                 : _t("Custom Button");
-                            const targetCopyEl = this.$target[0].cloneNode(true);
+                            targetCopyEl = targetCopyEl || this.$target[0].cloneNode(true);
                             targetCopyEl.classList.add('s_custom_snippet');
                             delete targetCopyEl.dataset.name;
                             if (isButton) {

@@ -2,42 +2,53 @@
 <odoo>
 
 <template id="s_product_catalog" name="Pricelist">
-    <section class="s_product_catalog oe_img_bg o_bg_img_center oe_custom_bg pt48 pb32" style="background-image: url('/web/image/website.s_product_catalog_default_image');" data-vcss="001">
+    <section class="s_product_catalog oe_img_bg o_bg_img_center oe_custom_bg pt64 pb64" style="background-image: url('/web/image/website.s_product_catalog_default_image');" data-vcss="002">
+        <div class="o_we_bg_filter bg-white-85"/>
         <div class="container">
-            <h2>Menu</h2>
-            <p>Add a menu description.</p>
+            <div class="row">
+                <div class="col pb48 text-center">
+                    <h2 class="h3-fs">Our Menu</h2>
+                    <p class="lead">Handcrafted Delights: Everything Homemade, Just for You.</p>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-6 pt16 pb16">
-                    <h3>Starter</h3>
+                    <h3 class="h4-fs">Pastries</h3>
                     <ul class="list-unstyled my-3">
                         <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Cheese Onion Rings</t>
-                            <t t-set="price">$9.00</t>
+                            <t t-set="name">Croissant</t>
+                            <t t-set="price">$1.50</t>
+                            <t t-set="description">A buttery, flaky pastry with a golden-brown crust, perfect for breakfast or a light snack.</t>
                         </t>
                         <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Chefs Fresh Soup of the Day</t>
-                            <t t-set="price">$7.50</t>
+                            <t t-set="name">Cinnamon Roll</t>
+                            <t t-set="price">$3.00</t>
+                            <t t-set="description">Soft, sweet dough rolled with cinnamon and sugar, topped with a rich cream cheese frosting.</t>
                         </t>
                         <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Beef Carpaccio</t>
-                            <t t-set="price">$10.50</t>
+                            <t t-set="name">Sourdough Bread</t>
+                            <t t-set="price">$5.00</t>
+                            <t t-set="description">A crusty loaf with a chewy interior, made with a naturally fermented sourdough starter for a tangy flavor.</t>
                         </t>
                     </ul>
                 </div>
                 <div class="col-lg-6 pt16 pb16">
-                    <h3>Main Course</h3>
+                    <h3 class="h4-fs">Cakes</h3>
                     <ul class="list-unstyled my-3">
                         <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Filet Mignon 8oz</t>
-                            <t t-set="price">$15.50</t>
+                            <t t-set="name">Classic Cheesecake</t>
+                            <t t-set="price">$25.00</t>
+                            <t t-set="description">A creamy, smooth cheesecake with a graham cracker crust, topped with a layer of fresh fruit or chocolate ganache.</t>
                         </t>
                         <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Farm Friendly Chicken Supreme</t>
-                            <t t-set="price">$15.50</t>
+                            <t t-set="name">Red Velvet Cake</t>
+                            <t t-set="price">$28.00</t>
+                            <t t-set="description">A moist, red-hued cake with layers of cream cheese frosting, perfect for any special occasion.</t>
                         </t>
                         <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Tuna and Salmon Burger</t>
-                            <t t-set="price">$12.00</t>
+                            <t t-set="name">Carrot Cake</t>
+                            <t t-set="price">$26.00</t>
+                            <t t-set="description">A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, topped with a tangy cream cheese frosting.</t>
                         </t>
                     </ul>
                 </div>
@@ -47,11 +58,15 @@
 </template>
 
 <template id="s_product_catalog_dish">
-    <li class="s_product_catalog_dish" data-name="Product">
-        <p class="s_product_catalog_dish_title d-flex align-items-baseline pb-2">
-            <span t-esc="name" class="s_product_catalog_dish_name s_product_catalog_dish_dot_leaders"/>
-            <span t-esc="price" class="s_product_catalog_dish_price ms-auto ps-2"/>
+    <li class="s_product_catalog_dish mb-4" data-name="Product">
+        <p class="s_product_catalog_dish_title d-flex align-items-baseline fw-bold">
+            <span class="d-flex flex-grow-1 align-items-center">
+                <span t-out="name" class="s_product_catalog_dish_name"/>
+                <span class="s_product_catalog_dish_dot_leaders flex-grow-1 ms-2 border-top"/>
+            </span>
+            <span t-out="price" class="s_product_catalog_dish_price ms-auto ps-3"/>
         </p>
+        <p t-if="description" t-out="description" class="s_product_catalog_dish_description d-block mt-2 pe-5 text-muted"/>
     </li>
 </template>
 
@@ -84,10 +99,9 @@
         <div data-js="ProductCatalog" data-selector=".s_product_catalog">
             <we-checkbox string="Descriptions" data-toggle-description="true" data-no-preview="true"/>
             <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">&#8985; Separator</t>
+                <t t-set="label">Separator</t>
                 <t t-set="direction" t-value="'top'"/>
-                <t t-set="apply_to" t-value="'.s_product_catalog_dish_description'"/>
-                <!-- Note: no need of extra dependency thanks to the apply-to -->
+                <t t-set="apply_to" t-value="'.s_product_catalog_dish_dot_leaders'"/>
             </t>
         </div>
         <div data-selector=".s_product_catalog_dish" data-drop-near=".s_product_catalog_dish"/>
@@ -97,10 +111,17 @@
     </xpath>
 </template>
 
+<record id="website.s_product_catalog_002_scss" model="ir.asset">
+    <field name="name">Product catalog 002 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_product_catalog/002.scss</field>
+</record>
+
 <record id="website.s_product_catalog_001_scss" model="ir.asset">
     <field name="name">Product catalog 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_product_catalog/001.scss</field>
+    <field name="active" eval="False"/>
 </record>
 
 </odoo>

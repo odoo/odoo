@@ -5,7 +5,6 @@ from lxml import etree
 from subprocess import Popen, PIPE
 import hashlib
 import io
-import json
 import logging
 import os
 import re
@@ -20,16 +19,14 @@ except ImportError:
     libsass = None
 
 from rjsmin import jsmin as rjsmin
-from markupsafe import Markup
 
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler, OrderedSet)
-from odoo.tools.json import scriptsafe
+from odoo.tools.json import scriptsafe as json
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.misc import file_open, file_path
-from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
@@ -396,7 +393,7 @@ class AssetsBundle(object):
         try:
             blocks = self.xml()
         except XMLAssetError as e:
-            content.append(f'throw new Error({json.dumps(to_text(e))});')
+            content.append(f'throw new Error({json.dumps(str(e))});')
 
         def get_template(element):
             element.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
@@ -613,7 +610,7 @@ css_error_message {
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
         def handle_compile_error(e, source):
-            error = self.get_preprocessor_error(e, source=source)
+            error = self.get_preprocessor_error(str(e), source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''
@@ -629,7 +626,6 @@ css_error_message {
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
-        compiled = ''
         try:
             compiled = compiler(source)
         except CompileError as e:
@@ -661,7 +657,7 @@ css_error_message {
         cmd = [rtlcss, '-c', file_path("base/data/rtlcss.json"), '-']
 
         try:
-            rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, encoding='utf-8')
         except Exception:
 
             # Check the presence of rtlcss, if rtlcss not available then we should return normal less file
@@ -678,21 +674,17 @@ css_error_message {
             self.css_errors.append(msg)
             return ''
 
-        result = rtlcss.communicate(input=source.encode('utf-8'))
+        out, err = rtlcss.communicate(input=source)
         if rtlcss.returncode:
-            cmd_output = ''.join(misc.ustr(result))
-            if not cmd_output:
-                cmd_output = "Process exited with return code %d\n" % rtlcss.returncode
-            error = self.get_rtlcss_error(cmd_output, source=source)
-            _logger.warning(error)
+            error = self.get_rtlcss_error(err or f"Process exited with return code {rtlcss.returncode}", source=source)
+            _logger.warning("%s", error)
             self.css_errors.append(error)
             return ''
-        rtlcss_result = result[0].strip().decode('utf8')
-        return rtlcss_result
+        return out.strip()
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
-        error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         if 'Cannot load compass' in error:
             error += "Maybe you should install the compass gem using this extra argument:\n\n" \
                      "    $ sudo gem install compass --pre\n"
@@ -704,8 +696,8 @@ css_error_message {
 
     def get_rtlcss_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
-        error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
-        error += "This error occurred while compiling the bundle '%s' containing:" % self.name
+        error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        error = f"{error}This error occurred while compiling the bundle {self.name!r} containing:"
         return error
 
 
@@ -806,7 +798,7 @@ class JavascriptAsset(WebAsset):
 
     def generate_error(self, msg):
         msg = super().generate_error(msg)
-        return f'console.error({scriptsafe.dumps(msg)});'
+        return f'console.error({json.dumps(msg)});'
 
     @property
     def bundle_version(self):
@@ -834,7 +826,7 @@ class JavascriptAsset(WebAsset):
         try:
             return super()._fetch_content()
         except AssetError as e:
-            return self.generate_error(json.dumps(to_text(e)))
+            return self.generate_error(str(e))
 
 
     def with_header(self, content=None, minimal=True):
@@ -866,7 +858,7 @@ class XMLAsset(WebAsset):
         try:
             content = super()._fetch_content()
         except AssetError as e:
-            return self.generate_error(json.dumps(to_text(e)))
+            return self.generate_error(str(e))
 
         parser = etree.XMLParser(ns_clean=True, remove_comments=True, resolve_entities=False)
         try:
@@ -980,17 +972,17 @@ class PreprocessedCSS(StylesheetAsset):
         command = self.get_command()
         try:
             compiler = Popen(command, stdin=PIPE, stdout=PIPE,
-                             stderr=PIPE)
+                             stderr=PIPE, encoding='utf-8')
         except Exception:
             raise CompileError("Could not execute command %r" % command[0])
 
-        (out, err) = compiler.communicate(input=source.encode('utf-8'))
+        out, err = compiler.communicate(input=source)
         if compiler.returncode:
-            cmd_output = misc.ustr(out) + misc.ustr(err)
+            cmd_output = out + err
             if not cmd_output:
                 cmd_output = u"Process exited with return code %d\n" % compiler.returncode
             raise CompileError(cmd_output)
-        return out.decode('utf8')
+        return out
 
 class SassStylesheetAsset(PreprocessedCSS):
     rx_indent = re.compile(r'^( +|\t+)', re.M)

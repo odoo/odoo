@@ -137,56 +137,51 @@
         <field name="model">payment.provider</field>
         <field name="arch" type="xml">
             <kanban create="false" quick_create="false" class="o_kanban_dashboard">
-                <field name="id"/>
-                <field name="name"/>
-                <field name="state"/>
                 <field name="is_published"/>
-                <field name="code"/>
                 <field name="module_id"/>
                 <field name="module_state"/>
                 <field name="module_to_buy"/>
-                <field name="color"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card" class="flex-row">
                         <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
                         <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
                         <t t-set="is_disabled" t-value="record.state.raw_value=='disabled'"/>
                         <t t-set="is_published" t-value="record.is_published.raw_value === true"/>
                         <t t-set="to_upgrade" t-value="!installed and to_buy"/>
-                        <div t-attf-class="oe_kanban_global_click" class="d-flex p-2">
-                            <div class="o_payment_provider_desc d-flex gap-2">
-                                <img type="open"
-                                     t-att-src="kanban_image('payment.provider', 'image_128', record.id.raw_value)"
-                                     class="mb-0 o_image_64_max"
-                                     alt="provider"/>
-                                <div class="d-flex flex-column justify-content-between w-100">
-                                    <div class="o_payment_kanban_info">
-                                        <h4 class="mb-0"><t t-esc="record.name.value"/></h4>
-                                        <t t-if="installed">
-                                            <field name="state"
-                                                   widget="label_selection"
-                                                   options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'light'}}"/>
-                                            <t t-if="!is_disabled">
-                                                <span t-if="is_published and installed"
-                                                      class="badge text-bg-success ms-1">
-                                                    Published
-                                                </span>
-                                                <span t-if="!is_published and installed"
-                                                      class="badge text-bg-info ms-1">
-                                                    Unpublished
-                                                </span>
-                                            </t>
-                                        </t>
-                                        <span t-if="to_upgrade" class="badge text-bg-primary ms-1">Enterprise</span>
-                                    </div>
-                                    <div class="o_payment_kanban_button text-end">
-                                        <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary float-end" name="button_immediate_install">Install</button>
-                                        <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary float-end">Activate</button>
-                                        <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary float-end">Upgrade</button>
-                                    </div>
+                        <aside>
+                            <field type="open"
+                                 name="image_128" widget="image"
+                                 class="mb-0 o_image_64_max"
+                                 alt="provider"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name="name" class="mb-0 fw-bold fs-4"/>
+                            <t t-if="installed">
+                                <div class="d-flex">
+                                    <field name="state"
+                                        widget="label_selection"
+                                        options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'light'}}"/>
+                                    <t t-if="!is_disabled">
+                                        <div>
+                                            <span t-if="is_published"
+                                                class="badge text-bg-success ms-1">
+                                                Published
+                                            </span>
+                                            <span t-else=""
+                                                class="badge text-bg-info ms-1">
+                                                Unpublished
+                                            </span>
+                                        </div>
+                                    </t>
                                 </div>
-                            </div>
-                        </div>
+                            </t>
+                            <span t-if="to_upgrade" class="badge text-bg-primary ms-1">Enterprise</span>
+                            <footer>
+                                <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary ms-auto" name="button_immediate_install">Install</button>
+                                <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary ms-auto">Activate</button>
+                                <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary ms-auto">Upgrade</button>
+                            </footer>
+                        </main>
                     </t>
                 </templates>
             </kanban>

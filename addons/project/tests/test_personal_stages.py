@@ -383,4 +383,4 @@ class TestPersonalStageTour(HttpCase, TestProjectCommon):
 
     def test_personal_stage_tour(self):
         # Test customizing personal stages as a project user
-        self.start_tour('/web', 'personal_stage_tour', login="armandel")
+        self.start_tour('/odoo', 'personal_stage_tour', login="armandel")

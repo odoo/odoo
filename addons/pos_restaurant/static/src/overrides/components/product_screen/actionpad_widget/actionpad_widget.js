@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { useState } from "@odoo/owl";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 /**
  * @props partner
  */
@@ -13,7 +14,9 @@ patch(ActionpadWidget.prototype, {
         });
     },
     get swapButton() {
-        return this.props.actionType === "payment" && this.pos.config.module_pos_restaurant;
+        return (
+            this.pos.config.module_pos_restaurant && this.pos.mainScreen.component !== TicketScreen
+        );
     },
     get currentOrder() {
         return this.pos.get_order();
@@ -24,8 +27,8 @@ patch(ActionpadWidget.prototype, {
     },
     get swapButtonClasses() {
         return {
-            "highlight btn-primary": this.displayCategoryCount.length,
-            "pe-none": !this.displayCategoryCount.length,
+            "highlight btn-primary justify-content-between": this.displayCategoryCount.length,
+            "btn-light pe-none disabled justify-content-center": !this.displayCategoryCount.length,
             altlight: !this.hasChangesToPrint && this.currentOrder?.hasSkippedChanges(),
         };
     },
@@ -54,10 +57,10 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get displayCategoryCount() {
-        return this.pos.categoryCount.slice(0, 3);
+        return this.pos.categoryCount.slice(0, 4);
     },
     get isCategoryCountOverflow() {
-        if (this.pos.categoryCount.length > 3) {
+        if (this.pos.categoryCount.length > 4) {
             return true;
         }
         return false;

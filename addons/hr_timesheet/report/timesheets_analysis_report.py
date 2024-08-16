@@ -25,6 +25,16 @@ class TimesheetsAnalysisReport(models.Model):
     unit_amount = fields.Float("Time Spent", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Partner", readonly=True)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
+    message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids',
+                                           search='_search_message_partner_ids', readonly=True)
+
+    @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
+    def _compute_message_partner_ids(self):
+        for line in self:
+            line.message_partner_ids = line.task_id.message_partner_ids | line.project_id.message_partner_ids
+
+    def _search_message_partner_ids(self, operator, value):
+        return self.env['account.analytic.line']._search_message_partner_ids(operator, value)
 
     @property
     def _table_query(self):

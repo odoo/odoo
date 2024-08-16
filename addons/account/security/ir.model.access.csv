@@ -13,6 +13,9 @@ access_account_invoice_report,account.invoice.report,model_account_invoice_repor
 access_account_incoterms_all,account.incoterms all,model_account_incoterms,base.group_user,1,0,0,0
 access_account_incoterms_manager,account.incoterms manager,model_account_incoterms,account.group_account_manager,1,1,1,1
 
+access_account_lock_exception,account.lock_exception,model_account_lock_exception,base.group_user,1,0,0,0
+access_account_lock_exception_manager,account.lock_exception manager,model_account_lock_exception,account.group_account_manager,1,0,1,0
+
 access_account_fiscal_position_product_manager,account.fiscal.position account.manager,model_account_fiscal_position,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_tax_product_manager,account.fiscal.position.tax account.manager,model_account_fiscal_position_tax,account.group_account_manager,1,1,1,1
 access_account_fiscal_position_account_product_manager,account.fiscal.position account.manager,model_account_fiscal_position_account,account.group_account_manager,1,1,1,1
@@ -60,6 +63,8 @@ access_account_group_manager,account.group,model_account_group,account.group_acc
 access_account_group,account.group,model_account_group,account.group_account_readonly,1,0,0,0
 access_account_root_manager,account.root,model_account_root,account.group_account_manager,1,0,0,0
 access_account_root,account.root,model_account_root,account.group_account_readonly,1,0,0,0
+access_account_code_mapping,account.code.mapping,model_account_code_mapping,account.group_account_readonly,1,0,0,0
+access_account_code_mapping_manager,account.code.mapping,model_account_code_mapping,account.group_account_manager,1,1,0,0
 access_account_account_manager,account.account,model_account_account,account.group_account_manager,1,1,1,1
 access_account_account,account.account.readonly,model_account_account,account.group_account_readonly,1,0,0,0
 access_account_account_user,account.account user,model_account_account,base.group_user,1,0,0,0
@@ -112,6 +117,7 @@ access_account_payment,account.payment,model_account_payment,account.group_accou
 
 access_account_payment_register,access.account.payment.register,model_account_payment_register,account.group_account_invoice,1,1,1,0
 access_account_automatic_entry_wizard,access.account.automatic.entry.wizard,model_account_automatic_entry_wizard,account.group_account_user,1,1,1,0
+access_account_autopost_bills_wizard,access.account.autopost.bills.wizard,model_account_autopost_bills_wizard,account.group_account_invoice,1,1,1,0
 access_account_unreconcile,access.account.unreconcile,model_account_unreconcile,account.group_account_user,1,1,1,0
 access_account_resequence,access.account.resequence.wizard,model_account_resequence_wizard,account.group_account_manager,1,1,1,0
 access_validate_account_move,access.validate.account.move,model_validate_account_move,account.group_account_invoice,1,1,1,0

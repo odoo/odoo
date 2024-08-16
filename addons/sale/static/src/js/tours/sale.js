@@ -6,8 +6,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add("sale_tour", {
-    url: "/web",
-    rainbowMan: true,
+    url: "/odoo",
     rainbowManMessage: () => markup(_t("<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.")),
     sequence: 20,
     steps: () => [
@@ -16,14 +15,14 @@ registry.category("web_tour.tours").add("sale_tour", {
             isActive: ["community"],
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
-            position: "right",
+            tooltipPosition: "right",
             run: "click",
         },
         {
             isActive: ["enterprise"],
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -33,7 +32,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         {
             trigger: "button.o_list_button_add",
             content: _t("Build your first quotation right here!"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -43,19 +42,18 @@ registry.category("web_tour.tours").add("sale_tour", {
         {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
             content: _t("Search a customer name, or create one on the fly."),
-            position: "right",
+            tooltipPosition: "right",
             run: "edit Agrolait",
         },
         {
             isActive: ["auto"],
             trigger: ".ui-menu-item > a:contains('Agrolait')",
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".o_field_x2many_list_row_add > a",
             content: _t("Click here to add some products or services to your quotation."),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -66,7 +64,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger:
                 ".o_field_widget[name='product_id'], .o_field_widget[name='product_template_id']",
             content: _t("Select a product, or create a new one on the fly."),
-            position: "right",
+            tooltipPosition: "right",
             run: function (actions) {
                 const input = this.anchor.querySelector("input");
                 actions.edit("DESK0001", input || this.anchor);
@@ -89,16 +87,12 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
-        },
-        {
-            isActive: ["auto"],
             trigger: ".oi-arrow-right", // Wait for product creation
         },
         {
             trigger: ".o_field_widget[name='price_unit'] input",
             content: _t("add the price of your product."),
-            position: "right",
+            tooltipPosition: "right",
             run: "edit 10.0 && click .o_selected_row",
         },
         {
@@ -118,13 +112,13 @@ registry.category("web_tour.tours").add("sale_tour", {
             isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],
             trigger: ".modal-footer button[name='document_layout_save']",
             content: _t("let's continue"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
             content: _t("Go ahead and send the quotation."),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {

@@ -28,22 +28,18 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     },
     {
         trigger: ".modal .o_field_x2many_list_row_add > a",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal .o_field_widget[name=lot_name] input",
-        in_modal: false,
         run: "edit lot1",
     },
     {
         trigger: ".modal .o_field_widget[name=quantity] input",
-        in_modal: false,
         run: "edit 4",
     },
     {
         trigger: ".modal button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -106,22 +102,18 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     },
     {
         trigger: ".modal h4:contains('Generate Serial numbers')",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal div[name=next_serial] input",
-        in_modal: false,
         run: "edit serial_n_1",
     },
     {
         trigger: ".modal div[name=next_serial_count] input",
-        in_modal: false,
         run: "edit 5 && click body",
     },
     {
         trigger: ".modal .btn-primary:contains('Generate')",
-        in_modal: false,
         run: "click",
     },
     {
@@ -135,7 +127,6 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     },
     {
         trigger: ".modal button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -202,43 +193,35 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     },
     {
         trigger: ".modal h4:contains('Stock move')",
-        in_modal: false,
         run: "click",
     },
     // We generate lots for a first batch of 50 products
     {
         trigger: ".modal .o_widget_generate_serials > button",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal h4:contains('Generate Lot numbers')",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal div[name=next_serial] input",
-        in_modal: false,
         run: "edit lot_n_1_1",
     },
     {
         trigger: ".modal div[name=next_serial_count] input",
-        in_modal: false,
         run: "edit 7.5",
     },
     {
         trigger: ".modal div[name=total_received] input",
-        in_modal: false,
         run: "edit 50",
     },
     {
         trigger: ".modal .modal-footer button.btn-primary:contains(Generate)",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal span[data-tooltip=Quantity]:contains(50)",
-        in_modal: false,
         run: () => {
             const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
             if (nbLines !== 7){
@@ -249,41 +232,33 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     // We generate lots for the last 50 products
     {
         trigger: ".modal .o_widget_generate_serials > button",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal h4:contains('Generate Lot numbers')",
-        in_modal: false,
     },
     {
         trigger: ".modal div[name=next_serial] input",
-        in_modal: false,
         run: "edit lot_n_2_1",
     },
     {
         trigger: ".modal div[name=next_serial_count] input",
-        in_modal: false,
         run: "edit 13",
     },
     {
         trigger: ".modal div[name=total_received] input",
-        in_modal: false,
         run: "edit 50",
     },
     {
         trigger: ".modal div[name=keep_lines] input",
-        in_modal: false,
         run: "check",
     },
     {
         trigger: ".modal .modal-footer button.btn-primary:contains(Generate)",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: ".modal span[data-tooltip=Quantity]:contains(100)",
-        in_modal: false,
         run: () => {
             const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
             if (nbLines !== 11){
@@ -293,7 +268,6 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     },
     {
         trigger: ".modal .o_form_button_save",
-        in_modal: false,
         run: "click",
     },
     {
@@ -380,6 +354,9 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         run: "click",
     },
     {
+        trigger: "body:not(:has(.modal))",
+    },
+    {
         trigger: '.o_searchview_input_container',
         run: () => {
             const applyButtons = document.querySelectorAll('button[name=action_apply_inventory]');
@@ -418,17 +395,14 @@ registry.category("web_tour.tours").add('test_add_new_line', {
         },
         {
             trigger: ".modal .o_field_x2many_list_row_add > a",
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_field_widget[name=lot_name] input",
-            in_modal: false,
             run: 'edit two',
         },
         {
             trigger: ".modal .o_form_view.modal-content .o_form_button_save",
-            in_modal: false,
             run: "click",
         },
         {
@@ -444,7 +418,7 @@ registry.category("web_tour.tours").add('test_add_new_line', {
     ]
 });
 
-registry.category("web_tour.tours").add('test_edit_existing_line', {
+registry.category("web_tour.tours").add("test_edit_existing_line", {
     test: true,
     steps: () => [
         {
@@ -453,39 +427,43 @@ registry.category("web_tour.tours").add('test_edit_existing_line', {
         },
         {
             trigger: ".o_field_widget[name=quantity] input",
-            run: 'edit 2',
+            run: "edit 2",
         },
         {
             trigger: ".fa-list",
             run: "click",
         },
         {
-            trigger: "h4:contains('Stock move')",
+            trigger: ".modal h4:contains(Stock move)",
             run: "click",
         },
         {
-            trigger: ".o_data_cell[name=quantity]:eq(1)",
+            trigger: ".modal .o_data_cell[name=quantity]:eq(1)",
             run: "click",
         },
         {
-            trigger: ".o_field_widget[name=lot_name] input",
-            run: 'edit two',
+            trigger: ".modal .o_field_widget[name=lot_name] input",
+            run: "edit two",
         },
         {
-            trigger: ".o_form_view.modal-content .o_form_button_save",
+            trigger: ".modal .o_form_view.modal-content .o_form_button_save:enabled",
             run: "click",
         },
         {
-            trigger: ".o_form_view:not(.modal-content) .o_form_button_save",
+            content: "wait the modal is totally closed before click on save",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            trigger: ".o_form_view .o_form_button_save",
             run: "click",
         },
         {
             trigger: ".o_form_renderer.o_form_saved",
         },
-    ]
+    ],
 });
 
-registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
+registry.category("web_tour.tours").add("test_onchange_twice_lot_ids", {
     test: true,
     steps: () => [
         {
@@ -515,5 +493,5 @@ registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
         {
             trigger: ".o_form_renderer.o_form_saved",
         },
-    ]
+    ],
 });

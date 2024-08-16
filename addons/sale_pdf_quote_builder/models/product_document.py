@@ -2,7 +2,7 @@
 
 import base64
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.sale_pdf_quote_builder import utils
@@ -24,6 +24,13 @@ class ProductDocument(models.Model):
              " the header pages and the quote table. ",
         ondelete={'inside': 'set default'},
     )
+    form_field_ids = fields.Many2many(
+        string="Form Fields Included",
+        comodel_name='sale.pdf.form.field',
+        domain=[('document_type', '=', 'product_document')],
+        compute='_compute_form_field_ids',
+        store=True,
+    )
 
     # === CONSTRAINT METHODS ===#
 
@@ -38,14 +45,35 @@ class ProductDocument(models.Model):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
             utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
 
+    # === COMPUTE METHODS === #
+
+    @api.depends('datas', 'attached_on_sale')
+    def _compute_form_field_ids(self):
+        # Empty the linked form fields as we want all and only those from the current datas
+        self.form_field_ids = [Command.clear()]
+        document_to_parse = self.filtered(
+            lambda doc: doc.attached_on_sale == 'inside' and doc.datas
+        )
+        if document_to_parse:
+            doc_type = 'product_document'
+            self.env['sale.pdf.form.field']._create_or_update_form_fields_on_pdf_records(
+                document_to_parse, doc_type
+            )
+
     # === ACTION METHODS ===#
 
-    def action_open_dynamic_fields_wizard(self):
+    def action_open_pdf_form_fields(self):
         self.ensure_one()
         return {
-            'name': _("Configure Dynamic Fields"),
+            'name': _('Form Fields'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'sale.pdf.quote.builder.dynamic.fields.wizard',
-            'target': 'new',
+            'res_model': 'sale.pdf.form.field',
+            'view_mode': 'tree',
+            'context': {
+                'default_document_type': 'product_document',
+                'default_product_document_ids': self.id,
+                'default_quotation_document_ids': False,
+                'search_default_context_document': True,
+            },
+            'target': 'current',
         }

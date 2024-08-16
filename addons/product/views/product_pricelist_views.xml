@@ -20,7 +20,9 @@
             <tree string="Products Price List" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="country_group_ids" widget="many2many_tags"/>
+                <field name="country_group_ids"
+                    widget="many2many_tags"
+                    placeholder="All countries"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>

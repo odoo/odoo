@@ -28,7 +28,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 'code': 'STOCKDIFF',
                 'reconcile': True,
                 'account_type': 'asset_current',
-                'company_id': company_data['company'].id,
             }),
         })
         return company_data
@@ -117,7 +116,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'journal_id': invoice.journal_id.id,
         })
         new_invoice = self.env['account.move'].browse(refund_invoice_wiz.modify_moves()['res_id'])
-        refund_invoice = invoice.reversal_move_id
+        refund_invoice = invoice.reversal_move_ids
         # Check the result
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state")
         self.assertEqual(refund_invoice.payment_state, 'paid', "Refund should be in 'paid' state")
@@ -295,7 +294,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'code': 'cash.basis.base.account',
             'name': 'cash_basis_base_account',
             'account_type': 'income',
-            'company_id': self.company_data['company'].id,
         })
         self.company_data['company'].account_cash_basis_base_account_id = cash_basis_base_account
 
@@ -303,14 +301,12 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
-            'company_id': self.company_data['company'].id,
         })
 
         tax_account_1 = self.env['account.account'].create({
             'code': 'tax.account.1',
             'name': 'tax_account_1',
             'account_type': 'income',
-            'company_id': self.company_data['company'].id,
         })
 
         tax_tags = self.env['account.account.tag'].create({

@@ -4,12 +4,12 @@ import logging
 
 import werkzeug
 from psycopg2.errorcodes import SERIALIZATION_FAILURE
-from psycopg2 import OperationalError
+from psycopg2.errors import SerializationFailure
 
 from odoo import http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
-from odoo.tools import replace_exceptions
+from odoo.tools import replace_exceptions, str2bool
 
 from odoo.addons.web.controllers.utils import ensure_db
 
@@ -24,37 +24,31 @@ WSGI_SAFE_KEYS = {'PATH_INFO', 'QUERY_STRING', 'RAW_URI', 'SCRIPT_NAME', 'wsgi.u
 should_fail = None
 
 
-class SerializationFailureError(OperationalError):
-    pgcode = SERIALIZATION_FAILURE
-
-
 class TestHttp(http.Controller):
+    def _readonly(self):
+        return str2bool(request.httprequest.args.get('readonly', True))
+
+    def _max_content_length_1kiB(self):
+        return 1024
 
     # =====================================================
     # Greeting
     # =====================================================
+
     @http.route(['/test_http/greeting', '/test_http/greeting-none'], type='http', auth='none')
     def greeting_none(self):
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-public', type='http', auth='public', readonly=True)
-    def greeting_public(self):
+    @http.route('/test_http/greeting-public', type='http', auth='public', readonly=_readonly)
+    def greeting_public(self, readonly=True):
         assert request.env.user, "ORM should be initialized"
+        assert request.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-user', type='http', auth='user', readonly=True)
-    def greeting_user(self):
+    @http.route('/test_http/greeting-user', type='http', auth='user', readonly=_readonly)
+    def greeting_user(self, readonly=True):
         assert request.env.user, "ORM should be initialized"
-        return "Tek'ma'te"
-
-    @http.route('/test_http/greeting-public-rw', type='http', auth='public')
-    def greeting_public_rw(self):
-        assert request.env.user, "ORM should be initialized"
-        return "Tek'ma'te"
-
-    @http.route('/test_http/greeting-user-rw', type='http', auth='user')
-    def greeting_user_rw(self):
-        assert request.env.user, "ORM should be initialized"
+        assert request.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
     @http.route('/test_http/wsgi_environ', type='http', auth='none')
@@ -124,13 +118,10 @@ class TestHttp(http.Controller):
             ]),
         })
 
-    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname-rw', methods=['GET', 'POST'], type='http', auth='user')
-    def galaxy_set_name_rw(self, galaxy, name):
-        galaxy.name = name
-        return galaxy.name
-
-    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname-ro', methods=['GET', 'POST'], type='http', auth='user', readonly=True)
-    def galaxy_set_name_ro(self, galaxy, name):
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname',
+                methods=['GET', 'POST'], type='http', auth='user', readonly=_readonly,
+                max_content_length=_max_content_length_1kiB)
+    def galaxy_set_name(self, galaxy, name, readonly=True):
         galaxy.name = name
         return galaxy.name
 
@@ -227,7 +218,9 @@ class TestHttp(http.Controller):
         data = ufile.read()
         if should_fail:
             should_fail = False  # Fail once
-            raise SerializationFailureError()
+            sf = SerializationFailure()
+            sf.__setstate__({'pgcode': SERIALIZATION_FAILURE})
+            raise sf
 
         return data.decode()
 

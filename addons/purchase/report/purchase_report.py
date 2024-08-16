@@ -35,8 +35,8 @@ class PurchaseReport(models.Model):
     delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, aggregator='avg', help="Amount of time between purchase approval and order by date.")
     delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, aggregator='avg',
                               help="Amount of time between date planned and order by date for each purchase order line.")
-    price_total = fields.Float('Total', readonly=True)
-    price_average = fields.Float('Average Cost', readonly=True, aggregator="avg", digits='Product Price')
+    price_total = fields.Monetary('Total', readonly=True)
+    price_average = fields.Monetary('Average Cost', readonly=True, aggregator="avg")
     nbr_lines = fields.Integer('# of Lines', readonly=True)
     category_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
@@ -46,7 +46,7 @@ class PurchaseReport(models.Model):
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
     order_id = fields.Many2one('purchase.order', 'Order', readonly=True)
-    untaxed_total = fields.Float('Untaxed Total', readonly=True)
+    untaxed_total = fields.Monetary('Untaxed Total', readonly=True)
     qty_ordered = fields.Float('Qty Ordered', readonly=True)
     qty_received = fields.Float('Qty Received', readonly=True)
     qty_billed = fields.Float('Qty Billed', readonly=True)
@@ -110,7 +110,7 @@ class PurchaseReport(models.Model):
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join %(currency_table)s ON currency_table.company_id = po.company_id
             """,
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today()),
+            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
         )
 
     def _where(self) -> SQL:

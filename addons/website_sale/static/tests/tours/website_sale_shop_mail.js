@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";
+import { redirect } from "@web/core/utils/urls";
 
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,
@@ -14,7 +15,7 @@ registry.category("web_tour.tours").add('shop_mail', {
         trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
         run: function () {
             const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
-            window.location.href = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
+            redirect("/odoo/action-sale.action_orders/" + orderId);
         },
     },
     {
@@ -34,29 +35,25 @@ registry.category("web_tour.tours").add('shop_mail', {
         isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],
         trigger: ".modal-footer button[name='document_layout_save']",
         content: "let's continue",
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {
         content: "Open recipients dropdown",
         trigger: ".modal .o_field_many2many_tags_email[name=partner_ids] input",
-        in_modal: false,
         run: 'click',
     },
     {
         content: "Select azure interior",
         trigger: ".modal .ui-menu-item a:contains(Interior24)",
-        in_modal: false,
         run: "click",
     },
     {
         trigger: '.modal .o_badge_text:contains("Azure")',
-        in_modal: false,
     },
     {
         content: "click Send email",
         trigger: '.modal .btn[name="action_send_mail"]',
-        in_modal: false,
         run: "click",
     },
     {

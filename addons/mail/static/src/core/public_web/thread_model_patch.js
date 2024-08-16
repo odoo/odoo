@@ -28,8 +28,6 @@ patch(Thread.prototype, {
             pushState = this.notEq(this.store.discuss.thread);
         }
         this.store.discuss.thread = this;
-        const activeId =
-            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
         this.store.discuss.activeTab =
             !this.store.env.services.ui.isSmall || this.model === "mail.box"
                 ? "main"
@@ -37,10 +35,22 @@ patch(Thread.prototype, {
                 ? "chat"
                 : "channel";
         if (pushState) {
-            router.pushState({ active_id: activeId });
+            this.setActiveURL();
         }
     },
 
+    setActiveURL() {
+        const activeId =
+            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
+        router.pushState({ active_id: activeId });
+    },
+    open(options) {
+        if (this.store.env.services.ui.isSmall) {
+            this.openChatWindow(options);
+            return;
+        }
+        super.open();
+    },
     async unpin() {
         this.isLocallyPinned = false;
         if (this.eq(this.store.discuss.thread)) {

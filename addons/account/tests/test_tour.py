@@ -42,7 +42,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'account_purchase_tax_id': None,
         })
 
-        account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_id', '=', self.env.company.id)])
+        account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_ids', '=', self.env.company.id)])
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
         })
@@ -60,7 +60,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             ('state', '=', 'draft'),
         ]).unlink()
 
-        self.start_tour("/web", 'account_tour', login="admin")
+        self.start_tour("/odoo", 'account_tour', login="admin")
 
     def test_01_account_tax_groups_tour(self):
         self.env.ref('base.user_admin').write({
@@ -85,4 +85,4 @@ class TestUi(AccountTestInvoicingHttpCommon):
         })
         product.supplier_taxes_id = new_tax
 
-        self.start_tour("/web", 'account_tax_group', login="admin")
+        self.start_tour("/odoo", 'account_tax_group', login="admin")

@@ -4,12 +4,13 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
 
 
 @tagged('post_install', '-at_install')
-class TestDiscussFullPerformance(HttpCase):
+class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store:
     #     1: action_discuss_id
     #     1: hasGifPickerFeature
@@ -21,10 +22,13 @@ class TestDiscussFullPerformance(HttpCase):
     #     4: settings
     #     1: has_access_livechat
     _query_count_init_store = 17
-    _query_count = 49 + 1  # +1 is necessary to fix nondeterministic issue on runbot
+    # Queries for _query_count:
+    #     3: _compute_is_editable
+    _query_count = 53 + 1  # +1 is necessary to fix nondeterministic issue on runbot
     # Queries for _query_count_discuss_channels:
     #     1: bus last id
-    _query_count_discuss_channels = 69
+    #     3: _compute_is_editable
+    _query_count_discuss_channels = 73
 
     def setUp(self):
         super().setUp()
@@ -174,7 +178,7 @@ class TestDiscussFullPerformance(HttpCase):
         """
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
-            "res.partner": [
+            "res.partner": self._filter_partners_fields(
                 {
                     "active": False,
                     "email": "odoobot@example.com",
@@ -188,6 +192,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
+                    "active": True,
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
@@ -196,7 +201,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
-            ],
+            ),
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
@@ -251,19 +256,19 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_channel(self.channel_chat_1),
             ],
             "discuss.channel.member": [
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
             ],
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
-            "res.partner": [
-                self._expected_result_for_persona(self.users[2], only_inviting=True),
+            "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(self.users[0]),
+                self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[14]),
-            ],
+            ),
             "Store": {
                 "inbox": {
                     "counter": 1,
@@ -317,11 +322,11 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_channel(self.channel_livechat_2),
             ],
             "discuss.channel.member": [
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_general, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_2, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_2, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_group_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_group_1, self.users[12].partner_id),
@@ -341,41 +346,44 @@ class TestDiscussFullPerformance(HttpCase):
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
+            "im_livechat.channel": [
+                self._expected_result_for_livechat_channel(),
+            ],
             "mail.guest": [
                 self._expected_result_for_persona(guest=True),
             ],
-            "mail.message": [
+            "mail.message": self._filter_messages_fields(
                 self._expected_result_for_message(self.channel_channel_public_1),
                 self._expected_result_for_message(self.channel_channel_public_2),
                 self._expected_result_for_message(self.channel_channel_group_1),
                 self._expected_result_for_message(self.channel_channel_group_2),
                 self._expected_result_for_message(self.channel_livechat_1),
                 self._expected_result_for_message(self.channel_livechat_2),
-            ],
+            ),
             "mail.notification": [
                 self._expected_result_for_notification(self.channel_channel_public_1),
             ],
-            "mail.thread": [
+            "mail.thread": self._filter_threads_fields(
                 self._expected_result_for_thread(self.channel_channel_public_1),
                 self._expected_result_for_thread(self.channel_channel_public_2),
                 self._expected_result_for_thread(self.channel_channel_group_1),
                 self._expected_result_for_thread(self.channel_channel_group_2),
                 self._expected_result_for_thread(self.channel_livechat_1),
                 self._expected_result_for_thread(self.channel_livechat_2),
-            ],
-            "res.partner": [
-                self._expected_result_for_persona(self.users[2]),
+            ),
+            "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(
                     self.users[0],
                     also_livechat=True,
                     also_notification=True,
                 ),
+                self._expected_result_for_persona(self.users[2]),
                 self._expected_result_for_persona(self.users[12]),
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[15]),
                 self._expected_result_for_persona(self.users[3]),
                 self._expected_result_for_persona(self.users[1], also_livechat=True),
-            ],
+            ),
         }
 
     def _expected_result_for_channel(self, channel):
@@ -402,7 +410,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": "General announcements for all employees.",
                 "group_based_subscription": True,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -579,7 +587,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -608,7 +616,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -637,7 +645,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -666,7 +674,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -699,10 +707,10 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
-                "livechatChannel": {"id": self.im_livechat_channel.id, "name": "support"},
+                "livechatChannel": {"id": self.im_livechat_channel.id},
                 "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "test1 Ernest Employee",
@@ -734,10 +742,10 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
-                "livechatChannel": {"id": self.im_livechat_channel.id, "name": "support"},
+                "livechatChannel": {"id": self.im_livechat_channel.id},
                 "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "anon 2 Ernest Employee",
@@ -1017,6 +1025,9 @@ class TestDiscussFullPerformance(HttpCase):
             }
         return {}
 
+    def _expected_result_for_livechat_channel(self):
+        return {"id": self.im_livechat_channel.id, "name": "support"}
+
     def _expected_result_for_message(self, channel):
         last_message = channel._get_last_messages()
         create_date = fields.Datetime.to_string(last_message.create_date)
@@ -1051,14 +1062,9 @@ class TestDiscussFullPerformance(HttpCase):
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
+                "rating_id": False,
                 "reactions": [],
-                "recipients": [
-                    {
-                        "id": self.users[0].partner_id.id,
-                        "name": "Ernest Employee",
-                        "type": "partner",
-                    },
-                ],
+                "recipients": [{"id": self.users[0].partner_id.id, "type": "partner"}],
                 "record_name": "public channel 1",
                 "res_id": channel.id,
                 "scheduledDatetime": False,
@@ -1072,7 +1078,7 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">test9</a> to the channel</div>',
+                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">@test9</a> to the channel</div>',
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "public channel 2",
@@ -1088,6 +1094,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
+                "rating_id": False,
                 "reactions": [],
                 "recipients": [],
                 "record_name": "public channel 2",
@@ -1103,7 +1110,7 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">test12</a> to the channel</div>',
+                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">@test12</a> to the channel</div>',
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 1",
@@ -1119,6 +1126,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
+                "rating_id": False,
                 "reactions": [],
                 "recipients": [],
                 "record_name": "group restricted channel 1",
@@ -1134,7 +1142,7 @@ class TestDiscussFullPerformance(HttpCase):
             return {
                 "attachments": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">test13</a> to the channel</div>',
+                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">@test13</a> to the channel</div>',
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 2",
@@ -1150,6 +1158,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
+                "rating_id": False,
                 "reactions": [],
                 "recipients": [],
                 "record_name": "group restricted channel 2",
@@ -1180,6 +1189,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
+                "rating_id": False,
                 "reactions": [],
                 "recipients": [],
                 "record_name": "test1 Ernest Employee",
@@ -1211,6 +1221,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
                 "pinned_at": False,
+                "rating_id": False,
                 "reactions": [],
                 "recipients": [],
                 "record_name": "anon 2 Ernest Employee",
@@ -1388,4 +1399,6 @@ class TestDiscussFullPerformance(HttpCase):
             "id": channel.id,
             "model": "discuss.channel",
             "module_icon": "/mail/static/description/icon.png",
+            "rating_avg": 0.0,
+            "rating_count": 0,
         }

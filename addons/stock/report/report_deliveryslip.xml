@@ -47,14 +47,14 @@
                     </h2>
                     <div class="oe_structure"></div>
                     <div id="informations" class="row mb-4">
-                        <div t-if="o.origin" class="col" name="div_origin">
+                        <div t-if="o.origin" class="col col-3 mw-100 mb-2" name="div_origin">
                             <strong>Order</strong>
-                            <div t-field="o.origin">S0001</div>
+                            <div t-field="o.origin" class="m-0">S0001</div>
                         </div>
-                        <div t-if="o.state" class="col" name="div_sched_date">
+                        <div t-if="o.state" class="col col-3 mw-100 mb-2" name="div_sched_date">
                             <strong>Shipping Date</strong>
-                            <div t-if="o.state == 'done'" t-field="o.date_done"/>
-                            <div t-else="" t-field="o.scheduled_date"/>
+                            <div t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
+                            <div t-else="" t-field="o.scheduled_date" class="m-0"/>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
@@ -238,7 +238,7 @@
             <td>
                 <span t-esc="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"/>
+                    <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">

@@ -8,7 +8,7 @@ import {
     queryLast,
     queryRect,
 } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { Deferred, advanceTime, animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import { Component, onWillRender, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -38,6 +38,7 @@ import {
     navigate,
     pickDate,
     removeFilter,
+    resizeEventToDate,
     resizeEventToTime,
     selectAllDayRange,
     selectDateRange,
@@ -409,7 +410,7 @@ test(`filter panel autocomplete: updates when typing`, async () => {
     expect(queryAllTexts(`${root} .o-autocomplete--dropdown-item`)).toEqual(["No records"]);
 });
 
-test(`add a filter with the search more dialog`, async () => {
+test(`check the avatar of the attendee in the calendar filter panel`, async () => {
     CalendarPartner._views = {
         list: `<tree><field name="name"/></tree>`,
         search: `<search/>`,
@@ -424,6 +425,122 @@ test(`add a filter with the search more dialog`, async () => {
         { id: 11, name: "foo partner 11" },
         { id: 12, name: "foo partner 12" },
         { id: 13, name: "foo partner 13" }
+    );
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
+            </calendar>
+        `,
+    });
+    const section = `.o_calendar_filter[data-name="attendee_ids"]`;
+
+    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
+    expect('.o_calendar_filter_item:eq(-2)').not.toHaveText('partner 3');
+
+    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    await contains(`${section} .o-autocomplete--input`).click();
+    await runAllTimers();
+    expect('.o-autocomplete--dropdown-item:first-child').toHaveText('partner 3');
+    expect(`.o-autocomplete--dropdown-item:first-child .dropdown-item img`).toHaveClass('o_avatar');
+
+    await contains(".o-autocomplete--dropdown-item:first-child").click();
+    expect('.o_calendar_filter_item:eq(-2)').toHaveText('partner 3');
+});
+
+test(`Select multiple attendees in the calendar filter panel autocomplete`, async () => {
+    CalendarPartner._views = {
+        list: `<tree><field name="name"/></tree>`,
+        search: `<search/>`,
+    };
+    CalendarPartner._records.push(
+        { id: 5, name: "foo partner 5" },
+        { id: 6, name: "foo partner 6" },
+        { id: 7, name: "foo partner 7" },
+        { id: 8, name: "foo partner 8" },
+        { id: 9, name: "foo partner 9" },
+        { id: 10, name: "foo partner 10" },
+        { id: 11, name: "foo partner 11" },
+        { id: 12, name: "foo partner 12" },
+        { id: 13, name: "foo partner 13" },
+        { id: 14, name: "foo partner 14" },
+    );
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
+            </calendar>
+        `,
+    });
+
+    const section = `.o_calendar_filter[data-name="attendee_ids"]`;
+    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_filter_item`).toHaveCount(3);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
+        "partner 1",
+        "partner 2",
+        "Everything",
+    ])
+
+    expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
+    await contains(`${section} .o-autocomplete--input`).click();
+    await runAllTimers();
+    expect(`.dropdown-item`).toHaveCount(9);
+    expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
+        "partner 3",
+        "partner 4",
+        "foo partner 5",
+        "foo partner 6",
+        "foo partner 7",
+        "foo partner 8",
+        "foo partner 9",
+        "foo partner 10",
+        "Search More...",
+    ]);
+
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
+    expect(`.modal .o_data_row`).toHaveCount(12);
+    await contains(".o_data_row:nth-child(1) .o_list_record_selector").click();
+    await contains(".o_data_row:nth-child(2) .o_list_record_selector").click();
+    await contains(".o_dialog .o_select_button").click();
+    expect("o_dialog").toHaveCount(0);
+
+
+    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
+        "partner 1",
+        "partner 2",
+        "partner 3",
+        "partner 4",
+        "Everything",
+    ])
+});
+
+test(`add a filter with the search more dialog`, async () => {
+    CalendarPartner._views = {
+        list: `<tree><field name="name"/></tree>`,
+        search: `<search/>`,
+    };
+    CalendarPartner._records.push(
+        { id: 5, name: "foo partner 5" },
+        { id: 6, name: "foo partner 6" },
+        { id: 7, name: "foo partner 7" },
+        { id: 8, name: "foo partner 8" },
+        { id: 9, name: "foo partner 9" },
+        { id: 10, name: "foo partner 10" },
+        { id: 11, name: "foo partner 11" },
+        { id: 12, name: "foo partner 12" },
+        { id: 13, name: "foo partner 13" },
+        { id: 14, name: "foo partner 14" },
     );
 
     await mountView({
@@ -483,7 +600,7 @@ test(`add a filter with the search more dialog`, async () => {
     expect(`.modal`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
     expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_data_row`).toHaveCount(9);
+    expect(`.modal .o_data_row`).toHaveCount(10);
     expect(queryAllTexts`.modal .o_data_row`).toEqual([
         "foo partner 5",
         "foo partner 6",
@@ -494,21 +611,27 @@ test(`add a filter with the search more dialog`, async () => {
         "foo partner 11",
         "foo partner 12",
         "foo partner 13",
+        "foo partner 14",
     ]);
     expect(`.modal .o_searchview_facet`).toHaveCount(1);
     expect(`.modal .o_searchview_facet`).toHaveText("Quick search: foo");
 
     // Choose a record
-    await contains(`.modal .o_data_row:first-child > td:first-child`).click();
-    expect(`.modal`).toHaveCount(0);
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
+    await contains(".o_data_row:nth-child(1) .o_list_record_selector").click();
+    await contains(".o_data_row:nth-child(2) .o_list_record_selector").click();
+    await contains(".o_dialog .o_select_button").click();
+    expect("o_dialog").toHaveCount(0);
+
+
+    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
+        "foo partner 6",
         "partner 1",
         "partner 2",
         "Everything",
-    ]);
-    expect(`.o-autocomplete--input`).toHaveValue("");
+    ])
 
     // Open the autocomplete dropdown
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
@@ -520,12 +643,12 @@ test(`add a filter with the search more dialog`, async () => {
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "partner 3",
         "partner 4",
-        "foo partner 6",
         "foo partner 7",
         "foo partner 8",
         "foo partner 9",
         "foo partner 10",
         "foo partner 11",
+        "foo partner 12",
         "Search More...",
     ]);
 
@@ -535,7 +658,6 @@ test(`add a filter with the search more dialog`, async () => {
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
-        "foo partner 6",
         "foo partner 7",
         "foo partner 8",
         "foo partner 9",
@@ -543,6 +665,7 @@ test(`add a filter with the search more dialog`, async () => {
         "foo partner 11",
         "foo partner 12",
         "foo partner 13",
+        "foo partner 14",
         "Search More...",
     ]);
 
@@ -552,7 +675,6 @@ test(`add a filter with the search more dialog`, async () => {
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_data_row`).toHaveCount(8);
     expect(queryAllTexts`.modal .o_data_row`).toEqual([
-        "foo partner 6",
         "foo partner 7",
         "foo partner 8",
         "foo partner 9",
@@ -560,6 +682,7 @@ test(`add a filter with the search more dialog`, async () => {
         "foo partner 11",
         "foo partner 12",
         "foo partner 13",
+        "foo partner 14",
     ]);
     expect(`.modal .o_searchview_facet`).toHaveCount(1);
     expect(`.modal .o_searchview_facet`).toHaveText("Quick search: foo");
@@ -567,9 +690,10 @@ test(`add a filter with the search more dialog`, async () => {
     // Close the search more dialog without choosing a record
     await contains(`.modal .o_form_button_cancel`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
+    expect(`${section} .o_calendar_filter_item`).toHaveCount(5);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
+        "foo partner 6",
         "partner 1",
         "partner 2",
         "Everything",
@@ -2885,7 +3009,7 @@ test(`initial_date given in the context`, async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect(`.o_control_panel .o_breadcrumb`).toHaveText("context initial date");
+    expect(`.o_breadcrumb`).toHaveText("context initial date");
     expect(`.o_calendar_renderer .fc-col-header-cell .o_cw_day_name`).toHaveText("Saturday");
     expect(`.o_calendar_renderer .fc-col-header-cell .o_cw_day_number`).toHaveText("30");
 });
@@ -3151,6 +3275,46 @@ test(`attempt to create multiples events and the same day and check the ordering
     });
     expect(`.o_calendar_renderer .fc-view`).toHaveCount(1);
     expect(queryAllTexts`.o_event_title`).toEqual(["First event", "Second event", "Third event"]);
+});
+
+test(`Resizing Pill of Multiple Days(Allday)`, async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual({
+            is_all_day: true,
+            name: "foobar",
+            start: "2016-12-13 00:00:00",
+            start_date: false,
+            stop: "2016-12-14 00:00:00",
+            stop_date: false,
+        });
+    });
+
+    onRpc("write", ({ args }) => {
+        expect.step("write");
+        expect(args[1]).toEqual({
+            is_all_day: true,
+            start: "2016-12-13",
+            stop: "2016-12-16",
+        });
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
+    });
+
+    await selectDateRange("2016-12-13", "2016-12-14");
+    await contains(`.modal .o_field_widget[name="name"] input`).edit("foobar", { confirm: false });
+    await contains(`.modal .o_form_button_save`).click();
+    expect.verifySteps(["web_save"]);
+
+    await resizeEventToDate(8, "2016-12-16");
+    const event = queryFirst`.o_event[data-event-id="8"]`;
+    expect(event).toHaveText("foobar");
+    expect(event.closest(".fc-daygrid-day")).not.toBeEmpty();
+    expect.verifySteps(["write"]);
 });
 
 test(`create event and resize to next day (24h) on week mode`, async () => {
@@ -3977,4 +4141,32 @@ test("save selected date during view switching", async () => {
     await contains(`.o_cp_switch_buttons .o_list`).click();
     await getService("action").switchView("calendar");
     expect(`th .fc-timegrid-axis-cushion:eq(0)`).toHaveText(weekNumber);
+});
+
+test(`check if active fields are fetched in addition to field names in record data(search_read rpc)`, async () => {
+    class CustomWidget extends Component {
+        static template = xml``;
+        static props = ["*"];
+    }
+    registry.category("fields").add("custom_widget", {
+        component: CustomWidget,
+        fieldDependencies: [{ name: "delay", type: "float" }],
+    });
+
+    onRpc("event", "search_read", ({ kwargs }) => {
+        expect.step("event.search_read");
+        expect(kwargs.fields.includes("delay")).toBe(true);
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="user_id" widget="custom_widget"/>
+            </calendar>
+        `,
+    });
+
+    expect.verifySteps(["event.search_read"]);
 });

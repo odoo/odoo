@@ -5,7 +5,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers', {
     test: true,
-    url: '/web',
+    url: '/odoo',
     steps: () => [
     stepUtils.showAppsMenuItem(),
     {
@@ -34,7 +34,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Set the second question's title",
         trigger: ".modal .o_field_widget[name=title] input",
-        in_modal: false,
         run: "edit Question 2",
     },
     ...addTwoAnswers(),
@@ -42,12 +41,10 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Set a trigger for the first question",
         trigger: ".modal .o_field_widget[name=triggering_answer_ids] input",
-        in_modal: false,
         run: "click",
     }, {
         content: "Set the first question's first answer as trigger",
         trigger: ".modal ul.ui-autocomplete a:contains(Question 1 : Answer A)",
-        in_modal: false,
         run: 'click',
     },
     ...changeTab("answers"),
@@ -55,7 +52,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Set the third question's title",
         trigger: ".modal .o_field_widget[name=title] input",
-        in_modal: false,
         run: "edit Question 3",
     },
     ...addTwoAnswers(),
@@ -63,17 +59,14 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Set a trigger for the second question",
         trigger: ".modal .o_field_widget[name=triggering_answer_ids] input",
-        in_modal: false,
         run: "click",
     }, {
         content: "Set the second question's second answer as trigger",
         trigger: ".modal ul.ui-autocomplete a:contains(Question 2 : Answer B)",
-        in_modal: false,
         run: 'click',
     },
     {
         trigger: ".modal button:contains(save & close)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -99,22 +92,18 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that an alert is shown",
         trigger: ".modal .o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
-        in_modal: false,
     },
     ...changeTab("options"),
     {
         content: "Remove invalid trigger",
         trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete",
-        in_modal: false,
         run: "click",
     }, {
         content: "Check that the alert is gone",
         trigger: `.modal .o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
-        in_modal: false,
     }, {
         content: "Choose a new valid trigger",
         trigger: ".modal .o_field_widget[name=triggering_answer_ids] input",
-        in_modal: false,
         run: "click",
     }, {
         content: "Set the first question's second answer as trigger, then",
@@ -124,7 +113,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Save the question (1)",
         trigger: ".modal button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -155,7 +143,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Save the question (2)",
         trigger: ".modal button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -176,23 +163,19 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that an alert is shown also when only one trigger is misplaced",
         trigger: ".modal .o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
-        in_modal: false,
     },
     ...changeTab("options"),
     {
         content: "Remove temporarily used trigger",
         trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete",
-        in_modal: false,
         run: "click",
     }, {
         content: "Check that the alert is gone in this case too",
         trigger: `.modal .o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
-        in_modal: false,
     },
     {
         content: "Save the question (3)",
         trigger: ".modal button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -219,7 +202,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Save the question (4)",
         trigger: ".modal button:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -227,8 +209,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     },
     {
         content: "Check that Question 3 no longer has a trigger icon",
-        trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
-        allowInvisible: true,
+        trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button)):not(:visible)",
     }, {
         content: "Check that Question 2 however still has a trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
@@ -238,8 +219,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Check that now Question 2 too does no longer have a trigger icon",
-        trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button))",
-        allowInvisible: true,
+        trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button)):not(:visible)",
     }, {
         content: 'Go back to Kanban View',
         trigger: '[data-menu-xmlid="survey.menu_survey_form"]',
@@ -256,25 +236,21 @@ function addTwoAnswers() {
             content: "Add the first answer",
             trigger:
                 ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal tr.o_selected_row div[name=value] input",
-            in_modal: false,
             run: "edit Answer A",
         },
         {
             content: "Add the second answer",
             trigger:
                 ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
-            in_modal: false,
             run: "click",
         },
         {
             trigger:
                 ".modal tr:nth-child(2).o_selected_row div[name=value] input",
-            in_modal: false,
             run: "edit Answer B",
         },
     ];
@@ -285,12 +261,10 @@ function saveAndNew() {
         {
             content: "Click Save & New",
             trigger: ".modal button.o_form_button_save_new",
-            in_modal: false,
             run: "click",
         },
         {
             content: "Wait for the dialog to render new question form",
-            in_modal: false,
             trigger:
                 ".modal div[name=suggested_answer_ids] .o_list_table tbody tr:first-child:not(.o_data_row)", // empty answers list
         },
@@ -302,13 +276,11 @@ function changeTab(tabName) {
         {
             content: `Go to ${tabName} tab`,
             trigger: `.modal .modal-content a[name=${tabName}].nav-link`,
-            in_modal: false,
             run: "click",
         },
         {
             content: `Wait for tab ${tabName} tab`,
             trigger: `.modal .modal-content a[name=${tabName}].nav-link.active`,
-            in_modal: false,
         },
     ];
 }

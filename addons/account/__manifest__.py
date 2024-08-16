@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Invoicing',
-    'version' : '1.2',
+    'version': '1.3',
     'summary': 'Invoices, Payments, Follow-ups & Bank Synchronization',
     'sequence': 10,
     'description': """
@@ -25,6 +25,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/onboarding_data.xml',
         'views/account_payment_view.xml',
         'wizard/account_automatic_entry_wizard_views.xml',
+        'wizard/account_autopost_bills_wizard.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_move_reversal_view.xml',
         'wizard/account_resequence_views.xml',
@@ -77,6 +78,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/product_views.xml',
         'views/tests_shared_js_python.xml',
         'views/base_document_layout_views.xml',
+        'views/account_lock_exception_views.xml',
         'views/report_templates.xml'
     ],
     'demo': [

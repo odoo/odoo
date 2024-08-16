@@ -195,7 +195,7 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             `<a href="#" class="o-discuss-mention">@${escape(special)}</a>`
         );
     }
-    const baseHREF = url("/web");
+    const baseHREF = url("/odoo");
     for (const mention of mentions) {
         const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
         const attClass = `class='${mention.class}'`;

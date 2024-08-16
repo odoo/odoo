@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -35,7 +34,7 @@ from odoo.osv import expression
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
     clean_context, split_every, Query, SQL, email_normalize_all,
-    ustr, ormcache, is_list_of,
+    ormcache, is_list_of,
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header, email_normalize, email_split,
@@ -1113,8 +1112,15 @@ class MailThread(models.AbstractModel):
             for ref in mail_header_msgid_re.findall(thread_references)
             if 'reply_to' not in ref
         ]
+
+        # avoid creating a gigantic query by limiting the number of references taken into account.
+        # newer msg_ids are *appended* to References as per RFC5322 §3.6.4, so we should generally
+        # find a match just with the last entry (equal to `In-Reply-To`). 32 refs seems large enough,
+        # we've seen performance degrade with 100+ refs.
+        msg_references = msg_references[-32:]
+
         replying_to_msg = self.env['mail.message'].sudo().search(
-            [('message_id', 'in', msg_references)], limit=1, order='id desc, message_id'
+            [('message_id', 'in', msg_references)], limit=1, order='id desc'
         ) if msg_references else self.env['mail.message']
         is_a_reply, reply_model, reply_thread_id = bool(replying_to_msg), replying_to_msg.model, replying_to_msg.res_id
 
@@ -1496,10 +1502,8 @@ class MailThread(models.AbstractModel):
             body = Markup(etree.tostring(root, pretty_print=False, encoding='unicode'))
         return {'body': body, 'attachments': attachments}
 
-    def _message_parse_extract_payload(self, message, message_dict, save_original=False):
+    def _message_parse_extract_payload(self, message: EmailMessage, message_dict: dict, save_original: bool = False):
         """Extract body as HTML and attachments from the mail message
-
-        :param string message: an email.message instance
         """
         attachments = []
         body = ''
@@ -1513,9 +1517,7 @@ class MailThread(models.AbstractModel):
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
         if message.get_content_maintype() == 'text':
-            encoding = message.get_content_charset()
             body = message.get_content()
-            body = ustr(body, encoding, errors='replace')
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
                 body = append_content_to_html('', body, preserve=True)
@@ -1525,7 +1527,7 @@ class MailThread(models.AbstractModel):
         else:
             alternative = False
             mixed = False
-            html = ''
+            html = False
             for part in message.walk():
                 if message_dict.get('is_bounce') and body:
                     # bounce email, keep only the first body and ignore
@@ -1565,18 +1567,18 @@ class MailThread(models.AbstractModel):
                     attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
-                if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = append_content_to_html(body, ustr(content, encoding, errors='replace'), preserve=True)
+                if part.get_content_type() == 'text/plain' and not (alternative and body):
+                    body = append_content_to_html(body, content, preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
-                    # mutlipart/alternative have one text and a html part, keep only the second
-                    # mixed allows several html parts, append html content
-                    append_content = not alternative or (html and mixed)
-                    html = ustr(content, encoding, errors='replace')
-                    if not append_content:
-                        body = html
+                    # multipart/alternative have one text and a html part, keep only the second
+                    if alternative and not (html and mixed):
+                        body = content
                     else:
-                        body = append_content_to_html(body, html, plaintext=False)
+                        # mixed allows several html parts, append html content
+                        body = append_content_to_html(body, content, plaintext=False)
+                    # TODO: maybe just setting to `True` is enough?
+                    html = html or bool(content)
                     # we only strip_classes here everything else will be done in by html field of mail.message
                     body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
@@ -2064,7 +2066,7 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------------
 
     def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
+        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid"}
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *,
@@ -3164,7 +3166,6 @@ class MailThread(models.AbstractModel):
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries;
         """
-        bus_notifications = []
         inbox_pids_uids = [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
         if inbox_pids_uids:
             notif_create_values = [
@@ -3189,20 +3190,14 @@ class MailThread(models.AbstractModel):
                 ]
             )
             for user in users:
-                bus_notifications.append(
-                    (
-                        user.partner_id,
-                        "mail.message/inbox",
-                        Store(
-                            message.with_user(user),
-                            msg_vals=msg_vals,
-                            for_current_user=True,
-                            add_followers=True,
-                            followers=followers,
-                        ).get_result(),
-                    )
+                user._bus_send_store(
+                    message.with_user(user),
+                    msg_vals=msg_vals,
+                    for_current_user=True,
+                    add_followers=True,
+                    followers=followers,
+                    notification_type="mail.message/inbox",
                 )
-        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -4408,13 +4403,16 @@ class MailThread(models.AbstractModel):
             domain = expression.AND([domain, subtype_domain])
         if after:
             domain = expression.AND([domain, [("id", ">", after)]])
-        followers = self.env["mail.followers"].search(domain, limit=limit, order="id ASC")
-        store.add(followers)
-        followers_data = [{"id": follower.id} for follower in followers]
-        if not reset:
-            followers_data = [("ADD", followers_data)]
-        relation = "recipients" if filter_recipients else "followers"
-        store.add("mail.thread", {"id": self.id, "model": self._name, relation: followers_data})
+        store.add(
+            self,
+            {
+                "recipients" if filter_recipients else "followers": Store.many(
+                    self.env["mail.followers"].search(domain, limit=limit, order="id ASC"),
+                    "ADD" if not reset else "REPLACE",
+                ),
+            },
+            as_thread=True,
+        )
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -4523,24 +4521,18 @@ class MailThread(models.AbstractModel):
         empty_messages = message.sudo()._filter_empty()
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
-        attachments = message.attachment_ids.sorted("id")
-        broadcast_store = Store(attachments)
         res = {
-            "attachments": [{"id": attachment.id} for attachment in attachments],
+            "attachments": Store.many(message.attachment_ids.sorted("id")),
             "body": message.body,
-            "id": message.id,
             "pinned_at": message.pinned_at,
-            "recipients": [{"id": p.id, "name": p.name, "type": "partner"} for p in message.partner_ids],
+            "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
             "write_date": message.write_date,
         }
         if "body" in msg_values:
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res["translationValue"] = False
-        broadcast_store.add("mail.message", res)
-        self.env["bus.bus"]._sendone(
-            message._bus_notification_target(), "mail.record/insert", broadcast_store.get_result()
-        )
+        message._bus_send_store(message, res)
 
     # ------------------------------------------------------
     # CONTROLLERS
@@ -4550,31 +4542,36 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
-    def _thread_to_store(self, store: Store, /, *, request_list):
-        res = {'hasWriteAccess': False, 'hasReadAccess': True, "id": self.id, "model": self._name}
-        if not self:
-            res['hasReadAccess'] = False
-            return res
-        res['canPostOnReadonly'] = self._mail_post_access == 'read'
-
+    def _thread_to_store(self, store: Store, /, *, fields=None, request_list=None):
         self.ensure_one()
+        if fields is None:
+            fields = []
+        res = self._read_format(
+            [field for field in fields if field not in ["display_name", "modelName"]], load=False
+        )[0]
+        if request_list:
+            res["hasReadAccess"] = True
+            res["hasWriteAccess"] = False
+            res["canPostOnReadonly"] = self._mail_post_access == 'read'
         try:
             self.check_access_rights("write")
             self.check_access_rule("write")
-            res['hasWriteAccess'] = True
+            if request_list:
+                res["hasWriteAccess"] = True
         except AccessError:
             pass
-        if isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"]):
-            activities = self.with_context(active_test=True).activity_ids
-            store.add(activities)
-            res["activities"] = [{"id": activity.id} for activity in activities]
-        if 'attachments' in request_list:
-            attachments = self._get_mail_thread_data_attachments()
-            store.add(attachments)
-            res["attachments"] = [{"id": attachment.id} for attachment in attachments]
+        if (
+            request_list and "activities" in request_list
+            and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])
+        ):
+            res["activities"] = Store.many(self.with_context(active_test=True).activity_ids)
+        if request_list and "attachments" in request_list:
+            res["attachments"] = Store.many(self._get_mail_thread_data_attachments())
             res["areAttachmentsLoaded"] = True
             res["isLoadingAttachments"] = False
-        if 'followers' in request_list:
+        if "display_name" in fields:
+            res["name"] = self.display_name
+        if request_list and "followers" in request_list:
             res['followersCount'] = self.env['mail.followers'].search_count([
                 ("res_id", "=", self.id),
                 ("res_model", "=", self._name)
@@ -4584,8 +4581,7 @@ class MailThread(models.AbstractModel):
                 ("res_model", "=", self._name),
                 ['partner_id', '=', self.env.user.partner_id.id]
             ])
-            store.add(self_follower)
-            res["selfFollower"] = {"id": self_follower.id} if self_follower else None
+            res["selfFollower"] = Store.one(self_follower)
             self._message_followers_to_store(store, reset=True)
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             res['recipientsCount'] = self.env['mail.followers'].search_count([
@@ -4596,9 +4592,11 @@ class MailThread(models.AbstractModel):
                 ("partner_id.active", "=", True)
             ])
             self._message_followers_to_store(store, filter_recipients=True, reset=True)
-        if 'suggestedRecipients' in request_list:
+        if "modelName" in fields:
+            res["modelName"] = self.env["ir.model"]._get(self._name).display_name
+        if request_list and "suggestedRecipients" in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
-        store.add("mail.thread", res)
+        store.add(self, res, as_thread=True)
 
     @api.model
     def get_views(self, views, options=None):
@@ -4606,3 +4604,13 @@ class MailThread(models.AbstractModel):
         if "form" in res["views"] and isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
             res["models"][self._name]["has_activities"] = True
         return res
+
+    @api.model
+    def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
+        try:
+            thread = self.with_context(active_test=False).search([("id", "=", thread_id)])
+            thread.check_access_rights(mode)
+            thread.check_access_rule(mode)
+            return thread.with_context(active_test=True)
+        except AccessError:
+            return self.browse()

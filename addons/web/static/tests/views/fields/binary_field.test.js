@@ -293,13 +293,10 @@ test.tags("desktop")("readonly in create mode does not download", async () => {
         expect.step("We shouldn't be getting the file.");
     });
 
-    Partner._fields["product_id"] = fields.Many2one({
-        relation: "product",
-        onChange(record) {
-            record.document = "onchange==\n";
-        },
-    });
-    Partner._fields["document"] = fields.Binary({ readonly: true });
+    Partner._onChanges.product_id = (record) => {
+        record.document = "onchange==\n";
+    };
+    Partner._fields.document.readonly = true;
 
     await mountView({
         resModel: "res.partner",
@@ -351,7 +348,7 @@ test("BinaryField in list view with filename", async () => {
 });
 
 test("new record has no download button", async () => {
-    Partner._fields["document"] = fields.Binary({ default: BINARY_FILE });
+    Partner._fields.document.default = BINARY_FILE;
     await mountView({
         resModel: "res.partner",
         type: "form",
@@ -367,7 +364,7 @@ test("filename doesn't exceed 255 bytes", async () => {
             "The initial binary file should be larger than max bytes that can represent the filename",
     });
 
-    Partner._fields["document"] = fields.Binary({ default: LARGE_BINARY_FILE });
+    Partner._fields.document.default = LARGE_BINARY_FILE;
     await mountView({
         resModel: "res.partner",
         type: "form",
@@ -412,13 +409,11 @@ test("isUploading state should be set to false after upload", async () => {
     expect.errors(1);
 
     Partner._records.push({ id: 1 });
-    Partner._fields["document"] = fields.Binary({
-        onChange(record) {
-            if (record["document"]) {
-                throw makeServerError({ type: "ValidationError" });
-            }
-        },
-    });
+    Partner._onChanges.document = (record) => {
+        if (record.document) {
+            throw makeServerError({ type: "ValidationError" });
+        }
+    };
     await mountView({
         resModel: "res.partner",
         resId: 1,

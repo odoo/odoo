@@ -4,9 +4,13 @@ declare module "models" {
 
     export interface Store {
         ringingThreads: Thread[],
+        nextTalkingTime: number,
     }
     export interface Rtc extends RtcClass {}
     export interface RtcSession extends RtcSessionClass {}
+    export interface Thread {
+        rtcSessions: RtcSession[],
+    }
 
     export interface Models {
         "RtcSession": RtcSession,

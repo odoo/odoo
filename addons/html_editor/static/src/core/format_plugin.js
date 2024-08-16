@@ -1,11 +1,14 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
-import { unwrapContents } from "../utils/dom";
-import { isUnbreakable, isVisibleTextNode, isZWS } from "../utils/dom_info";
-import { closestElement } from "../utils/dom_traversal";
+import { cleanTextNode, unwrapContents } from "../utils/dom";
+import { isVisibleTextNode, isZWS } from "../utils/dom_info";
+import { closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
-import { DIRECTIONS } from "../utils/position";
+import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import { prepareUpdate } from "@html_editor/utils/dom_state";
+
+const allWhitespaceRegex = /^[\s\u200b]*$/;
 
 function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
@@ -28,8 +31,9 @@ function hasFormat(formatPlugin) {
 
 export class FormatPlugin extends Plugin {
     static name = "format";
-    static dependencies = ["selection", "split", "zws"];
-    static shared = ["isSelectionFormat"];
+    static dependencies = ["selection", "split"];
+    static shared = ["isSelectionFormat", "insertAndSelectZws"];
+    /** @type { (p: FormatPlugin) => Record<string, any> } */
     static resources = (p) => ({
         shortcuts: [
             { hotkey: "control+b", command: "FORMAT_BOLD" },
@@ -37,65 +41,61 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+u", command: "FORMAT_UNDERLINE" },
             { hotkey: "control+5", command: "FORMAT_STRIKETHROUGH" },
         ],
-        toolbarGroup: [
+        toolbarCategory: { id: "decoration", sequence: 20 },
+        toolbarItems: [
             {
-                id: "decoration",
-                sequence: 20,
-                buttons: [
-                    {
-                        id: "bold",
-                        action(dispatch) {
-                            dispatch("FORMAT_BOLD");
-                        },
-                        icon: "fa-bold",
-                        name: "Toggle bold",
-                        isFormatApplied: isFormatted(p, "bold"),
-                    },
-                    {
-                        id: "italic",
-                        action(dispatch) {
-                            dispatch("FORMAT_ITALIC");
-                        },
-                        icon: "fa-italic",
-                        name: "Toggle italic",
-                        isFormatApplied: isFormatted(p, "italic"),
-                    },
-                    {
-                        id: "underline",
-                        action(dispatch) {
-                            dispatch("FORMAT_UNDERLINE");
-                        },
-                        icon: "fa-underline",
-                        name: "Toggle underline",
-                        isFormatApplied: isFormatted(p, "underline"),
-                    },
-                    {
-                        id: "strikethrough",
-                        action(dispatch) {
-                            dispatch("FORMAT_STRIKETHROUGH");
-                        },
-                        icon: "fa-strikethrough",
-                        name: "Toggle strikethrough",
-                        isFormatApplied: isFormatted(p, "strikeThrough"),
-                    },
-                ],
+                id: "bold",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_BOLD");
+                },
+                icon: "fa-bold",
+                name: "Toggle bold",
+                isFormatApplied: isFormatted(p, "bold"),
+            },
+            {
+                id: "italic",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_ITALIC");
+                },
+                icon: "fa-italic",
+                name: "Toggle italic",
+                isFormatApplied: isFormatted(p, "italic"),
+            },
+            {
+                id: "underline",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_UNDERLINE");
+                },
+                icon: "fa-underline",
+                name: "Toggle underline",
+                isFormatApplied: isFormatted(p, "underline"),
+            },
+            {
+                id: "strikethrough",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_STRIKETHROUGH");
+                },
+                icon: "fa-strikethrough",
+                name: "Toggle strikethrough",
+                isFormatApplied: isFormatted(p, "strikeThrough"),
             },
             {
                 id: "remove_format",
-                sequence: 26,
-                buttons: [
-                    {
-                        id: "remove_format",
-                        action(dispatch) {
-                            dispatch("FORMAT_REMOVE_FORMAT");
-                        },
-                        icon: "fa-eraser",
-                        name: "Remove Format",
-                        hasFormat: hasFormat(p),
-                    },
-                ],
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_REMOVE_FORMAT");
+                },
+                icon: "fa-eraser",
+                name: "Remove Format",
+                hasFormat: hasFormat(p),
             },
         ],
+        arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
+        onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 60 },
     });
 
     handleCommand(command, payload) {
@@ -126,6 +126,13 @@ export class FormatPlugin extends Plugin {
             case "FORMAT_REMOVE_FORMAT":
                 this.removeFormat();
                 break;
+            case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
+                this.clean(payload.root);
+                break;
+            case "NORMALIZE":
+                this.normalize(payload.node);
+                break;
         }
     }
 
@@ -155,7 +162,7 @@ export class FormatPlugin extends Plugin {
             .getTraversedNodes()
             .filter((n) => n.nodeType === Node.TEXT_NODE);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return selectedNodes.length && selectedNodes.some((n) => isFormatted(n, this.editable));
+        return selectedNodes.some((n) => isFormatted(n, this.editable));
     }
     /**
      * Return true if the current selection on the editable appears as the
@@ -179,6 +186,7 @@ export class FormatPlugin extends Plugin {
         }
     }
 
+    // @todo phoenix: refactor this method.
     _formatSelection(formatName, { applyStyle, formatProps } = {}) {
         // note: does it work if selection is in opposite direction?
         const selection = this.shared.splitSelection();
@@ -200,7 +208,7 @@ export class FormatPlugin extends Plugin {
                     focusOffset: 1,
                 });
             } else {
-                zws = this.shared.insertAndSelectZws();
+                zws = this.insertAndSelectZws();
             }
         }
 
@@ -241,8 +249,7 @@ export class FormatPlugin extends Plugin {
             while (
                 parentNode &&
                 !isBlock(parentNode) &&
-                !isUnbreakable(parentNode) &&
-                !isUnbreakable(currentNode) &&
+                !this.shared.isUnsplittable(parentNode) &&
                 (parentNode.classList.length === 0 ||
                     [...parentNode.classList].every((cls) => FONT_SIZE_CLASSES.includes(cls)))
             ) {
@@ -344,6 +351,122 @@ export class FormatPlugin extends Plugin {
             return true;
         }
     }
+
+    normalize(element) {
+        for (const el of selectElements(element, "[data-oe-zws-empty-inline]")) {
+            if (!allWhitespaceRegex.test(el.textContent)) {
+                // The element has some meaningful text. Remove the ZWS in it.
+                delete el.dataset.oeZwsEmptyInline;
+                this.cleanZWS(el);
+                if (
+                    el.tagName === "SPAN" &&
+                    el.getAttributeNames().length === 0 &&
+                    el.classList.length === 0
+                ) {
+                    // Useless span, unwrap it.
+                    unwrapContents(el);
+                }
+            }
+        }
+    }
+
+    clean(root) {
+        for (const el of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+            this.cleanElement(el);
+        }
+    }
+
+    cleanElement(element) {
+        delete element.dataset.oeZwsEmptyInline;
+        if (!allWhitespaceRegex.test(element.textContent)) {
+            // The element has some meaningful text. Remove the ZWS in it.
+            this.cleanZWS(element);
+            return;
+        }
+        if (this.resources.isUnremovable.some((predicate) => predicate(element))) {
+            return;
+        }
+        if (element.classList.length) {
+            // Original comment from web_editor:
+            // We only remove the empty element if it has no class, to ensure we
+            // don't break visual styles (in that case, its ZWS was kept to
+            // ensure the cursor can be placed in it).
+            return;
+        }
+        const restore = prepareUpdate(...leftPos(element), ...rightPos(element));
+        element.remove();
+        restore();
+    }
+
+    cleanZWS(element) {
+        const textNodes = descendants(element).filter((node) => node.nodeType === Node.TEXT_NODE);
+        const cursors = this.shared.preserveSelection();
+        for (const node of textNodes) {
+            cleanTextNode(node, "\u200B", cursors);
+        }
+        cursors.restore();
+    }
+
+    insertText(selection, content) {
+        if (selection.anchorNode.nodeType === Node.TEXT_NODE) {
+            selection = this.shared.setSelection(
+                {
+                    anchorNode: selection.anchorNode.parentElement,
+                    anchorOffset: this.shared.splitTextNode(
+                        selection.anchorNode,
+                        selection.anchorOffset
+                    ),
+                },
+                { normalize: false }
+            );
+        }
+
+        const txt = this.document.createTextNode(content || "#");
+        const restore = prepareUpdate(selection.anchorNode, selection.anchorOffset);
+        selection.anchorNode.insertBefore(
+            txt,
+            selection.anchorNode.childNodes[selection.anchorOffset]
+        );
+        restore();
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(txt);
+        this.shared.setSelection(
+            { anchorNode, anchorOffset, focusNode, focusOffset },
+            { normalize: false }
+        );
+        return txt;
+    }
+
+    /**
+     * Use the actual selection (assumed to be collapsed) and insert a
+     * zero-width space at its anchor point. Then, select that zero-width
+     * space.
+     *
+     * @returns {Node} the inserted zero-width space
+     */
+    insertAndSelectZws() {
+        const selection = this.shared.getEditableSelection();
+        const zws = this.insertText(selection, "\u200B");
+        this.shared.splitTextNode(zws, selection.anchorOffset);
+        return zws;
+    }
+
+    onBeforeInput(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.shared.getEditableSelection();
+            if (!selection.isCollapsed) {
+                return;
+            }
+            const element = closestElement(selection.anchorNode);
+            if (element.hasAttribute("data-oe-zws-empty-inline")) {
+                // Select its ZWS content to make sure the text will be
+                // inserted inside the element, and not before (outside) it.
+                // This addresses an undesired behavior of the
+                // contenteditable.
+                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(element);
+                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            }
+        }
+    }
 }
 
 function getOrCreateSpan(node, ancestors) {
@@ -359,6 +482,7 @@ function getOrCreateSpan(node, ancestors) {
     }
 }
 function removeFormat(node, formatSpec) {
+    const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {
         formatSpec.removeStyle(node);
@@ -373,7 +497,7 @@ function removeFormat(node, formatSpec) {
         });
         if (attributesNames.length) {
             // Change tag name
-            const newNode = this.document.createElement("span");
+            const newNode = document.createElement("span");
             while (node.firstChild) {
                 newNode.appendChild(node.firstChild);
             }

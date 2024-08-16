@@ -6,10 +6,12 @@ const snippets = [
     {
         id: "s_popup",
         name: "Popup",
+        groupName: "Content",
     },
     {
         id: "s_media_list",
         name: "Media List",
+        groupName: "Content",
     },
 ];
 
@@ -43,7 +45,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(false),
     {
         content: 'Click on the s_popup snippet',
-        in_modal: false,
         trigger: ':iframe .s_popup .modal',
         run: "click",
     },
@@ -51,9 +52,14 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(true),
     wTourUtils.goBackToBlocks(),
     {
-        content: "Drag the Media List block and drop it in the popup.",
-        trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
+        content: "Drag the Content snippet group and drop it at the bottom of the popup.",
+        trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         run: "drag_and_drop :iframe #wrap .s_popup .oe_drop_zone:last",
+    },
+    {
+        content: "Click on the s_media_list snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
+        run: "click",
     },
     checkScrollbar(false),
     {
@@ -93,33 +99,41 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(false),
     wTourUtils.goBackToBlocks(),
     {
-        content: "Drag the Media List block and drop it in the popup.",
-        trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
-        run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
+        content: "Drag the Content snippet group and drop it at the bottom of the popup.",
+        trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        run: "drag_and_drop :iframe #wrap .s_popup .oe_drop_zone:last",
+    },
+    {
+        content: "Click on the s_media_list snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
+        run: "click",
     },
     checkScrollbar(true), //the popup backdrop is activated so there should have a scrollbar on #wrapwrap
     {
         content: 'Click on the s_popup snippet',
-        in_modal: false,
         trigger: ':iframe .s_popup .modal',
         run: "click",
     },
     {
         content: "Remove the s_popup snippet",
         trigger: ".o_we_customize_panel we-customizeblock-options:contains('Popup') we-button.oe_snippet_remove:first",
-        in_modal: false,
         async run(helpers) {
             helpers.click();
             // TODO: remove the below setTimeout. Without it, goBackToBlocks() not works.
-            await new Promise((r) => setTimeout(r, 300));
+            await new Promise((r) => setTimeout(r, 1000));
         }
     },
     checkScrollbar(true),
     wTourUtils.goBackToBlocks(),
     {
-        content: "Drag a Media List snippet and drop it in the Cookies Bar.",
-        trigger: "#oe_snippets .oe_snippet:has(> [data-snippet='s_media_list']) .oe_snippet_thumbnail",
+        content: "Drag the Content snippet group and drop it in the Cookies Bar.",
+        trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
         run: "drag_and_drop :iframe #website_cookies_bar .modal-content.oe_structure",
+    },
+    {
+        content: "Click on the s_media_list snippet.",
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
+        run: "click",
     },
     {
         content: "Select the Media List snippet in the Cookies Bar.",

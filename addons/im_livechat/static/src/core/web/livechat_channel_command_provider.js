@@ -23,19 +23,19 @@ registry.category("command_provider").add("im_livechat.channel_join_leave", {
         }
         await store.livechatChannels.fetch();
         const activeChannels = new Set(
-            Object.values(store.LivechatChannel.records)
+            Object.values(store["im_livechat.channel"].records)
                 .filter((c) => c.threads.length > 0)
                 .map((c) => c.id)
         );
         // Show live chat channels with ongoing conversations first
-        return Object.values(store.LivechatChannel.records)
+        return Object.values(store["im_livechat.channel"].records)
             .sort((c) => (activeChannels.has(c.id) ? -1 : 1))
             .map((c) => ({
-                action: c.hasSelfAsMember ? c.leave.bind(c) : c.join.bind(c),
+                action: c.are_you_inside ? c.leave.bind(c) : c.join.bind(c),
                 Component: LivechatChannelCommand,
-                name: c.hasSelfAsMember ? c.leaveTitle : c.joinTitle,
+                name: c.are_you_inside ? c.leaveTitle : c.joinTitle,
                 props: {
-                    iconClass: c.hasSelfAsMember
+                    iconClass: c.are_you_inside
                         ? "fa fa-sign-out text-danger"
                         : "fa fa-sign-in text-success",
                 },

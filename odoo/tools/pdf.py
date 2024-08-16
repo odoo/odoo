@@ -16,11 +16,11 @@ from reportlab.pdfgen import canvas
 from odoo.tools.parse_version import parse_version
 from odoo.tools.arabic_reshaper import reshape
 
+import PyPDF2
 try:
     # class were renamed in PyPDF2 > 2.0
     # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
     from PyPDF2 import PdfReader
-    import PyPDF2
     # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
     # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
     class PdfFileReader(PdfReader):
@@ -44,6 +44,24 @@ try:
     from fontTools.ttLib import TTFont
 except ImportError:
     TTFont = None
+
+# ----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+try:
+    import zlib
+
+    def _decompress(data):
+        zobj = zlib.decompressobj()
+        return zobj.decompress(data)
+
+    import PyPDF2.filters  # needed after PyPDF2 2.0.0 and before 2.11.0
+    PyPDF2.filters.decompress = _decompress
+except ImportError:
+    pass  # no fix required
 
 from odoo.tools.misc import file_open
 

@@ -8,7 +8,7 @@ from odoo import Command
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_project_tour(self):
-        self.start_tour("/web", 'project_tour', login="admin")
+        self.start_tour("/odoo", 'project_tour', login="admin")
 
     def test_project_task_history(self):
         """This tour will check that the history works properly."""
@@ -23,4 +23,4 @@ class TestUi(odoo.tests.HttpCase):
             'project_id': project.id,
         })
 
-        self.start_tour('/web', 'project_task_history_tour', login='admin')
+        self.start_tour('/odoo', 'project_task_history_tour', login='admin')

@@ -16,6 +16,7 @@ import {
     onRpc,
     patchWithCleanup,
     toggleActionMenu,
+    toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
 import {
     getTimePickers,
@@ -321,7 +322,7 @@ defineModels([Partner, ResCompany, User]);
 test("properties: no access to parent", async () => {
     onRpc("check_access_rights", () => false);
 
-    await mountView({
+    const formView = await mountView({
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -337,6 +338,14 @@ test("properties: no access to parent", async () => {
         actionMenus: {},
     });
 
+    patchWithCleanup(formView.env.services.notification, {
+        add: (message, options) => {
+            expect(message).toBe(
+                "You need edit access on the parent document to update these property fields"
+            );
+        },
+    });
+
     expect(".o_field_properties").toHaveCount(1, { message: "The field must be in the view" });
 
     await toggleActionMenu();
@@ -344,6 +353,7 @@ test("properties: no access to parent", async () => {
     expect(".o-dropdown--menu span:contains(Add Properties)").toHaveCount(1, {
         message: "Show Add Properties btn in cog menu",
     });
+    await toggleMenuItem("Add Properties");
     expect(".o_field_properties:first-child .o_field_property_open_popover").toHaveCount(0, {
         message: "The edit definition button must not be in the view",
     });
@@ -398,17 +408,20 @@ test("properties: access to parent", async () => {
     );
     await animationFrame();
 
-    const popover = queryFirst(".o_property_field_popover");
-    expect(popover).toHaveCount(1, { message: "Should have opened the definition popover" });
-    expect(".o_field_property_definition_header", { root: popover }).toHaveValue("My Char");
+    expect(".o_property_field_popover").toHaveCount(1, {
+        message: "Should have opened the definition popover",
+    });
+    expect(".o_field_property_definition_header").toHaveValue("My Char");
 
-    const type = popover.querySelector(".o_field_property_definition_type input");
-    expect(".o_field_property_definition_type input", { root: popover }).toHaveValue("Text");
+    expect(".o_field_property_definition_type input").toHaveValue("Text");
 
     // Change the property type to "Date & Time"
     await contains(".o_field_property_definition_header").edit("My Datetime");
     await changeType("datetime");
-    expect(type).toHaveValue("Date & Time", { message: "Should have changed the property type" });
+    expect(".o_property_field_popover .o_field_property_definition_type input").toHaveValue(
+        "Date & Time",
+        { message: "Should have changed the property type" }
+    );
 
     // Choosing a date in the date picker should not close the definition popover
     click(".o_field_property_definition_value .o_datetime_input");
@@ -2490,4 +2503,56 @@ test.tags("desktop")("properties: onChange return new properties", async () => {
     await animationFrame();
     expect("[name='properties'] .o_property_field").toHaveText("My New Char");
     expect("[name='properties'] .o_property_field input").toHaveValue("Hello");
+});
+
+test("new property, change record, change property type", async () => {
+    const records = Partner._records;
+    records[0].properties = [];
+    records[1].properties = [];
+    onRpc("check_access_rights", () => true);
+    onRpc("check_access_rule", () => true);
+    onRpc("web_save", ({ args }) => {
+        if (args[0][0] === 1) {
+            // On property creation in first record, add a copy with empty value in
+            // second record
+            records[1].properties.push({
+                ...args[1].properties[0],
+            });
+            records[1].properties[0].value = "";
+        } else {
+            // When changing type of second record's properties, also apply it to
+            // first record and the property's value should be reset on name change
+            records[0].properties[0].type = args[1].properties[0].type;
+            if (records[0].properties[0].name !== args[1].properties[0].name) {
+                records[0].properties[0].value = null;
+            }
+            records[0].properties[0].name = args[1].properties[0].name;
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties"/>
+            </form>`,
+        actionMenus: {},
+    });
+    // Add a new property
+    await toggleActionMenu();
+    await click(".o_popover span .fa-cogs");
+
+    await contains(".o_property_field .o_property_field_value input").edit("aze");
+    await contains(".o_pager_next").click();
+    expect(".o_property_field .o_property_field_value input").toHaveValue("");
+    // Change second record's property type
+    await contains(".o_property_field .o_field_property_open_popover", { visible: false }).click();
+    await changeType("integer");
+
+    await contains(".o_pager_previous").click();
+    expect(".o_property_field .o_property_field_value input").toHaveValue("0");
 });

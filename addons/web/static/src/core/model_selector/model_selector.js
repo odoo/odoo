@@ -39,10 +39,6 @@ export class ModelSelector extends Component {
         });
     }
 
-    get placeholder() {
-        return _t("Type a model here...");
-    }
-
     get sources() {
         return [this.optionsSource];
     }

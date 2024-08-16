@@ -78,6 +78,9 @@ patch(PosStore.prototype, {
         }
 
         const order = this.get_order();
+        if (order.finalized) {
+            return;
+        }
         updateRewardsMutex.exec(() => {
             return this.orderUpdateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
@@ -285,7 +288,7 @@ patch(PosStore.prototype, {
             return _t(
                 "Gift Card: %s\nBalance: %s",
                 code,
-                this.env.utils.formatCurrency(coupon.balance)
+                this.env.utils.formatCurrency(coupon.points)
             );
         }
         return true;
@@ -560,9 +563,12 @@ patch(PosStore.prototype, {
 
         this.partnerId2CouponIds = {};
 
-        for (const reward of this.models["loyalty.reward"].getAll()) {
-            this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
-        }
+        this.computeDiscountProductIdsForAllRewards(this.models["product.product"].getAll());
+
+        this.models["product.product"].addEventListener(
+            "create",
+            this.computeDiscountProductIdsForAllRewards.bind(this)
+        );
 
         for (const program of this.models["loyalty.program"].getAll()) {
             if (program.date_to) {
@@ -571,6 +577,16 @@ patch(PosStore.prototype, {
             if (program.date_from) {
                 program.date_from = DateTime.fromISO(program.date_from);
             }
+        }
+
+        for (const rule of this.models["loyalty.rule"].getAll()) {
+            rule.validProductIds = new Set(rule.raw.valid_product_ids);
+        }
+    },
+
+    computeDiscountProductIdsForAllRewards(products) {
+        for (const reward of this.models["loyalty.reward"].getAll()) {
+            this.compute_discount_product_ids(reward, products);
         }
     },
 
@@ -589,7 +605,7 @@ patch(PosStore.prototype, {
                 ],
             });
         } catch (error) {
-            if (!(error instanceof InvalidDomainError)) {
+            if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
             }
             const index = this.models["loyalty.reward"].indexOf(reward);

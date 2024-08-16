@@ -80,11 +80,11 @@ class TestProjectSharingUi(HttpCase):
             'stage_id': self.project_portal.type_ids[0].id,
         })
 
-        self.start_tour("/web", 'project_sharing_with_blocked_task_tour', login="georges1")
+        self.start_tour("/odoo", 'project_sharing_with_blocked_task_tour', login="georges1")
 
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
-        self.start_tour("/web", 'project_sharing_tour', login="admin")
+        self.start_tour("/odoo", 'project_sharing_tour', login="admin")
 
     def test_02_project_sharing(self):
         """ Test project sharing ui with a portal user.
@@ -109,3 +109,21 @@ class TestProjectSharingUi(HttpCase):
             })],
         })
         self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1')
+
+    def test_03_project_sharing(self):
+        self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': self.project_portal.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'edit'}),
+            ],
+        })
+
+        self.project_portal.write({
+            'task_ids': [Command.create({
+                'name': "Test Project Sharing",
+                'stage_id': self.project_portal.type_ids.filtered(lambda stage: stage.sequence == 10)[:1].id,
+            })],
+            'allow_milestones': False,
+        })
+        self.start_tour("/my/projects", 'portal_project_sharing_tour_with_disallowed_milestones', login='georges1')

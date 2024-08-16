@@ -4,6 +4,7 @@
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tools.float_utils import float_compare
 
 from odoo.addons.sale.tests.common import SaleCommon
 
@@ -125,3 +126,30 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         price_total = sum(report_lines.mapped('price_total'))
         self.assertAlmostEqual(price_total, expected_reported_amount)
+
+    def test_sale_report_with_downpayment(self):
+        """Checks that downpayment lines are used in the calculation of amounts invoiced and to invoice"""
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+            })]
+        })
+        order.action_confirm()
+
+        downpayment = self.env['sale.advance.payment.inv'].with_context(active_ids=order.ids).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 200
+        })
+        downpayment.create_invoices()
+        order.invoice_ids.action_post()
+        order.order_line.flush_recordset()
+
+        amount_line = self.env['sale.report'].read_group(
+            [('order_reference', '=', f'sale.order,{order.id}')],
+            ['untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
+            []
+        )[0]
+
+        self.assertEqual(float_compare(amount_line['untaxed_amount_invoiced'], 200, precision_rounding=order.currency_id.rounding), 0)
+        self.assertEqual(float_compare(amount_line['untaxed_amount_to_invoice'], self.product.lst_price - 200, precision_rounding=order.currency_id.rounding), 0)

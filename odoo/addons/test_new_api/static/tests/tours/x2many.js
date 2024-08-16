@@ -5,7 +5,7 @@
     var inc;
 
     registry.category("web_tour.tours").add('widget_x2many', {
-        url: '/web?debug=tests#action=test_new_api.action_discussions',
+        url: '/odoo/action-test_new_api.action_discussions?debug=tests',
         test: true,
         steps: () => [
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,17 +39,14 @@
     {
         content: "insert a name into the modal form",
         trigger: ".modal .o_field_widget[name=name] input",
-        in_modal: false,
         run: `edit user_test_${(inc = new Date().getTime())}`,
     }, {
         content: "insert an email into the modal form",
         trigger: ".modal .o_field_widget[name=login] input",
-        in_modal: false,
         run: `edit user_test_${inc}@test`,
     }, {
         content: "save the modal content and create the new moderator",
         trigger: ".modal .o_form_button_save",
-        in_modal: false,
         run: "click",
     }, {
         content: "check if the modal is saved",
@@ -285,7 +282,6 @@
     }, {
         content: "test one2many field not triggered onchange",
         trigger: '.o_field_widget[name="message_concat"] textarea:value([test_trigger] Mitchell Admin:e)',
-        in_modal: false,
     }, {
         content: "save changes",
         trigger: '.modal-footer .o_form_button_save',

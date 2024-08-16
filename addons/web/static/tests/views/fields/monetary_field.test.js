@@ -19,18 +19,9 @@ class Partner extends models.Model {
     float_field = fields.Float({
         digits: [16, 1],
     });
-    p = fields.One2many({
-        string: "one2many field",
-        relation: "partner",
-    });
-    currency_id = fields.Many2one({
-        string: "Currency",
-        relation: "res.currency",
-    });
-    monetary_field = fields.Monetary({
-        string: "Monetary Field",
-        currency_field: this.currency_id,
-    });
+    p = fields.One2many({ relation: "partner" });
+    currency_id = fields.Many2one({ relation: "res.currency" });
+    monetary_field = fields.Monetary({ currency_field: "currency_id" });
 
     _records = [
         { id: 1, int_field: 10, float_field: 0.44444 },
@@ -510,11 +501,7 @@ test("MonetaryField with monetary field given in options", async () => {
 });
 
 test("should keep the focus when being edited in x2many lists", async () => {
-    Partner._fields.currency_id = fields.Many2one({
-        string: "Currency",
-        relation: "res.currency",
-        default: 1,
-    });
+    Partner._fields.currency_id.default = 1;
     Partner._fields.m2m = fields.Many2many({
         relation: "partner",
         default: [[4, 2]],
@@ -759,10 +746,7 @@ test("automatically uses currency_field if defined", async () => {
         string: "Currency",
         relation: "res.currency",
     });
-    Partner._fields.monetary_field = fields.Monetary({
-        string: "Monetary Field",
-        currency_field: "custom_currency_id",
-    });
+    Partner._fields.monetary_field.currency_field = "custom_currency_id";
     Partner._records[5].custom_currency_id = 1;
 
     await mountView({

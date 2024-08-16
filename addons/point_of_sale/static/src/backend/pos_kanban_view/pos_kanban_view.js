@@ -114,7 +114,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
     }
 
     createNewProducts() {
-        window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
+        window.open("/odoo/action-point_of_sale.action_client_product_menu", "_self");
     }
 
     showTopBorder() {

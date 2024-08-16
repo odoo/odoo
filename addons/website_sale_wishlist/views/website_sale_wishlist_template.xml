@@ -43,7 +43,7 @@
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
-                        <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary #{_badge_class}"/>
+                        <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class}"/>
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
                 </a>
@@ -65,7 +65,7 @@
             <t t-call="website_sale_wishlist.header_wishlist_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset'"/>
-                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1'"/>
             </t>
         </xpath>
     </template>

@@ -378,7 +378,7 @@
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
-                            widget="section_and_note_one2many"
+                            widget="sol_o2m"
                             mode="tree,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>
@@ -516,7 +516,6 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_lst_price': price_unit,
-                                        'default_description_sale': name
                                     }"
                                     options="{
                                         'no_open': True,
@@ -535,11 +534,11 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_list_price': price_unit,
-                                        'default_description_sale': name
                                     }"
                                     options="{
                                         'no_open': True,
                                     }"
+                                    optional="show"
                                     domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"
                                     placeholder="Type to find a product..."/>
@@ -552,7 +551,15 @@
                                 </field>
                                 <field name="product_no_variant_attribute_value_ids" column_invisible="1" />
                                 <field name="is_configurable_product" column_invisible="1" />
-                                <field name="name" widget="section_and_note_text" optional="show"/>
+                                <field name="linked_line_id" column_invisible="1"/>
+                                <field name="virtual_id" column_invisible="1"/>
+                                <field name="linked_virtual_id" column_invisible="1"/>
+                                <field name="combo_item_id" column_invisible="1"/>
+                                <field
+                                    name="name"
+                                    widget="sol_text"
+                                    optional="show"
+                                />
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                            optional="hide"
                                            groups="analytic.group_analytic_accounting"
@@ -594,10 +601,12 @@
                                     context="{'company_id': parent.company_id}"
                                     groups="uom.group_uom"
                                     options='{"no_open": True}'
+                                    width="60px"
                                     optional="show"/>
                                 <field
                                     name="customer_lead"
                                     optional="hide"
+                                    width="80px"
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment"/>
                                 <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging" optional="show"/>
                                 <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
@@ -612,14 +621,21 @@
                                     context="{'active_test': True}"
                                     readonly="qty_invoiced &gt; 0 or is_downpayment"
                                     optional="show"/>
-                                <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
+                                <field
+                                    name="discount"
+                                    string="Disc.%"
+                                    groups="sale.group_discount_per_so_line"
+                                    width="60px"
+                                    optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
-                                <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
-                                <field name="price_total"
-                                       string="Tax incl."
-                                       column_invisible="parent.tax_calculation_rounding_method == 'round_globally'"
+                                <field name="price_subtotal"
+                                       column_invisible="parent.company_price_include == 'tax_included'"
                                        invisible="is_downpayment"
-                                       optional="hide"/>
+                                       string="Amount"/>
+                                <field name="price_total"
+                                       column_invisible="parent.company_price_include == 'tax_excluded'"
+                                       invisible="is_downpayment"
+                                       string="Amount"/>
                                 <!-- Others fields -->
                                 <field name="tax_calculation_rounding_method" column_invisible="True"/>
                                 <field name="state" column_invisible="True"/>

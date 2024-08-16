@@ -4,8 +4,8 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("point_of_sale_tour", {
-    url: "/web",
-    rainbowMan: false,
+    url: "/odoo",
+    rainbowManMessage: false,
     sequence: 45,
     steps: () => [
         stepUtils.showAppsMenuItem(),
@@ -13,19 +13,19 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
             isActive: ["community"],
             trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
             content: markup(_t("Ready to launch your <b>point of sale</b>?")),
-            position: "right",
+            tooltipPosition: "right",
             run: "click",
         },
         {
             isActive: ["enterprise"],
             trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
             content: markup(_t("Ready to launch your <b>point of sale</b>?")),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: ".o_pos_kanban",
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
     ],

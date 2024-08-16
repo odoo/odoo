@@ -467,7 +467,9 @@ test("many2many kanban: conditional create/delete actions", async () => {
     });
 
     // color is red
-    expect(".o-kanban-button-new", '"Add" button should be available').toHaveCount(1);
+    expect(".o-kanban-button-new").toHaveCount(1, {
+        message: '"Add" button should be available',
+    });
 
     await contains(".o_kanban_record:contains(silver):eq(0)").click();
     expect(".modal .modal-footer .o_btn_remove").toHaveCount(1);
@@ -479,10 +481,9 @@ test("many2many kanban: conditional create/delete actions", async () => {
 
     // set color to black
     await contains('div[name="color"] select').select('"black"');
-    expect(
-        ".o-kanban-button-new",
-        '"Add" button should still be available even after color field changed'
-    ).toHaveCount(1);
+    expect(".o-kanban-button-new").toHaveCount(1, {
+        message: '"Add" button should still be available even after color field changed',
+    });
 
     await contains(".o-kanban-button-new:eq(0)").click();
     // only select and cancel button should be available, create
@@ -877,7 +878,9 @@ test("many2many list: conditional create/delete actions", async () => {
     });
 
     // color is red -> create and delete actions are available
-    expect(".o_field_x2many_list_row_add", "should have the 'Add an item' link").toHaveCount(1);
+    expect(".o_field_x2many_list_row_add").toHaveCount(1, {
+        message: "should have the 'Add an item' link",
+    });
     expect(".o_list_record_remove").toHaveCount(2);
 
     await contains(".o_field_x2many_list_row_add a:eq(0)").click();

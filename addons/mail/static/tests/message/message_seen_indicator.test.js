@@ -246,13 +246,13 @@ test("mark channel as seen from the bus", async () => {
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
-        new mailDataHelpers.Store("discuss.channel.member", {
-            id: pyEnv["discuss.channel.member"].search([
+        new mailDataHelpers.Store(
+            pyEnv["discuss.channel.member"].search([
                 ["channel_id", "=", channelId],
                 ["partner_id", "=", partnerId],
-            ])[0],
-            seen_message_id: messageId,
-        }).get_result()
+            ]),
+            { seen_message_id: messageId }
+        ).get_result()
     );
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
@@ -294,13 +294,13 @@ test("should display message indicator when message is fetched/seen", async () =
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
-        new mailDataHelpers.Store("discuss.channel.member", {
-            id: pyEnv["discuss.channel.member"].search([
+        new mailDataHelpers.Store(
+            pyEnv["discuss.channel.member"].search([
                 ["channel_id", "=", channelId],
                 ["partner_id", "=", partnerId],
-            ])[0],
-            seen_message_id: messageId,
-        }).get_result()
+            ]),
+            { seen_message_id: messageId }
+        ).get_result()
     );
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });

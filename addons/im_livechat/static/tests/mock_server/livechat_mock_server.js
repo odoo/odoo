@@ -65,17 +65,16 @@ async function get_session(request) {
     if (!persisted) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
-        store.add(
-            ResPartner.browse(channelVals.livechat_operator_id),
-            makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
-        );
         store.add("discuss.channel", {
             channel_type: "livechat",
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
             id: -1,
             isLoaded: true,
             name: channelVals["name"],
-            operator: { id: channelVals.livechat_operator_id, type: "partner" },
+            operator: mailDataHelpers.Store.one(
+                ResPartner.browse(channelVals.livechat_operator_id),
+                makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+            ),
             scrollUnread: false,
             state: "open",
         });
@@ -94,7 +93,7 @@ async function get_session(request) {
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
     store.add(DiscussChannel.browse(channelId));
-    store.add("discuss.channel", { id: channelId, isLoaded: true, scrollUnread: false });
+    store.add(DiscussChannel.browse(channelId), { isLoaded: true, scrollUnread: false });
     return store.get_result();
 }
 
@@ -169,14 +168,9 @@ patch(mailDataHelpers, {
         const store = await super.processRequest(...arguments);
         const { livechat_channels } = await parseRequestParams(request);
         if (livechat_channels) {
-            const LivechatChannel = this.env["im_livechat.channel"];
             store.add(
-                "LivechatChannel",
-                LivechatChannel.search_read([]).map((channel) => ({
-                    id: channel.id,
-                    name: channel.name,
-                    hasSelfAsMember: channel.user_ids.includes(this.env.user.id),
-                }))
+                this.env["im_livechat.channel"].search([]),
+                makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
         }
         return store;

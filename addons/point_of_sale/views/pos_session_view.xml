@@ -101,33 +101,18 @@
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" create="0" sample="1">
-                <field name="config_id" />
-                <field name="name" />
-                <field name="user_id" />
-                <field name="start_at" />
-                <field name="state" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><span><field name="config_id"/></span></strong>
-                                </div>
-                                <field name="state" widget="label_selection" options="{'classes': {'opening_control': 'default',
-                                        'opened': 'success', 'closing_control': 'warning', 'closed': 'warning'}}"/>
-                            </div>
-                            <div class="o_kanban_record_body">
-                                <field name="name" />
-                            </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <span><field name="start_at" /></span>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex">
+                            <field name="config_id" class="fw-bolder mb-1"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'opening_control': 'default',
+                                    'opened': 'success', 'closing_control': 'warning', 'closed': 'warning'}}" class="ms-auto"/>
                         </div>
+                        <field name="name" />
+                        <footer class="fs-6 pt-1">
+                            <field name="start_at" />
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'" class="ms-auto"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

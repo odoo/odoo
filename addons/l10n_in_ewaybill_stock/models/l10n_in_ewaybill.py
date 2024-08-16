@@ -5,9 +5,10 @@ import json
 import logging
 import pytz
 import re
-from datetime import datetime
 from collections import defaultdict
-from psycopg2 import OperationalError
+from datetime import datetime
+
+import psycopg2.errors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -351,11 +352,8 @@ class Ewaybill(models.Model):
             # Lock e-Waybill
             with self.env.cr.savepoint(flush=False):
                 self._cr.execute('SELECT * FROM l10n_in_ewaybill WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
-        except OperationalError as e:
-            if e.pgcode == '55P03':
-                raise UserError(_('This document is being sent by another process already.'))
-            else:
-                raise
+        except psycopg2.errors.LockNotAvailable:
+            raise UserError(_('This document is being sent by another process already.')) from None
 
     def _handle_internal_warning_if_present(self, response):
         if warnings := response.get('odoo_warning'):
@@ -429,6 +427,8 @@ class Ewaybill(models.Model):
         """
             This method is used to convert date from Indian timezone to UTC
         """
+        if not str_date:
+            return False
         try:
             local_time = datetime.strptime(str_date, time_format)
         except ValueError:
@@ -494,11 +494,20 @@ class Ewaybill(models.Model):
             "taxableAmount": AccountEDI._l10n_in_round_value(tax_details['total_excluded']),
         }
         for tax in tax_details.get('taxes'):
-            for gst_type in ['igst', 'sgst', 'cgst']:
+            gst_types = ['sgst', 'cgst', 'igst']
+            gst_tax_rates = {}
+            for gst_type in gst_types:
                 if tax_rate := tax.get(f'{gst_type}_rate'):
-                    line_details.update({
+                    gst_tax_rates.update({
                         f"{gst_type}Rate": AccountEDI._l10n_in_round_value(tax_rate)
                     })
+            line_details.update(
+                gst_tax_rates
+                or dict.fromkeys(
+                    [f"{gst_type}Rate" for gst_type in gst_types],
+                    0
+                )
+            )
             if cess_rate := tax.get("cess_rate"):
                 line_details.update({"cessRate": AccountEDI._l10n_in_round_value(cess_rate)})
             if cess_non_advol := tax.get("cess_non_advol_amount"):

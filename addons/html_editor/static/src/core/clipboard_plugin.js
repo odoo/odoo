@@ -1,4 +1,4 @@
-import { isUnbreakable, paragraphRelatedElements } from "../utils/dom_info";
+import { paragraphRelatedElements } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
@@ -314,7 +314,7 @@ export class ClipboardPlugin extends Plugin {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
                 const p = closestElement(selection.anchorNode, "p");
-                if (isUnbreakable(closestBlock(selection.anchorNode))) {
+                if (this.shared.isUnsplittable(closestBlock(selection.anchorNode))) {
                     this.dispatch("INSERT_LINEBREAK");
                 } else {
                     const [pBefore] = this.shared.splitBlock();

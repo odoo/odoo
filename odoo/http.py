@@ -140,7 +140,6 @@ import hmac
 import inspect
 import json
 import logging
-import mimetypes
 import os
 import re
 import threading
@@ -198,7 +197,7 @@ from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
 from .tools import (config, consteq, date_utils, file_path, get_lang,
-                    parse_version, profiler, unique, ustr)
+                    parse_version, profiler, unique, exception_to_unicode)
 from .tools.func import filter_kwargs, lazy_property
 from .tools.misc import submap
 from .tools._vendor import sessions
@@ -206,25 +205,6 @@ from .tools._vendor.useragents import UserAgent
 
 
 _logger = logging.getLogger(__name__)
-
-
-# =========================================================
-# Lib fixes
-# =========================================================
-
-# Add potentially missing (older ubuntu) font mime types
-mimetypes.add_type('application/font-woff', '.woff')
-mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
-mimetypes.add_type('application/x-font-ttf', '.ttf')
-mimetypes.add_type('image/webp', '.webp')
-# Add potentially wrong (detected on windows) svg mime types
-mimetypes.add_type('image/svg+xml', '.svg')
-# this one can be present on windows with the value 'text/plain' which
-# breaks loading js files from an addon's static folder
-mimetypes.add_type('text/javascript', '.js')
-
-# To remove when corrected in Babel
-babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 
 # =========================================================
@@ -442,7 +422,7 @@ def serialize_exception(exception):
     return {
         'name': f'{module}.{name}' if module else name,
         'debug': traceback.format_exc(),
-        'message': ustr(exception),
+        'message': exception_to_unicode(exception),
         'arguments': exception.args,
         'context': getattr(exception, 'context', {}),
     }
@@ -1899,7 +1879,7 @@ class Request:
         self._set_request_dispatcher(rule)
         readonly = rule.endpoint.routing['readonly']
         if callable(readonly):
-            readonly = readonly(rule.endpoint.func.__self__, self.registry, request)
+            readonly = readonly(rule.endpoint.func.__self__)
         return self._transactioning(
             functools.partial(self._serve_ir_http, rule, args),
             readonly=readonly,
@@ -2027,7 +2007,10 @@ class Dispatcher(ABC):
             werkzeug.exceptions.abort(Response(status=204))
 
         if 'max_content_length' in routing:
-            self.request.httprequest.max_content_length = routing['max_content_length']
+            max_content_length = routing['max_content_length']
+            if callable(max_content_length):
+                max_content_length = max_content_length(rule.endpoint.func.__self__)
+            self.request.httprequest.max_content_length = max_content_length
 
     @abstractmethod
     def dispatch(self, endpoint, args):

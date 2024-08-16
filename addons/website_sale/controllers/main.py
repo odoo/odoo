@@ -200,6 +200,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
+    def _get_additional_extra_shop_values(self, values, **post):
+        """ Hook to update values used for rendering website_sale.products template """
+        return self._get_additional_shop_values(values)
+
     @route([
         '/shop',
         '/shop/page/<int:page>',
@@ -419,7 +423,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
-        values.update(self._get_additional_shop_values(values))
+        values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
     @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
@@ -836,6 +840,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs
         )
+        # If the line is a combo product line, and it already has combo items, we need to update
+        # the combo item quantities as well.
+        line = request.env['sale.order.line'].browse(values['line_id'])
+        if line.product_type == 'combo' and line.linked_line_ids:
+            for linked_line_id in line.linked_line_ids:
+                if values['quantity'] != linked_line_id.product_uom_qty:
+                    order._cart_update(
+                        product_id=linked_line_id.product_id.id,
+                        line_id=linked_line_id.id,
+                        set_qty=values['quantity'],
+                    )
 
         values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
         values['notification_info']['warning'] = values.pop('warning', '')
@@ -897,6 +912,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'currency_id': int
                 'lines': [{
                     'id': int
+                    'linked_line_id': int
                     'image_url': int
                     'quantity': float
                     'name': str
@@ -915,6 +931,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'lines': [
                 { # For the cart_notification
                     'id': line.id,
+                    # Only set the linked line id for combo items, not for optional products.
+                    'linked_line_id': line.linked_line_id.id if line.combo_item_id else None,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
                     'quantity': line._get_displayed_quantity(),
                     'name': line.name_short,
@@ -1832,7 +1850,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if order and not order.amount_total and not tx_sudo:
             if order.state != 'sale':
-                order._validate_zero_amount_cart()
+                order._validate_order()
 
             # clean context and session, then redirect to the portal page
             request.website.sale_reset()
@@ -2141,3 +2159,24 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 domain += [('product_id.product_tmpl_id', '=', int(product_template_id))]
             request.env['website.track'].sudo().search(domain).unlink()
         return {}
+
+    @staticmethod
+    def _populate_currency_and_pricelist(kwargs):
+        website = request.website
+        kwargs.update({
+            'currency_id': website.currency_id.id,
+            'pricelist_id': website.pricelist_id.id,
+        })
+
+    @staticmethod
+    def _apply_taxes_to_price(price, product_or_template, currency):
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+            request.env.company
+        )
+        if product_taxes:
+            fiscal_position = request.website.fiscal_position_id.sudo()
+            taxes = fiscal_position.map_tax(product_taxes)
+            return request.env['product.template']._apply_taxes_to_price(
+                price, currency, product_taxes, taxes, product_or_template
+            )
+        return price

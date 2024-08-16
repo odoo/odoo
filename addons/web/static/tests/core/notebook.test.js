@@ -33,30 +33,30 @@ test("notebook with multiple pages given as slots", async () => {
 
     await mountWithCleanup(Parent);
     expect("div.o_notebook").toHaveCount(1);
-    expect(".o_notebook", {
+    expect(".o_notebook").toHaveClass("horizontal", {
         message: "default orientation is set as horizontal",
-    }).toHaveClass("horizontal");
-    expect(".nav", {
+    });
+    expect(".nav").toHaveClass("flex-row", {
         message: "navigation container uses the right class to display as horizontal tabs",
-    }).toHaveClass("flex-row");
-    expect(".o_notebook_headers a.nav-link", {
+    });
+    expect(".o_notebook_headers a.nav-link").toHaveCount(2, {
         message: "navigation link is present for each visible page",
-    }).toHaveCount(2);
-    expect(".o_notebook_headers .nav-item:first-child a", {
+    });
+    expect(".o_notebook_headers .nav-item:first-child a").toHaveClass("active", {
         message: "first page is selected by default",
-    }).toHaveClass("active");
-    expect(".active h3", {
+    });
+    expect(".active h3").toHaveText("About the bird", {
         message: "first page content is displayed by the notebook",
-    }).toHaveText("About the bird");
+    });
 
     click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
-    expect(".o_notebook_headers .nav-item:nth-child(2) a", {
+    expect(".o_notebook_headers .nav-item:nth-child(2) a").toHaveClass("active", {
         message: "second page is now selected",
-    }).toHaveClass("active");
-    expect(".active h3", {
+    });
+    expect(".active h3").toHaveText("Their favorite activity: hunting", {
         message: "second page content is displayed by the notebook",
-    }).toHaveText("Their favorite activity: hunting");
+    });
 });
 
 test("notebook with defaultPage props", async () => {
@@ -81,12 +81,12 @@ test("notebook with defaultPage props", async () => {
 
     await mountWithCleanup(Parent);
     expect("div.o_notebook").toHaveCount(1);
-    expect(".o_notebook_headers .nav-item:nth-child(2) a", {
+    expect(".o_notebook_headers .nav-item:nth-child(2) a").toHaveClass("active", {
         message: "second page is selected by default",
-    }).toHaveClass("active");
-    expect(".active h3", {
+    });
+    expect(".active h3").toHaveText("Their favorite activity: hunting", {
         message: "second page content is displayed by the notebook",
-    }).toHaveText("Their favorite activity: hunting");
+    });
 });
 
 test("notebook with defaultPage set on invisible page", async () => {
@@ -111,9 +111,9 @@ test("notebook with defaultPage set on invisible page", async () => {
     }
 
     await mountWithCleanup(Parent);
-    expect(".o_notebook_headers .nav-item a.active", {
+    expect(".o_notebook_headers .nav-item a.active").toHaveText("About", {
         message: "The first page is selected",
-    }).toHaveText("About");
+    });
 });
 
 test("notebook set vertically", async () => {
@@ -135,12 +135,12 @@ test("notebook set vertically", async () => {
 
     await mountWithCleanup(Parent);
     expect("div.o_notebook").toHaveCount(1);
-    expect(".o_notebook", {
+    expect(".o_notebook").toHaveClass("vertical", {
         message: "orientation is set as vertical",
-    }).toHaveClass("vertical");
-    expect(".nav", {
+    });
+    expect(".nav").toHaveClass("flex-column", {
         message: "navigation container uses the right class to display as vertical buttons",
-    }).toHaveClass("flex-column");
+    });
 });
 
 test("notebook pages rendered by a template component", async () => {
@@ -194,15 +194,15 @@ test("notebook pages rendered by a template component", async () => {
 
     await mountWithCleanup(Parent);
     expect("div.o_notebook").toHaveCount(1);
-    expect(".o_notebook_headers .nav-item:nth-child(3) a", {
+    expect(".o_notebook_headers .nav-item:nth-child(3) a").toHaveClass("active", {
         message: "third page is selected by default",
-    }).toHaveClass("active");
+    });
 
     click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
-    expect(".o_notebook_content p", {
+    expect(".o_notebook_content p").toHaveText("Second page rendered by a template component", {
         message: "displayed content corresponds to the current page",
-    }).toHaveText("Second page rendered by a template component");
+    });
 });
 
 test("each page is different", async () => {
@@ -305,21 +305,21 @@ test("disabled pages are greyed out and can't be toggled", async () => {
 
     await mountWithCleanup(Parent);
     expect(".page1").toHaveCount(1);
-    expect(".nav-item:nth-child(2)", {
+    expect(".nav-item:nth-child(2)").toHaveClass("disabled", {
         message: "tab of the disabled page is greyed out",
-    }).toHaveClass("disabled");
+    });
 
     click(".nav-item:nth-child(2) .nav-link");
     await animationFrame();
-    expect(".page1", {
+    expect(".page1").toHaveCount(1, {
         message: "the same page is still displayed",
-    }).toHaveCount(1);
+    });
 
     click(".nav-item:nth-child(3) .nav-link");
     await animationFrame();
-    expect(".page3", {
+    expect(".page3").toHaveCount(1, {
         message: "the third page is now displayed",
-    }).toHaveCount(1);
+    });
 });
 
 test("icons can be given for each page tab", async () => {

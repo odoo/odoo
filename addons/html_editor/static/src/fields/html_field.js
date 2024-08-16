@@ -13,6 +13,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { HtmlViewer } from "./html_viewer";
+import { TranslationButton } from "@web/views/fields/translation_button";
 
 /**
  * Check whether the current value contains nodes that would break
@@ -48,6 +49,7 @@ export class HtmlField extends Component {
     static components = {
         Wysiwyg,
         HtmlViewer,
+        TranslationButton,
     };
 
     setup() {
@@ -105,6 +107,11 @@ export class HtmlField extends Component {
         // @todo @phoenix maybe remove containsComplexHTML and alway use sandboxedPreview options
         return this.props.sandboxedPreview || this.state.containsComplexHTML;
     }
+
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
+    }
+
     async updateValue(value) {
         this.lastValue = value;
         this.isDirty = false;
@@ -188,19 +195,18 @@ export class HtmlField extends Component {
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             resources: {
-                toolbarGroup: [
+                toolbarCategory: {
+                    id: "codeview",
+                    sequence: 100,
+                },
+                toolbarItems: [
                     {
                         id: "codeview",
-                        sequence: 100,
-                        buttons: [
-                            {
-                                id: "codeview",
-                                icon: "fa-code",
-                                action: () => {
-                                    this.toggleCodeView();
-                                },
-                            },
-                        ],
+                        category: "codeview",
+                        icon: "fa-code",
+                        action: () => {
+                            this.toggleCodeView();
+                        },
                     },
                 ],
             },

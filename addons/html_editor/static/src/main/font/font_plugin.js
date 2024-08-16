@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
-import { isVisibleTextNode, paragraphRelatedElements } from "@html_editor/utils/dom_info";
+import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     createDOMPathGenerator,
@@ -102,42 +102,39 @@ export class FontPlugin extends Plugin {
             { callback: p.handleSplitBlockPRE.bind(p) },
             { callback: p.handleSplitBlockHeading.bind(p) },
         ],
-        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p) },
-        handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p) },
-        toolbarGroup: [
+        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
+        handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
+        toolbarCategory: [
             {
                 id: "font",
                 sequence: 10,
-                buttons: [
-                    {
-                        id: "font",
-                        Component: FontSelector,
-                        props: {
-                            getItems: () => fontItems,
-                            command: "SET_TAG",
-                        },
-                    },
-                ],
+            },
+            { id: "font-size", sequence: 29 },
+        ],
+        toolbarItems: [
+            {
+                id: "font",
+                category: "font",
+                Component: FontSelector,
+                props: {
+                    getItems: () => fontItems,
+                    command: "SET_TAG",
+                },
             },
             {
                 id: "font-size",
-                sequence: 29,
-                buttons: [
-                    {
-                        id: "font-size",
-                        Component: FontSelector,
-                        props: {
-                            getItems: () => p.fontSizeItems,
-                            isFontSize: true,
-                            command: "FORMAT_FONT_SIZE_CLASSNAME",
-                            document: p.document,
-                        },
-                    },
-                ],
+                category: "font-size",
+                Component: FontSelector,
+                props: {
+                    getItems: () => p.fontSizeItems,
+                    isFontSize: true,
+                    command: "FORMAT_FONT_SIZE_CLASSNAME",
+                    document: p.document,
+                },
             },
         ],
         powerboxCategory: { id: "format", name: _t("Format"), sequence: 30 },
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("Heading 1"),
                 description: _t("Big section heading"),
@@ -282,30 +279,30 @@ export class FontPlugin extends Plugin {
         }
     }
 
+    /**
+     * Transform an empty heading, blockquote or pre at the beginning of the
+     * editable into a paragraph.
+     */
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
-        const closestHandledElement = closestElement(endContainer, handledElemSelector);
-        if (!closestHandledElement) {
-            return;
-        }
         // Detect if cursor is at the start of the editable (collapsed range).
         const rangeIsCollapsed = startContainer === endContainer && startOffset === endOffset;
-        if (rangeIsCollapsed) {
-            const isUnremovable = this.resources.unremovables.some((predicate) =>
-                predicate(closestHandledElement)
-            );
-            if (
-                !isUnremovable &&
-                closestHandledElement.tagName !== "P" &&
-                paragraphRelatedElements.includes(closestHandledElement.tagName) &&
-                !closestHandledElement.textContent.length
-            ) {
-                const p = this.document.createElement("p");
-                p.append(...closestHandledElement.childNodes);
-                closestHandledElement.after(p);
-                closestHandledElement.remove();
-                this.shared.setCursorStart(p);
-                return true;
-            }
+        if (!rangeIsCollapsed) {
+            return;
         }
+        // Check if cursor is inside an empty heading, blockquote or pre.
+        const closestHandledElement = closestElement(endContainer, handledElemSelector);
+        if (!closestHandledElement || closestHandledElement.textContent.length) {
+            return;
+        }
+        // Check if unremovable.
+        if (this.resources.isUnremovable.some((predicate) => predicate(closestHandledElement))) {
+            return;
+        }
+        const p = this.document.createElement("p");
+        p.append(...closestHandledElement.childNodes);
+        closestHandledElement.after(p);
+        closestHandledElement.remove();
+        this.shared.setCursorStart(p);
+        return true;
     }
 }

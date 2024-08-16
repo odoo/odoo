@@ -54,7 +54,7 @@ function setProductQuantity(productName, quantity) {
         trigger: `
             ${productSelector(productName)}
             td.o_sale_product_configurator_qty
-            input[name="product_quantity"]
+            input[name="sale_quantity"]
         `,
         run: `edit ${quantity} && click .modal-body`,
     };
@@ -64,7 +64,7 @@ function assertProductQuantity(productName, quantity) {
     const quantitySelector = `
         ${productSelector(productName)}
         td.o_sale_product_configurator_qty
-        input[name="product_quantity"]
+        input[name="sale_quantity"]
     `;
     return {
         content: `Assert that the quantity of ${productName} is ${quantity}`,
@@ -192,6 +192,18 @@ function assertFooterButtonsDisabled() {
     };
 }
 
+function saveConfigurator() {
+    return [
+        {
+            trigger: '.modal button:contains(Confirm)',
+            run: 'click',
+        }, {
+            content: "Wait until the modal is closed",
+            trigger: 'body:not(:has(.modal))',
+        }
+    ]
+}
+
 export default {
     productSelector,
     optionalProductSelector,
@@ -210,4 +222,5 @@ export default {
     assertOptionalProductPriceInfo,
     assertProductNameContains,
     assertFooterButtonsDisabled,
+    saveConfigurator,
 };

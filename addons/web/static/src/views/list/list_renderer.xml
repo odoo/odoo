@@ -24,9 +24,8 @@
                                 t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
-                                t-att-data-tooltip="!isDebugMode ? column.label : false"
-                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
-                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                t-att-data-tooltip-info="makeTooltip(column)"
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
@@ -45,7 +44,7 @@
                         </t>
                         <th t-if="hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
                         <th t-if="hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0">
-                            <div t-if="displayOptionalFields" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
+                            <div t-if="displayOptionalFields or hasOptionalOpenFormViewColumn" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
                                 <Dropdown position="'bottom-end'">
                                     <button class="btn p-0" tabindex="-1">
                                         <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
@@ -69,6 +68,16 @@
                                                 </DropdownItem>
                                             </t>
                                         </t>
+                                        <div t-if="hasOptionalOpenFormViewColumn" role="separator" class="dropdown-divider"/>
+                                        <DropdownItem t-if="hasOptionalOpenFormViewColumn" closingMode="'none'" onSelected="() => this.toggleDebugOpenView()">
+                                            <CheckBox
+                                                onChange="() => this.toggleDebugOpenView()"
+                                                value="this.debugOpenView"
+                                                name="'View Button'"
+                                            >
+                                                <span class="d-flex align-items-center"><span class="text-truncate">View Button</span></span>
+                                            </CheckBox>
+                                        </DropdownItem>
                                     </t>
                                 </Dropdown>
                             </div>
@@ -91,7 +100,7 @@
                             <td t-elif="column.type != 'field'" class="w-print-auto"/>
                             <td t-else=""/>
                         </t>
-                        <td t-if="props.onOpenFormView" class="w-print-0 p-print-0"/>
+                        <td t-if="hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
                         <td t-if="displayOptionalFields or activeActions.onDelete" class="w-print-0 p-print-0" />
                     </tr>
                 </tfoot>
@@ -271,7 +280,7 @@
                 </t>
             </t>
 
-            <t t-if="props.onOpenFormView">
+            <t t-if="hasOpenFormViewColumn">
                 <td class="o_list_record_open_form_view w-print-0 p-print-0 text-center"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                     t-on-click.stop="() => isX2Many and record.isNew ? this.displaySaveNotification() : props.onOpenFormView(record)"
@@ -308,6 +317,11 @@
                 <td t-else="" tabindex="-1" class="w-print-0 p-print-0"/>
             </t>
         </tr>
+    </t>
+
+    <t t-name="web.ListHeaderTooltip">
+        <t t-esc="field.label"/>
+        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
     </t>
 
 </templates>

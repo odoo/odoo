@@ -8,14 +8,17 @@
         <field name="arch" type="xml">
             <field name="datas" position="after">
                 <button
-                    name="action_open_dynamic_fields_wizard"
+                    name="action_open_pdf_form_fields"
                     type="object"
                     string="Configure dynamic fields"
                     help="Configure the path to fill the form fields."
-                    class="btn-link"
+                    class="btn btn-link"
                     icon="fa-pencil"
                     groups="base.group_system"
                 />
+            </field>
+            <field name="company_id" position="before">
+                <field name="form_field_ids" widget="many2many_tags"/>
             </field>
         </field>
     </record>

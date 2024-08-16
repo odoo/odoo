@@ -1104,7 +1104,9 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
             `;
     }
     await mountWithCleanup(Parent);
-    expect(DROPDOWN_MENU, "menus are closed at start").toHaveCount(0);
+    expect(DROPDOWN_MENU).toHaveCount(0, {
+        message: "menus are closed at the start",
+    });
 
     // Highlighting and selecting items
     const scenarioSteps = [
@@ -1220,7 +1222,9 @@ test.tags("desktop")("multi-level dropdown: keynav when rtl direction", async ()
     });
 
     await mountWithCleanup(Parent);
-    expect(DROPDOWN_MENU, "menus are closed at start").toHaveCount(0);
+    expect(DROPDOWN_MENU).toHaveCount(0, {
+        message: "menus are closed at the start",
+    });
 
     // Highlighting and selecting items
     const scenarioSteps = [
@@ -1341,12 +1345,16 @@ test.tags("desktop")(
                 `;
         }
         await mountWithCleanup(Parent);
-        expect(DROPDOWN_MENU, "menus are closed at start").toHaveCount(0);
+        expect(DROPDOWN_MENU).toHaveCount(0, {
+            message: "menus are closed at the start",
+        });
 
         // Open main dropdown
         click(".main");
         await animationFrame();
-        expect(DROPDOWN_MENU, "1st menu is opened").toHaveCount(1);
+        expect(DROPDOWN_MENU).toHaveCount(1, {
+            message: "1st menu is opened",
+        });
 
         // Mouse enter sub dropdown
         hover(".sub");
@@ -1356,7 +1364,9 @@ test.tags("desktop")(
         // Mouse enter the adjacent dropdown item
         hover(".item");
         await animationFrame();
-        expect(DROPDOWN_MENU, "only 1st menu is opened").toHaveCount(1);
+        expect(DROPDOWN_MENU).toHaveCount(1, {
+            message: "only 1st menu is opened",
+        });
     }
 );
 

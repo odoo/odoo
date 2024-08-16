@@ -32,7 +32,7 @@ export class PaymentScreen extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
-        this.report = useService("report");
+        this.invoiceService = useService("account_move");
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
@@ -66,7 +66,7 @@ export class PaymentScreen extends Component {
 
         return enhancedButtons().map((button) => ({
             ...button,
-            class: `fs-4 ${colorClassMap[button.value] || ""}`,
+            class: `${colorClassMap[button.value] || ""}`,
         }));
     }
 
@@ -83,6 +83,7 @@ export class PaymentScreen extends Component {
             // When the buffer is updated, trigger this event.
             // Note that the component listens to it.
             triggerAtInput: () => this.updateSelectedPaymentline(),
+            useWithBarcode: true,
         };
 
         return config;
@@ -267,9 +268,7 @@ export class PaymentScreen extends Component {
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                 if (syncOrderResult[0]?.raw.account_move) {
-                    await this.report.doAction("account.account_invoices", [
-                        syncOrderResult[0].raw.account_move,
-                    ]);
+                    await this.invoiceService.downloadPdf(syncOrderResult[0].raw.account_move);
                 } else {
                     throw {
                         code: 401,

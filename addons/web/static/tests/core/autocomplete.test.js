@@ -606,7 +606,7 @@ test("correct sequence of blur, focus and select", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 
-test("autocomplete always closes on click away [REQUIRE FOCUS]", async () => {
+test("autocomplete always closes on click away", async () => {
     class Parent extends Component {
         static template = xml`
             <AutoComplete

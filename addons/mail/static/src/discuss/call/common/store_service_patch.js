@@ -28,10 +28,30 @@ const StorePatch = {
             },
         });
         this.allActiveRtcSessions = Record.many("RtcSession");
+        this.nextTalkingTime = 1;
     },
     onStarted() {
         super.onStarted(...arguments);
         this.rtc.start();
+    },
+    sortOnlineMembers(m1, m2) {
+        const m1HasRtc = Boolean(m1.rtcSession);
+        const m2HasRtc = Boolean(m2.rtcSession);
+        if (m1HasRtc === m2HasRtc) {
+            /**
+             * If raisingHand is falsy, it gets an Infinity value so that when
+             * we sort by [oldest/lowest-value]-first, falsy values end up last.
+             */
+            const m1RaisingValue = m1.rtcSession?.raisingHand || Infinity;
+            const m2RaisingValue = m2.rtcSession?.raisingHand || Infinity;
+            if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
+                return m1RaisingValue - m2RaisingValue;
+            } else {
+                return super.sortOnlineMembers(m1, m2);
+            }
+        } else {
+            return m2HasRtc - m1HasRtc;
+        }
     },
 };
 patch(Store.prototype, StorePatch);

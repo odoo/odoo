@@ -882,7 +882,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
         self.authenticate(self.env.user.login, self.env.user.login)
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
         expected = {
-            "mail.message": [
+            "mail.message": self._filter_messages_fields(
                 {
                     "attachments": [],
                     "author": {"id": self.user_admin.partner_id.id, "type": "partner"},
@@ -900,10 +900,9 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "needaction": True,
                     "notifications": [{"id": notif.id}],
                     "pinned_at": False,
+                    "rating_id": False,
                     "reactions": [],
-                    "recipients": [
-                        {"id": self.env.user.partner_id.id, "name": "Ernest Employee", "type": "partner"},
-                    ],
+                    "recipients": [{"id": self.env.user.partner_id.id, "type": "partner"}],
                     "record_name": "Test",
                     "res_id": test_record.id,
                     "scheduledDatetime": False,
@@ -914,7 +913,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "trackingValues": [],
                     "write_date": fields.Datetime.to_string(message.write_date),
                 },
-            ],
+            ),
             "mail.notification": [
                 {
                     "failure_type": False,
@@ -925,7 +924,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "persona": {"id": self.env.user.partner_id.id, "type": "partner"},
                 },
             ],
-            "mail.thread": [
+            "mail.thread": self._filter_threads_fields(
                 {
                     "id": test_record.id,
                     "model": "mail.test.simple",
@@ -933,8 +932,14 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "name": "Test",
                     "selfFollower": False,
                 },
-            ],
-            "res.partner": [
+            ),
+            "res.partner": self._filter_partners_fields(
+                {
+                    "displayName": "Ernest Employee",
+                    "id": self.env.user.partner_id.id,
+                    "name": "Ernest Employee",
+                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                },
                 {
                     "id": self.user_admin.partner_id.id,
                     "isInternalUser": True,
@@ -943,11 +948,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "userId": self.user_admin.id,
                     "write_date": fields.Datetime.to_string(self.user_admin.write_date),
                 },
-                {
-                    "displayName": "Ernest Employee",
-                    "id": self.env.user.partner_id.id,
-                },
-            ],
+            ),
         }
         self.assertEqual(data, expected)
 

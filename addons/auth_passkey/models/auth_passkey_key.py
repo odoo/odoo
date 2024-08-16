@@ -124,6 +124,8 @@ class PassKey(models.Model):
                 # See `res.users.write` and `_get_invalidation_fields`
                 # `self.env.user` is already sudo, so no need to re-apply `sudo` to get delete access right.
                 self.env.user.write({'auth_passkey_key_ids': [Command.delete(key.id)]})
+                new_token = self.env.user._compute_session_token(request.session.sid)
+                request.session.session_token = new_token
             else:
                 _logger.info(
                     "%s (#%d) attempted to delete passkey (#%d) belonging to %s (#%d) from %s but was denied.",
@@ -132,8 +134,6 @@ class PassKey(models.Model):
                     key.create_uid.login, key.create_uid.id,
                     request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
                 )
-        # Reload the web client, as its session has been invalidated, following a change of session token.
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     def action_rename_passkey(self):
         return {
@@ -182,5 +182,6 @@ class PassKeyCreate(models.TransientModel):
             self.env.user.login, self.env.user.id,
             ip
         )
-        # Reload the web client, as its session has been invalidated, following a change of session token.
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
+        new_token = self.env.user._compute_session_token(request.session.sid)
+        request.session.session_token = new_token
+        return True

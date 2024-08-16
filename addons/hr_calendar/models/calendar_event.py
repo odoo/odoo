@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
 from odoo import api, fields, models
@@ -14,17 +15,19 @@ class CalendarEvent(models.Model):
     @api.depends('partner_ids', 'start', 'stop', 'allday')
     def _compute_unavailable_partner_ids(self):
         complete_events = self.filtered(
-            lambda event: event.start and event.stop and event.stop >= event.start and event.partner_ids)
+            lambda event: event.start and event.stop and (event.stop > event.start or (event.stop >= event.start and event.allday)) and event.partner_ids)
         incomplete_event = self - complete_events
         incomplete_event.unavailable_partner_ids = []
         if not complete_events:
             return
         event_intervals = complete_events._get_events_interval()
-        # Event without start and stop are skipped, except all day event: their interval is computed
-        # based on company calendar's interval.
         for event, event_interval in event_intervals.items():
+            # Event_interval is empty when an allday event contains at least one day where the company is closed
+            if not event_interval:
+                event.unavailable_partner_ids = event.partner_ids
+                continue
             start = event_interval._items[0][0]
-            stop = event_interval._items[0][1]
+            stop = event_interval._items[-1][1]
             schedule_by_partner = event.partner_ids._get_schedule(start, stop, merge=False)
             event.unavailable_partner_ids = event._check_employees_availability_for_event(
                 schedule_by_partner, event_interval)
@@ -35,8 +38,11 @@ class CalendarEvent(models.Model):
 
     def _get_events_interval(self):
         """
-        Calculate the interval of an event based on its start, stop, and allday values. If an event is scheduled for the
-        entire day, its interval will correspond to the work interval defined by the company's calendar.
+        This method will returned an Intervals object that represent the event's interval based of its parameters.
+
+        If an event is scheduled for the entire day, its interval will correspond to the work interval defined by the
+        company's calendar.
+        If an allday event is scheduled on a day when the company is closed, the interval of this event will be empty.
         """
         start = min(self.mapped('start')).replace(hour=0, minute=0, second=0, tzinfo=UTC)
         stop = max(self.mapped('stop')).replace(hour=23, minute=59, second=59, tzinfo=UTC)
@@ -44,15 +50,28 @@ class CalendarEvent(models.Model):
         global_interval = company_calendar._work_intervals_batch(start, stop)[False]
         interval_by_event = {}
         for event in self:
-            event_interval = Intervals([(
-                timezone_datetime(event.start),
-                timezone_datetime(event.stop),
-                self.env['resource.calendar']
-            )])
             if event.allday:
-                interval_by_event[event] = event_interval & global_interval
+                # Avoid allday event with a duration of 0
+                allday_event_interval = Intervals([(
+                    event.start.replace(hour=0, minute=0, second=0, tzinfo=UTC),
+                    event.stop.replace(hour=23, minute=59, second=59, tzinfo=UTC),
+                    self.env['resource.calendar']
+                )])
+
+                if any(not (Intervals([(
+                    event.start.replace(hour=0, minute=0, second=0, tzinfo=UTC) + relativedelta(days=i),
+                    event.start.replace(hour=23, minute=59, second=59, tzinfo=UTC) + relativedelta(days=i),
+                    self.env['resource.calendar']
+                )]) & global_interval) for i in range(0, (event.stop_date - event.start_date).days + 1)):
+                    interval_by_event[event] = Intervals([])
+                else:
+                    interval_by_event[event] = allday_event_interval & global_interval
             else:
-                interval_by_event[event] = event_interval
+                interval_by_event[event] = Intervals([(
+                    timezone_datetime(event.start),
+                    timezone_datetime(event.stop),
+                    self.env['resource.calendar']
+                )])
         return interval_by_event
 
     def _check_employees_availability_for_event(self, schedule_by_partner, event_interval):

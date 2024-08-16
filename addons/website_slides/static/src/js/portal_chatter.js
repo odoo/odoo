@@ -18,7 +18,9 @@ PortalChatter.include({
     _reloadChatterContent: async function (data) {
         await this._super(...arguments);
         if (this.options.res_model === "slide.channel") {
-            $('#review-tab').text(_t('Reviews (%s)', data.rating_count));
+            $("#review-tab").text(
+                _t("Reviews (%s)", data.rating_count || data["mail.thread"][0].rating_count)
+            );
         }
     },
 });

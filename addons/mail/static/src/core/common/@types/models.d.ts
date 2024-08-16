@@ -20,7 +20,7 @@ declare module "models" {
 
     // define interfaces for jsdoc, including with patches
     export interface Attachment extends AttachmentClass {}
-    export interface Attachment extends CannedResponseClass {}
+    export interface CannedResponse extends CannedResponseClass {}
     export interface ChannelMember extends ChannelMemberClass {}
     export interface ChatHub extends ChatHubClass {}
     export interface ChatWindow extends ChatWindowClass {}
@@ -41,7 +41,7 @@ declare module "models" {
     // required to propagate types in relational fields
     export interface Models {
         "Attachment": Attachment,
-        "CannedResponse": CannedResponse,
+        "mail.canned.response": CannedResponse,
         "ChannelMember": ChannelMember,
         "ChatHub": ChatHub,
         "ChatWindow": ChatWindow,

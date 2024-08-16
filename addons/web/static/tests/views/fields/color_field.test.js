@@ -49,7 +49,7 @@ class User extends models.Model {
 defineModels([Color, User]);
 
 test("field contains a color input", async () => {
-    Color._fields.hex_color = fields.Char({ string: "hexadecimal color", onChange: () => {} });
+    Color._onChanges.hex_color = () => {};
     await mountView({ type: "form", resModel: "color", resId: 1 });
 
     onRpc("onchange", ({ args }) => {
@@ -96,18 +96,16 @@ test("read-only color field in editable list view", async () => {
 });
 
 test("color field read-only in model definition, in non-editable list", async () => {
-    Color._fields.hex_color = fields.Char({ string: "hexadecimal color", readonly: true });
+    Color._fields.hex_color.readonly = true;
     await mountView({ type: "list", resModel: "color" });
 
     expect(".o_field_color input:disabled").toHaveCount(2);
 });
 
 test("color field change via anoter field's onchange", async () => {
-    Color._fields.text = fields.Char({
-        onChange: (obj) => {
-            obj.hex_color = "#fefefe";
-        },
-    });
+    Color._onChanges.text = (obj) => {
+        obj.hex_color = "#fefefe";
+    };
 
     await mountView({
         type: "form",
@@ -136,6 +134,6 @@ test("color field change via anoter field's onchange", async () => {
     expect.verifySteps([
         'onchange [[1],{"text":"someValue"},["text"],{"text":{},"hex_color":{},"display_name":{}}]',
     ]);
-    expect(".o_field_color input", { visible: false }).toHaveValue("#fefefe");
+    expect(".o_field_color input").toHaveValue("#fefefe");
     expect(".o_field_color div").toHaveStyle({ backgroundColor: "rgb(254, 254, 254)" });
 });

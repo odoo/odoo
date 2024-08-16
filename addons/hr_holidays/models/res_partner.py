@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 from odoo import api, models
 from odoo.addons.mail.tools.discuss import Store
 
@@ -24,11 +23,11 @@ class ResPartner(models.Model):
     def _get_on_leave_ids(self):
         return self.env['res.users']._get_on_leave_ids(partner=True)
 
-    def _to_store(self, store: Store, fields=None):
+    def _to_store(self, store: Store, /, *, fields=None, **kwargs):
         """Override to add the current leave status."""
-        super()._to_store(store, fields=fields)
-        if not fields:
-            fields = {"out_of_office_date_end": True}
+        super()._to_store(store, fields=fields, **kwargs)
+        if fields is None:
+            fields = ["out_of_office_date_end"]
         for partner in self:
             if "out_of_office_date_end" in fields:
                 # in the rare case of multi-user partner, return the earliest possible return date
@@ -37,11 +36,5 @@ class ResPartner(models.Model):
                 date = sorted(dates)[0] if dates and all(dates) else False
                 state = sorted(states)[0] if states and all(states) else False
                 store.add(
-                    "res.partner",
-                    {
-                        "id": partner.id,
-                        "out_of_office_date_end": (
-                            odoo.fields.Date.to_string(date) if state == "validate" else False
-                        ),
-                    },
+                    partner, {"out_of_office_date_end": date if state == "validate" else False}
                 )

@@ -182,7 +182,7 @@ class TestUiSession(HttpCase):
         # =========================================
 
         with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
-            self.start_tour('/web', 'test_survey_session_start_tour', login='admin')
+            self.start_tour('/odoo', 'test_survey_session_start_tour', login='admin')
 
         self.assertEqual('in_progress', survey_session.session_state)
         self.assertTrue(bool(survey_session.session_start_time))
@@ -225,7 +225,7 @@ class TestUiSession(HttpCase):
         attendee_3._save_lines(scale_question, '6')
 
         with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
-            self.start_tour('/web', 'test_survey_session_manage_tour', login='admin')
+            self.start_tour('/odoo', 'test_survey_session_manage_tour', login='admin')
 
         self.assertFalse(bool(survey_session.session_state))
         self.assertTrue(all(answer.state == 'done' for answer in all_attendees))

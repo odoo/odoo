@@ -65,7 +65,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/polyfills/clipboard.js',
 
-            'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
@@ -94,7 +93,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
-            'web/static/src/legacy/js/libs/jquery.js',
 
             'base/static/src/css/modules.css',
 
@@ -127,12 +125,12 @@ This module provides the core of the Odoo Web Client.
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/xml/base.xml',
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.scss'),
         ],
         'web.assets_backend_lazy': [
             ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
@@ -140,6 +138,9 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/views/graph/**',
             'web/static/src/views/pivot/**',
+        ],
+        'web.assets_backend_lazy_dark': [
+            ('include', 'web.assets_backend_lazy'),
         ],
         'web.assets_web': [
             ('include', 'web.assets_backend'),
@@ -398,6 +399,10 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
         ],
+        'web._assets_jquery': [
+            'web/static/lib/jquery/jquery.js',
+            'web/static/src/legacy/js/libs/jquery.js',
+        ],
         'web._assets_bootstrap': [
             'web/static/src/scss/import_bootstrap.scss',
             'web/static/src/scss/utilities_custom.scss',
@@ -426,11 +431,11 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
 
         'web.assets_tests': [
-            # No tours are defined in web, but the bundle "assets_tests" is
-            # first called in web.
+            # the bundle "assets_tests" is first called in web.
             'web/static/tests/legacy/helpers/cleanup.js',
             'web/static/tests/legacy/helpers/utils.js',
             'web/static/tests/legacy/utils.js',
+            'web/static/tests/tours/**/*'
         ],
         'web.__assets_tests_call__': [
             'web/static/tests/legacy/ignore_missing_deps_start.js',
@@ -444,8 +449,11 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
 
+            'web/static/lib/jquery/jquery.js',
+
             'web/static/lib/hoot/**/*',
             'web/static/lib/hoot-dom/**/*',
+            ('remove', 'web/static/lib/hoot/ui/hoot_style.css'),
             ('remove', 'web/static/lib/hoot/tests/**/*'),
 
             # Odoo mocks
@@ -465,6 +473,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/**/*',
 
             ('remove', 'web/static/tests/_framework/mock_module_loader.js'),
+            ('remove', 'web/static/tests/tours/**/*'),
             ('remove', 'web/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
         ],
         'web.tests_assets': [
@@ -477,6 +486,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/legacy_tests/helpers/**/*',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
+
+            'web/static/lib/jquery/jquery.js',
 
             'web/static/lib/fullcalendar/core/index.global.js',
             'web/static/lib/fullcalendar/interaction/index.global.js',

@@ -273,6 +273,7 @@ class SaleOrder(models.Model):
         string="Amount Before Discount",
         compute='_compute_amount_undiscounted', digits=0)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
+    company_price_include = fields.Selection(related='company_id.account_price_include')
     expected_date = fields.Datetime(
         string="Expected Date",
         compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
@@ -1004,6 +1005,9 @@ class SaleOrder(models.Model):
             # Public user can confirm SO, so we check the group on any record creator.
             self.action_lock()
 
+        if self.env.context.get('send_email'):
+            self._send_order_confirmation_mail()
+
         return True
 
     def _should_be_locked(self):
@@ -1218,7 +1222,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        txs_to_be_linked = self.transaction_ids.filtered(
+        txs_to_be_linked = self.transaction_ids.sudo().filtered(
             lambda tx: (
                 tx.state in ('pending', 'authorized')
                 or tx.state == 'done' and not (tx.payment_id and tx.payment_id.is_reconciled)
@@ -1736,6 +1740,7 @@ class SaleOrder(models.Model):
         - it requires a payment;
         - the last transaction's state isn't `done`;
         - the total amount is strictly positive.
+        - confirmation amount is not reached
 
         Note: self.ensure_one()
 
@@ -1743,13 +1748,12 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        transaction = self.get_portal_last_transaction()
         return (
             self.state in ['draft', 'sent']
             and not self.is_expired
             and self.require_payment
-            and transaction.state != 'done'
             and self.amount_total > 0
+            and not self._is_confirmation_amount_reached()
         )
 
     def _get_portal_return_action(self):
@@ -2019,3 +2023,11 @@ class SaleOrder(models.Model):
             return self.partner_id.lang
 
         return self.env.lang
+
+    def _validate_order(self):
+        """
+        Confirm the sale order and send a confirmation email.
+
+        :return: None
+        """
+        self.with_context(send_email=True).action_confirm()

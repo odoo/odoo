@@ -33,6 +33,7 @@ var SelectBox = publicWidget.Widget.extend({
         this.$el.select2({
             placeholder: self.placeholder,
             allowClear: true,
+            formatNoMatches: false,
             createSearchChoice: function (term) {
                 if (self._objectExists(term)) {
                     return null;
@@ -132,7 +133,7 @@ var SelectBox = publicWidget.Widget.extend({
      * @param {String} name
      */
     _createObject: function (name) {
-        return this.orm.call("utm.mixin", "find_or_create_record", [[], this.obj, name]).then(record => {
+        return this.orm.call("utm.mixin", "find_or_create_record", [this.obj, name]).then(record => {
             this.$el.attr('value', record);
         });
     },

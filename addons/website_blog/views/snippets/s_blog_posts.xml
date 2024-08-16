@@ -5,6 +5,7 @@
     <t t-call="website.s_dynamic_snippet_template">
         <t t-set="snippet_name" t-value="'s_blog_posts'"/>
         <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts s_blog_post_big_picture s_blog_posts_effect_marley'"/>
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_preview_data"/>
     </t>
 </template>
 

@@ -12,6 +12,7 @@ import {
     isEditable,
     isEventTarget,
     isFocusable,
+    isInDOM,
     isVisible,
     queryAll,
     queryAllRects,
@@ -282,6 +283,30 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         expect(isFocusable("input:first")).toBe(true);
         expect(isFocusable("li:first")).toBe(false);
+    });
+
+    test("isInDom", async () => {
+        await mountOnFixture(FULL_HTML_TEMPLATE);
+        await waitForIframes();
+
+        expect(isInDOM(document)).toBe(true);
+        expect(isInDOM(document.body)).toBe(true);
+        expect(isInDOM(document.head)).toBe(true);
+        expect(isInDOM(document.documentElement)).toBe(true);
+
+        const form = queryOne`form`;
+        expect(isInDOM(form)).toBe(true);
+
+        form.remove();
+
+        expect(isInDOM(form)).toBe(false);
+
+        const paragraph = queryOne`:iframe p`;
+        expect(isInDOM(paragraph)).toBe(true);
+
+        paragraph.remove();
+
+        expect(isInDOM(paragraph)).toBe(false);
     });
 
     test("isDisplayed", async () => {
@@ -885,7 +910,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         test("queryRect with trimPadding", async () => {
             await mountOnFixture(/* xml */ `
-                <div style="width: 40px; height: 60px; padding: 5px; margin: 6px" />
+                <div style="width: 50px; height: 70px; padding: 5px; margin: 6px" />
             `);
 
             expect("div").toHaveRect({ width: 50, height: 70 }); // with padding

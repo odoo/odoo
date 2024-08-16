@@ -17,6 +17,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Transition } from "@web/core/transition";
 
 import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
+import { Breadcrumbs } from "@web/webclient/breadcrumbs/breadcrumbs";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -45,6 +46,7 @@ export class ControlPanel extends Component {
         SearchBar,
         Dropdown,
         DropdownItem,
+        Breadcrumbs,
         AccordionItem,
         CheckBox,
         Transition,
@@ -289,15 +291,6 @@ export class ControlPanel extends Component {
             layoutActions: true,
             ...this.props.display,
         };
-    }
-
-    /**
-     * Called when an element of the breadcrumbs is clicked.
-     *
-     * @param {string} jsId
-     */
-    onBreadcrumbClicked(jsId) {
-        this.actionService.restore(jsId);
     }
 
     onClickShowEmbedded() {

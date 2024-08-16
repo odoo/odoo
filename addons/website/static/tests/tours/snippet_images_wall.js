@@ -39,7 +39,7 @@ const selectSignImageStep = [
 const reselectSignImageSteps = [
     ...preventRaceConditionSteps,
     {
-        trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'])",
+        trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(img[data-index='1'])",
     },
     {
         content: "Select footer",
@@ -57,6 +57,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
     ...wTourUtils.dragNDrop({
         id: "s_images_wall",
         name: "Images Wall",
+        groupName: "Images",
 }), 
 ...wTourUtils.clickOnSnippet({
     id: "s_image_gallery",

@@ -1,6 +1,7 @@
-import { fields, serverState, webModels } from "@web/../tests/web_test_helpers";
+import { DISCUSS_ACTION_ID, mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
+import { fields, makeKwArgs, serverState, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
-import { DISCUSS_ACTION_ID } from "../mail_mock_server";
 
 export class ResUsers extends webModels.ResUsers {
     im_status = fields.Char({ default: "online" });
@@ -23,39 +24,39 @@ export class ResUsers extends webModels.ResUsers {
         /** @type {import("mock_models").ResUsersSettings} */
         const ResUsersSettings = this.env["res.users.settings"];
 
-        store.add(ResPartner.browse(serverState.odoobotId));
         store.add({
             action_discuss_id: DISCUSS_ACTION_ID,
             channel_types_with_seen_infos: DiscussChannel._types_allowing_seen_infos(),
             hasGifPickerFeature: true,
             hasLinkPreviewFeature: true,
             hasMessageTranslationFeature: true,
-            odoobot: { id: serverState.odoobotId, type: "partner" },
+            odoobot: mailDataHelpers.Store.one(ResPartner.browse(serverState.odoobotId)),
         });
         if (!this._is_public(this.env.uid)) {
             const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
-            store.add("res.partner", {
-                id: this.env.user?.partner_id,
-                isAdmin: true, // mock server simplification
-                active: true,
-                isInternalUser: !this.env.user?.share,
-                name: this.env.user?.name,
-                notification_preference: this.env.user?.notification_type,
-                userId: this.env.user?.id,
-                write_date: this.env.user?.write_date,
-            });
             store.add({
-                self: { id: this.env.user?.partner_id, type: "partner" },
+                self: mailDataHelpers.Store.one(
+                    ResPartner.browse(this.env.user.partner_id),
+                    makeKwArgs({
+                        fields: [
+                            "active",
+                            "isAdmin",
+                            "name",
+                            "notification_type",
+                            "user",
+                            "write_date",
+                        ],
+                    })
+                ),
                 settings: ResUsersSettings.res_users_settings_format(userSettings.id),
             });
         } else if (this.env.cookie.get("dgid")) {
-            const [guest] = MailGuest.read(this.env.cookie.get("dgid"));
-            store.add("mail.guest", {
-                id: guest.id,
-                name: guest.name,
-                write_date: guest.write_date,
+            store.add({
+                self: mailDataHelpers.Store.one(
+                    MailGuest.browse(this.env.cookie.get("dgid")),
+                    makeKwArgs({ fields: ["name", "write_date"] })
+                ),
             });
-            store.add({ self: { id: guest.id, type: "guest" } });
         }
     }
     systray_get_activities() {
@@ -116,7 +117,7 @@ export class ResUsers extends webModels.ResUsers {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const user = ResUsers._filter([["id", "in", ids]])[0];
+        const [user] = ResUsers.browse(ids);
         const channels = DiscussChannel._get_channels_as_member();
         const members = DiscussChannelMember._filter([
             ["channel_id", "in", channels.map((channel) => channel.id)],

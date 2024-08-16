@@ -24,7 +24,7 @@ from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import Users
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, new_test_user
-from odoo.tools import email_normalize, formataddr, mute_logger, pycompat
+from odoo.tools import email_normalize, formataddr, mute_logger
 from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
@@ -256,7 +256,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         )
 
     def from_string(self, text):
-        return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
+        return email.message_from_string(text, policy=email.policy.SMTP)
 
     def assertHtmlEqual(self, value, expected, message=None):
         tree = html.fragment_fromstring(value, parser=html.HTMLParser(encoding='utf-8'), create_parent='body')
@@ -806,12 +806,14 @@ class MailCase(MockEmail):
 
         with patch.object(ImBus, 'create', autospec=True, wraps=ImBus, side_effect=_bus_bus_create) as _bus_bus_create_mock:
             yield
+            self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 
     def _init_mock_bus(self):
         self._new_bus_notifs = self.env['bus.bus'].sudo()
 
     def _reset_bus(self):
-        self.env['bus.bus'].sudo().search([]).unlink()
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextmanager
     def mock_mail_app(self):
@@ -1185,13 +1187,20 @@ class MailCase(MockEmail):
               }}
             }, {...}]
         """
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
         new_line = "\n"
+
+        def notif_to_string(notif):
+            message = json.loads(notif.message)
+            payload = json_dump(message.get("payload"))
+            return f"{notif.channel}  # {message.get('type')} - {payload[0:120]}{'…' if len(payload) > 120 else ''}"
+
         self.assertEqual(
             bus_notifs.mapped("channel"),
             [json_dump(channel) for channel in channels],
             f"\nExpected:\n{new_line.join([json_dump(channel) for channel in channels])}"
-            f"\nReturned:\n{new_line.join(bus_notifs.mapped('channel'))}"
+            f"\nReturned:\n{new_line.join([notif_to_string(notif) for notif in bus_notifs])}",
         )
         notif_messages = [n.message for n in bus_notifs]
         for expected in message_items or []:
@@ -1199,8 +1208,15 @@ class MailCase(MockEmail):
                 if json_dump(expected) == notification:
                     break
             else:
-                raise AssertionError('No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s' %
-                    (json_dump(expected), ",\n".join(notif_messages)))
+                matching_notifs = [m for m in notif_messages if json.loads(m).get("type") == expected.get("type")]
+                if len(matching_notifs) == 1:
+                    self.assertEqual(expected, json.loads(matching_notifs[0]))
+                if not matching_notifs:
+                    matching_notifs = notif_messages
+                raise AssertionError(
+                    "No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s"
+                    % (json_dump(expected), ",\n".join(matching_notifs))
+                )
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs
@@ -1509,10 +1525,30 @@ class MailCommon(common.TransactionCase, MailCase):
             **attach_values,
         } for x in range(count)]
 
-    def _filter_persona_fields(self, data):
-        """ Remove store persona data dependant on other modules if they are not not installed.
+    def _filter_messages_fields(self, /, *messages_data):
+        """ Remove store message data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        if "rating.rating" not in self.env:
+            for data in messages_data:
+                data.pop("rating_id", None)
+        return list(messages_data)
+
+    def _filter_partners_fields(self, /, *partners_data):
+        """ Remove store partner data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
         if "hr.leave" not in self.env:
-            data.pop("out_of_office_date_end")
-        return data
+            for data in partners_data:
+                data.pop("out_of_office_date_end", None)
+        return list(partners_data)
+
+    def _filter_threads_fields(self, /, *threads_data):
+        """ Remove store thread data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        if "rating.rating" not in self.env:
+            for data in threads_data:
+                data.pop("rating_avg", None)
+                data.pop("rating_count", None)
+        return list(threads_data)

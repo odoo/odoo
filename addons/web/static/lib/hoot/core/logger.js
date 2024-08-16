@@ -27,7 +27,7 @@ const {
  */
 const styledArguments = (args) => {
     const prefix = `%c[HOOT]%c`;
-    const styles = [`color:#ff0080`, `color:inherit`];
+    const styles = [`color:#ff0080;font-weight:bold`, ""];
     let firstArg = args.shift() ?? "";
     if (typeof firstArg === "function") {
         firstArg = firstArg();

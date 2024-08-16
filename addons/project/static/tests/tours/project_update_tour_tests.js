@@ -5,7 +5,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_update_tour', {
     test: true,
-    url: '/web',
+    url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     run: "click",
@@ -90,11 +90,9 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "click",
 }, {
     trigger: ".modal .o_field_widget[name=fold] input",
-    in_modal: false,
     run: "click",
 }, {
     trigger: ".modal .modal-footer button",
-    in_modal: false,
     run: "click",
 },
 {

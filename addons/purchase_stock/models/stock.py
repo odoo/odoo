@@ -13,6 +13,31 @@ class StockPicking(models.Model):
         'purchase.order', related='move_ids.purchase_line_id.order_id',
         string="Purchase Orders", readonly=True)
 
+    days_to_arrive = fields.Datetime(compute='_compute_effective_date', search="_search_days_to_arrive", copy=False)
+    delay_pass = fields.Datetime(compute='_compute_date_order', search="_search_delay_pass", index=True, copy=False)
+
+    @api.depends('state', 'location_dest_id.usage', 'date_done')
+    def _compute_effective_date(self):
+        for picking in self:
+            if picking.state == 'done' and picking.location_dest_id.usage != 'supplier' and picking.date_done:
+                picking.days_to_arrive = picking.date_done
+            else:
+                picking.days_to_arrive = False
+
+    def _compute_date_order(self):
+        for picking in self:
+            picking.delay_pass = picking.purchase_id.date_order if picking.purchase_id else fields.Datetime.now()
+
+    @api.model
+    def _search_days_to_arrive(self, operator, value):
+        date_value = fields.Datetime.from_string(value)
+        return [('date_done', operator, date_value)]
+
+    @api.model
+    def _search_delay_pass(self, operator, value):
+        date_value = fields.Datetime.from_string(value)
+        return [('purchase_id.date_order', operator, date_value)]
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -168,7 +193,6 @@ class Orderpoint(models.Model):
             domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
         order = self.env['purchase.order.line'].search(domain, limit=1).order_id
         if order:
-            action = self.env.ref('purchase.action_rfq_form')
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -177,7 +201,7 @@ class Orderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': order.display_name,
-                        'url': f'/web#action={action.id}&id={order.id}&model=purchase.order',
+                        'url': f'/odoo/action-purchase.action_rfq_form/{order.id}',
                     }],
                     'sticky': False,
                     'next': {'type': 'ir.actions.act_window_close'},

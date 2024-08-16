@@ -176,7 +176,7 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, "<table><tbody><tr><td/></tr></tbody></table>")
         );
         expect(getContent(editor.editable)).toBe(
-            `<p class="oe_unbreakable">content</p><table><tbody><tr><td></td></tr></tbody></table>[]`
+            `<p class="oe_unbreakable">content[]</p><table><tbody><tr><td></td></tr></tbody></table>`
         );
     });
 
@@ -465,6 +465,21 @@ describe("not collapsed selection", () => {
                 editor.dispatch("ADD_STEP");
             },
             contentAfter: `<p><span class="a">TEST</span>[]</p>`,
+        });
+    });
+    test("should insert html containing ZWNBSP", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                editor.shared.domInsert(
+                    parseHTML(
+                        editor.document,
+                        '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p><p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>'
+                    )
+                );
+                editor.dispatch("ADD_STEP");
+            },
+            contentAfter: '<p><a href="#">link</a></p><p><a href="#">link</a>[]<br></p>',
         });
     });
 });

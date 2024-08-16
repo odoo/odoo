@@ -25,6 +25,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     ...selectImageSteps,
     {

@@ -10,6 +10,7 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     ...wTourUtils.dragNDrop({
         id: 's_404_snippet',
         name: '404 Snippet',
+        groupName: "Images",
     }),
     {
         content: 'Click on the snippet image',

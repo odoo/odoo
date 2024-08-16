@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="card_campaign_tag_demo" model="card.campaign.tag">
+        <field name="name">demo</field>
+    </record>
+
+    <record id="card_campaign_campaign_1" model="card.campaign">
+        <field name="name">Employee Card</field>
+        <field name="res_model">res.partner</field>
+        <field name="card_template_id" ref="marketing_card.card_template_user_image"/>
+        <field name="post_suggestion"></field>
+        <field name="tag_ids" eval="[Command.link(ref('card_campaign_tag_demo'))]"/>
+        <field name="target_url">https://www.odoo.com/</field>
+        <field name="reward_message" type="html">
+            <p>You just leveled up your exposure!</p>
+            <p>Check out odoo.com for more!</p>
+        </field>
+        <field name="reward_target_url">https://www.odoo.com/</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="card_element_ids" eval="[
+            Command.clear(),
+            Command.create({'card_element_role': 'background', 'render_type': 'image', 'value_type': 'static', 'card_element_image': False}),
+            Command.create({'card_element_role': 'header', 'render_type': 'text', 'value_type': 'field', 'field_path': 'name'}),
+            Command.create({'card_element_role': 'subheader', 'render_type': 'text', 'value_type': 'field', 'field_path': 'function'}),
+            Command.create({'card_element_role': 'section_1', 'render_type': 'text', 'value_type': 'static', 'card_element_text': 'Contact'}),
+            Command.create({'card_element_role': 'subsection_1', 'render_type': 'text', 'value_type': 'field', 'field_path': 'email'}),
+            Command.create({'card_element_role': 'subsection_2', 'render_type': 'text', 'value_type': 'field', 'field_path': 'phone'}),
+            Command.create({'card_element_role': 'button', 'render_type': 'text', 'value_type': 'static', 'card_element_text': 'Contact Me!'}),
+            Command.create({'card_element_role': 'image_1', 'render_type': 'image', 'value_type': 'field', 'field_path': 'image_256'}),
+        ]"/>
+    </record>
+    <record id="card_campaign_element_campaign_1_image_2" model="card.campaign.element">
+        <field name="campaign_id" ref="card_campaign_campaign_1"/>
+        <field name="card_element_role">image_2</field>
+        <field name="render_type">image</field>
+        <field name="value_type">static</field>
+        <field name="card_element_image" type="base64" file="web/static/img/logo.png"/>
+    </record>
+</odoo>

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
@@ -109,10 +108,13 @@ class AccrualPlanLevel(models.Model):
     yearly_day_display = fields.Selection(
         _get_selection_days, compute='_compute_days_display', inverse='_inverse_yearly_day_display')
     cap_accrued_time = fields.Boolean("Cap accrued time", default=True,
-        help="When the field is checked the accrued time will be capped at the specified amount of time.")
+        help="When the field is checked the balance of an allocation using this accrual plan will never exceed the specified amount.")
     maximum_leave = fields.Float(
         'Limit to', digits=(16, 2), compute="_compute_maximum_leave", readonly=False, store=True,
         help="Choose a cap for this accrual.")
+    cap_accrued_time_yearly = fields.Boolean(string="Milestone cap",
+        help="When the field is checked the total amount accrued each year will be capped at the specified amount")
+    maximum_leave_yearly = fields.Float(string="Yearly limit to", digits=(16, 2))
     action_with_unused_accruals = fields.Selection(
         [('lost', 'None. Accrued time reset to 0'),
          ('all', 'All accrued time carried over'),
@@ -136,10 +138,15 @@ class AccrualPlanLevel(models.Model):
          "(yearly_day > 0 AND yearly_day <= 31 AND frequency = 'yearly'))",
          "The dates you've set up aren't correct. Please check them."),
         ('start_count_check', "CHECK( start_count >= 0 )", "You can not start an accrual in the past."),
-        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', 'You must give a rate greater than 0 in accrual plan levels.')
+        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', "You must give a rate greater than 0 in accrual plan levels."),
+        (
+            'valid_yearly_cap_value',
+            'CHECK(cap_accrued_time_yearly IS NULL OR COALESCE(maximum_leave_yearly, 0) > 0)',
+            "You cannot have a cap on yearly accrued time without setting a maximum amount."
+        ),
     ]
 
-    @api.constrains('maximum_leave')
+    @api.constrains('cap_accrued_time', 'maximum_leave')
     def _check_maximum_leave(self):
         for level in self:
             if level.cap_accrued_time and level.maximum_leave < 1:

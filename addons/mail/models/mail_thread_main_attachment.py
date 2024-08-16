@@ -49,18 +49,11 @@ class MailMainAttachmentMixin(models.AbstractModel):
                     key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
                 ).id
 
-    def _thread_to_store(self, store: Store, request_list, **kwargs):
+    def _thread_to_store(self, store: Store, /, *, request_list=None, **kwargs):
         super()._thread_to_store(store, request_list=request_list, **kwargs)
-        if 'attachments' in request_list:
+        if request_list and "attachments" in request_list:
             store.add(
-                "mail.thread",
-                {
-                    "id": self.id,
-                    "model": self._name,
-                    "mainAttachment": (
-                        {"id": self.message_main_attachment_id.id}
-                        if self.message_main_attachment_id
-                        else False
-                    ),
-                },
+                self,
+                {"mainAttachment": Store.one(self.message_main_attachment_id, only_id=True)},
+                as_thread=True,
             )

@@ -1,14 +1,15 @@
-import { expect, describe, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import {
     check,
     dblclick,
-    resize,
     select,
     queryAll,
     queryAllTexts,
     queryFirst,
+    pointerDown,
+    pointerUp,
 } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, Deferred } from "@odoo/hoot-mock";
+import { runAllTimers, animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -19,17 +20,22 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { utils } from "@web/core/ui/ui_service";
 
 import { download } from "@web/core/network/download";
-
-describe.current.tags("desktop");
 
 async function exportAllAction() {
     await contains(".o_cp_action_menus .dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item").click();
 }
 const openExportDialog = async () => {
-    await contains(".o_list_record_selector input[type='checkbox']").click();
+    if (utils.isSmall()) {
+        pointerDown(".o_data_row:nth-child(1)");
+        await runAllTimers();
+        pointerUp(".o_data_row:nth-child(1)");
+    } else {
+        await contains(".o_list_record_selector input[type='checkbox']").click();
+    }
     await contains(".o_control_panel .o_cp_action_menus .dropdown-toggle").click();
     await contains(".dropdown-menu span:contains(Export)").click();
     await animationFrame();
@@ -363,7 +369,7 @@ test("Export dialog: interacting with export templates in debug", async () => {
     expect(".o_fields_list .o_export_field").toHaveText("Activities (activity_ids)");
 });
 
-test("Export dialog: interacting with available fields", async () => {
+test.tags("desktop")("Export dialog: interacting with available fields", async () => {
     onRpc("/web/export/formats", () => {
         return Promise.resolve([{ tag: "csv", label: "CSV" }]);
     });
@@ -594,7 +600,7 @@ test("Export dialog: export list with 'exportable: false'", async () => {
     expect(".o_fields_list").toHaveText("Foo\nExportable");
 });
 
-test("Export dialog: display on small screen after resize", async () => {
+test.tags("desktop")("Export dialog: sortable on desktop", async () => {
     onRpc("/web/export/formats", () => {
         return Promise.resolve([{ tag: "csv", label: "CSV" }]);
     });
@@ -616,23 +622,39 @@ test("Export dialog: display on small screen after resize", async () => {
     await openExportDialog();
 
     await contains(".modal .o_export_tree_item .o_add_field").click();
-
-    //make the window smaller to change the layout
-    resize({ width: 200 });
-    await advanceTime(1000);
-    expect(".o_export_field_sortable").toHaveCount(0, {
-        message: "exported fields can't be sorted by drag and drop",
-    });
-
-    //set back to a large window
-    resize({ width: 2000 });
-    await advanceTime(1000);
     expect(".o_export_field_sortable").toHaveCount(2, {
         message: "exported fields can be sorted by drag and drop",
     });
 });
 
-test("ExportDialog: export all records of the domain", async () => {
+test.tags("mobile")("Export dialog: non-sortable on mobile", async () => {
+    onRpc("/web/export/formats", () => {
+        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+    });
+    onRpc("/web/export/get_fields", async (request) => {
+        const { params } = await request.json();
+        if (!params.parent_field) {
+            return Promise.resolve(fetchedFields.root);
+        }
+        return Promise.resolve(fetchedFields[params.prefix]);
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<tree export_xlsx="1"><field name="foo"/></tree>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+
+    await contains(".modal .o_export_tree_item .o_add_field").click();
+    expect(".o_export_field_sortable").toHaveCount(0, {
+        message: "exported fields can't be sorted by drag and drop",
+    });
+});
+
+test.tags("desktop")("ExportDialog: export all records of the domain", async () => {
     let isDomainSelected = false;
     patchWithCleanup(download, {
         _download: (options) => {
@@ -668,7 +690,7 @@ test("ExportDialog: export all records of the domain", async () => {
     await openExportDialog();
 
     await contains(".o_select_button").click();
-    await contains(".btn-close").click();
+    await contains(".o_form_button_cancel").click();
 
     isDomainSelected = true;
     await contains(".o_list_select_domain").click();
@@ -762,7 +784,45 @@ test("Direct export grouped list", async () => {
     await exportAllAction();
 });
 
-test("Direct export list take optional fields into account", async () => {
+test.tags("desktop")(
+    "Direct export list take optional fields into account on desktop",
+    async () => {
+        patchWithCleanup(download, {
+            _download: (options) => {
+                expect(JSON.parse(options.data.data).fields).toEqual([
+                    { label: "Bar", name: "bar", store: true, type: "boolean" },
+                ]);
+                return Promise.resolve();
+            },
+        });
+        onRpc("/web/export/formats", () => {
+            return Promise.resolve([{ tag: "xls", label: "Excel" }]);
+        });
+        onRpc("/web/export/get_fields", () => {
+            return Promise.resolve(fetchedFields.root);
+        });
+
+        await mountView({
+            type: "list",
+            resModel: "partner",
+            arch: `
+        <tree>
+            <field name="foo" optional="show"/>
+            <field name="bar" optional="show"/>
+        </tree>`,
+            loadActionMenus: true,
+        });
+
+        await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
+        await contains("span.dropdown-item:first-child").click();
+        expect("th").toHaveCount(3, {
+            message: "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns",
+        });
+        await exportAllAction();
+    }
+);
+
+test.tags("mobile")("Direct export list take optional fields into account on mobile", async () => {
     patchWithCleanup(download, {
         _download: (options) => {
             expect(JSON.parse(options.data.data).fields).toEqual([
@@ -791,13 +851,13 @@ test("Direct export list take optional fields into account", async () => {
 
     await contains("table .o_optional_columns_dropdown .dropdown-toggle").click();
     await contains("span.dropdown-item:first-child").click();
-    expect("th").toHaveCount(3, {
-        message: "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns",
+    expect("th").toHaveCount(2, {
+        message: "should have 2 th, 1 for columns, 1 for optional columns",
     });
     await exportAllAction();
 });
 
-test("Export dialog with duplicated fields", async () => {
+test.tags("desktop")("Export dialog with duplicated fields on desktop", async () => {
     onRpc("/web/export/formats", () => {
         return Promise.resolve([{ tag: "csv", label: "CSV" }]);
     });
@@ -818,6 +878,34 @@ test("Export dialog with duplicated fields", async () => {
 
     expect(".o_list_table th:nth-child(2)").toHaveText("Foo");
     expect(".o_list_table th:nth-child(3)").toHaveText("duplicate of Foo");
+    await openExportDialog();
+    expect(".modal .o_export_field").toHaveCount(1);
+    expect(".modal .o_export_field").toHaveText("Foo", {
+        message: "the only field to export corresponds to the field displayed in the list view",
+    });
+});
+
+test.tags("mobile")("Export dialog with duplicated fields on mobile", async () => {
+    onRpc("/web/export/formats", () => {
+        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+    });
+    onRpc("/web/export/get_fields", () => {
+        return Promise.resolve(fetchedFields.root);
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+        <tree>
+            <field name="foo" string="Foo"/>
+            <field name="foo" string="duplicate of Foo"/>
+        </tree>`,
+        loadActionMenus: true,
+    });
+
+    expect(".o_list_table th:nth-child(1)").toHaveText("Foo");
+    expect(".o_list_table th:nth-child(2)").toHaveText("duplicate of Foo");
     await openExportDialog();
     expect(".modal .o_export_field").toHaveCount(1);
     expect(".modal .o_export_field").toHaveText("Foo", {

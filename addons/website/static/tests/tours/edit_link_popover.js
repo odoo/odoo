@@ -23,7 +23,6 @@ const clickEditLink = [{
 }, {
     content: "Ensure popover is closed",
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
-    in_modal: false,
 }];
 
 wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
@@ -35,6 +34,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     {
         content: "Click on a paragraph",
@@ -152,6 +152,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     ...wTourUtils.dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
+        groupName: "Content",
     }),
     // 3. Test other links (CTA in navbar & links in footer)
     {

@@ -146,7 +146,6 @@ export function clickPartnerButton() {
         {
             content: "partner screen is shown",
             trigger: `${PartnerList.clickPartner().trigger}`,
-            in_modal: false,
         },
     ];
 }
@@ -163,35 +162,61 @@ export function customerIsSelected(name) {
     ];
 }
 export function clickRefund() {
-    return [clickReview(), clickControlButtonMore(), clickControlButton("Refund")];
+    return [clickReview(), ...clickControlButton("Refund")];
 }
 export function controlButtonTrigger(name = "") {
     return `.control-buttons button:contains("${name}")`;
 }
 export function clickControlButton(name) {
-    return {
-        content: `click ${name} button`,
-        trigger: controlButtonTrigger(name),
-        run: "click",
-    };
+    return [
+        ...clickControlButtonMore(),
+        {
+            content: `click ${name} button`,
+            trigger: controlButtonTrigger(name),
+            run: "click",
+        },
+    ];
 }
 
 export function clickControlButtonMore() {
     return [
         {
             isActive: ["mobile"],
-            content: "click more button",
+            content: "click Actions button",
             trigger: ".mobile-more-button",
             run: "click",
         },
         {
             isActive: ["desktop"],
-            content: "click more button",
-            trigger: controlButtonTrigger("More..."),
+            content: "click Actions button",
+            trigger: controlButtonTrigger("Actions"),
             run: "click",
         },
     ];
 }
+
+export function clickInternalNoteButton() {
+    return [
+        {
+            isActive: ["mobile"],
+            content: "click Actions button",
+            trigger: ".mobile-more-button",
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            trigger: controlButtonTrigger("Internal Note"),
+            run: "click",
+        },
+        {
+            isActive: ["desktop"],
+            content: "click Internal Note button",
+            trigger: controlButtonTrigger("Internal Note"),
+            run: "click",
+        },
+    ];
+}
+
 /**
  * Selects a given price list in the user interface. This function is designed to be used to select a specific price list.
  *
@@ -266,12 +291,7 @@ export function enterOpeningAmount(amount) {
 export function clickFiscalPosition(name, checkIsNeeded = false) {
     const step = [
         clickReview(),
-        {
-            isActive: ["mobile"],
-            content: "click more button",
-            trigger: ".mobile-more-button",
-            run: "click",
-        },
+        ...clickControlButtonMore(),
         {
             content: "click fiscal position button",
             trigger: ".o_fiscal_position_button",
@@ -286,20 +306,14 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
 
     if (checkIsNeeded) {
         step.push(
-            {
-                isActive: ["mobile"],
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                run: "click",
-            },
+            ...clickControlButtonMore(),
             {
                 content: "the fiscal position " + name + " has been set to the order",
-                trigger: `.control-buttons button.o_fiscal_position_button:contains("${name}")`,
+                trigger: `.o_fiscal_position_button:contains("${name}")`,
             },
             {
                 content: "cancel dialog",
-                trigger: ".modal .modal-body button[aria-label='Close']",
-                in_modal: false,
+                trigger: ".modal .modal-header button[aria-label='Close']",
                 run: "click",
                 isActive: ["mobile"],
             }
@@ -312,7 +326,6 @@ export function closeWithCashAmount(val) {
     return [
         {
             trigger: ".modal .close-pos-popup .cash-input input",
-            in_modal: false,
             run: `edit ${val}`,
         },
     ];
@@ -393,7 +406,7 @@ export function productIsDisplayed(name) {
     ];
 }
 export function totalAmountIs(amount) {
-    return inLeftSide(Order.hasTotal(amount));
+    return inLeftSide(...Order.hasTotal(amount));
 }
 export function modeIsActive(mode) {
     return inLeftSide(Numpad.isActive(mode));
@@ -469,12 +482,6 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
 export function addCustomerNote(note) {
     return inLeftSide(
         [
-            {
-                isActive: ["mobile"],
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                run: "click",
-            },
             clickControlButton("Customer Note"),
             TextInputPopup.inputText(note),
             Dialog.confirm(),
@@ -484,17 +491,7 @@ export function addCustomerNote(note) {
 
 export function addInternalNote(note) {
     return inLeftSide(
-        [
-            {
-                isActive: ["mobile"],
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                run: "click",
-            },
-            clickControlButton("Internal Note"),
-            TextInputPopup.inputText(note),
-            Dialog.confirm(),
-        ].flat()
+        [clickInternalNoteButton(), TextInputPopup.inputText(note), Dialog.confirm()].flat()
     );
 }
 
@@ -539,10 +536,7 @@ export function finishOrder() {
             trigger: ".payment-screen .btn-switchpane:contains('Validate')",
             run: "click",
         },
-        {
-            content: "verify that the order has been successfully sent to the backend",
-            trigger: ".js_connected:visible",
-        },
+        Chrome.isSyncStatusConnected(),
         {
             isActive: ["desktop"],
             content: "click Next Order",
@@ -560,4 +554,10 @@ export function finishOrder() {
             trigger: ".pos-content div:not(:has(.receipt-screen))",
         },
     ];
+}
+
+export function checkTaxAmount(amount) {
+    return {
+        trigger: `.tax:contains(${amount})`,
+    };
 }

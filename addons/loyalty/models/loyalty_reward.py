@@ -50,7 +50,14 @@ class LoyaltyReward(models.Model):
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
 
-    description = fields.Char(compute='_compute_description', readonly=False, store=True, translate=True)
+    description = fields.Char(
+        translate=True,
+        compute='_compute_description',
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
+    )
 
     reward_type = fields.Selection([
         ('product', 'Free Product'),
@@ -85,6 +92,7 @@ class LoyaltyReward(models.Model):
     multi_product = fields.Boolean(compute='_compute_multi_product')
     reward_product_ids = fields.Many2many(
         'product.product', string="Reward Products", compute='_compute_multi_product',
+        search='_search_reward_product_ids',
         help="These are the products that can be claimed with this rule.")
     reward_product_qty = fields.Integer(default=1)
     reward_product_uom_id = fields.Many2one('uom.uom', compute='_compute_reward_product_uom_id')
@@ -130,6 +138,22 @@ class LoyaltyReward(models.Model):
             domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
         return domain
 
+    @api.model
+    def _get_active_products_domain(self):
+        return [
+            '|',
+                ('reward_type', '!=', 'product'),
+                '&',
+                    ('reward_type', '=', 'product'),
+                    '|',
+                        '&',
+                            ('reward_product_tag_id', '=', False),
+                            ('reward_product_id.active', '=', True),
+                        '&',
+                            ('reward_product_tag_id', '!=', False),
+                            ('reward_product_ids.active', '=', True)
+        ]
+
     @api.depends('discount_product_domain')
     def _compute_reward_product_domain(self):
         compute_all_discount_product = self.env['ir.config_parameter'].sudo().get_param('loyalty.compute_all_discount_product_ids', 'enabled')
@@ -154,6 +178,15 @@ class LoyaltyReward(models.Model):
             products = reward.reward_product_id + reward.reward_product_tag_id.product_ids
             reward.multi_product = reward.reward_type == 'product' and len(products) > 1
             reward.reward_product_ids = reward.reward_type == 'product' and products or self.env['product.product']
+
+    def _search_reward_product_ids(self, operator, value):
+        if operator not in ('=', '!=', 'in'):
+            raise NotImplementedError("Unsupported search operator")
+        return [
+            '&', ('reward_type', '=', 'product'),
+            '|', ('reward_product_id', operator, value),
+            ('reward_product_tag_id.product_ids', operator, value)
+        ]
 
     @api.depends('reward_type', 'reward_product_id', 'discount_mode',
                  'discount', 'currency_id', 'discount_applicability', 'all_discount_product_ids')

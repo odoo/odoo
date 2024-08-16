@@ -11,6 +11,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     ...wTourUtils.dragNDrop({
         id: 's_newsletter_block',
         name: 'Newsletter Block',
+        groupName: "Contact & Forms",
     }),
     {
         content: 'Wait for the list id to be set.',
@@ -34,58 +35,14 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         run: "click",
     },
     {
-        content: 'Toggle the option to display the Thanks button',
+        content: 'Toggle the option to display the Thanks message',
         trigger: 'we-button[data-toggle-thanks-message] we-checkbox',
         run: "click",
     },
     {
-        content: 'Click on the Thanks button',
-        trigger: ':iframe .s_newsletter_block .js_subscribed_btn',
-        run: "click",
-    },
-    {
-        content: 'Click on the link style button',
-        trigger: '.dropdown:has([name="link_style_color"]) > button',
-        run: "click",
-    },
-    {
-        content: 'Click on the primary style button',
-        trigger: '[data-value="primary"]',
-        run: "click",
-    },
-    {
-        trigger: 'we-customizeblock-option:has([name="link_style_size"])',
-    },
-    {
-        content: 'Verify that the shape option is not available for primary while the size option appeared',
-        trigger: 'we-customizeblock-option:not(:has([name="link_style_shape"]))',
-    },
-    {
-        content: 'Click on the link style button',
-        trigger: '.dropdown:has([name="link_style_color"]) > button',
-        run: "click",
-    },
-    {
-        content: 'Click on the custom style button',
-        trigger: '[data-value="custom"]',
-        run: "click",
-    },
-    {
-        content: 'Change the shape of the button',
-        trigger: '.dropdown:has([name="link_style_shape"]) > button',
-        run: "click",
-    },
-    {
-        content: 'Click on the flat shape button',
-        trigger: '[data-value="flat"]',
+        content: 'Click on the Thanks message',
+        trigger: ':iframe .s_newsletter_block .js_subscribed_wrap',
         run: "click",
     },
     ...wTourUtils.clickOnSave(),
-    // Check if the button style is correct (make sure that the 'btn-success'
-    // class which is not suggested as a valid style in the editor panel did not
-    // prevent to edit the button).
-    {
-        content: 'Check that the link style is correct',
-        trigger: ':iframe .s_newsletter_block .js_subscribed_btn.btn.btn-custom.flat:not(.btn-success)',
-    },
 ]);

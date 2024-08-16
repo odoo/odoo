@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { edit, press, queryAll, queryOne, scroll } from "@odoo/hoot-dom";
+import { click, edit, press, queryAll, queryOne, scroll, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     assertDateTimePicker,
@@ -22,7 +22,7 @@ import {
 class Partner extends models.Model {
     _name = "res.partner";
 
-    date = fields.Date({ string: "Date" });
+    date = fields.Date();
     char_field = fields.Char({ string: "Char" });
 
     _records = [
@@ -257,7 +257,7 @@ test("date field with warn_future option ", async () => {
 });
 
 test("date field with warn_future option: do not overwrite datepicker option", async () => {
-    Partner._fields.date = fields.Date({ string: "Date", default: undefined, onChange: () => {} });
+    Partner._onChanges.date = () => {};
 
     await mountView({
         type: "form",
@@ -411,10 +411,7 @@ test("hit enter should update value", async () => {
 test("allow to use compute dates (+5d for instance)", async () => {
     mockDate({ year: 2021, month: 2, day: 15 });
 
-    Partner._fields.date = fields.Date({
-        string: "Date",
-        default: "2019-09-15",
-    });
+    Partner._fields.date.default = "2019-09-15";
     await mountView({ type: "form", resModel: "res.partner" });
 
     expect(".o_field_date input").toHaveValue("09/15/2019");
@@ -432,4 +429,76 @@ test("allow to use compute dates (+5d for instance)", async () => {
     expect(".o_field_date input").toHaveValue("02/20/2021");
     await fieldInput("date").edit("+5d");
     expect(".o_field_date input").toHaveValue("02/20/2021");
+});
+
+test("date field with min_precision option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        // Do not let the date field get the focus in the first place
+        arch: `
+                <form>
+                    <group>
+                        <field name="date" options="{'min_precision': 'months'}" />
+                    </group>
+                </form>`,
+    });
+
+    click(".o_field_date input");
+    await animationFrame();
+    expect(".o_date_item_cell").toHaveCount(12);
+    expect(queryAllTexts(".o_date_item_cell")).toEqual([
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]);
+    expect(".o_date_item_cell.o_selected").toHaveText("Feb");
+
+    click(getPickerCell("Jan"));
+    await animationFrame();
+    // The picker should be closed
+    expect(".o_date_item_cell").toHaveCount(0);
+    expect(".o_field_widget[name='date'] input").toHaveValue("01/01/2017");
+});
+
+test("date field with max_precision option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        // Do not let the date field get the focus in the first place
+        arch: `
+                <form>
+                    <group>
+                        <field name="date" options="{'max_precision': 'months'}" />
+                    </group>
+                </form>`,
+    });
+
+    click(".o_field_date input");
+    await animationFrame();
+    // Try to zoomOut twice to be in the year selector
+    await zoomOut();
+    // Currently in the month selector
+    expect(".o_datetime_picker_header").toHaveText("2017");
+    await zoomOut();
+    // Stay in the month selector according to the max precision value
+    expect(".o_datetime_picker_header").toHaveText("2017");
+    expect(".o_date_item_cell.o_selected").toHaveText("Feb");
+
+    click(getPickerCell("Jan"));
+    await animationFrame();
+    click(getPickerCell("12"));
+    await animationFrame();
+    expect(".o_field_widget[name='date'] input").toHaveValue("01/12/2017");
 });

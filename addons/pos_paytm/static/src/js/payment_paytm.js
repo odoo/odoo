@@ -88,14 +88,14 @@ export class PaymentPaytm extends PaymentInterface {
                 if (resultCode === "S" && data?.merchantReferenceNo != referenceId) {
                     throw _t("Reference number mismatched");
                 } else if (resultCode === "S") {
-                    paymentLine.paytm_authcode = data?.authCode;
-                    paymentLine.paytm_issuer_card_no = data?.issuerMaskCardNo;
-                    paymentLine.paytm_issuer_bank = data?.issuingBankName;
-                    paymentLine.paytm_payment_method = data?.payMethod;
+                    paymentLine.payment_method_authcode = data?.authCode;
+                    paymentLine.card_no = data?.issuerMaskCardNo;
+                    paymentLine.payment_method_issuer_bank = data?.issuingBankName;
+                    paymentLine.payment_method_payment_mode = data?.payMethod;
                     paymentLine.card_type = data?.cardType;
-                    paymentLine.paytm_card_scheme = data?.cardScheme;
-                    paymentLine.paytm_reference_no = data?.merchantReferenceNo;
-                    paymentLine.transactionId = data?.merchantTransactionId;
+                    paymentLine.card_brand = data?.cardScheme;
+                    paymentLine.payment_ref_no = data?.merchantReferenceNo;
+                    paymentLine.transaction_id = data?.merchantTransactionId;
                     paymentLine.payment_date = data?.transactionDateTime;
                     return resolve(data);
                 } else {

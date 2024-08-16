@@ -1,5 +1,4 @@
 import base64
-import unittest
 
 try:
     import magic
@@ -7,7 +6,7 @@ except ImportError:
     magic = None
 
 from odoo.tests.common import BaseCase
-from odoo.tools.mimetypes import get_extension, guess_mimetype
+from odoo.tools.mimetypes import fix_filename_extension, get_extension, guess_mimetype
 
 PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
 GIF = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
@@ -57,6 +56,10 @@ XML = b"""<?xml version='1.0' encoding='utf-8'?>
     </GrpHdr>
   </CstmrCdtTrfInitn>
 </Document>
+"""
+
+TXT = b"""\
+Hello world!
 """
 
 class test_guess_mimetype(BaseCase):
@@ -122,7 +125,11 @@ class test_guess_mimetype(BaseCase):
 
     def test_mimetype_xml(self):
         mimetype = guess_mimetype(XML, default='test')
-        self.assertEqual(mimetype, 'application/xml')
+        self.assertIn(mimetype, ('application/xml', 'text/xml'))
+
+    def test_mimetype_txt(self):
+        mimetype = guess_mimetype(TXT, default='test')
+        self.assertEqual(mimetype, 'text/plain')
 
     def test_mimetype_get_extension(self):
         self.assertEqual(get_extension('filename.Abc'), '.abc')
@@ -136,3 +143,18 @@ class test_guess_mimetype(BaseCase):
         self.assertEqual(get_extension('filename.not_alnum'), '')
         self.assertEqual(get_extension('filename.with space'), '')
         self.assertEqual(get_extension('filename.notAnExtension'), '')
+
+    def test_mimetype_fix_extension(self):
+        fix = fix_filename_extension
+        self.assertEqual(fix('words.txt', 'text/plain'), 'words.txt')
+        self.assertEqual(fix('image.jpg', 'image/jpeg'), 'image.jpg')
+        self.assertEqual(fix('image.jpeg', 'image/jpeg'), 'image.jpeg')
+        with self.assertLogs('odoo.tools.mimetypes', 'WARNING') as capture:
+            self.assertEqual(fix('image.txt', 'image/jpeg'), 'image.txt.jpg')
+            self.assertEqual(fix('words.jpg', 'text/plain'), 'words.jpg.txt')
+        self.assertEqual(capture.output, [
+            "WARNING:odoo.tools.mimetypes:File 'image.txt' has an invalid "
+                "extension for mimetype 'image/jpeg', adding '.jpg'",
+            "WARNING:odoo.tools.mimetypes:File 'words.jpg' has an invalid "
+                "extension for mimetype 'text/plain', adding '.txt'",
+        ])

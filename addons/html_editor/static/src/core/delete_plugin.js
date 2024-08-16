@@ -2,13 +2,13 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     isAllowedContent,
+    isEditorTab,
     isEmpty,
     isInPre,
-    isNotEditableNode,
+    isMediaElement,
     isSelfClosingElement,
     isShrunkBlock,
     isTangible,
-    isUnbreakable,
     isWhitespace,
     isZWS,
     nextLeaf,
@@ -22,10 +22,18 @@ import {
     descendants,
     firstLeaf,
     getCommonAncestor,
-    getFurthestUneditableParent,
     lastLeaf,
+    findFurthest,
 } from "../utils/dom_traversal";
-import { DIRECTIONS, childNodeIndex, leftPos, nodeSize, rightPos } from "../utils/position";
+import {
+    DIRECTIONS,
+    childNodeIndex,
+    endPos,
+    leftPos,
+    nodeSize,
+    rightPos,
+    startPos,
+} from "../utils/position";
 import { CTYPES } from "../utils/content_types";
 
 /**
@@ -38,22 +46,16 @@ import { CTYPES } from "../utils/content_types";
 
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
-const beforeInputHandlers = {
-    deleteContentBackward: "DELETE_BACKWARD",
-    deleteContentForward: "DELETE_FORWARD",
-    deleteWordBackward: "DELETE_BACKWARD_WORD",
-    deleteWordForward: "DELETE_FORWARD_WORD",
-    deleteHardLineBackward: "DELETE_BACKWARD_LINE",
-    deleteHardLineForward: "DELETE_FORWARD_LINE",
-};
-
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection"];
     static name = "delete";
-    static shared = ["deleteRange"];
+    static shared = ["deleteRange", "isUnmergeable"];
     /** @type { (p: DeletePlugin) => Record<string, any> } */
     static resources = (p) => ({
-        onBeforeInput: p.onBeforeInput.bind(p),
+        onBeforeInput: [
+            { handler: p.onBeforeInputDelete.bind(p) },
+            { handler: p.onBeforeInputInsertText.bind(p), sequence: 10 },
+        ],
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
             { hotkey: "delete", command: "DELETE_FORWARD" },
@@ -62,26 +64,44 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
             { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
         ],
-        handle_delete_backward: [{ callback: p.deleteBackwardUnmergeable.bind(p) }],
-        handle_delete_backward_word: { callback: p.deleteBackwardUnmergeable.bind(p) },
-        handle_delete_backward_line: { callback: p.deleteBackwardUnmergeable.bind(p) },
-        handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p) },
-        handle_delete_forward_word: { callback: p.deleteForwardUnmergeable.bind(p) },
-        handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p) },
+        handle_delete_backward: [{ callback: p.deleteBackwardUnmergeable.bind(p), sequence: 30 }],
+        handle_delete_backward_word: {
+            callback: p.deleteBackwardUnmergeable.bind(p),
+            sequence: 30,
+        },
+        handle_delete_backward_line: {
+            callback: p.deleteBackwardUnmergeable.bind(p),
+            sequence: 30,
+        },
+        handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
+        handle_delete_forward_word: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
+        handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
 
         // @todo @phoenix: move these predicates to different plugins
-        unremovables: [
-            // The root editable (@todo @phoenix: I don't think this is necessary)
-            (element) => element.classList.contains("odoo-editor-editable"),
+        isUnremovable: [
+            (element) => element.classList.contains("oe_unremovable"),
             // Website stuff?
             (element) => element.classList.contains("o_editable"),
-            (element) => element.classList.contains("oe_unremovable"),
-            // QWeb directives
-            (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
             // Monetary field
             (element) => element.matches("[data-oe-type='monetary'] > span"),
         ],
     });
+
+    setup() {
+        this.findPreviousPosition = this.makeFindPositionFn("backward");
+        this.findNextPosition = this.makeFindPositionFn("forward");
+
+        for (const key of [
+            "handle_delete_backward",
+            "handle_delete_backward_word",
+            "handle_delete_backward_line",
+            "handle_delete_forward",
+            "handle_delete_forward_word",
+            "handle_delete_forward_line",
+        ]) {
+            this.resources[key].sort((a, b) => a.sequence - b.sequence);
+        }
+    }
 
     handleCommand(command, payload) {
         switch (command) {
@@ -173,9 +193,9 @@ export class DeletePlugin extends Plugin {
      */
     deleteBackward(selection, granularity) {
         // Normalize selection
-        selection = this.shared.setSelection(selection);
+        const { endContainer, endOffset } = this.shared.setSelection(selection);
 
-        let range = this.getRangeForDeleteBackward(selection, granularity);
+        let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
         const resources = {
             character: this.resources["handle_delete_backward"],
@@ -203,9 +223,9 @@ export class DeletePlugin extends Plugin {
      */
     deleteForward(selection, granularity) {
         // Normalize selection
-        selection = this.shared.setSelection(selection);
+        const { startContainer, startOffset } = this.shared.setSelection(selection);
 
-        let range = this.getRangeForDeleteForward(selection, granularity);
+        let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
         const resources = {
             character: this.resources["handle_delete_forward"],
@@ -227,64 +247,31 @@ export class DeletePlugin extends Plugin {
         this.setCursorFromRange(range);
     }
 
-    getRangeForDeleteBackward(selection, granularity) {
-        const { endContainer, endOffset } = selection;
-        let startContainer, startOffset;
-
+    getRangeForDelete(node, offset, direction, granularity) {
+        let destContainer, destOffset;
         switch (granularity) {
             case "character":
-                [startContainer, startOffset] = this.findPreviousPosition(endContainer, endOffset);
+                [destContainer, destOffset] = this.findAdjacentPosition(node, offset, direction);
                 break;
             case "word":
-                // @todo @phoenix: write more tests for ctrl+delete
-                ({ startContainer, startOffset } = this.shared.modifySelection(
-                    "extend",
-                    "backward",
-                    "word"
-                ));
+                ({ focusNode: destContainer, focusOffset: destOffset } =
+                    this.shared.modifySelection("extend", direction, "word"));
                 break;
             case "line":
-                [startContainer, startOffset] = this.findPreviousLineBoundary(
-                    endContainer,
-                    endOffset
-                );
+                [destContainer, destOffset] = this.findLineBoundary(node, offset, direction);
                 break;
             default:
                 throw new Error("Invalid granularity");
         }
 
-        if (!startContainer) {
-            [startContainer, startOffset] = [endContainer, endOffset];
+        if (!destContainer) {
+            [destContainer, destOffset] = [node, offset];
         }
-        return { startContainer, startOffset, endContainer, endOffset };
-    }
+        const [startContainer, startOffset, endContainer, endOffset] =
+            direction === "forward"
+                ? [node, offset, destContainer, destOffset]
+                : [destContainer, destOffset, node, offset];
 
-    getRangeForDeleteForward(selection, granularity) {
-        const { startContainer, startOffset } = selection;
-        let endContainer, endOffset;
-
-        switch (granularity) {
-            case "character":
-                [endContainer, endOffset] = this.findNextPosition(startContainer, startOffset);
-                break;
-            case "word":
-                // @todo @phoenix: write more tests for ctrl+delete
-                ({ endContainer, endOffset } = this.shared.modifySelection(
-                    "extend",
-                    "forward",
-                    "word"
-                ));
-                break;
-            case "line":
-                [endContainer, endOffset] = this.findNextLineBoundary(startContainer, startOffset);
-                break;
-            default:
-                throw new Error("Invalid granularity");
-        }
-
-        if (!endContainer) {
-            [endContainer, endOffset] = [startContainer, startOffset];
-        }
         return { startContainer, startOffset, endContainer, endOffset };
     }
 
@@ -555,7 +542,7 @@ export class DeletePlugin extends Plugin {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return true;
         }
-        return this.resources.unremovables.some((predicate) => predicate(node, root));
+        return this.resources.isUnremovable.some((predicate) => predicate(node, root));
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -661,12 +648,15 @@ export class DeletePlugin extends Plugin {
         // Same any combination involving type "null" (no joinable element).
     }
 
+    /**
+     * An unsplittable element is also unmergeable and vice-versa (as split and
+     * merge are reverse operations from one another).
+     */
     isUnmergeable(node) {
-        if (this.isUnremovable(node)) {
-            return true;
-        }
-        // @todo @phoenix: get rules as resources
-        return isUnbreakable(node);
+        return (
+            node.nodeType === Node.ELEMENT_NODE &&
+            this.resources.isUnsplittable.some((predicate) => predicate(node))
+        );
     }
 
     joinBlocks(left, right, commonAncestor) {
@@ -916,7 +906,8 @@ export class DeletePlugin extends Plugin {
      */
     expandRangeToIncludeNonEditables(range) {
         const { startContainer, endContainer, commonAncestorContainer: commonAncestor } = range;
-        const startUneditable = getFurthestUneditableParent(startContainer, commonAncestor);
+        const isNonEditable = (node) => !closestElement(node).isContentEditable;
+        const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
             // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
             // startContainer = startUneditable.parentElement;
@@ -928,7 +919,7 @@ export class DeletePlugin extends Plugin {
                 range.setStart(commonAncestor, 0);
             }
         }
-        const endUneditable = getFurthestUneditableParent(endContainer, commonAncestor);
+        const endUneditable = findFurthest(endContainer, commonAncestor, isNonEditable);
         if (endUneditable) {
             range.setEndAfter(endUneditable);
         }
@@ -939,161 +930,116 @@ export class DeletePlugin extends Plugin {
     // Find previous/next position
     // --------------------------------------------------------------------------
 
-    // Returns the previous visible position (ex: a previous character, the end
-    // of the previous block, etc.).
-    findPreviousPosition(node, offset, blockSwitch = false) {
-        // Look for a visible character in text node.
-        if (node.nodeType === Node.TEXT_NODE) {
-            // @todo @phoenix: write tests for chars with size > 1 (emoji, etc.)
-            // Use the string iterator to handle surrogate pairs.
-            let index = offset;
-            const chars = [...node.textContent.slice(0, index)];
-            let char = chars.pop();
-            while (char) {
-                index -= char.length;
-                if (this.isVisibleChar(char, node, index)) {
-                    return blockSwitch ? [node, index + char.length] : [node, index];
-                }
-                char = chars.pop();
-            }
-        }
-
-        // Get previous leaf
-        let leaf;
-        if (node.hasChildNodes() && offset) {
-            leaf = lastLeaf(node.childNodes[offset - 1]);
-        } else {
-            leaf = previousLeaf(node, this.editable);
-        }
-        if (!leaf) {
-            return [null, null];
-        }
-        // Skip invisible leafs, keeping track whether a block switch occurred.
-        const endNodeClosestBlock = closestBlock(node);
-        blockSwitch ||= closestBlock(leaf) !== endNodeClosestBlock;
-        while (this.shouldSkip(leaf, blockSwitch)) {
-            leaf = previousLeaf(leaf, this.editable);
-            if (!leaf) {
-                return [null, null];
-            }
-            blockSwitch ||= closestBlock(leaf) !== endNodeClosestBlock;
-        }
-
-        // If part of a contenteditable=false tree, expand selection to delete the root.
-        // If the non-editable is not a block and there was a block switch, reduce the
-        // selection to keep it instead, since the position moved from another block next
-        // to that inline root, there was a sufficient position change.
-        let leafClosestUneditable = closestElement(leaf, isNotEditableNode);
-        const nodeClosestUneditable = closestElement(node, isNotEditableNode);
-        if (leafClosestUneditable && leafClosestUneditable !== nodeClosestUneditable) {
-            // handle nested contenteditable=false elements
-            while (!leafClosestUneditable.parentNode.isContentEditable) {
-                leafClosestUneditable = leafClosestUneditable.parentNode;
-            }
-            return blockSwitch &&
-                !isBlock(leafClosestUneditable) &&
-                closestBlock(leafClosestUneditable) !== endNodeClosestBlock
-                ? rightPos(leafClosestUneditable)
-                : leftPos(leafClosestUneditable);
-        }
-
-        if (leaf.nodeType === Node.ELEMENT_NODE) {
-            return blockSwitch ? rightPos(leaf) : leftPos(leaf);
-        }
-
-        return this.findPreviousPosition(leaf, nodeSize(leaf), blockSwitch);
+    /**
+     * Returns the next/previous position for deletion.
+     *
+     * @param {Node} node
+     * @param {number} offset
+     * @param {"forward"|"backward"} direction
+     * @returns {[Node|null, Number|null]}
+     */
+    findAdjacentPosition(node, offset, direction) {
+        return direction === "forward"
+            ? this.findNextPosition(node, offset)
+            : this.findPreviousPosition(node, offset);
     }
 
-    findNextPosition(node, offset, blockSwitch = false) {
-        // Look for a visible character in text node.
-        if (node.nodeType === Node.TEXT_NODE) {
-            // Use the string iterator to handle surrogate pairs.
-            let index = offset;
-            for (const char of node.textContent.slice(index)) {
-                if (this.isVisibleChar(char, node, index)) {
-                    index += blockSwitch ? 0 : char.length;
-                    return [node, index];
+    /**
+     *  Returns a function to find the adjacent position in the given direction.
+     *
+     * @param {"forward"|"backward"} direction
+     */
+    makeFindPositionFn(direction) {
+        const isDirectionForward = direction === "forward";
+
+        // Define helper functions based on the direction.
+        // Text node helpers.
+        const findVisibleChar = (
+            isDirectionForward ? this.findNextVisibleChar : this.findPreviousVisibleChar
+        ).bind(this);
+        const charLeftPos = (index, char) => index;
+        const charRightPos = (index, char) => index + char.length;
+        const indexBeforeChar = isDirectionForward ? charLeftPos : charRightPos;
+        const indexAfterChar = isDirectionForward ? charRightPos : charLeftPos;
+        const textEdgePos = isDirectionForward ? startPos : endPos;
+        // Leaf helpers.
+        const adjacentLeaf = (isDirectionForward ? this.nextLeaf : this.previousLeaf).bind(this);
+        const adjacentLeafFromPos = (
+            isDirectionForward ? this.nextLeafFromPos : this.previousLeafFromPos
+        ).bind(this);
+        const beforePos = isDirectionForward ? leftPos : rightPos;
+        const afterPos = isDirectionForward ? rightPos : leftPos;
+
+        /**
+         * Returns the next/previous position for deletion.
+         *
+         * "Before" and "after" have different meanings depending on the
+         * direction: before and after mean, respectively, previous and next in
+         * DOM order when direction is "forward", and the other way around when
+         * direction is "backward".
+         *
+         * @param {Node} node
+         * @param {number} offset
+         * @returns {[Node|null, Number|null]}
+         */
+        return function findPosition(node, offset) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const [char, index] = findVisibleChar(node, offset);
+                if (char) {
+                    return [node, indexAfterChar(index, char)];
                 }
-                index += char.length;
             }
-        }
 
-        // Get next leaf
-        let leaf;
-        if (node.hasChildNodes() && offset < nodeSize(node)) {
-            leaf = firstLeaf(node.childNodes[offset]);
-        } else {
-            leaf = nextLeaf(node, this.editable);
-        }
-        if (!leaf) {
+            // Define context: search is restricted to the closest editable root.
+            const isEditableRoot = (n) => n.isContentEditable && !n.parentNode.isContentEditable;
+            const editableRoot = findUpTo(node, this.editable.parentNode, isEditableRoot);
+
+            let blockSwitch;
+            const nodeClosestBlock = closestBlock(node);
+            let leaf = adjacentLeafFromPos(node, offset, editableRoot);
+            while (leaf) {
+                blockSwitch ||= closestBlock(leaf) !== nodeClosestBlock;
+
+                if (this.shouldSkip(leaf, blockSwitch)) {
+                    leaf = adjacentLeaf(leaf, editableRoot);
+                    continue;
+                }
+
+                if (leaf.nodeType === Node.TEXT_NODE) {
+                    const [char, index] = findVisibleChar(...textEdgePos(leaf));
+                    if (char) {
+                        const idx = (blockSwitch ? indexBeforeChar : indexAfterChar)(index, char);
+                        return [leaf, idx];
+                    }
+                } else if (!leaf.isContentEditable && isBlock(leaf)) {
+                    // E.g. Desired range for deleteForward:
+                    // <p>abc[</p><div contenteditable="false">def</div>]<p>ghi</p>
+                    return afterPos(leaf);
+                } else {
+                    return blockSwitch ? beforePos(leaf) : afterPos(leaf);
+                }
+                leaf = adjacentLeaf(leaf, editableRoot);
+            }
             return [null, null];
-        }
-        // Skip invisible leafs, keeping track whether a block switch occurred.
-        const startNodeClosestBlock = closestBlock(node);
-        blockSwitch ||= closestBlock(leaf) !== startNodeClosestBlock;
-        while (this.shouldSkip(leaf, blockSwitch)) {
-            leaf = nextLeaf(leaf, this.editable);
-            if (!leaf) {
-                return [null, null];
-            }
-            blockSwitch ||= closestBlock(leaf) !== startNodeClosestBlock;
-        }
-
-        // If part of a contenteditable=false tree, expand selection to delete the root.
-        // If the non-editable is not a block and there was a block switch, reduce the
-        // selection to keep it instead, since the position moved from another block to
-        // that inline root, there was a sufficient position change.
-        let leafClosestUneditable = closestElement(leaf, isNotEditableNode);
-        const nodeClosestUneditable = closestElement(node, isNotEditableNode);
-        if (leafClosestUneditable && leafClosestUneditable !== nodeClosestUneditable) {
-            // handle nested contenteditable=false elements
-            while (!leafClosestUneditable.parentNode.isContentEditable) {
-                leafClosestUneditable = leafClosestUneditable.parentNode;
-            }
-            return blockSwitch &&
-                !isBlock(leafClosestUneditable) &&
-                closestBlock(leafClosestUneditable) !== startNodeClosestBlock
-                ? leftPos(leafClosestUneditable)
-                : rightPos(leafClosestUneditable);
-        }
-
-        if (leaf.nodeType === Node.ELEMENT_NODE) {
-            return blockSwitch ? leftPos(leaf) : rightPos(leaf);
-        }
-
-        return this.findNextPosition(leaf, 0, blockSwitch);
+        };
     }
 
-    findPreviousLineBoundary(endContainer, endOffset) {
-        const block = closestBlock(endContainer);
-        let last = endContainer;
-        let node = previousLeaf(endContainer, this.editable);
+    findLineBoundary(container, offset, direction) {
+        const adjacentLeaf = direction === "forward" ? nextLeaf : previousLeaf;
+        const edgeIndex = (node) => (direction === "forward" ? nodeSize(node) : 0);
+        const block = closestBlock(container);
+        let last = container;
+        let node = adjacentLeaf(container, this.editable);
         // look for a BR or a block start
         while (node && node.nodeName !== "BR" && closestBlock(node) === block) {
             last = node;
-            node = previousLeaf(node, this.editable);
+            node = adjacentLeaf(node, this.editable);
         }
-        if (last === endContainer && endOffset === 0) {
-            // Cursor is already next to the line break, go to previous position.
-            return this.findPreviousPosition(endContainer, endOffset);
+        if (last === container && offset === edgeIndex(container)) {
+            // Cursor is already next to the line break, go to following position.
+            return this.findAdjacentPosition(container, offset, direction);
         }
-        return leftPos(last);
-    }
-
-    findNextLineBoundary(startContainer, startOffset) {
-        const block = closestBlock(startContainer);
-        let last = startContainer;
-        let node = nextLeaf(startContainer, this.editable);
-        // look for a BR or a block start
-        while (node && node.nodeName !== "BR" && closestBlock(node) === block) {
-            last = node;
-            node = nextLeaf(node, this.editable);
-        }
-        if (last === startContainer && startOffset === nodeSize(startContainer)) {
-            // Cursor is already next to the line break, go to next position.
-            return this.findNextPosition(startContainer, startOffset);
-        }
-        return rightPos(last);
+        return direction === "forward" ? rightPos(last) : leftPos(last);
     }
 
     // @todo @phoenix: there are not enough tests for visibility of characters
@@ -1148,7 +1094,10 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        if (isSelfClosingElement(leaf)) {
+        // @todo: register these as resources by other plugins?
+        if (
+            [isSelfClosingElement, isMediaElement, isEditorTab].some((predicate) => predicate(leaf))
+        ) {
             return false;
         }
         if (isEmpty(leaf) || isZWS(leaf)) {
@@ -1157,15 +1106,91 @@ export class DeletePlugin extends Plugin {
         return false;
     }
 
+    findPreviousVisibleChar(textNode, index) {
+        // @todo @phoenix: write tests for chars with size > 1 (emoji, etc.)
+        // Use the string iterator to handle surrogate pairs.
+        const chars = [...textNode.textContent.slice(0, index)];
+        let char = chars.pop();
+        while (char) {
+            index -= char.length;
+            if (this.isVisibleChar(char, textNode, index)) {
+                return [char, index];
+            }
+            char = chars.pop();
+        }
+        return [null, null];
+    }
+
+    findNextVisibleChar(textNode, index) {
+        // Use the string iterator to handle surrogate pairs.
+        for (const char of textNode.textContent.slice(index)) {
+            if (this.isVisibleChar(char, textNode, index)) {
+                return [char, index];
+            }
+            index += char.length;
+        }
+        return [null, null];
+    }
+
+    // If leaf is part of a contenteditable=false tree, consider its root as the
+    // leaf instead.
+    adjustedLeaf(leaf, refEditableRoot) {
+        const isNonEditable = (node) => !closestElement(node).isContentEditable;
+        const nonEditableRoot = leaf && findFurthest(leaf, refEditableRoot, isNonEditable);
+        return nonEditableRoot || leaf;
+    }
+
+    previousLeaf(node, editableRoot) {
+        return this.adjustedLeaf(previousLeaf(node, editableRoot), editableRoot);
+    }
+
+    nextLeaf(node, editableRoot) {
+        return this.adjustedLeaf(nextLeaf(node, editableRoot), editableRoot);
+    }
+
+    previousLeafFromPos(node, offset, editableRoot) {
+        const leaf =
+            node.hasChildNodes() && offset > 0
+                ? lastLeaf(node.childNodes[offset - 1])
+                : previousLeaf(node, editableRoot);
+        return this.adjustedLeaf(leaf, editableRoot);
+    }
+
+    nextLeafFromPos(node, offset, editableRoot) {
+        const leaf =
+            node.hasChildNodes() && offset < nodeSize(node)
+                ? firstLeaf(node.childNodes[offset])
+                : nextLeaf(node, editableRoot);
+        return this.adjustedLeaf(leaf, editableRoot);
+    }
+
     // --------------------------------------------------------------------------
     // Event handlers
     // --------------------------------------------------------------------------
 
-    onBeforeInput(e) {
-        const command = beforeInputHandlers[e.inputType];
-        if (command) {
-            e.preventDefault();
-            this.dispatch(command);
+    onBeforeInputDelete(ev) {
+        const handledInputTypes = {
+            deleteContentBackward: ["backward", "character"],
+            deleteContentForward: ["forward", "character"],
+            deleteWordBackward: ["backward", "word"],
+            deleteWordForward: ["forward", "word"],
+            deleteHardLineBackward: ["backward", "line"],
+            deleteHardLineForward: ["forward", "line"],
+        };
+        const argsForDelete = handledInputTypes[ev.inputType];
+        if (argsForDelete) {
+            ev.preventDefault();
+            this.delete(...argsForDelete);
+        }
+    }
+
+    onBeforeInputInsertText(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.shared.getEditableSelection();
+            if (!selection.isCollapsed) {
+                this.deleteSelection();
+            }
+            // Default behavior: insert text and trigger input event
         }
     }
 

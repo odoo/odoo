@@ -32,10 +32,9 @@ export class MailActivity extends models.ServerModel {
         /** @type {import("mock_models").MailActivityType} */
         const MailActivityType = this.env["mail.activity.type"];
 
-        const activities = this._filter([["id", "in", ids]]);
-        const activityTypes = MailActivityType._filter(
-            [["id", "in", unique(activities.map((a) => a.activity_type_id))]],
-            { active_test: false }
+        const activities = this.browse(ids);
+        const activityTypes = MailActivityType.browse(
+            unique(activities.map((a) => a.activity_type_id))
         );
         const activityTypeById = Object.fromEntries(
             activityTypes.map((actType) => [actType.id, actType])
@@ -67,9 +66,7 @@ export class MailActivity extends models.ServerModel {
 
     /** @param {number[]} ids */
     activity_format(ids) {
-        return new mailDataHelpers.Store(
-            this.search([["id", "in", ids]], makeKwArgs({ context: { active_test: false } }))
-        ).get_result();
+        return new mailDataHelpers.Store(this.browse(ids)).get_result();
     }
 
     /** @param {number[]} ids */
@@ -83,28 +80,34 @@ export class MailActivity extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        for (const record of this.read(ids)) {
-            const activityType = record.activity_type_id
-                ? MailActivityType.find((r) => r.id === record.activity_type_id[0])
+        for (const activity of this.browse(ids)) {
+            const [data] = this.read(activity.id);
+            // simulate computes
+            const activityType = data.activity_type_id
+                ? MailActivityType.find((r) => r.id === data.activity_type_id[0])
                 : false;
             if (activityType) {
-                record.display_name = activityType.name;
-                record.icon = activityType.icon;
-                record.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
-                    const template = MailTemplate._filter([["id", "=", template_id]])[0];
+                data.display_name = activityType.name;
+                data.icon = activityType.icon;
+                data.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
+                    const [template] = MailTemplate.browse(template_id);
                     return {
                         id: template.id,
                         name: template.name,
                     };
                 });
             }
-            if (record.summary) {
-                record.display_name = record.summary;
+            if (data.summary) {
+                data.display_name = data.summary;
             }
-            const [user] = ResUsers._filter([["id", "=", record.user_id[0]]]);
-            record.persona = { id: user.partner_id, type: "partner" };
-            store.add(ResPartner.browse(user.partner_id));
-            store.add("mail.activity", record);
+            const [user] = ResUsers.browse(data.user_id[0]);
+            data.persona = { id: user.partner_id, type: "partner" };
+            data["attachment_ids"] = mailDataHelpers.Store.many(
+                this.env["ir.attachment"].browse(activity.attachment_ids),
+                makeKwArgs({ fields: ["name"] })
+            );
+            data["persona"] = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
+            store.add(this.browse(activity.id), data);
         }
     }
 
@@ -156,9 +159,7 @@ export class MailActivity extends models.ServerModel {
         if (allCompleted.length) {
             const attachmentIds = allCompleted.map((a) => a.attachment_ids).flat();
             attachmentsById = attachmentIds.length
-                ? Object.fromEntries(
-                      IrAttachment._filter([["id", "in", attachmentIds]]).map((a) => [a.id, a])
-                  )
+                ? Object.fromEntries(IrAttachment.browse(attachmentIds).map((a) => [a.id, a]))
                 : {};
         } else {
             attachmentsById = {};
@@ -249,7 +250,7 @@ export class MailActivity extends models.ServerModel {
         return {
             activity_types: activityTypes.map((type) => {
                 const templates = (type.mail_template_ids || []).map((template_id) => {
-                    const { id, name } = MailTemplate._filter([["id", "=", template_id]])[0];
+                    const { id, name } = MailTemplate.browse(template_id)[0];
                     return { id, name };
                 });
                 return {

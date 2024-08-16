@@ -4,7 +4,7 @@ from contextlib import nullcontext
 from freezegun import freeze_time
 from functools import partial
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
@@ -36,8 +36,8 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         self.assertEqual(self.root_company.fiscalyear_last_month, self.branch_a.fiscalyear_last_month)
 
         # The accounts are shared
-        root_accounts = self.env['account.account'].search([('company_id', 'parent_of', self.root_company.id)])
-        branch_a_accounts = self.env['account.account'].search([('company_id', 'parent_of', self.branch_a.id)])
+        root_accounts = self.env['account.account'].search([('company_ids', 'parent_of', self.root_company.id)])
+        branch_a_accounts = self.env['account.account'].search([('company_ids', 'parent_of', self.branch_a.id)])
         self.assertTrue(root_accounts)
         self.assertEqual(root_accounts, branch_a_accounts)
 
@@ -130,37 +130,54 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         moves = self.env['account.move'].search([])
         moves.filtered(lambda x: x.state != 'draft').button_draft()
         moves.unlink()
-        for lock in ['fiscalyear_lock_date', 'tax_lock_date']:
-            for root_lock, branch_lock, invoice_date, company, expected in (
+        for lock, lock_sale, lock_purchase in [
+            ('hard_lock_date', True, True),
+            ('fiscalyear_lock_date', True, True),
+            ('tax_lock_date', True, True),
+            ('sale_lock_date', True, False),
+            ('purchase_lock_date', False, True),
+        ]:
+            for root_lock, branch_lock, invoice_date, company, move_type, failure_expected in (
                 # before both locks
-                ('3021-01-01', '3022-01-01', '3020-01-01', self.root_company, 'fail'),
-                ('3021-01-01', '3022-01-01', '3020-01-01', self.branch_a, 'fail'),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.root_company, 'in_invoice', lock_purchase),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.root_company, 'out_invoice', lock_sale),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.branch_a, 'in_invoice', lock_purchase),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.branch_a, 'out_invoice', lock_sale),
                 # between root and branch lock
-                ('3020-01-01', '3022-01-01', '3021-01-01', self.root_company, 'success'),
-                ('3020-01-01', '3022-01-01', '3021-01-01', self.branch_a, 'fail'),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.root_company, 'in_invoice', False),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.root_company, 'out_invoice', False),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.branch_a, 'in_invoice', lock_purchase),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.branch_a, 'out_invoice', lock_sale),
                 # between branch and root lock
-                ('3022-01-01', '3020-01-01', '3021-01-01', self.root_company, 'fail'),
-                ('3022-01-01', '3020-01-01', '3021-01-01', self.branch_a, 'fail'),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.root_company, 'in_invoice', lock_purchase),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.root_company, 'out_invoice', lock_sale),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.branch_a, 'in_invoice', lock_purchase),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.branch_a, 'out_invoice', lock_sale),
                 # after both locks
-                ('3020-01-01', '3021-01-01', '3022-01-01', self.root_company, 'success'),
-                ('3020-01-01', '3021-01-01', '3022-01-01', self.branch_a, 'success'),
-            ):
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.root_company, 'in_invoice', False),
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.root_company, 'out_invoice', False),
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.branch_a, 'in_invoice', False),
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.branch_a, 'out_invoice', False),
+               ):
                 with self.subTest(
                     lock=lock,
                     root_lock=root_lock,
                     branch_lock=branch_lock,
                     invoice_date=invoice_date,
+                    move_type=move_type,
                     company=company.name,
                 ), self.env.cr.savepoint() as sp:
+                    check = partial(self.assertRaises, UserError) if failure_expected else nullcontext
+                    move = self.init_invoice(
+                        move_type, amounts=[100], taxes=self.root_company.account_sale_tax_id,
+                        invoice_date=invoice_date, post=True, company=company,
+                    )
+                    self.assertEqual(move.date, fields.Date.to_date(invoice_date))
                     with freeze_time('4000-01-01'):  # ensure we don't lock in the future
                         self.root_company[lock] = root_lock
                         self.branch_a[lock] = branch_lock
-                    check = partial(self.assertRaises, UserError) if expected == 'fail' else nullcontext
                     with check():
-                        self.init_invoice(
-                            'out_invoice', amounts=[100], taxes=self.root_company.account_sale_tax_id,
-                            invoice_date=invoice_date, post=True, company=company,
-                        )
+                        move.button_draft()
                     sp.close()
 
     def test_change_record_company(self):
@@ -168,7 +185,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             'name': 'volatile',
             'code': 'vola',
             'account_type': 'income',
-            'company_id': self.branch_a.id,
+            'company_ids': [Command.link(self.branch_a.id)]
         })
         account_lines = [Command.create({
             'account_id': account.id,
@@ -182,31 +199,31 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             'tax_ids': [Command.set(tax.ids)],
             'name': 'name',
         })]
-        for record, lines in (
-            (account, account_lines),
-            (tax, tax_lines),
+        for record, lines, company_field in (
+            (account, account_lines, 'company_ids'),
+            (tax, tax_lines, 'company_id'),
         ):
             with self.subTest(model=record._name):
                 self.env['account.move'].create({'company_id': self.branch_a.id, 'line_ids': lines})
                 # Can switch to main
-                record.company_id = self.root_company
+                record[company_field] = self.root_company
 
                 # Can switch back
-                record.company_id = self.branch_a
+                record[company_field] = self.branch_a
 
                 # Can't use in main if owned by a branch
                 with self.assertRaisesRegex(UserError, 'belongs to another company'):
                     self.env['account.move'].create({'company_id': self.root_company.id, 'line_ids': lines})
 
                 # Can still switch to main
-                record.company_id = self.root_company
+                record[company_field] = self.root_company
 
                 # Can use in main now
                 self.env['account.move'].create({'company_id': self.root_company.id, 'line_ids': lines})
 
                 # Can't switch back to branch if used in main
                 with self.assertRaisesRegex(UserError, 'journal items linked'):
-                    record.company_id = self.branch_a
+                    record[company_field] = self.branch_a
 
     def test_branch_should_keep_parent_company_currency(self):
         test_country = self.env['res.country'].create({

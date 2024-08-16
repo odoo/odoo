@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('purchase_matrix_tour', {
-    url: "/web",
+    url: "/odoo",
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     }
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: 'click'
 }, {
     trigger: '.o_form_button_save',
@@ -51,7 +50,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
 },
 {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
+    trigger: '.o_field_pol_product_many2one',
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
@@ -66,7 +65,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: 'click' // apply the matrix
 }, 
 {
@@ -99,7 +97,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     }
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: 'click' // apply the matrix
 },
 {

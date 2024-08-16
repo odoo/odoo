@@ -7,25 +7,28 @@ class AccountTax(models.Model):
     _inherit = 'account.tax'
 
     l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
+    l10n_in_tax_type = fields.Selection(
+        selection=[('igst', 'igst'), ('cgst', 'cgst'), ('sgst', 'sgst'), ('cess', 'cess')],
+        compute='_compute_l10n_in_tax_type',
+    )
 
-    def _prepare_dict_for_taxes_computation(self):
-        # EXTENDS 'account'
-        tax_data = super()._prepare_dict_for_taxes_computation()
-
-        if self.country_code == 'IN':
-            l10n_in_tax_type = None
-            tags = self.invoice_repartition_line_ids.tag_ids
-            if self.env.ref('l10n_in.tax_tag_igst') in tags:
-                l10n_in_tax_type = 'igst'
-            elif self.env.ref('l10n_in.tax_tag_cgst') in tags:
-                l10n_in_tax_type = 'cgst'
-            elif self.env.ref('l10n_in.tax_tag_sgst') in tags:
-                l10n_in_tax_type = 'sgst'
-            elif self.env.ref('l10n_in.tax_tag_cess') in tags:
-                l10n_in_tax_type = 'cess'
-            tax_data['_l10n_in_tax_type'] = l10n_in_tax_type
-
-        return tax_data
+    @api.depends('country_code', 'invoice_repartition_line_ids.tag_ids')
+    def _compute_l10n_in_tax_type(self):
+        self.l10n_in_tax_type = False
+        in_taxes = self.filtered(lambda tax: tax.country_code == 'IN')
+        if in_taxes:
+            tags_mapping = {
+                'igst': self.env.ref('l10n_in.tax_tag_igst'),
+                'cgst': self.env.ref('l10n_in.tax_tag_cgst'),
+                'sgst': self.env.ref('l10n_in.tax_tag_sgst'),
+                'cess': self.env.ref('l10n_in.tax_tag_cess'),
+            }
+            for tax in in_taxes:
+                tags = tax.invoice_repartition_line_ids.tag_ids
+                for tag_code, tag in tags_mapping.items():
+                    if tag in tags:
+                        tax.l10n_in_tax_type = tag_code
+                        break
 
     # -------------------------------------------------------------------------
     # HELPERS IN BOTH PYTHON/JAVASCRIPT (hsn_summary.js / account_tax.py)
@@ -43,35 +46,33 @@ class AccountTax(models.Model):
                 continue
 
             price_unit = base_line['price_unit']
+            discount = base_line['discount']
             quantity = base_line['quantity']
-            product_values = base_line['product_values']
-            uom = base_line['uom'] or {}
-            taxes_data = base_line['taxes_data']
+            product = base_line['product']
+            uom = base_line['uom']
+            taxes = base_line['taxes']
+
+            final_price_unit = price_unit * (1 - (discount / 100))
 
             # Compute the taxes.
-            evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
-                price_unit,
+            taxes_computation = taxes._get_tax_details(
+                final_price_unit,
                 quantity,
-                product_values,
                 rounding_method='round_per_line',
-                precision_rounding=0.01,
-            )
-            taxes_computation = self.env['account.tax']._eval_taxes_computation(
-                self.env['account.tax']._prepare_taxes_computation(taxes_data),
-                evaluation_context,
+                product=product,
             )
 
             # Rate.
             rate = sum(
-                tax_data['amount']
+                tax_data['tax'].amount
                 for tax_data in taxes_computation['taxes_data']
-                if tax_data['_l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
+                if tax_data['tax']['l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
             )
 
             key = frozendict({
                 'l10n_in_hsn_code': l10n_in_hsn_code,
                 'rate': rate,
-                'uom_name': uom.get('name'),
+                'uom_name': uom.name,
             })
 
             if key in results_map:
@@ -92,9 +93,9 @@ class AccountTax(models.Model):
                 }
 
             for tax_data in taxes_computation['taxes_data']:
-                l10n_in_tax_type = tax_data['_l10n_in_tax_type']
+                l10n_in_tax_type = tax_data['tax'].l10n_in_tax_type
                 if l10n_in_tax_type:
-                    results_map[key]['tax_amounts'][l10n_in_tax_type] += tax_data['tax_amount_factorized']
+                    results_map[key]['tax_amounts'][l10n_in_tax_type] += tax_data['tax_amount']
                     l10n_in_tax_types.add(l10n_in_tax_type)
 
         items = [

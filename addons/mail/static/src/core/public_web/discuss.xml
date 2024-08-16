@@ -3,8 +3,9 @@
 
 <t t-name="mail.Discuss">
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
-        <div t-if="store.inPublicPage or !(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
-            <div class="o-mail-Discuss-header px-3 bg-view d-flex flex-shrink-0 align-items-center border-bottom z-1" t-att-class="{ 'flex-grow-1': !ui.isSmall and !store.inPublicPage }" t-ref="header">
+        <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
+        <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
+            <div class="o-mail-Discuss-header px-3 d-flex flex-shrink-0 align-items-center border-bottom z-1" t-att-class="{ 'flex-grow-1': !ui.isSmall and !store.inPublicPage }" t-ref="header">
                 <t t-if="thread">
                     <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
                         <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
@@ -19,7 +20,7 @@
                     <t t-else="">
                         <ThreadIcon className="'me-2 align-self-center'" size="'large'" thread="thread"/>
                     </t>
-                    <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent.persona" thread="thread" />
+                    <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" member="thread.correspondent" />
                     <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                         <AutoresizeInput
                             className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
@@ -62,6 +63,7 @@
                 </t>
             </div>
             <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
+                <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>                
                 <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1" t-ref="core">
                     <t t-if="thread">
                         <div class="d-flex flex-column flex-grow-1">
@@ -78,6 +80,7 @@
                 </div>
             </div>
         </div>
+        <MessagingMenu t-if="ui.isSmall"/>
     </div>
 </t>
 
@@ -87,6 +90,12 @@
             'active o-active shadow-none': mailbox.eq(store.discuss.thread),
         }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.name"
     />
+</t>
+
+<t t-name="mail.Discuss.loading">
+    <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
+        <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
+    </div>
 </t>
 
 </templates>

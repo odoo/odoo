@@ -41,7 +41,7 @@ def check_access_token(access_token, *values):
     :rtype: bool
     """
     authentic_token = generate_access_token(*values)
-    return access_token and consteq(ustr(access_token), authentic_token)
+    return access_token and consteq(access_token, authentic_token)
 
 
 # Availability report.

@@ -10,6 +10,7 @@ import {
     queryAllTexts,
     queryAllValues,
     queryFirst,
+    queryLast,
     queryOne,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
@@ -414,7 +415,7 @@ test("open search view autocomplete on paste value using mouse", async () => {
     });
 
     // Simulate paste text through the mouse.
-    navigator.clipboard.writeTextSync("ABC");
+    await navigator.clipboard.writeText("ABC");
     pointerDown(".o_searchview input");
     press(["ctrl", "v"]);
     await animationFrame();
@@ -689,7 +690,8 @@ test("check kwargs of a rpc call with a domain", async () => {
             kwargs: {
                 args: [["bool", "=", true]],
                 context: { lang: "en", uid: 7, tz: "taht", allowed_company_ids: [1] },
-                limit: 8,
+                limit: 8 + 1,
+                operator: "ilike",
                 name: "F",
             },
         });
@@ -1700,4 +1702,99 @@ test("order by count resets when there is no group left", async () => {
     await toggleMenuItem("Bar");
     expect(".fa-sort-numeric-asc").toHaveCount(0);
     expect(".fa-sort").toHaveCount(1);
+});
+
+test("quoted search term performs an exact match search", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+    await editSearch(`"yop"`);
+    keyDown("Enter");
+    await animationFrame();
+    expect(searchBar.env.searchModel._domain).toEqual([["foo", "=", "yop"]]);
+});
+
+test(`quoted search term performs an exact match search on view defined's "filter_domain"`, async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field string="Foo" name="foo" filter_domain="[('name', 'ilike', self)]"/>
+            </search>
+        `,
+    });
+    await editSearch(`"Second record"`);
+    keyDown("Enter");
+    await animationFrame();
+    expect(searchBar.env.searchModel._domain).toEqual([["name", "=", "Second record"]]);
+});
+
+test(`quoted search term performs a name_search with operator = for subitems`, async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field string="Company" name="company"/>
+            </search>
+        `,
+    });
+    await editSearch(`"First"`);
+    await contains(".o_expand").click();
+    expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveText("(no result)");
+    await editSearch(`"First record"`);
+    await contains(".o_expand").click();
+    expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveText("First record");
+});
+
+test("subitems have a load more item if there is more records available", async () => {
+    for (let i = 0; i < 20; i++) {
+        Partner._records.push({
+            id: 100 + i,
+            name: `Home Depot ${i}`,
+        });
+    }
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="company"/>
+            </search>
+        `,
+    });
+    await editSearch("Home");
+    await contains(".o_expand").click();
+    await expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveCount(8 + 1);
+    await expect(queryLast(".o_searchview_autocomplete li.o_menu_item.o_indent")).toHaveText(
+        "Load more"
+    );
+    await contains(queryLast(".o_searchview_autocomplete li.o_menu_item.o_indent")).click();
+    await expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveCount(8 + 8 + 1);
+    await expect(queryLast(".o_searchview_autocomplete li.o_menu_item.o_indent")).toHaveText(
+        "Load more"
+    );
+});
+
+test("subitems do not have a load more item if there is no more records available", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="company"/>
+            </search>
+        `,
+    });
+    await editSearch("home");
+    await contains(".o_expand").click();
+    await expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveCount(1);
+    await expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveText("(no result)");
 });

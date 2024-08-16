@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('mailing_activities_split', {
     test: true,
-    url: '/web',
+    url: '/odoo',
     steps: () => [
         {
             content: 'Open Activity Systray',

@@ -212,12 +212,16 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_latam_available_document_type_ids')
     def _compute_l10n_latam_document_type(self):
-        for rec in self.filtered(lambda x: x.state == 'draft'):
+        for rec in self.filtered(lambda x: x.state == 'draft' and not x.posted_before):
             document_types = rec.l10n_latam_available_document_type_ids._origin
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
-    def _compute_made_sequence_hole(self):
+    def _compute_made_sequence_gap(self):
         use_documents_moves = self.filtered(lambda m: m.journal_id.l10n_latam_use_documents)
-        use_documents_moves.made_sequence_hole = False
+        use_documents_moves.made_sequence_gap = False
         if other_moves := self - use_documents_moves:
-            super(AccountMove, other_moves)._compute_made_sequence_hole()
+            super(AccountMove, other_moves)._compute_made_sequence_gap()
+
+    def _set_next_made_sequence_gap(self, made_gap: bool):
+        if other_moves := self.filtered(lambda m: not m.journal_id.l10n_latam_use_documents):
+            super(AccountMove, other_moves)._set_next_made_sequence_gap(made_gap)

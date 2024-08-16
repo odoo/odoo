@@ -36,7 +36,7 @@ export class BomOverviewExtraBlock extends Component {
             this.props.changeFolded({ ids: [this.identifier], isFolded: false });
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this._unfold());
+        useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
 
         onWillUpdateProps(newProps => {
             if (this.props.data.product_id != newProps.data.product_id) {
@@ -58,9 +58,9 @@ export class BomOverviewExtraBlock extends Component {
         this.props.changeFolded({ ids: [this.identifier], isFolded: newState });
     }
 
-    _unfold() {
-        this.state.isFolded = false;
-        this.props.changeFolded({ ids: [this.identifier], isFolded: false })
+    _toggleFoldAll() {
+        this.state.isFolded = !this.state.isFolded;
+        this.props.changeFolded({ ids: [this.identifier], isFolded: this.state.isFolded });
     }
 
     //---- Getters ----

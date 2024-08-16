@@ -1,4 +1,6 @@
+import { busService } from "@bus/services/bus_service";
 import { busModels } from "@bus/../tests/bus_test_helpers";
+
 import { mailGlobal } from "@mail/utils/common/misc";
 import { after, before, getFixture } from "@odoo/hoot";
 import { hover as hootHover, resize } from "@odoo/hoot-dom";
@@ -25,7 +27,11 @@ import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-import { DISCUSS_ACTION_ID, authenticateGuest, mailDataHelpers } from "./mock_server/mail_mock_server";
+import {
+    DISCUSS_ACTION_ID,
+    authenticateGuest,
+    mailDataHelpers,
+} from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 
@@ -62,6 +68,9 @@ import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_set
 import { contains } from "./mail_test_helpers_contains";
 
 export { SIZES } from "@web/core/ui/ui_service";
+import { patch } from "@web/core/utils/patch";
+import { logger } from "@web/../lib/hoot/core/logger";
+
 export * from "./mail_test_helpers_contains";
 
 before(prepareRegistriesWithCleanup);
@@ -71,6 +80,19 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 mailGlobal.isInTest = true;
 useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
 
+patch(busService, {
+    _onMessage(id, type, payload) {
+        super._onMessage(...arguments);
+        if (type === "mail.record/insert") {
+            const recordsByModelName = Object.entries(payload);
+            for (const [modelName, records] of recordsByModelName) {
+                for (const record of records) {
+                    logger.logDebug(modelName, record);
+                }
+            }
+        }
+    },
+});
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -298,6 +320,7 @@ export async function start(options) {
         patchWithCleanup(session, {
             storeData: store.get_result(),
         });
+        logger.logDebug("session.storeData", session.storeData);
     }
     let env;
     if (options?.asTab) {
@@ -319,6 +342,11 @@ export async function start(options) {
 export async function startServer() {
     const { env } = await makeMockServer();
     pyEnv = env;
+    pyEnv["res.users"].write([serverState.userId], {
+        groups_id: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupId]])
+            .map(({ id }) => id),
+    });
     return env;
 }
 

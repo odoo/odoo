@@ -173,8 +173,10 @@ class IrQWeb(models.AbstractModel):
 
         name = self.URL_ATTRS.get(tagName)
         if request:
-            if name and name in atts:
-                atts[name] = self.env['ir.http']._url_for(atts[name])
+            value = atts.get(name) if name else None
+            if value is not None and value is not False:
+                atts[name] = self.env['ir.http']._url_for(str(value))
+
             # Adapt background-image URL in the same way as image src.
             atts = self._adapt_style_background_image(atts, self.env['ir.http']._url_for)
 

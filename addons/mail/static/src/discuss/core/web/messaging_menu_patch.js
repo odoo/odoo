@@ -1,4 +1,4 @@
-import { MessagingMenu } from "@mail/core/web/messaging_menu";
+import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { ChannelSelector } from "@mail/discuss/core/web/channel_selector";
 import { patch } from "@web/core/utils/patch";
 
@@ -9,6 +9,14 @@ patch(MessagingMenu.prototype, {
         const res = super.beforeOpen(...arguments);
         this.store.channels.fetch();
         return res;
+    },
+    onClickNewMessage() {
+        if (this.ui.isSmall || this.env.inDiscussApp) {
+            Object.assign(this.state, { adding: "chat" });
+        } else {
+            this.store.openNewMessage();
+            this.dropdown.close();
+        }
     },
     get counter() {
         const count = super.counter;

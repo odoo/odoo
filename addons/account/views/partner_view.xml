@@ -90,12 +90,12 @@
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
                             <field name="account_ids" widget="one2many" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
-                                    <field name="account_src_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
-                                    <field name="account_dest_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_src_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
                                 </tree>
                                 <form string="Account Mapping">
-                                    <field name="account_src_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
-                                    <field name="account_dest_id" domain="['|', '|', ('company_id', '=', False), ('company_id', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_src_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
+                                    <field name="account_dest_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
                                 </form>
                             </field>
                         </page>
@@ -225,9 +225,10 @@
                                     <field name="credit_limit" class="oe_inline" invisible="not use_partner_credit_limit"/>
                                 </div>
                             </group>
-                            <group groups="base.group_no_one">
-                                <field name="ignore_abnormal_invoice_amount"/>
-                                <field name="ignore_abnormal_invoice_date"/>
+                            <group name='accounting_automation' string='Automation'>
+                                <field name="autopost_bills" groups="account.group_account_invoice,account.group_account_readonly"/>
+                                <field name="ignore_abnormal_invoice_amount" groups="base.group_no_one"/>
+                                <field name="ignore_abnormal_invoice_date" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </page>
@@ -244,9 +245,19 @@
                 </xpath>
                 <group name="sale" position="inside">
                     <field string="Payment Terms" name="property_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field string="Payment Method"
+                           name="property_inbound_payment_method_line_id"
+                           options="{'no_open': True, 'no_create': True}"
+                           groups="account.group_account_invoice,account.group_account_readonly"
+                    />
                 </group>
                 <group name="purchase" position="inside">
                     <field string="Payment Terms" name="property_supplier_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field string="Payment Method"
+                           name="property_outbound_payment_method_line_id"
+                           options="{'no_open': True, 'no_create': True}"
+                           groups="account.group_account_invoice,account.group_account_readonly"
+                    />
                 </group>
             </field>
         </record>

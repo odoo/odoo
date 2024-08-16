@@ -2323,6 +2323,18 @@ class TestBoM(TestMrpCommon):
         # the filter is applied because there are attachements on the product.template and on the product.product
         self.assertTrue(action['context']['search_default_context_variant'])
 
+    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
+        """
+        Checks that a notification is sent when at least one component can not be resupplied.
+        """
+        bom = self.bom_1
+        product = bom.product_id
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
+        product.route_ids = [Command.set([manufacturing_route_id])]
+        notification = bom.action_compute_bom_days()
+        self.assertEqual(bom.days_to_prepare_mo, 0.0)
+        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
+
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
@@ -2340,8 +2352,7 @@ class TestTourBoM(HttpCase):
 
         self.assertEqual(len(bom.bom_line_ids), 0)
 
-        action = self.env.ref('mrp.mrp_bom_form_action')
-        url = '/web#model=mrp.bom&view_type=form&action=%s&id=%s' % (str(action.id), str(bom.id))
+        url = f'/odoo/action-mrp.mrp_bom_form_action/{bom.id}'
 
         self.start_tour(url, 'test_mrp_bom_product_catalog', login='admin')
         self.assertEqual(len(bom.bom_line_ids), 1)
@@ -2350,6 +2361,5 @@ class TestTourBoM(HttpCase):
         """
         Create a new MO by pressing the "Manufacture" button in BoM Overview
         """
-        action = self.env.ref('mrp.mrp_bom_form_action')
-        url = f'/web#model=mrp.bom&view_type=list&action={action.id}'
+        url = '/odoo/action-mrp.mrp_bom_form_action'
         self.start_tour(url, 'test_manufacture_from_bom', login='admin', timeout=100)

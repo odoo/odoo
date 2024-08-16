@@ -9,9 +9,8 @@ from stdnum import luhn
 
 import logging
 
-from odoo import api, models, fields, tools, _
+from odoo import api, models, fields, _
 from odoo.tools import zeep
-from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
 
@@ -31,6 +30,7 @@ _ref_vat = {
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
     'br': _('either 11 digits for CPF or 14 digits for CNPJ'),
+    'cr': _('3101012009'),
     'ch': _('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
     'co': _('CO213123432-1 or CO213.123.432-1'),
@@ -116,7 +116,7 @@ class ResPartner(models.Model):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
-        if not ustr(country_code).encode('utf-8').isalpha():
+        if not country_code.encode().isalpha():
             return False
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
@@ -403,91 +403,33 @@ class ResPartner(models.Model):
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
-    __check_vat_mx_re = re.compile(br"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
-                                   br"[ \-_]?" \
-                                   br"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
-                                   br"[ \-_]?" \
-                                   br"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})"
+                                   r"[ \-_]?"
+                                   r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])"
+                                   r"[ \-_]?"
+                                   r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})")
 
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification
 
         Verificar RFC México
         '''
-        # we convert to 8-bit encoding, to help the regex parse only bytes
-        vat = ustr(vat).encode('iso8859-1')
-        m = self.__check_vat_mx_re.match(vat)
+        m = self.__check_vat_mx_re.fullmatch(vat)
         if not m:
             #No valid format
             return False
+        ano = int(m['ano'])
+        if ano > 30:
+            ano = 1900 + ano
+        else:
+            ano = 2000 + ano
         try:
-            ano = int(m.group('ano'))
-            if ano > 30:
-                ano = 1900 + ano
-            else:
-                ano = 2000 + ano
-            datetime.date(ano, int(m.group('mes')), int(m.group('dia')))
+            datetime.date(ano, int(m['mes']), int(m['dia']))
         except ValueError:
             return False
 
         # Valid format and valid date
         return True
-
-    # Netherlands VAT verification
-    __check_vat_nl_re = re.compile("(?:NL)?[0-9A-Z+*]{10}[0-9]{2}")
-
-    def check_vat_nl(self, vat):
-        """
-        Temporary Netherlands VAT validation to support the new format introduced in January 2020,
-        until upstream is fixed.
-
-        Algorithm detail: http://kleineondernemer.nl/index.php/nieuw-btw-identificatienummer-vanaf-1-januari-2020-voor-eenmanszaken
-
-        TODO: remove when fixed upstream
-        """
-
-        try:
-            from stdnum.util import clean
-            from stdnum.nl.bsn import checksum
-        except ImportError:
-            return True
-
-        vat = clean(vat, ' -.').upper().strip()
-
-        # Remove the prefix
-        if vat.startswith("NL"):
-            vat = vat[2:]
-
-        if not len(vat) == 12:
-            return False
-
-        # Check the format
-        match = self.__check_vat_nl_re.match(vat)
-        if not match:
-            return False
-
-        # Match letters to integers
-        char_to_int = {k: str(ord(k) - 55) for k in string.ascii_uppercase}
-        char_to_int['+'] = '36'
-        char_to_int['*'] = '37'
-
-        # 2 possible checks:
-        # - For natural persons
-        # - For non-natural persons and combinations of natural persons (company)
-
-        # Natural person => mod97 full checksum
-        check_val_natural = '2321'
-        for x in vat:
-            check_val_natural += x if x.isdigit() else char_to_int[x]
-        if int(check_val_natural) % 97 == 1:
-            return True
-
-        # Company => weighted(9->2) mod11 on bsn
-        vat = vat[:-3]
-        if vat.isdigit() and checksum(vat) == 0:
-            return True
-
-        return False
 
     # Norway VAT validation, contributed by Rolv Råen (adEgo) <rora@adego.no>
     # Support for MVA suffix contributed by Bringsvor Consulting AS (bringsvor@bringsvor.com)
@@ -696,16 +638,6 @@ class ResPartner(models.Model):
 
         return check_digit == checksum_digit
 
-    def check_vat_xi(self, vat):
-        """ Temporary Nothern Ireland VAT validation following Brexit
-        As of January 1st 2021, companies in Northern Ireland have a
-        new VAT number starting with XI
-        TODO: remove when stdnum is updated to 1.16 in supported distro"""
-        check_func = getattr(stdnum.util.get_cc_module('gb', 'vat'), 'is_valid', None)
-        if not check_func:
-            return len(vat) == 9
-        return check_func(vat)
-
     def check_vat_in(self, vat):
         #reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
         if vat and len(vat) == 15:
@@ -719,29 +651,6 @@ class ResPartner(models.Model):
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
 
-    def check_vat_au(self, vat):
-        '''
-        The Australian equivalent of a VAT number is an ABN number.
-        TFN (Australia Tax file numbers) are private and not to be
-        entered into systems or publicly displayed, so ABN numbers
-        are the public facing number that legally must be displayed
-        on all invoices
-        '''
-        check_func = getattr(stdnum.util.get_cc_module('au', 'abn'), 'is_valid', None)
-        if not check_func:
-            vat = vat.replace(" ", "")
-            return len(vat) == 11 and vat.isdigit()
-        return check_func(vat)
-
-    def check_vat_nz(self, vat):
-        '''
-        The New Zealand equivalent of a VAT number is an IRD number (GST number is another name for this).
-        IRD/GST numbers must legally must be displayed on all tax invoices.
-        https://arthurdejong.org/python-stdnum/doc/1.13/stdnum.nz.ird#module-stdnum.nz.ird
-        '''
-        check_func = stdnum.util.get_cc_module('nz', 'ird').is_valid
-        return check_func(vat)
-
     def check_vat_t(self, vat):
         if self.country_id.code == 'JP':
             return self.simple_vat_check('jp', vat)
@@ -750,6 +659,16 @@ class ResPartner(models.Model):
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
         is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
         return is_cpf_valid(vat) or is_cnpj_valid(vat)
+
+    __check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
+
+    def check_vat_cr(self, vat):
+        # CÉDULA FÍSICA: 9 digits
+        # CÉDULA JURÍDICA: 10 digits
+        # CÉDULA DIMEX: 11 or 12 digits
+        # CÉDULA NITE: 10 digits
+
+        return self.__check_vat_cr_re.match(vat) or False
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
@@ -782,7 +701,7 @@ class ResPartner(models.Model):
         return is_valid_vat(vat) or is_valid_stnr(vat)
 
     def check_vat_il(self, vat):
-        check_func = stdnum.util.get_cc_module('il', 'hp').is_valid if self.is_company else stdnum.util.get_cc_module('il', 'idnr').is_valid
+        check_func = stdnum.util.get_cc_module('il', 'idnr').is_valid
         return check_func(vat)
 
     def format_vat_sm(self, vat):

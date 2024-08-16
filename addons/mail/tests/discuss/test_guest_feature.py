@@ -3,10 +3,11 @@
 import json
 from odoo.tests import tagged
 from odoo.addons.bus.tests.common import WebsocketCase
+from odoo.addons.mail.tests.common import MailCommon
 
 
 @tagged("post_install", "-at_install")
-class TestGuestFeature(WebsocketCase):
+class TestGuestFeature(WebsocketCase, MailCommon):
     def test_mark_as_read_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         partner = self.env["res.partner"].create({"name": "John"})
@@ -34,11 +35,11 @@ class TestGuestFeature(WebsocketCase):
         self.assertEqual(guest_member.seen_message_id, channel.message_ids[0])
 
     def test_subscribe_to_guest_channel(self):
-        self.env["bus.bus"].search([]).unlink()
+        self._reset_bus()
         guest = self.env["mail.guest"].create({"name": "Guest"})
         guest_websocket = self.websocket_connect()
         self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"], guest.id)
-        self.env["bus.bus"]._sendone(guest, "lambda", {"foo": "bar"})
+        guest._bus_send("lambda", {"foo": "bar"})
         self.trigger_notification_dispatching([guest])
         notifications = json.loads(guest_websocket.recv())
         self.assertEqual(1, len(notifications))
@@ -51,10 +52,10 @@ class TestGuestFeature(WebsocketCase):
             group_id=None, name="General"
         )
         channel.add_members(guest_ids=[guest.id])
-        self.env["bus.bus"].search([]).unlink()
+        self._reset_bus()
         guest_websocket = self.websocket_connect()
         self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"], guest.id)
-        self.env["bus.bus"]._sendone(channel, "lambda", {"foo": "bar"})
+        channel._bus_send("lambda", {"foo": "bar"})
         self.trigger_notification_dispatching([channel])
         notifications = json.loads(guest_websocket.recv())
         self.assertEqual(1, len(notifications))

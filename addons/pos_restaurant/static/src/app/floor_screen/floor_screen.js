@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { ConnectionLostError } from "@web/core/network/rpc";
-import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
+import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
@@ -9,20 +8,34 @@ import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup"
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, useRef, useState, onWillStart, useEffect } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    useRef,
+    useState,
+    onWillStart,
+    useEffect,
+    useExternalListener,
+} from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import {
+    getButtons,
+    DECIMAL,
+    ZERO,
+    BACKSPACE,
+} from "@point_of_sale/app/generic_components/numpad/numpad";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-export function constrain(num, min, max) {
+
+function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
-
 /**
  * Gives the minimum and maximum x and y value for an element to prevent it from
  * overflowing outside of another element.
@@ -33,17 +46,26 @@ export function constrain(num, min, max) {
  *  shouldn't overflow
  * @returns {{ minX: number, maxX: number, minY: number, maxY: number }} limits
  */
-export function getLimits(el, limitEl) {
-    const { width, height } = el.getBoundingClientRect();
+function getLimits(el, limitEl) {
     const limitRect = limitEl.getBoundingClientRect();
     const offsetParentRect = el.offsetParent.getBoundingClientRect();
     return {
         minX: limitRect.left - offsetParentRect.left,
-        maxX: limitRect.left - offsetParentRect.left + limitRect.width - width,
+        maxX: limitRect.left - offsetParentRect.left + limitRect.width,
         minY: limitRect.top - offsetParentRect.top,
-        maxY: limitRect.top - offsetParentRect.top + limitRect.height - height,
+        maxY: limitRect.top - offsetParentRect.top + limitRect.height,
     };
 }
+const areElementsIntersecting = (el1, el2) => {
+    const rect1 = el1.getBoundingClientRect();
+    const rect2 = el2.getBoundingClientRect();
+    return !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+    );
+};
 const useDraggable = makeDraggableHook({
     name: "useDraggable",
     onComputeParams({ ctx }) {
@@ -54,6 +76,9 @@ const useDraggable = makeDraggableHook({
     onDrag: ({ ctx }) => pick(ctx.current, "element"),
     onDrop: ({ ctx }) => pick(ctx.current, "element"),
 });
+
+const GRID_SIZE = 10;
+
 export class FloorScreen extends Component {
     static components = { Dropdown, DropdownItem };
     static template = "pos_restaurant.FloorScreen";
@@ -63,90 +88,128 @@ export class FloorScreen extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
+        this.ui = useService("ui");
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
             floorHeight: "100%",
             floorWidth: "100%",
             selectedTableIds: [],
-            isColorPicker: false,
             potentialLink: null,
         });
         this.floorMapRef = useRef("floor-map-ref");
         this.floorScrollBox = useRef("floor-map-scroll");
         this.map = useRef("map");
         this.alert = useService("alert");
-        const getPosTable = (el) => {
-            return this.pos.models["restaurant.table"].get(
-                [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
-            );
+        const getTableElem = (table) => {
+            return this.map.el.querySelector(`.tableId-${table.id}`);
         };
-        const areElementsIntersecting = (el1, el2) => {
-            const rect1 = el1.getBoundingClientRect();
-            const rect2 = el2.getBoundingClientRect();
-            return !(
-                rect1.right < rect2.left ||
-                rect1.left > rect2.right ||
-                rect1.bottom < rect2.top ||
-                rect1.top > rect2.bottom
-            );
-        };
-        const findIntersectingTable = (tableElem) => {
-            const table = getPosTable(tableElem);
+        const findIntersectingTableElem = (tableElem) => {
+            const table = this.getPosTable(tableElem);
             return [...tableElem.parentElement.getElementsByClassName("table")].find(
                 (t) =>
                     t !== tableElem &&
                     areElementsIntersecting(t, tableElem) &&
-                    !table.isParent(getPosTable(t))
+                    !table.isParent(this.getPosTable(t))
             );
         };
-        let lastX;
-        let lastY;
+        const TABLE_LINKING_DELAY = 400;
+        let offsetX, offsetY;
+        const suggestLinkingPositions = () =>
+            this.state.potentialLink?.parent &&
+            this.state.potentialLink.time + TABLE_LINKING_DELAY < Date.now();
+
+        useExternalListener(window, "keydown", (ev) => {
+            const overlayElements = document.querySelectorAll(".o-overlay-item");
+            if (
+                overlayElements.length == 0 &&
+                ev.key === "Escape" &&
+                this.pos.isEditMode &&
+                this.state.selectedTableIds.length == 0 &&
+                !this.state.potentialLink
+            ) {
+                this.pos.isEditMode = false;
+            }
+        });
         useDraggable({
             ref: this.map,
             elements: ".table",
             ignore: "span.table-handle",
+            enabled: !this.pos.isEditMode,
             onDragStart: (ctx) => {
                 ctx.addClass(ctx.element, "shadow");
-                const table = getPosTable(ctx.element);
+                if (this.pos.isEditMode) {
+                    return;
+                }
+                const table = this.getPosTable(ctx.element);
+                this.state.potentialLink = { child: table };
+                table.uiState.initialPosition = pick(table, "position_h", "position_v");
+                // This helps when unlinking tables ( to keep the position )
+                table.position_h = table.getX();
+                table.position_v = table.getY();
                 if (table.parent_id) {
                     this.pos.data.write("restaurant.table", [table.id], {
                         parent_id: null,
                     });
                 }
-                table.uiState.initialPosition = pick(table, "position_h", "position_v");
             },
-            onWillStartDrag: ({ x, y }) => {
-                lastX = x;
-                lastY = y;
+            onWillStartDrag: ({ element, x, y }) => {
+                offsetX = x - element.getBoundingClientRect().left;
+                offsetY = y - element.getBoundingClientRect().top;
             },
-            onDrag: useThrottleForAnimation(({ element, x, y }) => {
-                const table = getPosTable(element);
-                table.position_h += x - lastX;
-                table.position_v += y - lastY;
-                lastX = x;
-                lastY = y;
-                if (this.pos.isEditMode) {
-                    return;
-                }
-                const potentialParentTable = findIntersectingTable(element);
-                if (potentialParentTable) {
+            onDrag: ({ element, x, y }) => {
+                const table = this.getPosTable(element);
+                if (!suggestLinkingPositions()) {
+                    table.position_h =
+                        x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
+                    table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
+                    if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
+                        table.position_h -= table.position_h % GRID_SIZE;
+                        table.position_v -= table.position_v % GRID_SIZE;
+                    }
+                    if (this.pos.isEditMode || this.state.potentialLink?.parent) {
+                        return;
+                    }
+                    const potentialParentElem = findIntersectingTableElem(element);
+                    if (!potentialParentElem) {
+                        this.alert.add("Link Table");
+                        return;
+                    }
                     this.state.potentialLink = {
                         child: table,
-                        parent: potentialParentTable,
+                        parent: this.getPosTable(potentialParentElem),
+                        time: Date.now(),
                     };
-                    this.overlayX = this.state.potentialLink.child.getCenter().x;
-                    this.overlayY = this.state.potentialLink.child.getCenter().y;
-                    this.alert.add("Link Tables");
-                } else {
-                    this.alert.dismiss();
-                    this.state.potentialLink = null;
+                    this.alert.add(
+                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
+                    );
+                    return;
                 }
-            }),
+                const { child, parent } = this.state.potentialLink;
+                const { left, top, width, height } = getTableElem(parent).getBoundingClientRect();
+                const dx = x - left - width / 2;
+                const dy = y - top - height / 2;
+                if (
+                    Math.abs(dx) > parent.width / 2 + child.width / 2 ||
+                    Math.abs(dy) > parent.height / 2 + child.height / 2
+                ) {
+                    this.state.potentialLink = { child: table };
+                    return;
+                }
+                table.setPositionAsIfLinked(
+                    this.state.potentialLink.parent,
+                    Math.abs(dx) > Math.abs(dy)
+                        ? dx > 0
+                            ? "left"
+                            : "right"
+                        : dy < 0
+                        ? "top"
+                        : "bottom"
+                );
+            },
             onDrop: ({ element }) => {
                 this.alert.dismiss();
-                const table = getPosTable(element);
-                this.state.potentialLink = null;
+                const table = this.getPosTable(element);
                 if (this.pos.isEditMode) {
                     this.pos.data.write("restaurant.table", [table.id], {
                         position_h: table.position_h,
@@ -156,63 +219,22 @@ export class FloorScreen extends Component {
                 }
                 table.position_h = table.uiState.initialPosition.position_h;
                 table.position_v = table.uiState.initialPosition.position_v;
-                const interesectingTableElem = findIntersectingTable(element);
-                if (!interesectingTableElem) {
+                if (!suggestLinkingPositions()) {
+                    this.state.potentialLink = null;
                     return;
                 }
-                const newParentTable = getPosTable(interesectingTableElem);
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
                     this.pos.orderToTransferUuid = oToTrans.uuid;
-                    this.pos.transferOrder(newParentTable);
+                    this.pos.transferOrder(this.state.potentialLink.parent);
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
-                    parent_id: newParentTable.id,
+                    parent_id: this.state.potentialLink.parent.id,
                 });
+                this.state.potentialLink = null;
             },
         });
-        useDraggable({
-            ref: this.map,
-            elements: "span.table-handle",
-            onDrag: useThrottleForAnimation((ctx) => {
-                const table = getPosTable(ctx.element.parentElement);
-                const newPosition = {
-                    minX: table.position_h,
-                    minY: table.position_v,
-                    maxX: table.position_h + table.width,
-                    maxY: table.position_v + table.height,
-                };
-                const dx =
-                    ctx.x - ctx.getRect(ctx.element).left - ctx.getRect(ctx.element).width / 2;
-                const dy =
-                    ctx.y - ctx.getRect(ctx.element).top - ctx.getRect(ctx.element).height / 2;
-                const limits = getLimits(ctx.element.parentElement, this.map.el);
-                const MIN_TABLE_SIZE = 30;
-                const bounds = {
-                    maxX: [table.position_h + MIN_TABLE_SIZE, limits.maxX + table.width],
-                    minX: [limits.minX, newPosition.maxX - MIN_TABLE_SIZE],
-                    maxY: [table.position_v + MIN_TABLE_SIZE, limits.maxY + table.height],
-                    minY: [limits.minY, newPosition.maxY - MIN_TABLE_SIZE],
-                };
-                const moveX = ctx.element.classList.contains("left") ? "minX" : "maxX";
-                const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
-                newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
-                newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
-                table.position_h = newPosition.minX;
-                table.position_v = newPosition.minY;
-                table.width = newPosition.maxX - newPosition.minX;
-                table.height = newPosition.maxY - newPosition.minY;
-            }),
-            onDrop: (ctx) => {
-                const table = getPosTable(ctx.element.parentElement);
-                this.pos.data.write(
-                    "restaurant.table",
-                    [table.id],
-                    pick(table, "position_h", "position_v", "width", "height")
-                );
-            },
-        });
-
+        this.useResizeHook();
         onMounted(() => {
             this.pos.openCashControl();
         });
@@ -227,16 +249,77 @@ export class FloorScreen extends Component {
             (tableL) => {
                 if (hasTouch()) {
                     if (tableL) {
-                        this.floorScrollBox.el.classList.remove("overflow-scroll");
+                        this.floorScrollBox.el.classList.remove("overflow-auto");
                         this.floorScrollBox.el.classList.add("overflow-hidden");
                     } else {
                         this.floorScrollBox.el.classList.remove("overflow-hidden");
-                        this.floorScrollBox.el.classList.add("overflow-scroll");
+                        this.floorScrollBox.el.classList.add("overflow-auto");
                     }
                 }
             },
             () => [this.state.selectedTableIds.length]
         );
+    }
+    getPosTable(el) {
+        return this.pos.models["restaurant.table"].get(
+            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+        );
+    }
+    useResizeHook() {
+        let startX, startY;
+        let startPosH, startPosV, startWidth, startHeight;
+        let table;
+        useDraggable({
+            ref: this.map,
+            elements: "span.table-handle",
+            onDragStart: (ctx) => {
+                table = this.getPosTable(ctx.element.parentElement);
+                startX = ctx.x;
+                startY = ctx.y;
+                startPosH = table.position_h;
+                startPosV = table.position_v;
+                startWidth = table.width;
+                startHeight = table.height;
+            },
+            onDrag: (ctx) => {
+                const newPosition = {
+                    minX: startPosH,
+                    minY: startPosV,
+                    maxX: startPosH + startWidth,
+                    maxY: startPosV + startHeight,
+                };
+                const dx = ctx.x - startX;
+                const dy = ctx.y - startY;
+                const limits = getLimits(ctx.element.parentElement, this.map.el);
+                const MIN_TABLE_SIZE = 30;
+                const bounds = {
+                    maxX: [startPosH + MIN_TABLE_SIZE, limits.maxX + startWidth],
+                    minX: [limits.minX, newPosition.maxX - MIN_TABLE_SIZE],
+                    maxY: [startPosV + MIN_TABLE_SIZE, limits.maxY + startHeight],
+                    minY: [limits.minY, newPosition.maxY - MIN_TABLE_SIZE],
+                };
+                const moveX = ctx.element.classList.contains("left") ? "minX" : "maxX";
+                const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
+                newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
+                newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
+                if (!this.activeFloor.floor_background_image) {
+                    newPosition[moveX] -= newPosition[moveX] % GRID_SIZE;
+                    newPosition[moveY] -= newPosition[moveY] % GRID_SIZE;
+                }
+                table.position_h = newPosition.minX;
+                table.position_v = newPosition.minY;
+                table.width = newPosition.maxX - newPosition.minX;
+                table.height = newPosition.maxY - newPosition.minY;
+            },
+            onDrop: (ctx) => {
+                const table = this.getPosTable(ctx.element.parentElement);
+                this.pos.data.write(
+                    "restaurant.table",
+                    [table.id],
+                    pick(table, "position_h", "position_v", "width", "height")
+                );
+            },
+        });
     }
     computeFloorSize() {
         if (this.pos.floorPlanStyle === "kanban") {
@@ -320,7 +403,6 @@ export class FloorScreen extends Component {
             });
         }
         this.state.selectedTableIds = [];
-        this.state.isColorPicker = false;
     }
     _computePinchHypo(ev, callbackFunction) {
         const touches = ev.touches;
@@ -461,7 +543,7 @@ export class FloorScreen extends Component {
             };
         }
         if (!duplicateFloor) {
-            newTableData.name = this._getNewTableName();
+            newTableData.table_number = this._getNewTableNumber();
         }
         const table = await this.createTableFromRaw(newTableData);
         return table;
@@ -471,22 +553,22 @@ export class FloorScreen extends Component {
         const table = await this.pos.data.create("restaurant.table", [newTableData]);
         return table[0];
     }
-    _getNewTableName() {
+    _getNewTableNumber() {
         let firstNum = 1;
-        const tablesNameNumber = this.activeTables
-            .map((table) => +table.name)
+        const tablesNumber = this.activeTables
+            .map((table) => table.table_number)
             .sort(function (a, b) {
                 return a - b;
             });
 
-        for (let i = 0; i < tablesNameNumber.length; i++) {
-            if (tablesNameNumber[i] == firstNum) {
+        for (let i = 0; i < tablesNumber.length; i++) {
+            if (tablesNumber[i] == firstNum) {
                 firstNum += 1;
             } else {
                 break;
             }
         }
-        return firstNum.toString();
+        return firstNum;
     }
     get activeFloor() {
         return this.state.selectedFloorId
@@ -529,12 +611,16 @@ export class FloorScreen extends Component {
     }
     async onClickTable(table, ev) {
         if (this.pos.isEditMode) {
-            if (ev.ctrlKey || ev.metaKey) {
-                this.state.selectedTableIds.push(table.id);
-            } else {
-                this.unselectTables();
-                this.state.selectedTableIds.push(table.id);
+            if (this.state.selectedTableIds.includes(table.id)) {
+                this.state.selectedTableIds = this.state.selectedTableIds.filter(
+                    (id) => id !== table.id
+                );
+                return;
             }
+            if (!ev.ctrlKey && !ev.metaKey) {
+                this.unselectTables();
+            }
+            this.state.selectedTableIds.push(table.id);
             return;
         }
         if (table.parent_id) {
@@ -546,27 +632,7 @@ export class FloorScreen extends Component {
             await this.pos.transferOrder(table);
             this.pos.showScreen("ProductScreen");
         } else {
-            try {
-                this.pos.tableSyncing = true;
-                await this.pos.setTable(table);
-            } catch (e) {
-                if (!(e instanceof ConnectionLostError)) {
-                    throw e;
-                }
-                // Reject error in a separate stack to display the offline popup, but continue the flow
-                Promise.reject(e);
-            } finally {
-                this.pos.tableSyncing = false;
-                const orders = this.pos.getTableOrders(table.id);
-                if (orders.length > 0) {
-                    this.pos.set_order(orders[0]);
-                    this.pos.orderToTransferUuid = null;
-                    this.pos.showScreen(orders[0].get_screen_data().name);
-                } else {
-                    this.pos.add_new_order();
-                    this.pos.showScreen("ProductScreen");
-                }
-            }
+            await this.pos.setTableFromUi(table);
         }
     }
     unselectTables() {
@@ -609,29 +675,28 @@ export class FloorScreen extends Component {
             this.state.selectedTableIds = [newTable.id];
         }
     }
-    async duplicateTableOrFloor() {
-        if (this.selectedTables.length == 0) {
-            const floor = this.activeFloor;
-            const tables = this.activeFloor.table_ids;
-            const newFloorName = floor.name + " (copy)";
-            const copyFloor = await this.pos.data.create("restaurant.floor", [
-                {
-                    name: newFloorName,
-                    background_color: "#ACADAD",
-                    pos_config_ids: [this.pos.config.id],
-                },
-            ]);
+    async duplicateFloor() {
+        const floor = this.activeFloor;
+        const tables = this.activeFloor.table_ids;
+        const newFloorName = floor.name + " (copy)";
+        const copyFloor = await this.pos.data.create("restaurant.floor", [
+            {
+                name: newFloorName,
+                background_color: "#ACADAD",
+                pos_config_ids: [this.pos.config.id],
+            },
+        ]);
 
-            this.selectFloor(copyFloor[0]);
-            this.pos.isEditMode = true;
+        this.selectFloor(copyFloor[0]);
+        this.pos.isEditMode = true;
 
-            for (const table of tables) {
-                const tableSerialized = table.serialize({ orm: true });
-                tableSerialized.floor_id = copyFloor[0].id;
-                await this.createTableFromRaw(tableSerialized);
-            }
-            return;
+        for (const table of tables) {
+            const tableSerialized = table.serialize({ orm: true });
+            tableSerialized.floor_id = copyFloor[0].id;
+            await this.createTableFromRaw(tableSerialized);
         }
+    }
+    async duplicateTable() {
         const selectedTables = this.selectedTables;
         this.state.selectedTableIds = [];
 
@@ -642,37 +707,53 @@ export class FloorScreen extends Component {
             }
         }
     }
-    async rename() {
+    async renameFloor() {
+        this.dialog.add(TextInputPopup, {
+            startingValue: this.activeFloor.name,
+            title: _t("Floor Name ?"),
+            getPayload: (newName) => {
+                if (newName !== this.activeFloor.name) {
+                    this.activeFloor.name = newName;
+                    this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
+                        name: newName,
+                    });
+                }
+            },
+        });
+    }
+    async renameTable() {
         if (this.selectedTables.length > 1) {
             return;
         }
-        this.dialog.add(
-            TextInputPopup,
-            this.selectedTables.length === 1
-                ? {
-                      startingValue: this.selectedTables[0].name,
-                      title: _t("Table Name ?"),
-                      getPayload: (newName) => {
-                          if (newName !== this.selectedTables[0].name) {
-                              this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                                  name: newName,
-                              });
-                          }
-                      },
-                  }
-                : {
-                      startingValue: this.activeFloor.name,
-                      title: _t("Floor Name ?"),
-                      getPayload: (newName) => {
-                          if (newName !== this.activeFloor.name) {
-                              this.activeFloor.name = newName;
-                              this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                                  name: newName,
-                              });
-                          }
-                      },
-                  }
-        );
+        if (this.selectedTables.length === 1) {
+            this.dialog.add(NumberPopup, {
+                startingValue: parseInt(this.selectedTables[0].table_number) || false,
+                title: _t("Change table number?"),
+                placeholder: _t("Enter a table number"),
+                buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
+                isValid: (x) => x,
+                getPayload: (newNumber) => {
+                    if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
+                        this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
+                            table_number: parseInt(newNumber),
+                        });
+                    }
+                },
+            });
+        } else {
+            this.dialog.add(TextInputPopup, {
+                startingValue: this.activeFloor.name,
+                title: _t("Floor Name ?"),
+                getPayload: (newName) => {
+                    if (newName !== this.activeFloor.name) {
+                        this.activeFloor.name = newName;
+                        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
+                            name: newName,
+                        });
+                    }
+                },
+            });
+        }
     }
     async changeSeatsNum() {
         const selectedTables = this.selectedTables;
@@ -698,19 +779,21 @@ export class FloorScreen extends Component {
             this.pos.data.write("restaurant.table", [table.id], { shape: form });
         }
     }
-    setColor(color) {
+
+    setFloorColor(color) {
+        this.activeFloor.background_color = color;
+        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
+            background_color: color,
+            floor_background_image: false,
+        });
+    }
+
+    setTableColor(color) {
         if (this.selectedTables.length > 0) {
             for (const table of this.selectedTables) {
                 this.pos.data.write("restaurant.table", [table.id], { color: color });
             }
-        } else {
-            this.activeFloor.background_color = color;
-            this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                background_color: color,
-                floor_background_image: false,
-            });
         }
-        this.state.isColorPicker = false;
     }
     _getColors() {
         return {
@@ -737,56 +820,53 @@ export class FloorScreen extends Component {
     getLighterShade(color) {
         return this.formatColor([...this._getColors()[color], 0.75]);
     }
-    async deleteFloorOrTable() {
-        if (this.selectedTables.length == 0) {
-            const confirmed = await ask(this.dialog, {
-                title: `Removing floor ${this.activeFloor.name}`,
-                body: sprintf(
-                    _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
-                    this.activeFloor.name
-                ),
+    async deleteFloor() {
+        const confirmed = await ask(this.dialog, {
+            title: `Removing floor ${this.activeFloor.name}`,
+            body: sprintf(
+                _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
+                this.activeFloor.name
+            ),
+        });
+        if (!confirmed) {
+            return;
+        }
+        const activeFloor = this.activeFloor;
+        try {
+            await this.pos.data.call("restaurant.floor", "deactivate_floor", [
+                activeFloor.id,
+                this.pos.session.id,
+            ]);
+        } catch {
+            this.dialog.add(AlertDialog, {
+                title: _t("Delete Error"),
+                body: _t("You cannot delete a floor with orders still in draft for this floor."),
             });
-            if (!confirmed) {
-                return;
-            }
-            const activeFloor = this.activeFloor;
-            try {
-                await this.pos.data.call("restaurant.floor", "deactivate_floor", [
-                    activeFloor.id,
-                    this.pos.session.id,
-                ]);
-            } catch {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Delete Error"),
-                    body: _t(
-                        "You cannot delete a floor with orders still in draft for this floor."
-                    ),
-                });
-                return;
-            }
-
-            const orderList = [...this.pos.get_open_orders()];
-            for (const order of orderList) {
-                if (activeFloor.table_ids.includes(order.tableId)) {
-                    this.pos.removeOrder(order, false);
-                }
-            }
-
-            for (const table_id of activeFloor.table_ids) {
-                table_id.delete();
-            }
-
-            activeFloor.delete();
-
-            if (this.pos.models["restaurant.floor"].length > 0) {
-                this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
-            } else {
-                this.pos.isEditMode = false;
-                this.pos.floorPlanStyle = "default";
-            }
             return;
         }
 
+        const orderList = [...this.pos.get_open_orders()];
+        for (const order of orderList) {
+            if (activeFloor.table_ids.includes(order.tableId)) {
+                this.pos.removeOrder(order, false);
+            }
+        }
+
+        for (const table_id of activeFloor.table_ids) {
+            table_id.delete();
+        }
+
+        activeFloor.delete();
+
+        if (this.pos.models["restaurant.floor"].length > 0) {
+            this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
+        } else {
+            this.pos.isEditMode = false;
+            this.pos.floorPlanStyle = "default";
+        }
+        return;
+    }
+    async deleteTable() {
         const confirmed = await ask(this.dialog, {
             title: _t("Are you sure?"),
             body: _t("Removing a table cannot be undone"),
@@ -880,7 +960,6 @@ export class FloorScreen extends Component {
                     body: _t("Encountered error when loading image. Please try again."),
                 });
             }
-            this.state.isColorPicker = false;
         }
     }
     getOrderCount(table) {
@@ -905,6 +984,34 @@ export class FloorScreen extends Component {
         }
 
         return table.uiState.orderCount + orderCount.size || 0;
+    }
+    setColor(hasSelectedTable, color) {
+        if (hasSelectedTable) {
+            return this.setTableColor(color);
+        } else {
+            return this.setFloorColor(color);
+        }
+    }
+    rename(hasSelectedTable) {
+        if (hasSelectedTable) {
+            return this.renameTable();
+        } else {
+            return this.renameFloor();
+        }
+    }
+    duplicate(hasSelectedTable) {
+        if (hasSelectedTable) {
+            return this.duplicateTable();
+        } else {
+            return this.duplicateFloor();
+        }
+    }
+    delete(hasSelectedTable) {
+        if (hasSelectedTable) {
+            return this.deleteTable();
+        } else {
+            return this.deleteFloor();
+        }
     }
 }
 

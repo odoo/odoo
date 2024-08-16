@@ -82,7 +82,7 @@
                                     <div t-if="assignees" class="flex-nowrap ps-3">
                                         <img class="rounded o_portal_contact_img me-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_1024)}" alt="User" style="width: 20px; height: 20px;"/>
                                         <span t-att-title="'\n'.join(assignees.mapped('name'))">
-                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill text-bg-light"> +<span t-out="len(assignees) - 1"/></span>
+                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
                                     </div>
                                 </td>
@@ -100,7 +100,7 @@
                                     </t>
                                 </td>
                                 <td t-if="groupby != 'stage_id'" class="text-end lh-1">
-                                    <span t-attf-class="badge rounded-pill #{'text-bg-success' if task.stage_id.fold else 'text-bg-primary'} fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>
+                                    <span class="fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"/>
                                 </td>
                             </tr>
                         </t>
@@ -153,7 +153,7 @@
             <t t-set="title" t-value="task.name"/>
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;action=%s&amp;view_type=form' % (task.id, task.env.ref('project.action_view_my_task').id)"/>
+                    <t t-set="backend_url" t-value="'/odoo/action-project.action_view_my_task/%s' % (task.id)"/>
                 </t>
             </t>
 

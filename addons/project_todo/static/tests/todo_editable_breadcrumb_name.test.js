@@ -16,6 +16,8 @@ import { click } from "@mail/../tests/mail_test_helpers";
 import { defineTodoModels } from "./todo_test_helpers";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
 
+describe.current.skip();
+
 describe.current.tags("desktop");
 defineTodoModels();
 

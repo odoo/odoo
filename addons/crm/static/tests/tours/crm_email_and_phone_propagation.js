@@ -5,7 +5,7 @@
 
     registry.category("web_tour.tours").add('crm_email_and_phone_propagation_edit_save', {
         test: true,
-        url: '/web',
+        url: '/odoo',
         steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -13,7 +13,7 @@
             content: 'open crm app',
             run: "click",
         }, {
-            trigger: '.o_kanban_record .o_kanban_record_title span:contains(Test Lead Propagation)',
+            trigger: '.o_kanban_record:contains(Test Lead Propagation)',
             content: 'Open the first lead',
             run: 'click',
         },
@@ -29,7 +29,7 @@
 
     registry.category("web_tour.tours").add('crm_email_and_phone_propagation_remove_email_and_phone', {
         test: true,
-        url: '/web',
+        url: '/odoo',
         steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -37,7 +37,7 @@
             content: 'open crm app',
             run: "click",
         }, {
-            trigger: '.o_kanban_record .o_kanban_record_title span:contains(Test Lead Propagation)',
+            trigger: '.o_kanban_record:contains(Test Lead Propagation)',
             content: 'Open the first lead',
             run: 'click',
         },
