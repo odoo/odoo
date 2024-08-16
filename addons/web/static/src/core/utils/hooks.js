@@ -1,4 +1,3 @@
-import { SERVICES_METADATA } from "@web/env";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
 import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/owl";
@@ -120,6 +119,8 @@ function _protectMethod(component, fn) {
         });
     };
 }
+
+export const SERVICES_METADATA = {};
 
 /**
  * Import a service into a component

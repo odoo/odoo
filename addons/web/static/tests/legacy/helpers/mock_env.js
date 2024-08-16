@@ -1,7 +1,8 @@
 /** @odoo-module alias=@web/../tests/helpers/mock_env default=false */
 
+import { SERVICES_METADATA } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { SERVICES_METADATA, makeEnv, startServices } from "@web/env";
+import { makeEnv, startServices } from "@web/env";
 import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
 import { mocks } from "./mock_services";

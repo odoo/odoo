@@ -31,8 +31,7 @@ function invalidImportsFrom(folder, allowedFolders) {
 describe.current.tags("headless");
 
 test("modules only import from allowed folders", () => {
-    // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
-    expect(invalidImportsFrom("core", [])).toEqual({ "@web/core/utils/hooks": ["@web/env"] });
+    expect(invalidImportsFrom("core", [])).toEqual({});
     expect(invalidImportsFrom("search", ["core"])).toEqual({
         // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
         "@web/search/control_panel/control_panel": ["@web/webclient/breadcrumbs/breadcrumbs"],
