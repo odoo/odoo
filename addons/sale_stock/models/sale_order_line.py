@@ -55,7 +55,7 @@ class SaleOrderLine(models.Model):
             move.id
             for line in self
             if line.state == 'sale'
-            for move in line.move_ids
+            for move in line.move_ids | self.env['stock.move'].browse(line.move_ids._rollup_move_origs())
             if move.product_id == line.product_id
         }
         all_moves = self.env['stock.move'].browse(all_move_ids)
@@ -65,7 +65,9 @@ class SaleOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state == 'sale'):
             if not line.display_qty_widget:
                 continue
-            moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
+            moves = line.move_ids | self.env['stock.move'].browse(line.move_ids._rollup_move_origs())
+            moves = moves.filtered(
+                lambda m: m.product_id == line.product_id and m.state not in ('cancel', 'done'))
             line.forecast_expected_date = max(
                 (
                     forecast_expected_date_per_move[move.id]
