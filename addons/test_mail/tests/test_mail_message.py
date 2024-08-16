@@ -132,6 +132,47 @@ class TestMessageValues(MailCommon):
         res = Store(message.with_user(self.user_employee), for_current_user=True).get_result()
         self.assertEqual(res["mail.message"][0].get("record_name"), "Test1")
 
+    def test_records_by_message(self):
+        record1 = self.env["mail.test.simple"].create({"name": "Test1"})
+        record2 = self.env["mail.test.simple"].create({"name": "Test1"})
+        record3 = self.env["mail.test.nothread"].create({"name": "Test2"})
+        messages = self.env["mail.message"].create(
+            [
+                {
+                    "model": record._name,
+                    "res_id": record.id,
+                }
+                for record in [record1, record2, record3]
+            ]
+        )
+        # methods called on batch of message
+        records_by_model_name = messages._records_by_model_name()
+        test_simple_records = records_by_model_name["mail.test.simple"]
+        self.assertEqual(test_simple_records, record1 + record2)
+        self.assertEqual(test_simple_records._prefetch_ids, tuple((record1 + record2).ids))
+        test_no_thread_records = records_by_model_name["mail.test.nothread"]
+        self.assertEqual(test_no_thread_records, record3)
+        self.assertEqual(test_no_thread_records._prefetch_ids, tuple(record3.ids))
+        record_by_message = messages._record_by_message()
+        m0_records = record_by_message[messages[0]]
+        self.assertEqual(m0_records, record1)
+        self.assertEqual(m0_records._prefetch_ids, tuple((record1 + record2).ids))
+        m1_records = record_by_message[messages[1]]
+        self.assertEqual(m1_records, record2)
+        self.assertEqual(m1_records._prefetch_ids, tuple((record1 + record2).ids))
+        m2_records = record_by_message[messages[2]]
+        self.assertEqual(m2_records, record3)
+        self.assertEqual(m2_records._prefetch_ids, tuple(record3.ids))
+        # methods called on individual message from a batch: prefetch from batch is kept
+        records_by_model_name = next(iter(messages))._records_by_model_name()
+        test_simple_records = records_by_model_name["mail.test.simple"]
+        self.assertEqual(test_simple_records, record1)
+        self.assertEqual(test_simple_records._prefetch_ids, tuple((record1 + record2).ids))
+        record_by_message = next(iter(messages))._record_by_message()
+        m0_records = record_by_message[messages[0]]
+        self.assertEqual(m0_records, record1)
+        self.assertEqual(m0_records._prefetch_ids, tuple((record1 + record2).ids))
+
     def test_mail_message_values_body_base64_image(self):
         msg = self.env['mail.message'].with_user(self.user_employee).create({
             'body': 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
