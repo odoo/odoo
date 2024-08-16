@@ -1,5 +1,10 @@
 from odoo import models, fields, api
 import requests
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -18,18 +23,18 @@ class SaleOrder(models.Model):
     customer_email = fields.Char(string="Email Address")
     customer_phone = fields.Char(string="Phone Number")
     
-    # new fields
+    # New fields
     consignment_number = fields.Char(string="Consignment Number")
     carrier = fields.Char(string="Carrier")
     status = fields.Char(string="Status")
     tracking_url = fields.Char(string="Tracking URL")
 
     def action_release_quotations(self):
-        print(f"action_release_quotations called with {len(self)} orders")
+        logger.info(f"action_release_quotations called with {len(self)} orders")
         if not self:
-            print("No orders passed to action_release_quotations")
+            logger.warning("No orders passed to action_release_quotations")
         for order in self:
-            print(f"Processing order: {order.name}")
+            logger.info(f"Processing order: {order.name}")
             all_products_available = True
             products_data = []
             for line in order.order_line:
@@ -53,8 +58,8 @@ class SaleOrder(models.Model):
                     location_name = "Unknown"
                     location_system = "Unknown"
 
-                print('----------------------------------------------------------------------------------------------------')
-                print(f"Checking product {product.name} (Default Code: {product_default_code}): Ordered {product_qty}, Available {available_qty}")
+                logger.info('----------------------------------------------------------------------------------------------------')
+                logger.info(f"Checking product {product.name} (Default Code: {product_default_code}): Ordered {product_qty}, Available {available_qty}")
                 if product_qty > available_qty:
                     all_products_available = False
                     break
@@ -78,7 +83,7 @@ class SaleOrder(models.Model):
 
             if auth_response.status_code == 200:
                 session_id = auth_response.json().get("session_id")
-                print(f"Authenticated successfully. Session ID: {session_id}")
+                logger.info(f"Authenticated successfully. Session ID: {session_id}")
 
                 # Proceed with the release process
                 if all_products_available:
@@ -98,13 +103,13 @@ class SaleOrder(models.Model):
                     }
                     response = requests.post(release_url, json=data_to_send, headers=headers)
                     if response.status_code == 200:
-                        print(f"Order {order.name} data successfully sent to external system.")
+                        logger.info(f"Order {order.name} data successfully sent to external system.")
                     else:
-                        print(f"Failed to send order {order.name} data to external system. Response: {response.text}")
+                        logger.error(f"Failed to send order {order.name} data to external system. Response: {response.text}")
                         order.is_released = 'unreleased'
                 else:
                     order.is_released = 'unreleased'
-                print(f"Order {order.name} released: {order.is_released}")
+                logger.info(f"Order {order.name} released: {order.is_released}")
 
             else:
-                print("Failed to authenticate. Cannot proceed with the release process.")
+                logger.error("Failed to authenticate. Cannot proceed with the release process.")
