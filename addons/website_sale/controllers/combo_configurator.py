@@ -62,8 +62,6 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
 
         values = order_sudo._cart_update(
             product_id=combo_product_id,
-            # TODO(loti): allow merging lines if two combo products are identical? (i.e. same combo
-            # items and same no_variant ptavs).
             line_id=False,  # Always create a new line for combo products.
             set_qty=quantity,
         )

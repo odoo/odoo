@@ -16,7 +16,7 @@ import { ProductConfiguratorDialog } from "./product_configurator_dialog/product
 import { uuid } from "@web/views/utils";
 import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
 import { ProductCombo } from "./models/product_combo";
-import { getLinkedSaleOrderLines } from "./sale_utils";
+import { getLinkedSaleOrderLines, serializeComboItem } from "./sale_utils";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -41,7 +41,9 @@ async function applyProduct(record, product) {
         ptal => ptal.create_variant === "no_variant"
     ).flatMap(ptal => ptal.selected_attribute_value_ids);
 
-    await record.update({
+    // We use `_update` (not locked) instead of `update` (locked) so that multiple records can be
+    // updated in parallel (for performance).
+    await record._update({
         product_id: [product.id, product.display_name],
         product_uom_qty: product.quantity,
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
@@ -64,9 +66,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.orm = useService("orm")
         let isMounted = false;
         let isInternalUpdate = false;
+        let wasCombo = false;
         const { updateRecord } = this;
         this.updateRecord = (value) => {
             isInternalUpdate = true;
+            wasCombo = this.isCombo;
             return updateRecord.call(this, value);
         };
         useEffect(value => {
@@ -75,6 +79,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             } else if (value && isInternalUpdate) {
                 // we don't want to trigger product update when update comes from an external sources,
                 // such as an onchange, or the product configuration dialog itself
+                if (wasCombo) {
+                    // If the previously selected product was a combo, delete its selected combo
+                    // items before changing the product.
+                    this.props.record.update({ selected_combo_items: JSON.stringify([]) });
+                }
                 if (this.relation === "product.template" || this.isCombo) {
                     this._onProductTemplateUpdate();
                 } else {
@@ -147,13 +156,18 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
-                if (!result.has_optional_products) {
+                if (result.is_combo) {
                     await this.props.record.update({
                         product_id: [result.product_id, result.product_name],
                     });
-                    result.is_combo ? this._openComboConfigurator() : this._onProductUpdate();
-                } else {
+                    this._openComboConfigurator();
+                } else if (result.has_optional_products) {
                     this._openProductConfigurator();
+                } else {
+                    await this.props.record.update({
+                        product_id: [result.product_id, result.product_name],
+                    });
+                    this._onProductUpdate();
                 }
             }
         } else {
@@ -221,17 +235,17 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
-                await applyProduct(this.props.record, mainProduct);
-
+                await Promise.all([
+                    applyProduct(this.props.record, mainProduct),
+                    ...optionalProducts.map(async product => {
+                        const line = await saleOrderRecord.data.order_line.addNewRecord({
+                            position: 'bottom', mode: 'readonly'
+                        });
+                        await applyProduct(line, product);
+                    }),
+                ]);
                 this._onProductUpdate();
                 saleOrderRecord.data.order_line.leaveEditMode();
-                for (const optionalProduct of optionalProducts) {
-                    const line = await saleOrderRecord.data.order_line.addNewRecord({
-                        position: 'bottom',
-                        mode: "readonly",
-                    });
-                    await applyProduct(line, optionalProduct);
-                }
             },
             discard: () => {
                 saleOrderRecord.data.order_line.delete(this.props.record);
@@ -276,45 +290,18 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             edit: edit,
             save: async (comboProductData, selectedComboItems) => {
                 saleOrder.order_line.leaveEditMode();
-                if (edit && selectedComboItems.length !== comboItemLineRecords.length) {
-                    // TODO(loti): this can only happen if some combo items are on another page.
-                    throw new Error(_t("Unexpected number of combo choices"));
-                }
+                const comboLineValues = {
+                    product_uom_qty: comboProductData.quantity,
+                    selected_combo_items: JSON.stringify(
+                        selectedComboItems.map(serializeComboItem)
+                    ),
+                };
                 if (!edit) {
-                    await comboLineRecord.update({ virtual_id: uuid() });
+                    comboLineValues.virtual_id = uuid();
                 }
-                await comboLineRecord.update({ product_uom_qty: comboProductData.quantity });
-                for (const selectedComboItem of selectedComboItems) {
-                    const comboItemLineRecord = edit
-                        ? comboItemLineRecords[selectedComboItems.indexOf(selectedComboItem)]
-                        : await saleOrder.order_line.addNewRecord({
-                              position: 'bottom', mode: 'readonly'
-                          });
-                    if (!edit) {
-                        await comboItemLineRecord.update({
-                            linked_virtual_id: comboLineRecord.data.virtual_id
-                        });
-                    }
-                    await comboItemLineRecord.update({
-                        product_id: [selectedComboItem.product.id, selectedComboItem.product.display_name],
-                        product_uom_qty: comboProductData.quantity,
-                        combo_item_id: [selectedComboItem.id, "unused"],
-                        product_no_variant_attribute_value_ids: [
-                            x2ManyCommands.set(selectedComboItem.product.selectedNoVariantPtavIds)
-                        ],
-                        product_custom_attribute_value_ids: [
-                            x2ManyCommands.set([]),
-                            ...selectedComboItem.product.selectedCustomPtavs.map(customPtav =>
-                                x2ManyCommands.create(undefined, {
-                                    custom_product_template_attribute_value_id: [
-                                        customPtav.id, "unused"
-                                    ],
-                                    custom_value: customPtav.value,
-                                })
-                            ),
-                        ],
-                    });
-                }
+                await comboLineRecord.update(comboLineValues);
+                // Ensure that the order lines are sorted according to their sequence.
+                await saleOrder.order_line._sort();
             },
             discard: () => saleOrder.order_line.delete(comboLineRecord),
         });

@@ -126,6 +126,13 @@ class ProductTemplate(models.Model):
                 "If you want to change its Unit of Measure, please archive this product and create a new one."
             ))
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == 'combo':
+            self.taxes_id = False
+            self.supplier_taxes_id = False
+        return super()._onchange_type()
+
     def _force_default_sale_tax(self, companies):
         default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
         for product_grouped_by_tax in self.grouped('taxes_id').values():

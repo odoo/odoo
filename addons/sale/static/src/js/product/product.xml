@@ -75,6 +75,6 @@
             name="sale_product_configurator_formatted_price"
             class="h5 text-nowrap"
             t-out="getFormattedPrice()"/>
-        <span t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
+        <div t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
     </t>
 </templates>

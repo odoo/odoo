@@ -32,12 +32,12 @@
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='goods']" position="after">
+            <filter name="combo" position="after">
                 <separator/>
                 <filter string="Time-based services" name="product_time_based" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')]"/>
                 <filter string="Fixed price services" name="product_service_fixed" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'order'), ('service_type', '=', 'timesheet')]"/>
                 <filter string="Milestone services" name="product_service_milestone" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'manual')]"/>
-            </xpath>
+            </filter>
         </field>
     </record>
 

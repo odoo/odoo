@@ -3,18 +3,17 @@
 import { registry } from '@web/core/registry';
 import { CharField } from '@web/views/fields/char/char_field';
 import {
+    productLabelSectionAndNoteOne2Many,
+    ProductLabelSectionAndNoteOne2Many,
+    ProductLabelSectionAndNoteListRender,
+} from '@account/components/product_label_section_and_note_field/product_label_section_and_note_field';
+import {
     listSectionAndNoteText,
     sectionAndNoteFieldOne2Many,
     sectionAndNoteText,
     ListSectionAndNoteText,
     SectionAndNoteText,
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
-import { getLinkedSaleOrderLines } from '../sale_utils';
-import {
-    productLabelSectionAndNoteOne2Many,
-    ProductLabelSectionAndNoteOne2Many,
-    ProductLabelSectionAndNoteListRender,
-} from '@account/components/product_label_section_and_note_field/product_label_section_and_note_field';
 
 export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
     static recordRowTemplate = 'sale.ListRenderer.RecordRow';
@@ -47,8 +46,16 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     /**
      * Combo logic
      */
-    // TODO(loti): prevent product change on combo lines, or delete linked lines on product change.
-    // TODO(loti): this method name is not ideal but I'd have to override 3 other methods otherwise.
+
+    /**
+     * Whether the provided record is a section, a note, or a combo.
+     *
+     * This method's name isn't ideal since it doesn't mention combos, but we'd have to override a
+     * few other methods to fix this, and the added complexity isn't worth it.
+     *
+     * @param record The record to check
+     * @return {Boolean} Whether the record is a section, a note, or a combo.
+     */
     isSectionOrNote(record=null) {
         return super.isSectionOrNote(record) || this.isCombo(record);
     }
@@ -58,24 +65,13 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         if (this.isCombo(record) || this.isComboItem(record)) {
             classNames = classNames.replace('o_row_draggable', '');
         }
-        // TODO(loti): this class name is not ideal but I'd have to duplicate the styles otherwise.
         return `${classNames} ${this.isCombo(record) ? 'o_is_line_section' : ''}`;
     }
 
     isCellReadonly(column, record) {
         return super.isCellReadonly(column, record) || (
-            this.isComboItem(record) && column.name !== 'name' && column.name !== 'tax_id'
+            this.isComboItem(record) && column.name !== this.titleField && column.name !== 'tax_id'
         );
-    }
-
-    async onDeleteRecord(record) {
-        await super.onDeleteRecord(record);
-        if (this.isCombo(record) && record.model.root.data.order_line) {
-            const comboItemLineRecords = getLinkedSaleOrderLines(record);
-            for (const comboItemLineRecord of comboItemLineRecords) {
-                await super.onDeleteRecord(comboItemLineRecord);
-            }
-        }
     }
 
     isCombo(record) {
