@@ -4,10 +4,8 @@
 from odoo import exceptions, Command, fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import HttpCase, tagged, freeze_time
 from odoo.tools import float_compare, float_round, float_repr
-
-from freezegun import freeze_time
 
 
 @freeze_time(fields.Date.today())

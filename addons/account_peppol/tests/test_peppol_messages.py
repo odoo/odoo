@@ -1,12 +1,11 @@
 import json
 from base64 import b64encode
 from contextlib import contextmanager
-from freezegun import freeze_time
 from requests import Session, PreparedRequest, Response
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
-from odoo.tests.common import tagged
+from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
 
 
