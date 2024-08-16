@@ -744,7 +744,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         };
         this._handleTextOptions(
             target,
-            [this._getOptionTextClass(target), "o_text_highlight_underline"],
+            [this._getOptionTextClass(target), "o_text_highlight_underline", "o_translate_inline"],
         );
         delete this.__handleTextOptionsPostActivate;
     },
