@@ -778,29 +778,25 @@ class AccountAccount(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
         default = default or {}
-
-        # We must restrict check_company fields to values available to the company of the new account.
-        fields_to_filter_by_company = {field for field in self._fields.values() if field.relational and field.check_company}
         cache = defaultdict(set)
+
         for account, vals in zip(self, vals_list):
-            match vals.get('company_ids'):
-                case [(Command.LINK, company_id, 0)] | [(Command.SET, 0, [company_id])] | [company_id] if isinstance(company_id, int):
-                    company = self.env['res.company'].browse(company_id)
-                case _:
-                    raise ValueError(_("You may only give an account a single company at creation."))
-            if 'code' not in default:
-                start_code = account.with_company(company).code or account.with_company(account.company_ids[0]).code
-                vals['code'] = account.with_company(company)._search_new_account_code(start_code, cache[company])
-                cache[company].add(vals['code'])
+            company_ids = self._fields['company_ids'].convert_to_cache(vals['company_ids'], account)
+            companies = self.env['res.company'].browse(company_ids)
+
+            if 'code_by_company' not in default and ('code' not in default or len(companies) > 1):
+                companies_to_get_new_account_codes = companies if 'code' not in default else companies[1:]
+                vals['code_by_company'] = {}
+
+                for company in companies_to_get_new_account_codes:
+                    start_code = account.with_company(company).code or account.with_company(account.company_ids[0]).code
+                    new_code = account.with_company(company)._search_new_account_code(start_code, cache[company.id])
+                    vals['code_by_company'][company.id] = new_code
+                    cache[company.id].add(new_code)
+
             if 'name' not in default:
                 vals['name'] = _("%s (copy)", account.name or '')
 
-            # For check_company fields, only keep values that are compatible with the new account's company.
-            for field in fields_to_filter_by_company:
-                if field.name not in default:
-                    corecord = account[field.name]
-                    filtered_corecord = corecord.filtered_domain(corecord._check_company_domain(company))
-                    vals[field.name] = filtered_corecord.id if field.type == 'many2one' else [Command.set(filtered_corecord.ids)]
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -886,23 +882,48 @@ class AccountAccount(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records_list = []
-        for company_ids, vals_list_for_company in itertools.groupby(vals_list, lambda v: v.get('company_ids')):
-            match company_ids:
-                case None:
-                    company = self.env.company
-                case [(Command.LINK, company_id, *_)] | [(Command.SET, 0, [company_id])] | [company_id] if isinstance(company_id, int):
-                    company = self.env['res.company'].browse(company_id)
-                case _:
-                    raise ValueError(_("You may only give an account a single company at creation."))
+
+        # As we are creating accounts with a single company at first, check_company fields will need to be added
+        # at the end to avoid triggering the check_company constraint.
+        check_company_fields = {fname for fname, field in self._fields.items() if field.relational and field.check_company}
+
+        for company_ids, vals_list_for_company in itertools.groupby(vals_list, lambda v: v.get('company_ids', [])):
             cache = set()
             vals_list_for_company = list(vals_list_for_company)
+
+            # Determine the companies the new accounts will have. The first one will be used to create the accounts, the others added later.
+            company_ids = self._fields['company_ids'].convert_to_cache(company_ids, self.browse())
+            companies = self.env['res.company'].browse(company_ids) or self.env.company
+
+            # Create the accounts with a single company and a single code.
             for vals in vals_list_for_company:
                 if 'prefix' in vals:
                     prefix, digits = vals.pop('prefix'), vals.pop('code_digits')
                     start_code = prefix.ljust(digits - 1, '0') + '1' if len(prefix) < digits else prefix
-                    vals['code'] = self.with_company(company)._search_new_account_code(start_code, cache)
+                    vals['code'] = self.with_company(companies[0])._search_new_account_code(start_code, cache)
                     cache.add(vals['code'])
-            records_list.append(super(AccountAccount, self.with_company(company)).create(vals_list_for_company))
+                elif 'code' not in vals and 'code_by_company' in vals:
+                    vals['code'] = vals['code_by_company'][companies[0].id]
+                vals['company_ids'] = [Command.set(companies[0].ids)]
+
+            code_by_company_list = [vals.pop('code_by_company', {}) for vals in vals_list_for_company]
+            check_company_vals_list = [{fname: vals.pop(fname) for fname in check_company_fields if fname in vals} for vals in vals_list_for_company]
+
+            new_accounts = super(AccountAccount, self.with_context({**self.env.context, 'allowed_company_ids': companies.ids})) \
+                                .create(vals_list_for_company)
+
+            # Add the other codes, companies and check_company fields on each account.
+            for new_account, code_by_company, check_company_vals in zip(new_accounts, code_by_company_list, check_company_vals_list):
+                for company_id, code in code_by_company.items():
+                    if company_id != companies[0].id:
+                        new_account.with_context({'allowed_company_ids': [company_id, companies[0].id]}).code = code
+                if len(companies) > 1:
+                    check_company_vals['company_ids'] = [Command.link(company.id) for company in companies[1:]]
+                if check_company_vals:
+                    new_account.write(check_company_vals)
+
+            records_list.append(new_accounts)
+
         records = self.env['account.account'].union(*records_list)
         records.with_context(allowed_company_ids=records.company_ids.ids)._ensure_code_is_unique()
         return records
