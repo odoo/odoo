@@ -65,3 +65,33 @@
         }
     }
 }
+<<<<<<< saas-17.4
+||||||| f23b5f24bc7e646eaf5cf3eb9012cc0d92e161a2
+
+// This is an ugly workaround to prevent the div content from overflowing
+.o_form_view div.float-start {
+    float: none !important;
+
+    .o_inner_group {
+        padding-right: $spacer;
+
+        @include media-breakpoint-up(md) {
+            width: 50%;
+        }
+    }
+}
+=======
+
+// This is an ugly workaround to prevent the div content from overflowing
+.o_form_sheet > div.float-start {
+    float: none !important;
+
+    .o_inner_group {
+        padding-right: $spacer;
+
+        @include media-breakpoint-up(md) {
+            width: 50%;
+        }
+    }
+}
+>>>>>>> 99dfb901b7e2106f48468c14941ee24e8e0d921f
