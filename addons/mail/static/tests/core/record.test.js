@@ -77,6 +77,122 @@ test("Can pass object as data for relational field with inverse as id", async ()
     expectRecord(thread.composer.thread).toEqual(thread);
 });
 
+test("pass single-id as data for 'one' relational field without inverse", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        author = Record.one("Partner");
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert({ id: 1, author: "John" });
+    const author = message.author;
+    expect(author.name).toBe("John");
+    store.Message.insert({ id: 1, author: null });
+    expect(message.author).toBe(undefined);
+    expect(author.name).toBe("John");
+    store.Message.insert({ id: 1, author: false });
+    expect(message.author).toBe(undefined);
+    store.Message.insert({ id: 1, author: undefined });
+    expect(message.author).toBe(undefined);
+});
+
+test("pass single-id as data for 'one' relational field with inverse", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        author = Record.one("Partner", { inverse: "messages" });
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+        messages = Record.many("Message", { inverse: "author" });
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert({ id: 1, author: "John" });
+    const author = message.author;
+    expect(author.name).toBe("John");
+    expect(author.messages.length).toBe(1);
+    expect(author.messages[0]).toBe(message);
+    store.Message.insert({ id: 1, author: null });
+    expect(message.author).toBe(undefined);
+    expect(author.name).toBe("John");
+    store.Message.insert({ id: 1, author: false });
+    expect(message.author).toBe(undefined);
+    store.Message.insert({ id: 1, author: undefined });
+    expect(message.author).toBe(undefined);
+});
+
+test("pass single-id as data for 'one' relational field as id", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        composer = Record.one("Composer", { inverse: "thread" });
+    }).register(localRegistry);
+    (class Composer extends Record {
+        static id = "thread";
+        thread = Record.one("Thread", { inverse: "composer" });
+        composerView = Record.many("ComposerView", { inverse: "composer" });
+    }).register(localRegistry);
+    (class ComposerView extends Record {
+        static id = "id";
+        composer = Record.one("Composer", { inverse: "composerView" });
+    }).register(localRegistry);
+    const store = await start();
+    const composerView = store.ComposerView.insert({ id: 1, composer: 2 });
+    const composer = composerView.composer;
+    expect(composer.thread.id).toBe(2);
+    store.ComposerView.insert({ id: 1, composer: null });
+    expect(composerView.composer).toBe(undefined);
+    expect(composer.thread.id).toBe(2);
+    store.ComposerView.insert({ id: 1, composer: false });
+    expect(composerView.composer).toBe(undefined);
+    store.ComposerView.insert({ id: 1, composer: undefined });
+    expect(composerView.composer).toBe(undefined);
+});
+
+test("pass single-id as data for 'many' relational field without inverse", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        authors = Record.many("Partner");
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert({ id: 1, authors: ["John", "Jane"] });
+    expect(message.authors.length).toBe(2);
+    expect(message.authors[0].name).toBe("John");
+    expect(message.authors[1].name).toBe("Jane");
+});
+
+test("pass single-id as data for 'many' relational field with inverse", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        authors = Record.many("Partner", { inverse: "messages" });
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+        messages = Record.many("Message", { inverse: "authors" });
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert({ id: 1, authors: ["John", "Jane"] });
+    expect(message.authors.length).toBe(2);
+    expect(message.authors[0].name).toBe("John");
+    expect(message.authors[0].messages.length).toBe(1);
+    expect(message.authors[0].messages[0]).toBe(message);
+    expect(message.authors[1].name).toBe("Jane");
+    expect(message.authors[1].messages.length).toBe(1);
+    expect(message.authors[1].messages[0]).toBe(message);
+});
+
 test("Assign & Delete on fields with inverses", async () => {
     (class Thread extends Record {
         static id = "name";

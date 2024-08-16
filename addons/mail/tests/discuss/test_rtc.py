@@ -24,10 +24,12 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "discuss.channel", channel.id),  # update sessions
+                # update sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
                 # end of previous session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                (self.cr.dbname, "discuss.channel", channel.id),  # update sessions
+                # update sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -40,9 +42,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("DELETE", [{"id": channel_member.rtc_session_ids.id}]),
-                                ],
+                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -53,9 +53,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("ADD", [{"id": channel_member.rtc_session_ids.id + 1}]),
-                                ],
+                                "rtcSessions": [("ADD", [channel_member.rtc_session_ids.id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -70,7 +68,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member.id},
+                                "channelMember": channel_member.id,
                                 "id": channel_member.rtc_session_ids.id + 1,
                             },
                         ],
@@ -95,8 +93,8 @@ class TestChannelRTC(MailCommon):
                     {
                         "id": channel.id,
                         "rtcSessions": [
-                            ("ADD", [{"id": channel_member.rtc_session_ids.id}]),
-                            ("DELETE", [{"id": channel_member.rtc_session_ids.id - 1}]),
+                            ("ADD", [channel_member.rtc_session_ids.id]),
+                            ("DELETE", [channel_member.rtc_session_ids.id - 1]),
                         ],
                     },
                 ],
@@ -112,7 +110,7 @@ class TestChannelRTC(MailCommon):
                 ],
                 "discuss.channel.rtc.session": [
                     {
-                        "channelMember": {"id": channel_member.id},
+                        "channelMember": channel_member.id,
                         "id": channel_member.rtc_session_ids.id,
                     },
                 ],
@@ -125,7 +123,7 @@ class TestChannelRTC(MailCommon):
                 ],
                 "Rtc": {
                     "iceServers": False,
-                    "selfSession": {"id": channel_member.rtc_session_ids.id},
+                    "selfSession": channel_member.rtc_session_ids.id,
                     "serverInfo": None,
                 },
             },
@@ -145,13 +143,20 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update new message separator
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
+                # update new session
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # message_post "started a live conference" (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # update new message separator
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update of pin state (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id, "members"),
+                # update of last interest (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # incoming invitation
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -160,7 +165,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [{"id": last_rtc_session_id + 1}])],
+                                "rtcSessions": [("ADD", [last_rtc_session_id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -175,7 +180,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member.id},
+                                "channelMember": channel_member.id,
                                 "id": last_rtc_session_id + 1,
                             },
                         ],
@@ -194,7 +199,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [("ADD", [{"id": channel_member_test_user.id}])],
+                                "invitedMembers": [("ADD", [channel_member_test_user.id])],
                             }
                         ],
                         "discuss.channel.member": [
@@ -242,14 +247,22 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update new message separator
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
-                (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
+                # update new session
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # message_post "started a live conference" (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # update new message separator
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update of pin state (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id, "members"),
+                # update of last interest (not asserted below)
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # incoming invitation
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # incoming invitation
+                (self.cr.dbname, "mail.guest", test_guest.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -258,7 +271,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [{"id": last_rtc_session_id + 1}])],
+                                "rtcSessions": [("ADD", [last_rtc_session_id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -273,7 +286,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member.id},
+                                "channelMember": channel_member.id,
                                 "id": last_rtc_session_id + 1,
                             },
                         ],
@@ -292,7 +305,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [{"id": last_rtc_session_id + 1}])],
+                                "rtcSessions": [("ADD", [last_rtc_session_id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -307,7 +320,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member.id},
+                                "channelMember": channel_member.id,
                                 "id": last_rtc_session_id + 1,
                             },
                         ],
@@ -329,10 +342,7 @@ class TestChannelRTC(MailCommon):
                                 "invitedMembers": [
                                     (
                                         "ADD",
-                                        [
-                                            {"id": channel_member_test_user.id},
-                                            {"id": channel_member_test_guest.id},
-                                        ],
+                                        [channel_member_test_user.id, channel_member_test_guest.id],
                                     )
                                 ],
                             },
@@ -397,9 +407,12 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "res.partner", test_user.partner_id.id),  # update invitation
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of invitations
-                (self.cr.dbname, "discuss.channel", channel.id),  # update sessions
+                # update invitation
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # update sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -414,9 +427,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
-                                    ("DELETE", [{"id": channel_member_test_user.id}])
-                                ],
+                                "invitedMembers": [("DELETE", [channel_member_test_user.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -447,9 +458,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("ADD", [{"id": channel_member.rtc_session_ids.id + 1}]),
-                                ],
+                                "rtcSessions": [("ADD", [channel_member.rtc_session_ids.id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -467,7 +476,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member_test_user.id},
+                                "channelMember": channel_member_test_user.id,
                                 "id": channel_member.rtc_session_ids.id + 1,
                             },
                         ],
@@ -488,9 +497,12 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "mail.guest", test_guest.id),  # update invitation
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of invitations
-                (self.cr.dbname, "discuss.channel", channel.id),  # update sessions
+                # update invitation
+                (self.cr.dbname, "mail.guest", test_guest.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # update sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -505,9 +517,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
-                                    ("DELETE", [{"id": channel_member_test_guest.id}]),
-                                ],
+                                "invitedMembers": [("DELETE", [channel_member_test_guest.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -538,9 +548,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("ADD", [{"id": channel_member.rtc_session_ids.id + 2}]),
-                                ],
+                                "rtcSessions": [("ADD", [channel_member.rtc_session_ids.id + 2])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -558,7 +566,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member_test_guest.id},
+                                "channelMember": channel_member_test_guest.id,
                                 "id": channel_member.rtc_session_ids.id + 2,
                             },
                         ],
@@ -589,8 +597,10 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "res.partner", test_user.partner_id.id),  # update invitation
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of invitations
+                # update invitation
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -605,9 +615,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
-                                    ("DELETE", [{"id": channel_member_test_user.id}]),
-                                ],
+                                "invitedMembers": [("DELETE", [channel_member_test_user.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -640,8 +648,10 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "mail.guest", test_guest.id),  # update invitation
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of invitations
+                # update invitation
+                (self.cr.dbname, "mail.guest", test_guest.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -656,9 +666,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
-                                    ("DELETE", [{"id": channel_member_test_guest.id}]),
-                                ],
+                                "invitedMembers": [("DELETE", [channel_member_test_guest.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -702,11 +710,16 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "res.partner", test_user.partner_id.id),  # update invitation
-                (self.cr.dbname, "mail.guest", test_guest.id),  # update invitation
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of invitations
-                (self.cr.dbname, "discuss.channel", channel.id),  # update sessions
-                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),  # end session
+                # update invitation
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # update invitation
+                (self.cr.dbname, "mail.guest", test_guest.id),
+                # update list of invitations
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # update sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # end session
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
             ],
             [
                 {
@@ -734,10 +747,7 @@ class TestChannelRTC(MailCommon):
                                 "invitedMembers": [
                                     (
                                         "DELETE",
-                                        [
-                                            {"id": channel_member_test_user.id},
-                                            {"id": channel_member_test_guest.id},
-                                        ],
+                                        [channel_member_test_user.id, channel_member_test_guest.id],
                                     )
                                 ],
                             },
@@ -788,9 +798,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("DELETE", [{"id": channel_member.rtc_session_ids.id}]),
-                                ],
+                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -853,7 +861,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcInvitingSession": {"id": channel_member.rtc_session_ids.id},
+                                "rtcInvitingSession": channel_member.rtc_session_ids.id,
                             },
                         ],
                         "discuss.channel.member": [
@@ -868,7 +876,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member.id},
+                                "channelMember": channel_member.id,
                                 "id": channel_member.rtc_session_ids.id,
                             },
                         ],
@@ -887,7 +895,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcInvitingSession": {"id": channel_member.rtc_session_ids.id},
+                                "rtcInvitingSession": channel_member.rtc_session_ids.id,
                             },
                         ],
                         "discuss.channel.member": [
@@ -902,7 +910,7 @@ class TestChannelRTC(MailCommon):
                         ],
                         "discuss.channel.rtc.session": [
                             {
-                                "channelMember": {"id": channel_member.id},
+                                "channelMember": channel_member.id,
                                 "id": channel_member.rtc_session_ids.id,
                             },
                         ],
@@ -924,10 +932,7 @@ class TestChannelRTC(MailCommon):
                                 "invitedMembers": [
                                     (
                                         "ADD",
-                                        [
-                                            {"id": channel_member_test_user.id},
-                                            {"id": channel_member_test_guest.id},
-                                        ],
+                                        [channel_member_test_user.id, channel_member_test_guest.id],
                                     )
                                 ],
                             }
@@ -985,8 +990,10 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of sessions
-                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),  # end session
+                # update list of sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # end session
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
             ],
             [
                 {
@@ -999,9 +1006,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("DELETE", [{"id": channel_member.rtc_session_ids.id}]),
-                                ],
+                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1024,8 +1029,10 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of sessions
-                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),  # session ended
+                # update list of sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # session ended
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
             ],
             [
                 {
@@ -1038,9 +1045,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("DELETE", [{"id": channel_member.rtc_session_ids.id}]),
-                                ],
+                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1059,8 +1064,10 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of sessions
-                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),  # session ended
+                # update list of sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # session ended
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
             ],
             [
                 {
@@ -1073,9 +1080,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [
-                                    ("DELETE", [{"id": channel_member.rtc_session_ids.id}]),
-                                ],
+                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1105,8 +1110,10 @@ class TestChannelRTC(MailCommon):
         self._reset_bus()
         with self.assertBus(
             [
-                (self.cr.dbname, "discuss.channel", channel.id),  # update list of sessions
-                (self.cr.dbname, "mail.guest", test_guest.id),  # session ended
+                # update list of sessions
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # session ended
+                (self.cr.dbname, "mail.guest", test_guest.id),
             ],
             [
                 {
@@ -1117,17 +1124,14 @@ class TestChannelRTC(MailCommon):
                     "type": "mail.record/insert",
                     "payload": {
                         "discuss.channel": [
-                            {
-                                "id": channel.id,
-                                "rtcSessions": [("DELETE", [{"id": test_session.id}])],
-                            },
+                            {"id": channel.id, "rtcSessions": [("DELETE", [test_session.id])]},
                         ],
                     },
                 },
             ],
         ):
             current_rtc_sessions, outdated_rtc_sessions = channel_member._rtc_sync_sessions(
-                check_rtc_session_ids=[join_call_values["Rtc"]["selfSession"]["id"]] + unused_ids
+                check_rtc_session_ids=[join_call_values["Rtc"]["selfSession"]] + unused_ids
             )
         self.assertEqual(channel_member.rtc_session_ids, current_rtc_sessions)
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
