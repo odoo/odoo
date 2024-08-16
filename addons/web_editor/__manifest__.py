@@ -23,6 +23,7 @@ Odoo Web Editor widget.
         #----------------------------------------------------------------------
 
         'web_editor.assets_snippets_menu': [
+            'web_editor/static/src/js/core/owl_utils.js',
             'web_editor/static/src/js/editor/snippets.editor.js',
             'web_editor/static/src/js/editor/snippets.options.js',
         ],
@@ -135,7 +136,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
             'web/static/src/legacy/js/core/widget.js',
-            'web/static/src/legacy/utils.js',
 
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
@@ -240,13 +240,11 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/frontend/loader_loading.js',
         ],
         'web.assets_frontend': [
-            # legacy stuff that are no longer in assets_backend
-            'web/static/src/legacy/utils.js',
-
             ('include', 'web_editor.assets_media_dialog'),
 
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/js/common/**/*',
+            'web_editor/static/src/js/core/owl_utils.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
             'web_editor/static/src/js/wysiwyg/fonts.js',
 

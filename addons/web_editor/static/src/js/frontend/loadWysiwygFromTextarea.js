@@ -2,7 +2,7 @@
 
 import { loadBundle } from "@web/core/assets";
 import { ensureJQuery } from "@web/core/ensure_jquery";
-import { attachComponent } from '@web/legacy/utils';
+import { attachComponent } from "@web_editor/js/core/owl_utils";
 
 export async function loadWysiwygFromTextarea(parent, textarea, options) {
     var loading = textarea.nextElementSibling;
