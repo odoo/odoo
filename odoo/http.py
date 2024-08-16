@@ -2332,7 +2332,9 @@ class Application:
                         _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
                         request.db = None
                         request.session.logout()
-                        if httprequest.path in ('/web', '/web/login', '/test_http/ensure_db'):
+                        if (httprequest.path in ('/web', '/web/login', '/test_http/ensure_db')
+                            or httprequest.path.startswith('/odoo')
+                        ):
                             # ensure_db() protected routes, remove ?db= from the query string
                             args_nodb = request.httprequest.args.copy()
                             args_nodb.pop('db', None)
