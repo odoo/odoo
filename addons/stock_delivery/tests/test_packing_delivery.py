@@ -67,6 +67,7 @@ class TestPacking(TestPackingCommon):
             'quantity': 5,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
+            'picked': True,
         })
         pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
