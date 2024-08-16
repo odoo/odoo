@@ -168,6 +168,10 @@ class MrpProduction(models.Model):
         'stock.move', 'production_id', 'Finished Products', readonly=False,
         compute='_compute_move_finished_ids', store=True, copy=False,
         domain=[('scrapped', '=', False)])
+    # technical field: inverse field for `stock.move.raw_material_production_id`
+    all_move_raw_ids = fields.One2many('stock.move', 'raw_material_production_id')
+    # technical field: inverse field for `stock.move.production_id`
+    all_move_ids = fields.One2many('stock.move', 'production_id')
     move_byproduct_ids = fields.One2many('stock.move', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids')
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
@@ -1892,7 +1896,7 @@ class MrpProduction(models.Model):
             ml_by_move = []
             product_uom = initial_move.product_id.uom_id
             if not initial_move.picked:
-                for move_line in initial_move.move_line_ids:
+                for move_line in initial_move.move_line_ids.sorted(key=lambda ml: ml._sorting_move_lines()):
                     available_qty = move_line.product_uom_id._compute_quantity(move_line.quantity, product_uom, rounding_method="HALF-UP")
                     if float_compare(available_qty, 0, precision_rounding=product_uom.rounding) <= 0:
                         continue

@@ -13,9 +13,10 @@
 # Leaanika Randmets, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Anna, 2023
 # Kärt Villako, 2024
 # Birgit Vijar, 2024
+# Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr ""
+msgstr "EDI konto proxy kasutaja"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
@@ -166,7 +167,7 @@ msgstr "Antud staatusega ei saa tühistada: %s"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't migrate registration with this status: %s"
-msgstr ""
+msgstr "Ei saa migreerida registreerimist antud staatusega: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -259,6 +260,7 @@ msgstr "Kontaktandmed on uuendatud. "
 #, python-format
 msgid "Contact email and mobile number are required."
 msgstr ""
+"E-posti aadress ja mobiilinumber peab olema valitud. Kohustuslikud väljad."
 
 #. module: account_peppol
 #. odoo-python
@@ -539,13 +541,13 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Mobile Number"
-msgstr ""
+msgstr "Mobiiltelefoni number"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "Mobile number (for validation)"
-msgstr ""
+msgstr "Mobiiltelefoni number (kinnitamiseks)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -559,7 +561,7 @@ msgstr "Kui vajad abi, palun kontakteeru meie kasutajatoega. "
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a mobile number to verify your application."
-msgstr ""
+msgstr "Palun sisestage mobiiltelefoni number et kinnitada taotlus. "
 
 #. module: account_peppol
 #. odoo-python
@@ -598,7 +600,7 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
-msgstr ""
+msgstr "Palun kontrolli partneri konfiguratsiooni partneri seadetes."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
@@ -806,6 +808,7 @@ msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
 msgstr ""
+"Digitaalsete arvete täielikuks loomiseks, määrake sellele partnerile riik."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -813,6 +816,8 @@ msgid ""
 "To generate electronic invoices, also set a country and a bank account for "
 "this partner."
 msgstr ""
+"Digitaalsete arvete loomiseks, määrake sellele partnerile riik ja "
+"pangakonto."
 
 #. module: account_peppol
 #. odoo-python
@@ -828,6 +833,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
+"Unikaalne identifikaator, mida kasutavad BIS Billing 3.0 ja selle tuletised,"
+" tuntud ka kui 'Endpoint ID'."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -900,7 +907,7 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Verify mobile number"
-msgstr ""
+msgstr "Kinnita mobiiltelefoni number"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -926,7 +933,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this mobile number"
-msgstr ""
+msgstr "Te saate kinnitamiskoodi sellele mobiiltelefoni numbrile"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

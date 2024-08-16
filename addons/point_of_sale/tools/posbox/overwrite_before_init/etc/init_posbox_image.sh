@@ -13,10 +13,15 @@ export DEBIAN_FRONTEND=noninteractive
 
 # set locale to en_US
 echo "set locale to en_US"
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+# Environment variables
 echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
-locale-gen
+echo "export DISPLAY=:0" | tee -a ~/.bashrc /home/pi/.bashrc
+echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
+echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
@@ -49,6 +54,7 @@ password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
 
 PKGS_TO_INSTALL="
+    chromium-browser \
     console-data \
     cups \
     cups-ipp-utils \
@@ -94,7 +100,9 @@ PKGS_TO_INSTALL="
     python3-reportlab \
     python3-requests \
     python3-serial \
+    python3-stdnum \
     python3-tz \
+    python3-vobject \
     rsync \
     screen \
     swig \
@@ -102,6 +110,7 @@ PKGS_TO_INSTALL="
     vim \
     x11-utils \
     xdotool \
+    xinput \
     xserver-xorg-input-evdev \
     xserver-xorg-video-dummy \
     xserver-xorg-video-fbdev"
@@ -110,6 +119,7 @@ echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
 apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PKGS_TO_INSTALL}
+apt-get -y autoremove
 
 apt-get clean
 localepurge
@@ -139,7 +149,10 @@ PIP_TO_INSTALL="
     Werkzeug==2.0.2 \
     urllib3==1.26.5 \
     pyOpenssl==22.0.0 \
-    cryptography==36.0.2"
+    cryptography==36.0.2 \
+    screeninfo==0.8.1 \
+    zeep==4.2.1 \
+    num2words==0.5.13"
 
 pip3 install ${PIP_TO_INSTALL} --break-system-package
 
@@ -178,6 +191,7 @@ systemctl enable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
+systemctl enable odoo.service
 
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
@@ -186,8 +200,8 @@ systemctl disable cups-browsed.service
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
 echo "disable_overscan=1" >> /boot/config.txt
 
-# Separate framebuffers for both screens on RPI4
-sed -i '/dtoverlay/d' /boot/config.txt
+# Use the fkms driver instead of the legacy one (RPI3 requires this)
+sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
 
 # exclude /drivers folder from git info to be able to load specific drivers
 echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude

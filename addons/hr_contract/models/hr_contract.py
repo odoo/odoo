@@ -83,6 +83,10 @@ class Contract(models.Model):
         for contract in self:
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
+    def _get_salary_costs_factor(self):
+        self.ensure_one()
+        return 12.0
+
     def _expand_states(self, states, domain, order):
         return [key for key, val in self._fields['state'].selection]
 

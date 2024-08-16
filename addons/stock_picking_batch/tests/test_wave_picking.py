@@ -509,7 +509,8 @@ class TestBatchPicking(TransactionCase):
     def test_validatation_of_partially_empty_picking(self):
         """
             Check that you can validate a wave transfer containing an empty picking,
-            that the picking stays unchanged and is removed from the transfer
+            that the picking stays unchanged (except for the 'picked' state of the move)
+            and is removed from the transfer
         """
         self.productA.tracking = 'none'
         self.productB.tracking = 'none'
@@ -545,6 +546,7 @@ class TestBatchPicking(TransactionCase):
         wave = self.env['stock.picking.batch'].create({
             'name': 'Wave transfer',
             'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+            'is_wave': True,
         })
         wave.move_ids.filtered(lambda m: m.product_id == self.productB).quantity = 0.0
         wave.move_ids.picked = True
@@ -552,7 +554,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(wave.state, 'done')
         self.assertEqual(wave.picking_ids, picking_1)
         self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
-        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, True])
+        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
 
     def test_add_partially_assigned_move_to_batch(self):
         """
@@ -602,3 +604,47 @@ class TestBatchPicking(TransactionCase):
         # check that the original picking was not added to a wave transfer
         self.assertFalse(picking.batch_id.filtered(lambda b: b.is_wave))
         self.assertEqual(picking.move_ids, move_1)
+
+    def test_validate_wave_with_zero_qty_picking(self):
+        """
+            Check that we can validate a wave transfer containing a picking without quantity.
+            In that case, the picking remains unchanged and is removed from the wave
+        """
+        (self.productA | self.productB).tracking = 'none'
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
+        picking_1, picking_2 = self.env['stock.picking'].create([
+            {'picking_type_id': self.picking_type_out},
+            {'picking_type_id': self.picking_type_out},
+        ])
+        self.env['stock.move'].create([
+            {
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': picking_1.location_id.id,
+            'location_dest_id': picking_1.location_dest_id.id,
+            },
+            {
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': picking_2.location_id.id,
+            'location_dest_id': picking_2.location_dest_id.id,
+            },
+        ])
+        (picking_1 | picking_2).action_confirm()
+        wave = self.env['stock.picking.batch'].create({
+            'name': 'Wave transfer',
+            'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+        })
+        self.assertEqual((picking_1 | picking_2).mapped('state'), ['assigned', 'assigned'])
+        picking_1.move_ids.quantity = 0.0
+        wave.action_done()
+        self.assertEqual(wave.state, 'done')
+        self.assertRecordValues(picking_1.move_ids, [{'state': 'confirmed', 'quantity': 0.0, 'picked': False}])
+        self.assertRecordValues(picking_2.move_ids, [{'state': 'done', 'quantity': 3.0, 'picked': True}])

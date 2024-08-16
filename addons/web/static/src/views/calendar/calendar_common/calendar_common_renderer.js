@@ -294,7 +294,20 @@ export class CalendarCommonRenderer extends Component {
             }
         }
         if (id) {
-            res.id = this.props.model.records[id].id;
+            const existingRecord = this.props.model.records[id];
+            if (this.props.model.scale === "month") {
+                res.start = res.start?.set({
+                    hour: existingRecord.start.hour,
+                    minute: existingRecord.start.minute,
+                });
+                if (existingRecord.end) {
+                    res.end = res.end?.set({
+                        hour: existingRecord.end.hour,
+                        minute: existingRecord.end.minute,
+                    });
+                }
+            }
+            res.id = existingRecord.id;
         }
         return res;
     }

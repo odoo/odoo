@@ -978,7 +978,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             }
             const modelName = await this.websiteService.getUserModelName(resModel);
             const recordNameEl = imageEl.closest("body").querySelector(`[data-oe-model="${resModel}"][data-oe-id="${resID}"][data-oe-field="name"]`);
-            const recordName = recordNameEl ? `'${recordNameEl.textContent}'` : resID;
+            const recordName = recordNameEl ? `'${recordNameEl.textContent.replaceAll("/", "")}'` : resID;
             const attachment = await this.rpc(
                 '/web_editor/attachment/add_data',
                 {

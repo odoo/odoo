@@ -337,23 +337,23 @@
                             <div class="row g-0">
                                 <div class="col-10 p-0 pb-1">
                                     <div class="container o_kanban_card_content" t-if="record.answer_count.raw_value != 0">
-                                        <div class="row mt-4 ms-5">
+                                        <div class="row mt-4 ms-2">
                                             <div class="col-4 p-0">
                                                 <a name="action_survey_user_input" type="object" class="d-flex flex-column align-items-center">
                                                     <span class="fw-bold"><field name="answer_count"/></span>
-                                                    <span class="text-muted">Registered</span>
+                                                    <span class="text-break text-muted">Registered</span>
                                                 </a>
                                             </div>
                                             <div class="col-4 p-0 border-start">
                                                 <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
                                                     <span class="fw-bold"><field name="answer_done_count"/></span>
-                                                    <span class="text-muted">Completed</span>
+                                                    <span class="text-break text-muted">Completed</span>
                                                 </a>
                                             </div>
                                             <div class="col-4 p-0 border-start" t-if="record.scoring_type.raw_value != 'no_scoring'" >
                                                 <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
                                                     <span class="fw-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
-                                                    <span class="text-muted" >Success</span>
+                                                    <span class="text-break text-muted" >Success</span>
                                                 </a>
                                             </div>
                                         </div>

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -889,10 +889,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Esta cuenta analítica se puede cambiar en cada tarea de forma individual si es necesario.\n"
-"Se necesita una cuenta analítica para usar hojas de asistencia."
+"Se necesita una cuenta analítica para usar partes de horas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -901,7 +901,7 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Por defecto, se establece la cuenta analítica de este proyecto. Sin embargo, puede ser cambiada de manera individual en cada tarea si fuera necesario."
 
@@ -1612,7 +1612,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Mensaje devuelto personalizado"
+msgstr "Mensaje rebotado personalizado"
 
 #. module: project
 #. odoo-python
@@ -3337,6 +3337,14 @@ msgid "Once a Month"
 msgstr "Una vez al mes"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr ""
+"Sólo se permiten imágenes jpeg, png, bmp y tiff como archivos adjuntos."
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
@@ -4179,6 +4187,20 @@ msgstr "Error de envío del SMS"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
 msgstr "Cara triste"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "Guardar la tarea para poder pegar imágenes en la descripción"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in Description"
+msgstr "Guardar la tarea para poder arrastrar imágenes en la descripción"
 
 #. module: project
 #. odoo-javascript
@@ -5046,7 +5068,7 @@ msgstr ""
 "Pueden editar tareas compartidas de proyectos y ver documentos específicos "
 "en modo de solo lectura desde su sitio web. Esto incluye leads y "
 "oportunidades, presupuestos y pedidos de venta, pedidos de compra, facturas,"
-" hojas de asistencia y tickets."
+" partes de horas y tickets."
 
 #. module: project
 #. odoo-python
@@ -5283,8 +5305,8 @@ msgid ""
 "belongs to a plan."
 msgstr ""
 "Lleve seguimiento de la rentabilidad de sus proyectos. Cualquier proyecto, "
-"sus tareas y hojas de asistencia están vinculados a una cuenta analítica y "
-"todas las cuentas analíticas pertenecen a un plan."
+"sus tareas y partes de horas están vinculados a una cuenta analítica y todas"
+" las cuentas analíticas pertenecen a un plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form

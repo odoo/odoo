@@ -646,7 +646,7 @@ class PosSession(models.Model):
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
 
     def _create_balancing_line(self, data, balancing_account, amount_to_balance):
-        if (not float_is_zero(amount_to_balance, precision_rounding=self.currency_id.rounding)):
+        if not self.company_id.currency_id.is_zero(amount_to_balance):
             balancing_vals = self._prepare_balancing_line_vals(amount_to_balance, self.move_id, balancing_account)
             MoveLine = data.get('MoveLine')
             MoveLine.create(balancing_vals)

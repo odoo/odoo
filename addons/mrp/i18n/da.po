@@ -1278,6 +1278,15 @@ msgstr "Annulleret"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
@@ -1347,7 +1356,7 @@ msgstr "Checksum/SHA1"
 #: code:addons/mrp/wizard/stock_label_type.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Vælg Etiketlayout"
 
 #. module: mrp
 #. odoo-python
@@ -6818,6 +6827,13 @@ msgstr ""
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr "Du kan ikke producere det samme serienummer to gange."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
