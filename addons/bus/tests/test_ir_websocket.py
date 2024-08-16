@@ -69,8 +69,14 @@ class TestIrWebsocket(WebsocketCase):
                 inactivity_period=0, identity_field="user_id", identity_value=bob.id
             )
             self.trigger_notification_dispatching([(bob.partner_id, "presence")])
-            with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
+            timeout_occurred = False
+            # Save point rollback of `assertRaises` can compete with `on_websocket_close`
+            # leading to `InvalidSavepoint` errors. We need to avoid it.
+            try:
                 websocket.recv()
+            except ws._exceptions.WebSocketTimeoutException:
+                timeout_occurred = True
+            self.assertTrue(timeout_occurred)
 
     def test_receive_missed_presences_on_subscribe(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
