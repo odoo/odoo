@@ -160,7 +160,7 @@
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/lib/select2/select2.js',
-            'web/static/src/legacy/js/libs/bootstrap.js',
+            'web/static/src/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
 
             'base/static/src/css/modules.css',
