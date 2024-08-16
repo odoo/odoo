@@ -152,7 +152,7 @@ class TestUiSession(HttpCase):
                 'type': 'ir.actions.act_url',
                 'name': "Open Session Manager",
                 'target': 'self',
-                'url': '/survey/session/manage/%s' % self.access_token
+                'url': f'/survey/session/manage/{self.id}/{self.access_token}'
             }
 
         # =======================

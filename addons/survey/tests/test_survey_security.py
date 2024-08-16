@@ -357,11 +357,13 @@ class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
         })
 
         # right short access token
-        response = self.url_open('/s/123456')
+        response = self.url_open(f'/s/{self.survey.id}/123456')
         self.assertEqual(response.status_code, 200)
         self.assertIn('The session will begin automatically when the host starts', response.text)
 
         # `like` operator injection
+        # since the controller changed and our goal is to test on injection,
+        # we should deliberately take out suvey_id untill v19/20.
         response = self.url_open('/s/______')
         self.assertFalse(self.survey.title in response.text)
 

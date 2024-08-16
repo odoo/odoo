@@ -162,17 +162,17 @@ class SurveyCase(common.TransactionCase):
     # ------------------------------------------------------------
 
     def _access_start(self, survey):
-        return self.url_open('/survey/start/%s' % survey.access_token)
+        return self.url_open(f'/survey/start/{survey.id}/{survey.access_token}')
 
     def _access_page(self, survey, token):
-        return self.url_open('/survey/%s/%s' % (survey.access_token, token))
+        return self.url_open(f'/survey/{survey.id}/{survey.access_token}/{token}')
 
     def _access_begin(self, survey, token):
-        url = survey.get_base_url() + '/survey/begin/%s/%s' % (survey.access_token, token)
+        url = survey.get_base_url() + f'/survey/begin/{survey.id}/{survey.access_token}/{token}'
         return self.opener.post(url=url, json={})
 
     def _access_submit(self, survey, token, post_data):
-        url = survey.get_base_url() + '/survey/submit/%s/%s' % (survey.access_token, token)
+        url = survey.get_base_url() + f'/survey/submit/{survey.id}/{survey.access_token}/{token}'
         return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
