@@ -6,6 +6,7 @@ import {
     defineWebModels,
     getService,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -498,6 +499,10 @@ test("Run custom tour", async () => {
 });
 
 test("Run a custom tour twice doesn't trigger traceback", async () => {
+    onRpc("/web/dataset/call_kw/web_tour.tour/consume", async () => {
+        return Promise.resolve(true);
+    });
+
     await mountWithCleanup(
         `
         <div class="o_parent">
@@ -541,5 +546,10 @@ test("Run a custom tour twice doesn't trigger traceback", async () => {
 
     expect("table tr td:contains('tour_name')").toHaveCount(2);
     click(".o_start_tour:eq(1)");
+    await animationFrame();
+    await advanceTime(100);
+
+    click(".o_parent > div");
+    await advanceTime(100);
     await animationFrame();
 });
