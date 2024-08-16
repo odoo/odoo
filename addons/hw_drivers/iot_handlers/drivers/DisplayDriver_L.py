@@ -80,6 +80,9 @@ class DisplayDriver(Driver):
             browser_env[key] = '/tmp/' + self._x_screen
         self.url = url or 'http://localhost:8069/point_of_sale/display/' + self.device_identifier
 
+        # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
+        # We need to terminate it because Odoo will create a new instance each time it is restarted.
+        subprocess.run(['pkill', self.browser.split('-')[0]], check=False)
         # --log-level=3 to avoid useless log messages
         subprocess.Popen([self.browser, self.url, '--start-fullscreen', '--log-level=3'], env=browser_env)
 
