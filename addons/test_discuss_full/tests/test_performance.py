@@ -16,19 +16,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #     1: hasGifPickerFeature
     #     1: hasLinkPreviewFeature
     #     1: hasMessageTranslationFeature
-    #     1: internalUserGroupId
-    #     1: mt_comment_id
-    #     6: odoobot format
+    #     2: internalUserGroupId
+    #     5: odoobot format
     #     4: settings
-    #     1: has_access_livechat
-    _query_count_init_store = 17
-    # Queries for _query_count:
+    _query_count_init_store = 15
+    # Queries for _query_count_init_messaging:
     #     3: _compute_is_editable
-    _query_count = 53 + 1  # +1 is necessary to fix nondeterministic issue on runbot
+    #     +1 is necessary to fix nondeterministic issue on runbot
+    _query_count_init_messaging = 51 + 1
     # Queries for _query_count_discuss_channels:
     #     1: bus last id
     #     3: _compute_is_editable
-    _query_count_discuss_channels = 73
+    _query_count_discuss_channels = 65
 
     def setUp(self):
         super().setUp()
@@ -240,7 +239,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.env.invalidate_all()
         self.authenticate(self.users[0].login, self.password)
         self.env['res.lang']._get_data(code='en_US')  # cache language for validation
-        with self.assertQueryCount(emp=self._query_count):
+        with self.assertQueryCount(emp=self._query_count_init_messaging):
             init_messaging = self.make_jsonrpc_request("/mail/action", {"init_messaging": {}})
         self.assertEqual(init_messaging, self._get_init_messaging_result())
 
