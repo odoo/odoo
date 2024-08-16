@@ -101,7 +101,7 @@ class BusPresence(models.Model):
         self.user_id.invalidate_recordset(["im_status"])
         self.user_id.partner_id.invalidate_recordset(["im_status"])
 
-    def _send_presence(self, im_status=None):
+    def _send_presence(self, im_status=None, bus_target=None):
         """Send notification related to bus presence update.
 
         :param im_status: 'online', 'away' or 'offline'
@@ -110,10 +110,11 @@ class BusPresence(models.Model):
         for presence in self:
             identity_data = presence._get_identity_data()
             target = presence._get_bus_target()
+            target = bus_target or (target and (target, "presence"))
             if identity_data and target:
                 notifications.append(
                     (
-                        (target, "presence"),
+                        target,
                         "bus.bus/im_status_updated",
                         {"im_status": im_status or presence.status, **identity_data},
                     )
