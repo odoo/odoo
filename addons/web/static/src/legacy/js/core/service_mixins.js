@@ -1,4 +1,4 @@
-import { SERVICES_METADATA } from "@web/env";
+import { SERVICES_METADATA } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 function protectMethod(widget, fn) {
