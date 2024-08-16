@@ -41,8 +41,6 @@ class Browser:
         self.fullscreen_args = ['--start-fullscreen']
         self.chromium_additional_args = self.kiosk_args if kiosk else []
 
-        self.instance = None
-
     def _set_environment(self, env):
         """
         Set the environment variables for the browser
@@ -64,15 +62,14 @@ class Browser:
         self.url = url or self.url
 
         # Reopen to take new url or additional args into account
-        if self.instance:
-            self.close_browser()
+        self.close_browser()
 
         if state == BrowserState.KIOSK:
             self.enable_kiosk_mode()
         elif state == BrowserState.FULLSCREEN:
             self.fullscreen()
 
-        self.instance = subprocess.Popen(
+        subprocess.Popen(
             [
                 self.browser,
                 self.url,
@@ -84,13 +81,12 @@ class Browser:
             env=self.env,
         )
         helpers.save_browser_state(url=self.url)
-        return self.instance
 
     def close_browser(self):
         """close the browser"""
-        if self.instance:
-            self.instance.kill()
-        self.instance = None
+        # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
+        # We need to terminate it because Odoo will create a new instance each time it is restarted.
+        subprocess.run(['pkill', self.browser.split('-')[0]], check=False)
 
     def xdotool_keystroke(self, keystroke):
         """
