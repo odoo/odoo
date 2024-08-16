@@ -1295,11 +1295,11 @@
 <!-- "Sidebar" template -->
 <template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="o_header_sidebar" separator=" "/>
+        <attribute name="t-attf-class" add="o_header_sidebar flex-column overflow-y-auto shadow" separator=" "/>
     </xpath>
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
-            <t t-set="_navbar_classes" t-valuef="o_border_right_only d-none d-lg-block shadow"/>
+            <t t-set="_navbar_classes" t-valuef="o_border_right_only flex-grow-1 d-none d-lg-block"/>
 
             <div id="o_main_nav" class="o_main_nav navbar-nav d-flex flex-column justify-content-between h-100 w-100">
                <div class="d-flex flex-column w-100 h-100">
