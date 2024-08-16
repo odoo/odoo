@@ -8,8 +8,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
-import { scanBarcode } from "@web/webclient/barcode/barcode_dialog";
-import { BarcodeVideoScanner } from "@web/webclient/barcode/barcode_video_scanner";
+import { scanBarcode } from "@web/core/barcode/barcode_dialog";
+import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { WebClient } from "@web/webclient/webclient";
 
 /* global ZXing */

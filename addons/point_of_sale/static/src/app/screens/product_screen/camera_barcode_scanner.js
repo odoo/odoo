@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { BarcodeVideoScanner } from "@web/webclient/barcode/barcode_video_scanner";
+import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 
 export class CameraBarcodeScanner extends BarcodeVideoScanner {
     static props = [];
