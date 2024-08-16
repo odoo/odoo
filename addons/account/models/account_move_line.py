@@ -1125,7 +1125,7 @@ class AccountMoveLine(models.Model):
     @api.onchange('amount_currency', 'currency_id')
     def _inverse_amount_currency(self):
         for line in self:
-            if line.currency_id == line.company_id.currency_id and line.balance != line.amount_currency:
+            if line.currency_id == line.company_id.currency_id and line.balance != line.amount_currency and not line.currency_id.is_zero(line.amount_currency):
                 line.balance = line.amount_currency
             elif (
                 line.currency_id != line.company_id.currency_id
