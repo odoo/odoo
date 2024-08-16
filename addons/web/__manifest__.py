@@ -189,7 +189,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/views/fields/signature/signature_field.scss',
 
             'web/static/src/legacy/scss/ui.scss',
-            'web/static/src/legacy/scss/modal.scss',
 
             ('include', 'web.assets_frontend_minimal'),
 
