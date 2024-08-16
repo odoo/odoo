@@ -241,9 +241,9 @@ function getWysiwygIframeContent(params) {
         ${assets.jsLibs.join('\n')}
 
         <script type="text/javascript">
-            window.odoo?.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
+            window.odoo?.define('root.widget', ['@web_editor/js/core/widget'], function (require) {
                 'use strict';
-                var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];
+                var Widget = require('@web_editor/js/core/widget')[Symbol.for("default")];
                 var widget = new Widget();
                 widget.appendTo(document.body);
                 return widget;
