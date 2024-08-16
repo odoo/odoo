@@ -1,7 +1,7 @@
 import { attachComponent } from "@web_editor/js/core/owl_utils";
 
 import { getFixture } from "@web/../tests/helpers/utils";
-import Widget from "@web/legacy/js/core/widget";
+import Widget from "@web_editor/js/core/widget";
 import {
     Component,
     onMounted,

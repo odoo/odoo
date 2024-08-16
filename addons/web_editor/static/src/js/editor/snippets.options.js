@@ -6,7 +6,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import { scrollTo } from "@web/core/utils/scrolling";
-import Widget from "@web/legacy/js/core/widget";
+import Widget from "@web_editor/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
