@@ -45,26 +45,6 @@ bsSanitizeAllowList.section = [];
 bsSanitizeAllowList.button = ['type'];
 bsSanitizeAllowList.del = [];
 
-/**
- * Returns an extended version of bootstrap default whitelist for sanitization,
- * i.e. a version where, for each key, the original value is concatened with the
- * received version's value and where the received version's extra key/values
- * are added.
- *
- * Note: the returned version
- *
- * @param {Object} extensions
- * @returns {Object} /!\ the returned whitelist is made from a *shallow* copy of
- *      the default whitelist, extended with given whitelist.
- */
-export function makeExtendedSanitizeWhiteList(extensions) {
-    let allowList = Object.assign({}, Tooltip.Default.allowList);
-    Object.keys(extensions).forEach(key => {
-        allowList[key] = (allowList[key] || []).concat(extensions[key]);
-    });
-    return allowList;
-}
-
 /* Bootstrap tooltip defaults overwrite */
 Tooltip.Default.placement = 'auto';
 Tooltip.Default.fallbackPlacement = ['bottom', 'right', 'left', 'top'];
