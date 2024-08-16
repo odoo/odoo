@@ -24,35 +24,73 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         Test that you can't have an account without a company set.
         Test that you can't remove a company from an account if there are some journal items in the company. '''
 
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+        company_3 = self.setup_other_company(name='company_3')['company']
+
         # Test specifying company_ids in account creation.
         account = self.env['account.account'].create({
             'code': '180001',
             'name': 'My Account in Company 2',
             'account_type': 'asset_current',
-            'company_ids': [Command.link(self.company_data_2['company'].id)]
+            'company_ids': [Command.link(company_2.id)]
         })
         self.assertRecordValues(
-            account.with_company(self.company_data_2['company']),
-            [{'code': '180001', 'company_ids': self.company_data_2['company'].ids}]
+            account.with_company(company_2),
+            [{'code': '180001', 'company_ids': company_2.ids}]
         )
 
         # Test that adding a company to an account fails if the code is not defined for that account and that company.
         with self.assertRaises(ValidationError):
-            account.write({'company_ids': [Command.link(self.company_data['company'].id)]})
+            account.write({'company_ids': [Command.link(company_1.id)]})
 
         # Test that you can add a company to an account if you add the code at the same time
         account.write({
             'code': '180011',
-            'company_ids': [Command.link(self.company_data['company'].id)],
+            'company_ids': [Command.link(company_1.id)],
             'tax_ids': [Command.link(self.company_data['default_tax_sale'].id), Command.link(self.company_data_2['default_tax_sale'].id)],
         })
+        self.assertRecordValues(account, [{'code': '180011', 'company_ids': [company_1.id, company_2.id]}])
+
+        # Test that you can create an account with multiple codes and companies if you specify `code_by_company`.
+        account_2 = self.env['account.account'].create({
+            'code_by_company': {
+                company_1.id: '180021',
+                company_2.id: '180022',
+                company_3.id: '180023',
+            },
+            'name': 'My second account',
+            'account_type': 'asset_current',
+            'company_ids': [Command.set([company_1.id, company_2.id, company_3.id])],
+        })
+        self.assertRecordValues(account_2, [{'code': '180021', 'company_ids': [company_1.id, company_2.id, company_3.id]}])
+        self.assertRecordValues(account_2.with_company(company_2), [{'code': '180022'}])
+        self.assertRecordValues(account_2.with_company(company_3), [{'code': '180023'}])
 
         # Test copying an account belonging to multiple companies, specifying the company the new account should belong to.
-        account_copy_1 = account.copy({'company_ids': [Command.set(self.company_data['company'].ids)]})
+        account_copy_1 = account.copy({'company_ids': [Command.set(company_1.ids)], 'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)]})
         self.assertRecordValues(
             account_copy_1,
-            [{'code': '180012', 'company_ids': self.company_data['company'].ids, 'tax_ids': self.company_data['default_tax_sale'].ids}]
+            [{'code': '180012', 'company_ids': company_1.ids, 'tax_ids': self.company_data['default_tax_sale'].ids}],
         )
+
+        # Test copying an account belonging to multiple companies, without specifying the company. Both companies should be copied.
+        account_copy_2 = account.copy()
+        self.assertRecordValues(
+            account_copy_2,
+            [{
+                'code': '180013',
+                'company_ids': [company_1.id, company_2.id],
+                'tax_ids': [self.company_data['default_tax_sale'].id, self.company_data_2['default_tax_sale'].id],
+            }],
+        )
+        self.assertRecordValues(account_copy_2.with_company(company_2), [{'code': '180002'}])
+
+        # Test copying an account belonging to 3 companies
+        account_copy_3 = account_2.copy()
+        self.assertRecordValues(account_copy_3, [{'code': '180022', 'company_ids': [company_1.id, company_2.id, company_3.id]}])
+        self.assertRecordValues(account_copy_3.with_company(company_2), [{'code': '180023'}])
+        self.assertRecordValues(account_copy_3.with_company(company_3), [{'code': '180024'}])
 
         # Test that at least one company is required on accounts.
         with self.assertRaises(UserError):
@@ -76,7 +114,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         })
 
         with self.assertRaises(UserError):
-            self.company_data['default_account_revenue'].company_ids = self.company_data_2['company']
+            self.company_data['default_account_revenue'].company_ids = company_2
 
     def test_toggle_reconcile(self):
         ''' Test the feature when the user sets an account as reconcile/not reconcile with existing journal entries. '''
