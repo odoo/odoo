@@ -203,7 +203,8 @@ export class Message extends Record {
     }
 
     get isSubjectDefault() {
-        const threadName = this.thread?.name?.trim().toLowerCase();
+        const name = this.thread?.name;
+        const threadName = name ? name.trim().toLowerCase() : "";
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
