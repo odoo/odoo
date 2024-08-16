@@ -704,3 +704,17 @@ test("form views in dialogs do not have chatter", async () => {
     await contains(".o_dialog .o_form_view");
     await contains(".o-mail-Form-Chatter", { count: 0 });
 });
+
+test("should display the subject even if the record name is false", async () => {
+    const pyEnv = await startServer();
+    const fakeId = pyEnv["res.fake"].create({ name: false });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.fake",
+        res_id: fakeId,
+        subject: "Salutations, voyageur",
+    });
+    await start();
+    await openFormView("res.fake", fakeId);
+    await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
+});
