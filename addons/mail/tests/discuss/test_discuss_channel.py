@@ -377,9 +377,9 @@ class TestChannelInternals(MailCommon, HttpCase):
             filter(lambda d: d["id"] == self_member.id, init_data["discuss.channel.member"])
         )
         self.assertEqual(
-            self_member_info['seen_message_id']['id'],
+            self_member_info["seen_message_id"],
             msg_2.id,
-            "Last message id should have been updated"
+            "Last message id should have been updated",
         )
         self_member._mark_as_read(msg_1.id)
         final_data = Store(chat).get_result()
@@ -387,9 +387,9 @@ class TestChannelInternals(MailCommon, HttpCase):
             filter(lambda d: d["id"] == self_member.id, final_data["discuss.channel.member"])
         )
         self.assertEqual(
-            self_member_info['seen_message_id']['id'],
+            self_member_info["seen_message_id"],
             msg_2.id,
-            "Last message id should stay the same after mark channel as seen with an older message"
+            "Last message id should stay the same after mark channel as seen with an older message",
         )
 
     @users('employee')
@@ -436,7 +436,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "id": member.id,
                                 "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
-                                "seen_message_id": {"id": msg_1.id},
+                                "seen_message_id": msg_1.id,
                                 "thread": {"id": chat.id, "model": "discuss.channel"},
                             },
                         ],

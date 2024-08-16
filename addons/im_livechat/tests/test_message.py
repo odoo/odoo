@@ -104,7 +104,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                         "thread": {"id": channel_livechat_1.id, "model": "discuss.channel"},
                         "parentMessage": False,
                         "pinned_at": False,
-                        "rating_id": {"id": record_rating.id},
+                        "rating_id": record_rating.id,
                         "recipients": [],
                         "record_name": "test1 Ernest Employee",
                         "res_id": channel_livechat_1.id,

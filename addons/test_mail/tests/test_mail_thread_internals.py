@@ -393,7 +393,7 @@ class TestDiscuss(MailCommon, TestRecipients):
                                 "counter": 1,
                                 "counter_bus_id": bus_last_id,
                                 "id": "starred",
-                                "messages": [["DELETE", [{"id": msg.id}]]],
+                                "messages": [["DELETE", [msg.id]]],
                                 "model": "mail.box",
                             }
                         ],
@@ -407,7 +407,7 @@ class TestDiscuss(MailCommon, TestRecipients):
                                 "counter": 0,
                                 "counter_bus_id": bus_last_id,
                                 "id": "starred",
-                                "messages": [["DELETE", [{"id": msg.id}]]],
+                                "messages": [["DELETE", [msg.id]]],
                                 "model": "mail.box",
                             }
                         ],

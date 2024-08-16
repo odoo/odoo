@@ -898,7 +898,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "message_type": "notification",
                     "model": "mail.test.simple",
                     "needaction": True,
-                    "notifications": [{"id": notif.id}],
+                    "notifications": [notif.id],
                     "pinned_at": False,
                     "rating_id": False,
                     "reactions": [],
@@ -918,7 +918,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                 {
                     "failure_type": False,
                     "id": notif.id,
-                    "message": {"id": message.id},
+                    "message": message.id,
                     "notification_status": "sent",
                     "notification_type": "inbox",
                     "persona": {"id": self.env.user.partner_id.id, "type": "partner"},
@@ -966,7 +966,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                 "partner": {"id": self.env.user.partner_id.id, "type": "partner"},
             },
         ]
-        expected_with_follower["mail.thread"][0]["selfFollower"] = {"id": follower.id}
+        expected_with_follower["mail.thread"][0]["selfFollower"] = follower.id
         self.assertEqual(data, expected_with_follower)
 
         # The user doesn't follow the record anymore

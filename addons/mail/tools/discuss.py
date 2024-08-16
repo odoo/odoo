@@ -225,4 +225,4 @@ class Store:
             return {"id": record.id, "type": "guest"}
         if record._name == "res.partner":
             return {"id": record.id, "type": "partner"}
-        return {"id": record.id}
+        return record.id

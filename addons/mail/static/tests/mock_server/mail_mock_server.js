@@ -1259,7 +1259,7 @@ class Store {
         if (records._name === "res.partner") {
             return { id: record.id, type: "partner" };
         }
-        return { id: record.id };
+        return record.id;
     }
 }
 

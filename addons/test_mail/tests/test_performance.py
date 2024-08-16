@@ -1387,7 +1387,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
-                                    "notifications": [{"id": notif_1.id}, {"id": notif_2.id}],
+                                    "notifications": [notif_1.id, notif_2.id],
                                     "pinned_at": False,
                                     "rating_id": False,
                                     "reactions": [],
@@ -1407,7 +1407,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_1.id,
-                                    "message": {"id": message.id},
+                                    "message": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1418,7 +1418,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_2.id,
-                                    "message": {"id": message.id},
+                                    "message": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1433,7 +1433,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "model": "mail.test.simple",
                                     "module_icon": "/base/static/description/icon.png",
                                     "name": "Test",
-                                    "selfFollower": {"id": follower_1.id},
+                                    "selfFollower": follower_1.id,
                                 },
                             ),
                             "res.partner": self._filter_partners_fields(
@@ -1490,7 +1490,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
-                                    "notifications": [{"id": notif_1.id}, {"id": notif_2.id}],
+                                    "notifications": [notif_1.id, notif_2.id],
                                     "pinned_at": False,
                                     "rating_id": False,
                                     "reactions": [],
@@ -1510,7 +1510,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_1.id,
-                                    "message": {"id": message.id},
+                                    "message": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1521,7 +1521,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "failure_type": False,
                                     "id": notif_2.id,
-                                    "message": {"id": message.id},
+                                    "message": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
                                     "persona": {
@@ -1536,7 +1536,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "model": "mail.test.simple",
                                     "module_icon": "/base/static/description/icon.png",
                                     "name": "Test",
-                                    "selfFollower": {"id": follower_2.id},
+                                    "selfFollower": follower_2.id,
                                 },
                             ),
                             "res.partner": self._filter_partners_fields(

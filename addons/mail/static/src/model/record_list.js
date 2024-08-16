@@ -212,6 +212,10 @@ export class RecordListInternal {
     insert(recordList, val, fn, { inv = true, mode = "ADD" } = {}) {
         const inverse = getInverse(recordList);
         const targetModel = getTargetModel(recordList);
+        if (typeof val !== "object") {
+            // single-id data
+            val = { [recordList._store[targetModel].id]: val };
+        }
         if (inverse && inv) {
             // special command to call addNoinv/deleteNoInv, to prevent infinite loop
             const target = isRecord(val) && val._raw === val ? val._proxy : val;
