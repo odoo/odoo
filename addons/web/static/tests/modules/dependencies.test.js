@@ -42,11 +42,7 @@ test("modules only import from allowed folders", () => {
         "@web/model/model": ["@web/views/view_hook"],
     });
     expect(invalidImportsFrom("views", ["core", "search", "model"])).toEqual({
-        // FIXME: these dependencies should not exist. Temporarily whitelist them so we don't add more, and remove ASAP
-        "@web/views/fields/many2one/many2one_field": [
-            "@web/webclient/barcode/barcode_dialog",
-            "@web/webclient/barcode/barcode_video_scanner",
-        ],
+        // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
         "@web/views/view_hook": ["@web/webclient/actions/action_hook"],
     });
 });
