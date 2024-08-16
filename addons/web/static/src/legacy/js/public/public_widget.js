@@ -8,7 +8,7 @@ import mixins from "@web/legacy/js/core/mixins";
 import ServicesMixin from "@web/legacy/js/core/service_mixins";
 import { loadBundle, loadCSS, loadJS } from '@web/core/assets';
 import { renderToElement } from "@web/core/utils/render";
-import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal_dom";
+import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/public/minimal_dom";
 
 /**
  * Base class for all visual components. Provides a lot of functions helpful
