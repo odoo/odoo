@@ -1,6 +1,7 @@
-import { registry } from "./core/registry";
-import { getTemplate } from "@web/core/templates";
 import { App, EventBus } from "@odoo/owl";
+import { SERVICES_METADATA } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 
@@ -50,7 +51,6 @@ serviceRegistry.addValidation({
     "*": true,
 });
 
-export const SERVICES_METADATA = {};
 let startServicesPromise = null;
 
 /**
