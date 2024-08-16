@@ -1076,6 +1076,50 @@ class BaseModel(metaclass=MetaModel):
         if not _is_toplevel_call:
             splittor = lambda rs: rs
 
+        # {properties_fname: {record: {property_name: (value, property_type)}}}
+        cache_properties = {}
+
+        def get_property(properties_fname, property_name, record):
+            # FIXME: Only efficient during the _is_toplevel_call == True
+            if properties_fname not in cache_properties:
+                properties_field = self._fields[properties_fname]
+                # each value is either None or a dict
+                result = []
+                for rec in self:
+                    raw_properties = rec[properties_fname]
+                    definition = properties_field._get_properties_definition(rec)
+                    if not raw_properties or not definition:
+                        result.append(definition or [])
+                    else:
+                        assert isinstance(raw_properties, dict), f"Wrong type {raw_properties!r}"
+                        result.append(properties_field._dict_to_list(raw_properties, definition))
+
+                # FIXME: Far from optimal, it will fetch display_name for no reason
+                res_ids_per_model = properties_field._get_res_ids_per_model(self, result)
+
+                cache_properties[properties_fname] = record_map = {}
+                for properties, rec in zip(result, self):
+                    properties_field._parse_json_types(properties, self.env, res_ids_per_model)
+                    record_map[rec] = prop_map = {}
+                    for prop in properties:
+                        value = prop.get('value')
+                        prop_type = prop.get('type')
+                        property_model = prop.get('comodel')
+
+                        if prop_type in ('many2one', 'many2many') and property_model:
+                            value = self.env[property_model].browse(value)
+                        elif prop_type == 'tags' and value:
+                            value = ",".join(
+                                next(iter(tag[1] for tag in prop['tags'] if tag[0] == v), '')
+                                for v in value
+                            )
+                        elif prop_type == 'selection':
+                            value = dict(prop['selection']).get(value, '')
+
+                        prop_map[prop['name']] = (value, prop_type)
+
+            return cache_properties[properties_fname][record].get(property_name, ('', 'char'))
+
         # memory stable but ends up prefetching 275 fields (???)
         for record in splittor(self):
             # main line of record, initially empty
@@ -1099,15 +1143,23 @@ class BaseModel(metaclass=MetaModel):
                 elif name == 'id':
                     current[i] = (record._name, record.id)
                 else:
-                    field = record._fields[name]
-                    value = record[name]
+                    prop_name = None
+                    if '.' in name:
+                        fname, prop_name = name.split('.')
+                        field = record._fields[fname]
+                        assert field.type == 'properties' and prop_name
+                        value, field_type = get_property(fname, prop_name, record)
+                    else:
+                        field = record._fields[name]
+                        field_type = field.type
+                        value = record[name]
 
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
                         current[i] = field.convert_to_export(value, record)
 
-                    elif import_compatible and field.type == 'reference':
+                    elif import_compatible and field_type == 'reference':
                         current[i] = f"{value._name},{value.id}"
 
                     else:
@@ -1119,7 +1171,7 @@ class BaseModel(metaclass=MetaModel):
 
                         # in import_compat mode, m2m should always be exported as
                         # a comma-separated list of xids or names in a single cell
-                        if import_compatible and field.type == 'many2many':
+                        if import_compatible and field_type == 'many2many':
                             index = None
                             # find out which subfield the user wants & its
                             # location as we might not get it as the first
@@ -1138,7 +1190,7 @@ class BaseModel(metaclass=MetaModel):
                                 xml_ids = [xid for _, xid in value.__ensure_xml_id()]
                                 current[index] = ','.join(xml_ids)
                             else:
-                                current[index] = field.convert_to_export(value, record)
+                                current[index] = ','.join(value.mapped('display_name')) if value else ''
                             continue
 
                         lines2 = value._export_rows(fields2, _is_toplevel_call=False)

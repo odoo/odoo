@@ -5,8 +5,7 @@ from unittest.mock import patch
 from odoo import http
 from odoo.tests import common, tagged
 from odoo.tools.misc import get_lang
-from odoo.addons.web.controllers.export import ExportXlsxWriter, Export
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.web.controllers.export import ExportXlsxWriter
 
 
 class XlsxCreatorCase(common.HttpCase):
@@ -75,17 +74,6 @@ class XlsxCreatorCase(common.HttpCase):
 
 @tagged('post_install', '-at_install')
 class TestExport(XlsxCreatorCase):
-    def test_properties_type_fields_not_selectable_with_import_compat(self):
-        with patch.object(Export, 'fields_get', return_value={
-            'id': {'string': 'ID', 'type': 'integer'},
-            'name': {'string': 'Name', 'type': 'char'},
-            'properties': {'string': 'Properties', 'type': 'properties'},
-            'properties_definition': {'string': 'Properties Definition', 'type': 'properties_definition'}
-        }), MockRequest(self.env):
-            fields = Export().get_fields("mock_model", import_compat=True)
-            field_names = [field['id'] for field in fields]
-            self.assertNotIn('properties', field_names)
-            self.assertNotIn('properties_definition', field_names)
 
     def test_int_monetary_float(self):
         # FIXME the currency is actually not used but still change the behavior of the export (see ExportXlsxWriter.__init__)
