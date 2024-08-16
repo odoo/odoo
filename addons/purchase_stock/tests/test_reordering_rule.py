@@ -3,11 +3,10 @@
 
 from datetime import datetime as dt, time
 from datetime import timedelta as td
-from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID, Command
 from odoo.fields import Date
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, freeze_time
 from odoo.tests.common import TransactionCase
 from odoo.tools.date_utils import add
 from odoo.exceptions import UserError, ValidationError
