@@ -446,6 +446,51 @@ class AccountChartTemplate(models.AbstractModel):
             if 'code' in account_data:
                 data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
 
+        # Create XMLids that link to existing identical accounts in another company with the same CoA.
+        # Get the company with the same CoA that has the greatest number of accounts.
+        companies_same_coa = self.env['res.company'].sudo().search([('account_fiscal_country_id', '=', fiscal_country.id), ('id', '!=', company.id)])
+        if companies_same_coa:
+            account_count_groupby_company = self.env['account.account'].sudo().read_group(
+                domain=[('company_ids', 'in', companies_same_coa.ids)],
+                fields=['id:count'],
+                groupby='company_ids',
+            )
+            account_count_by_company = [
+                (group['company_ids'][0], group['id'])
+                for group in account_count_groupby_company
+                if group['company_ids'][0] in companies_same_coa.ids and group['id'] != 0
+            ]
+            if account_count_by_company:
+                account_count_by_company.sort(key=lambda x: x[1], reverse=True)
+                company_to_share_accounts = self.env['res.company'].browse(account_count_by_company[0][0])
+                ir_model_data_vals = []
+                for xmlid, account_data in data.get('account.account', {}).items():
+                    if (
+                        'code' in account_data  # This is a new account, not an update of the tags in a CoA reload
+                        # TODO: Get all the xmlids at once using `_lookup_xmlids`?
+                        and (corresponding_account := self.sudo().with_company(company_to_share_accounts).ref(xmlid, raise_if_not_found=False))
+                        and all(
+                            corresponding_account[field] == account_data.get(field, False)
+                            for field in ('name', 'deprecated', 'account_type', 'reconcile', 'non_trade')
+                        )
+                    ):
+                        ir_model_data_vals.append({
+                            'xml_id': f'account.{company.id}_{xmlid}',
+                            'record': corresponding_account,
+                            'noupdate': True,
+                        })
+                        # TODO: discuss with WAN - this doesn't work because of access rights when trying to write on the account.
+                        # account_data.setdefault('company_ids', []).append(Command.link(company.id))
+                        # It's this or change the allowed_company_ids in _load_data...
+                        corresponding_account.with_context({'allowed_company_ids': [company.id, company_to_share_accounts.id]}).write({
+                            'code': account_data['code'],
+                            'company_ids': [Command.link(company.id)],
+                        })
+                        for field in set(account_data.keys()) - {'tag_ids', 'tax_ids'}:
+                            del account_data[field]
+                if ir_model_data_vals:
+                    self.env['ir.model.data'].sudo()._update_xmlids(ir_model_data_vals)
+
         for model in ('account.fiscal.position', 'account.reconcile.model'):
             if model in data:
                 data[model] = data.pop(model)
