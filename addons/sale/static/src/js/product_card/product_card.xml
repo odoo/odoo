@@ -2,11 +2,12 @@
 <templates id="template" xml:space="preserve">
     <t t-name="sale.ProductCard">
         <article
-            t-attf-class="product-card card rounded cursor-pointer transition-base {{props.isSelected ? 'selected' : ''}}"
+            tabindex="0"
+            t-attf-class="product-card card rounded cursor-pointer {{props.isSelected ? 'selected' : ''}}"
             t-on-keypress="(event) => event.code === 'Space' ? props.onClick() : () => {}"
             t-on-click="props.onClick"
         >
-            <div class="card-header">
+            <div class="card-header p-0">
                 <img
                     class="w-100"
                     t-attf-src="/web/image/product.product/{{props.product.id}}/image_128"

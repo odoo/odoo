@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -800,6 +802,65 @@ class SaleOrder(models.Model):
     def _onchange_prepayment_percent(self):
         if not self.prepayment_percent:
             self.require_payment = False
+
+    @api.onchange('order_line')
+    def _onchange_order_line(self):
+        virtual_ids = self.order_line.mapped('virtual_id')
+        lines_to_delete = self.order_line.filtered(
+            lambda sol: bool(
+                # Lines which aren't saved in DB yet.
+                virtual_ids and sol.linked_virtual_id and sol.linked_virtual_id not in virtual_ids
+            ) or bool(
+                # Lines which are saved in DB.
+                sol.linked_line_id and sol.linked_line_id not in self.order_line
+            )
+        )
+        if lines_to_delete:
+            self.order_line = [Command.unlink(line.id) for line in lines_to_delete]
+        for index, line in enumerate(self.order_line):
+            if line.product_type == 'combo' and line.selected_combo_items:
+                linked_lines = line._get_linked_lines()
+                selected_combo_items = json.loads(line.selected_combo_items)
+                if (
+                    selected_combo_items
+                    and len(selected_combo_items) != len(line.product_template_id.combo_ids)
+                ):
+                    raise ValidationError(_(
+                        "The number of selected combo items must match the number of available"
+                        " combo choices."
+                    ))
+
+                # Delete any existing combo item lines.
+                delete_commands = [Command.delete(linked_line.id) for linked_line in linked_lines]
+                # Create a new combo item line for each selected combo item.
+                create_commands = [Command.create({
+                    'product_id': combo_item['product_id'],
+                    'product_uom_qty': line.product_uom_qty,
+                    'combo_item_id': combo_item['combo_item_id'],
+                    'product_no_variant_attribute_value_ids': [
+                        Command.set(combo_item['no_variant_attribute_value_ids'])
+                    ],
+                    'product_custom_attribute_value_ids': [Command.clear()] + [
+                        Command.create(attribute_value)
+                        for attribute_value in combo_item['product_custom_attribute_values']
+                    ],
+                    # Combo item lines should come directly after their combo product line.
+                    'sequence': line.sequence + item_index + 1,
+                    # If the linked line exists in DB, populate linked_line_id, otherwise populate
+                    # linked_virtual_id.
+                    'linked_line_id': line.id if line._origin else False,
+                    'linked_virtual_id': line.virtual_id if not line._origin else False,
+                }) for item_index, combo_item in enumerate(selected_combo_items)]
+                # Shift any lines coming after the combo product line so that the combo item lines
+                # come first.
+                update_commands = [Command.update(
+                    order_line.id,
+                    {'sequence': line.sequence + len(selected_combo_items) + line_index - index},
+                ) for line_index, order_line in enumerate(self.order_line) if line_index > index]
+
+                # Clear `selected_combo_items` to avoid applying the same changes multiple times.
+                line.selected_combo_items = False
+                self.update({'order_line': delete_commands + create_commands + update_commands})
 
     #=== CRUD METHODS ===#
 

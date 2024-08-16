@@ -19,11 +19,11 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='goods']" position="after">
+                <filter name="combo" position="after">
                     <separator/>
                     <filter string="Manufactured Products" name="manufactured_products" domain="[('bom_ids', '!=', False)]"/>
                     <filter string="BoM Components" name="components" domain="[('bom_line_ids', '!=', False)]"/>
-                </xpath>
+                </filter>
             </field>
         </record>
 
@@ -33,11 +33,11 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='goods']" position="after">
+                <filter name="combo" position="after">
                     <separator/>
                     <filter string="Manufactured Products" name="manufactured_products" domain="[('bom_ids', '!=', False)]"/>
                     <filter string="BoM Components" name="components" domain="[('bom_line_ids', '!=', False)]"/>
-                </xpath>
+                </filter>
             </field>
         </record>
 

@@ -163,7 +163,7 @@ function assertProductPriceInfo(productName, priceInfo) {
         trigger: `
             ${productSelector(productName)}
             td.o_sale_product_configurator_price
-            span:contains("${priceInfo}")
+            div:contains("${priceInfo}")
         `,
     };
 }
@@ -173,7 +173,7 @@ function assertOptionalProductPriceInfo(productName, priceInfo) {
         trigger: `
             ${optionalProductSelector(productName)}
             td.o_sale_product_configurator_qty
-            span:contains("${priceInfo}")
+            div:contains("${priceInfo}")
         `,
     };
 }

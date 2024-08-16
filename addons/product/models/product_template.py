@@ -470,9 +470,28 @@ class ProductTemplate(models.Model):
         if self.type == 'combo':
             if self.attribute_line_ids:
                 raise UserError(_("Combo products can't have attributes"))
-            self.taxes_id = False
-            self.supplier_taxes_id = False
+            self.purchase_ok = False
         return {}
+
+    @api.constrains('type', 'combo_ids')
+    def _check_combo_ids_not_empty(self):
+        for template in self:
+            if template.type == 'combo' and not template.combo_ids:
+                raise ValidationError(_("A combo product must contain at least 1 combo choice."))
+
+    @api.constrains('type', 'combo_ids', 'sale_ok')
+    def _check_sale_combo_ids(self):
+        for template in self:
+            if (
+                template.type == 'combo'
+                and template.sale_ok
+                and any(
+                    not product.sale_ok for product in template.combo_ids.combo_item_ids.product_id
+                )
+            ):
+                raise ValidationError(
+                    _("A sellable combo product can only contain sellable products.")
+                )
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
@@ -774,6 +793,12 @@ class ProductTemplate(models.Model):
             # prevent change if exclusion deleted template by deleting last variant
             if self.exists() != self:
                 raise UserError(_("This configuration of product attributes, values, and exclusions would lead to no possible variant. Please archive or delete your product directly if intended."))
+        for variant in variants_to_unlink:
+            combo_items_to_unlink = self.env['product.combo.item'].search([
+                ('product_id', '=', variant.id)
+            ])
+            # Unlink all combo items which reference unlinked variants.
+            combo_items_to_unlink.unlink()
 
         # prefetched o2m have to be reloaded (because of active_test)
         # (eg. product.template: product_variant_ids)

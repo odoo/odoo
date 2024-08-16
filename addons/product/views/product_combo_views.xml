@@ -10,19 +10,22 @@
                     <h1>
                         <field
                             name="name"
-                            placeholder="e.g. Burger Menu"
+                            placeholder="e.g. Burger Choice"
                             widget="text"
                             options="{'line_breaks': False}"
                             class="text-break"
                         />
                     </h1>
+                </div>
+                <group>
                     <field
                         name="company_id"
+                        placeholder="Visible to all"
                         groups="base.group_multi_company"
-                        optional="hide"
                         options="{'no_create': True}"
+                        class="oe_inline"
                     />
-                </div>
+                </group>
                 <field name="combo_item_ids">
                     <list editable="bottom">
                         <field name="currency_id" column_invisible="True"/>

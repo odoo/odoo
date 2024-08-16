@@ -6,7 +6,7 @@
  * @return {Boolean} Whether the 2 lines are linked.
  */
 export function areSaleOrderLinesLinked(linkingSaleOrderLine, linkedSaleOrderLine) {
-    const linkingId = linkingSaleOrderLine.isNew
+    const linkingId = linkedSaleOrderLine.isNew
         ? linkingSaleOrderLine.data.linked_virtual_id
         : linkingSaleOrderLine.data.linked_line_id[0];
     const linkedId = linkedSaleOrderLine.isNew
@@ -23,8 +23,28 @@ export function areSaleOrderLinesLinked(linkingSaleOrderLine, linkedSaleOrderLin
  */
 export function getLinkedSaleOrderLines(saleOrderLine) {
     const saleOrder = saleOrderLine.model.root;
-    // TODO(loti): this doesn't work if some combo items are on another page.
+    // TODO(loti): this leaves out any combo items that are on another page.
     return saleOrder.data.order_line.records.filter(
         record => areSaleOrderLinesLinked(record, saleOrderLine)
     );
+}
+
+/**
+ * Serialize a combo item into a format understandable by the server.
+ *
+ * @param {ProductComboItem} comboItem The combo item to serialize.
+ * @return {Object} The serialized combo item.
+ */
+export function serializeComboItem(comboItem) {
+    return {
+        combo_item_id: comboItem.id,
+        product_id: comboItem.product.id,
+        no_variant_attribute_value_ids: comboItem.product.selectedNoVariantPtavIds,
+        product_custom_attribute_values: comboItem.product.selectedCustomPtavs.map(
+            customPtav => ({
+                custom_product_template_attribute_value_id: customPtav.id,
+                custom_value: customPtav.value,
+            })
+        ),
+    }
 }
