@@ -1931,3 +1931,40 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave.action_validate()
             self.assertEqual(get_reamining_leaves(2024, 3, 4), 3, "5 days should be deduced from the allocation and a new day should be accrued")
             self.assertEqual(get_reamining_leaves(2024, 3, 11), 10, "Accrual allocation should be capped at 10")
+
+    @freeze_time('2024-01-01')
+    def test_validate_leaves_with_more_days_than_allocation(self):
+        allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 1,
+            'allocation_type': 'regular',
+        })
+
+        allocation.action_validate()
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-01-09',
+                'request_date_to': '2024-01-12',
+            }])
+
+        leave = self.env['hr.leave'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-01-09 08:00:00',
+                'request_date_to': '2024-01-09 17:00:00',
+            }])
+
+        leave.action_validate()
+        leave.action_refuse()
+        leave.action_draft()
+
+        leave.write({
+            'request_date_from': '2024-01-09',
+            'request_date_to': '2024-01-12',
+        })
+        with self.assertRaises(ValidationError):
+            leave.action_confirm()
