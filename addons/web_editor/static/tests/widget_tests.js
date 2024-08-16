@@ -1,6 +1,4 @@
-/** @odoo-module alias=@web/../tests/legacy_tests/core/widget_tests default=false */
-
-import Widget from "@web/legacy/js/core/widget";
+import Widget from "@web_editor/js/core/widget";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
 

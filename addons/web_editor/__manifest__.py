@@ -135,7 +135,7 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/widget.js',
+            'web_editor/static/src/js/core/widget.js',
 
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
