@@ -508,6 +508,11 @@ test("Run a custom tour twice doesn't trigger traceback", async () => {
     onRpc("/web/dataset/call_kw/web_tour.tour/consume", async () => {
         return Promise.resolve(true);
     });
+<<<<<<< master
+||||||| 7b098d32904a9a130231d354b8187f8a8e929040
+=======
+
+>>>>>>> aa38225e3243137ac7a1f486177af6223b0d839c
     await mountWithCleanup(
         `
         <div class="o_parent">
@@ -552,6 +557,7 @@ test("Run a custom tour twice doesn't trigger traceback", async () => {
     expect("table tr td:contains('tour_name')").toHaveCount(2);
     click(".o_start_tour:eq(1)");
     await animationFrame();
+<<<<<<< master
 
     click(".o_parent > div");
     await animationFrame();
@@ -664,4 +670,12 @@ test("'Disable Tours' clean the custom running tour", async () => {
     await animationFrame();
 
     expect(browser.localStorage.getItem(CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY)).toBe(null);
+||||||| 7b098d32904a9a130231d354b8187f8a8e929040
+=======
+    await advanceTime(100);
+
+    click(".o_parent > div");
+    await advanceTime(100);
+    await animationFrame();
+>>>>>>> aa38225e3243137ac7a1f486177af6223b0d839c
 });
