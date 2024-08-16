@@ -12,10 +12,6 @@
                                 <i class="oi oi-chevron-left"/>
                                 <span t-if="!ui.isSmall" class="ms-2">Back</span>
                             </button>
-                            <button t-if="allowNewOrders" class="highlight btn btn-lg btn-light text-nowrap" t-on-click="() => this.onCreateNewOrder()">
-                                <i class="fa fa-plus"/>
-                                <span t-if="!ui.isSmall" class="ms-2">New Order</span>
-                            </button>
                         </div>
                         <SearchBar
                             config="getSearchBarConfig()"

@@ -34,7 +34,7 @@ export class ListContainer extends Component {
     };
     static template = xml`
         <div class="overflow-hidden d-flex flex-grow-1" t-attf-class="{{props.class}}">
-            <button t-if="props.onClickPlus" class="btn btn-secondary btn-lg me-1" t-on-click="props.onClickPlus">
+            <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1" t-on-click="props.onClickPlus">
                 <i class="fa fa-fw fa-plus-circle" aria-hidden="true"/>
             </button>
             <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"

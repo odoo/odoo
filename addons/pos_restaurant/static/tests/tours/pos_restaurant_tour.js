@@ -61,17 +61,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Dialog.confirm("Open Register"),
 
             // Create a floating order. The idea is to have one of the draft orders be a floating order during the tour.
+            Chrome.createFloatingOrder(),
 
-            {
-                content: "open table selector",
-                trigger: ".pos-topheader button.table-free-order-label",
-                run: "click",
-            },
-            {
-                content: "create new order",
-                trigger: ".modal-body button i.fa-plus-circle",
-                run: "click",
-            },
             // Dine in / Takeaway can be toggled.
             ProductScreen.clickControlButton("Switch to Takeaway"),
             ProductScreen.clickControlButton("Switch to Dine in"),
@@ -101,8 +92,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -153,18 +144,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),
-
-            // At floor screen, there should be 2 synced draft orders
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
 
             // Delete the first order then go back to floor
-            FloorScreen.clickTable("5"),
-            ProductScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
             // The order ref ends with -0002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
@@ -181,8 +168,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
 
-            // There should be 1 synced draft order.
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
+            // There should be 0 synced draft order as we already deleted -0002.
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
 
@@ -196,7 +184,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
         [
             // There is one draft synced order from the previous tour
             Chrome.startPoS(),
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("2"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order

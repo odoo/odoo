@@ -49,11 +49,6 @@ patch(TicketScreen.prototype, {
         await this.pos.setTable(orderTable, order.uuid);
         this.closeTicketScreen();
     },
-    get allowNewOrders() {
-        return this.pos.config.module_pos_restaurant
-            ? Boolean(this.pos.selectedTable)
-            : super.allowNewOrders;
-    },
     async settleTips() {
         const promises = [];
         for (const order of this.getFilteredOrderList()) {

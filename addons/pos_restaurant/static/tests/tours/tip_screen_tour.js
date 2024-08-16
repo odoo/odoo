@@ -31,16 +31,15 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
             // order 2
             ProductScreen.addOrderline("Coca-Cola", "2", "2"),
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("2", "2"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains("2", "Tipping"),
-            TicketScreen.clickDiscard(),
+            Chrome.clickPlanButton(),
 
             // Create without syncing the draft.
             // order 3
@@ -51,13 +50,12 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.clickPlanButton(),
+            Chrome.createFloatingOrder(),
             // order 4
             ProductScreen.addOrderline("Coca-Cola", "4", "2"),
             ProductScreen.totalAmountIs("8.0"),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("5", "4"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains("4", "Tipping"),
 

@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.checkStatus("-0001", "Ongoing"),
 
             // Order 2 is at Payment Screen
-            TicketScreen.clickNewTicket(),
+            Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Monitor Stand", "3", "4", "12.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.checkStatus("-0002", "Payment"),
 
             // Order 3 is at Receipt Screen
-            TicketScreen.clickNewTicket(),
+            Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Whiteboard Pen", "5", "6", "30.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
@@ -96,7 +96,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.nthRowContains(2, "Payment"),
             TicketScreen.deleteOrder("-0002"),
             Dialog.confirm(),
-            TicketScreen.clickNewTicket(),
+            Chrome.createFloatingOrder(),
 
             // Invoice an order
             ProductScreen.addOrderline("Whiteboard Pen", "5", "6"),
