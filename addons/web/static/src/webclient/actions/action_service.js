@@ -447,6 +447,9 @@ export function makeActionManager(env, router = _router) {
                     get url() {
                         return stateToUrl(controller.state);
                     },
+                    onSelected() {
+                        restore(controller.jsId);
+                    },
                 };
             });
     }
