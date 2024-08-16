@@ -405,6 +405,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
 
+        company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
         for invoice, invoice_data in invoices_data.items():
             grouped_invoices_by_report[invoice_data['pdf_report_id']][invoice] = invoice_data
@@ -413,7 +414,7 @@ class AccountMoveSend(models.TransientModel):
             ids = [inv.id for inv in group_invoices_data]
 
             pdf_report = self.env['ir.actions.report'].browse(pdf_report_id)
-            content, _report_type = self.env['ir.actions.report']._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
+            content, _report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
 
             for invoice, invoice_data in group_invoices_data.items():
                 invoice_data['pdf_attachment_values'] = {
@@ -432,7 +433,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
         pdf_report = self.env['ir.actions.report'].browse(invoice_data['pdf_report_id'])
-        content, _report_format = self.env['ir.actions.report']._render(pdf_report.report_name, invoice.ids, data={'proforma': True})
+        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render(pdf_report.report_name, invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
             'raw': content[invoice.id],
