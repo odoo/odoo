@@ -1024,7 +1024,10 @@ class ChromeBrowser:
 
     @property
     def screencasts_frames_dir(self):
-        return os.path.join(self.screencasts_dir, 'frames')
+        if screencasts_dir := self.screencasts_dir:
+            return os.path.join(screencasts_dir, 'frames')
+        else:
+            return None
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1035,8 +1038,7 @@ class ChromeBrowser:
     def stop(self):
         if hasattr(self, 'ws'):
             self._websocket_send('Page.stopScreencast')
-            if self.screencasts_dir:
-                screencasts_frames_dir = self.screencasts_frames_dir
+            if screencasts_frames_dir := self.screencasts_frames_dir:
                 self.screencasts_dir = None
                 if os.path.isdir(screencasts_frames_dir):
                     shutil.rmtree(screencasts_frames_dir, ignore_errors=True)
@@ -1440,12 +1442,11 @@ which leads to stray network requests and inconsistencies."""
             wait()
 
     def _handle_screencast_frame(self, sessionId, data, metadata):
-        if not self.screencasts_frames_dir:
+        frames_dir = self.screencasts_frames_dir
+        if not frames_dir:
             return
         self._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
-        if not self.screencasts_dir:
-            return
-        outfile = os.path.join(self.screencasts_frames_dir, 'frame_%05d.b64' % len(self.screencast_frames))
+        outfile = os.path.join(frames_dir, 'frame_%05d.b64' % len(self.screencast_frames))
         try:
             with open(outfile, 'w') as f:
                 f.write(data)
