@@ -456,3 +456,32 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
+
+    def test_account_group_hierarchy_consistency(self):
+        """ Test if the hierarchy of account groups is consistent when creating, deleting and recreating an account group """
+        def create_account_group(name, code_prefix, company):
+            return self.env['account.group'].create({
+                'name': name,
+                'code_prefix_start': code_prefix,
+                'code_prefix_end': code_prefix,
+                'company_id': company.id
+            })
+
+        group_1 = create_account_group('group_1', 1, self.env.company)
+        group_10 = create_account_group('group_10', 10, self.env.company)
+        group_100 = create_account_group('group_100', 100, self.env.company)
+        group_101 = create_account_group('group_101', 101, self.env.company)
+
+        self.assertEqual(len(group_1.parent_id), 0)
+        self.assertEqual(group_10.parent_id, group_1)
+        self.assertEqual(group_100.parent_id, group_10)
+        self.assertEqual(group_101.parent_id, group_10)
+
+        # Delete group_101 and recreate it
+        group_101.unlink()
+        group_101 = create_account_group('group_101', 101, self.env.company)
+
+        self.assertEqual(len(group_1.parent_id), 0)
+        self.assertEqual(group_10.parent_id, group_1)
+        self.assertEqual(group_100.parent_id, group_10)
+        self.assertEqual(group_101.parent_id, group_10)
