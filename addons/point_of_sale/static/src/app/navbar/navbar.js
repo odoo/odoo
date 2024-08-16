@@ -15,7 +15,7 @@ import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_p
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
-import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_video_scanner";
+import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";

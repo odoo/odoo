@@ -13,7 +13,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
-import * as BarcodeScanner from "@web/webclient/barcode/barcode_dialog";
+import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 
 class Product extends models.Model {
     _name = "product.product";

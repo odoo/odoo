@@ -8,8 +8,8 @@ import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
-import * as BarcodeScanner from "@web/webclient/barcode/barcode_dialog";
-import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_video_scanner";
+import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
+import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, markup, onWillUpdateProps, useState } from "@odoo/owl";
@@ -170,7 +170,7 @@ export class Many2OneField extends Component {
         if (!this.relation.includes(".")) {
             return "m-" + this.relation;
         }
-        return this.relation
+        return this.relation;
     }
     get string() {
         return this.props.string || this.props.record.fields[this.props.name].string || "";

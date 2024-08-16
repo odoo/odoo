@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { url } from '@web/core/utils/urls';
 import { EventRegistrationSummaryDialog } from "./event_registration_summary_dialog";
-import { scanBarcode } from "@web/webclient/barcode/barcode_dialog";
+import { scanBarcode } from "@web/core/barcode/barcode_dialog";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class EventScanView extends Component {
