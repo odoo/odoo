@@ -172,7 +172,7 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         # EXTENDS 'account'
-        self.write({'l10n_it_edi_header': False})
+        self.with_context(skip_is_manually_modified=True).write({'l10n_it_edi_header': False})
         return super()._post(soft)
 
     def _extend_with_attachments(self, attachments, new=False):
