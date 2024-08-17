@@ -1,15 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+
+from datetime import datetime
+from lxml import etree
+
 from odoo.tests import tagged
 from odoo.tools import file_open
 
-from lxml import etree
-from datetime import datetime
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install', '-at_install')
 class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
     def test_purchase_order_download_edi(self):
+        self.env.company.vat = "BE0246697724"
         po = self.env['purchase.order'].create({
             'name': 'My PO',
             'partner_id': self.partner_a.id,
@@ -34,7 +37,7 @@ class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
         file_content = self.env['purchase.edi.xml.ubl_bis3']._export_order(po)
         generated_xml = etree.fromstring(file_content)
 
-        with file_open('purchase_edi_ubl_bis3/tests/data/test_po_edi.xml', 'r') as f:
+        with file_open('purchase_edi_ubl/tests/data/test_po_edi.xml', 'r') as f:
             current_date = f'{datetime.today().date()}'
             xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode())
             expected_xml = etree.fromstring(xml_template)
