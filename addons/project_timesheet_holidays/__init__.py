@@ -13,12 +13,6 @@ def post_init(cr, registry):
     from odoo import api, SUPERUSER_ID
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    for hr_leave_type in env['hr.leave.type'].search([('timesheet_generate', '=', True), ('timesheet_project_id', '=', False)]):
-        company = hr_leave_type.company_id or env.company
-        hr_leave_type.write({
-            'timesheet_project_id': company.internal_project_id.id,
-            'timesheet_task_id': company.leave_timesheet_task_id.id,
-        })
 
     type_ids_ref = env.ref('hr_timesheet.internal_project_default_stage', raise_if_not_found=False)
     type_ids = [(4, type_ids_ref.id)] if type_ids_ref else []
@@ -54,3 +48,10 @@ def post_init(cr, registry):
             company.write({
                 'leave_timesheet_task_id': task.id,
             })
+
+    for hr_leave_type in env['hr.leave.type'].search(['|', ('timesheet_project_id', '=', False), ('timesheet_task_id', '=', False)]):
+        company = hr_leave_type.company_id or env.company
+        hr_leave_type.write({
+            'timesheet_project_id': company.internal_project_id.id,
+            'timesheet_task_id': company.leave_timesheet_task_id.id,
+        })
