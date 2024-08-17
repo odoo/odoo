@@ -56,8 +56,8 @@ pypiwin32 ; sys_platform == 'win32'
 pyserial==3.5
 python-dateutil==2.8.1 ; python_version < '3.11'
 python-dateutil==2.8.2 ; python_version >= '3.11'
-python-ldap==3.4.0 ; sys_platform != 'win32' and python_version < '3.12' # min version = 3.2.0 (Focal with security backports)
-python-ldap==3.4.4 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble) Mostly to have a wheel package
+python3-ldap==0.9.8.4 ; sys_platform != 'win32' and python_version < '3.12' # min version = 3.2.0 (Focal with security backports)
+python3-ldap==0.9.8.4 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble) Mostly to have a wheel package
 python-stdnum==1.17 ; python_version < '3.11'  # (jammy)
 python-stdnum==1.19 ; python_version >= '3.11'
 pytz  # no version pinning to avoid OS perturbations
