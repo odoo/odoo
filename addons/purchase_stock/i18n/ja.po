@@ -13,15 +13,16 @@
 # Noma Yuki, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
-# Junko Augias, 2023
+# Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -388,7 +389,7 @@ msgid "No data yet"
 msgstr "未データ"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/account_invoice.py:0
+#: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
@@ -434,9 +435,12 @@ msgstr "オーダーポイント"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months; the number of products received on time divided by "
-"the number of ordered products."
-msgstr "過去12ヶ月間；納期内に受け取ったプロダクト数をオーダ済プロダクト数で割った値。"
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
+"過去x日間の、時間通りに届いたプロダクト数をオーダ済プロダクト数で割ったもの。xはシステムパラメータpurchase_stock.on_time_delivery_days"
+" またはデフォルトの365。"
 
 #. module: purchase_stock
 #. openerp-web
@@ -446,6 +450,7 @@ msgid "Process all the receipt quantities."
 msgstr "すべての入庫数量を処理します。"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "調達グループ"
@@ -627,7 +632,7 @@ msgstr "在庫仕入先補充情報"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "仕入先価格リスト"
+msgstr "仕入先価格表"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids

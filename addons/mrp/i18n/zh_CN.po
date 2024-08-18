@@ -10,18 +10,19 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
-# Wil Odoo, 2023
 # Ryan <ouyang.em@gmail.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
+# Emily Jia <eji@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,11 +119,6 @@ msgstr "%s无法被删除。 尝试先取消。"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "&amp; Cost"
 msgstr "&amp;成本"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -905,12 +901,6 @@ msgstr "BOM结构与成本"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
 msgstr "BOM类型"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "BoM明细中的产品%s不应与BoM产品相同。"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -2387,14 +2377,6 @@ msgid "Line of issue consumption"
 msgstr "消耗申报明细"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr "有消耗数量存在，无法删除数据. "
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "位置"
@@ -2813,6 +2795,7 @@ msgstr "名称"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "New"
 msgstr "新建"
@@ -2995,22 +2978,12 @@ msgstr "发送错误的消息数量"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"Number of pieces (in product UoM) that can be produced in parallel (at the "
 "same time) at this work center. For example: the capacity is 5 and you need "
 "to produce 10 units, then the operation time listed on the BOM will be "
 "multiplied by two. However, note that both time before and after production "
-"will only be counted once. "
+"will only be counted once."
 msgstr ""
-"此工作中心可并行（同时）生产的件数（以产品计量单位计）。 例如：产能为 5，需要生产 10 台，则 BOM 上列出的作业时间将乘以 2。 "
-"但是请注意，生产前后的时间都只会计算一次. "
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
-msgid ""
-"This should be the smallest quantity that this product can be produced in. "
-"If the BOM contains operations, make sure the work center capacity is "
-"accurate. "
-msgstr "这应该是该产品可以生产的最小数量.。如果BOM包含工序，请确保工作中心产能准确. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3713,6 +3686,11 @@ msgid "Quantity:"
 msgstr "数量："
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "量化"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
 msgid "Raw Moves"
 msgstr "原材料移动"
@@ -3879,6 +3857,11 @@ msgstr "安排的日期"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "按安排日期"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr "安排日期：最近365天"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -4505,12 +4488,6 @@ msgstr "该产品已至少使用过一次，编辑其结构可能会导致不良
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "The quantity produced of by-products must be positive."
-msgstr "副产品的生产数量必须是正数。"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 #, python-format
@@ -4647,10 +4624,17 @@ msgstr "这个生产订单是由补货报告创建的。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
 msgstr "产品%s的该序列号已经产生"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate."
+msgstr "这应该是该产品可以生产的最小数量。如果物料清单（BOM）包含工作业，应确保工作中心产能准确无误。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5141,7 +5125,10 @@ msgstr "拆解数量短缺警告"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"

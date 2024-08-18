@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
 "Last-Translator: Tomaž Jug <tomaz@editor.si>, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -24,12 +24,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "%s connected"
-msgstr "%s povezan"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -498,6 +492,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "Omogočite kupcem prijavo in vpogled v njihove dokumente"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this email"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "Nikoli povezan"
@@ -646,12 +646,6 @@ msgstr "Predloga uporabnika za ustvarjanje novih uporabnikov preko prijave"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "This is their first connection. Wish them luck."
 msgstr ""
 
 #. module: auth_signup

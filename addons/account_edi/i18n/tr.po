@@ -4,21 +4,21 @@
 # 
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,14 @@ msgstr " Elektronik faturalandırma uyarısı(s)"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "EDI'nin iptali talep edildi."
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
 msgstr "EDI'nin iptali talebi iptal edildi."
@@ -82,6 +84,7 @@ msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Call off EDI Cancellation"
 msgstr "EDI İptalini Durdurun"
 
@@ -351,12 +354,23 @@ msgid "Process now"
 msgstr "Şimdi işle"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Ürün Ölçü Birimi"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Yevmiye Kayıtlarının sırasını yeniden oluşturun."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Rapor işlemi"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Request EDI Cancellation"
 msgstr "EDI İptali İste"
 
@@ -405,6 +419,13 @@ msgid ""
 msgstr ""
 "Fatura kaydedildiğinde (ve bu belge işlendiğinde) edi_format_id tarafından "
 "oluşturulan dosya."
+
+#. module: account_edi
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

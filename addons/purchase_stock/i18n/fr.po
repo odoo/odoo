@@ -8,14 +8,15 @@
 # RHTodoo, 2021
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -394,7 +395,7 @@ msgid "No data yet"
 msgstr "Pas de données"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/account_invoice.py:0
+#: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
@@ -442,11 +443,13 @@ msgstr "Point de commande"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months; the number of products received on time divided by "
-"the number of ordered products."
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"Au cours des 12 derniers mois; le nombre d'articles reçus à temps divisé par"
-" le nombre de produits commandés."
+"Au cours des x derniers jours, le nombre de produits reçus à temps divisé "
+"par le nombre de produits commandés. x est soit le paramètre système "
+"purchase_stock.on_time_delivery_days ou la valeur par défaut 365"
 
 #. module: purchase_stock
 #. openerp-web
@@ -456,6 +459,7 @@ msgid "Process all the receipt quantities."
 msgstr "Traiter toutes les quantités reçues"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "Groupe d'approvisionnement"

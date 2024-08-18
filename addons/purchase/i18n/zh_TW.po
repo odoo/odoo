@@ -5,13 +5,14 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -111,7 +112,7 @@ msgid ""
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
+"            <strong t-out=\"format_date(object.get_localized_date_planned()) or ''\">05/05/2021</strong>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <strong>undefined</strong>.\n"
@@ -120,28 +121,6 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            （<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>）\n"
-"        </t>\n"
-"        你好！\n"
-"        <br/><br/>\n"
-"        謹此提醒你，採購訂單 <strong t-out=\"object.name or ''\">P00015</strong>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            <strong>（參考編號： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>）</strong>\n"
-"        </t>\n"
-"        的預計交貨日期為： \n"
-"        <t t-if=\"object.date_planned\">\n"
-"            <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>。\n"
-"        </t>\n"
-"         <t t-else=\"\">\n"
-"            <strong>(未設定)</strong>。\n"
-"        </t>\n"
-"        麻煩你確認，能按時交貨嗎？\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -161,35 +140,13 @@ msgid ""
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
+"            The receipt is expected for <strong t-out=\"format_date(object.get_localized_date_planned()) or ''\">05/05/2021</strong>.\n"
 "            <br/><br/>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            （<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>）\n"
-"        </t>\n"
-"        你好！\n"
-"        <br/><br/>\n"
-"        附上採購訂單 <strong t-out=\"object.name or ''\">P00015</strong>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            （參考編號： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>）\n"
-"        </t>\n"
-"        ，金額為 <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>。\n"
-"        採購訂單由 <t t-out=\"object.company_id.name or ''\">YourCompany</t> 作出。\n"
-"        <br/><br/>\n"
-"        <t t-if=\"object.date_planned\">\n"
-"            預計到貨日期為： <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>。\n"
-"            <br/><br/>\n"
-"            麻煩你確認，已收到此訂單的送貨嗎？\n"
-"        </t>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -375,10 +332,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">合計</span>\n"
-"                          <span groups=\"account.group_show_line_subtotals_tax_included\">總價</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">未連稅總額</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">連稅總額</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -447,6 +404,11 @@ msgstr "<strong>預計日期</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
 msgstr "<strong>訂購日期:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Order Deadline:</strong>"
+msgstr "<strong>截止日期:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -752,7 +714,6 @@ msgid "Automatically remind the receipt date to your vendors"
 msgstr "自動提醒您的供應商交貨日期"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1696,7 +1657,6 @@ msgid "Number of Actions"
 msgstr "動作數量"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"

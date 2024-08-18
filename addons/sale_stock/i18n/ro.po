@@ -10,14 +10,15 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2023
 # Corina Calin, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -450,12 +451,6 @@ msgid "On"
 msgstr "On"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid "Ordered quantity decreased!"
-msgstr "Cantitate comandată micșorată!"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
 msgstr "Politica de ridicare"
@@ -529,6 +524,11 @@ msgstr "Comenzi de Vanzari"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
 msgstr "Numărul comenzilor de vânzare"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Factura de vânzare cu plată în avans"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -726,16 +726,6 @@ msgstr "Când toate produsele sunt pregătite"
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
 msgstr "Când să începeți expedierea"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
-msgstr ""
-"Reduceți cantitatea comandată! Nu uitați să actualizați manual livrarea, "
-"dacă este necesar."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0

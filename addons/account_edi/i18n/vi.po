@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +41,14 @@ msgstr "(Các) cảnh báo lập hoá đơn điện tử"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "Việc hủy bỏ EDI đã được yêu cầu."
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
 msgstr "Yêu cầu hủy bỏ EDI đã bị hủy bỏ."
@@ -76,6 +79,7 @@ msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Call off EDI Cancellation"
 msgstr "Huỷ lện huỷ EDI"
 
@@ -345,12 +349,23 @@ msgid "Process now"
 msgstr "Xử lý ngay"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị tính sản phẩm"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Tạo lại số thứ tự bút toán."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Báo cáo hành động"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Request EDI Cancellation"
 msgstr "Yêu cầu EDI hủy"
 

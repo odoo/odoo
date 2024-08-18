@@ -11,17 +11,17 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # emavertel, 2022
-# Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Lasse L, 2023
+# Simon S, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Simon S, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -452,12 +452,6 @@ msgid "On"
 msgstr "På"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid "Ordered quantity decreased!"
-msgstr "Orderkvantitet minskad!"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
 msgstr "Plockningspolicy"
@@ -531,6 +525,11 @@ msgstr "Säljordrar"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
 msgstr "Antal försäljningsorder"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Försäljning, faktura för förskottsbetalning"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -727,16 +726,6 @@ msgstr "När alla produkter är redo"
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
 msgstr "När ska leverans påbörjas"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
-msgstr ""
-"Du minskar den beställda kvantiteten! Glöm inte att manuellt uppdatera "
-"inköpsordern om det behövs."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0

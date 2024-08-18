@@ -25,21 +25,28 @@
 # Jacek Michalski <michalski.jck@gmail.com>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -368,6 +375,11 @@ msgid "Attachment Count"
 msgstr "Liczba załączników"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+msgid "Attachments"
+msgstr "Załączniki"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
 msgstr "Dziennik bankowy"
@@ -399,6 +411,7 @@ msgstr "Może być wydatkiem"
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #, python-format
 msgid "Cancel"
 msgstr "Anuluj"
@@ -632,6 +645,7 @@ msgid "Employee Home Address"
 msgstr "Adres domowy pracownika"
 
 #. module: hr_expense
+#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -794,7 +808,9 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.product,name:hr_expense.product_product_zero_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,name:hr_expense.product_product_zero_cost_product_template
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
@@ -1170,6 +1186,12 @@ msgid "New Expense Report"
 msgstr "Nowy raport wydatków"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Następna Czynność wydarzenia w kalendarzu"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1321,6 +1343,11 @@ msgstr ""
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr "Tylko kierownicy i pracownicy działu kadr mogą zatwierdzać wydatki."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Other Info"
+msgstr "Inne informacje"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.other_expense_product
@@ -1673,6 +1700,11 @@ msgid "Sheet"
 msgstr "Karta"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
+msgid "Sheet Is Editable"
+msgstr "Arkusz można edytować"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
@@ -1862,6 +1894,8 @@ msgstr "Dzisiejsze czynności"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
 msgid "Total"
 msgstr "Suma"
@@ -1910,11 +1944,13 @@ msgstr "Jednostka Miary"
 #: model:product.product,uom_name:hr_expense.food_expense_product
 #: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.product,uom_name:hr_expense.product_product_zero_cost
 #: model:product.product,uom_name:hr_expense.trans_expense_product
 #: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.food_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.other_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,uom_name:hr_expense.product_product_zero_cost_product_template
 #: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
 msgid "Units"
 msgstr "Jednostki"
@@ -2077,6 +2113,12 @@ msgstr "Nie można usunąć zaksięgowanego lub opłaconego wydatku."
 #, python-format
 msgid "You cannot refuse your own expenses"
 msgstr "Nie możesz odmówić pokrycia własnych wydatków"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

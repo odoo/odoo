@@ -25,19 +25,19 @@
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
 # Simo Suurla <simo@suurla.fi>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
-# Martin Trigaux, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Joakim Weckman, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Martin Trigaux, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -389,6 +389,11 @@ msgid "Attachment Count"
 msgstr "Liitteiden määrä"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+msgid "Attachments"
+msgstr "Liitteet"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
 msgstr "Päiväkirja, pankki"
@@ -420,6 +425,7 @@ msgstr "Voidaan kirjata kuluksi"
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #, python-format
 msgid "Cancel"
 msgstr "Peruuta"
@@ -655,6 +661,7 @@ msgid "Employee Home Address"
 msgstr "Työntekijän kotiosoite"
 
 #. module: hr_expense
+#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -815,7 +822,9 @@ msgstr "Kulu, josta päiväkirjan kirjaus on peräisin"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.product,name:hr_expense.product_product_zero_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,name:hr_expense.product_product_zero_cost_product_template
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
@@ -1191,6 +1200,12 @@ msgid "New Expense Report"
 msgstr "Uusi kuluraportti"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Seuraavan toimenpiteen kalenterimerkintä"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1345,6 +1360,11 @@ msgstr ""
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr "Vain päälliköt ja HR päälliköt voivat hyväksyä kuluja"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Other Info"
+msgstr "Muut tiedot"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.other_expense_product
@@ -1697,6 +1717,11 @@ msgid "Sheet"
 msgstr "Arkki"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
+msgid "Sheet Is Editable"
+msgstr "Taulukko on muokattavissa"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
@@ -1885,6 +1910,8 @@ msgstr "Tämän päivän toimenpiteet"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
 msgid "Total"
 msgstr "Yhteensä"
@@ -1933,11 +1960,13 @@ msgstr "Mittayksikkö"
 #: model:product.product,uom_name:hr_expense.food_expense_product
 #: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.product,uom_name:hr_expense.product_product_zero_cost
 #: model:product.product,uom_name:hr_expense.trans_expense_product
 #: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.food_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.other_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,uom_name:hr_expense.product_product_zero_cost_product_template
 #: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
 msgid "Units"
 msgstr "Yksiköt"

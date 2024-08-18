@@ -17,14 +17,15 @@
 # Piia Paurson <piia@avalah.ee>, 2022
 # Anna, 2023
 # JanaAvalah, 2023
+# Mihkel avalah, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
+"Last-Translator: Mihkel avalah, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,7 +404,7 @@ msgid "No data yet"
 msgstr "Andmed puuduvad!"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/account_invoice.py:0
+#: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
@@ -449,11 +450,13 @@ msgstr "Orderpoint"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months; the number of products received on time divided by "
-"the number of ordered products."
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"Viimase 12 kuu jooksul; õigel ajal saadud toodete arv jagatud tellitud "
-"toodete arvuga."
+"Viimase x päeva jooksul: õigeaegselt saabunud toodete arv jagatud tellitud "
+"toodete arvuga. X on kas süsteemi parameeter "
+"purchase_stock.on_time_delivery_days või vaikeväärtus 365."
 
 #. module: purchase_stock
 #. openerp-web
@@ -463,6 +466,7 @@ msgid "Process all the receipt quantities."
 msgstr "Töötle kõik saatelehe kogused."
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "Hankegrupp"

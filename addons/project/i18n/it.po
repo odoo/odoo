@@ -7,16 +7,17 @@
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
 # Luca Carlo, 2023
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -525,6 +526,14 @@ msgstr "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=\"Partner\"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\" style=\"opacity: 0.7;\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Create tasks by sending an email to </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -580,17 +589,6 @@ msgstr "<span class=\"o_stat_text\">Margine Lordo</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr "<span class=\"o_stat_text\">Ricorrenti</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
-"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Crea compiti inviando un'e-mail a  </span>\n"
-"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Crea compiti inviando un'e-mail a </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Crea compiti inviando un'e-mail a </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -966,6 +964,14 @@ msgid "Archived"
 msgstr "In archivio"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Archived tasks cannot be recurring. Please unarchive the task first."
+msgstr ""
+"I lavori archiviati non possono essere ricorrenti. Per prima cosa, annulla "
+"l'archiviazione del lavoro"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
 msgstr "Continuare veramente?"
@@ -999,16 +1005,6 @@ msgid "Assign to Me"
 msgstr "Assegna a me"
 
 #. module: project
-#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
-msgid " assignee"
-msgstr " assignee"
-
-#. module: project
-#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
-msgid " assignees"
-msgstr " assignees"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1027,7 +1023,6 @@ msgid "Assigned to"
 msgstr "Assegnato a"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1038,7 +1033,6 @@ msgstr "Assegnato a"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr "Assegnatari"
 
@@ -1215,6 +1209,26 @@ msgstr "Burn down chart"
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
 msgstr "Chiama o imposta a completato"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__day
+msgid "By Day"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__month
+msgid "By Month"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__year
+msgid "By Year"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
+msgid "By quarter"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1695,40 +1709,6 @@ msgstr ""
 "                lavoro o risolvere un problema."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
-msgstr ""
-"Persone alle quali sarà visibile il progetto e le rispettive attività.\n"
-"\n"
-"-Utenti interni invitati: quando si segue un progetto, gli utenti interni avranno accesso a tutte le attività senza distinzioni. In caso contrario, otterranno l'accesso solo alle attività specifiche che stanno seguendo.\n"
-" Un utente con il progetto > Il livello di accesso dell'amministratore può comunque accedere a questo progetto e ai suoi compiti, anche se non fanno esplicitamente parte dei seguaci.\n"
-"\n"
-"-Tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e a tutte le attività correlate senza distinzioni.\n"
-"\n"
-"-Utenti del portale invitati e tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e alle attivitò correlate senza distinzioni.\n"
-"Quando si segue un progetto, gli utenti del portale otterranno l'accesso a tutte le attivitò senza distinzioni. In caso contrario, otterranno l'accesso solo per le attività specifiche che stanno seguendo.\n"
-"\n"
-" Quando un progetto è condiviso nella modalità di sola lettura, l'utente del portale viene reindirizzato al portale. È possibile visualizzare l'attività ma non modificarla.\n"
-"Quando un progetto viene condiviso in modalità di modifica, l'utente del portale viene reindirizzato alle viste kanban ed elenco delle attività. Nelle attività è possibile modificare un determinato numero di campi.\n"
-"\n"
-"In ogni caso, un utente interno senza alcun diritto di accesso al progetto può comunque accedere all'attività, a condizione che venga fornito loro l'URL corrispondente (e che facciano parte dei follower se il progetto è privato)."
-
-#. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
 #: model:ir.actions.server,name:project.unlink_task_type_action
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -2128,6 +2108,7 @@ msgstr "Venerdì"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "Attività future"
@@ -2535,11 +2516,32 @@ msgstr "Sembra che alcuni compiti facciano parte di una ricorrenza."
 
 #. module: project
 #. openerp-web
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid ""
+"It seems that some tasks are part of a recurrence. At least one of them must"
+" be kept as a model to create the next occurences."
+msgstr ""
+"Sembra che alcuni lavori siano parte di una ricorrenza. Almeno una di esse "
+"deve essere mantenuta come modello per creare le prossime occorrenze."
+
+#. module: project
+#. openerp-web
 #: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
 msgstr "Sembra che questo compito faccia parte di una ricorrenza."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid ""
+"It seems that this task is part of a recurrence. You must keep it as a model"
+" to create the next occurences."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2693,6 +2695,7 @@ msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "Attività in ritardo"
@@ -3414,6 +3417,40 @@ msgstr ""
 "Modello principale contenente l'alias. Il modello che contiene il "
 "riferimento alias non è necessariamente quello fornito da alias_model_id "
 "(esempio: progetto (parent_model) e lavoro (model))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+msgstr ""
+"Persone alle quali sarà visibile il progetto e le rispettive attività.\n"
+"\n"
+"-Utenti interni invitati: quando si segue un progetto, gli utenti interni avranno accesso a tutte le attività senza distinzioni. In caso contrario, otterranno l'accesso solo alle attività specifiche che stanno seguendo.\n"
+" Un utente con il progetto > Il livello di accesso dell'amministratore può comunque accedere a questo progetto e ai suoi compiti, anche se non fanno esplicitamente parte dei seguaci.\n"
+"\n"
+"-Tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e a tutte le attività correlate senza distinzioni.\n"
+"\n"
+"-Utenti del portale invitati e tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e alle attivitò correlate senza distinzioni.\n"
+"Quando si segue un progetto, gli utenti del portale otterranno l'accesso a tutte le attivitò senza distinzioni. In caso contrario, otterranno l'accesso solo per le attività specifiche che stanno seguendo.\n"
+"\n"
+" Quando un progetto è condiviso nella modalità di sola lettura, l'utente del portale viene reindirizzato al portale. È possibile visualizzare l'attività ma non modificarla.\n"
+"Quando un progetto viene condiviso in modalità di modifica, l'utente del portale viene reindirizzato alle viste kanban ed elenco delle attività. Nelle attività è possibile modificare un determinato numero di campi.\n"
+"\n"
+"In ogni caso, un utente interno senza alcun diritto di accesso al progetto può comunque accedere all'attività, a condizione che venga fornito loro l'URL corrispondente (e che facciano parte dei follower se il progetto è privato)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4320,6 +4357,7 @@ msgid "Show Project on Dashboard"
 msgstr "Mostra il progetto sul cruscotto"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "Mostra tutti i record con data prossima azione precedente a oggi"
@@ -4694,6 +4732,7 @@ msgstr "Compito: Riconoscimento di ricezione"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -5026,6 +5065,7 @@ msgstr "Oggi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "Attività odierne"
@@ -5440,14 +5480,12 @@ msgstr ""
 "loro lavori."
 
 #. module: project
-#. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
 msgstr "Non è possibile leggere i campi %s nell'attività."
 
 #. module: project
-#. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
@@ -5479,6 +5517,16 @@ msgid ""
 msgstr ""
 "Dovresti avere almeno una fase personale. Crea una nuova fase in cui "
 "trasferire le attività dopo che questa è stata cancellata."
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+msgid "assignee"
+msgstr "assegnatario"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+msgid "assignees"
+msgstr "assegnatari"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

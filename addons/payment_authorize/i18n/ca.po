@@ -7,14 +7,14 @@
 # Martin Trigaux, 2021
 # RGB Consulting <odoo@rgbconsulting.com>, 2021
 # Quim - eccit <quim@eccit.com>, 2021
-# jabelchi, 2021
+# Josep Anton Belchi, 2021
 # marcescu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -23,6 +23,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid ""
+"<option value=\"checking\">Personal Checking</option>\n"
+"                    <option value=\"savings\">Personal Savings</option>\n"
+"                    <option value=\"businessChecking\">Business Checking</option>"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -108,11 +116,6 @@ msgstr "Tipus de compte bancari"
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Name"
 msgstr "Nom del Banc "
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
-msgid "Business Checking"
-msgstr "Comprovació de negocis"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -216,16 +219,6 @@ msgstr "Token de pagament"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transacció de pagament"
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
-msgid "Personal Checking"
-msgstr "Comprovació personal"
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
-msgid "Personal Savings"
-msgstr "Desaments personals"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider

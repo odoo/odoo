@@ -7,14 +7,15 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Tony Ng, 2023
 # Pak Wai Ho, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Pak Wai Ho, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +43,14 @@ msgstr " 電子應收憑單(發票)警示"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "已請求取消 EDI."
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
 msgstr "取消 EDI 的請求已被取消."
@@ -78,6 +81,7 @@ msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Call off EDI Cancellation"
 msgstr "取消 EDI 取消動作"
 
@@ -345,12 +349,23 @@ msgid "Process now"
 msgstr "立刻執行"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "產品測量單位"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "重新建立日記帳分錄的序列."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "報告動作"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Request EDI Cancellation"
 msgstr "請求取消EDI"
 

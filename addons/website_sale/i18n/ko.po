@@ -4,22 +4,22 @@
 # 
 # Translators:
 # nle_odoo, 2021
+# Martin Trigaux, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Seongseok Shin <shinss61@hotmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
-# Martin Trigaux, 2022
 # Sarah Park, 2023
-# Wil Odoo, 2023
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -377,11 +377,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>동영상 미리보기</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
-msgstr "<span>귀하의 결제가 승인되었습니다.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -977,14 +972,6 @@ msgstr "사용자 계정으로 문서가 발행된 후에는 이름을 변경할
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "하위 범주"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr "계정에 청구서를 발행하고 나면 이름을 변경할 수 없습니다. 이 경우, 당사에 직접 연락해주십시오."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1583,6 +1570,17 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"외부인을 위한 주문은 백엔드를 통해 생성할 수 있습니다. 이름이나 이메일 주소를 수정하려면 계정 설정에서 변경하거나 관리자에게 문의하시기"
+" 바랍니다."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1617,17 +1615,6 @@ msgstr "512 이미지"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "이미지 이름"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"외부인을 위한 주문은 백엔드를 통해 생성할 수 있습니다. 이름이나 이메일 주소를 수정하려면 계정 설정에서 변경하거나 관리자에게 문의하시기"
-" 바랍니다."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2459,6 +2446,11 @@ msgid "Products Recently Sold With Product"
 msgstr "제품과 함께 최근에 판매된 제품"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr "품목 리본"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "제품 조회수"
@@ -3025,11 +3017,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "이커머스 장바구니에서 추천되는 액세서리"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "부가가치세"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "태그"
@@ -3285,6 +3272,11 @@ msgstr "비과세의 판매액 합계"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr "로컬 라이브러리에서 파일을 업로드하십시오."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "부가가치세"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3578,6 +3570,11 @@ msgid "Your cart is empty!"
 msgstr "장바구니가 비어 있습니다!"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "귀하의 결제가 승인되었습니다."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "이전 장바구니가 이미 완료 되었습니다."
@@ -3596,6 +3593,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "코드..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

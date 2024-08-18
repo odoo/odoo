@@ -4,24 +4,25 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # NoaFarkash, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
+# Orel Nahmany, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -47,6 +48,11 @@ msgstr "בטל"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
 msgstr "העתק שורות"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
+msgid "Country Code"
+msgstr "קוד מדינה"
 
 #. module: account_debit_note
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
@@ -157,6 +163,15 @@ msgstr "חשבונית מקורית לחיוב"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 msgid "Reason"
 msgstr "סיבה"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"קוד ארץ ISO בשני תווים. \n"
+"ניתן להשתמש בשדה זה לחיפוש מהיר."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids

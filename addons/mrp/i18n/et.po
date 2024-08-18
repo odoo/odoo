@@ -8,7 +8,6 @@
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Gert Valdek <gert@airobot.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Egon Raamat <egon@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
@@ -17,17 +16,18 @@
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Leaanika Randmets, 2022
-# JanaAvalah, 2023
 # Stevin Lilla, 2024
+# Leaanika Randmets, 2024
+# JanaAvalah, 2024
+# Egon Raamat <egon@avalah.ee>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Egon Raamat <egon@avalah.ee>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,11 +124,6 @@ msgstr "%s ei saa kustutada. Proovige neid esmalt tühistada."
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "&amp; Cost"
 msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -926,12 +921,6 @@ msgstr "BoMi struktuur ja kulu"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
 msgstr "BOMi tüüp"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "Retsepti rea toode %s ei tohiks olla sama mis retsepti toode."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -2428,16 +2417,6 @@ msgid "Line of issue consumption"
 msgstr "Line of issue consumption"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Asukoht"
@@ -2860,6 +2839,7 @@ msgstr "Nimi"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "New"
 msgstr "Uus"
@@ -3050,19 +3030,11 @@ msgstr "Kohaletoimetamise veateatega sõnumite arv"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"Number of pieces (in product UoM) that can be produced in parallel (at the "
 "same time) at this work center. For example: the capacity is 5 and you need "
 "to produce 10 units, then the operation time listed on the BOM will be "
 "multiplied by two. However, note that both time before and after production "
-"will only be counted once. "
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
-msgid ""
-"This should be the smallest quantity that this product can be produced in. "
-"If the BOM contains operations, make sure the work center capacity is "
-"accurate. "
+"will only be counted once."
 msgstr ""
 
 #. module: mrp
@@ -3768,6 +3740,11 @@ msgid "Quantity:"
 msgstr "Kogus:"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "Koguseosad"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
 msgid "Raw Moves"
 msgstr "Toored liikumised"
@@ -3936,6 +3913,11 @@ msgstr "Planeeritud saatmise kuupäev"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "Planeeritud kuu järgi"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr "Planeeritud kuupäev: viimased 365 päeva"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -4591,12 +4573,6 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "The quantity produced of by-products must be positive."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 #, python-format
@@ -4743,10 +4719,19 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
 msgstr "Toote%s seerianumber on juba toodetud"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate."
+msgstr ""
+"See peaks olema väikseim kogus, millega seda toodet saab toota. Kui BOM "
+"sisaldab operatsioone, veenduge, et töökeskuse võimsus oleks täpne."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5244,7 +5229,10 @@ msgstr "Hoiata puuduvat lahti võtmise kogust"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
 # Saba Khmaladze <skhmaladze@uglt.org>, 2021
 # Martin Trigaux, 2021
 # Temur, 2021
 # Nika Chikhradze <nika@globaltravel.ge>, 2021
-# Gizo Kobakhidze <040168@gmail.com>, 2021
 # Gvantsa Gvinianidze <gvantsa@live.com>, 2021
+# Gizo Kobakhidze <040168@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Gvantsa Gvinianidze <gvantsa@live.com>, 2021\n"
+"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2024\n"
 "Language-Team: Georgian (https://app.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,9 +35,24 @@ msgid "Account Chart Template"
 msgstr "ანგარიშთა გეგმის ნიმუში"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "ანგარიშის ჯგუფი"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr ""
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
 msgid "Account Tag"
 msgstr "ანგარიში"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax_report_line
+msgid "Account Tax Report Line"
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
@@ -50,6 +65,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "ანალიტიკური ანგარიში"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__name
+msgid "Complete name for this report line, to be used in report."
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_res_country_state
@@ -98,10 +118,11 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr ""
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__name
 msgid "Name"
 msgstr "სახელი"
 
@@ -110,6 +131,13 @@ msgstr "სახელი"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
 msgid "Notes"
 msgstr "ჩანაწერები"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__tag_name
+msgid ""
+"Short name for the tax grid corresponding to this report line. Leave empty "
+"if this report line should not correspond to any such grid."
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
@@ -131,6 +159,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__tag_name
+msgid "Tag Name"
+msgstr ""
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
 msgid "Tax"
 msgstr "გადასახადი"
@@ -139,6 +173,11 @@ msgstr "გადასახადი"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
 msgid "Tax Name"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
 msgstr ""
 
 #. module: l10n_multilang

@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Matej Mijoč, 2022\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -273,12 +273,6 @@ msgid "Microsoft Recurrence Master Id"
 msgstr ""
 
 #. module: microsoft_calendar
-#: code:addons/microsoft_calendar/models/calendar.py:0
-#, python-format
-msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr ""
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__need_sync_m
@@ -302,6 +296,13 @@ msgid "Notification"
 msgstr "Obavijest"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__ms_organizer_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_organizer_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_organizer_event_id
+msgid "Organizer event Id"
+msgstr ""
+
+#. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
@@ -316,6 +317,15 @@ msgstr "Outlook Kalendar"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
+msgstr ""
+
+#. module: microsoft_calendar
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Outlook limitation: in a recurrence, an event cannot be moved to or before "
+"the day of the previous event, and cannot be moved to or after the day of "
+"the following event."
 msgstr ""
 
 #. module: microsoft_calendar
@@ -400,6 +410,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Token Validity"
 msgstr "Valjanost tokena"
+
+#. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__ms_universal_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_universal_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_universal_event_id
+msgid "Universal event Id"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id

@@ -12,27 +12,27 @@
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Naglis Jonaitis, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
-# Silvija Butko <silvija.butko@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
 # Arminas Grigonis <arminas@versada.lt>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Martin Trigaux, 2022
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2023
-# Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Asta Kasinskaitė, 2023
 # Sigitasvia <sigitas@vialaurea.lt>, 2024
 # Gailius Kazlauskas, 2024
 # Šarūnas Misevičius, 2024
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Jonas Zinkevicius <jozi@odoo.com>, 2024
+# Silvija Butko <silvija.butko@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -388,11 +388,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -1004,16 +999,6 @@ msgid "Children Categories"
 msgstr "Dukterinės kategorijos"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Neleidžiama keisti vardo po to, kai sąskaita-faktūra buvo pateikta jūsų "
-"sąskaitai. Prašome šiuo klausimu su mumis susisiekti tiesiogiai."
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "Pasirinkti mokėjimo būdą"
@@ -1620,6 +1605,15 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1654,15 +1648,6 @@ msgstr "Paveikslėlis 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Paveikslėlio pavadinimas"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2497,6 +2482,11 @@ msgid "Products Recently Sold With Product"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr "Produktų kaspinėlis"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr ""
@@ -3067,11 +3057,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "PVM mok. kodas"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Žyma"
@@ -3332,6 +3317,11 @@ msgstr "Viso parduota (be mokesčių)"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "PVM mok. kodas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3628,6 +3618,11 @@ msgid "Your cart is empty!"
 msgstr "Jūsų krepšelis tuščias!"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Jūsų mokėjimas buvo patvirtintas."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Jūsų ankstesnis krepšelis jau buvo užbaigtas."
@@ -3646,6 +3641,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "kodas..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

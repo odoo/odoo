@@ -10,14 +10,16 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023
+# Maria Muntean, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2478,7 +2480,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
 msgid "Embedded Slides View Counter"
-msgstr ""
+msgstr "Contor încorporat de vizualizare slide-uri"
 
 #. module: website_slides
 #. openerp-web
@@ -3881,6 +3883,12 @@ msgstr "După ce ați terminat, nu uitați să vă <b>Publicați</b> cursul."
 #, python-format
 msgid "Only JPG, PNG, PDF, files types are supported"
 msgstr "Sunt acceptate doar tipurile de fișiere JPG, PNG, PDF"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "Poate fi postată o singură recenzie per curs."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -5333,6 +5341,11 @@ msgid "Uploading document ..."
 msgstr "Încărcare document..."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Utilizați șablon"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr "Folosit pentru a clasifica și filtra canalele / cursurile afișate"
@@ -5674,6 +5687,8 @@ msgid ""
 "You are not allowed to add members to this course. Please contact the course"
 " responsible or an administrator."
 msgstr ""
+"Nu vi se permite să adăugați membri la acest curs. Vă rugăm să contactați "
+"responsabilul cursului sau un administrator."
 
 #. module: website_slides
 #. openerp-web
@@ -5885,6 +5900,13 @@ msgid "by email."
 msgstr "prin email."
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "documentation"
+msgstr "documentație"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "e.g. Computer Science for kids"
 msgstr "de ex. Științe computaționale pentru copii"
@@ -6010,6 +6032,13 @@ msgstr "să înscrieți"
 #, python-format
 msgid "to share this"
 msgstr "să partajați aceasta"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "training"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

@@ -7,7 +7,6 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2021
 # Martin Trigaux, 2021
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2021
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Jiří Podhorecký, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Petr Hemza, 2023
@@ -15,14 +14,16 @@
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-10 09:48+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -656,10 +657,10 @@ msgstr "<span class=\"oe_read_only\">/ měsíc</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Částka</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Celková cena</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Množství</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Celková cena</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2754,7 +2755,6 @@ msgstr "Počet objednávek"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
-#: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -2766,6 +2766,11 @@ msgstr "Počet objednávek"
 #, python-format
 msgid "Order Date"
 msgstr "Datum objednání"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
+msgstr "datum objednání: Za posledních 365 dní"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3290,7 +3295,6 @@ msgid "Recompute all prices based on this pricelist"
 msgstr "Přepočítejte všechny ceny na základě tohoto ceníku"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3867,7 +3871,6 @@ msgid "Specific Email"
 msgstr "Konkrétní e-mail"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
@@ -4600,6 +4603,8 @@ msgid "Volume"
 msgstr "Objem"
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning

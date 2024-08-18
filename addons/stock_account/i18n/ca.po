@@ -12,16 +12,16 @@
 # M Palau <mpalau@tda.ad>, 2021
 # Arnau Ros, 2021
 # César López Ramírez <cesar.lopez@coopdevs.org>, 2021
-# jabelchi, 2021
+# Josep Anton Belchi, 2021
 # Harcogourmet, 2022
 # Jonatan Gk, 2022
 # marcescu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
 "Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -366,7 +366,6 @@ msgid "Inventory Locations"
 msgstr "Ubicacions d'inventari"
 
 #. module: stock_account
-#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
@@ -751,6 +750,14 @@ msgstr ""
 "mateixa empresa d'origen o destí."
 
 #. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""
+
+#. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
@@ -928,6 +935,14 @@ msgid ""
 msgstr ""
 "No teniu cap compte de valoració d'entrada definit a la categoria del "
 "producte. Heu de definir-ne una abans de processar aquesta operació."
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

@@ -8,14 +8,15 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Sarah Park, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,12 +274,6 @@ msgid "Microsoft Recurrence Master Id"
 msgstr "Microsoft 반복 마스터 아이디"
 
 #. module: microsoft_calendar
-#: code:addons/microsoft_calendar/models/calendar.py:0
-#, python-format
-msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr ""
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__need_sync_m
@@ -302,6 +297,13 @@ msgid "Notification"
 msgstr "알림"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__ms_organizer_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_organizer_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_organizer_event_id
+msgid "Organizer event Id"
+msgstr "주최자 행사 아이디"
+
+#. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
@@ -317,6 +319,17 @@ msgstr "아웃룩 달력"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
 msgstr "아웃룩 동기화가 중지되었습니다"
+
+#. module: microsoft_calendar
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Outlook limitation: in a recurrence, an event cannot be moved to or before "
+"the day of the previous event, and cannot be moved to or after the day of "
+"the following event."
+msgstr ""
+"Outlook 제한: 반복되는 경우, 행사를 이전 행사일 당일이나 이전으로 이동할 수 없으며, 다음 행사일 당일이나 이후로 이동할 수 "
+"없습니다."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -400,6 +413,13 @@ msgstr "사용자가 행사 소유자인 경우에만 영향이 있습니다."
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Token Validity"
 msgstr "유효 토큰"
+
+#. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__ms_universal_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_universal_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_universal_event_id
+msgid "Universal event Id"
+msgstr "행사 범용 아이디"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id

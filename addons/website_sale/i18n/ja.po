@@ -10,6 +10,7 @@
 # Manami Hashi <manami@roomsfor.hk>, 2022
 # 江口和志 <k_eguchi@enzantrades.co.jp>, 2022
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2022
+# Martin Trigaux, 2022
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
@@ -17,20 +18,19 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Noma Yuki, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Tatsuki Kanda, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
-# Wil Odoo, 2023
 # Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -392,11 +392,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>動画プレビュー</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -991,14 +986,6 @@ msgid "Children Categories"
 msgstr "子分類"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr "アカウントの請求書が発行されると、あなたの名前の変更は許可されません。 この操作については、直接お問い合わせください。"
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "支払方法を選択"
@@ -1227,7 +1214,7 @@ msgstr "デフォルト通貨"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 msgid "Default Pricelist"
-msgstr "デフォルト価格リスト"
+msgstr "デフォルト価格表"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
@@ -1595,6 +1582,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"外部の方用にオーダする場合は、バックエンドから注文して下さい。名前やメールアドレスを変更したい場合は、アカウント設定から変更するか、管理者にご連絡下さい。"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1629,16 +1626,6 @@ msgstr "イメージ 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "イメージ名"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"外部の方用にオーダする場合は、バックエンドから注文して下さい。名前やメールアドレスを変更したい場合は、アカウント設定から変更するか、管理者にご連絡下さい。"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2301,14 +2288,14 @@ msgstr "このeコマース/ウェブサイトで有効な料金表"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
 msgid "Pricelist"
-msgstr "価格リスト"
+msgstr "価格表"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
-msgstr "価格リスト"
+msgstr "価格表"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2468,6 +2455,11 @@ msgstr "次のアクションで、最近売った商品: "
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
 msgid "Products Recently Sold With Product"
 msgstr "商品で最近売った商品"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr "製品リボン"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -3035,11 +3027,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "eコマースのカートでの推奨アクセサリ"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "VAT（Value Added Tax）"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "タグ"
@@ -3294,6 +3281,11 @@ msgstr "税抜合計販売額"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr "ローカルライブラリからファイルをアップロード。"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "VAT（Value Added Tax）"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3586,6 +3578,11 @@ msgid "Your cart is empty!"
 msgstr "あなたのカートは空です！"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "お支払いは承認されました。"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "前のカートは済みました。"
@@ -3604,6 +3601,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "コード..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

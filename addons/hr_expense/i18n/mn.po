@@ -18,16 +18,17 @@
 # Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2021
 # Munkhbaatar g <muuguu17@gmail.com>, 2021
 # Byambajargal Suuri <byambaa08@gmail.com>, 2021
-# Martin Trigaux, 2022
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Torbat Jargalsaikhan, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024\n"
+"Last-Translator: Torbat Jargalsaikhan, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -378,6 +379,11 @@ msgid "Attachment Count"
 msgstr "Хавсралтын тоо"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+msgid "Attachments"
+msgstr "Хавсралтууд"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
 msgstr "Банкны журнал"
@@ -409,6 +415,7 @@ msgstr "Зардал болгож ашиглах"
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #, python-format
 msgid "Cancel"
 msgstr "Цуцлах"
@@ -639,6 +646,7 @@ msgid "Employee Home Address"
 msgstr "Ажилтны гэрийн хаяг"
 
 #. module: hr_expense
+#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -799,7 +807,9 @@ msgstr "Журналын бичилтийн эх сурвалж бүхий за�
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.product,name:hr_expense.product_product_zero_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,name:hr_expense.product_product_zero_cost_product_template
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
@@ -1175,6 +1185,12 @@ msgid "New Expense Report"
 msgstr "Шинэ зардлын тооцоо"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Календар дээрх дараагийн Үйл ажиллагаа"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1328,6 +1344,11 @@ msgstr ""
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr "Зөвхөн Менежер болон HR мэргэжилтэн зардлыг зөвшөөрөх боломжтой"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Other Info"
+msgstr "Бусад мэдээлэл"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.other_expense_product
@@ -1671,6 +1692,11 @@ msgid "Sheet"
 msgstr "Хуудас"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
+msgid "Sheet Is Editable"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
@@ -1854,6 +1880,8 @@ msgstr "Өнөөдрийн ажилбар"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
 msgid "Total"
 msgstr "Нийт дүн"
@@ -1902,11 +1930,13 @@ msgstr "Хэмжих нэгж"
 #: model:product.product,uom_name:hr_expense.food_expense_product
 #: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.product,uom_name:hr_expense.product_product_zero_cost
 #: model:product.product,uom_name:hr_expense.trans_expense_product
 #: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.food_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.other_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,uom_name:hr_expense.product_product_zero_cost_product_template
 #: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
 msgid "Units"
 msgstr "Нэгж"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -104,6 +104,13 @@ msgid ""
 msgstr ""
 
 #. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Invalid Adyen request"
+msgstr ""
+
+#. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
@@ -155,25 +162,14 @@ msgstr "Technické pole použité k určení, zda je terminál stále připojen.
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid "Terminal %s is already used on payment method %s."
-msgstr "Terminál %s se již používá při platbě %s."
-
-#. module: pos_adyen
-#: code:addons/pos_adyen/models/pos_payment_method.py:0
-#, python-format
 msgid "Terminal %s is already used in company %s on payment method %s."
 msgstr "Terminál %s se již používá ve společnosti %s při platbě %s."
 
 #. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
-msgstr ""
-"Připojení k vašemu platebnímu terminálu se nezdařilo. Zkontrolujte, zda je "
-"stále připojen k internetu."
+msgid "Terminal %s is already used on payment method %s."
+msgstr "Terminál %s se již používá při platbě %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key

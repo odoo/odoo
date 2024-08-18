@@ -6,23 +6,24 @@
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
 # Zahed Alfak <tamass4116@gmail.com>, 2022
 # Maziar Niaki <maziarmn@gmail.com>, 2022
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
 # Hamid Darabi, 2022
+# Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Martin Trigaux, 2022
 # F Hariri <fhari1234@gmail.com>, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
-# Hanna Kheradroosta, 2022
-# Hamed Mohammadi <hamed@dehongi.com>, 2022
+# Hanna Kheradroosta, 2024
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-02 15:53+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2022\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,7 +212,6 @@ msgid "Company country"
 msgstr "کشور شرکت"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
@@ -449,6 +449,11 @@ msgid "Employee"
 msgstr "کارمند"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "قرارداد کارمند"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
 msgstr "قرارداد کارمند"
@@ -595,7 +600,6 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
 
@@ -686,6 +690,11 @@ msgid "New"
 msgstr "جدید"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr " تقویم فعالیت بعدی"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "موعد فعالیت بعدی"
@@ -773,6 +782,11 @@ msgid "Related User"
 msgstr "کاربر مروبطه"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "جزئیات مرخصی منابع"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "زمان کار منابع"
@@ -793,11 +807,6 @@ msgstr "در حال اجرا"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Running Contracts"
 msgstr "قراردادهای در حال اجرا"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "خطای تحویل پیامک"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -947,16 +956,6 @@ msgid "Wage"
 msgstr "دستمزد"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "پیام های وب سایت"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "تاریخچه ارتباط با وبسایت"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "شماره مجوز کار"
@@ -967,3 +966,9 @@ msgstr "شماره مجوز کار"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "برنامه‌ی زمانی کار"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr ""

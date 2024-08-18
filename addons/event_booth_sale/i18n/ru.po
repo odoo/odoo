@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#   * event_booth_sale
+# 	* event_booth_sale
 # 
 # Translators:
 # Denis Baranov <baranov@itlibertas.com>, 2021
@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -89,10 +89,6 @@ msgstr "Категория стендов"
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
 msgid "Cancel"
 msgstr "Отмена"
-
-#. module: event_booth_sale
-msgid "Configure an event booth"
-msgstr ""
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
@@ -284,11 +280,18 @@ msgid "Price Reduce"
 msgstr "Уменьшение цены"
 
 #. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr "Цена, уменьшенная на налог включенный"
+
+#. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_product_product
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_line__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_option__product_id
 msgid "Product"
 msgstr "Продукт"
 
@@ -302,6 +305,16 @@ msgstr "Шаблон продукта"
 #: model:ir.model.fields,field_description:event_booth_sale.field_product_template__detailed_type
 msgid "Product Type"
 msgstr "Тип продукта"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Строка шаблона коммерческого предложения"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_template_option
+msgid "Quotation Template Option"
+msgstr "Вариант шаблона коммерческого предложения"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event

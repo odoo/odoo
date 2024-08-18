@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#   * event_booth_sale
+# 	* event_booth_sale
 # 
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Martin Trigaux, 2021
 # Dorin Hongu <dhongu@gmail.com>, 2023
+# Corina Calin, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,10 +83,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
 msgid "Cancel"
 msgstr "Anulează"
-
-#. module: event_booth_sale
-msgid "Configure an event booth"
-msgstr ""
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
@@ -166,12 +164,12 @@ msgstr "Eveniment"
 #: model:ir.model.fields.selection,name:event_booth_sale.selection__product_template__detailed_type__event_booth
 #: model:product.product,name:event_booth_sale.product_product_event_booth
 msgid "Event Booth"
-msgstr ""
+msgstr "Stand pentru evenimente"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth_category
 msgid "Event Booth Category"
-msgstr ""
+msgstr "Categoria de stand pentru evenimente"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
@@ -187,7 +185,7 @@ msgstr ""
 #: model:ir.model,name:event_booth_sale.model_event_booth_registration
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__event_booth_registration_ids
 msgid "Event Booth Registration"
-msgstr ""
+msgstr "Înregistrare la standul de evenimente"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_type_booth
@@ -276,11 +274,18 @@ msgid "Price Reduce"
 msgstr "Reducere preț"
 
 #. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr "Reducere preț cu taxe"
+
+#. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_product_product
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_line__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_option__product_id
 msgid "Product"
 msgstr "Produs"
 
@@ -294,6 +299,16 @@ msgstr "Șablon produs"
 #: model:ir.model.fields,field_description:event_booth_sale.field_product_template__detailed_type
 msgid "Product Type"
 msgstr "Tip produs"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Linia șablonului de ofertă"
+
+#. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_template_option
+msgid "Quotation Template Option"
+msgstr "Opțiunea șablon de ofertă"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event

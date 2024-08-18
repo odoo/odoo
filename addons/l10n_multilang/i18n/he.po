@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
 # Martin Trigaux, 2021
 # Moshe Flam <pashute@gmail.com>, 2021
-# Yihya Hugirat <hugirat@gmail.com>, 2021
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
+# Ha Ketem <haketem@gmail.com>, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Netta Waizer, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021\n"
+"Last-Translator: Netta Waizer, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -34,9 +36,24 @@ msgid "Account Chart Template"
 msgstr "תבנית לוח חשבונות"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "קבוצת חשבון"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr "שם חשבון"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
 msgid "Account Tag"
 msgstr "תגית חשבון"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax_report_line
+msgid "Account Tax Report Line"
+msgstr "שורות דו\"ח מיסי חשבון"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
@@ -49,6 +66,11 @@ msgstr "חלוקה מנהלית של מדינה. למשל האכיל. מדינה
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "חשבון אנליטי"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__name
+msgid "Complete name for this report line, to be used in report."
+msgstr "שם מלא עבור שורת דוח זו, לשימוש בדוח."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_res_country_state
@@ -97,10 +119,11 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr "אזכורים משפטיים שצריכים להיות מודפסים על החשבונית."
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__name
 msgid "Name"
 msgstr "שם"
 
@@ -109,6 +132,15 @@ msgstr "שם"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
 msgid "Notes"
 msgstr "הערות"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__tag_name
+msgid ""
+"Short name for the tax grid corresponding to this report line. Leave empty "
+"if this report line should not correspond to any such grid."
+msgstr ""
+"שם קצר לרשת המס התואמת לשורת דוח זו. השאר ריק אם שורת דוח זו לא תתאים לאף "
+"רשת כזו."
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
@@ -130,6 +162,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__tag_name
+msgid "Tag Name"
+msgstr "שם תגית"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
 msgid "Tax"
 msgstr "מס"
@@ -139,6 +177,11 @@ msgstr "מס"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
 msgid "Tax Name"
 msgstr "שם המס"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
+msgstr "תבנית לקבוצות חשבונות"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template

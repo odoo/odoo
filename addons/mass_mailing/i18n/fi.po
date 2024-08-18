@@ -20,7 +20,6 @@
 # Martin Trigaux, 2021
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
 # Miku Laitinen <miku.laitinen@gmail.com>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Jukka Paulin <jukka.paulin@gmail.com>, 2021
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2021
 # Retropikzel, 2021
@@ -29,14 +28,15 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-01 17:39+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -184,8 +184,8 @@ msgstr "800px"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_call_to_action
-msgid "<b>50,000+ companies</b> run Odoo to grow their businesses."
-msgstr "<b>50,000+ yritystä</b> käyttää Odoota kasvattaakseen yritystään."
+msgid "<b>50,000+ companies</b> run Odoo."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
@@ -1354,11 +1354,6 @@ msgstr ""
 "kuvakkeita palikkojen mukauttamiseksi."
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
-msgid "Colors"
-msgstr "Värit"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
 msgid "Column Title"
 msgstr "Sarakkeen otsikko"
@@ -1573,6 +1568,13 @@ msgstr "Kyberturvallisuus"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "DEFAULT"
 msgstr "OLETUS"
+
+#. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/js/mass_mailing_widget.js:0
+#, python-format
+msgid "DRAG BUILDING BLOCKS HERE"
+msgstr "RAAHAA RAKENNE-ELEMENTTEJÄ TÄHÄN"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert_options
@@ -2743,11 +2745,6 @@ msgstr "Puuttuva sähköpostiosoite"
 #: model:ir.model,name:mass_mailing.model_ir_model
 msgid "Models"
 msgstr "Mallit"
-
-#. module: mass_mailing
-#: model:mailing.mailing,sms_subject:mass_mailing.mass_mail_1
-msgid "Monthly Newsletter"
-msgstr "Kuukausittainen uutiskirje"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -4185,12 +4182,6 @@ msgid "Unsubscription Date"
 msgstr "Tilauksen lopettamisen päivä"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "Massapostitusmalli ei ole tuettu %s"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "Update my subscriptions"
 msgstr "Päivitä tilaukseni"
@@ -4533,11 +4524,6 @@ msgid ""
 "news from them anymore:"
 msgstr ""
 "Olit edelleen näiden uutiskirjeiden tilaaja. Et saa heiltä enää uutisia:"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_social
-msgid "Your Logo"
-msgstr "Logo"
 
 #. module: mass_mailing
 #. openerp-web

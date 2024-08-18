@@ -4,24 +4,24 @@
 # 
 # Translators:
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2021
-# Martin Trigaux, 2021
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
 # Joni Winsten, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Joakim Weckman, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jessica Jakara, 2024
+# Joakim Weckman, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Jessica Jakara, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,12 +49,14 @@ msgstr " Sähköisen laskutuksen varoitukset"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "EDI-sanoman peruutusta on pyydetty."
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
 msgstr "EDI-sanoman peruutuksen pyyntö on peruttu."
@@ -85,6 +87,7 @@ msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Call off EDI Cancellation"
 msgstr "Peruuta EDI-sanoman peruutus"
 
@@ -354,12 +357,23 @@ msgid "Process now"
 msgstr "Käsittele nyt"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Tuotteen yksikkö"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Luo päiväkirjavientien sekvenssi uudelleen."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Raporttin"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Request EDI Cancellation"
 msgstr "Pyydä EDI-peruutusta"
 

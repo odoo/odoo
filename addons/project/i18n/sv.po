@@ -25,18 +25,18 @@
 # Simon Nilsson, 2023
 # Robin Calvin, 2023
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
-# Lasse L, 2023
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Yoann Baron, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Lasse L, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Yoann Baron, 2024\n"
+"Last-Translator: Lasse L, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -462,6 +462,14 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\" style=\"opacity: 0.7;\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Create tasks by sending an email to </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -508,14 +516,6 @@ msgstr "<span class=\"o_stat_text\">Bruttomarginal</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr "<span class=\"o_stat_text\">i återkommande fall</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -882,6 +882,14 @@ msgid "Archived"
 msgstr "Arkiverad"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Archived tasks cannot be recurring. Please unarchive the task first."
+msgstr ""
+"Arkiverade uppgifter kan inte vara återkommande. Vänligen avarkivera "
+"uppgiften först."
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
 msgstr "Är du säker på att du vill fortsätta?"
@@ -915,16 +923,6 @@ msgid "Assign to Me"
 msgstr "Tilldela mig"
 
 #. module: project
-#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
-msgid " assignee"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
-msgid " assignees"
-msgstr "tilldelad"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -943,7 +941,6 @@ msgid "Assigned to"
 msgstr "Tilldelad"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -954,7 +951,6 @@ msgstr "Tilldelad"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr "Tilldelad"
 
@@ -1131,6 +1127,26 @@ msgstr "Brinntidsdiagram"
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
 msgstr "Sätt som klart eller använd signal"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__day
+msgid "By Day"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__month
+msgid "By Month"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__year
+msgid "By Year"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
+msgid "By quarter"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1603,40 +1619,6 @@ msgstr ""
 "                lösa en uppgift eller ett problem."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
-msgstr ""
-"Personer för vilka detta projekt och dess uppgifter kommer att vara synliga.\n"
-"\n"
-"- Inbjudna interna användare: När interna användare följer ett projekt får de tillgång till alla dess uppgifter utan åtskillnad. I annat fall får de endast tillgång till de specifika uppgifter som de följer.\n"
-" En användare med behörighetsnivån projekt > administratör kan fortfarande få åtkomst till detta projekt och dess uppgifter, även om de inte uttryckligen är en del av följarna.\n"
-"\n"
-"- Alla interna användare: Alla interna användare har åtkomst till projektet och alla dess uppgifter utan åtskillnad.\n"
-"\n"
-"- Inbjudna portalanvändare och alla interna användare: alla interna användare har åtkomst till projektet och alla dess uppgifter utan åtskillnad.\n"
-"Om du följer ett projekt får portalanvändare tillgång till alla dess uppgifter utan åtskillnad. I annat fall får de endast tillgång till de specifika uppgifter som de följer.\n"
-"\n"
-"När ett projekt delas i skrivskyddat läge omdirigeras portalanvändaren till sin portal. De kan se uppgifterna, men inte redigera dem.\n"
-"När ett projekt delas i redigera omdirigeras portalanvändaren till kanban- och listvyerna för uppgifterna. De kan ändra ett utvalt antal fält i uppgifterna.\n"
-"\n"
-"I vilket fall som helst kan en intern användare utan projektåtkomsträttigheter fortfarande komma åt en uppgift, förutsatt att de får motsvarande URL (och att de är en del av följarna om projektet är privat)."
-
-#. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
 #: model:ir.actions.server,name:project.unlink_task_type_action
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -2026,6 +2008,7 @@ msgstr "fredag"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "Framtida aktiviteter"
@@ -2422,12 +2405,34 @@ msgstr ""
 
 #. module: project
 #. openerp-web
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid ""
+"It seems that some tasks are part of a recurrence. At least one of them must"
+" be kept as a model to create the next occurences."
+msgstr ""
+"Det verkar som om vissa uppgifter är en del av en återkommande händelse. "
+"Åtminstone en av dem måste bevaras som en modell för att skapa nästa "
+"tillfälle."
+
+#. module: project
+#. openerp-web
 #: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
 msgstr ""
 "Det verkar som om denna uppgift är en del av en återkommande händelse."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid ""
+"It seems that this task is part of a recurrence. You must keep it as a model"
+" to create the next occurences."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2581,6 +2586,7 @@ msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "Försenade aktiviteter"
@@ -3294,6 +3300,40 @@ msgstr ""
 "Överordnad modell innehåller alias. Modellen som innehåller aliasreferensen "
 "är inte nödvändigtvis den modell som ges av alias_model_id (exempel: projekt"
 " (parent_model) och aktivitet (modell))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+msgstr ""
+"Personer för vilka detta projekt och dess uppgifter kommer att vara synliga.\n"
+"\n"
+"- Inbjudna interna användare: När interna användare följer ett projekt får de tillgång till alla dess uppgifter utan åtskillnad. I annat fall får de endast tillgång till de specifika uppgifter som de följer.\n"
+" En användare med behörighetsnivån projekt > administratör kan fortfarande få åtkomst till detta projekt och dess uppgifter, även om de inte uttryckligen är en del av följarna.\n"
+"\n"
+"- Alla interna användare: Alla interna användare har åtkomst till projektet och alla dess uppgifter utan åtskillnad.\n"
+"\n"
+"- Inbjudna portalanvändare och alla interna användare: alla interna användare har åtkomst till projektet och alla dess uppgifter utan åtskillnad.\n"
+"Om du följer ett projekt får portalanvändare tillgång till alla dess uppgifter utan åtskillnad. I annat fall får de endast tillgång till de specifika uppgifter som de följer.\n"
+"\n"
+"När ett projekt delas i skrivskyddat läge omdirigeras portalanvändaren till sin portal. De kan se uppgifterna, men inte redigera dem.\n"
+"När ett projekt delas i redigera omdirigeras portalanvändaren till kanban- och listvyerna för uppgifterna. De kan ändra ett utvalt antal fält i uppgifterna.\n"
+"\n"
+"I vilket fall som helst kan en intern användare utan projektåtkomsträttigheter fortfarande komma åt en uppgift, förutsatt att de får motsvarande URL (och att de är en del av följarna om projektet är privat)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4189,6 +4229,7 @@ msgid "Show Project on Dashboard"
 msgstr "Visa projekt på instrumentpanelen"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "Visa alla poster som har nästa händelse före idag"
@@ -4560,6 +4601,7 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -4895,6 +4937,7 @@ msgstr "Idag"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "Dagens aktiviteter"
@@ -5302,14 +5345,12 @@ msgstr ""
 "deras uppgifter."
 
 #. module: project
-#. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
 msgstr "Du kan inte läsa %s-fält i uppgiften."
 
 #. module: project
-#. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
@@ -5341,6 +5382,16 @@ msgid ""
 msgstr ""
 "Du bör åtminstone ha en personlig scen. Skapa en ny scen som uppgifterna kan"
 " överföras till när den här scenen har raderats."
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+msgid "assignee"
+msgstr "Tilldelad"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+msgid "assignees"
+msgstr "tilldelade"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

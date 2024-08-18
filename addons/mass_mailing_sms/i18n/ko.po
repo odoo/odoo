@@ -11,20 +11,44 @@
 # Heesoo Choi, 2021
 # Sarah Park, 2023
 # Daye Jeong, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid ""
+"%s characters (including link trackers and opt-out link), fits in %s SMS "
+"(%s) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid "%s characters (including link trackers), fits in %s SMS (%s) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid "%s characters (including opt-out link), fits in %s SMS (%s) "
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -275,7 +299,6 @@ msgstr "블랙리스트 전화번호 제외"
 
 #. module: mass_mailing_sms
 #: model:mailing.mailing,name:mass_mailing_sms.mailing_sms_1
-#: model:mailing.mailing,sms_subject:mass_mailing_sms.mailing_sms_1
 #: model:utm.source,name:mass_mailing_sms.mailing_sms_1_utm_source
 msgid "Extra Promo"
 msgstr "추가 프로모션"
@@ -607,6 +630,11 @@ msgid "Opted Out"
 msgstr "선택하지 않음"
 
 #. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Options"
+msgstr "옵션"
+
+#. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_sms
 msgid "Outgoing SMS"
 msgstr "발신 SMS"
@@ -739,8 +767,8 @@ msgstr "SMS 당첨자 선택"
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS : %s"
-msgstr "SMS 중지 : %s"
+msgid "STOP SMS : %(unsubscribe_url)s"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -962,7 +990,6 @@ msgstr "잘못된 번호 형식"
 
 #. module: mass_mailing_sms
 #: model:mailing.mailing,name:mass_mailing_sms.mailing_sms_0
-#: model:mailing.mailing,sms_subject:mass_mailing_sms.mailing_sms_0
 #: model:utm.campaign,name:mass_mailing_sms.utm_campaign_0
 #: model:utm.source,name:mass_mailing_sms.mailing_sms_0_utm_source
 msgid "XMas Promo"

@@ -13,16 +13,17 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Malika Berardi, 2022
 # Loïc De Greef, 2022
-# Jolien De Paepe, 2023
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2023
+# Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-10 14:27+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Grégory Schreiner <gregory@mokatourisme.fr>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,15 +99,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"fa fa-arrow-right\"/>Comment configurer votre compte "
 "PayPal</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
-msgid ""
-"<span>Start selling directly without an account; an email will be sent by "
-"Paypal to create your new account and collect your payments.</span>"
-msgstr ""
-"<span>Commencez à vendre directement sans compte; un email sera envoyé par "
-"Paypal pour créer votre nouveau compte et encaisser vos paiements.</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -308,6 +300,13 @@ msgstr "Montant disponible pour remboursement"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
 msgstr "Montant maximum"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,field_description:payment.field_account_move__amount_paid
+#: model:ir.model.fields,field_description:payment.field_account_payment__amount_paid
+msgid "Amount paid"
+msgstr "Montant payé"
 
 #. module: payment
 #. openerp-web
@@ -627,6 +626,11 @@ msgid "Credit & Debit Card"
 msgstr "Carte de crédit & de débit"
 
 #. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
+msgid "Credit & Debit card (via Stripe)"
+msgstr "Carte de crédit et de débit (via Stripe)"
+
+#. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
 msgid "Credit Card (powered by Adyen)"
 msgstr "Carte de crédit (fournis par Adyen)"
@@ -668,6 +672,7 @@ msgstr "Carte de crédit (fourni par Sips)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
+#: model:ir.model.fields.selection,name:payment.selection__website_sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
 msgstr "Carte de crédit (via Stripe)"
 
@@ -680,6 +685,8 @@ msgstr "Devise"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__manual
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
+#: model:ir.model.fields.selection,name:payment.selection__website_sale_payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
 msgstr "Instructions de paiement"
 
@@ -800,7 +807,9 @@ msgid "Fixed international fees"
 msgstr "Frais fixes internationales "
 
 #. module: payment
+#: code:addons/payment/wizards/payment_link_wizard.py:0
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__acquirer_id
+#, python-format
 msgid "Force Payment Acquirer"
 msgstr "Forcez le fournisseur de paiement"
 
@@ -873,11 +882,15 @@ msgstr "Message d'aide"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__new_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_acquirer_onboarding_wizard__paypal_user_type__new_user
+#: model:ir.model.fields.selection,name:payment.selection__website_sale_payment_acquirer_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
 msgstr "Je n'ai pas de compte Paypal"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__existing_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_acquirer_onboarding_wizard__paypal_user_type__existing_user
+#: model:ir.model.fields.selection,name:payment.selection__website_sale_payment_acquirer_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
 msgstr "J'ai un compte Paypal"
 
@@ -1257,6 +1270,8 @@ msgstr "Autre"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
+#: model:ir.model.fields.selection,name:payment.selection__website_sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
 msgstr "Autre intermédiaire de Paiement"
 
@@ -1291,6 +1306,8 @@ msgstr "Payer"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_acquirer_onboarding_wizard__payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__website_sale_payment_acquirer_onboarding_wizard__payment_method__paypal
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 msgid "PayPal"
 msgstr "PayPal"
@@ -1506,12 +1523,6 @@ msgstr "Veuillez sélectionner une seule option de paiement."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Veuillez définir un montant inférieur à %s."
-
-#. module: payment
-#: code:addons/payment/controllers/portal.py:0
-#, python-format
-msgid "Please switch to company '%s' to make this payment."
-msgstr "Veuillez passer à la société '%s' pour effectuer ce paiement."
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1829,6 +1840,13 @@ msgstr "La référence du fournisseur du jeton de la transaction"
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
 msgstr "La référence fournisseur de la transaction"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,help:payment.field_account_move__amount_paid
+#: model:ir.model.fields,help:payment.field_account_payment__amount_paid
+msgid "The amount already paid for this invoice."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_refund_wizard.py:0
@@ -2268,14 +2286,14 @@ msgstr ""
 "Vous pouvez cliquer ici pour être redirigé vers la page de confirmation."
 
 #. module: payment
-#: code:addons/payment/models/account_journal.py:0
+#: code:addons/payment/models/account_payment_method.py:0
 #, python-format
 msgid ""
-"You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
-"Linked acquirer(s): %s"
+"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"Linked providers(s): %s"
 msgstr ""
-"Vous ne pouvez pas supprimer un mode de paiement associé à un intermédiaire en mode activé ou test. \n"
-"Intermédiaire(s) associé(s) : %s"
+"Vous ne pouvez pas supprimer un mode de paiement qui est lié à un fournisseur dont le statut est activé ou test.\n"
+"Fournisseur(s) lié(s) : %s"
 
 #. module: payment
 #: code:addons/payment/models/ir_ui_view.py:0
@@ -2286,10 +2304,28 @@ msgstr ""
 "de paiement."
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot delete the payment acquirer %s; disable it or uninstall it "
+"instead."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
 msgstr "Vous n'avez pas accès à ce jeton de paiement."
+
+#. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment acquirer before deleting its journal.\n"
+"Linked acquirer(s): %s"
+msgstr ""
+"Vous devez désactiver un fournisseur de paiement avant de supprimer son journal. \n"
+"Fournisseur(s) associé(s) : %s"
 
 #. module: payment
 #. openerp-web

@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Haojun Zou <apollo_zhj@msn.com>, 2021
 # Simon S, 2021
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Lasse Larsson, 2023
+# Lasse L, 2023
+# Martin Trigaux, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Lasse Larsson, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,11 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
 msgstr "Kopiera rader"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
+msgid "Country Code"
+msgstr "Landskod"
 
 #. module: account_debit_note
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
@@ -160,6 +166,15 @@ msgstr "Ursprungliga fakturan debiterades"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 msgid "Reason"
 msgstr "Anledning"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO-landskoden med två tecken.\n"
+"Du kan använda det här fältet för snabb sökning."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids

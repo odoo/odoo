@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Felipe Leal Coutinho <felipe@felipelc.com>, 2021
-# Martin Trigaux, 2022
+# Martin Trigaux, 2021
 # Jolien De Paepe, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
-# Wil Odoo, 2023
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -377,11 +377,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Pré-visualização do vídeo</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
-msgstr "<span>Seu pagamento foi autorizado.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -996,16 +991,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Categorias secundárias"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"A alteração do nome não é permitida após a emissão de faturas para sua "
-"conta. Entre em contato conosco diretamente para esta operação."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1625,6 +1610,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Se você estiver fazendo o pedido para uma pessoa externa, faça seu pedido "
+"por meio do back-end. Se você deseja alterar seu nome ou endereço de e-mail,"
+" faça-o nas configurações da conta ou entre em contato com o administrador."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1659,18 +1656,6 @@ msgstr "Imagem 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Nome da Imagem"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Se você estiver fazendo o pedido para uma pessoa externa, faça seu pedido "
-"por meio do back-end. Se você deseja alterar seu nome ou endereço de e-mail,"
-" faça-o nas configurações da conta ou entre em contato com o administrador."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2512,6 +2497,11 @@ msgid "Products Recently Sold With Product"
 msgstr "Produtos vendidos recentemente com produto"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr "Faixa de opções de produtos"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Visualizações de Produtos"
@@ -3088,11 +3078,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Acessórios sugeridos no carrinho de compras do e-Commerce"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "Imposto"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Marcador"
@@ -3361,6 +3346,11 @@ msgstr "Total Vendido sem Impostos"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr "Carregue um arquivo de sua biblioteca local."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "Imposto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3659,6 +3649,11 @@ msgid "Your cart is empty!"
 msgstr "Seu carrinho está vazio!"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Seu pagamento foi autorizado."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Seu carrinho anterior já foi concluído."
@@ -3677,6 +3672,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "código..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

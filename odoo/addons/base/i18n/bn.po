@@ -6,6 +6,7 @@
 # Khanstore <dmashraf@gmail.com>, 2022
 # Abu Zafar <azmikbal@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Noor E Alam Siddique, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Bengali (https://www.transifex.com/odoo/teams/41243/bn/)\n"
+"Last-Translator: Noor E Alam Siddique, 2023\n"
+"Language-Team: Bengali (https://app.transifex.com/odoo/teams/41243/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -7630,7 +7631,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_account
 msgid "Account"
-msgstr ""
+msgstr "হিসাব"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -8179,7 +8180,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #, python-format
 msgid "Address"
-msgstr ""
+msgstr "ঠিকানা"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -10280,7 +10281,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__category_id
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Category"
-msgstr ""
+msgstr "শ্রেণী"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -10543,7 +10544,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
-msgstr ""
+msgstr "শহর"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
@@ -10553,7 +10554,7 @@ msgstr "শহর ঠিকানা"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
 msgid "Client"
-msgstr ""
+msgstr "ক্রেতা"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
@@ -10900,6 +10901,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
 msgstr ""
 
 #. module: base
@@ -11320,6 +11327,12 @@ msgstr "দেশজ গোষ্ঠীসমূহ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
 msgstr ""
 
 #. module: base
@@ -13323,6 +13336,15 @@ msgid "Error message returned when the constraint is violated."
 msgstr ""
 
 #. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -14390,6 +14412,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
 msgstr ""
 
 #. module: base
@@ -16429,6 +16456,18 @@ msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -16565,7 +16604,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_stock
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Inventory"
-msgstr ""
+msgstr "মালপত্র"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
@@ -16608,7 +16647,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
 msgid "Invoicing"
-msgstr ""
+msgstr "চালান"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
@@ -16913,7 +16952,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -21480,7 +21519,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment
 msgid "Payment"
-msgstr ""
+msgstr "মূল্যপরিশোধ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
@@ -23092,7 +23131,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
 #: model:ir.ui.menu,name:base.reporting_menuitem
 msgid "Reporting"
-msgstr ""
+msgstr "প্রতিবেদন"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
@@ -23765,6 +23804,12 @@ msgid "Scheduled Actions Triggers"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr ""
@@ -24038,6 +24083,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr ""
 
@@ -24178,7 +24231,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_profile__session
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_search
 msgid "Session"
-msgstr ""
+msgstr "অধিবেসন"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
@@ -25415,6 +25468,12 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 
@@ -25485,7 +25544,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
+msgid "Those modules cannot be uninstalled: %s"
 msgstr ""
 
 #. module: base
@@ -25500,6 +25559,14 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
 msgstr ""
 
 #. module: base
@@ -25545,7 +25612,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -25801,7 +25867,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
 msgstr ""
 
 #. module: base
@@ -26249,6 +26316,14 @@ msgstr ""
 msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
 msgstr ""
 
 #. module: base
@@ -26809,6 +26884,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr ""
 
@@ -28375,6 +28455,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
@@ -28399,6 +28487,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -28417,6 +28511,20 @@ msgid ""
 "You should rather archive them after archiving their associated user.\n"
 "\n"
 "Linked active users : %(names)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
 msgstr ""
 
 #. module: base
@@ -28444,6 +28552,12 @@ msgstr ""
 msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
 msgstr ""
 
 #. module: base
@@ -28614,6 +28728,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary
 msgid "binary"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "binary_field_real_user should be a res.users record."
 msgstr ""
 
 #. module: base
@@ -29199,4 +29319,10 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
 msgstr ""

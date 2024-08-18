@@ -3,17 +3,18 @@
 # 	* fetchmail_gmail
 # 
 # Translators:
-# Kevilyn Rosa, 2023
 # Carlos Eduardo Nissola Migliavacca <carlos.migliavacca@gmail.com>, 2023
-# Layna Nascimento, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Kevilyn Rosa, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0+e\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-25 14:36+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2022-03-03 13:46+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,9 +45,29 @@ msgid ""
 msgstr ""
 
 #. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token
+msgid "Access Token"
+msgstr "Token de acesso"
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token_expiration
+msgid "Access Token Expiration Timestamp"
+msgstr "Data e hora de expiração do token de acesso"
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_authorization_code
+msgid "Authorization Code"
+msgstr "Código de autorização"
+
+#. module: fetchmail_gmail
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
 msgid "Gmail"
 msgstr "Gmail"
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__use_google_gmail_service
+msgid "Gmail Authentication"
+msgstr "Autenticação Gmail"
 
 #. module: fetchmail_gmail
 #: code:addons/fetchmail_gmail/models/fetchmail_server.py:0
@@ -60,6 +81,11 @@ msgid "Incoming Mail Server"
 msgstr "Servidor de recebimento de e-mails"
 
 #. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_refresh_token
+msgid "Refresh Token"
+msgstr "Atualizar token"
+
+#. module: fetchmail_gmail
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
 msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
@@ -67,3 +93,13 @@ msgid ""
 msgstr ""
 "Configure suas credenciais de API do Gmail nas configurações gerais para "
 "vincular uma conta do Gmail."
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,help:fetchmail_gmail.field_fetchmail_server__google_gmail_uri
+msgid "The URL to generate the authorization code from Google"
+msgstr "O URL para gerar o código de autorização do Google"
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_uri
+msgid "URI"
+msgstr "URL"

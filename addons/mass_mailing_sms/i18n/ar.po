@@ -5,20 +5,44 @@
 # Translators:
 # Martin Trigaux, 2021
 # Malaz Abuidris <msea@odoo.com>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid ""
+"%s characters (including link trackers and opt-out link), fits in %s SMS "
+"(%s) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid "%s characters (including link trackers), fits in %s SMS (%s) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid "%s characters (including opt-out link), fits in %s SMS (%s) "
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -273,7 +297,6 @@ msgstr "استثناء أرقام الهواتف المدرجة في القائ�
 
 #. module: mass_mailing_sms
 #: model:mailing.mailing,name:mass_mailing_sms.mailing_sms_1
-#: model:mailing.mailing,sms_subject:mass_mailing_sms.mailing_sms_1
 #: model:utm.source,name:mass_mailing_sms.mailing_sms_1_utm_source
 msgid "Extra Promo"
 msgstr "الترويج الإضافي "
@@ -615,6 +638,11 @@ msgid "Opted Out"
 msgstr "انسحب "
 
 #. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Options"
+msgstr "الخيارات"
+
+#. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_sms
 msgid "Outgoing SMS"
 msgstr "الرسائل النصية القصيرة الصادرة "
@@ -747,8 +775,8 @@ msgstr "اختيار الفائز عن طريق الرسائل النصية ال
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS : %s"
-msgstr "إيقاف الرسائل النصية القصيرة: %s "
+msgid "STOP SMS : %(unsubscribe_url)s"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -980,7 +1008,6 @@ msgstr "صيغة الرقم خطأ "
 
 #. module: mass_mailing_sms
 #: model:mailing.mailing,name:mass_mailing_sms.mailing_sms_0
-#: model:mailing.mailing,sms_subject:mass_mailing_sms.mailing_sms_0
 #: model:utm.campaign,name:mass_mailing_sms.utm_campaign_0
 #: model:utm.source,name:mass_mailing_sms.mailing_sms_0_utm_source
 msgid "XMas Promo"

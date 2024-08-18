@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
@@ -102,6 +102,13 @@ msgid ""
 msgstr ""
 
 #. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Invalid Adyen request"
+msgstr ""
+
+#. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
@@ -150,22 +157,13 @@ msgstr ""
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid "Terminal %s is already used on payment method %s."
+msgid "Terminal %s is already used in company %s on payment method %s."
 msgstr ""
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid "Terminal %s is already used in company %s on payment method %s."
-msgstr ""
-
-#. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
-#, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
+msgid "Terminal %s is already used on payment method %s."
 msgstr ""
 
 #. module: pos_adyen

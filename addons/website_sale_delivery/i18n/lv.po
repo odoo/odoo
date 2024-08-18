@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
 "Last-Translator: Will Sensors, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_shipping_method
 msgid "<b>Shipping Method: </b>"
 msgstr ""
 
@@ -102,7 +102,6 @@ msgstr ""
 #. module: website_sale_delivery
 #. openerp-web
 #: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 #, python-format
 msgid "Free"
 msgstr "Brīvs"
@@ -134,6 +133,12 @@ msgstr ""
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
+msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
 msgstr ""
 
 #. module: website_sale_delivery

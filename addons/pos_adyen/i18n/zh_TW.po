@@ -5,14 +5,15 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,6 +103,13 @@ msgid ""
 msgstr "無法連接到Odoo服務器,請檢查您的互聯網連接並重試。"
 
 #. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Invalid Adyen request"
+msgstr "Adyen 請求無效"
+
+#. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
@@ -150,23 +158,14 @@ msgstr "用於確定終端是否仍處於連接狀態的技術欄位."
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid "Terminal %s is already used on payment method %s."
-msgstr "終端 %s 已用於付款方式 %s."
-
-#. module: pos_adyen
-#: code:addons/pos_adyen/models/pos_payment_method.py:0
-#, python-format
 msgid "Terminal %s is already used in company %s on payment method %s."
 msgstr "終端%s已在公司%s的付款方式%s中使用."
 
 #. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
-msgstr "與您的支付終端的連接失敗. 請檢查它是否仍然連接到網際網路."
+msgid "Terminal %s is already used on payment method %s."
+msgstr "終端 %s 已用於付款方式 %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key

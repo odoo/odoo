@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -114,7 +114,6 @@ msgstr "שנה ראשונה"
 #: model:product.product,description_sale:product.product_product_4
 #: model:product.product,description_sale:product.product_product_4b
 #: model:product.product,description_sale:product.product_product_4c
-#: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
 msgstr "160X80 ס\"מ, עם רגליים גדולות."
@@ -678,7 +677,6 @@ msgstr "צור קשר"
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
 msgstr "צור קשר"
@@ -822,7 +820,6 @@ msgstr "מזהה לקוח"
 #: model:product.product,name:product.product_product_4
 #: model:product.product,name:product.product_product_4b
 #: model:product.product,name:product.product_product_4c
-#: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
 msgstr "שולחן הניתן להתאמה אישית"
@@ -1044,7 +1041,6 @@ msgstr ""
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
 msgstr "ארגונומי"
@@ -1534,7 +1530,6 @@ msgstr "שורות"
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
 msgstr "ייצור מקומי"
@@ -1549,7 +1544,6 @@ msgstr "לוגיסטיקה"
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
@@ -1863,7 +1857,6 @@ msgstr "פאונד"
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
@@ -2617,7 +2610,6 @@ msgstr "הראשון ברצף הוא ברירת המחדל."
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
@@ -2676,6 +2668,12 @@ msgid ""
 msgstr ""
 "הכמות לרכישה מספק זה בכדי ליהנות מהמחיר, הבאה לידי ביטוי ביחידת המידה אם יש "
 "כזו. אחרת, ביחידת מידת ברירת המחדל של המוצר."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2856,7 +2854,6 @@ msgstr "שם יחידת המידה"
 #: model:product.product,uom_name:product.product_product_4
 #: model:product.product,uom_name:product.product_product_4b
 #: model:product.product,uom_name:product.product_product_4c
-#: model:product.product,uom_name:product.product_product_4d
 #: model:product.product,uom_name:product.product_product_5
 #: model:product.product,uom_name:product.product_product_6
 #: model:product.product,uom_name:product.product_product_7
@@ -3125,7 +3122,6 @@ msgstr "אזהרות"
 #: model_terms:product.product,website_description:product.product_product_4
 #: model_terms:product.product,website_description:product.product_product_4b
 #: model_terms:product.product,website_description:product.product_product_4c
-#: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"

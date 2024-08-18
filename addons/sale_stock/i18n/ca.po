@@ -7,21 +7,21 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2021
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
 # RGB Consulting <odoo@rgbconsulting.com>, 2021
-# Quim - eccit <quim@eccit.com>, 2021
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # M Palau <mpalau@tda.ad>, 2021
 # Arnau Ros, 2021
 # Josep Anton Belchi, 2021
 # Jonatan Gk, 2022
 # marcescu, 2022
+# Quim - eccit <quim@eccit.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -453,12 +453,6 @@ msgid "On"
 msgstr "On"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid "Ordered quantity decreased!"
-msgstr "La quantitat demanada ha disminuït!"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
 msgstr "Política de recollida"
@@ -532,6 +526,11 @@ msgstr "Comandes de venda"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
 msgstr "Comptador d'ordres de venda "
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Vendes. Bestreta pagament factura"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -729,16 +728,6 @@ msgstr "Quan tots els productes estan preparats"
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
 msgstr "Quan començar a enviar"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
-msgstr ""
-"Està reduint la quantitat perduda! No oblidi actualitzar manualment l'ordre "
-"d'entrega si és necessari."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0

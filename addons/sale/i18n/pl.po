@@ -26,7 +26,6 @@
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
 # Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2021
 # DanielDemedziuk <daniel.demedziuk@gmail.com>, 2021
-# Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
 # Dawid Prus, 2021
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
 # Maksym <ms@myodoo.pl>, 2022
@@ -40,14 +39,16 @@
 # Janusz Harkot <jh@trilab.pl>, 2023
 # Jolien De Paepe, 2023
 # Damian Ratus, 2024
+# Wil Odoo, 2024
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-10 09:48+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Damian Ratus, 2024\n"
+"Last-Translator: Rafał Kozak <rafal.kozak@openglobe.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -680,10 +681,10 @@ msgstr "<span class=\"oe_read_only\">/ Miesiąc</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Kwota</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Cena całkowita</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Cena całkowita</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2783,7 +2784,6 @@ msgstr "Liczba zamówień"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
-#: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -2795,6 +2795,11 @@ msgstr "Liczba zamówień"
 #, python-format
 msgid "Order Date"
 msgstr "Data zamówienia"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
+msgstr "Data zamówienia: ostatnie 365 dni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3320,7 +3325,6 @@ msgid "Recompute all prices based on this pricelist"
 msgstr "Oblicz ponownie wszystkie ceny bazując na Cenniku"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3900,7 +3904,6 @@ msgid "Specific Email"
 msgstr "Specyficzny email"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
@@ -4621,6 +4624,8 @@ msgid "Volume"
 msgstr "Objętość"
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning

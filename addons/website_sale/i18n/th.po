@@ -9,18 +9,18 @@
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
+# Martin Trigaux, 2021
 # Wichanon Jamwutthipreecha, 2022
-# Martin Trigaux, 2022
-# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -391,11 +391,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>ดูตัวอย่างวิดีโอ</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
-msgstr "<span>การชำระเงินของคุณได้รับการอนุมัติแล้ว</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -1096,16 +1091,6 @@ msgid "Children Categories"
 msgstr "หมวดหมู่เด็ก"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "เลือกวิธีการชำระเงิน"
@@ -1705,6 +1690,18 @@ msgid "ID"
 msgstr "ไอดี"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"หากคุณกำลังสั่งซื้อสำหรับบุคคลภายนอก โปรดสั่งซื้อผ่านทางแบ็กเอนด์ "
+"หากคุณต้องการเปลี่ยนชื่อหรือที่อยู่อีเมลของคุณ "
+"โปรดดำเนินการในการตั้งค่าบัญชีหรือติดต่อผู้ดูแลระบบของคุณ"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1739,18 +1736,6 @@ msgstr "รูปภาพ 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "ชื่อรูปภาพ"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"หากคุณกำลังสั่งซื้อสำหรับบุคคลภายนอก โปรดสั่งซื้อผ่านทางแบ็กเอนด์ "
-"หากคุณต้องการเปลี่ยนชื่อหรือที่อยู่อีเมลของคุณ "
-"โปรดดำเนินการในการตั้งค่าบัญชีหรือติดต่อผู้ดูแลระบบของคุณ"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2584,6 +2569,11 @@ msgid "Products Recently Sold With Product"
 msgstr "สินค้าที่เพิ่งขายพร้อมสินค้า"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr "ริบบิ้นสินค้า"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "ดูสินค้า"
@@ -3155,11 +3145,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "อุปกรณ์เสริมที่แนะนำในรถเข็นสินค้าอีคอมเมิร์ซ"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "ภาษีมูลค่าเพิ่ม (VAT)"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "แท็ก"
@@ -3421,6 +3406,11 @@ msgstr "ยอดขายทั้งหมดไม่รวมภาษี"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr "อัปโหลดไฟล์จากห้องสมุดท้องถิ่นของคุณ"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "ภาษีมูลค่าเพิ่ม (VAT)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3716,6 +3706,11 @@ msgid "Your cart is empty!"
 msgstr "รถเข็นของคุณว่างเปล่า!"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "การชำระเงินของคุณได้รับการอนุมัติแล้ว"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "รถเข็นก่อนหน้าของคุณเสร็จสมบูรณ์แล้ว"
@@ -3734,6 +3729,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "โค้ด..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

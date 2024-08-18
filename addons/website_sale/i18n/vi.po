@@ -5,6 +5,7 @@
 # Translators:
 # Manh Vu <vuducmanh96vp@gmail.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
+# Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
 # Nancy Momoland <thanh.np2502@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
@@ -12,17 +13,16 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Vo Thanh Thuy, 2021
 # Thin Tran <trvathin@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wil Odoo, 2023
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -389,11 +389,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Xem trước video</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
-msgstr "<span>Thanh toán của bạn đã được chứng thực.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -1098,17 +1093,6 @@ msgid "Children Categories"
 msgstr "Danh mục con"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Không được phép thay đổi tên của bạn khi đã lập hóa đơn hành cho tài khoản "
-"của bạn. Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện hoạt động "
-"này."
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "Chọn phương thức thanh toán"
@@ -1716,6 +1700,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
+"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
+"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1750,18 +1746,6 @@ msgstr "Ảnh 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Tên hình"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
-"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
-"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2598,6 +2582,11 @@ msgid "Products Recently Sold With Product"
 msgstr "Sản phẩm được bán gần đây kèm theo sản phẩm"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr "Ruy băng sản phẩm"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Lượt xem sản phẩm"
@@ -3171,11 +3160,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Phụ kiện được gợi ý trong giỏ hàng eCommerce "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "Mã số thuế"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Thẻ"
@@ -3438,6 +3422,11 @@ msgstr "Tổng đã bán chưa thuế"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr "Tải lên tệp từ thư viện nội bộ của bạn. "
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "Mã số thuế"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3736,6 +3725,11 @@ msgid "Your cart is empty!"
 msgstr "Giỏ hàng của bạn đang trống!"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Thanh toán của bạn đã được chứng thực."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Giỏ hàng trước của bạn đã được hoàn thành."
@@ -3754,6 +3748,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "mã..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

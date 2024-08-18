@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:55+0000\n"
+"POT-Creation-Date: 2024-08-14 15:44+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +88,22 @@ msgstr ""
 "<small class=\"form-text text-muted\">لا يسمح بتغيير اسم شركتك أو رقم ضريبة "
 "القيمة المضافة بمجرد أن يتم إصدار مستند (مستندات) لحسابك. <br/>يرجى التواصل "
 "معنا مباشرة لهذه العملية.</small> "
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"السابق \"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" "
+"title=\"التالي \"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -321,12 +337,6 @@ msgstr "إضافة محتوى إضافي لعرضه في البريد الإكت
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "تمت إضافته في "
-
-#. module: portal
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "يجب تقديم رمز وصول لكل مرفق. "
 
 #. module: portal
 #. openerp-web
@@ -648,16 +658,16 @@ msgid "Important:"
 msgstr "مهم: "
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "Internal User"
-msgstr "مستخدم داخلي"
-
-#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal Note"
 msgstr "ملاحظة داخلية"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Internal User"
+msgstr "مستخدم داخلي"
 
 #. module: portal
 #. openerp-web
@@ -703,6 +713,13 @@ msgid ""
 msgstr ""
 "من المهم جداً أن يكون هذا الوصف واضحاً\n"
 "                وكاملاً، "
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -801,7 +818,6 @@ msgstr "كلمة السر الجديدة: "
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "التالي"
@@ -894,11 +910,6 @@ msgid "Powered by"
 msgstr "مشغل بواسطة "
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "السابق"
-
-#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -961,6 +972,7 @@ msgstr "الأمان "
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "ضبط الأمان "
@@ -1049,13 +1061,6 @@ msgstr "لا يمكن إزالة المرفق %s لأنه مرتبط برسال�
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "لا يمكن إزالة المرفق %s لأن حالته معلّقة. "
-
-#. module: portal
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "المرفق %s غير موجود أو إنك لا تملك حق الوصول إليه. "
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0

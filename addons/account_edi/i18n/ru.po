@@ -9,16 +9,16 @@
 # GulShar Mungatova <mungatova@gmail.com>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
 # Martin Trigaux, 2022
-# Wil Odoo, 2024
 # Collex100, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Collex100, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,14 @@ msgstr " Предупреждение(я) об электронном выста
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "Поступил запрос на отмену EDI."
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
+#: code:addons/account_edi/models/account_payment.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
 msgstr "Запрос на отмену EDI был отозван."
@@ -82,6 +84,7 @@ msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Call off EDI Cancellation"
 msgstr "Отзыв EDI Отмена"
 
@@ -351,12 +354,23 @@ msgid "Process now"
 msgstr "Процесс сейчас"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Единица измерения продукта"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Переделайте последовательность записей в журнале."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Отчет о действияx "
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Request EDI Cancellation"
 msgstr "Запрос на отмену ЭДО"
 

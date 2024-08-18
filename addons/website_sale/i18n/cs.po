@@ -13,20 +13,20 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # Jiří Podhorecký, 2022
-# Wil Odoo, 2023
 # Jakub Krkoška, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Katerina Horylova, 2024
 # Jakub Smolka, 2024
 # Vojtech Smolka, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 11:51+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Vojtech Smolka, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -382,11 +382,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video náhled</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<span>Your payment has been authorized.</span>"
-msgstr "<span>Vaše platba byla autorizována.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -998,16 +993,6 @@ msgid "Children Categories"
 msgstr "Podřízené kategorie"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Změna jména není povolena po vystavení faktur pro váš účet. Kontaktujte nás "
-"prosím přímo pro tuto operaci."
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "Zvolte způsob platby"
@@ -1611,6 +1596,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Pokud objednáváte za externí osobu, prosím proveďte objednávku "
+"prostřednictvím backendu. Pokud si přejete změnit své jméno nebo e-mailovou "
+"adresu, proveďte tak v nastavení účtu nebo kontaktujte svého správce."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1645,18 +1642,6 @@ msgstr "Obrázek 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Název obrázku"
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Pokud objednáváte za externí osobu, prosím proveďte objednávku "
-"prostřednictvím backendu. Pokud si přejete změnit své jméno nebo e-mailovou "
-"adresu, proveďte tak v nastavení účtu nebo kontaktujte svého správce."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2495,6 +2480,11 @@ msgid "Products Recently Sold With Product"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+msgid "Products Ribbon"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr "Zobrazení produktů"
@@ -3070,11 +3060,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Navrhované příslušenství v košíku elektronického obchodu"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "VAT"
-msgstr "DIČ"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Tag"
@@ -3334,6 +3319,11 @@ msgstr "Celkem prodáno bez daně"
 #, python-format
 msgid "Upload a file from your local library."
 msgstr "Nahrát soubor z místní knihovny."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "VAT"
+msgstr "DIČ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3630,6 +3620,11 @@ msgid "Your cart is empty!"
 msgstr "váš košík je prázdný!"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Vaše platba byla autorizována"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Váš předchozí košík již byl dokončen."
@@ -3648,6 +3643,13 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "code..."
 msgstr "kód..."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "col-lg-6 col-12"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options

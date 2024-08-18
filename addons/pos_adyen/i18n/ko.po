@@ -6,14 +6,15 @@
 # JH CHOI <hwangtog@gmail.com>, 2021
 # 조성현 (jaymz9634) <jaymz9634@gmail.com>, 2021
 # Sarah Park, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +104,13 @@ msgid ""
 msgstr "Odoo 서버에 연결할 수 없습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
 #. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Invalid Adyen request"
+msgstr "잘못된 Adyen 요청"
+
+#. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
@@ -151,23 +159,14 @@ msgstr "터미널이 여전히 연결되어 있는지 확인하는 데 사용되
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid "Terminal %s is already used on payment method %s."
-msgstr "터미널 %s는 결제 방법 %s에 이미 사용되고 있습니다."
-
-#. module: pos_adyen
-#: code:addons/pos_adyen/models/pos_payment_method.py:0
-#, python-format
 msgid "Terminal %s is already used in company %s on payment method %s."
 msgstr "%s 단말기는 이미 %s 회사에서 %s 결제 방법으로 사용 중입니다."
 
 #. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
-msgstr "결제 터미널에 연결하지 못했습니다. 인터넷에 여전히 연결되어 있는지 확인하십시오."
+msgid "Terminal %s is already used on payment method %s."
+msgstr "터미널 %s는 결제 방법 %s에 이미 사용되고 있습니다."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key

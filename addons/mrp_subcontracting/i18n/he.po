@@ -4,27 +4,27 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# ExcaliberX <excaliberx@gmail.com>, 2021
 # Yihya Hugirat <hugirat@gmail.com>, 2021
-# דודי מלכה <Dudimalka6@gmail.com>, 2021
 # Ofir Blum <ofir.blum@gmail.com>, 2021
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Netta Waizer, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# ExcaliberX <excaliberx@gmail.com>, 2024
+# דודי מלכה <Dudimalka6@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -127,6 +127,11 @@ msgid "Mandatory"
 msgstr ""
 
 #. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_nosuggest_ids
+msgid "Move Line Nosuggest"
+msgstr "Move Line Nosuggest"
+
+#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to record"
@@ -137,6 +142,11 @@ msgstr ""
 #, python-format
 msgid "Operation not supported"
 msgstr "הפעולה אינה נתמכת"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
+msgid "Operations without package"
+msgstr "פעולות ללא אריזה"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -363,8 +373,14 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__incoming_picking
 msgid "Transfer"
 msgstr "העברה"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_stock_move_line_tree_view
+msgid "Unit of Measure"
+msgstr "יחידת מידה"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse

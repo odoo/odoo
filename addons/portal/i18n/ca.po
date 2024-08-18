@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:55+0000\n"
+"POT-Creation-Date: 2024-08-14 15:44+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Josep Anton Belchi, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -101,6 +101,18 @@ msgstr ""
 "vostra empresa un cop s'hagin emès els document(s) per al vostre "
 "compte<br/>Si us plau, poseu-vos en contacte amb nosaltres directament per a"
 " aquesta operació.</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -334,12 +346,6 @@ msgstr "Afegir contingut addicional per mostrar al correu electrònic"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "Afegit el"
-
-#. module: portal
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Cal facilitar un token d'accés per a cada adjunt"
 
 #. module: portal
 #. openerp-web
@@ -661,16 +667,16 @@ msgid "Important:"
 msgstr "Important:"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "Internal User"
-msgstr "Usuari intern"
-
-#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal Note"
 msgstr "Nota interna"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Internal User"
+msgstr "Usuari intern"
 
 #. module: portal
 #. openerp-web
@@ -716,6 +722,13 @@ msgid ""
 msgstr ""
 "És molt important que aquesta descripció sigui clara\n"
 "                i completa,"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -814,7 +827,6 @@ msgstr "Nova contrasenya:"
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Següent"
@@ -910,11 +922,6 @@ msgid "Powered by"
 msgstr "Impulsat per"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Anterior"
-
-#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -977,6 +984,7 @@ msgstr "Seguretat"
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Control de seguretat"
@@ -1067,13 +1075,6 @@ msgstr "L'adjunt %s no es pot eliminar perquè està enllaçat a un missatge."
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "L'adjunt %s no es pot eliminar perquè no està en un estat pendent."
-
-#. module: portal
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "L'adjunt %s no existeix o no hi teniu drets d'accès."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0

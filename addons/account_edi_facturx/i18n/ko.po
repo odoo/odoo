@@ -7,14 +7,15 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2022-01-24 09:06+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,9 +29,20 @@ msgid "1.0"
 msgstr "1.0"
 
 #. module: account_edi_facturx
+#: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_facturx_export
+msgid "42"
+msgstr "42"
+
+#. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "ConformanceLevel"
 msgstr ""
+
+#. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid "Display the currency"
+msgstr "통화 표시"
 
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
@@ -41,12 +53,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "DocumentType"
 msgstr ""
-
-#. module: account_edi_facturx
-#: code:addons/account_edi_facturx/models/account_edi_format.py:0
-#, python-format
-msgid "Display the currency"
-msgstr "통화 표시"
 
 #. module: account_edi_facturx
 #: model:ir.model,name:account_edi_facturx.model_account_edi_format
@@ -76,14 +82,6 @@ msgstr "Odoo에서 생성된 청구서"
 #. module: account_edi_facturx
 #: code:addons/account_edi_facturx/models/account_edi_format.py:0
 #, python-format
-msgid ""
-"The currency (%s) of the document you are uploading is not active in this database.\n"
-"Please activate it before trying again to import."
-msgstr ""
-
-#. module: account_edi_facturx
-#: code:addons/account_edi_facturx/models/account_edi_format.py:0
-#, python-format
 msgid "No information about the journal or the type of invoice is passed"
 msgstr "분개장 또는 송장 유형에 대한 정보가 전달되지 않습니다."
 
@@ -91,6 +89,11 @@ msgstr "분개장 또는 송장 유형에 대한 정보가 전달되지 않습�
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "Odoo"
 msgstr "Odoo"
+
+#. module: account_edi_facturx
+#: model:ir.model,name:account_edi_facturx.model_account_tax
+msgid "Tax"
+msgstr "세금"
 
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
@@ -108,6 +111,20 @@ msgid "The conformance level of the embedded Factur-X data"
 msgstr ""
 
 #. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The currency (%s) of the document you are uploading is not active in this database.\n"
+"Please activate it before trying again to import."
+msgstr ""
+
+#. module: account_edi_facturx
+#: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_facturx_export
+#: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_line_facturx_export
+msgid "VAT"
+msgstr "부가가치세"
+
+#. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "Version"
 msgstr "버전"
@@ -123,6 +140,11 @@ msgid "factur-x.xml"
 msgstr "factur-x.xml"
 
 #. module: account_edi_facturx
+#: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_line_facturx_export
+msgid "false"
+msgstr "X"
+
+#. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "fx"
 msgstr "fx"
@@ -134,8 +156,8 @@ msgstr ""
 
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_facturx_export
-msgid "urn:cen.eu:en16931:2017"
-msgstr "urn:cen.eu:en16931:2017"
+msgid "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
+msgstr ""
 
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata

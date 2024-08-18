@@ -7,14 +7,15 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -394,7 +395,7 @@ msgid "No data yet"
 msgstr "Noch keine Daten vorhanden"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/account_invoice.py:0
+#: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
@@ -442,11 +443,14 @@ msgstr "Beschaffungspunkt"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months; the number of products received on time divided by "
-"the number of ordered products."
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"In den letzten 12 Monaten; die Anzahl der fristgerecht eingegangenen "
-"Produkte geteilt durch die Anzahl der bestellten Produkte."
+"Über die letzten x Tage; die Anzahl der pünktlich erhaltenen Produkte "
+"geteilt durch die Anzahl der bestellten Produkte.x ist entweder der "
+"Systemparameter purchase_stock.on_time_delivery_days oder der Standardwert "
+"365"
 
 #. module: purchase_stock
 #. openerp-web
@@ -456,6 +460,7 @@ msgid "Process all the receipt quantities."
 msgstr "Verarbeiten Sie alle Eingangsmengen."
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "Beschaffungsgruppe"

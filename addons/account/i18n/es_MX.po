@@ -5,20 +5,21 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
 # Aimée Mendoza Sánchez, 2023
-# Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Lucia Pacheco, 2023
+# Fernanda Alvarez, 2024
+# Iran Villalobos López, 2024
+# Braulio D. López Vázquez <bdl@odoo.com>, 2024
 # Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-18 09:52+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,6 +105,12 @@ msgstr "%<span class=\"px-3\"/>("
 #, python-format
 msgid "%d moves"
 msgstr "%d movimientos"
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid "%s (%s)"
+msgstr "%s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -1088,11 +1095,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Importe pendiente</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
 msgstr "<strong>Fecha de nota de crédito:</strong>"
 
@@ -1225,8 +1227,8 @@ msgid ""
 "                should receive this periodicaly from your bank."
 msgstr ""
 "Un estado de cuenta bancario es un resumen de todas las transacciones financieras\n"
-"                que ocurren en un periodo de tiempo en una cuenta bancaria. Debe\n"
-"                recibirlo de su banco periódicamente."
+"                que ocurren en un periodo de tiempo en una cuenta bancaria. Debería\n"
+"                recibirlo de forma periódica desde su banco."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
@@ -1247,8 +1249,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Un asiento contable está compuesto por varios apuntes contables, siendo\n"
-"                cada uno de ellos una transacción de débito o crédito."
+"Un conjunto de apuntes contables forman un asiento contable. Cada\n"
+"apunte es una transacción de cargo o abono."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1264,8 +1266,8 @@ msgstr ""
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
-"Una línea de este movimiento utiliza una cuenta obsoleta, no puede "
-"publicarla."
+"Se está utilizando una cuenta obsoleta en una línea de este movimiento, por "
+"lo que no puede publicarlo."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -1324,17 +1326,6 @@ msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
 "Solo se puede definir una vez una posición fiscal sobre los mismos "
 "impuestos."
-
-#. module: account
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid ""
-"A tax should only use tags from its country. You should use another tax and "
-"a fiscal position if you wish to uses the tags from foreign tax reports."
-msgstr ""
-"Un impuesto debe usar solamente etiquetas de su país. Debe utilizar otro "
-"impuesto y posición fiscal si desea utilizar las etiquetas de reportes de "
-"impuestos extranjeros."
 
 #. module: account
 #: code:addons/account/models/res_users.py:0
@@ -2521,9 +2512,9 @@ msgid ""
 "                to disclose a certain amount of information."
 msgstr ""
 "Una cuenta es la parte de un libro contable que le permite\n"
-"                a su empresa registrar todo tipo de transacciones de débito y crédito.\n"
+"                a su empresa registrar todo tipo de transacciones de cargos y abonos.\n"
 "                Las empresas presentan sus cuentas anuales principalmente en dos partes:\n"
-"                 el balance general y el estado de resultados\n"
+"                la hoja de balance general y el estado de resultados (ganancias y pérdidas)\n"
 "              Las cuentas anuales son requeridas por ley a las empresas\n"
 "                para revelar cierta cantidad de información."
 
@@ -2750,16 +2741,6 @@ msgstr "Activos"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_ids
 msgid "Associated Account Templates"
 msgstr "Plantillas de cuentas asociadas"
-
-#. module: account
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-"Es necesario instalar al menos una localización para poblar la base de datos"
-" con la contabilidad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -4019,6 +4000,7 @@ msgstr "Empresas que se refieren al contacto"
 #: model:ir.model.fields,field_description:account.field_account_tax_carryover_line__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -5007,6 +4989,7 @@ msgstr "Comprobar la consistencia de datos"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__date
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__date
 #: model_terms:ir.ui.view,arch_db:account.report_journal
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5317,6 +5300,26 @@ msgstr "Eliminar correos electrónicos"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__auto_delete_message
 msgid "Delete Message Copy"
 msgstr "Eliminar copia del mensaje"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Cuenta de salarios de CEO de demostración"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Cuenta de demostración para capital "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Cuenta de demostración para venta de terrenos"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Cuenta de demostración para existencias "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -6120,6 +6123,11 @@ msgstr "Cuenta financiera"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "Etiquetas financieras"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_financing
+msgid "Financing Activities"
+msgstr "Actividades financieras"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7367,6 +7375,11 @@ msgid "Invert Tags"
 msgstr "Invertir etiquetas"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_investing
+msgid "Investing & Extraordinary Activities"
+msgstr "Actividades de inversión y extraordinarias"
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
@@ -7820,6 +7833,7 @@ msgstr "Enero"
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9484,6 +9498,11 @@ msgid "Off-Balance Sheet"
 msgstr "Fuera de balance"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Muebles de oficina"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -9684,6 +9703,11 @@ msgstr "Valor de crédito de apertura para esta cuenta."
 #: model:ir.model.fields,help:account.field_account_account__opening_debit
 msgid "Opening debit value for this account."
 msgstr "Valor de débito de apertura para esta cuenta."
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_operating
+msgid "Operating Activities"
+msgstr "Actividades operativas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10040,6 +10064,7 @@ msgstr "Pagado parcialmente"
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_form_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13922,11 +13947,10 @@ msgstr "La empresa a la que pertenece esta línea de distribución."
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
+"The country code of the foreign VAT number does not match any country in the"
+" group."
 msgstr ""
-"No se pudo detectar el país del número de identificación extranjero. Asigne "
-"un país a la posición fiscal o establezca un grupo de países."
+"El código de país del rfc extranjero no coincide con ningún país del grupo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15740,9 +15764,9 @@ msgid ""
 "should not have this option set."
 msgstr ""
 "Se utiliza en reportes para saber si se deberían considerar los apuntes "
-"contables desde el principio en lugar de para el año fiscal en curso "
-"solamente. No disponen de esta opción los tipos de cuenta que deben "
-"restablecerse a cero en cada año fiscal (como gastos, ingresos...)."
+"contables desde el principio en lugar de solo para el año fiscal en curso. "
+"Los tipos de cuenta que deben restablecerse a cero después da cada año "
+"fiscal nuevo (como gastos o ingress) no tienen esta opción."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__reference
@@ -15857,7 +15881,7 @@ msgid ""
 msgstr ""
 "Valor por el importe de la línea de cancelación\n"
 "    * Porcentaje: porcentaje del balance, entre 0 y 100.\n"
-"    * Fijo: el valor fijo de la cancelación. El importe contará como débito si es negativo, como crédito si es positivo.\n"
+"    * Fijo: el valor fijo de la cancelación. El importe contará como cargo si es negativo, como abono si es positivo.\n"
 "    * De la etiqueta: no se necesita un delimitador de expresiones regulares, solo se necesita la expresión regular. Por ejemplo, si desea extraer la cantidad de\n"
 "R: 9672938 10/07 AX 9415126318 T: 5L: NA BRT: 3358,07 C:\n"
 "Podría ingresar\n"

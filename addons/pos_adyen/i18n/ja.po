@@ -5,14 +5,15 @@
 # Translators:
 # Noma Yuki, 2022
 # Junko Augias, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,6 +103,13 @@ msgid ""
 msgstr "Odooサーバに接続できませんでした。インターネット接続を確認して、もう一度お試し下さい。"
 
 #. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Invalid Adyen request"
+msgstr "無効なAdyen要求"
+
+#. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
@@ -150,23 +158,14 @@ msgstr ""
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid "Terminal %s is already used on payment method %s."
-msgstr "端末%sはすでに決済方法%sで使用されています。"
-
-#. module: pos_adyen
-#: code:addons/pos_adyen/models/pos_payment_method.py:0
-#, python-format
 msgid "Terminal %s is already used in company %s on payment method %s."
 msgstr "端末%sはすでに会社%s 内で決済方法%sで使用されています。"
 
 #. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
-msgstr ""
+msgid "Terminal %s is already used on payment method %s."
+msgstr "端末%sはすでに決済方法%sで使用されています。"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key

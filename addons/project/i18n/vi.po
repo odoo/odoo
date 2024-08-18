@@ -16,14 +16,15 @@
 # Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
 # Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -531,6 +532,14 @@ msgstr "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=\"Đối t�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\" style=\"opacity: 0.7;\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Create tasks by sending an email to </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -586,17 +595,6 @@ msgstr "<span class=\"o_stat_text\">Tổng biên</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr "<span class=\"o_stat_text\">trong Định kỳ</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
-"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Tạo nhiệm vụ bằng cách gửi email tới </span>\n"
-"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Tạo nhiệm vụ bằng cách gửi email tới </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Tạo nhiệm vụ bằng cách gửi email tới </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -970,6 +968,12 @@ msgid "Archived"
 msgstr "Đã lưu"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Archived tasks cannot be recurring. Please unarchive the task first."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
 msgstr "Bạn có chắc chắn muốn tiếp tục không?"
@@ -1003,16 +1007,6 @@ msgid "Assign to Me"
 msgstr "Phân công cho tôi"
 
 #. module: project
-#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
-msgid " assignee"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
-msgid " assignees"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1031,7 +1025,6 @@ msgid "Assigned to"
 msgstr "Phân công cho"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1042,7 +1035,6 @@ msgstr "Phân công cho"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr "Người được phân công"
 
@@ -1219,6 +1211,26 @@ msgstr "Sơ đồ chi tiết"
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
 msgstr "Buzz hoặc đặt là hoàn tất"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__day
+msgid "By Day"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__month
+msgid "By Month"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__year
+msgid "By Year"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
+msgid "By quarter"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1696,40 +1708,6 @@ msgstr ""
 "                hoặc xử lý nhiệm vụ hoặc sự cố."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
-msgstr ""
-"Những người có thể thấy được dự án này và các nhiệm vụ dự án.\n"
-"\n"
-"- Người dùng nội bộ được mời: khi theo dõi một dự án, người dùng nội bộ sẽ có quyền truy cập vào tất cả nhiệm vụ dự án mà không có sự phân biệt. Nếu không, họ sẽ chỉ có quyền truy cập vào các nhiệm vụ nhất định mà họ đang theo dõi.\n"
-"Người dùng có cấp độ quyền truy cập quản trị viên dự án vẫn có thể truy cập dự án này và các nhiệm vụ dự án, ngay cả khi rõ ràng họ không phải là một người theo dõi.\n"
-"\n"
-"- Tất cả người dùng nội bộ: tất cả người dùng nội bộ đều có thể truy cập vào dự án và tất cả nhiệm vụ dự án mà không có sự phân biệt.\n"
-"\n"
-"- Người dùng cổng thông tin được mời và tất cả người dùng nội bộ: tất cả người dùng nội bộ có thể truy cập dự án và tất cả nhiệm vụ dự án mà không có sự phân biệt.\n"
-"Khi theo dõi một dự án, người dùng cổng thông tin sẽ có quyền truy cập vào tất cả nhiệm vụ dự án mà không có sự phân biệt. Nếu không, họ sẽ chỉ có quyền truy cập vào các nhiệm vụ nhất định mà họ đang theo dõi.\n"
-"\n"
-"Khi một dự án được chia sẻ ở chế độ chỉ đọc, người dùng cổng thông tin sẽ được chuyển hướng đến cổng thông tin của họ. Họ có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng.\n"
-"Khi một dự án được chia sẻ trong chế độ chỉnh sửa, người dùng cổng thông tin sẽ được chuyển hướng đến chế độ xem kanban và chế độ xem danh sách của nhiệm vụ. Họ có thể sửa đổi một số trường đã chọn trong nhiệm vụ.\n"
-"\n"
-"Trong mọi trường hợp, nếu người dùng nội bộ không có quyền truy cập dự án nhưng được cung cấp URL nhiệm vụ (và họ là một người theo dõi, nếu dự án ở chế độ riêng tư), thì họ vẫn có thể truy cập nhiệm vụ tương ứng."
-
-#. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
 #: model:ir.actions.server,name:project.unlink_task_type_action
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -2122,6 +2100,7 @@ msgstr "Thứ sáu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "Hoạt động tương lai"
@@ -2527,11 +2506,30 @@ msgstr "Có vẻ như một số nhiệm vụ thuộc thuộc nhóm định kỳ
 
 #. module: project
 #. openerp-web
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid ""
+"It seems that some tasks are part of a recurrence. At least one of them must"
+" be kept as a model to create the next occurences."
+msgstr ""
+
+#. module: project
+#. openerp-web
 #: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
 msgstr "Có vẻ như nhiệm vụ này thuộc nhóm định kỳ."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid ""
+"It seems that this task is part of a recurrence. You must keep it as a model"
+" to create the next occurences."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2685,6 +2683,7 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "Hoạt động trễ"
@@ -3407,6 +3406,40 @@ msgstr ""
 "Mô hình gốc chứa bí danh này. Mô hình chứa tham chiếu bí danh không nhất "
 "thiết phải là mô hình đưa ra bởi alias_model_id (Ví dụ: dự án (parent_model)"
 " và nhiệm vụ (model))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+msgstr ""
+"Những người có thể thấy được dự án này và các nhiệm vụ dự án.\n"
+"\n"
+"- Người dùng nội bộ được mời: khi theo dõi một dự án, người dùng nội bộ sẽ có quyền truy cập vào tất cả nhiệm vụ dự án mà không có sự phân biệt. Nếu không, họ sẽ chỉ có quyền truy cập vào các nhiệm vụ nhất định mà họ đang theo dõi.\n"
+"Người dùng có cấp độ quyền truy cập quản trị viên dự án vẫn có thể truy cập dự án này và các nhiệm vụ dự án, ngay cả khi rõ ràng họ không phải là một người theo dõi.\n"
+"\n"
+"- Tất cả người dùng nội bộ: tất cả người dùng nội bộ đều có thể truy cập vào dự án và tất cả nhiệm vụ dự án mà không có sự phân biệt.\n"
+"\n"
+"- Người dùng cổng thông tin được mời và tất cả người dùng nội bộ: tất cả người dùng nội bộ có thể truy cập dự án và tất cả nhiệm vụ dự án mà không có sự phân biệt.\n"
+"Khi theo dõi một dự án, người dùng cổng thông tin sẽ có quyền truy cập vào tất cả nhiệm vụ dự án mà không có sự phân biệt. Nếu không, họ sẽ chỉ có quyền truy cập vào các nhiệm vụ nhất định mà họ đang theo dõi.\n"
+"\n"
+"Khi một dự án được chia sẻ ở chế độ chỉ đọc, người dùng cổng thông tin sẽ được chuyển hướng đến cổng thông tin của họ. Họ có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng.\n"
+"Khi một dự án được chia sẻ trong chế độ chỉnh sửa, người dùng cổng thông tin sẽ được chuyển hướng đến chế độ xem kanban và chế độ xem danh sách của nhiệm vụ. Họ có thể sửa đổi một số trường đã chọn trong nhiệm vụ.\n"
+"\n"
+"Trong mọi trường hợp, nếu người dùng nội bộ không có quyền truy cập dự án nhưng được cung cấp URL nhiệm vụ (và họ là một người theo dõi, nếu dự án ở chế độ riêng tư), thì họ vẫn có thể truy cập nhiệm vụ tương ứng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4312,6 +4345,7 @@ msgid "Show Project on Dashboard"
 msgstr "Hiện dự án trên bảng thông tin"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "Hiển thị tất cả hồ sơ có ngày tác vụ kế tiếp trước hôm nay"
@@ -4685,6 +4719,7 @@ msgstr "Nhiệm vụ: Xác nhận đã nhận được"
 
 #. module: project
 #: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -5019,6 +5054,7 @@ msgstr "Hôm nay"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "Hoạt động hôm nay"
@@ -5426,14 +5462,12 @@ msgstr ""
 "cả các nhiệm vụ."
 
 #. module: project
-#. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
 msgstr "Bạn không thể đọc các trường %s trong nhiệm vụ."
 
 #. module: project
-#. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
@@ -5465,6 +5499,16 @@ msgid ""
 msgstr ""
 "Ít nhất bạn nên có một giai đoạn cá nhân. Tạo một giai đoạn mới để chuyển "
 "các nhiệm vụ sang sau khi giai đoạn này bị xóa."
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+msgid "assignee"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+msgid "assignees"
+msgstr "người được phân công"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

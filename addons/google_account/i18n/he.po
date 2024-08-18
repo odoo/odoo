@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
 "Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -18,7 +18,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid "Google %s is not yet configured."
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -36,6 +42,14 @@ msgstr ""
 #: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code."
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
 msgstr "אירעה שגיאה במהלך יצירת הטוקן שלך. יתכן כי קוד האישור שלך לא תקין"
@@ -47,3 +61,9 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr "אירעה שגיאה במהלך יצירת הטוקן שלך. יתכן כי קוד האישור שלך פג תוקף"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid "The refresh token for authentication is not set."
+msgstr ""

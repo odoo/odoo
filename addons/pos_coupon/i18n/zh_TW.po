@@ -5,14 +5,15 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Tony Ng, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-08 06:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -348,6 +349,13 @@ msgid "No"
 msgstr "否"
 
 #. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "No tax"
+msgstr "無稅"
+
+#. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
 msgstr "套用此計畫的訂單明細。"
@@ -448,6 +456,13 @@ msgstr "此獎勵項目所基於的促銷/優惠券計劃。"
 #, python-format
 msgid "Reset Programs"
 msgstr "重置計畫"
+
+#. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "稅：%s"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids

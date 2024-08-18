@@ -7,16 +7,16 @@
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,11 +113,6 @@ msgstr "%s لا يمكن حذفها. حاول إلغاءها قبل. "
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "&amp; Cost"
 msgstr "التكلفة "
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -911,12 +906,6 @@ msgstr "تكلفة وبنية قائمة المواد"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
 msgstr "نوع قائمة المواد"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "يجب أن يكون منتج بند قائمة المواد %s مطابقاً لمنتج قائمة المواد. "
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -2412,16 +2401,6 @@ msgid "Line of issue consumption"
 msgstr "بند تحذير استهلاك التصنيع "
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr ""
-"بعض البنود بحاجة للحذف، لكن تعذر حذفها بسبب احتوائها على كميات غير مستهلكة "
-"بعد. "
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "الموقع "
@@ -2844,6 +2823,7 @@ msgstr "الاسم"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "New"
 msgstr "جديد"
@@ -3031,26 +3011,12 @@ msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
-"Number of pieces (in product UoM) that can be produced in parallel  (at the "
+"Number of pieces (in product UoM) that can be produced in parallel (at the "
 "same time) at this work center. For example: the capacity is 5 and you need "
 "to produce 10 units, then the operation time listed on the BOM will be "
 "multiplied by two. However, note that both time before and after production "
-"will only be counted once. "
+"will only be counted once."
 msgstr ""
-"عدد القطع (في قائمة مواد المنتج) التي يمكن إنتاجها بشكل موازٍ (في نفس الوقت)"
-" في مركز العمل هذا. على سبيل المثال: السعة هي 5 وتحتاج إلى إنتاج 10 وحدات، "
-"ستم مضاعفة وقت العملية المذكور في قائمة المواد، ولكن يرجى العلم بأنه سيتم "
-"حساب الوقت قبل وبعد الإنتاج مرة واحدة فقط. "
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
-msgid ""
-"This should be the smallest quantity that this product can be produced in. "
-"If the BOM contains operations, make sure the work center capacity is "
-"accurate. "
-msgstr ""
-"يجب أن تكون هذه أصغر كمية يمكن إنتاج المنتج فيها. إذا كانت قائمة المواد "
-"تحتوي على العمليات، تأكد من أن سعة مركز العمل دقيقة. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3753,6 +3719,11 @@ msgid "Quantity:"
 msgstr "الكمية:"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "سجلات الكميات "
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
 msgid "Raw Moves"
 msgstr "الحركات الخام "
@@ -3921,6 +3892,11 @@ msgstr "التاريخ المجدول"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "التاريخ المجدول حسب الشهر"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr "التاريخ المجدول: آخر 365 يوم "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -4570,12 +4546,6 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "The quantity produced of by-products must be positive."
-msgstr "يجب أن تكون الكمية المنتجة من المنتجات الثانوية قيمة موجبة. "
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
 #, python-format
@@ -4721,10 +4691,19 @@ msgstr "لقد تم إنشاء أمر الإنتاج من تقرير تجديد 
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
 msgstr "لقد تم إنتاج هذا الرقم التسلسلي للمنتج %s "
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
+msgid ""
+"This should be the smallest quantity that this product can be produced in. "
+"If the BOM contains operations, make sure the work center capacity is "
+"accurate."
+msgstr ""
+"يجب أن تكون هذه أصغر كمية يمكن إنتاج المنتج فيها. إذا كانت قائمة المواد "
+"تحتوي على العمليات، تأكد من أن سعة مركز العمل دقيقة. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5220,7 +5199,10 @@ msgstr "التحذير من كمية التفكيك غير الكافية "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"

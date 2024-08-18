@@ -10,14 +10,15 @@
 # Martin Trigaux, 2022
 # ievaputnina <ievai.putninai@gmail.com>, 2022
 # Anzelika Adejanova, 2022
+# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Anzelika Adejanova, 2022\n"
+"Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3208,6 +3209,11 @@ msgid "Progression Mode"
 msgstr "Progresēšanas režīms"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -4440,6 +4446,11 @@ msgid "Upcoming Activities"
 msgstr "Gaidāmās aktivitātes"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Izmantot ziņojuma veidni"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
 msgid ""
 "Use this field to add additional explanations about your question or to "
@@ -4780,6 +4791,14 @@ msgid ""
 msgstr ""
 "Jūs varat izveidot sertifikātus tikai tām aptaujām, kurām ir vērtēšanas "
 "mehānisms."
+
+#. module: survey
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

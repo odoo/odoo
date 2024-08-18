@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
 "Last-Translator: Abu Zafar <azmikbal@gmail.com>, 2022\n"
 "Language-Team: Bengali (https://app.transifex.com/odoo/teams/41243/bn/)\n"
@@ -27,6 +27,19 @@ msgstr ""
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr ""
+
+#. module: sale_mrp
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
+msgstr ""
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_bom
+msgid "Bill of Material"
 msgstr ""
 
 #. module: sale_mrp

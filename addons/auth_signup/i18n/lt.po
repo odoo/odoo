@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
 "Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -28,12 +28,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "%s connected"
-msgstr "%s prisijungė"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -504,6 +498,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "Leiskite savo klientams prisijungti ir matyti jų dokumentus"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this email"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "Niekada neprisijungęs"
@@ -654,12 +654,6 @@ msgstr ""
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "Forma buvo netinkamai užpildyta."
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "This is their first connection. Wish them luck."
-msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form

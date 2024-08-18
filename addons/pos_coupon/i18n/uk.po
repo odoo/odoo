@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2021
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-08 06:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -353,6 +354,13 @@ msgid "No"
 msgstr "Ні"
 
 #. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "No tax"
+msgstr "Немає податків"
+
+#. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
 msgstr "Рядки замовлення, на які застосовується ця програма."
@@ -453,6 +461,13 @@ msgstr "Акційна/купонна програма, звідки цей ря
 #, python-format
 msgid "Reset Programs"
 msgstr "Скинути програми"
+
+#. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "Податок: %s"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
