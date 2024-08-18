@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10095,6 +10095,15 @@ msgid "Update Quantity"
 msgstr "Оновіть кількість"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Updating the location of this transfer will result in unreservation of the currently assigned items. An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n"
+"\n"
+"To avoid this, please discard the source location change before saving."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__1
 msgid "Urgent"
@@ -10412,6 +10421,12 @@ msgstr "Пепередження на комплектуванні "
 #: code:addons/stock/models/product.py:0
 msgid "Warning!"
 msgstr "Увага!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "Warning: change source location"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10749,16 +10764,18 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
 msgid ""
 "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
 "Ви не можете створити відкладену точку замовлення, яка не активується "
 "вручну."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "You can not delete moves linked to another operation"
+msgstr "Ви не можете видалити переміщення, пов'язане з іншою операцією"
 
 #. module: stock
 #. odoo-python
@@ -10812,7 +10829,6 @@ msgstr "Ви можете обробити лише 1.0 %s товарів з у�
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
 msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."

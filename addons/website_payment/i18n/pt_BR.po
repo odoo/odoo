@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -71,15 +71,6 @@ msgstr "<option value=\"\">País...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
-msgstr ""
-"<strong>Não foi possível encontrar uma opção de pagamento adequada.</strong><br/>\n"
-"                                Se você acredita que isso é um erro, entre em contato com o administrador do site."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
 msgstr "<strong>Aviso:</strong> a moeda está faltando ou é incorreta."
 
@@ -100,7 +91,6 @@ msgid "Activate Payments"
 msgstr "Ativar pagamentos"
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
 msgstr "Ativar Stripe"
@@ -119,7 +109,6 @@ msgstr "Adicionar nova opção preenchida"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 msgid "Amount"
 msgstr "Valor"
@@ -159,7 +148,6 @@ msgstr "Configurar %s"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
-#: model:ir.model,name:website_payment.model_res_country
 msgid "Country"
 msgstr "País"
 
@@ -180,7 +168,6 @@ msgstr "É necessário informar o país."
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -297,7 +284,6 @@ msgstr "É doação"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
-#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
 msgstr "É um país aceito pelo Stripe"
 
@@ -473,8 +459,8 @@ msgstr "Agradecemos pela sua doação no valor de"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
-msgid "The minimum donation amount is %s%s%s"
-msgstr "A quantia mínima de doação é %s%s%s"
+msgid "The minimum donation amount is %(amount)s"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay

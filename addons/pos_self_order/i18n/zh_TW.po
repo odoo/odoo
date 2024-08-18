@@ -3,13 +3,14 @@
 # 	* pos_self_order
 # 
 # Translators:
+# Tony Ng, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -48,11 +49,9 @@ msgstr ""
 "                    網址："
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid ""
-"<span>Please note that the kiosk only works with Adyen &amp; Stripe "
-"terminals</span>"
-msgstr "<span>請注意：自助服務點只支援 Adyen 或 Stripe 終端機。</span>"
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
+msgid "<sup title=\"Only works for kiosk and mobile\">?</sup>"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -97,24 +96,20 @@ msgid "Add to cart"
 msgstr "加入購物車"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid ""
-"Adjust the tax rate based on whether customers are dining in or opting for "
-"takeout."
-msgstr "根據顧客是在店內用餐還是選擇外賣,去調整稅率。"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "All the items will be removed from the cart."
 msgstr "所有商品都將從購物車中移除."
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Alternative Fiscal Position"
-msgstr "替代財務規則"
+msgid "Allow self-order customers to set their order for takeout."
+msgstr "允許自助點餐顧客將訂單設為外賣。"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Allow takeout order"
+msgstr "允許外賣訂單"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -146,7 +141,7 @@ msgstr "可用時間直至"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available"
 msgstr "可用"
@@ -203,7 +198,6 @@ msgstr "取消訂單"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 msgid "Cancel order"
 msgstr "取消訂單"
@@ -240,6 +234,7 @@ msgstr "選擇用餐位置"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/out_of_paper_popup/out_of_paper_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
 msgid "Close"
@@ -253,19 +248,8 @@ msgstr "關閉營業點"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Combo"
 msgstr "組合"
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_line_ids
-msgid "Combo Lines"
-msgstr "組合資料行"
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_parent_id
-msgid "Combo Parent"
-msgstr "組合母項"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
@@ -288,6 +272,12 @@ msgstr "確認"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Connection lost, please try again later"
 msgstr "連線中斷，請稍後再試"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid "Continue"
+msgstr "繼續"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -414,11 +404,6 @@ msgid "Eat In"
 msgstr "堂食"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Eat in / Take out"
-msgstr "堂食 / 外賣"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Edit"
@@ -443,9 +428,9 @@ msgid "File streaming helper model for controllers"
 msgstr "控制器檔案串流輔助模型"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Fiscal Positions"
-msgstr "財政狀況"
+#: model:ir.model,name:pos_self_order.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "財務規則"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -474,6 +459,11 @@ msgstr "獲取追蹤工具，然後在此輸入其編號"
 #: model:ir.model,name:pos_self_order.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
+msgid "Has paper"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -535,7 +525,6 @@ msgstr "自助訂購螢幕上顯示的圖片"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
-#: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr "在自助訂購模式下，必須最少有一個表格，才可產生二維碼"
@@ -554,6 +543,14 @@ msgstr "詳細資訊"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Information about your product for Self Order and Kiosk"
 msgstr "供自助訂購及自助服務點使用的產品資訊"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid ""
+"It seems there hasn't been any activity on this kiosk. Would you like to "
+"continue?"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
@@ -694,7 +691,7 @@ msgstr "找不到產品"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
 msgid "Not available"
 msgstr "不可用"
 
@@ -728,24 +725,14 @@ msgstr "以新分頁開啟"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Order"
 msgstr "訂單"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
-#: model:pos_self_order.custom_link,name:pos_self_order.default_custom_link
 msgid "Order Now"
 msgstr "立即訂購"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
-msgid "Order number:"
-msgstr "訂單編號："
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -815,6 +802,11 @@ msgid "PoS Order by Session"
 msgstr "PoS按時段排序"
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_load_mixin
+msgid "PoS data loading mixin"
+msgstr "PoS 數據載入混入程式"
+
+#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_category
 msgid "Point of Sale Category"
 msgstr "POS類別"
@@ -882,13 +874,11 @@ msgstr "商品"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__description_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__description_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Product Description for Self Order"
 msgstr "自助訂購產品描述"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Product Information"
 msgstr "產品訊息"
@@ -903,7 +893,6 @@ msgstr "產品款式"
 #: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
@@ -962,6 +951,11 @@ msgid "Reset QR Codes"
 msgstr "重設二維碼"
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_floor
+msgid "Restaurant Floor"
+msgstr "餐廳樓層"
+
+#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_table
 msgid "Restaurant Table"
 msgstr "餐桌"
@@ -999,9 +993,13 @@ msgstr "選擇您想在哪些銷售點顯示此連結。留空以在所有銷售
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
-#: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Kiosk"
 msgstr "自助服務點"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
+msgid "Self Order Description"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1037,26 +1035,32 @@ msgid "Self Ordering Mode"
 msgstr "自助訂購模式"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+msgid "Self Ordering Service Mode"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
 msgstr "自助訂購網址"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
+msgid "Self Takeaway"
+msgstr "外賣自取"
+
+#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
-msgid "Self-ordering availability:"
-msgstr "自助訂購可用度："
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+msgid "Self-ordering:"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
 msgid "Sequence"
 msgstr "序列號"
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
-msgid "Service"
-msgstr "服務"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1128,21 +1132,15 @@ msgid "Table:"
 msgstr "餐桌："
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__take_away
-msgid "Take Away"
-msgstr "外賣"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Take Out"
 msgstr "外賣"
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
-msgid "Takeaway"
-msgstr "外賣"
+#: model:ir.model,name:pos_self_order.model_account_tax
+msgid "Tax"
+msgstr "稅金"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1201,14 +1199,6 @@ msgstr "產品將一直維持可用，直至這個小時。"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "The user must be a POS user"
 msgstr "用戶必須是 POS 用戶"
-
-#. module: pos_self_order
-#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
-#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
-msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
-msgstr "這對於提供具有特定稅率的上門服務和外賣服務的餐廳十分有用。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1274,6 +1264,13 @@ msgid "Yes"
 msgstr "是"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid "You cannot add cash payment methods in kiosk mode."
+msgstr "你不可在自助服務機模式下，新增現金付款方式。"
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "You cannot edit a posted orderline !"
@@ -1312,6 +1309,12 @@ msgstr "你的訂單已付款"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+msgid "Your order has been updated"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Your order number"
 msgstr "你的訂單編號"
@@ -1331,6 +1334,12 @@ msgstr "及"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr "空 = 所有銷售點"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+msgid "floor"
+msgstr "地板"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

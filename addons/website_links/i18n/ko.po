@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,11 @@ msgstr "클릭 수"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
 msgstr "<strong>캠페인</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Label</strong>"
+msgstr "<strong>라벨</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -75,15 +81,9 @@ msgstr "총 시간"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+"Campaign\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the context of your link. It might be an event you want to promote or a special promotion.\"/>"
 msgstr ""
-"캠페인 <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
 
 #. module: website_links
 #. odoo-javascript
@@ -100,7 +100,6 @@ msgstr "사본"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
@@ -124,6 +123,13 @@ msgid "Icon"
 msgstr "아이콘"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"Label\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines a label to ease reporting.\"/>"
+msgstr ""
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
 msgstr "전 월"
@@ -144,14 +150,9 @@ msgstr "링크 추적기"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+"Medium\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance.\"/>"
 msgstr ""
-"중급 <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"도구 설명 정보\" title=\"링크를 공유하는 데 "
-"사용되는 매체를 정의합니다. 이메일이나 페이스북 광고 등을 예로 들 수 있습니다.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -184,14 +185,9 @@ msgstr "<strong>분석 추적기</strong>가 포함된 <strong>짧은 링크</st
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+"Source\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the source from which your traffic will come from, Facebook or X for instance.\"/>"
 msgstr ""
-"출처 <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"도구 설명 정보\" title=\"페이스북이나 트위터와 "
-"같이 트래픽이 유입되는 출처를 정의합니다.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -214,8 +210,6 @@ msgstr "코드는 비워 둘 수 없습니다"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "There is no data to show"
 msgstr "표시할 데이터가 없습니다"
@@ -287,6 +281,11 @@ msgstr "클릭"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "copy"
 msgstr "복사"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr "예: \"블랙 프라이데이 메일링 캠페인\""
 
 #. module: website_links
 #. odoo-javascript

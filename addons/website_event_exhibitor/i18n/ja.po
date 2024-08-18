@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -44,23 +44,9 @@ msgid ""
 msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"矢印\"/>"
 
 #. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
-msgid ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                    Write one."
-msgstr ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                    1つ記入して下さい。"
-
-#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<small class=\"badge text-bg-danger\">Unpublished</small>"
 msgstr "<small class=\"badge text-bg-danger\">非公開</small>"
-
-#. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
-msgid "<span class=\"btn border-0 py-1 px-2\">×</span>"
-msgstr "<span class=\"btn border-0 py-1 px-2\">×</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
@@ -71,6 +57,11 @@ msgstr "<span class=\"fa fa-plus me-1\"/> 出展者の追加"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<span class=\"h5 m-3\">Other exhibitors</span>"
 msgstr "<span class=\"h5 m-3\">他の出展者</span>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_kanban
+msgid "<span class=\"text-bg-success\">Published</span>"
+msgstr "<span class=\"text-bg-success\">公開</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -142,6 +133,11 @@ msgid "All Countries"
 msgstr "すべての国"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_exhibitor_main
+msgid "All Exhibitors"
+msgstr "全ての出展者"
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_sponsorship
 msgid "All Levels"
 msgstr "全てのレベル"
@@ -178,6 +174,11 @@ msgstr "参加者は、以下のような出会いを求めて参加すること
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "Available from"
 msgstr "以下から利用可能:"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_exhibitor_main
+msgid "Back to all Exhibitors"
+msgstr "全ての出展者に戻る"
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type1
@@ -354,7 +355,6 @@ msgstr "終了時間"
 
 #. module: website_event_exhibitor
 #. odoo-javascript
-#: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: model:ir.model,name:website_event_exhibitor.model_event_event
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_id
@@ -807,11 +807,6 @@ msgid "Ratings"
 msgstr "評価"
 
 #. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
-msgid "Register"
-msgstr "登録"
-
-#. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
@@ -851,6 +846,11 @@ msgstr "SMS配信エラー"
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Sales and Distribution"
 msgstr "販売と流通"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
+msgid "Search an exhibitor ..."
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sequence
@@ -982,16 +982,6 @@ msgid "Talent Management"
 msgstr "タレントマネジメント"
 
 #. module: website_event_exhibitor
-#. odoo-python
-#: code:addons/website_event_exhibitor/controllers/website_event_main.py:0
-msgid ""
-"The event %s starts on %s (%s). \n"
-"Join us there to meet %s!"
-msgstr ""
-"イベント %s は %s (%s)に開始します。\n"
-"参加して%sと会いましょう！"
-
-#. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
 msgid "The full URL to access the document through the website."
 msgstr "サイト経由して、文書にアクセスする完全なURL。"
@@ -1102,7 +1092,6 @@ msgstr "例: ご自宅のベストチョイス"
 
 #. module: website_event_exhibitor
 #. odoo-javascript
-#: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 msgid "is not available right now."
 msgstr "は現在利用不可能です。"

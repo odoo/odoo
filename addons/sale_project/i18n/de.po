@@ -3,13 +3,14 @@
 # 	* sale_project
 # 
 # Translators:
+# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -41,13 +42,13 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
 msgstr "Verkaufsauftragspositionen von %(name)s"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Orders"
 msgstr "Verkaufsaufträge von %(name)s"
 
@@ -55,14 +56,14 @@ msgstr "Verkaufsaufträge von %(name)s"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been canceled. We recommend either "
-"updating the sales order item or canceling this project in alignment with "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been canceled. We recommend either "
-"updating the sales order item or canceling this project in alignment with "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 
@@ -70,14 +71,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been canceled. We recommend either "
-"updating the sales order item or canceling this task in alignment with the "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been canceled. We recommend either "
-"updating the sales order item or canceling this task in alignment with the "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 
@@ -119,11 +120,23 @@ msgstr ""
 "                        </span>"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"o_stat_text\">Customer</span>\n"
+"                        <span class=\"o_stat_text\">Preview</span>"
+msgstr ""
+
+#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Verkaufsauftrag</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr "<span class=\"o_stat_text\">Aufgaben</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -147,18 +160,17 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
 msgstr "Basierend auf gelieferter Menge (Manuell)"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
 msgstr "Basierend auf Meilensteinen"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 msgid "Billable"
@@ -181,13 +193,63 @@ msgid "Create Project"
 msgstr "Projekt erstellen"
 
 #. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Create a customer invoice"
+msgstr "Kundenrechnung erstellen"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr ""
+"Erstellen Sie ein neues Angebot, den ersten Schritt eines neuen Verkaufs!"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"Create a project for the order with a task for each sales order line to "
+"track the time spent."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Create a task in an existing project to track the time spent."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Create an empty project for the order to track the time spent."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr ""
+"Erstellen Sie Rechnungen, registrieren Sie Zahlungen und verfolgen Sie die "
+"Gespräche mit Ihren Kunden."
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
 msgstr "Bei Auftrag erstellen"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"Create projects or tasks later, and link them to order to track the time "
+"spent."
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__partner_id
 msgid "Customer"
@@ -195,7 +257,7 @@ msgstr "Kunde"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "Customer Invoices"
 msgstr "Kundenrechnungen"
 
@@ -216,16 +278,6 @@ msgid "Display Sales Order"
 msgstr "Verkaufsauftrag anzeigen"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__display_sales_stat_buttons
-msgid "Display Sales Stat Buttons"
-msgstr "Schaltfläche für Verkaufsstatistiken anzeigen"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
-msgid "Display project"
-msgstr "Projekt anzeigen"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Done"
@@ -233,7 +285,7 @@ msgstr "Erledigt"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "Down Payments"
 msgstr "Anzahlungen"
 
@@ -248,164 +300,16 @@ msgid "Furniture Assembly"
 msgstr "Möbelaufbau"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
-msgid "Generated Project"
-msgstr "Generiertes Projekt"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
-msgid "Generated Task"
-msgstr "Generierte Aufgabe"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
-msgid "Has SO to Invoice"
-msgstr "Hat abzurechnenden Verkaufsauftrag"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
-msgid "Has a SO with an invoice status of No"
-msgstr "Hat ein Verkaufsauftrag mit Rechnungstatus „Nichts“"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "In Progress"
 msgstr "In Bearbeitung"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
-msgid "Invoice Count"
-msgstr "Rechnungsanzahl"
-
-#. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
-"Stellen Sie die bestellten Mengen in Rechnung, sobald diese Dienstleistung "
-"verkauft ist."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a project"
-" for the order with a task for each sales order line to track the time "
-"spent."
-msgstr ""
-"Stellen Sie die bestellten Mengen in Rechnung, sobald diese Dienstleistung "
-"verkauft wurde. Erstellen Sie ein Projekt für den Auftrag mit einer Aufgabe "
-"für jede Verkaufsauftragszeile, um den Zeitaufwand zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a task in"
-" an existing project to track the time spent."
-msgstr ""
-"Stellen Sie die bestellten Mengen in Rechnung, sobald diese Dienstleistung "
-"verkauft wurde. Erstellen Sie eine Aufgabe in einem bestehenden Projekt, um "
-"den Zeitaufwand zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create an empty "
-"project for the order to track the time spent."
-msgstr ""
-"Stellen Sie die bestellten Mengen in Rechnung, sobald diese Dienstleistung "
-"verkauft wurde. Erstellen Sie ein leeres Projekt für den Auftrag, um den "
-"Zeitaufwand zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice this service when it is delivered (set the quantity by hand on your "
-"sales order lines). "
-msgstr ""
-"Stellen Sie diese Dienstleistung in Rechnung, sobald sie erbracht wurde "
-"(legen Sie die Menge in den Verkaufsauftragszeilen manuell fest)."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice this service when it is delivered (set the quantity by hand on your "
-"sales order lines). Create a project for the order with a task for each "
-"sales order line to track the time spent."
-msgstr ""
-"Stellen Sie diese Dienstleistung in Rechnung, sobald sie erbracht wurde "
-"(legen Sie die Menge in den Verkaufsauftragszeilen manuell fest). Erstellen "
-"Sie ein Projekt für den Auftrag mit einer Aufgabe für jede "
-"Verkaufsauftragszeile, um den Zeitaufwand zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice this service when it is delivered (set the quantity by hand on your "
-"sales order lines). Create a task in an existing project to track the time "
-"spent."
-msgstr ""
-"Stellen Sie diese Dienstleistung in Rechnung, sobald sie erbracht wurde "
-"(legen Sie die Menge in den Verkaufsauftragszeilen manuell fest). Erstellen "
-"Sie eine Aufgabe in einem bestehenden Projekt, um den Zeitaufwand zu "
-"verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice this service when it is delivered (set the quantity by hand on your "
-"sales order lines). Create an empty project for the order to track the time "
-"spent."
-msgstr ""
-"Stellen Sie diese Dienstleistung in Rechnung, sobald sie erbracht wurde "
-"(legen Sie die Menge in den Verkaufsauftragszeilen manuell fest). Erstellen "
-"Sie ein leeres Projekt für den Auftrag, um den Zeitaufwand zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
 msgstr "Stellen Sie Ihre Meilensteine in Rechnung, sobald sie erreicht sind."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice your milestones when they are reached. Create a project for the "
-"order with a task for each sales order line to track the time spent."
-msgstr ""
-"Stellen Sie Ihre Meilensteine in Rechnung, sobald sie erreicht sind. "
-"Erstellen Sie ein Projekt für den Auftrag mit einer Aufgabe für jede "
-"Verkaufsauftragszeile, um den Zeitaufwand zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice your milestones when they are reached. Create a task in an existing "
-"project to track the time spent."
-msgstr ""
-"Stellen Sie Ihre Meilensteine in Rechnung, sobald sie erreicht sind. "
-"Erstellen Sie eine Aufgabe in einem bestehenden Projekt, um den Zeitaufwand "
-"zu verfolgen."
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/product.py:0
-msgid ""
-"Invoice your milestones when they are reached. Create an empty project for "
-"the order to track the time spent."
-msgstr ""
-"Stellen Sie Ihre Meilensteine in Rechnung, sobald sie erreicht sind. "
-"Erstellen Sie ein leeres Projekt für den Auftrag, um den Zeitaufwand zu "
-"verfolgen."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -421,8 +325,8 @@ msgstr "Abgerechnet"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices
 msgid "Invoices"
 msgstr "Rechnungen"
 
@@ -430,11 +334,6 @@ msgstr "Rechnungen"
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Invoicing Policy"
 msgstr "Abrechnungspolitik"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
-msgid "Is Product Milestone"
-msgstr "Ist Produktmeilenstein"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
@@ -461,7 +360,7 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "Materials"
 msgstr "Materialien"
 
@@ -469,11 +368,6 @@ msgstr "Materialien"
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
 msgstr "Methode zum Aktualisieren der gelieferten Menge"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
-msgid "Milestone Count"
-msgstr "Anzahl Meilensteine"
 
 #. module: sale_project
 #. odoo-python
@@ -502,29 +396,16 @@ msgid "Not Billed"
 msgstr "Nicht abgerechnet"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
-msgid "Nothing"
-msgstr "Nichts"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
-msgid "Number of Projects"
-msgstr "Anzahl der Projekte"
-
-#. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
 msgstr "Büromöbelsatz (Aufgabe)"
 
 #. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
-#: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
 msgid ""
-"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
-"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+"Once the quotation is confirmed by the customer, it becomes a sales order."
 msgstr ""
-"Bei der Auftragsbestätigung kann dieses Produkt ein Projekt und/oder eine Aufgabe erzeugen. Anhand dieser können Sie die von Ihnen verkaufte Dienstleistung verfolgen. \n"
-"„Im Projekt des Verkaufsauftrags“: Verwendet das konfigurierte Projekt des Verkaufsauftrags, falls definiert, oder erstellt ein neues Projekt auf der Grundlage der ausgewählten Vorlage."
 
 #. module: sale_project
 #. odoo-python
@@ -534,7 +415,7 @@ msgstr "Vorgang nicht unterstützt"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "Other Services"
 msgstr "Andere Dienstleistungen"
 
@@ -559,7 +440,7 @@ msgstr "Sanitärdienstleistungen"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
 msgstr "Vorkasse/Festpreis"
 
@@ -577,7 +458,6 @@ msgstr "Produktvariante"
 #: model:ir.model,name:sale_project.model_project_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Project"
 msgstr "Projekt"
@@ -611,15 +491,9 @@ msgstr "Verkaufsauftrag des Projekts"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Projects"
 msgstr "Projekte"
-
-#. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
-msgid "Projects used in this sales order."
-msgstr "Projekte in diesem Verkaufsauftrag."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
@@ -638,26 +512,6 @@ msgid "Quotation Template Line"
 msgstr "Angebotsvorlagenzeile"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
-msgid "Reached Milestones"
-msgstr "Erreichte Meilensteine"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_display_name
-msgid "Sale Line Display Name"
-msgstr "Anzeigename der Verkaufszeile"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
-msgid "Sale Order Count"
-msgstr "Anzahl Verkaufsaufträge"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_line_count
-msgid "Sale Order Line Count"
-msgstr "Anzahl Verkaufsauftragszeilen"
-
-#. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Sales"
@@ -670,11 +524,9 @@ msgstr "Verkauf & Rechnungsstellung"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project_milestone.py:0
+#: code:addons/sale_project/models/project_task.py:0
 #: model:ir.model,name:sale_project.model_sale_order
-#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model:project.project,name:sale_project.so_template_project
@@ -714,8 +566,7 @@ msgstr ""
 #. module: sale_project
 #. odoo-javascript
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Sales Order Items"
 msgstr "Verkaufsauftragspositionen"
@@ -727,7 +578,8 @@ msgstr "Verkaufsauftragszeile"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
 msgid "Sales Orders"
 msgstr "Verkaufsaufträge"
 
@@ -739,12 +591,6 @@ msgid ""
 msgstr ""
 "Verkaufsauftragsposition, die standardmäßig auf den Aufgaben und Zeiterfassungsbögen dieses Projekts ausgewählt wird, es sei denn, der auf den Zeiterfassungsbögen eingestellte Mitarbeiter ist ausdrücklich mit einer anderen Verkaufsauftragsposition des Projekts verknüpft.\n"
 "Er kann bei Bedarf für jede Aufgabe und jeden Zeiterfassungseintrag einzeln geändert werden."
-
-#. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
-#: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
-msgid "Sales order to which the project is linked."
-msgstr "Verkaufsauftrag, mit dem das Projekt verknüpft ist."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -769,13 +615,6 @@ msgid "Search in Sales Order"
 msgstr "In Verkaufsauftrag suchen"
 
 #. module: sale_project
-#: model:ir.model.fields,help:sale_project.field_sale_order__project_id
-msgid "Select a non billable project on which tasks can be created."
-msgstr ""
-"Wählen Sie ein nicht abrechenbares Projekt aus, um Aufgaben darin zu "
-"erstellen."
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
 msgstr "Wählen Sie aus, wer abgerechnet wird ..."
@@ -787,28 +626,12 @@ msgid "Service Invoicing Policy"
 msgstr "Abrechnungspolitik für Dienstleistungen"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__show_create_project_button
-msgid "Show Create Project Button"
-msgstr "„Projekt erstellen“-Schaltfläche anzeigen"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__show_project_button
-msgid "Show Project Button"
-msgstr "„Projekt“-Schaltfläche anzeigen"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__show_task_button
-msgid "Show Task Button"
-msgstr "„Aufgabe“-Schaltfläche anzeigen"
-
-#. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Sold"
 msgstr "Verkauft"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_state
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
 msgid "Status"
 msgstr "Status"
@@ -822,8 +645,8 @@ msgstr "Aufgabe"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
-msgid "Task Created (%s): %s"
-msgstr "Aufgabe erstellt (%s): %s"
+msgid "Task Created (%(name)s): %(link)s"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -831,9 +654,7 @@ msgid "Task Recurrence"
 msgstr "Aufgabenwiederholung"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_count
 #: model:project.project,label_tasks:sale_project.so_template_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Tasks"
 msgstr "Aufgaben"
 
@@ -843,13 +664,8 @@ msgid "Tasks Analysis"
 msgstr "Aufgabenanalyse"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
-msgid "Tasks associated with this sale"
-msgstr "Mit diesem Verkauf verbundene Aufgaben"
-
-#. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
@@ -859,7 +675,7 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
@@ -869,7 +685,7 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/product.py:0
+#: code:addons/sale_project/models/product_template.py:0
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
@@ -899,8 +715,8 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
-msgid "This task has been created from: %s (%s)"
-msgstr "Diese Aufgabe wurde erstellt aus: %s (%s)"
+msgid "This task has been created from: %(order_link)s (%(product_name)s)"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
@@ -927,19 +743,8 @@ msgstr ""
 "Verfolgen Sie, was Sie verkauft, geliefert und in Rechnung gestellt haben."
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom
-msgid "Unit of Measure"
-msgstr "Maßeinheit"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count
-msgid "Vendor Bill Count"
-msgstr "Anzahl Lieferantenrechnungen"
-
-#. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_project.py:0
 msgid "Vendor Bills"
 msgstr "Lieferantenrechnungen"
 
@@ -960,7 +765,7 @@ msgstr "Elektro-Dienstleistungen"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project_task.py:0
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
@@ -968,3 +773,9 @@ msgstr ""
 "Sie können die Auftragsposition %(order_id)s - %(product_id)s nicht mit "
 "dieser Aufgabe verknüpfen, da es sich um eine weiterberechnete Auslage "
 "handelt."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "You will be able to create an invoice and collect the payment."
+msgstr ""

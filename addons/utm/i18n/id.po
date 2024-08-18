@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -213,7 +213,6 @@ msgstr "Deployed"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
 msgid "Design"
 msgstr "Desain"
@@ -229,8 +228,6 @@ msgstr "Nama Tampilan"
 
 #. module: utm
 #. odoo-javascript
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Done"
 msgstr "Selesai"
@@ -293,7 +290,6 @@ msgstr "ID"
 
 #. module: utm
 #. odoo-javascript
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Ideas"
 msgstr "Gagasan"
@@ -380,6 +376,14 @@ msgid "No Sources yet!"
 msgstr "Belum ada Sumber!"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+msgid ""
+"Oops, you can't delete the Medium '%s'.\n"
+"Doing so would be like tearing down a load-bearing wall — not the best idea."
+msgstr ""
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Pre-Launch"
@@ -423,7 +427,6 @@ msgstr "Pulihkan"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Review"
 msgstr "Tinjauan"
 
@@ -451,13 +454,11 @@ msgstr "Cari UTM Medium"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Send"
 msgstr "Kirim"
 
 #. module: utm
 #. odoo-javascript
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
 msgid "Sent"
@@ -542,16 +543,6 @@ msgid "Tags"
 msgstr "Label"
 
 #. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_medium.py:0
-msgid ""
-"The UTM medium '%s' cannot be deleted as it is used in some main functional "
-"flows, such as the recruitment and the mass mailing."
-msgstr ""
-"Utm medium '%s' tidak dapat dihapus karena digunakan pada beberapa main "
-"functional flow, seperti rekrutmen dan mailing massal. "
-
-#. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
@@ -631,10 +622,8 @@ msgstr "Medium UTM"
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
-"\"Website\", \"Twitter\", ...)."
+"\"Website\", \"X\", ...)."
 msgstr ""
-"UTM Medium melacak metode yang digunakan untuk menggaet traffic (contoh "
-"\"Website\", \"Twitter\", ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -680,6 +669,14 @@ msgstr "UTMs"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Use This For My Campaigns"
 msgstr "Gunakan Ini Untuk Kampanye Saya"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form

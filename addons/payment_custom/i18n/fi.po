@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Mikko Salmela <salmemik@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid ""
 "<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
 "app</small>"
@@ -33,7 +33,7 @@ msgstr ""
 "pankkisovelluksessasi</small>"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "<strong class=\"mt-auto\">Communication: </strong>"
 msgstr "<strong class=\"mt-auto\">Viestintä: </strong>"
 
@@ -63,7 +63,7 @@ msgid "Enable the use of QR-codes when paying by wire transfer."
 msgstr "Ota QR-koodien käyttö käyttöön tilisiirrolla maksettaessa."
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "Finalize your payment"
 msgstr "Viimeistele maksusi"
 
@@ -74,7 +74,7 @@ msgid "No transaction found matching reference %s."
 msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "OR"
 msgstr "TAI"
 
@@ -111,5 +111,6 @@ msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
 
 #. module: payment_custom
 #: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+#: model:payment.method,name:payment_custom.payment_method_wire_transfer
 msgid "Wire Transfer"
 msgstr "Tilisiirto"

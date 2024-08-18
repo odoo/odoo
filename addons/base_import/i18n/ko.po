@@ -3,13 +3,14 @@
 # 	* base_import
 # 
 # Translators:
+# Martin Trigaux, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -117,14 +118,16 @@ msgstr "가져오기를 진행하려면 '계속하기'를 클릭하여 %s 행에
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "%s 열에 잘못된 값이 포함되어 있습니다(값 : %s)."
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "%s 열에 잘못된 값이 포함되어 있습니다. 라인 %d : %s에 오류가 있습니다."
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -133,8 +136,6 @@ msgstr "열 이름"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr "콤마"
@@ -175,7 +176,6 @@ msgstr "작성일자"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
 msgstr "데이터베이스 ID"
 
@@ -206,7 +206,6 @@ msgstr "표시명"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 msgid "Dot"
 msgstr "점"
 
@@ -226,14 +225,14 @@ msgstr "인코딩 :"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "날짜 구문 오류 [%s:L%d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
-msgstr "%s 행 오류: \"%s\""
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -247,11 +246,9 @@ msgstr "레코드를 가져오는 동안 오류가 발생했습니다. 텍스트
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %d entries while the first row has %d. You may need to change "
-"the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"레코드를 가져오는 동안 오류가 발생했습니다. 모든 행은 크기가 같아야 합니다. 제목 행에 %d개 및 첫 번째 행에 %d개가 입력되어 "
-"있습니다. 구문 문자를 변경해야 하는지 확인하세요."
 
 #. module: base_import
 #. odoo-javascript
@@ -273,7 +270,6 @@ msgstr "서식이 자동으로 지정되므로 엑셀 파일을 사용하시는 
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "외부 ID"
@@ -306,7 +302,6 @@ msgstr "파일 유형"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "파일 크기가 설정된 최대 값을 초과합니다 (%s bytes)"
@@ -345,12 +340,6 @@ msgstr "사용불가능한 이미지 정보가 발견되었습니다, 이미지�
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Go to Import FAQ"
-msgstr "가져오기 관련 FAQ 보기"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
 msgstr "도움말"
 
@@ -381,6 +370,15 @@ msgstr ""
 "                    더 간편하게 가져오기를 할 수 있습니다."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"모델이 openchatter를 사용하는 경우 기록 추적이 구독을 설정하고 가져오는 동안 알림을 보내지만 가져오기 속도가 느려집니다."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -392,12 +390,6 @@ msgstr "이미지 크기가 초과되었습니다. 4,200만 픽셀보다 작은 
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import"
 msgstr "가져오기"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Import FAQ"
-msgstr "가져오기 관련 FAQ"
 
 #. module: base_import
 #. odoo-javascript
@@ -520,6 +512,12 @@ msgstr "미리보기"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "진행 표시줄"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Reimport"
 msgstr "다시 가져오기"
@@ -604,7 +602,6 @@ msgstr "시트:"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
 msgstr "레코드 건너뛰기"
 
@@ -628,7 +625,6 @@ msgstr "줄에서 시작"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
 msgstr "가져오기 중지"
@@ -770,6 +766,14 @@ msgstr "첫 번째 행을 머리글로 사용"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "사용자"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

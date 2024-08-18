@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -302,13 +302,9 @@ msgid "Points Cost"
 msgstr "Pisteen kustannukset"
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
-msgid "Promotions"
-msgstr "Kampanjat"
-
-#. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Reward"
 msgstr "Palkinto"
 
@@ -433,7 +429,6 @@ msgstr "Tämä koodi on vanhentunut (%s)."
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-#: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "This code is invalid (%s)."
 msgstr "Tämä koodi on virheellinen (%s)."
 
@@ -448,6 +443,20 @@ msgstr "Tämä kuponki on jo käytetty."
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "This coupon is expired."
 msgstr "Tämä kuponki on vanhentunut."
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"This discount (%(discount)s) is not compatible with \"%(other_discount)s\". "
+"Please remove it in order to apply this one."
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "This program cannot be applied with code."
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python

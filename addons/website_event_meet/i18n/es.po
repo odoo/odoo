@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +68,11 @@ msgid "All Languages"
 msgstr "Todos los idiomas"
 
 #. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meet_main
+msgid "All Rooms"
+msgstr "Todos las salas"
+
+#. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_event__meeting_room_allow_creation
 #: model:ir.model.fields,field_description:website_event_meet.field_event_type__meeting_room_allow_creation
 msgid "Allow Room Creation"
@@ -89,6 +95,11 @@ msgstr "¿Está seguro de que desea duplicar esta sala?"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
 msgid "Audience"
 msgstr "Audiencia"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meet_main
+msgid "Back to all Rooms"
+msgstr "Regresar a todas las salas"
 
 #. module: website_event_meet
 #. odoo-javascript
@@ -162,6 +173,15 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__create_date
 msgid "Created on"
 msgstr "Creado el"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meet
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
+"OF ALL EVENTS"
+msgstr ""
+"ARRASTRE LOS BLOQUES DE CREACIÓN AQUÍ PARA QUE ESTÉN DISPONIBLES PARA TODAS "
+"LAS PÁGINAS DE PROPUESTA PARA TODOS LOS EVENTOS"
 
 #. module: website_event_meet
 #. odoo-javascript
@@ -443,11 +463,9 @@ msgstr "El evento"
 #. odoo-python
 #: code:addons/website_event_meet/controllers/website_event_main.py:0
 msgid ""
-"The event %s starts on %s (%s). \n"
-"Join us there to chat about \"%s\"!"
+"The event %(name)s starts on %(date_begin)s (%(timezone)s).\n"
+"Join us there to chat about \"%(subject)s\"!"
 msgstr ""
-"El evento %s comienza el %s (%s). \n"
-"Únase para hablar de \"%s\""
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url

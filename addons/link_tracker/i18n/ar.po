@@ -4,28 +4,21 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#. module: link_tracker
-#. odoo-python
-#: code:addons/link_tracker/models/link_tracker.py:0
-#: code:addons/link_tracker/models/link_tracker.py:0
-msgid "%r is not a valid link, links cannot redirect to the current page."
-msgstr ""
-"%r ليس رابطاً صالحاً. لا يمكن للروابط إعادة التوجيه إلى الصفحة الحالية. "
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
@@ -78,6 +71,18 @@ msgid "Codes"
 msgstr "الأكواد "
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid ""
+"Combinations of Link Tracker values (URL, campaign, medium, source, and label) must be unique.\n"
+"The following combinations are already used: \n"
+"- %(error_lines)s"
+msgstr ""
+"تركيبات قيم متتبع الروابط (URL، الحملة، الوسط، المصدر، والعنوان) يجب أن تكون فريدة.\n"
+"التركيبات التالية مُستخدَمة بالفعل: \n"
+"- %(error_lines)s "
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 msgid "Country"
@@ -105,7 +110,6 @@ msgstr "أنشئ في"
 
 #. module: link_tracker
 #. odoo-python
-#: code:addons/link_tracker/models/link_tracker.py:0
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "Creating a Link Tracker without URL is not possible"
 msgstr "لا يمكن إنشاء متتبع روابط دون رابط URL "
@@ -187,16 +191,6 @@ msgstr "نقرة متتبع الرابط"
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "Link Tracker Code"
 msgstr "كود متتبع الرابط"
-
-#. module: link_tracker
-#. odoo-python
-#: code:addons/link_tracker/models/link_tracker.py:0
-msgid ""
-"Link Tracker values (URL, campaign, medium and source) must be unique (%s, "
-"%s, %s, %s)."
-msgstr ""
-"يجب أن تكون قيم متتبع الروابط (URL، الحملة، الوسط والمصدر) فريدة (%s، %s، "
-"%s، %s). "
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -349,3 +343,9 @@ msgstr "زيارة صفحة الويب"
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
 msgstr "رابط الموقع الإلكتروني "
+
+#. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "“%s” is not a valid link, links cannot redirect to the current page."
+msgstr ""

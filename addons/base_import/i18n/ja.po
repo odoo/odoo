@@ -3,15 +3,17 @@
 # 	* base_import
 # 
 # Translators:
+# Junko Augias, 2024
 # Wil Odoo, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +39,7 @@ msgstr "%sレコードがインポートされました "
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
-msgstr "単一カラムがファイル内に見つかりました。これは区切り記号が間違っているときによくあることです。"
+msgstr "単一カラムがファイル内に見つかりました。これはファイルセパレータが間違っているときによくあることです。"
 
 #. module: base_import
 #. odoo-javascript
@@ -116,14 +118,16 @@ msgstr "'再開'をクリックしてインポートを続行し、次の行%s�
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "カラム %s に正しくない値が含まれています (値: %s) "
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "カラム %s に正しくない値が含まれています。エラー行 %d : %s "
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -132,8 +136,6 @@ msgstr "カラム名"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr "コンマ"
@@ -173,7 +175,6 @@ msgstr "作成日"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
 msgstr "データベースID"
 
@@ -204,7 +205,6 @@ msgstr "表示名"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 msgid "Dot"
 msgstr "ドット"
 
@@ -224,14 +224,14 @@ msgstr "エンコード:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "日付の処理エラー [%s:L%d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
-msgstr "列 %s: \"%s\"でのエラー"
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -245,11 +245,9 @@ msgstr "レコードのインポート中にエラーが発生しました： �
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %d entries while the first row has %d. You may need to change "
-"the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"レコードをインポート中にエラーが発生しました: "
-"全ての列は同じサイズである必要がありますが、タイトル列は%dエントリを持っており、最初の列は%dを持っています。セパレータ文字を変更する必要があるかもしれません。"
 
 #. module: base_import
 #. odoo-javascript
@@ -271,7 +269,6 @@ msgstr "フォーマットが自動であるため、エクセルファイルを
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "外部ID"
@@ -305,7 +302,6 @@ msgstr "ファイルタイプ"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "ファイルサイズが設定された最大値を超えています(%s bytes)"
 
@@ -324,7 +320,7 @@ msgstr "中断する前に現在のバッチを最終処理しています..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "For CSV files, you may need to select the correct separator."
-msgstr "CSVファイルの場合、正しい区切り文字を選択する必要がある場合があります。"
+msgstr "CSVファイルの場合、正しいセパレータを選択する必要がある場合があります。"
 
 #. module: base_import
 #. odoo-javascript
@@ -339,12 +335,6 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr "無効な画像データが見つかりました。画像はURLまたはbase64でエンコードされたデータとしてインポートする必要があります。"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Go to Import FAQ"
-msgstr "インポートFAQ"
 
 #. module: base_import
 #. odoo-javascript
@@ -379,6 +369,15 @@ msgstr ""
 "　　　作業ができます。"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"モデルがopenchatterを使用する場合は、履歴トラッキングはサブスクリプションを作成し、インポート中に通知を送信しますが、インポート速度が落ちます。"
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -390,12 +389,6 @@ msgstr "画像サイズが大きすます、アップロードされた画像は
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import"
 msgstr "インポート"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Import FAQ"
-msgstr "インポートFAQ"
 
 #. module: base_import
 #. odoo-javascript
@@ -490,7 +483,7 @@ msgstr "ヘルプが必要ですか？"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No Separator"
-msgstr "区きり文字なし"
+msgstr "セパレータなし"
 
 #. module: base_import
 #. odoo-javascript
@@ -515,6 +508,12 @@ msgstr "インポートしない"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Preview"
 msgstr "プレビュー"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "進捗バー"
 
 #. module: base_import
 #. odoo-javascript
@@ -567,7 +566,7 @@ msgstr "セミコロン"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Separator:"
-msgstr "区切り文字："
+msgstr "セパレータ:"
 
 #. module: base_import
 #. odoo-javascript
@@ -602,7 +601,6 @@ msgstr "シート:"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
 msgstr "レコードをスキップ"
 
@@ -626,7 +624,6 @@ msgstr "何行目から"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
 msgstr "インポートを中止"
@@ -683,7 +680,7 @@ msgstr "この列はフィールド内で連結されます"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Thousands Separator:"
-msgstr "千の区切り文字："
+msgstr "千単位区切り:"
 
 #. module: base_import
 #. odoo-javascript
@@ -753,7 +750,7 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
-"年はYYYY、月はMM、日はDDで表します。ドット、スラッシュ、ダッシュなどの区切り文字を含めます。提案されたフォーマット以外に、カスタムフォーマットを使用することもできます。Odooにフォーマットを推測させる場合は空白にして下さい。(推奨)"
+"年はYYYY、月はMM、日はDDで表します。ドット、スラッシュ、ダッシュなどのセパレータを含めます。提案されたフォーマット以外に、カスタムフォーマットを使用することもできます。Odooにフォーマットを推測させる場合は空白にして下さい。(推奨)"
 
 #. module: base_import
 #. odoo-javascript
@@ -765,6 +762,14 @@ msgstr "先頭行を見出しとする"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "ユーザ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr "警告：ラベル行と空白行、空白セルのみで構成される行は無視されます"
 
 #. module: base_import
 #. odoo-javascript

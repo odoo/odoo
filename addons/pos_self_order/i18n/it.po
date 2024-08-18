@@ -3,13 +3,14 @@
 # 	* pos_self_order
 # 
 # Translators:
+# Marianna Ciofani, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -50,13 +51,9 @@ msgstr ""
 "                    URL:"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid ""
-"<span>Please note that the kiosk only works with Adyen &amp; Stripe "
-"terminals</span>"
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
+msgid "<sup title=\"Only works for kiosk and mobile\">?</sup>"
 msgstr ""
-"<span>Nota che il chiosco multimediale funziona solo con i terminali Adyen e"
-" Stripe</span>"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -103,26 +100,21 @@ msgid "Add to cart"
 msgstr "Aggiungi al carrello"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid ""
-"Adjust the tax rate based on whether customers are dining in or opting for "
-"takeout."
-msgstr ""
-"Configura le tasse in basse alla scelta dei clienti: consumazione sul posto "
-"o da asporto."
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "All the items will be removed from the cart."
 msgstr "Tutti gli articoli verranno eliminati dal carrello."
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Alternative Fiscal Position"
-msgstr "Posizione di bilancio alternativa"
+msgid "Allow self-order customers to set their order for takeout."
+msgstr ""
+"Consenti ai clienti che ordinano in autonomia di selezionare l'asporto."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Allow takeout order"
+msgstr "Consenti ordine d'asporto"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -154,7 +146,7 @@ msgstr "Disponibilità fino alle"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available"
 msgstr "Disponibile"
@@ -211,7 +203,6 @@ msgstr "Annulla ordine"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 msgid "Cancel order"
 msgstr "Annulla ordine"
@@ -248,6 +239,7 @@ msgstr "Scegli il luogo dove vuoi mangiare"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/out_of_paper_popup/out_of_paper_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
 msgid "Close"
@@ -261,19 +253,8 @@ msgstr "Chiudi sessione"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Combo"
 msgstr "Combo"
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_line_ids
-msgid "Combo Lines"
-msgstr "Righe combo"
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_parent_id
-msgid "Combo Parent"
-msgstr "Combo principale"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
@@ -296,6 +277,12 @@ msgstr "Conferma"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Connection lost, please try again later"
 msgstr "Connessione persa, riprova più tardi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid "Continue"
+msgstr "Continua"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -424,11 +411,6 @@ msgid "Eat In"
 msgstr "Mangia all'interno"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Eat in / Take out"
-msgstr "Consumazione sul posto/da asporto"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Edit"
@@ -455,9 +437,9 @@ msgid "File streaming helper model for controllers"
 msgstr "Modello di aiuto streaming file per controller"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Fiscal Positions"
-msgstr "Posizioni fiscali"
+#: model:ir.model,name:pos_self_order.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Posizione fiscale"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -486,6 +468,11 @@ msgstr "Ottieni un cercapersone e inserisci il numero qui"
 #: model:ir.model,name:pos_self_order.model_ir_http
 msgid "HTTP Routing"
 msgstr "Instradamento HTTP"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
+msgid "Has paper"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -549,7 +536,6 @@ msgstr "Immagine da visualizzare sullo schermo per l'ordine fai da te"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
-#: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
@@ -571,6 +557,14 @@ msgstr "Informazioni"
 msgid "Information about your product for Self Order and Kiosk"
 msgstr ""
 "Informazioni sul prodotto per l'ordine fai da te e il chiosco multimediale"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid ""
+"It seems there hasn't been any activity on this kiosk. Would you like to "
+"continue?"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
@@ -714,7 +708,7 @@ msgstr "Nessun prodotto trovato"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
 msgid "Not available"
 msgstr "Non disponibile"
 
@@ -748,24 +742,14 @@ msgstr "Apri in una nuova scheda"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Order"
 msgstr "Ordina"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
-#: model:pos_self_order.custom_link,name:pos_self_order.default_custom_link
 msgid "Order Now"
 msgstr "Ordina ora"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
-msgid "Order number:"
-msgstr "Numero ordine:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -837,6 +821,11 @@ msgid "PoS Order by Session"
 msgstr "Ordine POS per sessione"
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_load_mixin
+msgid "PoS data loading mixin"
+msgstr "Dati POS in caricamento mixin"
+
+#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_category
 msgid "Point of Sale Category"
 msgstr "Categoria punto vendita"
@@ -904,13 +893,11 @@ msgstr "Prodotto"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__description_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__description_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Product Description for Self Order"
 msgstr "Descrizione prodotto per ordine fai da te"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Product Information"
 msgstr "Informazioni prodotto"
@@ -925,7 +912,6 @@ msgstr "Variante prodotto"
 #: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
@@ -986,6 +972,11 @@ msgid "Reset QR Codes"
 msgstr "Resetta codici QR"
 
 #. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_floor
+msgid "Restaurant Floor"
+msgstr "Piano ristorante"
+
+#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_table
 msgid "Restaurant Table"
 msgstr "Tavolo ristorante"
@@ -1026,9 +1017,13 @@ msgstr ""
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
-#: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Kiosk"
 msgstr "Chiosco self"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
+msgid "Self Order Description"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1064,26 +1059,32 @@ msgid "Self Ordering Mode"
 msgstr "Modalità ordine fai da te"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+msgid "Self Ordering Service Mode"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
 msgstr "URL ordine fai da te"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
+msgid "Self Takeaway"
+msgstr "Asporto fai-da-te"
+
+#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
-msgid "Self-ordering availability:"
-msgstr "Disponibilità ordine fai da te:"
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+msgid "Self-ordering:"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
 msgid "Sequence"
 msgstr "Sequenza"
-
-#. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
-msgid "Service"
-msgstr "Servizio"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1155,21 +1156,15 @@ msgid "Table:"
 msgstr "Tavolo:"
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__take_away
-msgid "Take Away"
-msgstr "Asporto"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Take Out"
 msgstr "Asporto"
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
-msgid "Takeaway"
-msgstr "Asporto"
+#: model:ir.model,name:pos_self_order.model_account_tax
+msgid "Tax"
+msgstr "Imposta"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1230,16 +1225,6 @@ msgstr "Il prodotto sarà disponibile fino a quest'ora."
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "The user must be a POS user"
 msgstr "L'utente deve essere un utente POS"
-
-#. module: pos_self_order
-#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
-#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
-msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
-msgstr ""
-"Questo è utile per ristoranti con servizi in loco o da asporto che "
-"comportano aliquote fiscali specifiche."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1305,6 +1290,15 @@ msgid "Yes"
 msgstr "Sì"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid "You cannot add cash payment methods in kiosk mode."
+msgstr ""
+"Non è possibile aggiungere metodi di pagamento in contanti nella modalità "
+"chiosco."
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "You cannot edit a posted orderline !"
@@ -1343,6 +1337,12 @@ msgstr "Il tuo ordine è stato pagato"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+msgid "Your order has been updated"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Your order number"
 msgstr "Il tuo numero di ordine"
@@ -1362,6 +1362,12 @@ msgstr "e"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr "vuoto=tutti i punti vendita"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+msgid "floor"
+msgstr "pavimento"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

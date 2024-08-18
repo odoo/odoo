@@ -3,20 +3,20 @@
 # 	* hr_recruitment_skills
 # 
 # Translators:
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Martin Trigaux, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Simo Suurla <simo@suurla.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +46,11 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__skill_ids
+msgid "Expected Skills"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__id
 msgid "ID"
 msgstr "ID"
@@ -54,6 +59,11 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__is_interviewer
 msgid "Is Interviewer"
 msgstr "On haastattelija"
+
+#. module: hr_recruitment_skills
+#: model:ir.model,name:hr_recruitment_skills.model_hr_job
+msgid "Job Position"
+msgstr "Tehtävänimike"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
@@ -66,6 +76,38 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: hr_recruitment_skills
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid "Matching Applicants"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
+msgid "Matching Score(%)"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
+msgid "Matching Skills"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
+msgid "Missing Skills"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills
+msgid "Move to this Job Position"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid "No Matching Applicants"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress"
 msgstr "Edistyminen"
@@ -74,6 +116,13 @@ msgstr "Edistyminen"
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr "Edistyminen nollatiedosta (0 %) täysin hallittuun (100 %)."
+
+#. module: hr_recruitment_skills
+#. odoo-javascript
+#: code:addons/hr_recruitment_skills/static/src/components/search_job_applicant_menu/search_job_applicant_menu.xml:0
+#: model:ir.actions.server,name:hr_recruitment_skills.action_applicant_search_applicant
+msgid "Search Matching Applicants"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
@@ -125,3 +174,11 @@ msgstr "Taitotaso %(level)s ei ole voimassa taitotyypille: %(type)s"
 #: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Saman taidon kaksi tasoa ei ole sallittua"
+
+#. module: hr_recruitment_skills
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid ""
+"We do not have any applicants who meet the skill requirements for this job "
+"position in the database at the moment."
+msgstr ""

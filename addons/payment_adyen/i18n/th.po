@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -31,8 +31,10 @@ msgstr ""
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-msgid "A request was sent to void the transaction with reference %s (%s)."
-msgstr "มีการส่งคำขอให้ยกเลิกธุรกรรมโดยมีการอ้างอิง %s (%s)."
+msgid ""
+"A request was sent to void the transaction with reference %(reference)s "
+"(%(provider)s)."
+msgstr ""
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -134,8 +136,6 @@ msgstr "ธุรกรรมสำหรับการชำระเงิน
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "การประมวลผลการชำระเงินล้มเหลว"
 
@@ -202,7 +202,6 @@ msgstr "URL พื้นฐานสำหรับจุดสิ้นสุ�
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The capture of the transaction with reference %s failed."
 msgstr "การบันทึกธุรกรรมที่มีการอ้างอิง %s ล้มเหลว"
 
@@ -259,7 +258,6 @@ msgstr "ข้อมูลอ้างอิงเฉพาะของพาร
 
 #. module: payment_adyen
 #. odoo-python
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The void of the transaction with reference %s failed."
 msgstr "การเป็นโมฆะของธุรกรรมที่มีการอ้างอิง %s ล้มเหลว"

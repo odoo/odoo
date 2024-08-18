@@ -37,7 +37,7 @@ msgstr " 小时"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr ""
+msgstr "至%(date_to_utc)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -967,13 +967,13 @@ msgstr "分配类别"
 msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
-msgstr ""
+msgstr "分配的状态必须为 “待批准” 或 “第二次批准”，才能生效。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
+msgstr "必须确认分配（“待批准”），才能进行批准。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -992,13 +992,13 @@ msgstr "分配"
 msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
-msgstr ""
+msgstr "分配申请必须经过确认、二次批准或验证，才能拒绝。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
-msgstr ""
+msgstr "分配状态必须为 “已拒绝”，才能重置为 “待批准”。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1203,6 +1203,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"在批量生成休假时，对于以小时为单位设立的重叠休假，自动休假拆分功能无法管理。存在冲突的休假：\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2255,7 +2257,7 @@ msgstr "是关注者"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "名称是否自订"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2449,7 +2451,7 @@ msgstr "标记为草稿"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "标记为准备好进行批准"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -3382,7 +3384,7 @@ msgstr "有些叶子不能链接到任何分配。看那些树叶,"
 msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
-msgstr ""
+msgstr "您尝试删除的累积计划，有部分已连接至现有休假分配。请先删除或取消它们。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id

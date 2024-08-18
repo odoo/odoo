@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -18,11 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: web_unsplash
-#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Generate an Access Key"
-msgstr "<i class=\"oi oi-arrow-right\"/> 액세스 키 생성"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
@@ -63,6 +58,11 @@ msgstr "오류 : 알 수 없는 Unsplash URL!"
 #: code:addons/web_unsplash/controllers/main.py:0
 msgid "ERROR: Unknown Unsplash notify URL!"
 msgstr "오류 : 알 수 없는 Unsplash 알림 URL!"
+
+#. module: web_unsplash
+#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
+msgid "Generate an Access Key"
+msgstr ""
 
 #. module: web_unsplash
 #. odoo-javascript
@@ -140,8 +140,8 @@ msgstr "승인되지 않은 키"
 #. module: web_unsplash
 #. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
-msgid "Uploading %s '%s' images."
-msgstr "%s '%s' 이미지 파일을 업로드하는 중입니다."
+msgid "Uploading %(count)s '%(query)s' images."
+msgstr ""
 
 #. module: web_unsplash
 #. odoo-javascript
@@ -171,3 +171,9 @@ msgstr "및 여기에 붙여넣기:"
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 msgid "here:"
 msgstr "여기:"
+
+#. module: web_unsplash
+#. odoo-javascript
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+msgid "unsplash"
+msgstr ""

@@ -3,16 +3,16 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,12 +53,6 @@ msgstr "%(product)s 시작일 %(original_receipt_date)s 종료일 %(new_receipt_
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "%(vendor)s confirmed the receipt will take place on %(date)s."
 msgstr "%(vendor)s에서 입고 예정일을 %(date)s로 확인했습니다."
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "%s has been created"
-msgstr "%s 항목이 생성되었습니다."
 
 #. module: purchase
 #. odoo-python
@@ -523,15 +517,6 @@ msgid "A sample email has been sent to %s."
 msgstr "견본 메일이 %s로 전송됩니다."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__advance_payment_method
-msgid ""
-"A standard vendor bill is created with all the order lines ready for "
-"billing, according to their bill policy (based on ordered or received "
-"quantity)."
-msgstr ""
-"표준 공급업체 청구서는 청구 정책에 따라 청구할 준비가 된 모든 주문 라인이 포함된 상태로 생성됩니다 (주문 또는 수령 수량 기준)."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
 "A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
@@ -673,13 +658,6 @@ msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr "공급업체에게 입고일을 주지시키기 위한 이메일을 자동 전송하도록 허용합니다."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings__group_down_payment
-#: model:res.groups,name:purchase.group_down_payment
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Allow creating vendor bills for down payments on purchase orders"
-msgstr "구매 주문의 계약금에 대한 공급업체 청구서 생성 허용"
-
-#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "발주서 편집 허용"
@@ -688,12 +666,6 @@ msgstr "발주서 편집 허용"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 msgid "Amount"
 msgstr "금액"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_invoiced
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_invoiced
-msgid "Amount already billed"
-msgstr "이미 청구된 금액"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
@@ -706,12 +678,6 @@ msgstr "계획일자와 각각의 발주서 내역의 요청일자간의 시간�
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr "구매 승인일과 발주일 사이의 기간입니다"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_to_invoice
-msgid "Amount to be billed"
-msgstr "청구할 금액"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -816,14 +782,9 @@ msgid "Bill Count"
 msgstr "청구서 수"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_move_line_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
 msgid "Bill Lines"
 msgstr "청구서 내역"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "Bill Purchase Order"
-msgstr "청구서 구매 주문"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -851,7 +812,7 @@ msgid "Billing Status"
 msgstr "청구 상태"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__account_move_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
 msgid "Bills"
 msgstr "공급업체 청구서"
 
@@ -933,7 +894,6 @@ msgid "Companies"
 msgstr "회사"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
@@ -1057,7 +1017,6 @@ msgid "Country code"
 msgstr "국가 코드"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
 msgstr "청구서 발행"
@@ -1079,27 +1038,18 @@ msgid "Create a new product variant"
 msgstr "새로운 세부선택 품목 생성"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "Create bills"
-msgstr "청구서 만들기"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_date
 msgid "Created on"
 msgstr "작성일자"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
@@ -1209,17 +1159,6 @@ msgid "Discount:"
 msgstr "할인 :"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_draft_invoice_warning
-msgid "Display Draft Invoice Warning"
-msgstr "미결 청구서 경고 표시"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "청구서 금액 경고 표시"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
@@ -1246,40 +1185,6 @@ msgstr "완료"
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
 msgstr "이중 검증 금액"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount
-msgid "Down Payment"
-msgstr "선결제 금액"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__fixed_amount
-msgid "Down Payment Amount (Fixed)"
-msgstr "선결제 금액 (고정 금액)"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_down_payment
-msgid "Down Payments"
-msgstr "선결제 금액"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "Down payment vendor bill"
-msgstr "계약금 공급업체 청구서"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__is_downpayment
-msgid ""
-"Down payments are made when creating account moves from an order. They are "
-"not copied when duplicating an order."
-msgstr "판매주문서에서 청구서를 생성하면 선결제 항목이 만들어집니다. 판매주문서를 복사하더라도 이 항목은 복사되지 않습니다."
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "Draft Bills"
-msgstr "미결 공급업체 청구서"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -1401,17 +1306,11 @@ msgid "Has Message"
 msgstr "메시지가 있습니다"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__has_down_payments
-msgid "Has down payments"
-msgstr "선결제된 금액이 있습니다."
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
 msgstr "취소한 명세 숨기기"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
@@ -1516,11 +1415,6 @@ msgid "Is In Purchase Order"
 msgstr "구매주문서 상"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__is_downpayment
-msgid "Is a down payment"
-msgstr "선결제 금액입니다."
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
 msgstr "전표 입력"
@@ -1531,14 +1425,12 @@ msgid "Journal Item"
 msgstr "전표 항목"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_date
 msgid "Last Updated on"
@@ -1816,6 +1708,7 @@ msgid "Not using Odoo?"
 msgstr "Odoo를 사용하지 않으시나요?"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Note"
 msgstr "노트"
@@ -1897,28 +1790,17 @@ msgid ""
 msgstr "공급업체에 품목을 발주하려면, 구매요청서를 승인하는 즉시 바로 발주서로 변환됩니다."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_invoiced
-msgid "Only confirmed down payments and invoiced amounts are considered."
-msgstr "확인된 계약금과 청구된 금액만 고려됩니다."
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Operation not supported"
 msgstr "지원되지 않는 작업"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__order_ids
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Order"
 msgstr "주문"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__count
-msgid "Order Count"
-msgstr "주문 수"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
@@ -2118,11 +2000,6 @@ msgstr "구매를 위한 이중 검증 메커니즘 제공"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "매입"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_advance_payment_wizard
-msgid "Purchase Advance Payment Bill"
-msgstr "구매 선결제 청구서"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
@@ -2393,11 +2270,6 @@ msgid "Quantity"
 msgstr "수량"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
-msgid "Quantity to Invoice"
-msgstr "청구 수량"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
 msgstr "수량:"
@@ -2646,6 +2518,11 @@ msgid "Search a vendor name, or create one on the fly."
 msgstr "공급업체 이름을 검색하거나 새로 생성합니다."
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
+msgid "Section"
+msgstr "구분"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Section Name (eg. Products, Services)"
 msgstr "구분명 (예. 제품, 서비스)"
@@ -2891,7 +2768,7 @@ msgstr "세금 포함:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
 msgstr "세금"
 
@@ -2918,11 +2795,6 @@ msgid "Terms and Conditions"
 msgstr "이용 약관"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "The Down Payment is greater than the amount remaining to be billed."
-msgstr "계약금이 청구될 남은 금액을 초과합니다."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -2932,31 +2804,10 @@ msgstr ""
 "이 필드는 빠른 검색을 위해 사용할 수 있습니다."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
-msgid ""
-"The amount to be billed = Purchase Order Total - Amount already billed."
-msgstr "청구할 금액 = 구매 주문 총액 - 이미 청구된 금액."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__fixed_amount
-msgid "The fixed amount billed in advance."
-msgstr "미리 청구된 고정 금액입니다."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "The new bill will deduct draft bills linked to this purchase order."
-msgstr "새 청구서는 이 구매주문서에 연결된 미결 청구서 금액을 차감합니다."
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The order receipt has been acknowledged by %s."
 msgstr "%s에서 주문 접수를 확인했습니다."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount
-msgid "The percentage of amount billed in advance."
-msgstr "선결제 금액의 비율입니다."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2979,15 +2830,10 @@ msgid "There are currently no requests for quotation for your account."
 msgstr "현재 귀하의 계정에 대한 견적 요청이 없습니다."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "There are existing Draft Bills for this Purchase Order."
-msgstr "이 구매 주문에 대한 기존 청구서가 있습니다."
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"There are no invoiceable lines. If a product has a control policy based on "
+"There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr "청구서를 발행할 항목이 없습니다. 입고 수량을 기준으로 품목을 관리하는 경우, 해당 수량의 입고 여부를 확인하세요."
 
@@ -3066,6 +2912,11 @@ msgstr "팁: 발주서를 잊지 마세요"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "To Approve"
 msgstr "결재 대기"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
+msgid "To Invoice Quantity"
+msgstr "청구서 발행할 수량"
 
 #. module: purchase
 #. odoo-javascript
@@ -3428,8 +3279,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
-msgid ""
-"You can find a vendor by their Name, TIN, Email, or Internal Reference."
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr "업체명, 사업자 등록번호, 이메일 또는 내부 참조 사항으로 공급업체를 검색할 수 있습니다."
 
 #. module: purchase

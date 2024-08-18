@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -58,6 +58,11 @@ msgid "<strong>HS Code</strong>"
 msgstr "<strong>HS-Code</strong>"
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Shipping Method:</strong>"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
 msgstr "<strong>Versandgewicht: </strong>"
@@ -103,11 +108,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
 msgstr "Auf Versandmethoden anwendbar"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
-msgid "Bulk Weight"
-msgstr "Schüttgewicht"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -168,6 +168,11 @@ msgid "Delivery Carrier Selection Wizard"
 msgstr "Assistent zur Auswahl von Zustellern"
 
 #. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "Liefermethoden"
+
+#. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
 msgstr "Auswahlassistent für Lieferpakete"
@@ -211,6 +216,11 @@ msgid ""
 msgstr ""
 "Geschätzte Kosten: Dem Kunden werden die geschätzten Kosten für den Versand in Rechnung gestellt.\n"
 "Tatsächliche Kosten: Dem Kunden werden die tatsächlichen Kosten für den Versand in Rechnung gestellt, die Kosten für den Versand werden nach der Lieferung auf dem Verkaufsauftrag aktualisiert."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "FedEx"
+msgstr "FedEx"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -284,7 +294,6 @@ msgstr "Paket zu schwer!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
 msgid "Packages"
 msgstr "Pakete"
 
@@ -392,14 +401,12 @@ msgstr "Versandinformationen"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
-#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
 msgstr "Versandmethoden"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
 msgstr "Versandgewicht"
 
@@ -411,12 +418,8 @@ msgstr "Versandgewicht:"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
-msgid ""
-"Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+msgid "Standardized code for international shipping and goods declaration."
 msgstr ""
-"Standardisierter Code für den internationalen Versand und die "
-"Warendeklaration. Im Moment nur für den FedEx-Versand verwendet."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -454,7 +457,6 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
@@ -488,28 +490,6 @@ msgstr "Es gibt keine passende Versandregel."
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
 msgstr "Gesamtgewicht aller in dem Paket enthaltenen Produkte."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
-msgid ""
-"Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
-msgstr ""
-"Gesamtgewicht von Paketen und Produkten, die nicht in einem Paket enthalten "
-"sind. Bei Paketen, für die kein Versandgewicht angegeben ist, wird "
-"standardmäßig das Gesamtgewicht der Produkte verwendet. Dies ist das "
-"Gewicht, das zur Berechnung der Versandkosten verwendet wird."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
-msgid "Total weight of products which are not in a package."
-msgstr "Gesamtgewicht der Produkte, die sich nicht in einem Paket befinden."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
-msgid "Total weight of the package."
-msgstr "Gesamtgewicht des Pakets."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
@@ -561,11 +541,6 @@ msgid "Weight"
 msgstr "Gewicht"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
-msgid "Weight for Shipping"
-msgstr "Gewicht für Versand"
-
-#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
 msgstr "Gewicht für Versand"
@@ -585,7 +560,6 @@ msgstr "Gewicht:"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
-#, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
 "carriers (i.e. check that all of their transfers have a carrier assigned and"

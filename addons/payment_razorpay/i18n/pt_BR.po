@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:38+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -18,15 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-msgid ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                        Enable recurring payments on Razorpay"
-msgstr ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"Habilitar pagamentos recorrentes no Razorpay"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -49,6 +40,11 @@ msgstr "Não foi possível estabelecer a conexão com a API."
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Enable recurring payments on Razorpay"
+msgstr ""
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Key Id"
 msgstr "ID da chave"
 
@@ -67,6 +63,11 @@ msgstr "Nenhuma transação encontrada com a referência %s."
 #: model:ir.model,name:payment_razorpay.model_payment_provider
 msgid "Payment Provider"
 msgstr "Provedor de serviços de pagamento"
+
+#. module: payment_razorpay
+#: model:ir.model,name:payment_razorpay.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pagamento"
 
 #. module: payment_razorpay
 #: model:ir.model,name:payment_razorpay.model_payment_transaction
@@ -175,3 +176,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Webhook Secret"
 msgstr "Segredo do webhook"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_token.py:0
+msgid ""
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
+" this payment method"
+msgstr ""

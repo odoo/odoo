@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,14 +121,16 @@ msgstr "اضغط على 'استمرار' لاستئناف عملية الاست�
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "يحتوي العمود %s على قيم غير صحيحة (القيمة: %s) "
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "يحتوي العمود %s على قيم غير صحيحة. الخطأ في السطر %d: %s "
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -136,8 +139,6 @@ msgstr "اسم العمود"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr "فاصلة"
@@ -178,7 +179,6 @@ msgstr "أنشئ في"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
 msgstr "مُعرف قاعدة البيانات"
 
@@ -209,7 +209,6 @@ msgstr "اسم العرض "
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 msgid "Dot"
 msgstr "دوت"
 
@@ -229,14 +228,14 @@ msgstr "الترميز:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "خطأ في تفسير البيانات [%s:L%d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
-msgstr "خطأ في الصف %s: \"%s\" "
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -250,11 +249,9 @@ msgstr "حدث خطأ أثناء استيراد السجلات: يجب أن يك
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %d entries while the first row has %d. You may need to change "
-"the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"حدث خطأ أثناء استيراد التقارير: يجب أن يكون لكافة الصفوف نفس الحجم، ولكن لدى"
-" صف العنوان %d قيد بينما الصف الأول به %d. "
 
 #. module: base_import
 #. odoo-javascript
@@ -276,7 +273,6 @@ msgstr "يتطلب ملفات بصيغة Excel حيث أن التنسيق يتم
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "معرف خارجي"
@@ -309,7 +305,6 @@ msgstr "نوع الملف"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "حجم الملف يتجاوز الحد الأقصى المضبوط (%s بايت)"
@@ -350,12 +345,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Go to Import FAQ"
-msgstr "الذهاب إلى استيراد الأسئلة الشائعة "
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
 msgstr "المساعدة"
 
@@ -386,6 +375,17 @@ msgstr ""
 "                    بساطة، خاصةً عندما يحتوي الملف على الكثير من الأعمدة. "
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"إذا كان النموذج يستخدم الدردشة المفتوحة، سوف يقوم تتبع السجل بتعيين اشتراكات"
+" وإرسال إشعارات خلال عملية الاستيراد، ولكن يؤدي ذلك إلى إبطاء عملية "
+"الاستيراد. "
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -398,12 +398,6 @@ msgstr ""
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import"
 msgstr "استيراد"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Import FAQ"
-msgstr "استيراد الأسئلة الشائعة "
 
 #. module: base_import
 #. odoo-javascript
@@ -527,6 +521,12 @@ msgstr "معاينة"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "شريط التقدم "
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Reimport"
 msgstr "إعادة الاستيراد "
@@ -611,7 +611,6 @@ msgstr "الورقة: "
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
 msgstr "تخطي السجل "
 
@@ -635,7 +634,6 @@ msgstr "ابدأ من السطر "
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
 msgstr "إيقاف الاستيراد "
@@ -781,6 +779,16 @@ msgstr "استخدم الصف الأول كترويسة "
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "المستخدم"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"تحذير: تجاهل سطر العناوين، الأسطر الفارغة، والأسطر التي يتم إنشاؤها فقط من "
+"خلايا فارغة "
 
 #. module: base_import
 #. odoo-javascript

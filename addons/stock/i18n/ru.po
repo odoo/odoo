@@ -3,16 +3,17 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Anton Kaligin, 2024
 # Nadia Martynova, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Nadia Martynova, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Трансферы %(transfer_list)s: Вы должны указать номер Партии/Серийный номер для товаров %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -36,6 +40,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) существует в Локации %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -631,7 +637,7 @@ msgstr "<span class=\"o_stat_text\">Вон:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr "<span class=\"o_stat_text\">Перемещение продуктов</span>"
+msgstr "<span class=\"o_stat_text\">Перемещение товаров</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -706,7 +712,7 @@ msgstr "<span>Тип упаковки: </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr "<span>Продукты без назначенной упаковки</span>"
+msgstr "<span>Товары без назначенной упаковки</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -820,14 +826,14 @@ msgstr "<strong>Пакет</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product Barcode</strong>"
-msgstr "<strong>Штрих-код продукта</strong>"
+msgstr "<strong>Штрих-код товара</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product</strong>"
-msgstr "<strong>Продукт</strong>"
+msgstr "<strong>Товар</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -873,7 +879,7 @@ msgstr "<strong>В</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr "<strong>Отслеживаемый продукт(ы):</strong>"
+msgstr "<strong>Отслеживаемый(е) товар(ы):</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -883,7 +889,7 @@ msgstr "<strong>Адрес склада</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products?</strong>"
-msgstr "<strong>Куда вы хотите отправить продукцию?</strong>"
+msgstr "<strong>Куда вы хотите отправить товары?</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -899,7 +905,7 @@ msgstr "Штрих-код может быть присвоен только од
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
 msgstr ""
-"Для этого продукта уже существует правило пополнения запасов в этом месте."
+"Для этого товара уже существует правило пополнения запасов в этой локации."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -970,7 +976,7 @@ msgstr "Вид деятельности"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
-msgstr "Добавить продукт"
+msgstr "Добавить товар"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -1132,12 +1138,12 @@ msgstr "Все возвращенные ходы"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
 msgid "Allow New Product"
-msgstr "Разрешить новый продукт"
+msgstr "Разрешить новый товар"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr "Разрешить смешанные продукты"
+msgstr "Разрешить смешанные товары"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1210,12 +1216,12 @@ msgstr "Применяется для упаковки"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
 msgid "Applicable on Product"
-msgstr "Пригодно для продукта"
+msgstr "Пригодно для товара"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "Применяется для категории продукта"
+msgstr "Применяется для категории товаров"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_selectable
@@ -1268,7 +1274,7 @@ msgstr "Архивировано"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
-msgstr ""
+msgstr "Вы уверены, что хотите отменить это перемещение?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1365,7 +1371,7 @@ msgstr "Пакеты автоматической печати"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
 msgid "Auto Print Product Labels"
-msgstr "Автоматическая печать этикеток для продуктов"
+msgstr "Автоматическая печать этикеток для товаров"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
@@ -1412,7 +1418,7 @@ msgstr "Доступно"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
-msgstr "Доступные продукты"
+msgstr "Доступные товары"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__available_quantity
@@ -1428,6 +1434,8 @@ msgstr "Доступное количество"
 msgid ""
 "Available quantity should be set to zero before changing inventory tracking"
 msgstr ""
+"Доступное количество должно быть установлено на ноль перед изменением "
+"способа отслеживания"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -1638,13 +1646,13 @@ msgstr "Отменен"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Cannot move an empty package"
-msgstr ""
+msgstr "Нельзя перемещать пустую тару"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Cannot remove the location of a non empty package"
-msgstr ""
+msgstr "Нельзя убрать локацию для непустой тары"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
@@ -1659,7 +1667,7 @@ msgstr "Вместимость по пакетам"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Product"
-msgstr "Вместимость по продуктам"
+msgstr "Вместимость по товарам"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1707,7 +1715,7 @@ msgstr "Цепное перемещение существует"
 #: model:ir.actions.act_window,name:stock.action_change_product_quantity
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr "Изменить количество продукта"
+msgstr "Изменить количество товара"
 
 #. module: stock
 #. odoo-python
@@ -1733,7 +1741,7 @@ msgstr "Изменение типа операции для этой запис�
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr "Изменение продукта допускается только в статусе «Черновик»."
+msgstr "Изменение товара допускается только в статусе «Черновик»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
@@ -1820,7 +1828,7 @@ msgstr "Выберите макет листа для печати этикет�
 msgid "Choose whether to print product or lot/sn labels"
 msgstr ""
 "Выберите, какие этикетки печатать: этикетки на товар или этикетки на "
-"партию/шнур"
+"партию/серийный номер"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -2179,7 +2187,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create products easily by scanning using"
-msgstr ""
+msgstr "Создавайте товары просто сканирование с помощью"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2314,12 +2322,12 @@ msgstr "Дата создания"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Cross Dock"
-msgstr ""
+msgstr "Кросс-Док"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__xdock_type_id
 msgid "Cross Dock Type"
-msgstr ""
+msgstr "Тип Кросс-Дока"
 
 #. module: stock
 #. odoo-python
@@ -2799,7 +2807,7 @@ msgstr "Название демо"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Product"
-msgstr "Демо-продукт"
+msgstr "Демо-товар"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_packaging__route_ids
@@ -3218,7 +3226,7 @@ msgstr "Электронная почта, отправленная клиент
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "Пустые локации"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3354,7 +3362,7 @@ msgstr "Первый пришел - первый ушел (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "Первый номер Лота"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
@@ -6808,7 +6816,7 @@ msgstr "Вариант продукта"
 #: model:ir.actions.act_window,name:stock.stock_product_normal_action
 #: model:ir.ui.menu,name:stock.product_product_menu
 msgid "Product Variants"
-msgstr "Варианты продуктов"
+msgstr "Варианты товаров"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -7997,7 +8005,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap"
-msgstr "Отходы"
+msgstr "Брак"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -8008,7 +8016,7 @@ msgstr "Место хранения НСП"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr "Заказы по несоответствующей продукции"
+msgstr "Заявки на списание"
 
 #. module: stock
 #. odoo-python
@@ -8038,8 +8046,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"Несоответствующие продукты будут удалены с вашего склада. В конечном итоге, \n"
-"                 продукт будет в месте утилизации, которое может быть использовано для отчетности."
+"Бракование товара уберет его с вашего склада. В конечном итоге, продукт "
+"будет в Локации \"Брак\", которая может быть использована для отчетности."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9611,7 +9619,7 @@ msgstr "Подсчитать"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Deliver"
-msgstr ""
+msgstr "Доставить"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -9660,7 +9668,7 @@ msgstr "К обработке"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Получить"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9774,7 +9782,7 @@ msgstr "Отчет о прослеживаемости"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Отслеживать на складе"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10124,6 +10132,15 @@ msgid "Update Quantity"
 msgstr "Обновить количество"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Updating the location of this transfer will result in unreservation of the currently assigned items. An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n"
+"\n"
+"To avoid this, please discard the source location change before saving."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__1
 msgid "Urgent"
@@ -10441,6 +10458,12 @@ msgstr "Предупреждение о пикировке"
 #: code:addons/stock/models/product.py:0
 msgid "Warning!"
 msgstr "Внимание!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "Warning: change source location"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10781,14 +10804,16 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
 msgid ""
 "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "You can not delete moves linked to another operation"
+msgstr "Вы не можете удалять перемещения, связанные с другой операцией"
 
 #. module: stock
 #. odoo-python
@@ -10843,7 +10868,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
 msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
@@ -10945,7 +10969,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
-msgstr "Вы не можете удалить отходы которые делаются."
+msgstr "Вы не можете удалить отходы, которые уже перемещены."
 
 #. module: stock
 #. odoo-python

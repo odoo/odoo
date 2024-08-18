@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Maria Muntean, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Maria Muntean, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,15 +72,6 @@ msgstr "<option value=\"\">Țară...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
-msgstr ""
-"<strong>Nu a fost găsită nicio opțiune de plată potrivită.</strong><br/>\n"
-"                                Dacă credeți că este o eroare, vă rugăm să contactați administratorul site-ului."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
 msgstr "<strong>Atenție</strong> Moneda lipsește sau este incorectă."
 
@@ -100,7 +92,6 @@ msgid "Activate Payments"
 msgstr "Activează plățile"
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
 msgstr "Activează Stripe"
@@ -119,7 +110,6 @@ msgstr "Adaugă o nouă opțiune pre-completată"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 msgid "Amount"
 msgstr "Sumă"
@@ -159,7 +149,6 @@ msgstr "Configurare %s"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
-#: model:ir.model,name:website_payment.model_res_country
 msgid "Country"
 msgstr "Țară"
 
@@ -169,6 +158,8 @@ msgid ""
 "Country\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"Țară\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -178,7 +169,6 @@ msgstr "Țara este necesară."
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -209,7 +199,7 @@ msgstr "Afișează opțiunile"
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Donate"
-msgstr ""
+msgstr "Donați"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -257,6 +247,8 @@ msgid ""
 "Email\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"Email\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-javascript
@@ -293,7 +285,6 @@ msgstr "Este donație"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
-#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
 msgstr "Este țară suportată de Stripe"
 
@@ -329,6 +320,8 @@ msgid ""
 "Name\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"Nume\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
 #. odoo-python
@@ -376,7 +369,7 @@ msgstr "Tranzacție plată"
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Procesarea plății a eșuat"
 
 #. module: website_payment
 #. odoo-python
@@ -467,8 +460,8 @@ msgstr "Vă mulțumim pentru donația dumneavoastră de"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
-msgid "The minimum donation amount is %s%s%s"
-msgstr "Suma minimă de donație este %s%s%s"
+msgid "The minimum donation amount is %(amount)s"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay

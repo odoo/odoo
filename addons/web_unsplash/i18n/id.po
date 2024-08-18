@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -18,11 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: web_unsplash
-#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Generate an Access Key"
-msgstr "<i class=\"oi oi-arrow-right\"/> Buat Kunci Akses"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
@@ -63,6 +58,11 @@ msgstr "ERROR: URL Unsplash Tidak Dikenali!"
 #: code:addons/web_unsplash/controllers/main.py:0
 msgid "ERROR: Unknown Unsplash notify URL!"
 msgstr "ERROR: URL notifikasi Unsplash Tidak Dikenali!"
+
+#. module: web_unsplash
+#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
+msgid "Generate an Access Key"
+msgstr ""
 
 #. module: web_unsplash
 #. odoo-javascript
@@ -142,8 +142,8 @@ msgstr "Kunci Tidak Sah"
 #. module: web_unsplash
 #. odoo-javascript
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
-msgid "Uploading %s '%s' images."
-msgstr "Mengunggah %s gambar '%s'."
+msgid "Uploading %(count)s '%(query)s' images."
+msgstr ""
 
 #. module: web_unsplash
 #. odoo-javascript
@@ -173,3 +173,9 @@ msgstr "dan tempel di sini:"
 #: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 msgid "here:"
 msgstr "di sini:"
+
+#. module: web_unsplash
+#. odoo-javascript
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+msgid "unsplash"
+msgstr ""

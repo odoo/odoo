@@ -6,19 +6,19 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
-# Martin Trigaux, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Antti Oksman <antti.oksman@web-veistamo.fi>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,10 +28,22 @@ msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "#{Math.round(val * 100) / 100} stars on 5"
+msgstr ""
+
+#. module: portal_rating
+#. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Add Review"
 msgstr "Lisää arvostelu"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
+msgid "Are you sure you want to permanently delete this comment?"
+msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
@@ -70,15 +82,28 @@ msgstr "Kommentoitu"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 msgid "Delete"
 msgstr "Poista"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
+msgid "Delete confirmation"
+msgstr ""
+
+#. module: portal_rating
+#. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Details"
 msgstr "Tiedot"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
+msgid "Discard"
+msgstr "Hylkää"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -153,6 +178,12 @@ msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "Progress bar"
+msgstr "Edistymispalkki"
+
+#. module: portal_rating
+#. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 msgid "Published on"
 msgstr "Julkastu"
@@ -224,7 +255,6 @@ msgstr "Kirjoita kommenttisi"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 msgid "avatar"
 msgstr "avatar"

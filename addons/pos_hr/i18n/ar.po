@@ -3,16 +3,17 @@
 # 	* pos_hr
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
 msgstr "الصلاحيات المتقدمة "
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "All Employees"
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
@@ -56,6 +62,12 @@ msgid "Config Settings"
 msgstr "تهيئة الإعدادات "
 
 #. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.js:0
+msgid "Connection with your PIN code"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
@@ -66,8 +78,8 @@ msgstr "الموظف"
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
-msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr "الموظف: %s - تهيئة نقطة البيع: %s \n"
+msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
@@ -80,6 +92,18 @@ msgstr "الموظفون الذين يملكون صلاحيات وصول أسا�
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
 msgid "Employees with manager access"
 msgstr "الموظفون الذين يملكون صلاحية وصول المدير "
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
+msgid "Enter Pin"
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
+msgid "Identify Manually"
+msgstr "التعريف يدوياً "
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -109,13 +133,25 @@ msgstr "قفل "
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
-msgid "Log in to"
-msgstr "تسجيل الدخول إلى"
+msgid "Logo"
+msgstr "الشعار"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "No Cashiers"
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "No employee"
 msgstr "لا يوجد موظف "
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.js:0
+msgid "PIN not found"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -158,16 +194,32 @@ msgid "Point of Sale Session"
 msgstr "جلسة نقطة البيع"
 
 #. module: pos_hr
+#: model:ir.model,name:pos_hr.model_product_product
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 msgid "Scan your badge"
 msgstr "قم بمسح شارتك "
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "Select Employee(s)"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
-msgid "Select Cashier"
-msgstr "تحديد أمين الصندوق "
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "There are no employees to select as cashier. Please create one."
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.js:0
+msgid "Wrong PIN"
+msgstr "الرمز السري غير صحيح"
 
 #. module: pos_hr
 #. odoo-python
@@ -178,9 +230,3 @@ msgid ""
 msgstr ""
 "لا يمكنك حذف موظف قد يكون مستخدَماً في جلسة نقطة بيع نشطة. قم بإغلاق الجلسة "
 "(الجلسات) أولاً: \n"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
-msgid "or"
-msgstr "أو"

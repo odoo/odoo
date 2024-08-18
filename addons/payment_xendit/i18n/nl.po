@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:38+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -23,11 +23,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (status %s). Please "
-"try again."
+"An error occurred during the processing of your payment (%s). Please try "
+"again."
 msgstr ""
-"Er is een fout opgetreden tijdens het verwerken van je betaling (status %s)."
-" Probeer het opnieuw."
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
+msgid "Card Code"
+msgstr "Kaartcode"
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
+msgid "Card Number"
+msgstr "Kaartnummer"
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
@@ -39,6 +47,34 @@ msgstr "Code"
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
 msgstr "Kan geen verbinding maken met de API."
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
+msgid "Expiration"
+msgstr "Vervaldatum"
+
+#. module: payment_xendit
+#. odoo-javascript
+#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+msgid "Invalid CVN"
+msgstr ""
+
+#. module: payment_xendit
+#. odoo-javascript
+#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+msgid "Invalid Card Number"
+msgstr ""
+
+#. module: payment_xendit
+#. odoo-javascript
+#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+msgid "Invalid Date"
+msgstr ""
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
+msgid "MM"
+msgstr "MM"
 
 #. module: payment_xendit
 #. odoo-python
@@ -55,6 +91,17 @@ msgstr "Betaalprovider"
 #: model:ir.model,name:payment_xendit.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_xendit
+#. odoo-javascript
+#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Betalingsverwerking mislukt"
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Public Key"
+msgstr "Publieke sleutel"
 
 #. module: payment_xendit
 #. odoo-python
@@ -83,6 +130,12 @@ msgid "The technical code of this payment provider."
 msgstr "De technische code van deze betaalprovider."
 
 #. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "De transactie is niet gekoppeld aan een token."
+
+#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Webhook Token"
 msgstr "Token Webhook"
@@ -93,6 +146,11 @@ msgid "Xendit"
 msgstr "Xendit"
 
 #. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
+msgid "Xendit Public Key"
+msgstr ""
+
+#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
 msgid "Xendit Secret Key"
 msgstr "Xendit Secret Key"
@@ -101,3 +159,8 @@ msgstr "Xendit Secret Key"
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
 msgid "Xendit Webhook Token"
 msgstr "Xendit Webhook Token"
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
+msgid "YYYY"
+msgstr ""

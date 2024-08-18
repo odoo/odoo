@@ -3,16 +3,16 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2024
 # Marianna Ciofani, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -254,6 +254,8 @@ msgstr ""
 "proprie esigenze."
 
 #. module: website
+#: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1479,6 +1481,8 @@ msgid ""
 "A font with the same name already exists.\n"
 "Try renaming the uploaded file."
 msgstr ""
+"Esiste già un font con lo stesso nome.\n"
+"Prova a rinominare il file caricato."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
@@ -1785,13 +1789,13 @@ msgstr "Aggiungi anno"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Add a Custom Font"
-msgstr ""
+msgstr "Aggiungi font personalizzato"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Add a Google font or upload a custom font"
-msgstr ""
+msgstr "Aggiungi un font Google o carica un font personalizzato"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3101,7 +3105,7 @@ msgstr "Scegli altro tema"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Choose from list"
-msgstr ""
+msgstr "Scegli dall'elenco"
 
 #. module: website
 #. odoo-javascript
@@ -3782,7 +3786,7 @@ msgstr "Campo personalizzato"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Custom Font"
-msgstr ""
+msgstr "Font personalizzato"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4950,7 +4954,7 @@ msgstr "Esplora"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Explore on"
-msgstr ""
+msgstr "Esplora su"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
@@ -5122,13 +5126,13 @@ msgstr "Campi"
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "File '%s' exceeds maximum allowed file size"
-msgstr ""
+msgstr "Il file '%s' supera la dimensione massima consentita"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "File '%s' is not recognized as a font"
-msgstr ""
+msgstr "Il file '%s' non è riconosciuto come font"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5344,19 +5348,19 @@ msgstr "Dimensione carattere"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font access"
-msgstr ""
+msgstr "Accesso font"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font exists"
-msgstr ""
+msgstr "Il font esiste"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font name already used"
-msgstr ""
+msgstr "Nome font già usato"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
@@ -6882,6 +6886,7 @@ msgstr "Lasciare vuoto per usare un valore predefinito"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
+#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -8221,6 +8226,12 @@ msgstr "Nessun dominio configurato per questo sito web."
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "None"
 msgstr "Nessuno"
+
+#. module: website
+#: model:website,prevent_zero_price_sale_text:website.default_website
+#: model:website,prevent_zero_price_sale_text:website.website2
+msgid "Not Available For Sale"
+msgstr "Non disponibile per la vendita"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
@@ -10090,7 +10101,7 @@ msgstr "Vestibilità sicura e confortevole"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Select a Google Font..."
-msgstr ""
+msgstr "Seleziona un font Google..."
 
 #. module: website
 #. odoo-javascript
@@ -11254,12 +11265,13 @@ msgstr "Il nome della pagina utilizzabile nell'URL"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "The quick brown fox jumps over the lazy dog."
 msgstr ""
+"Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja!"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "The selected font cannot be accessed."
-msgstr ""
+msgstr "Non è possibile accedere al font selezionato."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -11332,6 +11344,7 @@ msgstr "Colori tema"
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
+#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -11609,6 +11622,8 @@ msgid ""
 "This uploaded font already exists.\n"
 "To replace an existing font, remove it first."
 msgstr ""
+"Il font caricato esiste già.\n"
+"Per sostituire un font esistente è necessario rimuoverlo."
 
 #. module: website
 #. odoo-javascript
@@ -11776,7 +11791,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "To comply with some local regulations"
-msgstr ""
+msgstr "Per rispettare alcune normative locali"
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
@@ -12751,6 +12766,7 @@ msgstr "Visitatori web"
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
+#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -14025,7 +14041,7 @@ msgstr "sì"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "zip, ttf, woff, woff2, otf"
-msgstr ""
+msgstr "zip, ttf, woff, woff2, otf"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options

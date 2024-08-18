@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -32,6 +32,7 @@ msgstr ""
 "如果需要网站主题，可从 https://github.com/odoo/design-themes 下载。\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "启用"
@@ -56,14 +57,15 @@ msgstr "关闭"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr "与 %s 的连接失败 无法获取行业模块列表"
+msgid ""
+"Connection to %(url)s failed, the module %(module)s cannot be downloaded."
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr "与 %s 的连接失败，无法下载模块 %s。"
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr "与 %s 的连接失败 无法获取行业模块列表"
 
 #. module: base_import_module
 #. odoo-python
@@ -96,7 +98,6 @@ msgstr "显示名称"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid ""
 "Error while importing module '%(module)s'.\n"
 "\n"
@@ -110,7 +111,6 @@ msgstr ""
 
 #. module: base_import_module
 #. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "文件 '%s' 超过了允许的大小"
@@ -171,7 +171,6 @@ msgstr "安装"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Install an Industry"
 msgstr "安装一个行业"
 
@@ -296,6 +295,7 @@ msgid "The module %s cannot be downloaded"
 msgstr "无法下载模块 %s"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "升级"

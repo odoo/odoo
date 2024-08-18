@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -41,6 +41,11 @@ msgid "Display Name"
 msgstr "표시명"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__skill_ids
+msgid "Expected Skills"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__id
 msgid "ID"
 msgstr "ID"
@@ -49,6 +54,11 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__is_interviewer
 msgid "Is Interviewer"
 msgstr "면접관"
+
+#. module: hr_recruitment_skills
+#: model:ir.model,name:hr_recruitment_skills.model_hr_job
+msgid "Job Position"
+msgstr "직무 영역"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
@@ -61,6 +71,38 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: hr_recruitment_skills
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid "Matching Applicants"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
+msgid "Matching Score(%)"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
+msgid "Matching Skills"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
+msgid "Missing Skills"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills
+msgid "Move to this Job Position"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid "No Matching Applicants"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress"
 msgstr "진행"
@@ -69,6 +111,13 @@ msgstr "진행"
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr "관련 지식 없음(0%)에서 완전히 숙달된 상태(100%)까지의 진행 상황."
+
+#. module: hr_recruitment_skills
+#. odoo-javascript
+#: code:addons/hr_recruitment_skills/static/src/components/search_job_applicant_menu/search_job_applicant_menu.xml:0
+#: model:ir.actions.server,name:hr_recruitment_skills.action_applicant_search_applicant
+msgid "Search Matching Applicants"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
@@ -120,3 +169,11 @@ msgstr "%(level)s능력 수준이 스킬 유형%(type)s에 맞지 않습니다."
 #: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "동일 능력에 대해 두 가지 수준이 함께 허용되지 않습니다."
+
+#. module: hr_recruitment_skills
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid ""
+"We do not have any applicants who meet the skill requirements for this job "
+"position in the database at the moment."
+msgstr ""

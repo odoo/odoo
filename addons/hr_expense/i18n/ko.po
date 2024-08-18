@@ -3,13 +3,14 @@
 # 	* hr_expense
 # 
 # Translators:
+# Daye Jeong, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -469,6 +470,7 @@ msgstr "비용:"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
@@ -1301,6 +1303,13 @@ msgstr "나의 팀"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Name"
 msgstr "이름"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
+msgid "New"
+msgstr "신규"
 
 #. module: hr_expense
 #. odoo-python
@@ -2412,7 +2421,7 @@ msgstr "비용이 보고서에 연결되어 있는 경우 총액을 0으로 설�
 msgid ""
 "You do not have the rights to add or remove any expenses on an approved or "
 "paid expense report."
-msgstr ""
+msgstr "승인 또는 지급된 경비 보고서에서 비용을 추가하거나 제거할 수 있는 권한이 없습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -2534,3 +2543,5 @@ msgid ""
 "from the partner to fix the configuration. Cancel this invoice and start "
 "again."
 msgstr ""
+"자신의 회사에 청구서를 발행하시겠습니까? 문제를 해결하려면 파트너의 세부 정보에서 \"회사 이름\"을 제거한 후, 이 청구서를 취소하고 "
+"다시 시작하세요."

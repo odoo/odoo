@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -65,6 +65,11 @@ msgid "All Languages"
 msgstr "所有语言"
 
 #. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meet_main
+msgid "All Rooms"
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_event__meeting_room_allow_creation
 #: model:ir.model.fields,field_description:website_event_meet.field_event_type__meeting_room_allow_creation
 msgid "Allow Room Creation"
@@ -87,6 +92,11 @@ msgstr "你确定要复制这个房间吗？"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
 msgid "Audience"
 msgstr "听众"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meet_main
+msgid "Back to all Rooms"
+msgstr ""
 
 #. module: website_event_meet
 #. odoo-javascript
@@ -156,6 +166,13 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__create_date
 msgid "Created on"
 msgstr "创建日期"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meet
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
+"OF ALL EVENTS"
+msgstr ""
 
 #. module: website_event_meet
 #. odoo-javascript
@@ -433,11 +450,9 @@ msgstr "本次活动"
 #. odoo-python
 #: code:addons/website_event_meet/controllers/website_event_main.py:0
 msgid ""
-"The event %s starts on %s (%s). \n"
-"Join us there to chat about \"%s\"!"
+"The event %(name)s starts on %(date_begin)s (%(timezone)s).\n"
+"Join us there to chat about \"%(subject)s\"!"
 msgstr ""
-"活动%s将于%s (%s) 开始。 \n"
-"加入我们讨论 \"%s\" 吧！"
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -20,14 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid ""
 "<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
 "app</small>"
 msgstr "<small class=\"text-center text-wrap lh-sm\">금융 앱에서 스캔해 주세요.</small>"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "<strong class=\"mt-auto\">Communication: </strong>"
 msgstr "<strong class=\"mt-auto\">커뮤니케이션: </strong>"
 
@@ -57,7 +57,7 @@ msgid "Enable the use of QR-codes when paying by wire transfer."
 msgstr "QR 코드를 사용하여 계좌 이체를 할 수 있게 합니다."
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "Finalize your payment"
 msgstr "결제 완료하기"
 
@@ -68,7 +68,7 @@ msgid "No transaction found matching reference %s."
 msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "OR"
 msgstr "또는"
 
@@ -105,5 +105,6 @@ msgstr "이 결제대행업체의 기술 코드입니다."
 
 #. module: payment_custom
 #: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+#: model:payment.method,name:payment_custom.payment_method_wire_transfer
 msgid "Wire Transfer"
 msgstr "계좌 이체"

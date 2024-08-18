@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:38+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -18,15 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-msgid ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                        Enable recurring payments on Razorpay"
-msgstr ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                        在 Razorpay 上啟用經常付款"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -48,6 +39,11 @@ msgstr "無法建立與 API 的連線。"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Enable recurring payments on Razorpay"
+msgstr ""
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Key Id"
 msgstr "密鑰識別碼"
 
@@ -66,6 +62,11 @@ msgstr "沒有找到匹配參考 %s 的交易。"
 #: model:ir.model,name:payment_razorpay.model_payment_provider
 msgid "Payment Provider"
 msgstr "支付提供商"
+
+#. module: payment_razorpay
+#: model:ir.model,name:payment_razorpay.model_payment_token
+msgid "Payment Token"
+msgstr "付款代碼(token)"
 
 #. module: payment_razorpay
 #: model:ir.model,name:payment_razorpay.model_payment_transaction
@@ -172,3 +173,11 @@ msgstr "由 Razorpay 處理的交易無法在 Odoo 中手動取消。"
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Webhook Secret"
 msgstr "網絡鈎子秘密"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_token.py:0
+msgid ""
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
+" this payment method"
+msgstr ""

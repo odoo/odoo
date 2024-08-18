@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,20 +59,20 @@ msgstr "เก็บถาวรแล้ว"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
-"Are you sure you want to switch this calendar to 1 week calendar? All "
-"entries will be lost"
+"Are you sure you want to switch to a 1-week calendar? All work entries will "
+"be lost."
 msgstr ""
-"คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนปฏิทินนี้เป็นปฏิทินแบบ 1 สัปดาห์ "
-"รายการทั้งหมดจะหายไป"
+"คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนไปใช้ปฏิทินแบบ 1 สัปดาห์ "
+"รายการงานทั้งหมดจะหายไป"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
-"Are you sure you want to switch this calendar to 2 weeks calendar? All "
-"entries will be lost"
+"Are you sure you want to switch to a 2-week calendar? All work entries will "
+"be lost."
 msgstr ""
-"คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนปฏิทินนี้เป็นปฏิทินแบบ 2 สัปดาห์ "
-"รายการทั้งหมดจะหายไป"
+"คุณแน่ใจหรือไม่ว่าต้องการเปลี่ยนไปใช้ปฏิทินแบบ 2 สัปดาห์ "
+"รายการงานทั้งหมดจะหายไป"
 
 #. module: resource
 #. odoo-python
@@ -145,11 +146,6 @@ msgstr "สร้างเมื่อ"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Date"
-msgstr "วันที่"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Dates"
 msgstr "วันที่"
 
 #. module: resource
@@ -579,8 +575,10 @@ msgstr "ฟิลด์เทคนิคสำหรับ UX เป้าห�
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
-msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr "สัปดาห์ปัจจุบัน (จาก %s ถึง %s) ตรงกับสัปดาห์ %s"
+msgid ""
+"The current week (from %(first_day)s to %(last_day)s) corresponds to week "
+"number %(number)s."
+msgstr ""
 
 #. module: resource
 #. odoo-python

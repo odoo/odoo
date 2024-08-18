@@ -3,13 +3,14 @@
 # 	* spreadsheet_dashboard
 # 
 # Translators:
+# Tony Ng, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -80,7 +81,6 @@ msgstr "建立於"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
-#: model:ir.module.category,name:spreadsheet_dashboard.dashboard_management
 msgid "Dashboard"
 msgstr "儀表板"
 
@@ -139,6 +139,11 @@ msgid "ID"
 msgstr "識別號"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
+msgid "Is Published"
+msgstr "已發佈"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_uid
@@ -183,6 +188,11 @@ msgid ""
 "Only chart figures are displayed in small screens but this dashboard doesn't"
 " contain any"
 msgstr "細小螢幕只會顯示統計圖表，但目前的概覽檢視畫面未有任何圖表。"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__published_dashboard_ids
+msgid "Published Dashboard"
+msgstr "已發佈概覽畫面"
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
@@ -232,11 +242,6 @@ msgstr "縮圖"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
 msgid "URL"
 msgstr "網址"
-
-#. module: spreadsheet_dashboard
-#: model:ir.module.category,description:spreadsheet_dashboard.dashboard_management
-msgid "User access level for Dashboard module"
-msgstr "概覽畫面模組的用戶存取級別"
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website

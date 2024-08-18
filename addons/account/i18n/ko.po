@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-24 12:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -645,6 +645,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요,\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)님.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님.\n"
+"        </t>\n"
+"        <br><br>\n"
+"        다음 청구서 내역을 확인해 주시기 바랍니다:\n"
+"        <t t-if=\"object.name\">\n"
+"            인보이스 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            인보이스\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        금액 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        발행인 <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            해당 인보이스는 이미 지불이 완료되었습니다.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            빠른 시일 내에 결제를 부탁드립니다.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                결제 시 다음 내용을 참조용으로 기재해 주세요: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            참고 사항: 작업 기록은 <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">포털</a>에서 확인하실 수 있습니다.\n"
+"        </t>\n"
+"        <br><br>\n"
+"        궁금한 점이 있으시면 언제든지 연락주시기 바랍니다..\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -2224,7 +2273,7 @@ msgstr "전표 수정: {link} {amount}의 {percent}%%, 기준일 {new_date}"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Advanced Billing"
-msgstr ""
+msgstr "고급 청구 기능"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -11543,7 +11592,7 @@ msgstr "인식 기준일"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
+msgstr "해당 재정 상태를 기준으로 모든 세금과 계정을 다시 계산합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -13907,7 +13956,7 @@ msgstr "이 유통 항목이 속해 있는 회사입니다."
 msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
-msgstr ""
+msgstr "해외 VAT 번호의 국가 코드가 그룹 내 어떤 국가와도 일치하지 않습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14972,7 +15021,7 @@ msgstr "해당일을 포함하여 선택한 날짜까지 반복 발행됩니다,
 msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
-msgstr ""
+msgstr "현재 선택된 재정 위치에 따라 모든 세금과 계정이 새로 업데이트됩니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15572,7 +15621,7 @@ msgstr "업데이트 전용"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "세금 및 계정 업데이트"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16368,7 +16417,7 @@ msgstr "인바운드 및 아웃바운드 이동에 대한 결제를 동시에 �
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
-msgstr ""
+msgstr "해당 전표 항목은 초안 상태로 재설정할 수 없습니다. 대신 취소를 요청해야 합니다."
 
 #. module: account
 #. odoo-python
@@ -16409,7 +16458,7 @@ msgstr "전표의 계좌 유형이 은행 계좌인 경우에는 미수금이나
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "선택한 국가 그룹 외부에 있는 국가에는 재정 포지션을 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python

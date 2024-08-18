@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -120,8 +120,6 @@ msgstr "Asetukset"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid "Configuration"
 msgstr "Asetukset"
 
@@ -138,13 +136,11 @@ msgstr "Vahvista"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_uid
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__create_uid
 msgid "Created by"
 msgstr "Luonut"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_date
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__create_date
 msgid "Created on"
 msgstr "Luotu"
 
@@ -171,7 +167,6 @@ msgstr "Hylkää"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -215,12 +210,9 @@ msgstr "Tapahtuman toistuvuussääntö"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
 "For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
-"Either update the events/attendees or archive these events %s:\n"
-"%s"
+"Either update the events/attendees or archive these events %(details)s:\n"
+"%(invalid_events)s"
 msgstr ""
-"Jotta Odoo ja Outlook-kalenteri voidaan synkronoida oikein, kaikilla osallistujilla on oltava sähköpostiosoite. Jotkin tapahtumat eivät kuitenkaan noudata tätä ehtoa. Niin kauan kuin tapahtumat ovat virheellisiä, kalentereita ei synkronoida.\n"
-"Joko päivitä tapahtumat/osallistujat tai arkistoi nämä tapahtumat %s:\n"
-"%s"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -234,7 +226,6 @@ msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__id
 msgid "ID"
 msgstr "ID"
 
@@ -264,8 +255,8 @@ msgstr ""
 "tallentamista."
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_last_sync_date
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_last_sync_date
 msgid "Last Sync Date"
 msgstr "Viimeisin synkronointipäivä"
 
@@ -276,19 +267,17 @@ msgstr "Viimeisin synkronointiaika"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_uid
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__write_uid
 msgid "Last Updated by"
 msgstr "Viimeksi päivittänyt"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_date
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,help:microsoft_calendar.field_res_users__microsoft_last_sync_date
+#: model:ir.model.fields,help:microsoft_calendar.field_res_users_settings__microsoft_last_sync_date
 msgid "Last synchronization date with Outlook Calendar"
 msgstr "Viimeisin synkronointipäivä Outlook-kalenterin kanssa"
 
@@ -296,16 +285,6 @@ msgstr "Viimeisin synkronointipäivä Outlook-kalenterin kanssa"
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
 msgstr "Jätä ne koskematta"
-
-#. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_account_id
-msgid "Microsoft Calendar Account"
-msgstr "Microsoftin kalenteritili"
-
-#. module: microsoft_calendar
-#: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_credentials
-msgid "Microsoft Calendar Account Data"
-msgstr "Microsoftin kalenteritilin tiedot"
 
 #. module: microsoft_calendar
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
@@ -324,8 +303,8 @@ msgid "Microsoft Client_key"
 msgstr "Microsoft Client_key"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__calendar_sync_token
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_sync_token
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_calendar_sync_token
 msgid "Microsoft Next Sync Token"
 msgstr "Microsoft seuraavan synkronoinnin pääsytunniste"
 
@@ -372,8 +351,6 @@ msgstr "Järjestäjän tapahtuman Id"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 msgid "Outlook"
 msgstr "Outlook"
 
@@ -383,8 +360,8 @@ msgid "Outlook Calendar"
 msgstr "Outlook-kalenteri"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
 msgstr "Outlookin synkronointi päättyi"
 
@@ -426,18 +403,6 @@ msgid "Reset Outlook Calendar Account"
 msgstr "Nollaa Outlook-kalenteritili"
 
 #. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "Stop Synchronization"
-msgstr "Pysäytä synkronointi"
-
-#. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "Success"
-msgstr "Onnistuminen"
-
-#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
 msgstr "Synkronoi tietue Microsoftin kalenterin kanssa"
@@ -469,17 +434,6 @@ msgid "The account for the Outlook Calendar service is not configured."
 msgstr "Outlook-kalenteripalvelun tiliä ei ole määritetty."
 
 #. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "The synchronization with Outlook calendar was successfully stopped."
-msgstr "Synkronointi Outlook-kalenterin kanssa lopetettiin onnistuneesti."
-
-#. module: microsoft_calendar
-#: model:ir.model.constraint,message:microsoft_calendar.constraint_res_users_microsoft_token_uniq
-msgid "The user has already a microsoft account"
-msgstr "Käyttäjällä on jo Microsoft-tili"
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr "Tämä vaikuttaa vain tapahtumiin, joiden omistaja on käyttäjä"
@@ -499,9 +453,13 @@ msgstr "Yleinen tapahtuma Id"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_users
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__user_ids
 msgid "User"
 msgstr "Käyttäjä"
+
+#. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_res_users_settings
+msgid "User Settings"
+msgstr "Käyttäjäasetukset"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -512,20 +470,3 @@ msgstr "Käyttäjän pääsytunniste"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
 msgstr "Käyttäjän olemassa olevat tapahtumat"
-
-#. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid ""
-"You are about to stop the synchronization of your calendar with Outlook. Are"
-" you sure you want to continue?"
-msgstr ""
-"Olet lopettamassa kalenterisi synkronoinnin Outlookin kanssa. Haluatko "
-"varmasti jatkaa?"
-
-#. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "Your administrator paused the synchronization with Outlook Calendar."
-msgstr ""
-"Järjestelmänvalvojasi keskeytti synkronoinnin Outlook-kalenterin kanssa."

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,23 +46,9 @@ msgstr ""
 "title=\"Arrow\"/>"
 
 #. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
-msgid ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                    Write one."
-msgstr ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                    Escreva algo."
-
-#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<small class=\"badge text-bg-danger\">Unpublished</small>"
 msgstr "<small class=\"badge text-bg-danger\">Não publicado</small>"
-
-#. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
-msgid "<span class=\"btn border-0 py-1 px-2\">×</span>"
-msgstr "<span class=\"btn border-0 py-1 px-2\">×</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
@@ -72,6 +59,11 @@ msgstr "<span class=\"fa fa-plus me-1\"/> Adicionar expositores"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<span class=\"h5 m-3\">Other exhibitors</span>"
 msgstr "<span class=\"h5 m-3\">Outros expositores</span>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_kanban
+msgid "<span class=\"text-bg-success\">Published</span>"
+msgstr "<span class=\"text-bg-success\">Publicado</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -146,6 +138,11 @@ msgid "All Countries"
 msgstr "Todos os países"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_exhibitor_main
+msgid "All Exhibitors"
+msgstr "Todos os expositores"
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_sponsorship
 msgid "All Levels"
 msgstr "Todos os níveis"
@@ -182,6 +179,11 @@ msgstr "Participantes poderão entrar na reunião"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "Available from"
 msgstr "Disponível a partir de"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_exhibitor_main
+msgid "Back to all Exhibitors"
+msgstr "Voltar para todos os expositores"
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type1
@@ -360,7 +362,6 @@ msgstr "Horário de término"
 
 #. module: website_event_exhibitor
 #. odoo-javascript
-#: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: model:ir.model,name:website_event_exhibitor.model_event_event
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_id
@@ -827,11 +828,6 @@ msgid "Ratings"
 msgstr "Avaliações"
 
 #. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
-msgid "Register"
-msgstr "Inscrição"
-
-#. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
@@ -871,6 +867,11 @@ msgstr "Erro no envio de SMS"
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Sales and Distribution"
 msgstr "Vendas e distribuição"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
+msgid "Search an exhibitor ..."
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sequence
@@ -1002,16 +1003,6 @@ msgid "Talent Management"
 msgstr "Gestão de talentos"
 
 #. module: website_event_exhibitor
-#. odoo-python
-#: code:addons/website_event_exhibitor/controllers/website_event_main.py:0
-msgid ""
-"The event %s starts on %s (%s). \n"
-"Join us there to meet %s!"
-msgstr ""
-"O evento %s começará em %s (%s). \n"
-"Junte-se a nós para conhecer %s!"
-
-#. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
 msgid "The full URL to access the document through the website."
 msgstr "A URL completa para acessar o documento através do site."
@@ -1122,7 +1113,6 @@ msgstr "ex., a melhor escolha para a sua casa"
 
 #. module: website_event_exhibitor
 #. odoo-javascript
-#: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 msgid "is not available right now."
 msgstr "não está disponível agora."

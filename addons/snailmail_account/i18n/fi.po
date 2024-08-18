@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -54,6 +54,12 @@ msgid "By Post"
 msgstr "Postitse"
 
 #. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/wizard/account_move_send.py:0
+msgid "Check Invoice(s)"
+msgstr ""
+
+#. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
 msgid "Companies"
 msgstr "Yritykset"
@@ -79,11 +85,6 @@ msgid "Send By Post Readonly"
 msgstr "Lähetä postitse Vain luku"
 
 #. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_warning_message
-msgid "Send By Post Warning Message"
-msgstr "Lähetä postitse varoitusviesti"
-
-#. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
 #: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
 msgid "Send by Post"
@@ -103,3 +104,9 @@ msgid ""
 msgstr ""
 "Seuraavissa laskuissa mainituilla kumppaneilla ei ole voimassa olevaa "
 "osoitetta. Näitä laskuja ei lähetetä: %s"
+
+#. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/wizard/account_move_send.py:0
+msgid "View Invoice(s)"
+msgstr ""

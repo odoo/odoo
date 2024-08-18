@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -43,7 +43,6 @@ msgstr "<span class=\"o_stat_text\"> Учасники</span>"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
-#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
 msgstr "<span class=\"o_stat_text\"> Ліди</span>"
 
@@ -87,6 +86,12 @@ msgstr "Автоматично призначає створені ліди ці
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
 msgid "Automatically assign the created leads to this Salesperson."
 msgstr "Автоматично призначає створені ліди цьому продавцю."
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
+msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -145,20 +150,27 @@ msgid "Default lead type when this rule is applied."
 msgstr "Тип ліда за замовчуванням при застосуванні цього правила."
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_event
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_id
 msgid "Event"
 msgstr "Подія"
 
 #. module: event_crm
-#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
-msgid "Event Categories"
-msgstr "Категорії зустрічі"
+#: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
+msgid "Event CRM: Generate Leads based on Rules"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_request
+msgid "Event Lead Request"
+msgstr ""
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -169,6 +181,11 @@ msgstr "Правила лідів з події"
 #: model:ir.model,name:event_crm.model_event_registration
 msgid "Event Registration"
 msgstr "Реєстрація події"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
+msgid "Event Templates"
+msgstr "Шаблони події"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
@@ -215,6 +232,18 @@ msgid "For any of these Events"
 msgstr "Для будь-якої з цих подій"
 
 #. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Generate Leads"
+msgstr "Генерація лідів"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Got it! We've noted your request. Your leads will be created soon!"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
 msgid "ID"
 msgstr "ID"
@@ -280,6 +309,7 @@ msgstr "Лід/Нагода"
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_registration
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_ids
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_ids
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "Leads"
 msgstr "Ліди"
 
@@ -311,13 +341,23 @@ msgid "No registration found"
 msgstr "Не знайдено жодної реєстрації"
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
+msgid "Ongoing Generation Request"
+msgstr ""
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Only Event Managers are allowed to re-generate all leads."
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
 msgid "Opportunity"
 msgstr "Нагода"
 
 #. module: event_crm
 #. odoo-python
-#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 msgid "Participants"
 msgstr "Учасники"
@@ -340,6 +380,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
 msgid "Per Order"
 msgstr "На замовлення"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
+msgid "Processed Registration"
+msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -401,6 +446,11 @@ msgid "Search Lead Generation Rules"
 msgstr "Пошук правил генерації лідів"
 
 #. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
+msgid "Set to True when a Lead Generation Request is currently running."
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
 msgid "Source Event"
 msgstr "Джерело події"
@@ -416,6 +466,13 @@ msgid "Tags"
 msgstr "Мітки"
 
 #. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_request__processed_registration_id
+msgid ""
+"The ID of the last processed event.registration, used to know where to "
+"resume."
+msgstr ""
+
+#. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
 msgstr "Вони автоматично створюють ліди, коли учасники реєструються."
@@ -428,7 +485,6 @@ msgstr "Тип тригеру"
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_registration.py:0
-#: code:addons/event_crm/models/event_registration.py:0
 msgid "Updated registrations"
 msgstr "Оновлені реєстрації"
 
@@ -436,6 +492,17 @@ msgstr "Оновлені реєстрації"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
 msgid "When"
 msgstr "Коли"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Yee-ha, %(leads_count)s Leads have been created!"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
+msgid "You can only have one generation request per event at a time."
+msgstr ""
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

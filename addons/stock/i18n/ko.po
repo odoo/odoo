@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9905,6 +9905,15 @@ msgid "Update Quantity"
 msgstr "수량 갱신"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Updating the location of this transfer will result in unreservation of the currently assigned items. An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n"
+"\n"
+"To avoid this, please discard the source location change before saving."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__1
 msgid "Urgent"
@@ -10220,6 +10229,12 @@ msgstr "선별에 대한 경고"
 #: code:addons/stock/models/product.py:0
 msgid "Warning!"
 msgstr "경고!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "Warning: change source location"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10549,14 +10564,16 @@ msgstr "이미 품목 유형을 사용한 경우에는 재고 추적을 변경�
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "수동으로 실행시키지 않으면 일시 중지된 주문 지점을 생성할 수 없습니다."
+
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
-msgid ""
-"You can not create a snoozed orderpoint that is not manually triggered."
-msgstr ""
+msgid "You can not delete moves linked to another operation"
+msgstr "다른 작업에 이동이 연결되어 있는 경우에는 삭제할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10603,11 +10620,11 @@ msgstr "고유 Serial 번호가 있는 품목의 1.0 %s만 처리할 수 있습�
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
 msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"주문 포인트는 수동 주문 포인트만 일시 중지할 수 있습니다. 자동 체결 주문 포인트를 활성화하지 않으려면 보관처리해야 합니다."
 
 #. module: stock
 #. odoo-python

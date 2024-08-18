@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -114,8 +114,6 @@ msgstr "Konfigurationseinstellungen"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid "Configuration"
 msgstr "Konfiguration"
 
@@ -132,13 +130,11 @@ msgstr "Bestätigen"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_uid
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__create_uid
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_date
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__create_date
 msgid "Created on"
 msgstr "Erstellt am"
 
@@ -165,7 +161,6 @@ msgstr "Verwerfen"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -209,12 +204,9 @@ msgstr "Ereignis-Wiederholungsregel"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
 "For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
-"Either update the events/attendees or archive these events %s:\n"
-"%s"
+"Either update the events/attendees or archive these events %(details)s:\n"
+"%(invalid_events)s"
 msgstr ""
-"Für eine korrekte Synchronisierung zwischen Odoo und dem Outlook-Kalender müssen alle Teilnehmer eine E-Mail-Adresse haben. Einige Termine erfüllen diese Bedingung jedoch nicht. Solange die Termine nicht korrekt sind, werden die Kalender nicht synchronisiert.\n"
-"Aktualisieren Sie entweder die Termine/Teilnehmer oder archivieren Sie diese Termine %s:\n"
-"%s"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -229,7 +221,6 @@ msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__id
 msgid "ID"
 msgstr "ID"
 
@@ -260,8 +251,8 @@ msgstr ""
 "Sie den Termin speichern."
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_last_sync_date
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_last_sync_date
 msgid "Last Sync Date"
 msgstr "Datum der letzten Synchronisierung"
 
@@ -272,19 +263,17 @@ msgstr "Zeitpunkt der letzten Synchronisierung"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_uid
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert von"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_date
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_credentials__last_sync_date
 #: model:ir.model.fields,help:microsoft_calendar.field_res_users__microsoft_last_sync_date
+#: model:ir.model.fields,help:microsoft_calendar.field_res_users_settings__microsoft_last_sync_date
 msgid "Last synchronization date with Outlook Calendar"
 msgstr "Letztes Synchronisierungsdatum mit Outlook-Kalender"
 
@@ -292,16 +281,6 @@ msgstr "Letztes Synchronisierungsdatum mit Outlook-Kalender"
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
 msgstr "Unangetastet lassen"
-
-#. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_account_id
-msgid "Microsoft Calendar Account"
-msgstr "Microsoft-Kalender-Konto"
-
-#. module: microsoft_calendar
-#: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_credentials
-msgid "Microsoft Calendar Account Data"
-msgstr "Microsoft-Kalender-Kontodaten"
 
 #. module: microsoft_calendar
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
@@ -320,8 +299,8 @@ msgid "Microsoft Client_key"
 msgstr "Microsoft Client_key"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__calendar_sync_token
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_sync_token
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_calendar_sync_token
 msgid "Microsoft Next Sync Token"
 msgstr "Token der nächsten Microsoft-Sychronisierung"
 
@@ -368,8 +347,6 @@ msgstr "Ereignis-ID des Organisators"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 msgid "Outlook"
 msgstr "Outlook"
 
@@ -379,8 +356,8 @@ msgid "Outlook Calendar"
 msgstr "Outlook-Kalender"
 
 #. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
 msgstr "Outlook-Synchronisierung angehalten"
 
@@ -422,18 +399,6 @@ msgid "Reset Outlook Calendar Account"
 msgstr "Outlook-Kalender-Konto zurücksetzen"
 
 #. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "Stop Synchronization"
-msgstr "Synchronisierung anhalten"
-
-#. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "Success"
-msgstr "Erfolgreich"
-
-#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
 msgstr "Sychronisieren Sie einen Datensatz mit Microsoft-Kalender"
@@ -465,17 +430,6 @@ msgid "The account for the Outlook Calendar service is not configured."
 msgstr "Das Konto für den Outlook-Kalender-Dienst ist nicht konfiguriert."
 
 #. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "The synchronization with Outlook calendar was successfully stopped."
-msgstr "Die Synchronisierung mit Outlook-Kalender wurde erfolgreich gestoppt."
-
-#. module: microsoft_calendar
-#: model:ir.model.constraint,message:microsoft_calendar.constraint_res_users_microsoft_token_uniq
-msgid "The user has already a microsoft account"
-msgstr "Der Benutzer hat bereits ein Microsoft-Konto"
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
@@ -496,9 +450,13 @@ msgstr "Universelle Termin-ID"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_users
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_credentials__user_ids
 msgid "User"
 msgstr "Benutzer"
+
+#. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_res_users_settings
+msgid "User Settings"
+msgstr "Benutzereinstellungen"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -509,20 +467,3 @@ msgstr "Benutzer-Token"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
 msgstr "Bestehende Termine des Benutzers"
-
-#. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid ""
-"You are about to stop the synchronization of your calendar with Outlook. Are"
-" you sure you want to continue?"
-msgstr ""
-"Sie sind im Begriff, die Synchronisierung Ihres Kalenders mit Outlook zu "
-"beenden. Sind Sie sicher, dass Sie fortfahren möchten?"
-
-#. module: microsoft_calendar
-#. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-msgid "Your administrator paused the synchronization with Outlook Calendar."
-msgstr ""
-"Ihr Administrator hat die Synchronisierung mit Outlook-Kalender pausiert."

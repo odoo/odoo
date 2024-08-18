@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 msgid " Please correct the number and try again."
 msgstr "Mohon perbaiki nomor dan coba lagi."
@@ -51,8 +50,8 @@ msgstr "Diarsipkan"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr "Apakah Anda yakin ingin menghapus Nomor Telepon ini dari blacklist?"
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -104,11 +103,6 @@ msgid ""
 msgstr ""
 "Diblokir melalui penghapusan akun portal %(portal_user_name)s oleh "
 "%(user_name)s (#%(user_id)s)"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "Konfirmasi"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -214,8 +208,6 @@ msgstr ""
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Impossible number %s: too many digits."
 msgstr "Angka mustahil %s: terlalu banyak digit."
 
@@ -249,7 +241,6 @@ msgstr "Nomor tidak valid %s: kemungkin memiliki awalan yang salah."
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Invalid primary phone field on model %s"
 msgstr "Kolom telepon primer yang tidak valid pada model %s"
@@ -375,6 +366,7 @@ msgstr "Alasan"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "Hapus telepon dari blacklist"
 
@@ -404,6 +396,11 @@ msgstr "Alasan Menghapus Blokir: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Pengguna"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr "contoh \"Diminta untuk menerima buletin kami yang berikutnya\""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

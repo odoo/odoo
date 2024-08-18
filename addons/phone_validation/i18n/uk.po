@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 msgid " Please correct the number and try again."
 msgstr "Виправте номер та спробуйте ще раз."
@@ -51,8 +50,8 @@ msgstr "Заархівовано"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr "Ви впевнені, що хочете видалити цей номер телефону з чорного списку?"
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -104,11 +103,6 @@ msgid ""
 msgstr ""
 "Заблоковано видаленням портального облікового запису %(portal_user_name)s "
 "%(user_name)s (#%(user_id)s)"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "Підтвердити"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -213,8 +207,6 @@ msgstr "Неможлива цифра %s: ймовірно, неправильн
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Impossible number %s: too many digits."
 msgstr "Нереальний номер %s: забагато цифр."
 
@@ -248,7 +240,6 @@ msgstr "Неможлива кількість %s: ймовірно невірн�
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Invalid primary phone field on model %s"
 msgstr "Недійсне основне поле телефону на моделі %s"
@@ -375,6 +366,7 @@ msgstr "Причина"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "Вилучити телефон з чорного списку"
 
@@ -404,6 +396,11 @@ msgstr "Причина розблокування: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Користувач"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr ""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

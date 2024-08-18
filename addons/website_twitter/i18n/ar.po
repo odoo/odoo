@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -37,10 +37,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
-"                            Show me how to obtain the Twitter API key and Twitter API secret"
+"                            Show me how to obtain the X API key and X API secret"
 msgstr ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                            أرني كيفية الحصول على مفتاح الواجهة البرمجية لـ Twitter وسر الواجهة البرمجية لـ Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -49,18 +47,18 @@ msgstr "<strong>اسم التطبيق: </strong> اختر اسماً فريدا�
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Description: </strong> Odoo Twitter Integration"
-msgstr "<strong>الوصف: </strong> تكامل أودو مع Twitter "
+msgid "<strong>Description: </strong> Odoo X Integration"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr "<strong>الاسم: </strong> تكامل أودو مع Twitter "
+msgid "<strong>Name: </strong> Odoo X Integration"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
-msgstr "<strong>حالة استخدام: </strong> تضمين التغريدات في موقع إلكتروني "
+msgid "<strong>Use Case: </strong> Embedding Posts in a website"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -79,10 +77,8 @@ msgstr "سر الواجهة البرمجية للتطبيق "
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
-"tweets are protected."
+"posts are protected."
 msgstr ""
-"بيانات الاعتماد المطلوبة للمصادقة مفقودة أو غير صحيحة. قد تكون التغريدات "
-"محمية."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -134,8 +130,8 @@ msgstr "خطأ HTTP: هناك مشكلة في التهيئة "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "How to configure the Twitter API access"
-msgstr "كيفية تهيئة وصول مفتاح الواجهة البرمجية لـ Twitter "
+msgid "How to configure the X API access"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -145,8 +141,8 @@ msgstr "المُعرف"
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
-msgid "Internet connection refused: We failed to reach a twitter server."
-msgstr "تم رفض الاتصال بالإنترنت: لم نتمكن من من الوصول إلى خادم Twitter. "
+msgid "Internet connection refused: We failed to reach a X server."
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -171,29 +167,28 @@ msgstr "على"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid ""
-"Once connected, and if not already done, complete the Twitter portal access "
+"Once connected, and if not already done, complete the X portal access "
 "process on"
 msgstr ""
-"عندما تكون متصلاً، وإذا لم تنتهِ بعد، قم بإكمال عملية الوصول إلى بوابة تويتر"
-" في "
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 msgid ""
-"Please set a Twitter screen name to load favorites from, in the Website "
-"Settings (it does not have to be yours)"
+"Please set a X screen name to load favorites from, in the Website Settings "
+"(it does not have to be yours)"
 msgstr ""
-"الرجاء وضع اسم ظهور لتحميل المفضلات منه في إعدادات الموقع الإلكتروني (ليس "
-"بالضرورة أن يكون لك) "
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
-msgid "Please set the Twitter API Key and Secret in the Website Settings."
+msgid "Please set the X API Key and Secret in the Website Settings."
 msgstr ""
-"يرجى وضع مفتاح الواجهة البرمجية لـ Twitter وسره في إعدادات الموقع "
-"الإلكتروني. "
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
+msgid "Posts"
+msgstr "المنشورات "
 
 #. module: website_twitter
 #. odoo-javascript
@@ -217,39 +212,31 @@ msgstr "اسم الظهور"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_screen_name
 msgid ""
-"Screen Name of the Twitter Account from which you want to load favorites.It "
-"does not have to match the API Key/Secret."
+"Screen Name of the X Account from which you want to load favorites.It does "
+"not have to match the API Key/Secret."
 msgstr ""
-"اسم ظهور حساب Twitter الذي ترغب في تحميل المفضلات منه لا يتطابق مع مفتاح "
-"الواجهة البرمجية/سر Twitter. "
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid "The X servers are up, but overloaded with requests. Try again later."
+msgstr ""
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid ""
-"The Twitter servers are up, but overloaded with requests. Try again later."
+"The X servers are up, but the request could not be serviced due to some "
+"failure within our stack. Try again later."
 msgstr ""
-"خوادم Twitter تعمل، لكنها محملة بالكثير من الطلبات. حاول مرة أخرى لاحقاً. "
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid ""
-"The Twitter servers are up, but the request could not be serviced due to "
-"some failure within our stack. Try again later."
-msgstr ""
-"خوادم Twitter تعمل، لكن تعذّر تنفيذ الطلب بسبب مشكلة في بياناتنا. حاول مرة "
-"أخرى لاحقاً. "
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
-" Please check your Twitter API Key and Secret."
+" Please check your X API Key and Secret."
 msgstr ""
-"تم فهم الطلب، لكن تم رفضه أو قد يكون الوصول ممنوع. يرجى التحقق من مفتاح "
-"الواجهة البرمجية لـ Twitter ورمزها السري. "
 
 #. module: website_twitter
 #. odoo-python
@@ -268,133 +255,6 @@ msgid "There was no new data to return."
 msgstr "لا توجد بيانات حديثة لإعادتها."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
-msgid "Tweet ID"
-msgstr "معرف التغريدة"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
-msgid "Tweets"
-msgstr "التغريدات "
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter API Credentials"
-msgstr "بيانات اعتماد الواجهة البرمجية لـ Twitter "
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
-msgid "Twitter API Key"
-msgstr "مفتاح الواجهة البرمجية لـ Twitter "
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
-msgid "Twitter API Secret"
-msgstr "سر الواجهة البرمجية لـ Twitter "
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
-msgid "Twitter API key"
-msgstr "مفتاح الواجهة البرمجية لـ Twitter "
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
-msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
-"يمكنك الحصول على مفتاح الواجهة البرمجية لـ Twitter من "
-"https://apps.twitter.com/ "
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
-msgid "Twitter API secret"
-msgstr "سر الواجهة البرمجية لـ Twitter "
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
-msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
-"يمكنك الحصول على سر الواجهة البرمجية لـ Twitter من https://apps.twitter.com/"
-" "
-
-#. module: website_twitter
-#. odoo-javascript
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
-msgid "Twitter Configuration"
-msgstr "تهيئة Twitter "
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Portal"
-msgstr "بوابة تويتر "
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr "شريط تمرير Twitter "
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
-msgid "Twitter Scroller"
-msgstr "شريط تمرير Twitter "
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid ""
-"Twitter authorization error! Please double-check your Twitter API Key and "
-"Secret!"
-msgstr ""
-"خطأ في تفويض Twitter! يرجى التحقق مجدداً من مفتاح وسر الواجهة البرمجية لـ "
-"Twitter! "
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid "Twitter is down or being upgraded."
-msgstr "Twitter معطل أو قيد التحديث. "
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid ""
-"Twitter seems broken. Please retry later. You may consider posting an issue "
-"on Twitter forums to get help."
-msgstr ""
-"يبدو أن Twitter معطل. يرجى المحاولة مرة أخرى لاحقاً. ربما عليك كتابة منشور "
-"عن مشكلتك على منتديات Twitter للحصول على المساعدة. "
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
-msgid "Twitter server uri"
-msgstr "معرف الموارد الموحد لخادم Twitter "
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter tutorial"
-msgstr "درس تدريبي عن Twitter "
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/controllers/main.py:0
-msgid ""
-"Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
-" or choose a different screen name."
-msgstr ""
-"مستخدم تويتر @%(username)s لديه أقل من 12 تغريدة مفضلة. الرجاء إضافة المزيد "
-"أو اختيار اسم ظهور مختلف. "
-
-#. module: website_twitter
-#. odoo-javascript
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
-msgid "Twitter's user"
-msgstr "مستخدم Twitter "
-
-#. module: website_twitter
-#: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
-msgid "Twitter: Fetch new favorites"
-msgstr "Twitter: البحث عن مفضلات جديدة "
-
-#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
@@ -402,8 +262,118 @@ msgstr "الموقع الإلكتروني"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
-msgid "Website Twitter"
-msgstr "Twitter الموقع الإلكتروني "
+msgid "Website X"
+msgstr "الموقع الإلكتروني لـ X "
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X API Credentials"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
+msgid "X API Key"
+msgstr "مفتاح الواجهة البرمجية لـ X "
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
+msgid "X API Secret"
+msgstr "سر الواجهة البرمجية لـ X "
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
+msgid "X API key"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
+msgid "X API key you can get it from https://apps.twitter.com/"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
+msgid "X API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
+msgid "X API secret you can get it from https://apps.twitter.com/"
+msgstr ""
+
+#. module: website_twitter
+#. odoo-javascript
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
+msgid "X Configuration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
+msgid "X ID"
+msgstr "معرّف X "
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X Portal"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X Roller"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
+msgid "X Scroller"
+msgstr "شريط تمرير X "
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid "X authorization error! Please double-check your X API Key and Secret!"
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid "X is down or being upgraded."
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid ""
+"X seems broken. Please retry later. You may consider posting an issue on X "
+"forums to get help."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "X server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X tutorial"
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/controllers/main.py:0
+msgid ""
+"X user @%(username)s has less than 12 favorite posts. Please add more or "
+"choose a different screen name."
+msgstr ""
+
+#. module: website_twitter
+#. odoo-javascript
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
+msgid "X's user"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
+msgid "X: Fetch new favorites"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

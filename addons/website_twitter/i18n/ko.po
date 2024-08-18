@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -36,10 +36,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
-"                            Show me how to obtain the Twitter API key and Twitter API secret"
+"                            Show me how to obtain the X API key and X API secret"
 msgstr ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                            트위터 API 키 및 트위터 API 시크릿을 얻는 방법 확인"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -48,18 +46,18 @@ msgstr "<strong>앱 네임: </strong> 고유한 이름을 선택해주세요"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Description: </strong> Odoo Twitter Integration"
-msgstr "<strong>설명 : </strong> Odoo Twitter 통합"
+msgid "<strong>Description: </strong> Odoo X Integration"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr "<strong>이름 : </strong> Odoo Twitter 통합"
+msgid "<strong>Name: </strong> Odoo X Integration"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
-msgstr "<strong>활용 사례: </strong> 웹사이트에 트윗 퍼가기"
+msgid "<strong>Use Case: </strong> Embedding Posts in a website"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -78,8 +76,8 @@ msgstr "API 암호"
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
-"tweets are protected."
-msgstr "인증 자격 증명이 없거나 잘못되었습니다. 화면명 트윗이 보호되어있을 수 있습니다."
+"posts are protected."
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -130,8 +128,8 @@ msgstr "HTTP 오류 : 뭔가 잘못 설정되었습니다."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "How to configure the Twitter API access"
-msgstr "트위터 API 접근을 구성하는 방법"
+msgid "How to configure the X API access"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -141,8 +139,8 @@ msgstr "ID"
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
-msgid "Internet connection refused: We failed to reach a twitter server."
-msgstr "인터넷 연결이 거부되었습니다: 트위터 서버에 연결하지 못했습니다."
+msgid "Internet connection refused: We failed to reach a X server."
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -167,23 +165,28 @@ msgstr "On the"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid ""
-"Once connected, and if not already done, complete the Twitter portal access "
+"Once connected, and if not already done, complete the X portal access "
 "process on"
-msgstr "아직 완료하지 않은 경우, 연결 후 트위터 포털 액세스에서 프로세스를 완료합니다."
+msgstr ""
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 msgid ""
-"Please set a Twitter screen name to load favorites from, in the Website "
-"Settings (it does not have to be yours)"
-msgstr "웹사이트 설정에서 관심글을 로드하는 트위터 화면 이름을 설정하십시오(그것은 당신일 필요는 없습니다)."
+"Please set a X screen name to load favorites from, in the Website Settings "
+"(it does not have to be yours)"
+msgstr ""
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
-msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr "웹 사이트 설정에서 트위터 API 키와 암호를 설정하십시오."
+msgid "Please set the X API Key and Secret in the Website Settings."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
+msgid "Posts"
+msgstr "게시물"
 
 #. module: website_twitter
 #. odoo-javascript
@@ -207,32 +210,31 @@ msgstr "화면 이름"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_screen_name
 msgid ""
-"Screen Name of the Twitter Account from which you want to load favorites.It "
-"does not have to match the API Key/Secret."
-msgstr "즐겨찾기를 로드하려는 트위터 계정의 화면 이름입니다. 이것은 API 키/암호와 일치하지 않습니다."
+"Screen Name of the X Account from which you want to load favorites.It does "
+"not have to match the API Key/Secret."
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid "The X servers are up, but overloaded with requests. Try again later."
+msgstr ""
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid ""
-"The Twitter servers are up, but overloaded with requests. Try again later."
-msgstr "트위터 서버가 가동되었지만 요청이 과부하되었습니다. 나중에 다시 시도하십시오."
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid ""
-"The Twitter servers are up, but the request could not be serviced due to "
-"some failure within our stack. Try again later."
-msgstr "Twitter 서버가 가동되었지만 스택 내에서 일부 장애로 인해 요청을 처리 할 수 ​​없습니다. 나중에 다시 시도하십시오."
+"The X servers are up, but the request could not be serviced due to some "
+"failure within our stack. Try again later."
+msgstr ""
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
-" Please check your Twitter API Key and Secret."
-msgstr "요청이 이해되었지만 요청이 거부되었거나 액세스가 허용되지 않았습니다. 트위터 API 키와 암호를 확인하십시오."
+" Please check your X API Key and Secret."
+msgstr ""
 
 #. module: website_twitter
 #. odoo-python
@@ -250,124 +252,6 @@ msgid "There was no new data to return."
 msgstr "반환할 새 데이터가 없습니다."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
-msgid "Tweet ID"
-msgstr "트윗 ID"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
-msgid "Tweets"
-msgstr "트윗"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter API Credentials"
-msgstr "트위터 API 자격 증명"
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
-msgid "Twitter API Key"
-msgstr "트위터 API 키"
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
-msgid "Twitter API Secret"
-msgstr "트위터 API 암호"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
-msgid "Twitter API key"
-msgstr "트위터 API 키"
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
-msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr "트위터 API 키는 https://apps.twitter.com/ 에서 얻을 수 있습니다."
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
-msgid "Twitter API secret"
-msgstr "트위터 API 암호"
-
-#. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
-msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr "트위터 API 암호는 https://apps.twitter.com/ 에서 얻을 수 있습니다."
-
-#. module: website_twitter
-#. odoo-javascript
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
-msgid "Twitter Configuration"
-msgstr "트위터 구성"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Portal"
-msgstr "트위터 포털"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr "트위터 롤러"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
-msgid "Twitter Scroller"
-msgstr "트위터 스크롤러"
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid ""
-"Twitter authorization error! Please double-check your Twitter API Key and "
-"Secret!"
-msgstr "트위터 인증 오류가 발생했습니다! 트위터 API 키와 비밀번호를 다시 확인해주세요!"
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid "Twitter is down or being upgraded."
-msgstr "트위터가 다운되었거나 업그레이드 중입니다."
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/models/res_config_settings.py:0
-msgid ""
-"Twitter seems broken. Please retry later. You may consider posting an issue "
-"on Twitter forums to get help."
-msgstr ""
-"트위터가 고장난 것 같습니다. 나중에 다시 시도하십시오. 도움을 받으려면 트위터 포럼에 문제를 게시하는 것을 고려할 수 있습니다."
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
-msgid "Twitter server uri"
-msgstr "트위터 서버 URI"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter tutorial"
-msgstr "트위터 튜토리얼"
-
-#. module: website_twitter
-#. odoo-python
-#: code:addons/website_twitter/controllers/main.py:0
-msgid ""
-"Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
-" or choose a different screen name."
-msgstr "트위터 사용자 @%(username)s 의 관심 트윗이 12개 미만입니다. 더 추가하거나 다른 화면 이름을 선택하십시오."
-
-#. module: website_twitter
-#. odoo-javascript
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
-msgid "Twitter's user"
-msgstr "트위터 사용자"
-
-#. module: website_twitter
-#: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
-msgid "Twitter: Fetch new favorites"
-msgstr "트위터 : 새로운 즐겨찾기 가져 오기"
-
-#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
@@ -375,8 +259,118 @@ msgstr "웹사이트"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
-msgid "Website Twitter"
-msgstr "웹사이트 트위터"
+msgid "Website X"
+msgstr "웹사이트 X"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X API Credentials"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
+msgid "X API Key"
+msgstr "X API 키"
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
+msgid "X API Secret"
+msgstr "X API 암호"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
+msgid "X API key"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
+msgid "X API key you can get it from https://apps.twitter.com/"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
+msgid "X API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
+msgid "X API secret you can get it from https://apps.twitter.com/"
+msgstr ""
+
+#. module: website_twitter
+#. odoo-javascript
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
+msgid "X Configuration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
+msgid "X ID"
+msgstr "X ID"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X Portal"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X Roller"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
+msgid "X Scroller"
+msgstr "X 스크롤러"
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid "X authorization error! Please double-check your X API Key and Secret!"
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid "X is down or being upgraded."
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/models/res_config_settings.py:0
+msgid ""
+"X seems broken. Please retry later. You may consider posting an issue on X "
+"forums to get help."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "X server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "X tutorial"
+msgstr ""
+
+#. module: website_twitter
+#. odoo-python
+#: code:addons/website_twitter/controllers/main.py:0
+msgid ""
+"X user @%(username)s has less than 12 favorite posts. Please add more or "
+"choose a different screen name."
+msgstr ""
+
+#. module: website_twitter
+#. odoo-javascript
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
+msgid "X's user"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
+msgid "X: Fetch new favorites"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

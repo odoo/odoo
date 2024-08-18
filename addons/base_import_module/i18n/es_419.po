@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -32,6 +32,7 @@ msgstr ""
 "Si necesita temas para el sitio web puede descargarlos en https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "Activar"
@@ -56,16 +57,17 @@ msgstr "Cerrar"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgid ""
+"Connection to %(url)s failed, the module %(module)s cannot be downloaded."
 msgstr ""
-"Falló la conexión con %s . No se puede recuperar la lista de módulos del "
-"sector. "
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr "Falló la conexión con %s , no se puede descargar el módulo %s"
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+"Falló la conexión con %s . No se puede recuperar la lista de módulos del "
+"sector. "
 
 #. module: base_import_module
 #. odoo-python
@@ -100,7 +102,6 @@ msgstr "Nombre en pantalla"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid ""
 "Error while importing module '%(module)s'.\n"
 "\n"
@@ -114,7 +115,6 @@ msgstr ""
 
 #. module: base_import_module
 #. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "El archivo '%s' excedió el máximo tamaño de archivo permitido"
@@ -177,7 +177,6 @@ msgstr "Instalar"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Install an Industry"
 msgstr "Instalar un sector"
 
@@ -307,6 +306,7 @@ msgid "The module %s cannot be downloaded"
 msgstr "No se puede descargar el módulo %s "
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "Actualizar"

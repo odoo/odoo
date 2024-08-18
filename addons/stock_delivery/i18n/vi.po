@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -58,6 +58,11 @@ msgid "<strong>HS Code</strong>"
 msgstr "<strong>Mã HS</strong>"
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Shipping Method:</strong>"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
 msgstr "<strong>Khối lượng vận chuyển: </strong>"
@@ -103,11 +108,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
 msgstr "Áp dụng cho các phương thức vận chuyển"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
-msgid "Bulk Weight"
-msgstr "Khối lượng hàng rời"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -168,6 +168,11 @@ msgid "Delivery Carrier Selection Wizard"
 msgstr "Công cụ chọn đơn vị giao hàng"
 
 #. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "Phương thức giao hàng"
+
+#. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
 msgstr "Công cụ chọn kiện giao hàng"
@@ -211,6 +216,11 @@ msgid ""
 msgstr ""
 "Phí dự tính: khách hàng sẽ nhận được hóa đơn phí giao hàng dự tính.\n"
 "Phí thực tế: khách hàng sẽ nhận được hóa đơn phí giao hàng thực tế, phí vận chuyển sẽ được cập nhật trong đơn bán hàng sau khi giao hàng. "
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "FedEx"
+msgstr "FedEx"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -284,7 +294,6 @@ msgstr "Kiện hàng quá nặng"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
 msgid "Packages"
 msgstr "Kiện hàng"
 
@@ -392,14 +401,12 @@ msgstr "Thông tin vận chuyển"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
-#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
 msgstr "Phương thức vận chuyển"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
 msgstr "Khối lượng vận chuyển"
 
@@ -411,12 +418,8 @@ msgstr "Khối lượng vận chuyển:"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
-msgid ""
-"Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+msgid "Standardized code for international shipping and goods declaration."
 msgstr ""
-"Mã tiêu chuẩn dùng cho vận chuyển quốc tế và khai báo hàng hóa. Hiện tại, "
-"chỉ sử dụng cho đơn vị vận chuyển FedEx. "
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -452,7 +455,6 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
@@ -486,28 +488,6 @@ msgstr "Không có quy định vận chuyển phù hợp."
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
 msgstr "Tổng khối lượng của tất cả sản phẩm trong kiện hàng."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
-msgid ""
-"Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
-msgstr ""
-"Tổng khối lượng của kiện hàng và sản phẩm không nằm trong kiện hàng. Kiện "
-"hàng không rõ khối lượng vận chuyển sẽ được đặt khối lượng mặc định là tổng "
-"khối lượng của các sản phẩm trong kiện hàng đó. Đây là khối lượng được dùng "
-"để tính phí vận chuyển."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
-msgid "Total weight of products which are not in a package."
-msgstr "Tổng khối lượng của các sản phẩm không nằm trong kiện hàng"
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
-msgid "Total weight of the package."
-msgstr "Tổng khối lượng của kiện hàng."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
@@ -559,11 +539,6 @@ msgid "Weight"
 msgstr "Khối lượng"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
-msgid "Weight for Shipping"
-msgstr "Khối lượng vận chuyển"
-
-#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
 msgstr "Khối lượng vận chuyển"
@@ -583,7 +558,6 @@ msgstr "Khối lượng:"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
-#, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
 "carriers (i.e. check that all of their transfers have a carrier assigned and"

@@ -3,13 +3,14 @@
 # 	* website_livechat
 # 
 # Translators:
+# Junko Augias, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -28,11 +29,9 @@ msgstr "# セッション"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
-"%sが %sと会話を始めました。\n"
-"                        チャット要求がキャンセルされました。"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -207,7 +206,7 @@ msgstr "オペレータ名"
 msgid ""
 "Recipients are not available. Please refresh the page to get latest visitors"
 " status."
-msgstr "受信者が利用できません。最新の訪問者ステータスを取得するには、ページをリフレッシュして下さい。"
+msgstr "宛先が利用できません。最新の訪問者ステータスを取得するには、ページをリフレッシュして下さい。"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -287,14 +286,20 @@ msgstr "訪問者"
 
 #. module: website_livechat
 #. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/controllers/main.py:0
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "Visitor #%d"
 msgstr "訪問者数%d"
 
 #. module: website_livechat
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_livechat/controllers/main.py:0
 #: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
 msgid "Visitor #%s"
@@ -303,8 +308,8 @@ msgstr "訪問者番号%s"
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
-msgstr "訪問者%sは会話から退出しました。"
+msgid "Visitor left the conversation."
+msgstr "訪問者は会話から退出しました。"
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action

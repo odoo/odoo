@@ -3,16 +3,16 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Wil Odoo, 2024
 # Nadia Martynova, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Nadia Martynova, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,11 @@ msgstr "<strong>Перевозчик:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>HS Code</strong>"
 msgstr "<strong>ТН ВЭД</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Shipping Method:</strong>"
+msgstr ""
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -104,11 +109,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
 msgstr "Применяется при способах доставки"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
-msgid "Bulk Weight"
-msgstr "Насыпной вес"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -168,6 +168,11 @@ msgid "Delivery Carrier Selection Wizard"
 msgstr "Мастер выбора курьера доставки"
 
 #. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "Способы доставки"
+
+#. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
 msgstr "Мастер выбора пакета поставки"
@@ -211,6 +216,11 @@ msgid ""
 msgstr ""
 "Расчетная стоимость: клиенту будет выставлен счет на расчетную стоимость доставки.\n"
 "Реальная стоимость: покупателю будет выставлен счет на реальную стоимость доставки, стоимость доставки будет обновлена на СЦ после доставки."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "FedEx"
+msgstr "FedEx"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -284,7 +294,6 @@ msgstr "Упаковка слишком тяжелая!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
 msgid "Packages"
 msgstr "Пакеты"
 
@@ -392,14 +401,12 @@ msgstr "Информация о доставке"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
-#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
 msgstr "Методы доставки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
 msgstr "Вес с упаковкой"
 
@@ -411,13 +418,8 @@ msgstr "Вес:"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
-msgid ""
-"Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+msgid "Standardized code for international shipping and goods declaration."
 msgstr ""
-"Стандартизированный код для международных перевозок и декларирования "
-"товаров. На данный момент используется только для поставщика услуг по "
-"доставке FedEx."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -454,7 +456,6 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
@@ -489,27 +490,6 @@ msgstr "Нет подходящего правила доставки."
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
 msgstr "Общий вес всех продуктов, содержащихся в упаковке."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
-msgid ""
-"Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
-msgstr ""
-"Общий вес пакетов и товаров, не входящих в пакет. Для пакетов, в которых не "
-"указан вес доставки, по умолчанию будет указан общий вес товаров. Именно "
-"этот вес используется для расчета стоимости доставки."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
-msgid "Total weight of products which are not in a package."
-msgstr "Общий вес товаров, не входящих в упаковку."
-
-#. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
-msgid "Total weight of the package."
-msgstr "Общий вес посылки."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
@@ -561,11 +541,6 @@ msgid "Weight"
 msgstr "Вес"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
-msgid "Weight for Shipping"
-msgstr "Вес для перевозкы груза"
-
-#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
 msgstr "Вес для транспортировки"
@@ -585,7 +560,6 @@ msgstr "Вес:"
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
-#, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
 "carriers (i.e. check that all of their transfers have a carrier assigned and"

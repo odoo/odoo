@@ -4,9 +4,9 @@
 # 
 # Translators:
 # David Pérez, 2024
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-24 12:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -655,7 +655,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Apreciable\n"
+"        Estimado/a\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
@@ -673,8 +673,8 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (con referencia: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        por un importe total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$143,750.00</span>\n"
-"        de <t t-out=\"object.company_id.name or ''\">Su Empresa</t>.\n"
+"        con un importe total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$143,750.00</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "             Esta factura ya está pagada.\n"
 "        </t>\n"
@@ -691,7 +691,7 @@ msgstr ""
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
 "            <br><br>\n"
-"            Puede revisar sus hojas de horas <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">desde el portal</a>.\n"
+"            Puede revisar sus sus partes de horas <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">desde el portal</a>.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        No dude en contactarnos si tiene alguna pregunta.\n"
@@ -9525,7 +9525,7 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Manual: pague o cobre con cualquier método externo a Odoo.\n"
+"Manual: pague o cobre con cualquier método fuera de Odoo.\n"
 "Proveedores de pago: cada proveedor de pago tiene su propio método de pago. Solicite una transacción en o a una tarjeta con al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
 "Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
 "Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Necesita el módulo account_batch_payment.\n"
@@ -11921,7 +11921,7 @@ msgstr "Fecha de reconocimiento"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
 msgstr ""
-"Volver a calcular todos los impuestos y cuentas según la posición fiscal"
+"Vuelva a calcular todos los impuestos y cuentas según la posición fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -14388,7 +14388,7 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
-"El código de país del RFC extranjero no coincide con ningún país del grupo."
+"El código de país del NIF extranjero no coincide con ningún país del grupo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15577,8 +15577,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
-"Esto actualizará todos los impuestos y las cuentas según la posición fiscal "
-"actualmente establecida."
+"Esto actualizará todos los impuestos y todas las cuentas según la posición "
+"fiscal actualmente establecida."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move

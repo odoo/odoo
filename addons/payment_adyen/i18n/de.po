@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -31,10 +31,10 @@ msgstr ""
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-msgid "A request was sent to void the transaction with reference %s (%s)."
+msgid ""
+"A request was sent to void the transaction with reference %(reference)s "
+"(%(provider)s)."
 msgstr ""
-"Es wurde ein Antrag auf Stornierung der Transaktion mit Referenz %s (%s) "
-"gesendet."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -137,8 +137,6 @@ msgstr "Zahlungstransaktion"
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Zahlungsverarbeitung fehlgeschlagen"
 
@@ -208,7 +206,6 @@ msgstr "Die Basis-URL für die API-Endpunkte"
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The capture of the transaction with reference %s failed."
 msgstr "Die Erfassung der Transaktion mit Referenz %s ist fehlgeschlagen."
 
@@ -266,7 +263,6 @@ msgstr "Die eindeutige Referenz des Partners, der dieses Token besitzt"
 
 #. module: payment_adyen
 #. odoo-python
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The void of the transaction with reference %s failed."
 msgstr "Die Stornierung der Transaktion mit Referenz %s ist fehlgeschlagen."

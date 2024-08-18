@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 msgid " Please correct the number and try again."
 msgstr "Vui lòng sửa số và thử lại."
@@ -51,8 +50,8 @@ msgstr "Đã lưu trữ"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr "Bạn có chắc chắn muốn bỏ hạn chế Số điện thoại này không?"
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -104,11 +103,6 @@ msgid ""
 msgstr ""
 "Bị chặn do việc xóa tài khoản cổng thông tin %(portal_user_name)s bởi "
 "%(user_name)s (#%(user_id)s)"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "Xác nhận"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -213,8 +207,6 @@ msgstr "Số không đúng %s: có vẻ số lượng chữ số không hợp l�
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Impossible number %s: too many digits."
 msgstr "Số không đúng %s: quá nhiều chữ số."
 
@@ -248,7 +240,6 @@ msgstr "Số không hợp lệ %s: có thể tiền tố không chính xác."
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Invalid primary phone field on model %s"
 msgstr "Trường điện thoại chính không hợp lệ trên mô hình %s"
@@ -373,6 +364,7 @@ msgstr "Lý do"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "Xoá số điện thoại khỏi danh sách hạn chế"
 
@@ -402,6 +394,11 @@ msgstr "Lý do bỏ chặn: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Người dùng"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr "VD: \"Đã yêu cầu nhận bản tin email sắp tới của chúng ta\""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

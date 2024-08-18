@@ -3,16 +3,16 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,12 +53,6 @@ msgstr "%(product)s من %(original_receipt_date)s إلى %(new_receipt_date)s "
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "%(vendor)s confirmed the receipt will take place on %(date)s."
 msgstr "قام %(vendor)s بتأكيد أن الإيصال سيكون بتاريخ %(date)s. "
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "%s has been created"
-msgstr "%s تم إنشاؤه "
 
 #. module: purchase
 #. odoo-python
@@ -530,16 +524,6 @@ msgid "A sample email has been sent to %s."
 msgstr "لقد تم إرسال عينة بريد إلكتروني إلى %s. "
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__advance_payment_method
-msgid ""
-"A standard vendor bill is created with all the order lines ready for "
-"billing, according to their bill policy (based on ordered or received "
-"quantity)."
-msgstr ""
-"يتم إنشاء فاتورة العميل القياسية مع كافة بنود الطلب جاحزة لفوترتها، وفقاً "
-"لسياسة الفوترة الخاصة بها (بناءً على الكميات المطلوبة أو التي تم استلامها). "
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
 "A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
@@ -684,13 +668,6 @@ msgstr ""
 "السماح بإرسال رسائل البريد الإلكتروني تلقائياً لتذكير مورّدك بتاريخ الإيصال "
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings__group_down_payment
-#: model:res.groups,name:purchase.group_down_payment
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Allow creating vendor bills for down payments on purchase orders"
-msgstr "اسمح بإنشاء فواتير المورّدين للمدفوعات المقدمة في أوامر الشراء "
-
-#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "السماح بتحرير أوامر الشراء "
@@ -699,12 +676,6 @@ msgstr "السماح بتحرير أوامر الشراء "
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 msgid "Amount"
 msgstr "مبلغ"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_invoiced
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_invoiced
-msgid "Amount already billed"
-msgstr "تمت فوترة المبلغ بالفعل "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
@@ -717,12 +688,6 @@ msgstr "الوقت ما بين التاريخ المخطط له والطلب ح�
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr "الوقت ما بين الموافقة على الشراء والطلب حسب التاريخ. "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_to_invoice
-msgid "Amount to be billed"
-msgstr "المبلغ المراد فوترته "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -829,14 +794,9 @@ msgid "Bill Count"
 msgstr "عدد الفواتير"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_move_line_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
 msgid "Bill Lines"
 msgstr "بنود الفاتورة"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "Bill Purchase Order"
-msgstr "فوترة أمر الشراء "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -864,7 +824,7 @@ msgid "Billing Status"
 msgstr "حالة الفاتورة"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__account_move_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
 msgid "Bills"
 msgstr "الفواتير"
 
@@ -946,7 +906,6 @@ msgid "Companies"
 msgstr "الشركات"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
@@ -1072,7 +1031,6 @@ msgid "Country code"
 msgstr "رمز الدولة "
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
 msgstr "إنشاء فاتورة"
@@ -1094,27 +1052,18 @@ msgid "Create a new product variant"
 msgstr "إنشاء متغير جديد لمنتج "
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "Create bills"
-msgstr "إنشاء فواتير مورّدين "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_date
 msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
@@ -1229,17 +1178,6 @@ msgid "Discount:"
 msgstr "الخصم:"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_draft_invoice_warning
-msgid "Display Draft Invoice Warning"
-msgstr "عرض تحذير مسودة الفاتورة "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "عرض تحذير مبلغ الفاتورة "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
@@ -1266,42 +1204,6 @@ msgstr "منتهي "
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
 msgstr "ضِعف مبلغ التصديق  "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount
-msgid "Down Payment"
-msgstr "الدفعة المقدّمة"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__fixed_amount
-msgid "Down Payment Amount (Fixed)"
-msgstr "مبلغ الدفعة المقدمة (ثابت) "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_down_payment
-msgid "Down Payments"
-msgstr "الدفعات المقدّمة "
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "Down payment vendor bill"
-msgstr "فاتورة الدفعة المقدمة للعميل "
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__is_downpayment
-msgid ""
-"Down payments are made when creating account moves from an order. They are "
-"not copied when duplicating an order."
-msgstr ""
-"يتم تسجيل الدفعات المقدّمة عند إنشاء حركات الحساب من الطلب. لا يتم نسخها عند"
-" إنشاء نسخة من الطلب. "
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "Draft Bills"
-msgstr "فواتير المورّدين بحالة المسودة "
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -1423,17 +1325,11 @@ msgid "Has Message"
 msgstr "يحتوي على رسالة "
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__has_down_payments
-msgid "Has down payments"
-msgstr "يحتوي على الدفعات المقدمة "
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
 msgstr "إخفاء البنود الملغية "
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
@@ -1543,11 +1439,6 @@ msgid "Is In Purchase Order"
 msgstr "في أمر شراء "
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__is_downpayment
-msgid "Is a down payment"
-msgstr "دفعة مقدّمة "
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
 msgstr "قيد اليومية"
@@ -1558,14 +1449,12 @@ msgid "Journal Item"
 msgstr "عنصر اليومية"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_date
 msgid "Last Updated on"
@@ -1849,6 +1738,7 @@ msgid "Not using Odoo?"
 msgstr "لا تستخدم أودو؟ "
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Note"
 msgstr "الملاحظات"
@@ -1934,28 +1824,17 @@ msgstr ""
 "إلى أمر شراء. "
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_invoiced
-msgid "Only confirmed down payments and invoiced amounts are considered."
-msgstr "يتم اعتبار الدفعات المقدمة والمبالغ المفوترة المؤكدة فقط. "
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Operation not supported"
 msgstr "العملية غير مدعومة "
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__order_ids
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Order"
 msgstr "الطلب"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__count
-msgid "Order Count"
-msgstr "عدد الطلبات "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
@@ -2155,11 +2034,6 @@ msgstr "قم بتوفير آلية التصديق المزدوج للمشتري�
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "الشراء"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_advance_payment_wizard
-msgid "Purchase Advance Payment Bill"
-msgstr "فاتورة الدفعة المقدمة للشتريات "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
@@ -2434,11 +2308,6 @@ msgid "Quantity"
 msgstr "الكمية"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
-msgid "Quantity to Invoice"
-msgstr "الكمية المراد فوترتها "
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
 msgstr "الكمية:"
@@ -2685,6 +2554,11 @@ msgstr "البحث في المستند المرجع"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Search a vendor name, or create one on the fly."
 msgstr "ابحث عن اسم المورّد، أو أنشئ واحداً فوراّ خلال ثوان. "
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
+msgid "Section"
+msgstr "القسم"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2935,7 +2809,7 @@ msgstr "شامل الضريبة: "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
 msgstr "الضرائب"
 
@@ -2963,11 +2837,6 @@ msgid "Terms and Conditions"
 msgstr "الشروط والأحكام"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "The Down Payment is greater than the amount remaining to be billed."
-msgstr "الدفعة المقدمة أكبر من المبلغ المتبقي لفوترته. "
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -2977,33 +2846,10 @@ msgstr ""
 "يمكنك استخدام هذا الحقل لإجراء بحث سريع."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
-msgid ""
-"The amount to be billed = Purchase Order Total - Amount already billed."
-msgstr ""
-"المبلغ المراد فوترته = إجمالي أمر الشراء - المبلغ الذي تمت فوترته بالفعل. "
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__fixed_amount
-msgid "The fixed amount billed in advance."
-msgstr "المبلغ الثابت لفوترته مقدماً. "
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "The new bill will deduct draft bills linked to this purchase order."
-msgstr ""
-"ستقوم الفاتورة الجديدة بخصم مسودات الفواتير المرتبطة بأمر الشراء هذا. "
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The order receipt has been acknowledged by %s."
 msgstr "تم الاعتراف بإيصال الطلب من قِبَل %s. "
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount
-msgid "The percentage of amount billed in advance."
-msgstr "النسبة من المبلغ التي تتم فوترتها مقدماً. "
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3027,18 +2873,13 @@ msgid "There are currently no requests for quotation for your account."
 msgstr "لا توجد حالياً أي طلبات لعروض الأسعار لحسابك. "
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "There are existing Draft Bills for this Purchase Order."
-msgstr "توجد مسودات لفواتير المورّدين لأمر الشراء هذا. "
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"There are no invoiceable lines. If a product has a control policy based on "
+"There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
-"لا توجد بنود قابلة للفوترة. إذا كان لمنتج سياسة تحكّم بناءً على الكمية "
+"ليس هناك بند قابل للفوترة. إذا كان لمنتج سياسة تحكّم بناءً على الكمية "
 "المستلمة، يرجى التأكد من أنه قد تم استلام كمية. "
 
 #. module: purchase
@@ -3120,6 +2961,11 @@ msgstr "نصيحة: لا تفوت أمر شراءً أبداً "
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "To Approve"
 msgstr "بانتظار الموافقة "
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
+msgid "To Invoice Quantity"
+msgstr "الكمية المُراد فوترتها"
 
 #. module: purchase
 #. odoo-javascript
@@ -3490,8 +3336,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
-msgid ""
-"You can find a vendor by their Name, TIN, Email, or Internal Reference."
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "يمكنك إيجاد المورَد عن طريق الاسم، أو الرقم التعريفي لدافع الضرائب TIN، أو "
 "البريد الإلكتروني، أو عن طريق مرجع داخلي. "

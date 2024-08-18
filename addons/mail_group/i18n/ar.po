@@ -3,13 +3,14 @@
 # 	* mail_group
 # 
 # Translators:
+# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -532,6 +533,11 @@ msgstr ""
 "مطابق ويستبدل حقل author_id في المحادثات."
 
 #. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "نطاق البريد الإلكتروني مثال: 'example.com' في 'odoo@example.com' "
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails"
 msgstr "رسائل البريد الإلكتروني"
@@ -640,16 +646,14 @@ msgstr "صورة"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#: code:addons/mail_group/models/mail_group.py:0
 msgid "Invalid action for URL generation (%s)"
 msgstr "إجراء غير صالح لإنشاء رابط URL (%s) "
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
-#: code:addons/mail_group/models/mail_group_moderation.py:0
-msgid "Invalid email address %r"
-msgstr "عنوان البريد الإلكتروني غير صالح %r"
+msgid "Invalid email address “%s”"
+msgstr "عنوان البريد الإلكتروني غير صالح \"%s\" "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
@@ -1011,6 +1015,12 @@ msgid "Only members can send email to the mailing list."
 msgstr "وحدهم الأعضاء بوسعهم إرسال رسائل بريد إلكتروني إلى القائمة البريدية. "
 
 #. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+
+#. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
@@ -1268,7 +1278,6 @@ msgstr "الموضوع "
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
-#: code:addons/mail_group/static/src/js/mail_group.js:0
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Subscribe"
 msgstr "اشتراك"
@@ -1402,7 +1411,6 @@ msgstr "للمراجعة"
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
-#: code:addons/mail_group/static/src/js/mail_group.js:0
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Unsubscribe"
 msgstr "إلغاء الاشتراك"
@@ -1451,6 +1459,11 @@ msgid "_______________________________________________"
 msgstr "_______________________________________________"
 
 #. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "alias"
+msgstr "اللقب "
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
 msgstr "وأرسل بريداً إلكترونياً إلى الكاتب ("
@@ -1472,8 +1485,8 @@ msgstr "مثال: \"النشرة الأخبارية\" "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-msgid "e.g. domain.com"
-msgstr "مثال: domain.com "
+msgid "e.g. mycompany.com"
+msgstr "مثال: mycompany.com "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search

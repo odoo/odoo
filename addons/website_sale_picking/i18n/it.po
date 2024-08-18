@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -49,21 +49,6 @@ msgid "Customize Pickup Sites"
 msgstr "Personalizza sedi ritiro"
 
 #. module: website_sale_picking
-#. odoo-javascript
-#: code:addons/website_sale_picking/static/src/js/payment_form.js:0
-msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
-msgstr ""
-"Se credi che si tratti di un errore, contatta l'amministratore del sito."
-
-#. module: website_sale_picking
-#. odoo-javascript
-#: code:addons/website_sale_picking/static/src/js/payment_form.js:0
-msgid "No suitable payment method could be found."
-msgstr "Non è stato possibile trovare un metodo di pagamento adatto."
-
-#. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
 msgid "On Site"
 msgstr "Sul campo"
@@ -78,6 +63,11 @@ msgstr "Ritiro in sede"
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in Store"
 msgstr "Paga in negozio"
+
+#. module: website_sale_picking
+#: model:payment.method,name:website_sale_picking.payment_method_pay_on_site
+msgid "Pay on site"
+msgstr ""
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_payment_provider
@@ -148,3 +138,9 @@ msgstr "Il pagamento è stato elaborato con successo."
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
 msgstr "[Ritiro in sede] Il mio negozio 1"
+
+#. module: website_sale_picking
+#. odoo-python
+#: code:addons/website_sale_picking/models/payment_provider.py:0
+msgid "no onsite picking carriers available"
+msgstr ""

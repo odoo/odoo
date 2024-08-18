@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -21,21 +21,13 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<i class=\"fa fa-ban me-2\"/>\n"
-"                                            Unpublished"
-msgstr ""
-"<i class=\"fa fa-ban me-2\"/>\n"
-"                                          未发布"
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
+msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>已登记"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered"
+msgid "<small>Add this event to your calendar</small>"
 msgstr ""
-"<i class=\"fa fa-check me-2\"/>\n"
-"                                            注册"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -63,14 +55,24 @@ msgid ""
 msgstr "最小数量为正的价格表项目将不应用于活动门票产品。"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Add to Google Agenda"
+msgstr "添加至谷歌日程"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Add to iCal/Outlook"
+msgstr "添加至iCal/Outlook"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
 msgstr "确认登记记录"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr "下载门票<i class=\"ms-1 fa fa-download\"/>"
+msgid "Don't miss out!"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
@@ -78,9 +80,19 @@ msgid "Event Sales Report"
 msgstr "活动销售报表"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Subtitle"
+msgstr "活动子标题"
+
+#. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "活动门票"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Title"
+msgstr "活动标题"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
@@ -93,14 +105,19 @@ msgid "From"
 msgstr "来自"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Go to Event"
-msgstr "转到活动"
-
-#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Go to Payment"
 msgstr "前往付款"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Google Agenda"
+msgstr "谷歌日程"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Outlook"
+msgstr "微软个人邮件"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
@@ -169,11 +186,6 @@ msgstr "警告"
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "We are looking forward to meeting you at the following"
 msgstr "我们期待着在以下场合与您见面"
-
-#. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_website
-msgid "Website"
-msgstr "网站"
 
 #. module: website_event_sale
 #. odoo-python

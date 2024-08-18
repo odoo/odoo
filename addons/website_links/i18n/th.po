@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,11 @@ msgstr "# ของคลิก"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
 msgstr "<strong>แคมเปญ</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Label</strong>"
+msgstr "<strong>ป้ายกำกับ</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -75,15 +81,11 @@ msgstr "เวลาทั้งหมด"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+"Campaign\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the context of your link. It might be an event you want to promote or a special promotion.\"/>"
 msgstr ""
-"แคมเปญ <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"บน\" role=\"รูปภาพ\" aria-label=\"ข้อมูลเคล็ดลับเครื่องมือ\" "
-"title=\"กำหนดบริบทของลิงก์ของคุณ "
-"อาจจะเป็นงานที่คุณต้องการโปรโมทหรือโปรโมชันพิเศษ\"/>"
+"แคมเปญ\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"กำหนดบริบทของลิงก์ของคุณ อาจเป็นงานที่คุณต้องการโปรโมตหรือโปรโมชันพิเศษ\"/>"
 
 #. module: website_links
 #. odoo-javascript
@@ -100,7 +102,6 @@ msgstr "คัดลอก"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
@@ -124,6 +125,15 @@ msgid "Icon"
 msgstr "ไอคอน"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"Label\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines a label to ease reporting.\"/>"
+msgstr ""
+"ป้ายกำกับ\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"กำหนดป้ายกำกับเพื่อความสะดวกในการรายงาน\"/>"
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
 msgstr "เดือนที่แล้ว"
@@ -144,16 +154,11 @@ msgstr "ตัวติดตามลิงก์"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+"Medium\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance.\"/>"
 msgstr ""
-"วิธีที่เข้ามา <i class=\"fa fa-info-circle\" data-bs-"
-"toggle=\"เคล็ดลับเครื่องมือ\" data-bs-placement=\"บน\" role=\"รูปภาพ\" aria-"
-"label=\"ข้อมูลเคล็ดลับเครื่องมือ\" "
-"title=\"กำหนดสื่อที่ใช้ในการแชร์ลิงก์ของคุณ อาจเป็นอีเมลหรือโฆษณา Facebook "
-"เป็นต้น\"/>"
+"วิธีที่เข้ามา\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"กำหนดสื่อที่ใช้ในการแชร์ลิงก์ของคุณ อาจเป็นอีเมลหรือโฆษณา Facebook เป็นต้น\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -188,15 +193,9 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+"Source\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the source from which your traffic will come from, Facebook or X for instance.\"/>"
 msgstr ""
-"แหล่งที่มา <i class=\"fa fa-info-circle\" data-bs-"
-"toggle=\"เคล็ดลับเครื่องมือ\" data-bs-placement=\"บน\" role=\"รูปภาพ\" aria-"
-"label=\"ข้อมูลเคล็ดลับเครื่องมือ\" title=\"กำหนดแหล่งที่มาของการเข้าชมของคุณ"
-" เช่น Facebook หรือ Twitter\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -219,8 +218,6 @@ msgstr "ไม่สามารถเว้นโค้ดว่างได้
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "There is no data to show"
 msgstr "ไม่มีข้อมูลที่จะแสดง"
@@ -293,6 +290,11 @@ msgstr "คลิก"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "copy"
 msgstr "ทำสำเนา"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr "เช่น \"แคมเปญส่งจดหมาย Black Friday\""
 
 #. module: website_links
 #. odoo-javascript

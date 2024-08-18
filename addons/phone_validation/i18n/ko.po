@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 msgid " Please correct the number and try again."
 msgstr "전화번호 수정 후 다시 시도하세요."
@@ -51,8 +50,8 @@ msgstr "보관됨"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr "이 전화번호를 차단 해제하시겠습니까?"
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -103,11 +102,6 @@ msgid ""
 "(#%(user_id)s)"
 msgstr ""
 "%(user_name)s (#%(user_id)s) 사용자가 포털 계정 %(portal_user_name)s 삭제로 인해 차단됨"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "승인"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -210,8 +204,6 @@ msgstr "가능하지 않은 번호 %s: 자릿수가 잘못되었습니다."
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Impossible number %s: too many digits."
 msgstr "잘못된 숫자 %s: 입력된 숫자가 너무 많습니다."
 
@@ -243,7 +235,6 @@ msgstr "잘못된 번호 %s: 접두사가 잘못되었습니다."
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Invalid primary phone field on model %s"
 msgstr "%s 모델에 대한 첫번째 전화번호 필드가 잘못되었습니다"
@@ -368,6 +359,7 @@ msgstr "사유"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "블랙리스트에서 휴대폰 번호 삭제"
 
@@ -397,6 +389,11 @@ msgstr "차단 해제 사유: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "사용자"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr "예: \"다음 뉴스레터 수신 요청\""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

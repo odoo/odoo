@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/phone_blacklist.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 msgid " Please correct the number and try again."
 msgstr " 請更正號碼，然後重試。"
@@ -51,8 +50,8 @@ msgstr "已封存"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr "您確定要將該電話號碼從黑名單中刪除嗎?"
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -102,11 +101,6 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr "已封鎖，因為 %(user_name)s（#%(user_id)s）已刪除客戶頁面帳號 %(portal_user_name)s"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "確認"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -207,8 +201,6 @@ msgstr "號碼錯誤 %s：可能無效的位數。"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
-#: code:addons/phone_validation/tools/phone_validation.py:0
 msgid "Impossible number %s: too many digits."
 msgstr "不可能的數字%s:數字太多。"
 
@@ -236,7 +228,6 @@ msgstr "無效號碼 %s：前綴可能不正確。"
 
 #. module: phone_validation
 #. odoo-python
-#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Invalid primary phone field on model %s"
 msgstr "模型 %s 上不正確主電話欄位"
@@ -361,6 +352,7 @@ msgstr "原因"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "從黑名單中刪除手機"
 
@@ -390,6 +382,11 @@ msgstr "解除封鎖原因： %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "使用者"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr "例：被要求接收我們之後的最新通訊"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

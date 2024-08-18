@@ -3,13 +3,14 @@
 # 	* pos_hr
 # 
 # Translators:
+# Tomasz Leppich <t.leppich@gmail.com>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -23,6 +24,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
+msgstr ""
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "All Employees"
 msgstr ""
 
 #. module: pos_hr
@@ -55,6 +61,12 @@ msgid "Config Settings"
 msgstr "Ustawienia konfiguracji"
 
 #. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.js:0
+msgid "Connection with your PIN code"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
@@ -65,8 +77,8 @@ msgstr "Pracownik"
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
-msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr "Pracownik: %s - Konfiguracja(e) PoS: %s\n"
+msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
@@ -79,6 +91,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
 msgid "Employees with manager access"
 msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
+msgid "Enter Pin"
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
+msgid "Identify Manually"
+msgstr "Ręczna identyfikacja"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -107,12 +131,24 @@ msgstr "Zablokuj"
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
-msgid "Log in to"
-msgstr "Zaloguj się do"
+msgid "Logo"
+msgstr "Logo"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "No Cashiers"
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "No employee"
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.js:0
+msgid "PIN not found"
 msgstr ""
 
 #. module: pos_hr
@@ -157,16 +193,32 @@ msgid "Point of Sale Session"
 msgstr "Sesja punktu sprzedaży"
 
 #. module: pos_hr
+#: model:ir.model,name:pos_hr.model_product_product
+msgid "Product Variant"
+msgstr "Wariant produktu"
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 msgid "Scan your badge"
 msgstr "Zeskanuj swój identyfikator"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "Select Employee(s)"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
-msgid "Select Cashier"
-msgstr "Wybierz kasjera"
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+msgid "There are no employees to select as cashier. Please create one."
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.js:0
+msgid "Wrong PIN"
+msgstr "Nieprawidłowy PIN"
 
 #. module: pos_hr
 #. odoo-python
@@ -177,9 +229,3 @@ msgid ""
 msgstr ""
 "Nie możesz usunąć pracownika który może być użyty w aktywnej sesji PoS, "
 "najpierw zamknij sesję:\n"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
-msgid "or"
-msgstr "lub"

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -475,6 +475,11 @@ msgstr ""
 "Up\".</font></span>"
 
 #. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid "<span style=\"font-weight: bolder; color: white;\">VIP10</span>"
+msgstr ""
+
+#. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_promotion_template
 msgid ""
 "<span style=\"font-weight: bolder;\">\n"
@@ -528,11 +533,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
 msgid "<span style=\"font-weight: bolder;\">Register now</span>"
 msgstr "<span style=\"font-weight: bolder;\">Зареєструйтеся зараз</span>"
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "<span style=\"font-weight: bolder;\">VIP10</span>"
-msgstr "<span style=\"font-weight: bolder;\">VIP10</span>"
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_promotion_template
@@ -675,7 +675,7 @@ msgid "Best practices to digitize your company"
 msgstr "Найкращі практики для цифровізації вашої компанії"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Big News"
 msgstr "Великі новини"
 
@@ -689,7 +689,7 @@ msgstr ""
 " шлях вперед."
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Blogging"
 msgstr "Ведення блогу"
 
@@ -735,7 +735,7 @@ msgid "Client Testimonials"
 msgstr "Відгуки клієнтів"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Coffee break"
 msgstr "Кава брейк"
 
@@ -755,7 +755,7 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Coupon Code"
 msgstr "Код купона"
 
@@ -857,7 +857,7 @@ msgid "Easy Returns"
 msgstr "Легкі повернення"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Event Promo"
 msgstr "Промо події"
 
@@ -1157,7 +1157,7 @@ msgid "LinkedIn"
 msgstr "LinkedIn"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Magazine"
 msgstr "Журнал"
 
@@ -1210,7 +1210,7 @@ msgid "New Financing in 2014"
 msgstr "Нове фінансування у 2014"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Newsletter"
 msgstr "Інформаційний бюлетень"
 
@@ -1274,7 +1274,7 @@ msgstr ""
 " за минулий тиждень.<br/>"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Promotion Program"
 msgstr "Програма лояльності"
 
@@ -1314,12 +1314,12 @@ msgid "Registration is free, but mandatory:"
 msgstr "Реєстрація безкоштовна, але обовʼязкова:"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Roadshow Follow-up"
 msgstr "Нагадування Roadshow"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Roadshow Schedule"
 msgstr "Розклад Roadshow"
 
@@ -1564,7 +1564,7 @@ msgid "Train with the best developers"
 msgstr "Тренуйтеся з найкращими розробниками"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Training"
 msgstr "Тренінг"
 
@@ -1576,14 +1576,6 @@ msgid ""
 msgstr ""
 "З цими міжнародними рецептами подорожуйте, не виходячи з кухні. Від Канади "
 "до Австралії, від Мексики до Швеції і скрізь між ними."
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coffeebreak_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "Twitter"
-msgstr "Twitter"
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template

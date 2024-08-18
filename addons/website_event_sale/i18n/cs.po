@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -21,16 +21,12 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<i class=\"fa fa-ban me-2\"/>\n"
-"                                            Unpublished"
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered"
+msgid "<small>Add this event to your calendar</small>"
 msgstr ""
 
 #. module: website_event_sale
@@ -57,13 +53,23 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Add to Google Agenda"
+msgstr "Přidat do Google kalendáře"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Add to iCal/Outlook"
+msgstr "Přidat do iCal/Outlook"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
 msgstr "Potvrdit registraci"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgid "Don't miss out!"
 msgstr ""
 
 #. module: website_event_sale
@@ -72,9 +78,19 @@ msgid "Event Sales Report"
 msgstr "Výkaz prodejů událostí"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Subtitle"
+msgstr "Podtitul události"
+
+#. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Vstupenky na akce"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Title"
+msgstr "Jméno události"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
@@ -87,14 +103,19 @@ msgid "From"
 msgstr "Od"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Go to Event"
-msgstr ""
-
-#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Go to Payment"
 msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Google Agenda"
+msgstr "Google kalendář"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Outlook"
+msgstr "Outlook"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
@@ -163,11 +184,6 @@ msgstr "Varování"
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "We are looking forward to meeting you at the following"
 msgstr ""
-
-#. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_website
-msgid "Website"
-msgstr "Webová stránka"
 
 #. module: website_event_sale
 #. odoo-python

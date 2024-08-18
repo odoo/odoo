@@ -3,16 +3,16 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,12 +53,6 @@ msgstr "%(product)s 從 %(original_receipt_date)s 到 %(new_receipt_date)s"
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "%(vendor)s confirmed the receipt will take place on %(date)s."
 msgstr "%(vendor)s 確認將於 %(date)s 收貨。"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "%s has been created"
-msgstr "%s 已被建立"
 
 #. module: purchase
 #. odoo-python
@@ -526,14 +520,6 @@ msgid "A sample email has been sent to %s."
 msgstr "已寄送範例郵件模板至郵箱 %s."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__advance_payment_method
-msgid ""
-"A standard vendor bill is created with all the order lines ready for "
-"billing, according to their bill policy (based on ordered or received "
-"quantity)."
-msgstr "系統會根據賬單政策（基於已訂購或已收到的數量），建立標準供應商賬單，當中會包含所有準備好開立發票的訂單資料行。"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
 "A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
@@ -675,13 +661,6 @@ msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr "允許自動發送電子郵件提醒您的供應商收貨日期"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings__group_down_payment
-#: model:res.groups,name:purchase.group_down_payment
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Allow creating vendor bills for down payments on purchase orders"
-msgstr "允許為採購訂單的首期付款，建立供應商賬單"
-
-#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "允許修改採購訂單"
@@ -690,12 +669,6 @@ msgstr "允許修改採購訂單"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 msgid "Amount"
 msgstr "金額"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_invoiced
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_invoiced
-msgid "Amount already billed"
-msgstr "已開立賬單金額"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
@@ -708,12 +681,6 @@ msgstr "每個採購訂單明細的計劃日期和按日期訂購之間的時間
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr "採購批准和按日期訂購之間的時間量."
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_to_invoice
-msgid "Amount to be billed"
-msgstr "待開立賬單金額"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -818,14 +785,9 @@ msgid "Bill Count"
 msgstr "帳單計數"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_move_line_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
 msgid "Bill Lines"
 msgstr "帳單明細"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "Bill Purchase Order"
-msgstr "賬單採購訂單"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -853,7 +815,7 @@ msgid "Billing Status"
 msgstr "帳單狀態"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__account_move_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
 msgid "Bills"
 msgstr "帳單"
 
@@ -935,7 +897,6 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
@@ -1019,7 +980,7 @@ msgstr "連結你的軟體！"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Connect your software"
-msgstr ""
+msgstr "連接你的軟體"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1057,7 +1018,6 @@ msgid "Country code"
 msgstr "國家代碼"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
 msgstr "建立帳單"
@@ -1079,27 +1039,18 @@ msgid "Create a new product variant"
 msgstr "建立新產品變體"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "Create bills"
-msgstr "建立賬單"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
 msgstr "建立人員"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_date
 msgid "Created on"
 msgstr "建立於"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
@@ -1209,17 +1160,6 @@ msgid "Discount:"
 msgstr "折扣："
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_draft_invoice_warning
-msgid "Display Draft Invoice Warning"
-msgstr "顯示草稿發票警告"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "顯示發票金額警告"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
@@ -1246,40 +1186,6 @@ msgstr "完成"
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
 msgstr "雙重驗證金額"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount
-msgid "Down Payment"
-msgstr "首期付款"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__fixed_amount
-msgid "Down Payment Amount (Fixed)"
-msgstr "首期付款金額（固定）"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_down_payment
-msgid "Down Payments"
-msgstr "預付訂金"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "Down payment vendor bill"
-msgstr "首期付款供應商賬單"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__is_downpayment
-msgid ""
-"Down payments are made when creating account moves from an order. They are "
-"not copied when duplicating an order."
-msgstr "從訂單建立賬戶分錄時，會支付首期付款。複製訂單時不會複製它們。"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
-msgid "Draft Bills"
-msgstr "草稿賬單"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -1401,17 +1307,11 @@ msgid "Has Message"
 msgstr "有訊息"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__has_down_payments
-msgid "Has down payments"
-msgstr "有預付款"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
 msgstr "隱藏已已取消的明細項目"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
@@ -1515,11 +1415,6 @@ msgid "Is In Purchase Order"
 msgstr "是在採購訂單內"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__is_downpayment
-msgid "Is a down payment"
-msgstr "是預付訂金"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
 msgstr "日記賬記項"
@@ -1530,14 +1425,12 @@ msgid "Journal Item"
 msgstr "日記賬項目"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
 msgid "Last Updated by"
 msgstr "最後更新者"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_date
 msgid "Last Updated on"
@@ -1811,6 +1704,7 @@ msgid "Not using Odoo?"
 msgstr "還未使用 Odoo？"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Note"
 msgstr "備註"
@@ -1892,28 +1786,17 @@ msgid ""
 msgstr "若已決定要向供應商訂購產品，請確認您的詢價單，它將變成採購訂單."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_invoiced
-msgid "Only confirmed down payments and invoiced amounts are considered."
-msgstr "只會考慮已確認的首期付款金額及已開立發票金額。"
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Operation not supported"
 msgstr "不支援此操作"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__order_ids
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Order"
 msgstr "訂單"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__count
-msgid "Order Count"
-msgstr "銷售訂單數量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
@@ -2113,11 +1996,6 @@ msgstr "為採購提供雙重驗證機制"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "採購"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_advance_payment_wizard
-msgid "Purchase Advance Payment Bill"
-msgstr "採購項目預先付款賬單"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
@@ -2388,11 +2266,6 @@ msgid "Quantity"
 msgstr "數量"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
-msgid "Quantity to Invoice"
-msgstr "待開立發票數量"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
 msgstr "數量："
@@ -2639,6 +2512,11 @@ msgid "Search a vendor name, or create one on the fly."
 msgstr "搜索供應商名稱，或立刻建立一個."
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
+msgid "Section"
+msgstr "章節"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Section Name (eg. Products, Services)"
 msgstr "小節名稱(如:產品，服務)"
@@ -2882,7 +2760,7 @@ msgstr "連稅："
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_ids
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
 msgstr "稅金"
 
@@ -2909,11 +2787,6 @@ msgid "Terms and Conditions"
 msgstr "條款和條件"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "The Down Payment is greater than the amount remaining to be billed."
-msgstr "首期付款金額大於剩餘待開立賬單的金額。"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -2923,31 +2796,10 @@ msgstr ""
 " 您可以使用此欄位進行快速搜尋。"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
-msgid ""
-"The amount to be billed = Purchase Order Total - Amount already billed."
-msgstr "待開立賬單金額 = 採購訂單總額 - 已開立賬單金額。"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__fixed_amount
-msgid "The fixed amount billed in advance."
-msgstr "預先開立賬單的固定金額。"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "The new bill will deduct draft bills linked to this purchase order."
-msgstr "新的賬單將會扣減關聯至此採購訂單的草稿賬單。"
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The order receipt has been acknowledged by %s."
 msgstr "%s 已確認訂單供貨."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount
-msgid "The percentage of amount billed in advance."
-msgstr "預先開立賬單的金額百分比。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2970,17 +2822,12 @@ msgid "There are currently no requests for quotation for your account."
 msgstr "目前您的帳戶沒有詢價單."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
-msgid "There are existing Draft Bills for this Purchase Order."
-msgstr "此採購訂單已有現有的草稿賬單。"
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"There are no invoiceable lines. If a product has a control policy based on "
+"There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
-msgstr "沒有可開立發票的資料行。如果產品有基於已收到數量的控制政策，請確保已收到一定數量。"
+msgstr "沒有須支付明細. 如果產品有基於收貨數量的帳單控制策略，請確認已接收數量."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3057,6 +2904,11 @@ msgid "To Approve"
 msgstr "待批准"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
+msgid "To Invoice Quantity"
+msgstr "應收憑單數"
+
+#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "To Send"
@@ -3082,7 +2934,7 @@ msgstr "總計"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total Qty purchased"
-msgstr ""
+msgstr "採購總數量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -3111,7 +2963,7 @@ msgstr "合計金額"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
-msgstr ""
+msgstr "採購總金額"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
@@ -3418,9 +3270,8 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
-msgid ""
-"You can find a vendor by their Name, TIN, Email, or Internal Reference."
-msgstr "你可透過名稱、納稅人識別號碼、電子郵件，或內部參考號碼，去尋找供應商。"
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr "你可以找到一個供應商的名稱, 統一編號, 電子郵件或參照."
 
 #. module: purchase
 #. odoo-python

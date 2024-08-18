@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -485,6 +485,11 @@ msgstr ""
 "Up\".</font></span>"
 
 #. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid "<span style=\"font-weight: bolder; color: white;\">VIP10</span>"
+msgstr "<span style=\"font-weight: bolder; color: white;\">VIP10</span>"
+
+#. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_promotion_template
 msgid ""
 "<span style=\"font-weight: bolder;\">\n"
@@ -537,11 +542,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
 msgid "<span style=\"font-weight: bolder;\">Register now</span>"
 msgstr "<span style=\"font-weight: bolder;\">Rekisteröidy nyt</span>"
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "<span style=\"font-weight: bolder;\">VIP10</span>"
-msgstr "<span style=\"font-weight: bolder;\">VIP10</span>"
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_promotion_template
@@ -684,7 +684,7 @@ msgid "Best practices to digitize your company"
 msgstr "Parhaat käytännöt yrityksesi digitalisoimiseksi"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Big News"
 msgstr "Isoja uutisia"
 
@@ -698,7 +698,7 @@ msgstr ""
 "on juuri sinulle."
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Blogging"
 msgstr "Blogaaminen"
 
@@ -745,7 +745,7 @@ msgid "Client Testimonials"
 msgstr "Asiakaskertomukset"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Coffee break"
 msgstr "Kahvitauko"
 
@@ -765,7 +765,7 @@ msgid "Contact"
 msgstr "Kontakti"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Coupon Code"
 msgstr "Alennuskoodi"
 
@@ -868,7 +868,7 @@ msgid "Easy Returns"
 msgstr "<i class=\"fa fa-check-circle-o text-o-color-1\"/> Helppo palautus"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Event Promo"
 msgstr "Tapahtuman promo"
 
@@ -1170,7 +1170,7 @@ msgid "LinkedIn"
 msgstr "LinkedIn"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Magazine"
 msgstr "Lipas"
 
@@ -1223,7 +1223,7 @@ msgid "New Financing in 2014"
 msgstr "Uusi rahoitus vuonna 2014"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Newsletter"
 msgstr "Uutiskirje"
 
@@ -1288,7 +1288,7 @@ msgstr ""
 " videot.<br/>"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Promotion Program"
 msgstr "Myynninedistämisohjelma"
 
@@ -1328,12 +1328,12 @@ msgid "Registration is free, but mandatory:"
 msgstr "Ilmoittautuminen on maksutonta, mutta pakollista:"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Roadshow Follow-up"
 msgstr "Roadshow-seuranta"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Roadshow Schedule"
 msgstr "Roadshow aikataulu"
 
@@ -1580,7 +1580,7 @@ msgid "Train with the best developers"
 msgstr "Kouluttaudu parhaiden kehittäjien kanssa"
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Training"
 msgstr "Koulutus"
 
@@ -1592,14 +1592,6 @@ msgid ""
 msgstr ""
 "Matkusta poistumatta keittiöstäsi näiden kansainvälisten reseptien avulla. "
 "Kanadasta Australiaan, Meksikosta Ruotsiin ja kaikkialle siltä väliltä."
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coffeebreak_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "Twitter"
-msgstr "Twitter"
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
