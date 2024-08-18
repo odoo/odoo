@@ -3,7 +3,7 @@
 # 	* mail_group
 # 
 # Translators:
-# Hasna, 2023
+# Hasna <hasnausmantu@gmail.com>, 2023
 # Niyas Raphy, 2023
 # 
 msgid ""
@@ -65,7 +65,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Please find below the guidelines of the {{ object.mail_group_id.name }} mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "

@@ -9430,6 +9430,12 @@ msgid "Never"
 msgstr "从不"
 
 #. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "新日记账名称"
@@ -13708,7 +13714,7 @@ msgstr "此分销线所属的公司。"
 msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
-msgstr ""
+msgstr "无法检测到外国增值税号所在的国家/地区。请为财务规则指定一个国家/地区，或国家/地区组别。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -16125,7 +16131,7 @@ msgstr "您不能将日记帐上设置为银行帐户的科目类型更改为应
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "您不能在所选国家/地区组别之外的国家/地区，创建财务规则。"
 
 #. module: account
 #: code:addons/account/models/partner.py:0

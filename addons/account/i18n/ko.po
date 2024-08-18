@@ -9466,6 +9466,12 @@ msgid "Never"
 msgstr "하지않음"
 
 #. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "새로운 분개장 명칭"
@@ -13754,7 +13760,7 @@ msgstr "이 유통 항목이 속해 있는 회사입니다."
 msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
-msgstr ""
+msgstr "해외 VAT 번호의 국가를 확인할 수 없습니다. 재정 위치에 국가를 부여하거나 국가 그룹을 설정하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -16206,7 +16212,7 @@ msgstr "전표에 계좌 유형이 은행 계좌로 설정된 경우에는 미�
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "선택한 국가 그룹 외부에 있는 국가에는 재정 포지션을 생성할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
