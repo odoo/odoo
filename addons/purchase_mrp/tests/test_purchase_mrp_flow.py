@@ -1181,3 +1181,25 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         replenishments = report_values['components'][0]['replenishments']
         self.assertEqual(len(replenishments), 1)
         self.assertEqual(replenishments[0]['summary']['name'], purchase.name)
+
+    def test_total_cost_share_rounded_to_precision(self):
+        kit, compo01, compo02 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': price,
+            'type': 'product',
+        } for name, price in [('Kit', 30), ('Compo 01', 10), ('Compo 02', 20)]])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': compo01.id,
+                'product_qty': 1,
+                'cost_share': 99.99,
+            }), (0, 0, {
+                'product_id': compo02.id,
+                'product_qty': 1,
+                'cost_share': 0.01,
+            })],
+        })
+        self.assertTrue(bom)
