@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Fernanda Alvarez, 2024
 # Wil Odoo, 2024
+# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
@@ -635,6 +635,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Apreciable\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Aquí está su \n"
+"        <t t-if=\"object.name\">\n"
+"            factura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (con referencia: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        por un importe total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Esta factura ya está pagada.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"             Realice su pago lo más pronto posible.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                 Utilice la siguiente referencia para realizar su pago: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    en la cuenta <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            Puede revisar sus hojas de horas <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">desde el portal.</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        No dude en contactarnos si tiene alguna pregunta.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1319,8 +1368,8 @@ msgid ""
 "                payments on a daily basis."
 msgstr ""
 "Una caja registradora le permite gestionar asientos de efectivo en sus diarios\n"
-"                de efectivo. Esta función le proporciona una forma sencilla de llevar el seguimiento de pagos\n"
-"                en efectivo diariamente."
+"                de efectivo. Esta función es una manera sencilla de llevar el seguimiento de pagos\n"
+"                en efectivo a diario."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -1344,9 +1393,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
-"Un estado de cuenta bancario es un resumen de todas sus transacciones financieras\n"
-"                que ocurren en un periodo de tiempo en una cuenta bancaria. Debe\n"
-"                recibirlo de forma periódica."
+"Un estado de cuenta bancario es un resumen de todas las transacciones financieras\n"
+"                que ocurren en un periodo de tiempo en una cuenta bancaria. Debería\n"
+"                recibirlo de forma periódica de parte de su banco."
 
 #. module: account
 #. odoo-python
@@ -1360,8 +1409,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Un asiento contable está compuesto por varios apuntes contables, cada uno\n"
-"                de ellos es una transacción de débito o crédito."
+"Un conjunto de apuntes contables forman un asiento contable. Cada\n"
+"apunte es una transacción de cargo o abono."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -1390,8 +1439,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
-"Una línea de este movimiento utiliza una cuenta obsoleta, no puede "
-"publicarla."
+"Se está utilizando una cuenta obsoleta en una línea de este movimiento, por "
+"lo que no puede publicarlo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1467,7 +1516,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
 msgid ""
 "A tag with the same name and applicability already exists in this country."
-msgstr "Una etiqueta con el mismo nombre y relevancia ya existe en este país."
+msgstr "Ya existe una etiqueta con el mismo nombre y relevancia en este país."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -2581,7 +2630,7 @@ msgid ""
 "                to disclose a certain amount of information."
 msgstr ""
 "Una cuenta es la parte de un libro contable que le permite\n"
-"                a su empresa registrar todo tipo de transacciones de débito y crédito.\n"
+"                a su empresa registrar todo tipo de transacciones de cargos y abonos.\n"
 "                Las empresas presentan sus cuentas anuales principalmente en dos partes:\n"
 "                la hoja de balance general y el estado de resultados (ganancias y pérdidas)\n"
 "              Las cuentas anuales son requeridas por ley a las empresas\n"
@@ -12704,12 +12753,13 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"Con frecuencia se reciben correos que contienen facturas falsas con cuentas "
-"fraudulentas, a esta práctica se le llama phishing. Es importante verificar "
-"los nuevos números de cuenta y la mejor manera de hacerlo es llamar al "
-"proveedor, esto es esencial porque si esto llega a pasar, quiere decir que "
-"el correo del proveedor está en peligro. Una vez que haya comprobado que la "
-"información es correcta puede activar la función de enviar dinero."
+"Con frecuencia se reciben correos que contienen facturas falsas con números "
+"de cuenta fraudulentos, a esta práctica se le llama phishing. Es importante "
+"verificar los nuevos números de cuenta y la mejor manera de hacerlo es "
+"llamar al proveedor, lo cual es esencial porque si se encuentra en esta "
+"situación, quiere decir que el correo del proveedor está en peligro. Una vez"
+" que haya comprobado que la información es correcta, puede activar la "
+"función de enviar dinero."
 
 #. module: account
 #. odoo-python
@@ -16013,9 +16063,9 @@ msgid ""
 "should not have this option set."
 msgstr ""
 "Se utiliza en reportes para saber si se deberían considerar los apuntes "
-"contables desde el principio en lugar de para el año fiscal en curso "
-"solamente. No disponen de esta opción los tipos de cuenta que deben "
-"restablecerse a cero en cada año fiscal (como gastos, ingresos...)."
+"contables desde el principio en lugar de solo para el año fiscal en curso. "
+"Los tipos de cuenta que deben restablecerse a cero después da cada año "
+"fiscal nuevo (como gastos o ingress) no tienen esta opción."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -16125,7 +16175,7 @@ msgid ""
 msgstr ""
 "Valor por el importe de la línea de cancelación\n"
 "    * Porcentaje: porcentaje del balance, entre 0 y 100.\n"
-"    * Fijo: el valor fijo de la cancelación. El importe contará como débito si es negativo, como crédito si es positivo.\n"
+"    * Fijo: el valor fijo de la cancelación. El importe contará como cargo si es negativo, como abono si es positivo.\n"
 "    * De la etiqueta: no se necesita un delimitador de expresiones regulares, solo se necesita la expresión regular. Por ejemplo, si desea extraer la cantidad de\n"
 "R: 9672938 10/07 AX 9415126318 T: 5L: NA BRT: 3358,07 C:\n"
 "Podría ingresar\n"
