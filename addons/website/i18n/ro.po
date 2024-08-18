@@ -14,17 +14,17 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
-# Wil Odoo, 2024
 # Maria Muntean, 2024
 # Corina Calin, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -297,6 +297,8 @@ msgstr ""
 "... și schimbați conținutul calendarului pentru a se potrivi cu nevoile dvs."
 
 #. module: website
+#: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -7040,6 +7042,7 @@ msgstr "Lasă gol pentru a utiliza valoarea implicită"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
+#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -8406,6 +8409,12 @@ msgstr "Niciun domeniu configurat pentru acest site web."
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "None"
 msgstr "Fără"
+
+#. module: website
+#: model:website,prevent_zero_price_sale_text:website.default_website
+#: model:website,prevent_zero_price_sale_text:website.website2
+msgid "Not Available For Sale"
+msgstr "Nu este disponibil pentru vânzare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
@@ -11085,7 +11094,7 @@ msgstr "Submeniuri"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Subheading"
-msgstr ""
+msgstr "Subtitlu"
 
 #. module: website
 #. odoo-javascript
@@ -11164,7 +11173,7 @@ msgstr "SUGESTIE: Odată încărcat, urmați"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
-msgstr ""
+msgstr "Cuprins"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -11338,7 +11347,7 @@ msgstr "Mulțumesc!"
 #: code:addons/website/static/src/snippets/s_instagram_page/options.js:0
 #, python-format
 msgid "The Instagram page name is not valid"
-msgstr ""
+msgstr "Numele paginii de Instagram nu este valid"
 
 #. module: website
 #. odoo-javascript
@@ -11354,6 +11363,9 @@ msgid ""
 "battery life that lasts up to 17h, you can enjoy your favorite tunes without"
 " interruption."
 msgstr ""
+"Cutia de încărcare compactă oferă o încărcare convenabilă din mers, cu o "
+"durată de viață a bateriei care durează până la 17 ore, vă puteți bucura de "
+"melodiile preferate fără întrerupere."
 
 #. module: website
 #. odoo-python
@@ -11363,6 +11375,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"Compania %(company_name)r nu poate fi arhivată deoarece are un site web legat %(website_name)r.\n"
+"Schimbați mai întâi compania de pe site-ul respectiv."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11398,13 +11412,16 @@ msgid ""
 "pocket-friendly size ensures you can carry your audio experience wherever "
 "you roam."
 msgstr ""
+"Căștile se integrează perfect în stilul dvs. de viață, în timp ce "
+"dimensiunea de buzunar a carcasei de încărcare vă asigură că vă puteți purta"
+" experiența audio oriunde vă deplasați."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "The field '%s' is mandatory for the action '%s'."
-msgstr ""
+msgstr "Câmpul \"%s\" este obligatoriu pentru acțiunea \"%s\"."
 
 #. module: website
 #. odoo-javascript
@@ -11477,12 +11494,12 @@ msgstr "Limita trebuie să fie între 1 și 16."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "The maximum number of files that can be uploaded."
-msgstr ""
+msgstr "Numărul maxim de fișiere care pot fi încărcate."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "The maximum size (in MB) an uploaded file can have."
-msgstr ""
+msgstr "Dimensiunea maximă (în MB) pe care o poate avea un fișier încărcat."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -11494,11 +11511,13 @@ msgstr "Mesajul va fi vizibil odată ce numărătoarea inversă se termină"
 msgid ""
 "The name is used to generate the URL and is shown in the browser title bar"
 msgstr ""
+"Numele este utilizat pentru a genera URL-ul și este afișat în bara de titlu "
+"a browserului"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
-msgstr ""
+msgstr "Numele paginii care se poate utiliza într-un URL"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -11526,6 +11545,8 @@ msgid ""
 "The type of the page. If set, it indicates whether the page displays a list "
 "of records or a single record"
 msgstr ""
+"Tipul paginii. Dacă este setat, indică dacă pagina afișează o listă de "
+"înregistrări sau o singură înregistrare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11571,6 +11592,7 @@ msgstr "Culori tematice"
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
+#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -11636,7 +11658,7 @@ msgstr "Gros"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thickness"
-msgstr ""
+msgstr "Grosime"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -11659,6 +11681,7 @@ msgstr "Al treilea meniu"
 #, python-format
 msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
 msgstr ""
+"Această adresă URL este conținută în “%(field)s” din următorul “%(model)s”"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -11667,6 +11690,9 @@ msgid ""
 "nutrition guidance, and expert coaching. Elevate your fitness level and "
 "achieve feats you never thought possible."
 msgstr ""
+"Acest program de coaching oferă antrenamente specializate axate pe forță, "
+"îndrumare nutrițională și coaching de specialitate. Ridicați-vă nivelul de "
+"fitness și atingeți performanțe pe care nu le-ați crezut niciodată posibile."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -11684,6 +11710,9 @@ msgid ""
 "This field is mandatory for this action. You cannot remove it. Try hiding it"
 " with the 'Visibility' option instead and add it a default value."
 msgstr ""
+"Acest câmp este obligatoriu pentru această acțiune. Nu îl puteți elimina. "
+"Încercați să-l ascundeți cu opțiunea \"Vizibilitate\" și adăugați-i o "
+"valoare implicită."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__arch_base
@@ -11732,6 +11761,8 @@ msgid ""
 "This font already exists, you can only add it as a local font to replace the"
 " server version."
 msgstr ""
+"Acest font există deja, îl puteți adăuga doar ca font local pentru a înlocui"
+" versiunea de pe server."
 
 #. module: website
 #. odoo-javascript
@@ -11756,6 +11787,10 @@ msgid ""
 "aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
 " Phasellus laoreet lorem vel dolor tempus vehicula."
 msgstr ""
+"Acesta este un paragraf. Ambitioni dedisse scripsisse iudicaretur. Nihilne "
+"te nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, "
+"aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
+" Phasellus laoreet lorem vel dolor tempus vehicula."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -11773,16 +11808,19 @@ msgid ""
 "This is a wider card with supporting text below as a natural lead-in to "
 "additional content. This content is a little bit longer."
 msgstr ""
+"Acesta este un card mai larg, cu text de susținere dedesubt, ca o "
+"introducere naturală la conținut suplimentar. Acest conținut este puțin mai "
+"lung."
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.contactus
 msgid "This is the contact us page of the website"
-msgstr ""
+msgstr "Aceasta este pagina de contact a site-ului"
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.homepage
 msgid "This is the homepage of the website"
-msgstr ""
+msgstr "Aceasta este pagina principală a site-ului"
 
 #. module: website
 #. odoo-python
@@ -11818,7 +11856,7 @@ msgstr ""
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "This translation is not editable."
-msgstr ""
+msgstr "Această traducere nu poate fi modificată."
 
 #. module: website
 #. odoo-javascript
@@ -11844,7 +11882,7 @@ msgstr "Acest arhitectural de vizualizare a fost modificat"
 #: code:addons/website/static/src/systray_items/website_switcher.xml:0
 #, python-format
 msgid "This website does not have a domain configured."
-msgstr ""
+msgstr "Acest site nu are un domeniu configurat."
 
 #. module: website
 #. odoo-javascript
@@ -11854,6 +11892,8 @@ msgid ""
 "This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
 "To remove this message please set a domain in your website settings"
 msgstr ""
+"Acest site nu are un domeniu configurat. Pentru a evita comportamente neașteptate în timpul editării site-ului, vă recomandăm să închideți (sau să actualizați) alte file ale browserului.\n"
+"Pentru a elimina acest mesaj, vă rugăm să configurați un domeniu în setările site-ului dvs."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -12806,7 +12846,7 @@ msgstr "Venim în curând"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_5_s_banner
 msgid "We Are Down for Maintenance"
-msgstr ""
+msgstr "Suntem indisponibili pentru întreținere"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -12857,13 +12897,16 @@ msgid ""
 "understanding your fitness aspirations, your current lifestyle, and any "
 "challenges you face."
 msgstr ""
+"Noi credem că fiecare călătorie de fitness este unică. Abordarea noastră "
+"începe cu înțelegerea aspirațiilor dvs. de fitness, a stilului dvs. de viață"
+" actual și a oricăror provocări cu care vă confruntați."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
 #, python-format
 msgid "We couldn't find the Facebook page"
-msgstr ""
+msgstr "Nu am putut găsi pagina de Facebook"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12896,6 +12939,8 @@ msgid ""
 "We monitor your progress meticulously, adjusting your plan as needed to "
 "ensure continuous improvement and results."
 msgstr ""
+"Vă monitorizăm progresul cu meticulozitate, ajustându-vă planul după cum "
+"este necesar pentru a asigura îmbunătățire continuă și rezultate."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -12942,6 +12987,9 @@ msgid ""
 "We're driven by the aspiration to redefine industry standards, to exceed the"
 " expectations of our clients, and to foster a culture of continuous growth."
 msgstr ""
+"Suntem motivați de aspirația de a redefini standardele industriei, de a "
+"depăși așteptările clienților noștri și de a promova o cultură a creșterii "
+"continue."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -12968,6 +13016,7 @@ msgstr "Vizitatori Web"
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
+#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -13062,12 +13111,12 @@ msgstr "Setări Meniuri Site web"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "Website Model Page Settings"
-msgstr ""
+msgstr "Setări pentru pagina de model a site-ului"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_controller_pages_list
 msgid "Website Model Pages"
-msgstr ""
+msgstr "Pagini model ale site-ului"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
@@ -13260,7 +13309,7 @@ msgstr "Traducere Pagini web"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Weight Loss Transformation"
-msgstr ""
+msgstr "Transformare prin pierdere în greutate"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
@@ -13270,6 +13319,10 @@ msgid ""
 "support, we're committed to helping you achieve lasting results that align "
 "with your aspirations."
 msgstr ""
+"Bine ați venit la gama noastră cuprinzătoare de servicii de antrenamente de "
+"fitness pe măsură, cu antrenamente personalizate, planuri de nutriție "
+"adaptate și sprijin neclintit, ne angajăm să vă ajutăm să obțineți rezultate"
+" durabile care se aliniază aspirațiilor dumneavoastră."
 
 #. module: website
 #. odoo-javascript
@@ -13281,7 +13334,7 @@ msgstr "Bine ați venit la"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Wellness Coaching"
-msgstr ""
+msgstr "Antrenament de îmbunătățire a stării de bine"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_text_block_h2
@@ -13312,7 +13365,7 @@ msgstr "Câștigă $20"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "Wireless Freedom"
-msgstr ""
+msgstr "Libertate fără fir"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
@@ -13326,6 +13379,10 @@ msgid ""
 " support, you'll shed unwanted pounds while building healthy habits that "
 "last."
 msgstr ""
+"Cu ajutorul planurilor de fitness personalizate, al îndrumărilor "
+"nutriționale adaptate și al sprijinului consistent, veți scăpa de "
+"kilogramele nedorite, dezvoltând în același timp obiceiuri sănătoase care "
+"vor persista."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -13377,6 +13434,9 @@ msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
 "feature. To be successful your content needs to be useful to your readers."
 msgstr ""
+"Scrieți unul sau două paragrafe în care vă descrieți produsul, serviciile "
+"sau o caracteristică specifică. Pentru a avea succes, conținutul dvs. "
+"trebuie să fie util pentru cititorii dvs."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -13416,6 +13476,10 @@ msgid ""
 "%s ). This is necessary to edit or view your website from the Website app. "
 "You might need to log back in."
 msgstr ""
+"Sunteți pe cale să fiți redirecționat către domeniul configurat pentru site-"
+"ul dvs. ( %s ). Acest lucru este necesar pentru a edita sau vizualiza site-"
+"ul dvs. din aplicația Website. S-ar putea să fie necesar să vă autentificați"
+" din nou."
 
 #. module: website
 #. odoo-javascript
@@ -13481,6 +13545,8 @@ msgstr "Nu puteți elimina butonul de trimitere a formularului"
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
 msgstr ""
+"Nu puteți șterge site-ul implicit %s . În schimb, încercați să modificați "
+"setările acestuia"
 
 #. module: website
 #. odoo-python
@@ -13490,6 +13556,9 @@ msgid ""
 "You cannot delete this website menu as this serves as the default parent "
 "menu for new websites (e.g., /shop, /event, ...)."
 msgstr ""
+"Nu puteți șterge acest meniu al site-ului, deoarece acesta servește drept "
+"meniu părinte implicit pentru site-urile noi (de exemplu, /shop, /event, "
+"...)."
 
 #. module: website
 #. odoo-javascript
@@ -13503,7 +13572,7 @@ msgstr "Nu puteți duplica acest câmp."
 #: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
 #, python-format
 msgid "You didn't provide a valid Facebook link"
-msgstr ""
+msgstr "Nu ați furnizat un link Facebook valid"
 
 #. module: website
 #. odoo-python
@@ -13627,6 +13696,8 @@ msgid ""
 "Your brand is your story. We help you tell it through cohesive visual "
 "identity and messaging that resonates with your audience."
 msgstr ""
+"Brandul dvs. este povestea dvs. Vă ajutăm să o spuneți prin identitate "
+"vizuală coerentă și mesaje care rezonează cu publicul dumneavoastră."
 
 #. module: website
 #. odoo-javascript
@@ -13634,6 +13705,7 @@ msgstr ""
 #, python-format
 msgid "Your changes might be lost during future Odoo upgrade."
 msgstr ""
+"Modificările dvs. pot fi pierdute în timpul unei viitoare actualizări Odoo."
 
 #. module: website
 #. odoo-javascript
@@ -13663,6 +13735,8 @@ msgstr ""
 msgid ""
 "Your instagram page must be public to be integrated into an Odoo website."
 msgstr ""
+"Pagina dvs. de instagram trebuie să fie publică pentru a fi integrată într-"
+"un site Odoo."
 
 #. module: website
 #. odoo-javascript

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -208,15 +208,16 @@ msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
 msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
-msgstr ""
+msgstr "이 해외 VAT 번호로 등록된 국가가 이 재정 위치에 설정된 국가 그룹 중 어느 국가와도 일치하지 않습니다."
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
-msgstr ""
+msgstr "해외 VAT 번호의 국가를 확인할 수 없습니다. 재정 위치에 국가를 부여하거나 국가 그룹을 설정하세요."
 
 #. module: base_vat
 #. odoo-python
@@ -255,6 +256,13 @@ msgstr "확인할 VIES VAT"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr "XXXXXXXXX [9자리]이며, Luhn 알고리즘 체크섬을 준수해야 합니다."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
 msgstr "CPF의 경우 11자리 또는 CNPJ의 경우 14자리입니다."
 
@@ -271,10 +279,3 @@ msgstr "재정 위치 [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "협력사 [%s]"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
-msgstr "XXXXXXXXX [9자리]이며, Luhn 알고리즘 체크섬을 준수해야 합니다."
