@@ -8,7 +8,7 @@
 # Martin Trigaux, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Chloe Wang, 2024
 # 
 msgid ""
@@ -3391,7 +3391,7 @@ msgstr "病假"
 msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
-msgstr ""
+msgstr "您尝试删除的累积计划，有部分已连接至现有休假分配。请先删除或取消它们。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3556,6 +3556,14 @@ msgstr "花费"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__taken_leave_ids
 msgid "Taken Leave"
 msgstr "请假"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"The Start Date of the Validity Period must be anterior to the End Date."
+msgstr "有效期的开始日期须早于结束日期。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count

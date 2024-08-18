@@ -3,7 +3,7 @@
 # 	* delivery
 # 
 # Translators:
-# Nikola Iliev, 2023
+# KeyVillage, 2023
 # Александра Николова <alexandra1nikolova@gmail.com>, 2023
 # Георги Пехливанов <sonaris@gmail.com>, 2023
 # Boris Stefanov <borkata@gmail.com>, 2023
@@ -1250,6 +1250,23 @@ msgid ""
 "\n"
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
 msgstr ""
 
 #. module: delivery

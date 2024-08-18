@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -47,7 +47,6 @@ msgstr "Autoriser l'enrichissement manuel"
 #. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
-#: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
 msgstr "CRM : enrichir des pistes (IAP)"
 
@@ -84,6 +83,7 @@ msgid "Lead Enrichment (based on email address)"
 msgstr "Enrichissement de pistes (basé sur l'adresse email)"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Lead enriched based on email address"
@@ -95,12 +95,14 @@ msgid "Lead/Opportunity"
 msgstr "Piste/Opportunité"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Not enough credits for Lead Enrichment"
 msgstr "Pas assez de crédits pour l'enrichissement de pistes"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Sent batch %s enrich requests: failed with exception %s"
@@ -108,6 +110,7 @@ msgstr ""
 "Demandes d'enrichissement envoyées en lot %s : échouées, à l'exception de %s"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "The leads/opportunities have successfully been enriched"

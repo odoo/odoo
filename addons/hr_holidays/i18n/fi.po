@@ -1550,7 +1550,7 @@ msgstr "Vahvistettu"
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #, python-format
 msgid "Confirmed and Approved"
-msgstr ""
+msgstr "Vahvistettu ja hyväksytty"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3470,6 +3470,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"Jotkin poistettavista suoriteperusteisista suunnitelmista liittyvät olemassa"
+" olevaan kohdistukseen. Poista tai peruuta ne ensin."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3634,6 +3636,15 @@ msgstr "Otettu"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__taken_leave_ids
 msgid "Taken Leave"
 msgstr "Otettu lomaa"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"The Start Date of the Validity Period must be anterior to the End Date."
+msgstr ""
+"Voimassaoloajan alkamispäivän on oltava aikaisempi kuin päättymispäivän."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count

@@ -6,8 +6,8 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
-# Wil Odoo, 2024
 # Marianna Ciofani, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1196,7 +1196,7 @@ msgstr "Ferie approvate"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
 msgid "Approved by Time Off Officer"
-msgstr "Approvato da Responsabile congedi"
+msgstr "Approvato da Responsabile ferie"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1347,8 +1347,7 @@ msgstr "Da parte dell'approvatore del dipendente"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr ""
-"Da parte dell'approvatore del dipendente e dell'addetto al tempo libero"
+msgstr "Da parte dell'approvatore del dipendente e del responsabile ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1362,7 +1361,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Per addetto ferie"
+msgstr "Per responsabile ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
@@ -1447,8 +1446,8 @@ msgid ""
 "Choose the Time Off Officer who will be notified to approve allocation or "
 "Time Off request"
 msgstr ""
-"Scegli il responsabile per il tempo libero che sarà notificato per approvare"
-" l'assegnazione o la richiesta di congedo"
+"Scegli il responsabile ferie che sarà notificato per approvare "
+"l'assegnazione o la richiesta di congedo"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3284,7 +3283,7 @@ msgstr "Orario lavorativo risorsa"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
 msgid "Responsible Time Off Officer"
-msgstr "Responsabile del tempo libero"
+msgstr "Responsabile ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3627,6 +3626,16 @@ msgid "Taken Leave"
 msgstr "Congedo preso"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"The Start Date of the Validity Period must be anterior to the End Date."
+msgstr ""
+"La data di inizio del periodo di validità deve essere precedente alla data "
+"di fine."
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
 "The accrual starts after a defined period from the allocation start date. "
@@ -3931,8 +3940,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"Gli addetti assegnano i giorni di ferie ai dipendenti (es. aspettativa retribuita).<br>\n"
-"                I dipendenti avanzano richieste di assegnazione agli addetti ferie (es. giorni di riposo)."
+"I responsabili assegnano i giorni di ferie ai dipendenti (es. aspettativa retribuita).<br>\n"
+"                I dipendenti avanzano richieste di assegnazione ai responsabili ferie (es. giorni di riposo)."
 
 #. module: hr_holidays
 #. odoo-javascript
