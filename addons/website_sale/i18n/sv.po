@@ -18,8 +18,6 @@
 # Fredrik Arvas <fredrik.arvas@vertel.se>, 2023
 # Simon S, 2023
 # Robin Chatfield <robin.chatfield@gmail.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
-# Lasse L, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
@@ -28,14 +26,16 @@
 # Claes-Johan Dahlin, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Larissa Manderfeld, 2024
+# Lasse L, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,6 @@ msgstr "%s recensioner"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Frakt"
 
@@ -146,7 +145,6 @@ msgstr "<b>Prislista</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Leverans: </b>"
 
@@ -506,11 +504,6 @@ msgid ""
 msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\"> <tbody> <!-- INNEHÅLL --> <tr> <td align=\"center\" style=\"min-width: 590px;\"> <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\"> <tr><td valign=\"top\" style=\"font-size: 13px;\"> <h1 style=\"color:#A9A9A9;\">DER FINNS NÅGOT I DIN KORG.</h1> Vill du slutföra ditt köp?<br><br> <t t-if=\"object.order_line\"> <t t-foreach=\"object.website_order_line\" t-as=\"line\"> <hr> <table width=\"100%\"> <tr> <td style=\"padding: 10px; width:150px;\"> <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Produktbild\"> </td> <td> <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Skrivbordskombination</strong><br><t t-out=\"line.name or ''\">[FURN_7800] Skrivbordskombination Skrivbordskombination, svartbrun: stol + skrivbord + låda.</t> </td> <td width=\"100px\" align=\"right\"> <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Enheter</t> </td> </tr> </table> </t> <hr> </t> <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\"> <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\"> CV-order </a> </div> <t t-set=\"company\" t-value=\"object.company_id eller object.user_id.company_id eller user.company_id\"></t> <div style=\"text-align: center;\"><strong>Tack för att du handlar hos <t t-out=\"company.name or ''\">Mitt företag (San Francisco)</t>!</strong></div> </td></tr> </table> </td> </tr> </tbody> </table>\n"
 " "
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Dokument</u>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -894,7 +887,6 @@ msgstr "Stor"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Fakturering"
 
@@ -999,13 +991,6 @@ msgstr "Kan bilden 1024 förstoras"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Kan publicera"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1258,6 +1243,11 @@ msgstr "Komponenter"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
 msgstr "Beräkna leveranskostnad och skicka med Easypost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1699,6 +1689,11 @@ msgstr ""
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Vill du rensa din varukorg innan du lägger till produkter i den?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Dokument"
 
 #. module: website_sale
 #. odoo-python
@@ -2571,6 +2566,13 @@ msgstr ""
 "Vänligen kontakta oss för mer information."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2787,11 +2789,6 @@ msgid "Pay now"
 msgstr "Betala direkt"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Betala med"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2812,6 +2809,11 @@ msgstr "Betalningsmetoder"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Betalningsleverantörer"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Betalnings-token"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3633,6 +3635,16 @@ msgstr "Leveranssätt"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
 msgstr "Leveransadress"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
+msgstr ""
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
@@ -4501,6 +4513,13 @@ msgstr ""
 "                                            Om du vill modifiera din leveransadress, skapa en"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4547,6 +4566,15 @@ msgstr "Din e-post"
 #, python-format
 msgid "Your Name"
 msgstr "Ditt namn"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

@@ -8,23 +8,23 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Murat Durmuş <muratd@projetgrup.com>, 2023
 # Umur Akın <umura@projetgrup.com>, 2023
-# Ediz Duman <neps1192@gmail.com>, 2023
-# Murat Kaplan <muratk@projetgrup.com>, 2023
 # Levent Karakaş <levent@mektup.at>, 2023
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2023
 # abc Def <hdogan1974@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-# sinem cil, 2024
+# Sinem Cil, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: sinem cil, 2024\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgstr ""
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)sHata "
 
 #. module: delivery
 #. odoo-python
@@ -49,7 +49,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Oran Al"
 
 #. module: delivery
 #. odoo-python
@@ -135,7 +135,7 @@ msgstr "Sevkiyat ekle"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Ek marj"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -377,6 +377,13 @@ msgid "Error: this delivery method is not available for this address."
 msgstr "Hata: bu teslimat yöntemi bu adres için mevcut değil."
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
@@ -406,7 +413,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Sabit Marj"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -626,6 +633,11 @@ msgid "Pricing Rules"
 msgstr "Fiyatlandırma Kuralları"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Ürün Kategorisi"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
 msgstr "Ürün Miktarı"
@@ -725,7 +737,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Standart teslimat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -787,7 +799,7 @@ msgstr "Bu yüzde gönderim bedeline eklenecektir."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Toplam Sipariş Ağırlığı"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -833,7 +845,7 @@ msgstr "Ağırlık * Hacim"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Ağırlık Ölçü Adı"
 
 #. module: delivery
 #. odoo-python
@@ -848,6 +860,15 @@ msgstr ""
 "Daha önce faturalanmış bir siparişin kargo ücretini güncelleyemezsiniz!\n"
 "\n"
 "Aşağıdaki teslimat satırları (ürün, faturalanan miktar ve fiyat) halihazırda işlenmiştir:\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

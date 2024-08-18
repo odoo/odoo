@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1185,6 +1185,13 @@ msgid "Generate eWallet"
 msgstr "Générer un e-wallet"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1763,6 +1770,7 @@ msgstr "Type de récompense"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Récompenses"
 
@@ -1900,6 +1908,13 @@ msgstr "Le code promotionnel doit être unique."
 msgid "The required points for a reward must be strictly positive."
 msgstr ""
 "Les points requis pour une récompense doivent être strictement positifs."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "La description de la récompense ne peut pas être vide."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -2059,13 +2074,6 @@ msgstr "Avec un code promotionnel"
 #, python-format
 msgid "You can not delete a program in an active state"
 msgstr "Vous ne pouvez pas supprimer un programme dans un état actif"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_reward.py:0
-#, python-format
-msgid "The reward description field cannot be empty."
-msgstr "La description de la récompense ne peut pas être vide."
 
 #. module: loyalty
 #. odoo-python
@@ -2232,3 +2240,10 @@ msgstr "usages"
 #, python-format
 msgid "your order"
 msgstr "votre commande"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr ""

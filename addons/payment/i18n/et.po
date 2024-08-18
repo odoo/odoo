@@ -3,7 +3,6 @@
 # 	* payment
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2023
 # Aveli Kannel <aveli@avalah.ee>, 2023
 # Martin Talts <martin.t@avalah.ee>, 2023
 # Algo Kärp <algokarp@gmail.com>, 2023
@@ -24,14 +23,15 @@
 # Birgit Vijar, 2024
 # Stevin Lilla, 2024
 # Anna, 2024
+# Rivo Zängov <eraser@eraser.ee>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,11 +155,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> Kuidas seadistada PayPali "
 "konto</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>Sinu maksemeetodid</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1643,6 +1638,11 @@ msgid "Test Mode"
 msgstr "Testrežiim "
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Aitäh!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -2250,6 +2250,11 @@ msgid "Your payment has not been processed yet."
 msgstr "Teie makset ei ole veel töödeldud."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "Postiindeks"
@@ -2258,16 +2263,6 @@ msgstr "Postiindeks"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Postiindeks"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "oht"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "info"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2286,11 +2281,6 @@ msgid "provider"
 msgstr "teenusepakkuja"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "edukas"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2298,8 +2288,3 @@ msgid ""
 msgstr ""
 "et sooritada see\n"
 "                   makse."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "hoiatus"

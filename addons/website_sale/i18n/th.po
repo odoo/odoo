@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -47,7 +47,6 @@ msgstr "%s รีวิว"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "และการจัดส่ง"
 
@@ -124,7 +123,6 @@ msgstr "<b>รายการราคา</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>การจัดส่ง: </b>"
 
@@ -532,11 +530,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">เอกสาร</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>เงื่อนไขและข้อกำหนด</u>"
@@ -914,7 +907,6 @@ msgstr "ใหญ่"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "ทำรายการบิล"
 
@@ -1018,13 +1010,6 @@ msgstr "สามารถขยายภาพ 1024 ได้หรือไม
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "สามารถเผยแพร่"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "คุณไม่สามารถใช้วิดีโอเป็นรูปภาพหลักของผลิตภัณฑ์ได้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1718,6 +1703,11 @@ msgstr "ไม่มีสิทธิ์เข้าถึง ข้ามข�
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "คุณต้องการล้างตะกร้าสินค้าของคุณก่อนที่จะเพิ่มสินค้าลงไปหรือไม่?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "เอกสาร"
 
 #. module: website_sale
 #. odoo-python
@@ -2579,10 +2569,10 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "No shipping method is selected."
-msgstr ""
+msgstr "ไม่ได้เลือกวิธีการจัดส่ง"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -2800,11 +2790,6 @@ msgid "Pay now"
 msgstr "ชำระเงินตอนนี้"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "ชำระด้วย"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2825,6 +2810,11 @@ msgstr "วิธีการชำระเงิน"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "โทเค็นการชำระเงิน"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -4512,6 +4502,13 @@ msgstr ""
 "                                            หากคุณต้องการแก้ไขที่อยู่สำหรับจัดส่ง ให้สร้าง"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "คุณไม่สามารถใช้วิดีโอเป็นรูปภาพหลักของผลิตภัณฑ์ได้"
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4558,6 +4555,15 @@ msgstr "อีเมลของคุณ"
 #, python-format
 msgid "Your Name"
 msgstr "ชื่อของคุณ"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

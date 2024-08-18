@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -843,6 +843,7 @@ msgid "Allocated Time"
 msgstr "獲分配時間"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "已分配時間："
@@ -1000,8 +1001,6 @@ msgid "Assigned to"
 msgstr "分派給"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1009,7 +1008,6 @@ msgstr "分派給"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "受指派人"
 
@@ -2003,6 +2001,11 @@ msgstr "此任務發送電郵的副本抄送收件方，並且目前未連結至
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "副本寄送"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "電子郵件網域，例如 odoo@example.com 之內的「example.com」"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -3234,6 +3237,13 @@ msgid "Once a Month"
 msgstr "一個月一次"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr "只接受 jpeg、png、bmp、tiff 圖片作為附件。"
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
@@ -3529,7 +3539,7 @@ msgstr "私密任務"
 msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
-msgstr ""
+msgstr "私人任務不能轉換為子任務。請為任務設定一個專案，以使用此功能。"
 
 #. module: project
 #. odoo-javascript
@@ -4054,6 +4064,20 @@ msgstr "簡訊發送錯誤"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
 msgstr "悲傷的表情"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr "儲存任務，以便可以拖曳圖片至描述內"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "你須儲存任務，才可在描述內貼上圖片"
 
 #. module: project
 #. odoo-javascript
@@ -4659,6 +4683,7 @@ msgstr "任務：評級請求"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4745,6 +4770,14 @@ msgstr "當前用戶的個人階段。"
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "當前用戶的個人任務階段。"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "附件不存在，或者您沒有存取該文檔的許可權。"
 
 #. module: project
 #. odoo-python
@@ -4925,6 +4958,7 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"此專案與 %s 關聯，而所選階段屬於 %s。有幾個選項可以考慮：可從專案或階段中刪除公司名稱。或者，也可以更新這些記錄的公司資料，使它們所屬的公司相同。"
 
 #. module: project
 #. odoo-python
@@ -4935,7 +4969,7 @@ msgid ""
 " to %s. There are a couple of options to consider: either change the "
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
-msgstr ""
+msgstr "此專案與任何公司都沒有關聯，而該階段與 %s 關聯。有幾個方案可以考慮：可更改專案的公司，使其與階段的公司一致；或者，刪除階段的公司設定"
 
 #. module: project
 #. odoo-javascript
@@ -5762,6 +5796,13 @@ msgstr "狀態，以將任務標記為完成。"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "state.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -5821,8 +5862,11 @@ msgstr "將創建任務在您的"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: 滿意度調查"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}：滿意度調查"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
