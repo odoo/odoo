@@ -163,6 +163,48 @@ class TestStockPickingTour(HttpCase):
         names = self.receipt.move_ids.move_line_ids.mapped('lot_name')
         self.assertEqual(names, ["one", "two"])
 
+    def test_edit_existing_lines_2(self):
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        product_a, product_b = self.env["product.product"].create([
+            {
+                'name': 'Product a',
+                'is_storable': True,
+                'tracking': 'serial',
+            },
+            {
+                'name': 'Product b',
+                'is_storable': True,
+                'tracking': 'serial',
+            }
+        ])
+
+        self.receipt.write({
+            "move_ids": [
+                Command.create({
+                    "name": "Product a",
+                    "product_id": product_a.id,
+                    "location_id": self.receipt.location_id.id,
+                    "location_dest_id": self.receipt.location_dest_id.id,
+                    "product_uom_qty": 1,
+                }),
+                Command.create({
+                    "name": "Product b",
+                    "product_id": product_b.id,
+                    "location_id": self.receipt.location_id.id,
+                    "location_dest_id": self.receipt.location_dest_id.id,
+                    "product_uom_qty": 1,
+                }),
+            ]
+        })
+
+        self.receipt.action_confirm()
+
+        url = self._get_picking_url(self.receipt.id)
+        self.start_tour(url, 'test_edit_existing_lines_2', login='admin', timeout=60)
+
+        names = self.receipt.move_ids.move_line_ids.mapped('lot_name')
+        self.assertEqual(names, ["SNa001", "SNb001"])
+
     def test_onchange_serial_lot_ids(self):
         """
         Checks that onchange behaves correctly with respect to multiple unlinks
