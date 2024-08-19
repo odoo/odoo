@@ -57,9 +57,6 @@ export class JustifyPlugin extends Plugin {
             },
         ],
     });
-    setup() {
-        console.warn("align called");
-    }
 
     handleCommand(command) {
         switch (command) {
