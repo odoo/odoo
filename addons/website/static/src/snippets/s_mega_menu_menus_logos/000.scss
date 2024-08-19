@@ -8,4 +8,11 @@
         // Apply color transparency to match with the preset used
         border-color: rgba(0, 0, 0, .05) !important;
     }
+
+    .row > div.col-sm-6 {
+        @include media-breakpoint-between(sm, lg) {
+            min-width: min-content;
+            flex-grow: 1;
+        }
+    }
 }
