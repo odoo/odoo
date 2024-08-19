@@ -285,7 +285,7 @@ class StockMove(models.Model):
         super()._compute_show_info()
         byproduct_moves = self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids)
         byproduct_moves.show_quant = False
-        byproduct_moves.show_lots_text = True
+        byproduct_moves.show_lots_m2o = True
 
     @api.depends('picking_type_id.use_create_components_lots')
     def _compute_display_assign_serial(self):
