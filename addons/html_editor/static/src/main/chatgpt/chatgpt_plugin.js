@@ -19,6 +19,7 @@ export class ChatGPTPlugin extends Plugin {
                 id: "translate",
                 category: "ai",
                 Component: LanguageSelector,
+                props: { dispatch: p.dispatch },
             },
             {
                 id: "chatgpt",

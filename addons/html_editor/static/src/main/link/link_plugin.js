@@ -1,161 +1,37 @@
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
-import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { _t } from "@web/core/l10n/translation";
-import { LinkPopover } from "./link_popover";
-import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
-import { prepareUpdate } from "@html_editor/utils/dom_state";
-import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import { isVisible } from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
+import { callbacksForCursorUpdate, findInSelection } from "@html_editor/utils/selection";
+import { _t } from "@web/core/l10n/translation";
+import { EMAIL_REGEX, URL_REGEX, deduceURLfromText } from "./utils";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
  */
 
-/**
- * @param {EditorSelection} selection
- */
-function isLinkActive(selection) {
-    const linkElementAnchor = closestElement(selection.anchorNode, "A");
-    const linkElementFocus = closestElement(selection.focusNode, "A");
-    if (linkElementFocus && linkElementAnchor) {
-        return linkElementAnchor === linkElementFocus;
-    }
-    if (linkElementAnchor || linkElementFocus) {
-        return true;
-    }
-
-    return false;
-}
-
-function isSelectionHasLink(selection) {
-    return findInSelection(selection, "a") ? true : false;
-}
-
-/**
- * @param { HTMLAnchorElement } link
- * @param {number} offset
- * @returns {"start"|"end"|false}
- */
-function isPositionAtEdgeofLink(link, offset) {
-    const childNodes = [...link.childNodes];
-    let firstVisibleIndex = childNodes.findIndex(isVisible);
-    firstVisibleIndex = firstVisibleIndex === -1 ? 0 : firstVisibleIndex;
-    if (offset <= firstVisibleIndex) {
-        return "start";
-    }
-    let lastVisibleIndex = childNodes.reverse().findIndex(isVisible);
-    lastVisibleIndex = lastVisibleIndex === -1 ? 0 : childNodes.length - lastVisibleIndex;
-    if (offset >= lastVisibleIndex) {
-        return "end";
-    }
-    return false;
-}
-
 export class LinkPlugin extends Plugin {
     static name = "link";
     static dependencies = ["dom", "selection", "split", "line_break", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
-    static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    static shared = ["getOrCreateLink", "createLink", "insertLink", "getPathAsUrlCommand"];
     /** @type { (p: LinkPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        toolbarCategory: {
-            id: "link",
-            sequence: 40,
-        },
-        toolbarItems: [
-            {
-                id: "link",
-                category: "link",
-                action(dispatch) {
-                    dispatch("CREATE_LINK_ON_SELECTION");
-                },
-                icon: "fa-link",
-                name: "link",
-                label: _t("Link"),
-                isFormatApplied: isLinkActive,
-            },
-            {
-                id: "unlink",
-                category: "link",
-
-                action(dispatch) {
-                    dispatch("REMOVE_LINK_FROM_SELECTION");
-                },
-                icon: "fa-unlink",
-                name: "unlink",
-                label: _t("Remove Link"),
-                isAvailable: isSelectionHasLink,
-            },
-        ],
-
-        powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
-        powerboxItems: [
-            {
-                name: _t("Link"),
-                description: _t("Add a link"),
-                category: "navigation",
-                fontawesome: "fa-link",
-                action(dispatch) {
-                    dispatch("TOGGLE_LINK");
-                },
-            },
-            {
-                name: _t("Button"),
-                description: _t("Add a button"),
-                category: "navigation",
-                fontawesome: "fa-link",
-                action(dispatch) {
-                    dispatch("TOGGLE_LINK");
-                },
-            },
-        ],
-        onSelectionChange: p.handleSelectionChange.bind(p),
         split_element_block: { callback: p.handleSplitBlock.bind(p) },
         handle_insert_line_break_element: { callback: p.handleInsertLineBreak.bind(p) },
     });
     setup() {
-        this.overlay = this.shared.createOverlay(LinkPopover);
-        this.addDomListener(this.editable, "click", (ev) => {
-            if (ev.target.tagName === "A" && ev.target.isContentEditable) {
-                ev.preventDefault();
-                this.toggleLinkTools({ link: ev.target });
-            }
-        });
         this.addDomListener(this.editable, "keydown", (ev) => {
             if (ev.key === "Enter" || ev.key === " ") {
                 this.handleAutomaticLinkInsertion();
             }
         });
-        // link creation is added to the command service because of a shortcut conflict,
-        // as ctrl+k is used for invoking the command palette
-        this.removeLinkShortcut = this.services.command.add(
-            "Create link",
-            () => {
-                this.toggleLinkTools();
-            },
-            {
-                hotkey: "control+k",
-                category: "shortcut_conflict",
-                isAvailable: () => this.shared.getEditableSelection().inEditable,
-            }
-        );
         this.ignoredClasses = new Set(this.resources["link_ignore_classes"] || []);
-    }
-
-    destroy() {
-        this.removeLinkShortcut();
     }
 
     handleCommand(command, payload) {
         switch (command) {
-            case "CREATE_LINK_ON_SELECTION":
-                this.toggleLinkTools(payload.options);
-                break;
-            case "TOGGLE_LINK":
-                this.toggleLinkTools(payload.options);
-                break;
             case "NORMALIZE":
                 this.normalizeLink();
                 break;
@@ -186,133 +62,6 @@ export class LinkPlugin extends Plugin {
         link.innerText = label;
         return link;
     }
-    /**
-     * @param {string} url
-     * @param {string} label
-     */
-    insertLink(url, label) {
-        const selection = this.shared.getEditableSelection();
-        let link = closestElement(selection.anchorNode, "a");
-        if (link) {
-            link.setAttribute("href", url);
-            link.innerText = label;
-        } else {
-            link = this.createLink(url, label);
-            this.shared.domInsert(link);
-        }
-        this.dispatch("ADD_STEP");
-        const linkParent = link.parentElement;
-        const linkOffset = Array.from(linkParent.childNodes).indexOf(link);
-        this.shared.setSelection(
-            { anchorNode: linkParent, anchorOffset: linkOffset + 1 },
-            { normalize: false }
-        );
-    }
-    /**
-     * @param {string} text
-     * @param {string} url
-     */
-    getPathAsUrlCommand(text, url) {
-        const pasteAsURLCommand = {
-            name: _t("Paste as URL"),
-            description: _t("Create an URL."),
-            fontawesome: "fa-link",
-            action: () => {
-                this.shared.domInsert(this.createLink(url, text));
-                this.dispatch("ADD_STEP");
-            },
-        };
-        return pasteAsURLCommand;
-    }
-    /**
-     * Toggle the Link popover to edit links
-     *
-     * @param {Object} options
-     * @param {HTMLElement} options.link
-     */
-    toggleLinkTools({ link } = {}) {
-        if (!link) {
-            link = this.getOrCreateLink();
-        }
-        this.linkElement = link;
-    }
-
-    normalizeLink() {
-        const { anchorNode } = this.shared.getEditableSelection();
-        const linkEl = closestElement(anchorNode, "a");
-        if (linkEl && linkEl.isContentEditable) {
-            const label = linkEl.innerText;
-            const url = deduceURLfromText(label, linkEl);
-            if (url) {
-                linkEl.setAttribute("href", url);
-            }
-        }
-    }
-
-    handleSelectionChange(selection) {
-        if (!selection.isCollapsed) {
-            this.overlay.close();
-        } else if (!selection.inEditable) {
-            const selection = this.document.getSelection();
-            // note that data-prevent-closing-overlay also used in color picker but link popover
-            // and color picker don't open at the same time so it's ok to query like this
-            const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
-            if (popoverEl?.contains(selection.anchorNode)) {
-                return;
-            }
-            this.overlay.close();
-        } else {
-            const linkEl = closestElement(selection.anchorNode, "A");
-            if (!linkEl) {
-                this.overlay.close();
-                this.removeCurrentLinkIfEmtpy();
-                return;
-            }
-            if (linkEl !== this.linkElement) {
-                this.removeCurrentLinkIfEmtpy();
-                this.overlay.close();
-                this.linkElement = linkEl;
-            }
-
-            const props = {
-                linkEl,
-                onApply: (url, label, classes) => {
-                    this.linkElement.href = url;
-                    if (cleanZWChars(this.linkElement.innerText) === label) {
-                        this.overlay.close();
-                        this.shared.setSelection(this.shared.getEditableSelection());
-                    } else {
-                        const restore = prepareUpdate(...leftPos(this.linkElement));
-                        this.linkElement.innerText = label;
-                        restore();
-                        this.overlay.close();
-                        this.shared.setCursorEnd(this.linkElement);
-                    }
-                    if (classes) {
-                        this.linkElement.className = classes;
-                    } else {
-                        this.linkElement.removeAttribute("class");
-                    }
-                    this.dispatch("ADD_STEP");
-                    this.removeCurrentLinkIfEmtpy();
-                },
-                onRemove: () => {
-                    this.removeLink();
-                    this.overlay.close();
-                    this.dispatch("ADD_STEP");
-                },
-                onCopy: () => {
-                    this.overlay.close();
-                },
-                onClose: () => {
-                    this.overlay.close();
-                },
-            };
-            // pass the link element to overlay to prevent position change
-            this.overlay.open({ target: this.linkElement, props });
-        }
-    }
-
     /**
      * get the link from the selection or create one if there is none
      *
@@ -355,29 +104,55 @@ export class LinkPlugin extends Plugin {
             return link;
         }
     }
-
-    removeCurrentLinkIfEmtpy() {
-        if (this.linkElement && cleanZWChars(this.linkElement.innerText) === "") {
-            this.linkElement.remove();
+    /**
+     * @param {string} url
+     * @param {string} label
+     */
+    insertLink(url, label) {
+        const selection = this.shared.getEditableSelection();
+        let link = closestElement(selection.anchorNode, "a");
+        if (link) {
+            link.setAttribute("href", url);
+            link.innerText = label;
+        } else {
+            link = this.createLink(url, label);
+            this.shared.domInsert(link);
         }
-        if (this.linkElement && !this.linkElement.href) {
-            this.removeLink();
-            this.dispatch("ADD_STEP");
-        }
+        this.dispatch("ADD_STEP");
+        const linkParent = link.parentElement;
+        const linkOffset = Array.from(linkParent.childNodes).indexOf(link);
+        this.shared.setSelection(
+            { anchorNode: linkParent, anchorOffset: linkOffset + 1 },
+            { normalize: false }
+        );
+    }
+    /**
+     * @param {string} text
+     * @param {string} url
+     */
+    getPathAsUrlCommand(text, url) {
+        const pasteAsURLCommand = {
+            name: _t("Paste as URL"),
+            description: _t("Create an URL."),
+            fontawesome: "fa-link",
+            action: () => {
+                this.shared.domInsert(this.createLink(url, text));
+                this.dispatch("ADD_STEP");
+            },
+        };
+        return pasteAsURLCommand;
     }
 
-    /**
-     * Remove the link from the collapsed selection
-     */
-    removeLink() {
-        const link = this.linkElement;
-        const cursors = this.shared.preserveSelection();
-        if (link && link.isContentEditable) {
-            cursors.update(callbacksForCursorUpdate.unwrap(link));
-            unwrapContents(link);
+    normalizeLink() {
+        const { anchorNode } = this.shared.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            if (url) {
+                linkEl.setAttribute("href", url);
+            }
         }
-        cursors.restore();
-        this.linkElement = null;
     }
 
     removeLinkFromSelection() {
@@ -527,6 +302,26 @@ export class LinkPlugin extends Plugin {
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset });
         return true;
     }
+}
+
+/**
+ * @param { HTMLAnchorElement } link
+ * @param {number} offset
+ * @returns {"start"|"end"|false}
+ */
+function isPositionAtEdgeofLink(link, offset) {
+    const childNodes = [...link.childNodes];
+    let firstVisibleIndex = childNodes.findIndex(isVisible);
+    firstVisibleIndex = firstVisibleIndex === -1 ? 0 : firstVisibleIndex;
+    if (offset <= firstVisibleIndex) {
+        return "start";
+    }
+    let lastVisibleIndex = childNodes.reverse().findIndex(isVisible);
+    lastVisibleIndex = lastVisibleIndex === -1 ? 0 : childNodes.length - lastVisibleIndex;
+    if (offset >= lastVisibleIndex) {
+        return "end";
+    }
+    return false;
 }
 
 // @phoenix @todo: duplicate from the clipboard plugin, should be moved to a shared location

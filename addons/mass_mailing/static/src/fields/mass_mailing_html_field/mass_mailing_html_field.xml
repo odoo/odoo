@@ -1,0 +1,21 @@
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.MassMailingHtmlField" t-inherit="html_editor.HtmlField">
+        <xpath expr="//div[@class='h-100']" position="replace">
+            <div class="d-flex h-100" t-att-class="{'o_show_codeview': state.showCodeView, 'o_field_translate': isTranslatable}">
+                <t t-if="state.showMassMailingTemplateSelector">
+                    <MassMailingTemplateSelector
+                        filterTemplates="this.props.filterTemplates"
+                        mailingModelId="this.props.record.data.mailing_model_id[0]"
+                        mailingModelName="this.props.record.data.mailing_model_id[1] || ''"
+                        onSelectMassMailingTemplate.bind="this.onSelectMassMailingTemplate"/>
+                </t>
+                <t t-else="">
+                    <div class="w-100" t-ref="editor">$0</div>
+                    <div class="" t-if="this.displaySnippetsMenu">
+                        <t t-component="this.MassMailingSnippetsMenu" t-props="this.snippetMenuProps"/>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

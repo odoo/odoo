@@ -1,0 +1,145 @@
+.o_mail_theme_selector_new {
+    display: block;
+    overflow: auto;
+    background-color: $o-we-sidebar-bg;
+
+    h5 {
+        font-size: 1.1rem!important;
+    }
+
+    .dropdown-item {
+        padding: 10px 10px;
+        &:first-child {
+            display: none;
+        }
+
+        .o_thumb {
+            display: none;
+            background-size: cover;
+            padding-top: 50%;
+            border: 1px solid $o-we-border-color;
+
+            &.logo {
+                display: block;
+            }
+        }
+
+        &:hover {
+            background-color: $o-we-sidebar-bg;
+
+            .o_thumb {
+                border: 1px solid black;
+            }
+        }
+
+        &:focus {
+            background-color: $o-we-sidebar-bg;
+        }
+
+        &.selected .o_thumb {
+            border: 2px solid $o-brand-odoo;
+            background-color: $o-we-sidebar-bg;
+        }
+    }
+
+    .dropdown-item {
+        margin: 0;
+        float: left;
+        clear: none;
+        width: 100%;
+        max-width: 20%;
+        transition: all 0.3s ease 0s;
+
+        &:first-child {
+            display: block;
+        }
+
+        .o_thumb {
+            display: none;
+            padding-top: 107%;
+            border: 1px solid #4e525b;
+            border-top: 1px solid $o-we-border-color;
+            box-shadow: 0 5px 10px rgba(black, 0.8);
+            will-change: transform;
+            backface-visibility: hidden;
+            transition: all 0.3s ease 0s;
+
+            &.small {
+                display: block;
+            }
+
+            @media screen and (min-width: 900px) {
+                &.small {
+                    display: none;
+                }
+                &.large {
+                    display: block;
+                }
+            }
+        }
+
+        &:hover {
+            background-color: #212629;
+
+            .o_thumb {
+                box-shadow: 0 5px 30px 1px rgba(black, 0.6);
+            }
+        }
+
+        &.o_mass_mailing_themes_upgrade .o_thumb {
+            position: relative;
+            display: block;
+            border: 1px dashed white;
+            opacity: 0.2;
+
+            > .fa {
+                @include o-position-absolute(0, 0, 0, 0);
+                text-align: center;
+                font-size: 50px;
+                color: white;
+
+                &::before {
+                    vertical-align: middle;
+                }
+                &::after {
+                    content: "";
+                    display: inline-block;
+                    height: 100%;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+
+    .o_mail_template_preview {
+        padding: 10px 1.5rem;
+        width: 20%;
+        div i.o_mail_template_remove_favorite {
+            display: none;
+        }
+        div:hover i.o_mail_template_remove_favorite {
+            display: inline-block;
+            &:hover {
+                color: red;
+            }
+        }
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    // Show 2 columns for the templates on small screen
+    // can not be done with "o_xxs_form_view" because those
+    // elements are inside an iframe (HTML field).
+    .o_mail_theme_selector_new {
+        .dropdown-item {
+            max-width: 50%!important;
+        }
+    }
+    .o_mail_template_preview {
+        width: 50%!important;
+    }
+}

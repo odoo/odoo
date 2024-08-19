@@ -1,4 +1,3 @@
-
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
 
@@ -8,11 +7,10 @@ export const getColorPickerTemplateService = {
     async: true,
     start(env, { orm }) {
         return () => {
-            colorPickerTemplatePromise ??= orm.call(
-                'ir.ui.view',
-                'render_public_asset',
-                ['web_editor.colorpicker', {}]
-            );
+            colorPickerTemplatePromise ??= orm.call("ir.ui.view", "render_public_asset", [
+                "web_editor.colorpicker",
+                {},
+            ]);
             return colorPickerTemplatePromise;
         };
     },

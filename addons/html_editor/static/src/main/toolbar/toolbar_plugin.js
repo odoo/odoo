@@ -20,31 +20,41 @@ export class ToolbarPlugin extends Plugin {
             categoryIds.add(category.id);
         }
         this.categories = this.resources.toolbarCategory.sort((a, b) => a.sequence - b.sequence);
+        /** @type {Array} */
         this.buttonGroups = [];
+
+        const toolbarItems = !this.config.disabledToolbarButtonIds
+            ? this.resources.toolbarItems
+            : this.resources.toolbarItems.filter(
+                  (button) => !this.config.disabledToolbarButtonIds.has(button.id)
+              );
+
         for (const category of this.categories) {
-            this.buttonGroups.push({
-                ...category,
-                buttons: this.resources.toolbarItems.filter(
-                    (command) => command.category === category.id
-                ),
-            });
+            const buttons = toolbarItems.filter((command) => command.category === category.id);
+            for (const button of buttons) {
+                if (!("state" in button)) {
+                    button.state = reactive({});
+                }
+                applyDefaults(button.state, {
+                    isAvailable: true,
+                    isEnabled: true,
+                    isActive: false,
+                });
+            }
+            if (buttons.length > 0) {
+                this.buttonGroups.push({
+                    ...category,
+                    buttons,
+                });
+            }
         }
         this.buttonsDict = Object.assign(
             {},
-            ...this.resources.toolbarItems.map((button) => ({ [button.id]: button }))
+            ...toolbarItems.map((button) => ({ [button.id]: button }))
         );
 
         this.overlay = this.shared.createOverlay(Toolbar, { position: "top-start" });
         this.state = reactive({
-            buttonsActiveState: this.buttonGroups.flatMap((g) =>
-                g.buttons.map((b) => [b.id, false])
-            ),
-            buttonsDisabledState: this.buttonGroups.flatMap((g) =>
-                g.buttons.map((b) => [b.id, false])
-            ),
-            buttonsAvailableState: this.buttonGroups.flatMap((g) =>
-                g.buttons.map((b) => [b.id, true])
-            ),
             namespace: undefined,
         });
         this.updateSelection = null;
@@ -156,17 +166,26 @@ export class ToolbarPlugin extends Plugin {
         for (const buttonGroup of this.buttonGroups) {
             if (buttonGroup.namespace === this.state.namespace) {
                 for (const button of buttonGroup.buttons) {
-                    this.state.buttonsActiveState[button.id] = button.isFormatApplied?.(
-                        selection,
-                        nodes
-                    );
-                    this.state.buttonsDisabledState[button.id] =
-                        button.hasFormat != null && !button.hasFormat?.(selection);
-                    this.state.buttonsAvailableState[button.id] =
-                        button.isAvailable === undefined || button.isAvailable(selection);
+                    if (button.isAvailable) {
+                        button.state.isAvailable = button.isAvailable?.(selection, nodes);
+                    }
+                    if (button.hasFormat) {
+                        button.state.isEnabled = button.hasFormat?.(selection, nodes);
+                    }
+                    if (button.isFormatApplied) {
+                        button.state.isActive = button.isFormatApplied?.(selection, nodes);
+                    }
                 }
             }
         }
         this.updateSelection = null;
+    }
+}
+
+function applyDefaults(obj, defaultObj) {
+    for (const propertyName in defaultObj) {
+        if (obj[propertyName] === undefined) {
+            obj[propertyName] = defaultObj[propertyName];
+        }
     }
 }

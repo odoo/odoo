@@ -15,6 +15,8 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { HtmlViewer } from "./html_viewer";
 import { TranslationButton } from "@web/views/fields/translation_button";
 
+/** @typedef {import("../editor").Editor} Editor */
+
 /**
  * Check whether the current value contains nodes that would break
  * on insertion inside an existing body.
@@ -77,10 +79,7 @@ export class HtmlField extends Component {
         useRecordObserver((record) => {
             // Reset Wysiwyg when we discard or onchange value
             if (!this.isDirty && this.lastValue !== record.data[this.props.name].toString()) {
-                this.state.key++;
-                this.state.containsComplexHTML = computeContainsComplexHTML(
-                    record.data[this.props.name]
-                );
+                this.onApplyExternalContent(record);
             }
         });
         useRecordObserver((record) => {
@@ -103,6 +102,16 @@ export class HtmlField extends Component {
         return `${this.props.record.resId}_${this.state.key}`;
     }
 
+    get wysiwygProps() {
+        return {
+            iframe: false,
+            config: this.getConfig(),
+            onLoad: this.onEditorLoad.bind(this),
+            contentClass: "note-editable p-1",
+            onBlur: this.onBlur.bind(this),
+        };
+    }
+
     get sandboxedPreview() {
         // @todo @phoenix maybe remove containsComplexHTML and alway use sandboxedPreview options
         return this.props.sandboxedPreview || this.state.containsComplexHTML;
@@ -110,6 +119,12 @@ export class HtmlField extends Component {
 
     get isTranslatable() {
         return this.props.record.fields[this.props.name].translate;
+    }
+
+    onApplyExternalContent(record) {
+        this.state.key++;
+        this.lastValue = record.data[this.props.name].toString();
+        this.state.containsComplexHTML = computeContainsComplexHTML(record.data[this.props.name]);
     }
 
     async updateValue(value) {
@@ -129,18 +144,25 @@ export class HtmlField extends Component {
     async _commitChanges({ urgent }) {
         if (this.isDirty) {
             if (this.state.showCodeView) {
-                await this.updateValue(this.codeViewRef.el.value);
+                await this.updateCodeview(this.codeViewRef.el.value);
                 return;
             }
 
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
-            const el = await this.getEditorContent();
-            const content = el.innerHTML;
-            if (!urgent || (urgent && this.lastValue !== content)) {
-                await this.updateValue(content);
-            }
+            await this.updateEditorContent(await this.getEditorContent(), { urgent });
+        }
+    }
+
+    updateCodeview(content) {
+        return this.updateValue(content);
+    }
+
+    async updateEditorContent(el, { urgent }) {
+        const content = el.innerHTML;
+        if (!urgent || (urgent && this.lastValue !== content)) {
+            await this.updateValue(content);
         }
     }
 
@@ -152,6 +174,9 @@ export class HtmlField extends Component {
         }
     }
 
+    /**
+     * @param {Editor} editor
+     */
     onEditorLoad(editor) {
         this.editor = editor;
     }
@@ -189,6 +214,9 @@ export class HtmlField extends Component {
                     collaborationResId: parseInt(this.props.record.resId),
                 },
                 peerId: this.generateId(),
+            },
+            linkOptions: {
+                forceNewWindow: true,
             },
             dropImageAsAttachment: true, // @todo @phoenix always true ?
             dynamicPlaceholder: this.dynamicPlaceholder,
@@ -267,6 +295,7 @@ export const htmlField = {
             codeview: Boolean(odoo.debug && options.codeview),
         };
     },
+    additionalClasses: ["o_field_html"],
 };
 
 registry.category("fields").add("html", htmlField, { force: true });

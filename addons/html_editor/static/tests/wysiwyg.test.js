@@ -47,7 +47,7 @@ describe("Wysiwyg Component", () => {
     test("wysiwyg with toolbar: buttons react to selection change", async () => {
         const { el } = await setupWysiwyg({
             toolbar: true,
-            config: { content: "<p>test some text</p>" },
+            config: { content: "<p>test some text</p>", disableFloatingToolbar: true },
         });
         expect(el.innerHTML).toBe(`<p>test some text</p>`);
 

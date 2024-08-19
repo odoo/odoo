@@ -30,6 +30,7 @@ export class Wysiwyg extends Component {
         style: { type: String, optional: true },
         toolbar: { type: Boolean, optional: true },
         iframe: { type: Boolean, optional: true },
+        onIframeLoaded: { type: Function, optional: true },
         copyCss: { type: Boolean, optional: true },
         onLoad: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
@@ -47,7 +48,6 @@ export class Wysiwyg extends Component {
         });
         const overlayRef = useRef("localOverlay");
         const contentRef = useRef("content");
-        this.editor = this.props.editor;
         const config = {
             ...this.props.config,
             // TODO ABD TODO @phoenix: check if there is too much info in the wysiwyg env.
@@ -57,7 +57,6 @@ export class Wysiwyg extends Component {
             // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
             embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
             getLocalOverlayContainer: () => overlayRef?.el,
-            disableFloatingToolbar: this.props.toolbar,
         };
         this.editor = new Editor(config, this.env.services);
         this.props.onLoad(this.editor);
@@ -83,7 +82,14 @@ export class Wysiwyg extends Component {
                                 el.contentDocument.body.classList.add(c);
                             }
                         }
-                        this.editor.attachTo(el.contentDocument.body);
+                        if (this.props.onIframeLoaded) {
+                            this.props.onIframeLoaded(el.contentDocument, this.editor);
+                        } else {
+                            this.editor.attachTo(el.contentDocument.body);
+                        }
+                        el.contentWindow.onblur = () => {
+                            this.props.onBlur();
+                        };
                     }
                 };
                 if (el.contentDocument.readyState === "complete") {

@@ -59,6 +59,8 @@ export class ImagePlugin extends Plugin {
                     props: {
                         getDescription: () => p.getImageAttribute("alt"),
                         getTooltip: () => p.getImageAttribute("title"),
+                        dispatch: p.dispatch.bind(p),
+                        getSelection: p.shared.getEditableSelection.bind(p),
                     },
                 },
                 {
@@ -106,6 +108,9 @@ export class ImagePlugin extends Plugin {
                     category: "image_padding",
                     name: _t("Image padding"),
                     Component: ImagePadding,
+                    props: {
+                        dispatch: p.dispatch.bind(p),
+                    },
                 },
                 {
                     id: "resize_default",

@@ -20,7 +20,6 @@ export class LinkTools extends Link {
     static props = {
         ...Link.props,
         wysiwyg: { type: Object },
-        $button: { type: Object },
         onColorCombinationClassChange: { type: Function, optional: true },
         onPreApplyLink: { type: Function, optional: true },
         onPostApplyLink: { type: Function, optional: true },

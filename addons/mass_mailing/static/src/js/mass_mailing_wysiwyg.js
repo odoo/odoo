@@ -94,7 +94,7 @@ export class MassMailingWysiwyg extends Wysiwyg {
      */
     async getSnippetsMenuClass() {
         await loadBundle('mass_mailing.assets_snippets_menu');
-        const { MassMailingSnippetsMenu } = await odoo.loader.modules.get('@mass_mailing/js/snippets.editor');
+        const { MassMailingSnippetsMenu } = await odoo.loader.modules.get('@mass_mailing/fields/mass_mailing_html_field/mass_mailing_snippet_menu');
         return MassMailingSnippetsMenu;
     }
     /**
