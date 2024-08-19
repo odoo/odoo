@@ -329,12 +329,29 @@
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
                             <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 p-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
-                                <div t-if="opt_wsale_categories" class="products_categories mb-3">
+                                <t
+                                    t-set="is_sidebar_collapsible"
+                                    t-value="is_view_active('website_sale.products_categories_list_collapsible')"
+                                />
+                                <div
+                                    t-if="opt_wsale_categories"
+                                    t-att-class="'products_categories'
+                                                + (' accordion accordion-flush' if is_sidebar_collapsible else ' mb-3')"
+                                >
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
-                                <div class="products_attributes_filters"/>
-                                <t t-if="opt_wsale_filter_price and opt_wsale_attributes"
-                                   t-call="website_sale.filter_products_price"/>
+                                <div
+                                    t-attf-class="products_attributes_filters d-empty-none {{opt_wsale_categories and 'border-top'}}"
+                                />
+                                <t
+                                    t-if="opt_wsale_filter_price and opt_wsale_attributes"
+                                    t-call="website_sale.filter_products_price"
+                                >
+                                    <t
+                                        t-set="_classes"
+                                        t-valuef="{{is_sidebar_collapsible and 'accordion accordion-flush'}} {{is_sidebar_collapsible and (opt_wsale_categories or len(attributes) > 0) and 'border-top'}}"
+                                    />
+                                </t>
                             </div>
                         </aside>
                         <div id="products_grid"
@@ -657,7 +674,7 @@
                 </div>
 
                 <form t-if="opt_wsale_attributes or opt_wsale_attributes_top"
-                      t-attf-class="js_attributes d-flex flex-column"
+                      t-attf-class="js_attributes accordion accordion-flush d-flex flex-column {{len(attributes) > 0 and 'border-bottom'}}"
                       method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id"/>
                     <input type="hidden" name="search" t-att-value="search"/>
@@ -743,8 +760,12 @@
 
                 <t t-if="opt_wsale_filter_price and (opt_wsale_attributes or opt_wsale_attributes_top)"
                    t-call="website_sale.filter_products_price">
-                    <t t-set="_classes" t-valuef="o_wsale_offcanvas_title px-4 border-top"/>
+                    <t
+                        t-set="_classes"
+                        t-valuef="o_wsale_offcanvas_title accordion accordion-flush px-4"
+                    />
                     <t t-set="_classes_title" t-valuef="ms-n1 pt-3 pb-2"/>
+                    <t t-set="isOffcanvas" t-value="True"/>
                 </t>
             </div>
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
@@ -840,22 +861,71 @@
     </template>
 
     <template id="website_sale.products_categories_list" active="True" name="eCommerce Categories">
-        <h6 t-attf-class="o_categories_collapse_title mb-3 {{_titleClasses}}"><b>Categories</b></h6>
-        <div class="wsale_products_categories_list">
-            <ul class="nav d-flex flex-column mt-3">
-                <li class="nav-item mb-1">
-                    <a
-                        t-att-href="keep('/shop', category=0)"
-                        t-attf-class="{{not category and 'text-decoration-underline'}} p-0"
-                    >
-                        All Products
-                    </a>
-                </li>
-                <t t-foreach="categories" t-as="c">
-                    <t t-call="website_sale.categories_recursive"/>
-                </t>
-            </ul>
+        <!--
+            We must keep `t-attf-class` attr. for both following divs to work correctly with
+            products_categories_list_collapsible and option_collapse_products_categories
+        -->
+        <div t-attf-class="d-contents">
+            <h6 t-attf-class="o_categories_collapse_title {{_titleClasses}}"><b>Categories</b></h6>
+            <div name="wsale_products_categories_list" t-attf-class="wsale_products_categories_list">
+                <ul class="nav d-flex flex-column mb-3">
+                    <li class="nav-item mb-1">
+                        <a
+                            t-att-href="keep('/shop', category=0)"
+                            t-attf-class="{{not category and 'text-decoration-underline'}} p-0"
+                        >
+                            All Products
+                        </a>
+                    </li>
+                    <t t-foreach="categories" t-as="c">
+                        <t t-call="website_sale.categories_recursive"/>
+                    </t>
+                </ul>
+            </div>
         </div>
+    </template>
+
+    <template
+        id="website_sale.products_categories_list_collapsible"
+        inherit_id="website_sale.products_categories_list"
+        name="Collapsed eCommerce Categories"
+    >
+        <xpath expr="//div" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="{{not isOffcanvas and 'accordion-item'}}"
+                remove="d-contents"
+                separator=" "
+            />
+        </xpath>
+        <xpath expr="//h6" position="attributes">
+            <attribute name="t-attf-class" add="accordion-header" separator=" "/>
+        </xpath>
+        <xpath expr="//h6//b" position="replace">
+            <button
+                class="accordion-button px-0 bg-transparent shadow-none"
+                type="button"
+                data-bs-toggle="collapse"
+                t-attf-data-bs-target="#o_wsale_categories"
+                t-attf-aria-controls="o_wsale_categories"
+                aria-expanded="true"
+            >
+                <b>Categories</b>
+            </button>
+        </xpath>
+
+        <xpath expr="//div//div" position="attributes">
+            <attribute
+                name="t-attf-id"
+                add="{{not isOffcanvas and 'o_wsale_categories'}}"
+                separator=" "
+            />
+            <attribute
+                name="t-attf-class"
+                add="{{not isOffcanvas and 'accordion-collapse collapse show'}}"
+                separator=" "
+            />
+        </xpath>
     </template>
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
@@ -868,7 +938,7 @@
                 <div class="accordion-header d-flex mb-1">
                     <t t-call="website_sale.categorie_link"/>
                     <button t-attf-id="o_wsale_cat_accordion_title_{{c.id}}"
-                            t-attf-class="accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}} w-auto flex-grow-1 bg-transparent shadow-none"
+                            t-attf-class="o_categories_recursive_button accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}} w-auto flex-grow-1 bg-transparent shadow-none"
                             t-attf-data-bs-target="#o_wsale_cat_accordion_{{c.id}}"
                             t-att-aria-expanded="isOpen and 'true' or 'false'"
                             t-attf-aria-controls="o_wsale_cat_accordion_{{c.id}}"
@@ -897,31 +967,37 @@
     </template>
 
     <template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories_list" active="False">
-        <xpath expr="//div[hasclass('wsale_products_categories_list')]" position="attributes">
-            <attribute name="class" add="o_shop_collapse_category" separator=" "/>
-        </xpath>
         <xpath expr="//t[@t-call='website_sale.categories_recursive']" position="attributes">
             <attribute name="t-call">website_sale.option_collapse_categories_recursive</attribute>
         </xpath>
     </template>
 
     <template id="products_attributes" inherit_id="website_sale.products" active="True" name="Attributes &amp; Variants filters">
-        <xpath expr="//div[hasclass('products_attributes_filters')]" position="inside">
-            <div id="wsale_products_attributes_collapse"
+        <xpath expr="//div[contains(@t-attf-class, 'products_attributes_filters')]" position="inside">
+            <div t-if="attributes or all_tags" id="wsale_products_attributes_collapse"
                  class=" position-relative">
-                <form t-if="attributes or all_tags" class="js_attributes position-relative mb-2" method="get">
+                <form class="js_attributes position-relative mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <input type="hidden" name="order" t-att-value="order"/>
-                    <a t-if="attrib_values or tags" t-att-href="keep('/shop' + ('/category/' + slug(category)) if category else None, attribute_value=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1 mb-2">
-                        <small class="mx-auto"><b>Clear Filters</b></small>
-                        <i class="oi oi-close"/>
-                    </a>
+                    <div
+                        t-if="attrib_values or tags"
+                        class="accordion-item rounded-0 border-top-0 py-3"
+                    >
+                        <a
+                            t-att-href="keep('/shop' + ('/category/' + slug(category)) if category else None, attribute_value=0, tags=0)"
+                            t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1"
+                            title="Clear Filters"
+                        >
+                            <small class="mx-auto"><b>Clear Filters</b></small>
+                            <i class="oi oi-close" role="presentation"/>
+                        </a>
+                    </div>
                     <t t-foreach="attributes" t-as="a">
                         <t t-cache="a,attrib_set">
-                            <div class="accordion-item nav-item mb-1 border-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
+                            <div class="accordion-item nav-item mb-1 rounded-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
                                 <h6 class="mb-3">
-                                    <b class="o_products_attributes_title d-none d-lg-block" t-field="a.name"/>
+                                    <b class="d-none d-lg-block" t-field="a.name"/>
                                 </h6>
                                 <div t-attf-id="o_products_attributes_{{a.id}}" class="">
                                     <t t-if="a.display_type == 'select'">
@@ -962,19 +1038,99 @@
         </xpath>
     </template>
 
-    <template id="filter_products_price" name="Filter by Prices" active="False">
-        <t t-set="isDisabled" t-value="available_min_price == available_max_price"/>
-        <div id="o_wsale_price_range_option"
-             t-attf-class="position-relative {{_classes}} {{isDisabled and 'opacity-75 pe-none user-select-none'}}">
-            <label t-attf-class="m-0 h6 o_products_attributes_title {{_classes_title}}">
-                <b>Price Range</b>
-            </label>
-            <input type="range" multiple="multiple"
-                   t-attf-class="form-range range-with-input {{_classes_input}}"
-                   t-att-data-currency="website.currency_id.symbol"
-                   t-att-data-currency-position="website.currency_id.position"
-                   t-att-step="website.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
-                   t-att-max="'%f' % (available_max_price)" t-att-value="'%f,%f' % (min_price, max_price)"/>
+    <template
+        id="products_attributes_collapsible"
+        name="Collapsed Attributes &amp; Variants filters"
+        inherit_id="website_sale.products_attributes"
+    >
+        <xpath expr="//form" position="attributes">
+            <attribute
+                name="class"
+                add="wsale_accordion_collapsible accordion accordion-flush"
+                remove="mb-2"
+                separator=" "
+            />
+        </xpath>
+        <xpath expr="//div[hasclass('accordion-item')]//h6" position="replace">
+            <h6 class="accordion-header">
+                <button
+                    class="accordion-button px-0 bg-transparent shadow-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    t-attf-data-bs-target="#o_products_attributes_{{a.id}}"
+                    t-attf-aria-controls="o_products_attributes_{{a.id}}"
+                    aria-expanded="true"
+                >
+                    <b t-field="a.name"/>
+                </button>
+            </h6>
+        </xpath>
+        <xpath expr="//div[@t-attf-id='o_products_attributes_{{a.id}}']" position="attributes">
+            <attribute name="class" add="accordion-collapse collapse show" separator=" "/>
+            <attribute name="data-bs-parent" add="wsale_products_attributes_collapse"/>
+        </xpath>
+        <xpath expr="//select" position="attributes">
+            <attribute name="class" add="mb-3" remove="mb-2" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('flex-column')]" position="attributes">
+            <attribute name="class" add="mb-3" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="filter_products_price" name="Filter by Prices">
+        <t t-set="is_disabled" t-value="available_min_price == available_max_price"/>
+        <div
+            id="o_wsale_price_range_option"
+            t-attf-class="position-relative {{_classes}} {{is_disabled and 'opacity-75 pe-none user-select-none'}}"
+        >
+            <t t-if="is_sidebar_collapsible">
+                <div class="accordion-item">
+                    <h6 class="accordion-header">
+                        <button
+                            class="accordion-button px-0 bg-transparent shadow-none"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            t-attf-data-bs-target="#o_wsale_price_range_option_inner"
+                            t-attf-aria-controls="o_wsale_price_range_option_inner"
+                            aria-expanded="true"
+                        >
+                            <b>Price Range</b>
+                        </button>
+                    </h6>
+                    <div
+                        id="o_wsale_price_range_option_inner"
+                        class="accordion-collapse collapse show"
+                    >
+                        <input
+                            type="range"
+                            multiple="multiple"
+                            t-attf-class="form-range range-with-input {{_classes_input}}"
+                            t-att-data-currency="website.currency_id.symbol"
+                            t-att-data-currency-position="website.currency_id.position"
+                            t-att-step="website.currency_id.rounding"
+                            t-att-min="'%f' % (available_min_price)"
+                            t-att-max="'%f' % (available_max_price)"
+                            t-att-value="'%f,%f' % (min_price, max_price)"
+                        />
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <label t-attf-class="h6 m-0 {{_classes_title}}">
+                    <b>Price Range</b>
+                </label>
+                <input
+                    type="range"
+                    multiple="multiple"
+                    t-attf-class="form-range range-with-input {{_classes_input}}"
+                    t-att-data-currency="website.currency_id.symbol"
+                    t-att-data-currency-position="website.currency_id.position"
+                    t-att-step="website.currency_id.rounding"
+                    t-att-min="'%f' % (available_min_price)"
+                    t-att-max="'%f' % (available_max_price)"
+                    t-att-value="'%f,%f' % (min_price, max_price)"
+                />
+            </t>
         </div>
     </template>
 
