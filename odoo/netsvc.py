@@ -284,8 +284,9 @@ PSEUDOCONFIG_MAPPER = {
     'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
 }
 
-logging.RUNBOT = 25
-logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+# adding RUNBOT level displayed as INFO in log
+logging.RUNBOT = 25  # type: ignore
+logging.addLevelName(logging.RUNBOT, "INFO")  # type: ignore
 logging.captureWarnings(True)
 # must be after `loggin.captureWarnings` so we override *that* instead of the
 # other way around
@@ -311,6 +312,9 @@ def showwarning_with_traceback(message, category, filename, lineno, file=None, l
     )
 warnings.showwarning = showwarning_with_traceback
 
+
 def runbot(self, message, *args, **kws):
     self.log(logging.RUNBOT, message, *args, **kws)
-logging.Logger.runbot = runbot
+
+
+logging.Logger.runbot = runbot  # type: ignore
