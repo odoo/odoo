@@ -288,6 +288,31 @@ registry.category("web_tour.tours").add('test_edit_existing_line', {
     ]
 });
 
+registry.category("web_tour.tours").add('test_edit_existing_lines_2', {
+    test: true,
+    steps: () => [
+        { trigger: ".o_data_row:has(.o_data_cell[data-tooltip='Product a']) .fa-list" },
+        { trigger: ".o_data_cell[name=lot_name]" },
+        {
+            trigger: ".o_field_widget[name=lot_name] input",
+            run: 'text SNa001',
+        },
+        { trigger: ".o_form_view.modal-content .o_form_button_save" },
+        { trigger: ".o_data_row:has(.o_data_cell[data-tooltip='Product b']) .fa-list" },
+        { trigger: ".o_data_cell[name=lot_name]" },
+        {
+            trigger: ".o_field_widget[name=lot_name] input",
+            run: 'text SNb001',
+        },
+        { trigger: ".o_form_view.modal-content .o_form_button_save" },
+        { trigger: ".o_form_view:not(.modal-content) .o_form_button_save" },
+        {
+            trigger: ".o_form_renderer.o_form_saved",
+            isCheck: true,
+        },
+    ]
+});
+
 registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
     test: true,
     steps: () => [
