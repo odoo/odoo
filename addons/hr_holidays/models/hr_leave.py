@@ -1065,13 +1065,30 @@ class HolidaysRequest(models.Model):
 
     def _prepare_employees_holiday_values(self, employees):
         self.ensure_one()
-        work_days_data = employees._get_work_days_data_batch(self.date_from, self.date_to)
+        date_from = self.date_from
+        date_to = self.date_to
+
+        work_days_data = dict()
+        for employee in employees:
+            attendance_from, attendance_to = self._get_attendances(employee, date_from.date(), date_to.date())
+            hour_from = float_to_time(attendance_from.hour_from)
+            hour_to = float_to_time(attendance_to.hour_to)
+            employee_date_from = timezone(employee.tz).localize(datetime.combine(date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+            employee_date_to = timezone(employee.tz).localize(datetime.combine(date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+            employee_data = employee._get_work_days_data_batch(employee_date_from, employee_date_to)
+            if not employee_data:
+                continue
+            work_days_data.update(employee_data)
+            work_days_data[employee.id]['date_from'] = employee_date_from
+            work_days_data[employee.id]['date_to'] = employee_date_to
+
+
         return [{
             'name': self.name,
             'holiday_type': 'employee',
             'holiday_status_id': self.holiday_status_id.id,
-            'date_from': self.date_from,
-            'date_to': self.date_to,
+            'date_from': work_days_data[employee.id]['date_from'],
+            'date_to': work_days_data[employee.id]['date_to'],
             'request_date_from': self.request_date_from,
             'request_date_to': self.request_date_to,
             'notes': self.notes,

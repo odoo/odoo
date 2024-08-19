@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import fields, SUPERUSER_ID
+from odoo import fields, SUPERUSER_ID, Command
 
 from odoo.tests import common, new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
@@ -144,3 +144,23 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
         wizard.action_register_departure()
         self.assertEqual(len(holiday.timesheet_ids), 0, 'Timesheets related to the archived employee should have been deleted')
+
+    @freeze_time('2018-02-01 08:00:00')
+    def test_validate_with_timesheet_mutiple_employee(self):
+        # employee creates a leave request
+        employee_bamako = self.env['hr.employee'].create({
+            'name': 'Bamako Employee',
+            'tz': 'Africa/Bamako',
+        })
+        holiday = self.Requests.with_user(SUPERUSER_ID).create({
+            'name': 'Leave 1',
+            'multi_employee': True,
+            'employee_ids': [Command.set([self.empl_employee.id, employee_bamako.id])],
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'request_date_from': self.leave_start_datetime.date(),
+            'request_date_to': self.leave_start_datetime.date(),
+        })
+        holiday._compute_date_from_to()
+        holiday.with_user(SUPERUSER_ID).action_validate()
+        leaves_number_of_hours = holiday.linked_request_ids.mapped("number_of_hours_display")
+        self.assertListEqual(leaves_number_of_hours, [8, 8])
