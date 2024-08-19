@@ -18,6 +18,9 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 category: "ai",
+                isAvailable: (selection) => {
+                    return !selection.isCollapsed;
+                },
                 Component: LanguageSelector,
                 props: { dispatch: p.dispatch },
             },
