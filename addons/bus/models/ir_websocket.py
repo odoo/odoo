@@ -30,6 +30,11 @@ class IrWebsocket(models.AbstractModel):
         # `_build_bus_channel_list`.
         return [[("user_id", "in", partners.with_context(active_test=False).sudo().user_ids.ids)]]
 
+    def _get_missed_presences_bus_target(self):
+        return (
+            self.env.user.partner_id if self.env.user and not self.env.user._is_public() else None
+        )
+
     def _build_presence_channel_list(self, presences):
         """
         Return the list of presences to subscribe to.
@@ -112,7 +117,8 @@ class IrWebsocket(models.AbstractModel):
     def _subscribe(self, og_data):
         data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
         dispatch.subscribe(data["channels"], data["last"], self.env.registry.db_name, wsrequest.ws)
-        data["missed_presences"]._send_presence()
+        if bus_target := self._get_missed_presences_bus_target():
+            data["missed_presences"]._send_presence(bus_target=bus_target)
 
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         if self.env.user and not self.env.user._is_public():
@@ -124,7 +130,7 @@ class IrWebsocket(models.AbstractModel):
 
     def _on_websocket_closed(self, cookies):
         if self.env.user and not self.env.user._is_public():
-            self.env["bus.presence"].search([("user_id", "=", self.env.uid)]).unlink()
+            self.env["bus.presence"].search([("user_id", "=", self.env.uid)]).status = "offline"
 
     @classmethod
     def _authenticate(cls):

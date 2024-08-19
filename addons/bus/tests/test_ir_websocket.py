@@ -10,6 +10,7 @@ except ImportError:
 from odoo.tests import new_test_user, tagged
 from .common import WebsocketCase
 from ..models.bus_presence import AWAY_TIMER
+from ..models.bus import channel_with_db, json_dump
 
 
 @tagged("-at_install", "post_install")
@@ -100,13 +101,20 @@ class TestIrWebsocket(WebsocketCase):
         session = self.authenticate("bob_user", "bob_user")
         websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
         self.env["bus.presence"].create({"user_id": bob.id, "status": "online"})
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.subscribe(
             websocket,
             [f"odoo-presence-res.partner_{bob.partner_id.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
-        self.trigger_notification_dispatching([(bob.partner_id, "presence")])
-        message = json.loads(websocket.recv())[0]["message"]
-        self.assertEqual(message["type"], "bus.bus/im_status_updated")
-        self.assertEqual(message["payload"]["im_status"], "online")
-        self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+        self.trigger_notification_dispatching([bob.partner_id])
+        notification = json.loads(websocket.recv())[0]
+        self._close_websockets()
+        bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
+        self.assertEqual(
+            bus_record.channel,
+            json_dump(channel_with_db(self.env.cr.dbname, bob.partner_id)),
+        )
+        self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
+        self.assertEqual(notification["message"]["payload"]["im_status"], "online")
+        self.assertEqual(notification["message"]["payload"]["partner_id"], bob.partner_id.id)

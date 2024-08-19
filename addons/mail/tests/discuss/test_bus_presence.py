@@ -10,6 +10,7 @@ except ImportError:
 from odoo.tests import tagged, new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
 @tagged("post_install", "-at_install")
@@ -36,13 +37,18 @@ class TestBusPresence(WebsocketCase, MailCommon):
         )
         self.trigger_notification_dispatching([(sender_bus_target, "presence")])
         notifications = json.loads(websocket.recv())
+        self._close_websockets()
+        bus_record = self.env["bus.bus"].search([("id", "=", int(notifications[0]["id"]))])
+        self.assertEqual(
+            bus_record.channel,
+            json_dump(channel_with_db(self.env.cr.dbname, (sender_bus_target, "presence"))),
+        )
         self.assertEqual(notifications[0]["message"]["type"], "bus.bus/im_status_updated")
         self.assertEqual(notifications[0]["message"]["payload"]["im_status"], "online")
         self.assertEqual(
             notifications[0]["message"]["payload"]["partner_id" if sent_from_user else "guest_id"],
             sender_bus_target.id,
         )
-        self._close_websockets()
 
     def test_receive_presences_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
