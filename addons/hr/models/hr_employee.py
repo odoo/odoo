@@ -493,7 +493,7 @@ class HrEmployeePrivate(models.Model):
         hr_root_menu = self.env.ref('hr.menu_hr_root')
         for employee in employees:
             # Launch onboarding plans
-            url = '/odoo/%s/action-hr.plan_wizard_action?menu_id=%s' % (employee.id, hr_root_menu.id)
+            url = '/odoo/%s/action-hr.plan_wizard_action?active_model=hr.employee&menu_id=%s' % (employee.id, hr_root_menu.id)
             onboarding_notes_bodies[employee.id] = Markup(_(
                 '<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>',
             )) % url
