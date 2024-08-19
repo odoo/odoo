@@ -3070,6 +3070,7 @@ class BaseModel(metaclass=MetaModel):
                 return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
 
         if (field.relational or field.name == 'id') and operator in ('=', '!=') and isinstance(value, NewId):
+            _logger.warning("_condition_to_sql: ignored (%r, %r, NewId), did you mean (%r, 'in', recs.ids)?", fname, operator, fname)
             return SQL("TRUE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("FALSE")
 
         # comparison with null

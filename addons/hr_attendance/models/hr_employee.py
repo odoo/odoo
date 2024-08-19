@@ -128,7 +128,7 @@ class HrEmployee(models.Model):
             start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
 
             attendances = self.env['hr.attendance'].search([
-                ('employee_id', '=', employee.id),
+                ('employee_id', 'in', employee.ids),
                 ('check_in', '<=', now),
                 '|', ('check_out', '>=', start_naive), ('check_out', '=', False),
             ], order='check_in asc')
@@ -149,7 +149,7 @@ class HrEmployee(models.Model):
     def _compute_last_attendance_id(self):
         for employee in self:
             employee.last_attendance_id = self.env['hr.attendance'].search([
-                ('employee_id', '=', employee.id),
+                ('employee_id', 'in', employee.ids),
             ], order="check_in desc", limit=1)
 
     @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
