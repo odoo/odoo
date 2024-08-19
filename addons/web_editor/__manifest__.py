@@ -140,7 +140,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jquery-cropper/jquery-cropper.js',
             'web_editor/static/lib/jQuery.transfo.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
-            'web_editor/static/lib/DOMPurify.js',
 
             # odoo-editor
             'web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js',
@@ -293,6 +292,8 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/**/*js',
             'web_editor/static/src/js/editor/odoo-editor/test/spec/*js',
             'web_editor/static/src/js/editor/odoo-editor/test/*js',
+
+            'html_editor/static/lib/DOMpurify.js',
         ],
     },
     'auto_install': True,
