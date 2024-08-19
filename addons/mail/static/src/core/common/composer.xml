@@ -13,7 +13,8 @@
                     'o-isUiSmall': ui.isSmall,
                     'p-3': normal,
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
-                    'o-focused': props.composer.isFocused
+                    'o-focused': props.composer.isFocused,
+                    'o-editing': props.composer.message,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
@@ -33,11 +34,12 @@
                         'o-mail-Composer-compactContainer m-1 shadow-sm border-secondary': compact and !props.composer.message,
                         'o-mobile rounded-3': isMobileOS,
                         'rounded-3' : normal,
-                        'rounded-3 align-self-stretch flex-column' : extended,
+                        'rounded-3 align-self-stretch' : extended,
+                        'flex-column': extended or props.composer.message,
                     }"
                 >
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input form-control bg-view border-0 rounded-3 shadow-none overflow-auto"
+                        <textarea class="o-mail-Composer-input o-mail-Composer-inputStyle form-control bg-view border-0 rounded-3 shadow-none overflow-auto"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -55,21 +57,23 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake position-absolute border-0"
+                            class="o-mail-Composer-fake o-mail-Composer-inputStyle position-absolute border-0"
                             t-model="props.composer.text"
                             t-ref="fakeTextarea"
                             disabled="1"
                         />
                     </div>
-                    <div class="o-mail-Composer-actions d-flex bg-view rounded"
+                    <div class="o-mail-Composer-actions d-flex bg-view"
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
                             'mx-1': compact and !ui.isSmall,
                             'ms-3': normal,
                             'mx-3 border-top p-1': extended,
+                            'border-top': extended or props.composer.message,
+                            'rounded': !props.composer.message,
                         }"
                     >
-                        <div class="d-flex flex-grow-1 align-items-baseline mt-1" t-ref="main-actions">
+                        <div class="d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'mt-1': !props.composer.message }" t-ref="main-actions">
                             <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
@@ -78,7 +82,7 @@
                             </FileUploader>
                             <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
                             <t t-if="!extended" t-call="mail.Composer.fullComposer"/>
-                            <t t-if="!extended" t-call="mail.Composer.sendButton"/>
+                            <t t-if="hasSendButtonNonEditing" t-call="mail.Composer.sendButton"/>
                         </div>
                         <t t-if="extended" t-call="mail.Composer.fullComposer"/>
                     </div>
@@ -97,7 +101,7 @@
                 <Picker t-props="picker"/>
             </div>
         </div>
-        <span t-if="props.composer.message" class="text-muted" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
+        <span t-if="props.composer.message" class="text-muted px-1" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
     </div>
     <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
