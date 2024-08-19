@@ -420,6 +420,13 @@ def _tree_from_domain(domain):
 
 def _tree_not(tree):
     """ Negate a tree node. """
+    if tree[0] == '=?':
+        # already update operator '=?' here, so that '!' is distributed correctly
+        assert len(tree) == 3
+        if tree[2]:
+            tree = ('=', tree[1], tree[2])
+        else:
+            return ('?', False)
     if tree[0] == '?':
         return ('?', not tree[1])
     if tree[0] == '!':
