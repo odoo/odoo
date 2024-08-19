@@ -38,7 +38,7 @@ export function hasLine({
         trigger += `:has(.product-name:contains("${productName}"))`;
     }
     if (quantity) {
-        trigger += `:has(.qty:contains("x${quantity}"))`;
+        trigger += `:has(.qty:contains("${quantity}"))`;
     }
     if (price) {
         trigger += `:has(.price:contains("${price}"))`;
