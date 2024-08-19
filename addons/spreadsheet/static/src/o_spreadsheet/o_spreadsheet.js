@@ -18722,7 +18722,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     function parseTokens(tokens) {
         tokens = tokens.filter((x) => x.type !== "SPACE");
-        if (tokens[0].type === "OPERATOR" && tokens[0].value === "=") {
+        if (tokens[0] && tokens[0].type === "OPERATOR" && tokens[0].value === "=") {
             tokens.splice(0, 1);
         }
         const result = parseExpression(tokens, 0);
@@ -43440,9 +43440,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.50';
-    __info__.date = '2024-08-09T12:40:09.004Z';
-    __info__.hash = '3972870';
+    __info__.version = '16.0.51';
+    __info__.date = '2024-08-19T08:14:53.311Z';
+    __info__.hash = '2b60022';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
