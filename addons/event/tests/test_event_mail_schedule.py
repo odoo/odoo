@@ -9,7 +9,7 @@ from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
-from odoo.tests import tagged, users
+from odoo.tests import tagged, users, warmup
 from odoo.tools import formataddr, mute_logger
 
 
@@ -316,6 +316,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
+    @warmup
     def test_event_mail_schedule_on_subscription(self):
         """ Test emails sent on subscription, notably to avoid bottlenecks """
         test_event = self.test_event.with_env(self.env)
@@ -329,8 +330,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # consider having hanging registrations, still not processed (e.g. adding
         # a new scheduler after)
         self.env.invalidate_all()
-        # com 61, event 39
-        with self.assertQueryCount(74), self.mock_datetime_and_now(reference_now), \
+        # event 19
+        with self.assertQueryCount(37), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {
@@ -352,8 +353,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             }),
         ]})
         self.env.invalidate_all()
-        # com 148, event 99
-        with self.assertQueryCount(153), \
+        # event 50
+        with self.assertQueryCount(66), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([
