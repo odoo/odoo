@@ -12,7 +12,7 @@ import { assets } from "@web/core/assets";
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
-import { deepCopy, isObject } from "@web/core/utils/objects";
+import { isObject } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, registerModelToFetch } from "../module_set.hoot";
@@ -27,6 +27,7 @@ import {
 } from "./mock_server_utils";
 
 const { fetch: realFetch } = globals;
+const { DateTime } = luxon;
 
 /**
  * @typedef {Record<string, any>} ActionDefinition
@@ -109,6 +110,40 @@ const authenticateUser = (user) => {
     }
     env.cookie.set("sid", user.id);
     env.uid = user.id;
+};
+
+/**
+ * @template T
+ * @param {T} object
+ * @return {T}
+ */
+const deepCopy = (object) => {
+    if (!object) {
+        return object;
+    }
+    if (typeof object === "object") {
+        if (object?.nodeType) {
+            // Nodes
+            return object.cloneNode(true);
+        } else if (object instanceof Date || object instanceof DateTime) {
+            // Dates
+            return new object.constructor(object);
+        } else if (isIterable(object)) {
+            // Iterables
+            const copy = [...object].map(deepCopy);
+            if (object instanceof Set || object instanceof Map) {
+                return new object.constructor(copy);
+            } else {
+                return copy;
+            }
+        } else {
+            // Other objects
+            return Object.fromEntries(
+                Object.entries(object).map(([key, object]) => [key, deepCopy(object)])
+            );
+        }
+    }
+    return object;
 };
 
 /**
