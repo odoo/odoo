@@ -84,7 +84,7 @@ export class LinkPopoverPlugin extends Plugin {
         this.removeLinkShortcut = this.services.command.add(
             "Create link",
             () => {
-                this.toggleLinkTools();
+                this.toggleLinkPopover();
             },
             {
                 hotkey: "control+k",
