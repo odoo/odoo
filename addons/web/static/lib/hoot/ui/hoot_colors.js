@@ -21,7 +21,7 @@ const {
 //-----------------------------------------------------------------------------
 
 const updateClassNames = () => {
-    if (!colorRoot || new URLSearchParams(location.search).has("headless")) {
+    if (!colorRoot) {
         return;
     }
     const { classList } = colorRoot;
