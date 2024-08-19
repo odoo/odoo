@@ -68,11 +68,11 @@ function checkSOLDescriptionContains(productName, text) {
     // TODO in the future: handle edit mode and look directly into the textarea value
     if (!text) {
         return {
-            trigger: `span:contains("${productName}") ~ div:empty:not(:visible)`,
+            trigger: `span:contains("${productName}")`,
         }
     }
     return {
-        trigger: `span:contains("${productName}") ~ div:contains("${text}"):not(:visible)`,
+        trigger: `span:contains("${productName}") ~ textarea`,
     }
 }
 

@@ -3,7 +3,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { onPatched, useEffect, useRef, useState } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import {
     SectionAndNoteListRenderer,
@@ -120,6 +120,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 
     setup() {
         super.setup();
+        this.isPrintMode = useState({ value: false });
         this.labelVisibility = useState({ value: false });
         this.switchToLabel = false;
         this.columnIsProductAndLabel = useState({ value: this.props.record.columnIsProductAndLabel });
@@ -140,6 +141,28 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
                 this.switchToLabel = false;
                 this.labelNode.el.focus();
             }
+        });
+
+        this.onBeforePrint = () => {
+            this.isPrintMode.value = true;
+        };
+
+        this.onAfterPrint = () => {
+            this.isPrintMode.value = false;
+        };
+
+        // The following hooks are used to make a div visible only in the print view. This div is necessary in the
+        // print view in order not to have scroll bars but can't be displayed in the normal view because it adds
+        // an empty line. This is done by switching an attribute to true only during the print view life cycle and
+        // including the said div in a t-if depending on that attribute.
+        onMounted(() => {
+            window.addEventListener("beforeprint", this.onBeforePrint);
+            window.addEventListener("afterprint", this.onAfterPrint);
+        });
+
+        onWillUnmount(() => {
+            window.removeEventListener("beforeprint", this.onBeforePrint);
+            window.removeEventListener("afterprint", this.onAfterPrint);
         });
     }
 
