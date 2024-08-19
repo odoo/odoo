@@ -10,10 +10,13 @@ try:
 except ImportError:
     an2cn = None
 
+
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    fapiao = fields.Char(string='Fapiao Number', size=8, copy=False, tracking=True)
+    fapiao = fields.Char('Fapiao Number', size=8, copy=False, tracking=True)
+    machine_number = fields.Char('Machine Number')
+    approver_id = fields.Many2one('hr.employee', string='Approver')
 
     @api.constrains('fapiao')
     def _check_fapiao(self):
