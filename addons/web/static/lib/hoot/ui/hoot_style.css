@@ -726,12 +726,18 @@ input[type="checkbox"]:checked {
 .start-0 {
     inset-inline-start: 0;
 }
+.start-1\/2 {
+    inset-inline-start: 50%;
+}
+
 .end-0 {
     inset-inline-end: 0;
 }
+
 .top-0 {
     top: 0;
 }
+
 .bottom-0 {
     bottom: 0;
 }
@@ -1356,9 +1362,9 @@ input[type="checkbox"]:checked {
     font-size: 0.75rem;
     line-height: 1.25rem;
 }
-.text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
+.text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
 }
 
 /* Transform: rotate */
@@ -1368,6 +1374,12 @@ input[type="checkbox"]:checked {
 }
 .rotate-180 {
     transform: rotate(180deg);
+}
+
+/* Transform: translate */
+
+.\-translate-x-1\/2 {
+    transform: translateX(-50%);
 }
 
 /* Transitions */
