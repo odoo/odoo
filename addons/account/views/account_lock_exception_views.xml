@@ -42,10 +42,38 @@
                                     <div colspan="2" class="o_wrap_label">
                                         <span class="o_form_label">Changed Lock Dates:</span>
                                     </div>
-                                    <field name="sale_lock_date" readonly="True" invisible="not sale_lock_date"/>
-                                    <field name="purchase_lock_date" readonly="True" invisible="not purchase_lock_date"/>
-                                    <field name="tax_lock_date" readonly="True" invisible="not tax_lock_date"/>
-                                    <field name="fiscalyear_lock_date" readonly="True" invisible="not fiscalyear_lock_date"/>
+
+                                    <label for="sale_lock_date" invisible="not sale_lock_date"/>
+                                    <div invisible="not sale_lock_date">
+                                        <field name="sale_lock_date" class="oe_inline" readonly="True"/>
+                                        <i class="text-muted">
+                                        (from <field name="company_sale_lock_date" class="oe_inline" readonly="True" invisible="not sale_lock_date"/>)
+                                        </i>
+                                    </div>
+
+                                    <label for="purchase_lock_date" invisible="not purchase_lock_date"/>
+                                    <div invisible="not purchase_lock_date">
+                                        <field name="purchase_lock_date" class="oe_inline" readonly="True" invisible="not purchase_lock_date"/>
+                                        <i class="text-muted">
+                                        (from <field name="company_purchase_lock_date" class="oe_inline" readonly="True" invisible="not purchase_lock_date"/>)
+                                        </i>
+                                    </div>
+
+                                    <label for="tax_lock_date" invisible="not tax_lock_date"/>
+                                    <div invisible="not tax_lock_date">
+                                        <field name="tax_lock_date" class="oe_inline" readonly="True" invisible="not tax_lock_date"/>
+                                        <i class="text-muted">
+                                        (from <field name="company_tax_lock_date" class="oe_inline" readonly="True" invisible="not tax_lock_date"/>)
+                                        </i>
+                                    </div>
+
+                                    <label for="fiscalyear_lock_date" invisible="not fiscalyear_lock_date"/>
+                                    <div invisible="not fiscalyear_lock_date">
+                                        <field name="fiscalyear_lock_date" class="oe_inline" readonly="True" invisible="not fiscalyear_lock_date"/>
+                                        <i class="text-muted">
+                                        (from <field name="company_fiscalyear_lock_date" class="oe_inline" readonly="True" invisible="not fiscalyear_lock_date"/>)
+                                        </i>
+                                    </div>
                                 </group>
                             </group>
                         </div>

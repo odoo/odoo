@@ -62,6 +62,23 @@ class AccountLockException(models.Model):
         help="The date the Purchase Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
 
+    company_fiscalyear_lock_date = fields.Date(
+        string="Company Global Lock Date",
+        help="The date of the Global Lock Date of the company when the exception was created",
+    )
+    company_tax_lock_date = fields.Date(
+        string="Company Tax Return Lock Date",
+        help="The date of the Tax Return Lock Date of the company when the exception was created",
+    )
+    company_sale_lock_date = fields.Date(
+        string='Company Sales Lock Date',
+        help="The date of the Sale Lock Date of the company when the exception was created",
+    )
+    company_purchase_lock_date = fields.Date(
+        string='Company Purchase Lock Date',
+        help="The date of the Purchase Lock Date of the company when the exception was created",
+    )
+
     def init(self):
         super().init()
         create_index(
@@ -116,6 +133,13 @@ class AccountLockException(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Store the current lock dates (if not provided)
+        for vals in vals_list:
+            company = self.env['res.company'].browse(vals.get('company_id', self.env.company.id))
+            for field in SOFT_LOCK_DATE_FIELDS:
+                company_value_field = f'company_{field}'
+                if company_value_field not in vals:
+                    vals[company_value_field] = company[field]
         exceptions = super().create(vals_list)
         for exception in exceptions:
             company = exception.company_id
@@ -175,6 +199,26 @@ class AccountLockException(models.Model):
             domain.append(('create_uid', '=', self.user_id.id))
         if self.end_datetime:
             domain.append(('date', '<=', self.end_datetime))
+
+        changed_fields = [field for field in SOFT_LOCK_DATE_FIELDS if self[field]]
+        if changed_fields:
+            min_date = min(self[field] for field in changed_fields)
+            max_date = max(self[f'company_{field}'] for field in changed_fields)
+            domain.extend([
+                '|',
+                    '&',
+                        ('account_audit_log_move_id.date', '>=', min_date),
+                        ('account_audit_log_move_id.date', '<=', max_date),
+                    '&',
+                        ('tracking_value_ids.field_id', '=', self.env['ir.model.fields']._get('account.move', 'date').id),
+                        '|',
+                            '&',
+                                ('tracking_value_ids.old_value_datetime', '>=', min_date),
+                                ('tracking_value_ids.old_value_datetime', '<=', max_date),
+                            '&',
+                                ('tracking_value_ids.new_value_datetime', '>=', min_date),
+                                ('tracking_value_ids.new_value_datetime', '<=', max_date),
+            ])
 
         return domain
 
