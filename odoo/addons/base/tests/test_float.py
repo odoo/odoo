@@ -177,6 +177,8 @@ class TestFloatPrecision(TransactionCase):
         # res.currency.rate no more uses 6 digits of precision by default, it now uses whatever precision it gets
         try_roundtrip(10000.999999, 10000.999999, '2000-01-03')
 
+        assert float_round(0.0153, precision_digits=4) == 0.0153
+
         #TODO re-enable those tests when tests are made on dedicated models
         # (res.currency.rate don't accept negative value anymore)
         #try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
