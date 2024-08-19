@@ -82,18 +82,6 @@
                         <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
                     </button>
                 </div>
-                <div t-if="pos.orderToTransferUuid" class="d-flex align-items-center justify-content-between px-3 gap-2 border-bottom bg-view overflow-x-auto">
-                    <button t-attf-class="ms-auto {{editButtonClass}} btn-outline-secondary lh-lg" t-att-class="{active: !pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = false">
-                        <i class="fa fa-arrow-right me-2" role="img" aria-label="Transfer" title="Transfer" />Transfer</button>
-                    <button
-                        t-if="pos.models['pos.order'].find(o => o.uuid === pos.orderToTransferUuid).table_id"
-                        t-attf-class="{{editButtonClass}} btn-outline-secondary lh-lg" t-att-class="{active: pos.isTableToMerge}"
-                        t-on-click="() => this.pos.isTableToMerge = true">
-                        <i class="fa fa-link me-2" role="img" aria-label="Merge" title="Merge" />Merge</button>
-                    <button class="btn btn-primary btn-lg lh-lg ms-2" t-on-click.stop="stopOrderTransfer">
-                        Discard
-                    </button>
-                </div>
             </div>
             <div t-ref="floor-map-scroll" class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}"> 
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
