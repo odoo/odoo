@@ -802,9 +802,9 @@
             margin-top: $o-we-sidebar-content-field-spacing;
             padding: 0 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
             grid-template-areas:
-                "typo typo style style color"
+                "typo typo decoration decoration color"
                 "size align list list link"
-                "ai animate animate hilight hilight";
+                "ai ai ai ai ai";
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             grid-template-rows:
                 minmax($o-we-sidebar-content-field-height, auto)
@@ -854,8 +854,8 @@
             .btn-group[name="typo"] {
                 grid-area: typo;
             }
-            .btn-group[name="style"] {
-                grid-area: style;
+            .btn-group[name="decoration"] {
+                grid-area: decoration;
             }
             .btn-group[name="color"] {
                 grid-area: color;
