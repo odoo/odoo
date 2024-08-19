@@ -216,7 +216,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_allowed_root_attrs(self):
-        return ['style', 'class']
+        return ['style', 'class', 'target']
 
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
