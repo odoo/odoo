@@ -717,7 +717,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         # Special =? operator mean "is equal if right is set, otherwise always True"
         users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
-        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)], test_complement=False)  # FIXME complement
+        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)])
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
