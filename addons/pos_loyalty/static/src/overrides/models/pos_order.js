@@ -921,7 +921,9 @@ patch(PosOrder.prototype, {
      */
     _getCheapestLine() {
         let cheapestLine;
-        for (const line of this.get_orderlines()) {
+        for (const line of this.get_orderlines().filter(
+            (line) => line.combo_line_ids?.length === 0
+        )) {
             if (line.reward_id || !line.get_quantity()) {
                 continue;
             }

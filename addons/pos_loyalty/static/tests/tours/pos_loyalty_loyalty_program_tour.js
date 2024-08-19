@@ -1,6 +1,9 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
@@ -180,5 +183,21 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
 
             PosLoyalty.orderTotalIs("5.10"),
             PosLoyalty.finalizeOrder("Cash", "5.10"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            inLeftSide(Order.hasLine({ productName: "10% on the cheapest product" })),
+            inLeftSide(PosLoyalty.orderTotalIs("59.09")),
         ].flat(),
 });
