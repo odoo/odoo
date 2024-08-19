@@ -6,11 +6,6 @@
             <field name="model">account.move.reversal</field>
             <field name="arch" type="xml">
                 <form string="Reverse Journal Entry">
-                    <field name="residual" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="move_ids" invisible="1"/>
-                    <field name="move_type" invisible="1"/>
-                    <field name="available_journal_ids" invisible="1"/>
                     <group>
                         <field name="reason" invisible="move_type == 'entry'"/>
                         <field name="journal_id" domain="[('id', 'in', available_journal_ids)]"/>
