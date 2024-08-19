@@ -294,7 +294,7 @@ class MailThread(models.AbstractModel):
                     '|', ('res_partner_id', 'in', partner_ids),
                     '&', ('res_partner_id', '=', False), ('sms_number', 'in', sms_numbers),
                     ('notification_type', '=', 'sms'),
-                    ('mail_message_id', '=', message.id)
+                    ('mail_message_id', 'in', message.ids),
                 ])
                 for n in existing:
                     if n.res_partner_id.id in partner_ids and n.mail_message_id == message:
