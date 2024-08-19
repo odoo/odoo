@@ -47,7 +47,6 @@ class TestSalePrices(SaleCommon):
         )
         product_price = self.product.lst_price
         product_dozen_price = product_price * 12
-        discount = 1 - self.discount/100
 
         self.empty_order.order_line = [
             Command.create({
@@ -87,6 +86,9 @@ class TestSalePrices(SaleCommon):
             discounted_lines.mapped('price_unit'),
             [product_price, product_price, product_dozen_price, product_dozen_price])
         self.assertEqual(discounted_lines.mapped('discount'), [self.discount]*len(discounted_lines))
+
+        discounted_lines[0].product_uom_qty = 3.0
+        self.assertFalse(discounted_lines[0].discount)
 
     def test_pricelist_dates(self):
         """ Verify the order date is correctly provided to the pricelist API"""
@@ -947,6 +949,7 @@ class TestSalePrices(SaleCommon):
         order_line.write({
             'product_uom_qty': 3.0,
             'price_unit': 100.0,
+            'discount': 1.0,
         })
         order.invalidate_recordset(['amount_undiscounted'])
 

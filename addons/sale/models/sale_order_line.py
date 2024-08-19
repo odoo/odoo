@@ -683,19 +683,17 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
+        discount_enabled = self.env['product.pricelist.item']._is_discount_feature_enabled()
         for line in self:
             if not line.product_id or line.display_type:
                 line.discount = 0.0
 
-            if not (
-                line.order_id.pricelist_id
-                and line.pricelist_item_id._show_discount()
-            ):
+            if not (line.order_id.pricelist_id and discount_enabled):
                 continue
 
             line.discount = 0.0
 
-            if not line.pricelist_item_id:
+            if not (line.pricelist_item_id and line.pricelist_item_id._show_discount()):
                 # No pricelist rule was found for the product
                 # therefore, the pricelist didn't apply any discount/change
                 # to the existing sales price.
