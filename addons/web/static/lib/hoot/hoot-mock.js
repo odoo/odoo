@@ -5,7 +5,7 @@
  */
 
 export { makeSeededRandom } from "./mock/math";
-export { mockPermission, mockSendBeacon, mockUserAgent } from "./mock/navigator";
+export { mockPermission, mockSendBeacon, mockUserAgent, mockVibrate } from "./mock/navigator";
 export { mockFetch, mockLocation, mockWebSocket, mockWorker } from "./mock/network";
 export { flushNotifications } from "./mock/notification";
 export {

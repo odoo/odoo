@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { mockUserAgent, runAllTimers } from "@odoo/hoot-mock";
+import { mockUserAgent, mockVibrate, runAllTimers } from "@odoo/hoot-mock";
 
 import {
     clickSave,
@@ -11,7 +11,6 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 
@@ -58,10 +57,7 @@ defineModels([Product, SaleOrderLine]);
 
 beforeEach(() => {
     mockUserAgent("android");
-    // FIXME: JUM
-    patchWithCleanup(browser.navigator, {
-        vibrate: () => {},
-    });
+    mockVibrate((pattern) => expect.step(`vibrate:${pattern}`));
 });
 
 test("Many2OneBarcode component should display the barcode icon", async () => {
@@ -78,7 +74,7 @@ test("Many2OneBarcode component should display the barcode icon", async () => {
 });
 
 test("barcode button with single results", async () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     // The product selected (mock) for the barcode scanner
     const selectedRecordTest = Product._records[0];
@@ -109,10 +105,12 @@ test("barcode button with single results", async () => {
 
     await contains(".o_barcode").click();
     await clickSave();
+
+    expect.verifySteps(["vibrate:100"]);
 });
 
 test.tags("desktop")("barcode button with multiple results", async () => {
-    expect.assertions(4);
+    expect.assertions(5);
 
     // The product selected (mock) for the barcode scanner
     const selectedRecordTest = Product._records[1];
@@ -151,4 +149,5 @@ test.tags("desktop")("barcode button with multiple results", async () => {
         ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item:nth-child(1)"
     ).click();
     await clickSave();
+    expect.verifySteps(["vibrate:100"]);
 });
