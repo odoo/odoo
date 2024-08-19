@@ -935,14 +935,15 @@ class PosOrder(models.Model):
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
-            existing_draft_order = self.env["pos.order"].search(
-                ['&', ('id', '=', order.get('id', False)), ('state', '=', 'draft')], limit=1) if isinstance(order.get('id'), int) else False
+            existing_order = self.env["pos.order"].browse(order.get('id', False)) if isinstance(order.get('id', False), int) else False
 
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
-            if existing_draft_order:
-                order_ids.append(self._process_order(order, existing_draft_order))
+            if existing_order and existing_order.state == 'draft':
+                order_ids.append(self._process_order(order, existing_order))
+            elif existing_order and existing_order.state != 'draft':
+                order_ids.append(existing_order.id)
             else:
                 existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
                 if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):

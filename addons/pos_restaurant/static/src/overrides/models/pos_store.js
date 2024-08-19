@@ -25,7 +25,6 @@ patch(PosStore.prototype, {
     async setup() {
         this.orderToTransferUuid = null; // table transfer feature
         this.isEditMode = false;
-        this.tableSyncing = false;
         await super.setup(...arguments);
         this.floorPlanStyle =
             localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
@@ -243,12 +242,8 @@ patch(PosStore.prototype, {
 
         return {
             paidOrdersNotSent,
-            orderToCreate: orderToCreate.filter(
-                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
-            ),
-            orderToUpdate: orderToUpdate.filter(
-                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
-            ),
+            orderToCreate: orderToCreate.filter((o) => context.table_ids.includes(o.table_id?.id)),
+            orderToUpdate: orderToUpdate.filter((o) => context.table_ids.includes(o.table_id?.id)),
         };
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
@@ -316,10 +311,6 @@ patch(PosStore.prototype, {
     },
     async setTableFromUi(table, orderUuid = null) {
         try {
-            this.tableSyncing = true;
-            if (table.parent_id) {
-                table = table.getParent();
-            }
             await this.setTable(table, orderUuid);
         } catch (e) {
             if (!(e instanceof ConnectionLostError)) {
@@ -328,7 +319,6 @@ patch(PosStore.prototype, {
             // Reject error in a separate stack to display the offline popup, but continue the flow
             Promise.reject(e);
         } finally {
-            this.tableSyncing = false;
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
                 this.set_order(orders[0]);
