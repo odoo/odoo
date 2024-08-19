@@ -422,6 +422,7 @@ export class MassMailingHtmlField extends HtmlField {
         // } else {
         //     value = this.wysiwyg.getValue();
         // }
+        let value;
         let blankEditable = "<p><br></p>";
         $themeSelectorNew.on('click', '.dropdown-item', async (e) => {
             e.preventDefault();
