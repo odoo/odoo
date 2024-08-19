@@ -9,4 +9,12 @@
             background: rgba(0, 0, 0, .05);
         }
     }
+
+    @include media-breakpoint-only(sm) {
+        .row > div.col-sm-6 {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+        }
+    }
 }
