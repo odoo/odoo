@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import re
 
 from collections import OrderedDict
@@ -12,6 +13,8 @@ from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 
+
+_logger = logging.getLogger(__name__)
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
@@ -217,6 +220,10 @@ class IrQweb(models.AbstractModel):
         return (js_assets | assets, css_assets | assets)
 
     def _pregenerate_assets_bundles(self):
+        _logger.info("_pregenerate_assets_bundles called")
+        _logger.info("config['test_enable']: %s" % str(config['test_enable']))
+        _logger.info("config['test_file']: %s" % str(config['test_file']))
+        _logger.info("config['test_tags']: %s" % str(config['test_tags']))
         if config['test_enable'] or config['test_file'] or config['test_tags']:
             # Expose templates in templates.js
             _fetch_content = JavascriptAsset._fetch_content
