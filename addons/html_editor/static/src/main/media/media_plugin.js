@@ -55,7 +55,11 @@ export class MediaPlugin extends Plugin {
                     id: "replace_image",
                     category: "replace_image",
                     action(dispatch) {
-                        dispatch("REPLACE_IMAGE");
+                        const selectedNodes = p.shared.getSelectedNodes();
+                        const node = selectedNodes.find((node) => node.tagName === "IMG");
+                        if (node) {
+                            dispatch("REPLACE_MEDIA", { node });
+                        }
                     },
                     name: "Replace media",
                     text: "Replace",
@@ -84,13 +88,8 @@ export class MediaPlugin extends Plugin {
             case "INSERT_MEDIA":
                 this.openMediaDialog(payload);
                 break;
-            case "REPLACE_IMAGE": {
-                const selectedNodes = this.shared.getSelectedNodes();
-                const node = selectedNodes.find((node) => node.tagName === "IMG");
-                if (node) {
-                    this.openMediaDialog({ node });
-                    this.dispatch("ADD_STEP");
-                }
+            case "REPLACE_MEDIA": {
+                this.openMediaDialog(payload);
                 break;
             }
         }
