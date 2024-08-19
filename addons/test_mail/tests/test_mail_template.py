@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.tests import tagged, users
+from odoo.tests import tagged, users, warmup
 from odoo.tools import mute_logger, safe_eval
 
 
@@ -132,7 +132,7 @@ class TestMailTemplate(TestMailTemplateCommon):
         self.assertEqual(mail.body, body_result)
 
 
-@tagged('mail_template', 'multi_lang', 'post_install', '-at_install')
+@tagged('mail_template', 'multi_lang', 'mail_performance', 'post_install', '-at_install')
 class TestMailTemplateLanguages(TestMailTemplateCommon):
 
     @classmethod
@@ -188,11 +188,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.user_employee.has_group('base.group_user')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
     def test_template_send_email(self):
         """ Test 'send_email' on template on a given record, used notably as
         contextual action. """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(26):  # runbot 25
+        with self.with_user(self.user_employee.login), self.assertQueryCount(13):
             mail_id = self.test_template.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -205,11 +206,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
     def test_template_send_email_nolayout(self):
         """ Test without layout, just to check impact """
         self.test_template.email_layout_xmlid = False
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(19):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(12):
             mail_id = self.test_template.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -222,11 +224,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
     def test_template_send_email_batch(self):
         """ Test 'send_email' on template in batch """
         self.env.invalidate_all()
         mails = self.env['mail.mail'].sudo()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(932):  # runbot: 928
+        with self.with_user(self.user_employee.login), self.assertQueryCount(908):
             template = self.test_template.with_env(self.env)
             for record in self.test_records_batch:
                 mails += mails.browse(template.send_mail(record.id))
@@ -243,11 +246,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
                 self.assertEqual(mail.subject, f'SpanishSubject for {record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
     def test_template_send_email_wreport(self):
         """ Test 'send_email' on template on a given record, used notably as
         contextual action, with dynamic reports involved """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(101):  # runbot 98
+        with self.with_user(self.user_employee.login), self.assertQueryCount(28):
             mail_id = self.test_template_wreports.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -259,11 +263,12 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
     def test_template_send_email_wreport_batch(self):
         """ Test 'send_email' on template in batch with dynamic reports """
         self.env.invalidate_all()
         mails = self.env['mail.mail'].sudo()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(1634):  # runbot 1611
+        with self.with_user(self.user_employee.login), self.assertQueryCount(1519):
             template = self.test_template_wreports.with_env(self.env)
             for record in self.test_records_batch:
                 mails += mails.browse(template.send_mail(record.id))
@@ -302,6 +307,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mail.subject, f'SpanishSubject for {self.test_record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
     def test_template_translation_partner_lang(self):
         """ Test template rendering using lang defined on a sub-record aka
         'partner_id.lang' """
@@ -322,7 +328,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
 
         self.env.invalidate_all()
         mails = self.env['mail.mail'].sudo()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(48):  # runbot 44
+        with self.with_user(self.user_employee.login), self.assertQueryCount(26):
             template = self.test_template.with_env(self.env)
             for record in self.test_records:
                 mails += mails.browse(
