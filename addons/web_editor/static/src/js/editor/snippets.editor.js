@@ -1879,7 +1879,7 @@ class SnippetsMenu extends Component {
             canRedo: false,
         });
 
-        this.historyState = useState(this.props.options.wysiwyg.historyState);
+        this.historyState = useState(this.props.options.wysiwyg.historyState || {});
 
         this.snippets = useState(new Map());
 
