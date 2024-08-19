@@ -3509,7 +3509,7 @@ class MailThread(models.AbstractModel):
         tracking = []
         if check_tracking:
             tracking_values = self.env['mail.tracking.value'].sudo().search(
-                [('mail_message_id', '=', message.id)]
+                [('mail_message_id', 'in', message.ids)]
             )._filter_has_field_access(self.env)
             if tracking_values and hasattr(record_wlang, '_track_filter_for_display'):
                 tracking_values = record_wlang._track_filter_for_display(tracking_values)
