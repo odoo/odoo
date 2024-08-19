@@ -10,18 +10,6 @@ from odoo.addons.mail.tools.discuss import Store
 class IrWebsocket(models.AbstractModel):
     _inherit = "ir.websocket"
 
-    def _im_status_to_store(self, store: Store, im_status_ids_by_model):
-        super()._im_status_to_store(store, im_status_ids_by_model=im_status_ids_by_model)
-        if guest_ids := im_status_ids_by_model.get("mail.guest"):
-            # sudo: mail.guest - necessary to read im_status from other guests, information is not considered sensitive
-            store.add(
-                "mail.guest",
-                self.env["mail.guest"]
-                .sudo()
-                .with_context(active_test=False)
-                .search_read([("id", "in", guest_ids)], ["im_status"]),
-            )
-
     def _get_missed_presences_identity_domains(self, presence_channels):
         identity_domain = super()._get_missed_presences_identity_domains(presence_channels)
         if guest_ids := [
