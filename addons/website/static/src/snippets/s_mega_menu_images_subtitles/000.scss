@@ -9,4 +9,13 @@
             background: rgba(0, 0, 0, .05);
         }
     }
+
+    .row > div.col-sm-6 {
+        @include media-breakpoint-down(lg) {
+            min-width: min-content;
+        }
+        @include media-breakpoint-down(md) {
+            min-width: fit-content;
+        }
+    }
 }
