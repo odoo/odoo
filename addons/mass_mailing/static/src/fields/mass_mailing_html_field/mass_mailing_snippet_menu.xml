@@ -26,6 +26,12 @@
             <span>Design</span>
         </button>
     </xpath>
+    <xpath expr="//div[hasclass('o_we_toolbar_wrapper')]" position="replace">
+        <Toolbar t-if="this.props.toolbarInfos" toolbar="this.props.toolbarInfos" useDefaultClasses="false"/>
+        <t t-if="this.props.linkToolProps">
+            <LinkTools t-props="this.props.linkToolProps"/>
+        </t>
+    </xpath>
 </t>
 
 </templates>

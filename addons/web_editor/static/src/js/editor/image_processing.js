@@ -483,7 +483,7 @@ export async function loadImageInfo(img, attachmentSrc = '') {
     // URL. The original attachment linked to the img is then retrieved thanks
     // to the path of the built URL object.
     let docHref = img.ownerDocument.defaultView.location.href;
-    if (docHref === "about:srcdoc") {
+    if (docHref === "about:srcdoc" || docHref === "about:blank") {
         docHref = window.location.href;
     }
 

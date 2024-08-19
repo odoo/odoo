@@ -181,7 +181,7 @@ test("selected text color is not shown in the toolbar after removeFormat", async
     await waitFor(".o-we-toolbar");
     expect(".o_font_color_selector").toHaveCount(0);
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-    click(".btn .fa-eraser");
+    click(".o-we-toolbar .btn[name='remove_format']");
     await animationFrame();
     expect(getContent(el)).toBe(`<p>
             <font style="color: rgb(255, 0, 0);">t</font>[es]<font style="color: rgb(255, 0, 0);">t</font>

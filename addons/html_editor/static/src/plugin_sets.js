@@ -21,7 +21,6 @@ import { ColorPlugin } from "./main/font/color_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
-import { JustifyPlugin } from "./main/justify_plugin";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
 import { LinkPlugin } from "./main/link/link_plugin";
 import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
@@ -51,6 +50,7 @@ import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/colla
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
+import { LinkPopoverPlugin } from "./main/link/link_popover_plugin";
 
 export const CORE_PLUGINS = [
     ClipboardPlugin,
@@ -76,7 +76,6 @@ export const MAIN_PLUGINS = [
     ColumnPlugin,
     EmojiPlugin,
     HintPlugin,
-    JustifyPlugin,
     ListPlugin,
     MediaPlugin,
     ShortCutPlugin,
@@ -94,6 +93,7 @@ export const MAIN_PLUGINS = [
     ImagePlugin,
     ImageCropPlugin,
     LinkPlugin,
+    LinkPopoverPlugin,
     LinkPastePlugin,
     LinkSelectionPlugin,
     OdooLinkSelectionPlugin,

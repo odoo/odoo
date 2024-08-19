@@ -1,3 +1,5 @@
+import { JustifyPlugin } from "@html_editor/main/justify_plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { expect, getFixture } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
@@ -147,6 +149,12 @@ export async function testEditor(config) {
                 message: `(testEditor) ${phase} is strictly equal to %actual%"`,
             });
         };
+    }
+    if (!config.config) {
+        config.config = {};
+    }
+    if (!config.config.Plugins) {
+        config.config.Plugins = [...MAIN_PLUGINS, JustifyPlugin];
     }
     const { el, editor } = await setupEditor(contentBefore, config);
     // The HISTORY_STAGE_SELECTION should have been triggered by the click on

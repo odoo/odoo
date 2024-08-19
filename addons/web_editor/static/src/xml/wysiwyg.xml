@@ -123,7 +123,7 @@
         </Dialog>
     </div>
 
-    <we-customizeblock-option t-name="web_editor.LinkTools">
+    <we-customizeblock-option class="o-we-linktools" t-name="web_editor.LinkTools">
         <div style="display: contents" t-ref="linkComponentWrapper">
             <we-row id="url_row" t-attf-class="#{state.isButton ? ' d-none' : ''}">
                 <we-input class="o_we_user_value_widget o_we_sublevel_1">
@@ -176,7 +176,7 @@
                             <ColorPalette
                                 selectedColor="colorpickerProps['color'].selectedColor"
                                 excluded="['transparent_grayscale']"
-                                document="this.props.wysiwyg.options.document"
+                                document="this.props.wysiwyg.odooEditor.document"
                                 onSetColorNames="(colorNames) => this._onColorpaletteSetColorNames('color', colorNames)"
                                 onColorHover="(params) => this._colorpaletteApply('color', params)"
                                 onColorLeave="(params) => this._colorpaletteApply('color', params)"
@@ -197,7 +197,7 @@
                             <ColorPalette
                                 selectedColor="colorpickerProps['background-color'].selectedColor"
                                 excluded="['transparent_grayscale']"
-                                document="this.props.wysiwyg.options.document"
+                                document="this.props.wysiwyg.odooEditor.document"
                                 withGradients="true"
                                 onSetColorNames="(colorNames) => this._onColorpaletteSetColorNames('background-color', colorNames)"
                                 onColorHover="(params) => this._colorpaletteApply('background-color', params)"
@@ -241,7 +241,7 @@
                                 <ColorPalette
                                     selectedColor="colorpickerProps['border-color'].selectedColor"
                                     excluded="['transparent_grayscale']"
-                                    document="this.props.wysiwyg.options.document"
+                                    document="this.props.wysiwyg.odooEditor.document"
                                     onSetColorNames="(colorNames) => this._onColorpaletteSetColorNames('border-color', colorNames)"
                                     onColorHover="(params) => this._colorpaletteApply('border-color', params)"
                                     onColorLeave="(params) => this._colorpaletteApply('border-color', params)"

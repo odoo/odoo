@@ -170,7 +170,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
             'web_editor/static/src/js/wysiwyg/conflict_dialog.js',
             'web_editor/static/src/js/wysiwyg/conflict_dialog.xml',
-            'web_editor/static/src/js/wysiwyg/get_color_picker_template_service.js',
 
             # odoo utils
             ('include', 'web._assets_helpers'),

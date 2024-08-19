@@ -8,7 +8,6 @@ export class LanguageSelector extends Component {
     static template = "html_editor.LanguageSelector";
     static props = {
         dispatch: Function,
-        getSelection: Function,
     };
     static components = { Dropdown, DropdownItem };
 

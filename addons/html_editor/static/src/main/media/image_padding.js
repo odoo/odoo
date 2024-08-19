@@ -6,7 +6,6 @@ export class ImagePadding extends Component {
     static components = { Dropdown, DropdownItem };
     static props = {
         dispatch: Function,
-        getSelection: Function,
     };
     static template = "html_editor.ImagePadding";
 

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -408,21 +407,21 @@ export class MassMailingHtmlField extends HtmlField {
             modelName: this.props.record.data.mailing_model_id[1] || '',
         }));
 
-        // Check if editable area is empty.
-        const $layout = this.wysiwyg.$iframeBody.find(".o_layout");
-        let $mailWrapper = $layout.children(".o_mail_wrapper");
-        let $mailWrapperContent = $mailWrapper.find('.o_mail_wrapper_td');
-        if (!$mailWrapperContent.length) {
-            $mailWrapperContent = $mailWrapper;
-        }
-        let value;
-        if ($mailWrapperContent.length > 0) {
-            value = $mailWrapperContent.html();
-        } else if ($layout.length) {
-            value = $layout.html();
-        } else {
-            value = this.wysiwyg.getValue();
-        }
+        // // Check if editable area is empty.
+        // const $layout = this.wysiwyg.$iframeBody.find(".o_layout");
+        // let $mailWrapper = $layout.children(".o_mail_wrapper");
+        // let $mailWrapperContent = $mailWrapper.find('.o_mail_wrapper_td');
+        // if (!$mailWrapperContent.length) {
+        //     $mailWrapperContent = $mailWrapper;
+        // }
+        // let value;
+        // if ($mailWrapperContent.length > 0) {
+        //     value = $mailWrapperContent.html();
+        // } else if ($layout.length) {
+        //     value = $layout.html();
+        // } else {
+        //     value = this.wysiwyg.getValue();
+        // }
         let blankEditable = "<p><br></p>";
         $themeSelectorNew.on('click', '.dropdown-item', async (e) => {
             e.preventDefault();
@@ -747,4 +746,4 @@ export const massMailingHtmlField = {
     fieldDependencies: [{ name: 'body_html', type: 'html', readonly: 'false' }],
 };
 
-registry.category("fields").add("mass_mailing_html", massMailingHtmlField);
+// registry.category("fields").add("mass_mailing_html", massMailingHtmlField);
