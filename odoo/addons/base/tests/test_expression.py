@@ -883,6 +883,20 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
+    def test_like_filtered(self):
+        Model = self.env['res.partner.category']
+        record = Model.create({'name': '[default] _*%'})
+        record_pct = Model.create({'name': '5%'})
+
+        self.assertIn(record, self._search(Model, [('name', 'like', r'[default]')]))
+        self.assertIn(record, self._search(Model, [('name', 'like', r'\_*')]))
+        self.assertIn(record, self._search(Model, [('name', 'like', r'[_ef')]))
+        self.assertIn(record, self._search(Model, [('name', 'like', r'[%]')]))
+        self.assertIn(record, self._search(Model, [('name', 'ilike', r'DEF')]))
+
+        self.assertIn(record, self._search(Model, [('name', '=like', r'%\%')]))
+        self.assertIn(record_pct, self._search(Model, [('name', '=like', r'%\%')]))
+
     def test_like_cast(self):
         Model = self.env['res.partner.category']
         record = Model.create({'name': 'XY', 'color': 42})
