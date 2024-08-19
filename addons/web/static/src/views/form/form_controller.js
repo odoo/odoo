@@ -13,12 +13,12 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { useSetupView } from "@web/views/view_hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
 import { useModel } from "@web/model/model";
@@ -251,7 +251,7 @@ export class FormController extends Component {
             }
         };
 
-        useSetupView({
+        useSetupAction({
             rootRef: this.rootRef,
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),

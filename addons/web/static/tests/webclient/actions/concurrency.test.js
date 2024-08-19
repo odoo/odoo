@@ -25,7 +25,7 @@ import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
-import { useSetupView } from "@web/views/view_hook";
+import { useSetupAction } from "@web/search/action_hook";
 import { WebClient } from "@web/webclient/webclient";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
@@ -698,7 +698,7 @@ test.tags("desktop")("local state, global state, and race conditions", async () 
         setup() {
             this.id = id++;
             expect.step(JSON.stringify(this.props.state || "no state"));
-            useSetupView({
+            useSetupAction({
                 getLocalState: () => {
                     return { fromId: this.id };
                 },

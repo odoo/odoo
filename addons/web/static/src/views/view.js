@@ -1,3 +1,4 @@
+import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -225,6 +226,8 @@ export class View extends Component {
 
         onWillStart(() => this.loadView(this.props));
         onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
+
+        useDebugCategory("view", { component: this });
     }
 
     async loadView(props) {

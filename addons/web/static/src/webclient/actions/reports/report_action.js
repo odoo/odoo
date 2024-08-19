@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
+import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { useEnrichWithActionLinks } from "@web/webclient/actions/reports/report_hook";
 
 import { Component, useRef, useSubEnv } from "@odoo/owl";

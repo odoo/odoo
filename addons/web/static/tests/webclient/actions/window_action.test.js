@@ -25,9 +25,9 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
+import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import { WebClient } from "@web/webclient/webclient";
 import {

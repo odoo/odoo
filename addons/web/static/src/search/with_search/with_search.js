@@ -1,5 +1,5 @@
-import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
 import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
+import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { SearchModel } from "@web/search/search_model";
 import { useBus, useService } from "@web/core/utils/hooks";
 

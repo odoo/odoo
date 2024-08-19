@@ -207,7 +207,6 @@
             'web/static/src/model/relational_model/utils.js',
             'web/static/src/webclient/actions/action_container.js',
             'web/static/src/webclient/actions/action_dialog.js',
-            'web/static/src/webclient/actions/action_hook.js',
             'web/static/src/webclient/actions/action_service.js',
             'web/static/src/webclient/actions/reports/report_action.js',
             'web/static/src/webclient/actions/reports/report_hook.js',

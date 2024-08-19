@@ -6,12 +6,12 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
-import { useSetupView } from "@web/views/view_hook";
 import { useModelWithSampleData } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
@@ -145,13 +145,8 @@ export class KanbanController extends Component {
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
         });
-        useSetupView({
+        useSetupAction({
             rootRef: this.rootRef,
-            getGlobalState: () => {
-                return {
-                    resIds: this.model.root.records.map((rec) => rec.resId), // WOWL: ask LPE why?
-                };
-            },
             getLocalState: () => {
                 return {
                     activeBars: this.progressBarState?.activeBars,

@@ -10,6 +10,7 @@ import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
+import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
@@ -21,7 +22,6 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { ViewButton } from "@web/views/view_button/view_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
-import { useSetupView } from "@web/views/view_hook";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
@@ -120,7 +120,7 @@ export class ListController extends Component {
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
         });
-        useSetupView({
+        useSetupAction({
             rootRef: this.rootRef,
             beforeLeave: async () => {
                 return this.model.root.leaveEditMode();

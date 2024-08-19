@@ -7,7 +7,7 @@ import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { useSetupView } from "@web/views/view_hook";
+import { useSetupAction } from "@web/search/action_hook";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
@@ -85,7 +85,7 @@ export class CalendarController extends Component {
             }
         );
 
-        useSetupView({
+        useSetupAction({
             getLocalState: () => this.model.exportedState,
         });
 

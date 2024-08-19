@@ -10,9 +10,9 @@ import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
-import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 import { UPDATE_METHODS } from "@web/core/orm_service";
+import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router, stateToUrl } from "@web/core/browser/router";
 

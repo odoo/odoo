@@ -19,7 +19,7 @@ import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
-import { CallbackRecorder } from "@web/webclient/actions/action_hook";
+import { CallbackRecorder } from "@web/search/action_hook";
 
 const viewRegistry = registry.category("views");
 

@@ -1,7 +1,7 @@
 import { renderToMarkup } from "@web/core/utils/render";
+import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { WebClient } from "@web/webclient/webclient";
 
 import { xml } from "@odoo/owl";
