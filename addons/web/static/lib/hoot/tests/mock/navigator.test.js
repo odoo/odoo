@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
+import { mockSendBeacon, mockTouch, mockVibrate } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
 /**
@@ -34,5 +35,39 @@ describe(parseUrl(import.meta.url), () => {
 
             expect(value).toBe("some text");
         });
+    });
+
+    test("maxTouchPoints", () => {
+        mockTouch(false);
+
+        expect(navigator.maxTouchPoints).toBe(0);
+
+        mockTouch(true);
+
+        expect(navigator.maxTouchPoints).toBe(1);
+    });
+
+    test("sendBeacon", () => {
+        expect(() => navigator.sendBeacon("/route", new Blob([]))).toThrow(/sendBeacon/);
+
+        mockSendBeacon(expect.step);
+
+        expect.verifySteps([]);
+
+        navigator.sendBeacon("/route", new Blob([]));
+
+        expect.verifySteps(["/route"]);
+    });
+
+    test("vibrate", () => {
+        expect(() => navigator.vibrate(100)).toThrow(/vibrate/);
+
+        mockVibrate(expect.step);
+
+        expect.verifySteps([]);
+
+        navigator.vibrate(100);
+
+        expect.verifySteps([100]);
     });
 });
