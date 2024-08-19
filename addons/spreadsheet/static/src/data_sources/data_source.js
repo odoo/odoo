@@ -97,6 +97,10 @@ export class LoadableDataSource {
         return this._isFullyLoaded;
     }
 
+    isLoading() {
+        return !!this._loadPromise && !this.isReady();
+    }
+
     isValid() {
         return this.isReady() && this._isValid;
     }

@@ -46,11 +46,6 @@ const ODOO_LIST_HEADER = {
         const id = toString(listId);
         const field = toString(fieldName);
         assertListsExists(id, this.getters);
-        const dataSource = this.getters.getListDataSource(id);
-        const error = dataSource.assertIsValid({ throwOnError: false });
-        if (error) {
-            return error;
-        }
         return this.getters.getListHeaderValue(id, field);
     },
     returns: ["NUMBER", "STRING"],

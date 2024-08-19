@@ -8,6 +8,7 @@ import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { astToFormula } = spreadsheet;
+const { isEvaluationError, toString } = spreadsheet.helpers;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
@@ -342,11 +343,10 @@ export class ListUIPlugin extends OdooUIPlugin {
     getListCellValueAndFormat(listId, position, fieldName) {
         const dataSource = this.getters.getListDataSource(listId);
         dataSource.addFieldToFetch(fieldName);
-        const error = dataSource.assertIsValid({ throwOnError: false });
-        if (error) {
-            return error;
-        }
         const value = dataSource.getListCellValue(position, fieldName);
+        if (isEvaluationError(toString(value))) {
+            return value;
+        }
         const field = dataSource.getField(fieldName);
         const format = this._getListFormat(listId, position, field);
         return { value, format };

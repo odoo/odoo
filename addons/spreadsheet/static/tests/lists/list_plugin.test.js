@@ -718,6 +718,41 @@ test("fetch all and only required fields", async function () {
     expect.verifySteps(["data-fetched"]);
 });
 
+test("fetch all required positions, including the evaluated ones", async function () {
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                cells: {
+                    A1: { content: '=ODOO.LIST(1, 11, "foo")' },
+                    A2: { content: '=ODOO.LIST(1, A3, "foo")' },
+                    A3: { content: "111" },
+                },
+            },
+        ],
+        lists: {
+            1: {
+                id: 1,
+                columns: ["foo"],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+                context: {},
+            },
+        },
+    };
+    await createModelWithDataSource({
+        spreadsheetData,
+        mockRPC: function (route, args) {
+            if (args.method === "web_search_read" && args.model === "partner") {
+                expect.step("data-fetched");
+                expect(args.kwargs.limit).toBe(111);
+            }
+        },
+    });
+    expect.verifySteps(["data-fetched"]);
+});
+
 test("list with both a monetary field and the related currency field 1", async function () {
     const { model } = await createSpreadsheetWithList({
         columns: ["pognon", "currency_id"],
