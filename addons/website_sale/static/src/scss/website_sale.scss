@@ -849,3 +849,18 @@ a.no-decoration {
         }
     }
 }
+
+.o_wsale_products_grid_before_rail .accordion {
+    --accordion-btn-icon-width: 1rem;
+}
+
+.wsale_accordion_collapsible {
+    .products_attributes_filters & div.accordion-item:first-of-type {
+        border-top: none;
+    }
+}
+
+// Hide chevrons for collapsed categories
+.o_categories_recursive_button:after {
+    display: none;
+}
