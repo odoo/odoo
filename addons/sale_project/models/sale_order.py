@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -110,13 +111,14 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super()._action_confirm()
+        context = clean_context(self._context)
         if len(self.company_id) == 1:
             # All orders are in the same company
-            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+            self.order_line.sudo().with_company(self.company_id).with_context(context)._timesheet_service_generation()
         else:
             # Orders from different companies are confirmed together
             for order in self:
-                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
+                order.order_line.sudo().with_company(order.company_id).with_context(context)._timesheet_service_generation()
         return result
 
     def action_view_task(self):

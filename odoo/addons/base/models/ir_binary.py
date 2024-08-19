@@ -219,6 +219,8 @@ class IrBinary(models.AbstractModel):
 
         if stream.type == 'url':
             return stream  # Rezising an external URL is not supported
+        if not stream.mimetype.startswith('image/'):
+            stream.mimetype = 'application/octet-stream'
         if isinstance(stream.etag, str):
             stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
 

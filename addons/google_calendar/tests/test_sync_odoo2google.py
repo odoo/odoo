@@ -757,3 +757,44 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'transparency': 'opaque',
         })
+
+    @patch_api
+    def test_allday_duplicated_first_event_in_recurrence(self):
+        """ Ensure that when creating recurrence with 'all day' events the first event won't get duplicated in Google. """
+        # Create 'all day' event: ensure that 'need_sync' is falsy after creation an API wasn't called.
+        event = self.env['calendar.event'].with_user(self.organizer_user).create({
+            'name': "All Day Recurrent Event",
+            'user_id': self.organizer_user.id,
+            'start': datetime(2024, 1, 17),
+            'stop': datetime(2024, 1, 17),
+            'allday': True,
+            'need_sync': False,
+            'recurrency': True,
+            'recurrence_id': False,
+        })
+        self.assertFalse(event.need_sync, "Variable 'need_sync' must be falsy after event's 'create' call.")
+        self.assertGoogleAPINotCalled()
+
+        # Link recurrence to the event: ensure that it got synchronized after creation and API called insert once.
+        recurrence = self.env['calendar.recurrence'].with_user(self.organizer_user).create({
+            'rrule': 'FREQ=WEEKLY;COUNT=1;BYDAY=WE',
+            'calendar_event_ids': [(4, event.id)],
+            'need_sync': True,
+        })
+        self.assertFalse(event.need_sync, "Variable 'need_sync' must be falsy after recurrence's 'create' call.")
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'date': '2024-01-17'},
+            'end': {'date': '2024-01-18'},
+            'summary': 'All Day Recurrent Event',
+            'description': '',
+            'location': '',
+            'visibility': 'public',
+            'guestsCanModify': True,
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': self.organizer_user.email, 'self': True},
+            'attendees': [{'email': self.organizer_user.email, 'responseStatus': 'accepted'}],
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=1;BYDAY=WE'],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
+            'transparency': 'opaque',
+        }, timeout=3)
