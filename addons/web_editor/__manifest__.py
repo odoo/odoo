@@ -171,6 +171,9 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/conflict_dialog.js',
             'web_editor/static/src/js/wysiwyg/conflict_dialog.xml',
 
+            #utils already move in html_editor
+            'html_editor/static/src/service/get_color_picker_template_service.js',
+
             # odoo utils
             ('include', 'web._assets_helpers'),
 

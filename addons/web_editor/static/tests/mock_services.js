@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { patch } from '@web/core/utils/patch';
-import { registry } from '@web/core/registry';
+import { getColorPickerTemplateService } from '@html_editor/service/get_color_picker_template_service';
 import { utils } from '@web/../tests/helpers/mock_env';
-import { getColorPickerTemplateService } from '@web_editor/js/wysiwyg/get_color_picker_template_service';
+import { registry } from '@web/core/registry';
+import { patch } from '@web/core/utils/patch';
 
 const { prepareRegistriesWithCleanup } = utils;
 
