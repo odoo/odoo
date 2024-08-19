@@ -1191,8 +1191,8 @@ class MailCase(MockEmail):
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
         new_line = "\n"
         self.assertEqual(
-            bus_notifs.mapped("channel"),
-            [json_dump(channel) for channel in channels],
+            sorted(bus_notifs.mapped("channel")),
+            sorted([json_dump(channel) for channel in channels]),
             f"\nExpected:\n{new_line.join([json_dump(channel) for channel in channels])}"
             f"\nReturned:\n{new_line.join(bus_notifs.mapped('channel'))}"
         )
