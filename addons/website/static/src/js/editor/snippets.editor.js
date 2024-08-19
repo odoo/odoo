@@ -632,7 +632,8 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             HIGHLIGHTED_TEXT_SELECTOR,
             [
                 this._getOptionTextClass(HIGHLIGHTED_TEXT_SELECTOR),
-                "o_text_highlight_underline"
+                "o_text_highlight_underline",
+                "o_translate_inline",
             ],
             ($snippet) => {
                 // TODO should be reviewed
