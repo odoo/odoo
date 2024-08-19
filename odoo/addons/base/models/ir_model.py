@@ -20,6 +20,17 @@ from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
 
+# Messages are declared in extenso so they are properly exported in translation terms
+ACCESS_ERROR_HEADER = {
+    'read': _lt("You are not allowed to access '%(document_kind)s' (%(document_model)s) records."),
+    'write': _lt("You are not allowed to modify '%(document_kind)s' (%(document_model)s) records."),
+    'create': _lt("You are not allowed to create '%(document_kind)s' (%(document_model)s) records."),
+    'unlink': _lt("You are not allowed to delete '%(document_kind)s' (%(document_model)s) records."),
+}
+ACCESS_ERROR_GROUPS = _lt("This operation is allowed for the following groups:\n%(groups_list)s")
+ACCESS_ERROR_NOGROUP = _lt("No group currently allows this operation.")
+ACCESS_ERROR_RESOLUTION = _lt("Contact your administrator to request access if necessary.")
+
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 RE_ORDER_FIELDS = re.compile(r'"?(\w+)"?\s*(?:asc|desc)?', flags=re.I)
 
@@ -2064,56 +2075,28 @@ class IrModelAccess(models.Model):
             _logger.error('Missing model %s', model)
 
         has_access = model in self._get_allowed_models(mode)
-
         if not has_access and raise_exception:
-            groups = '\n'.join('\t- %s' % g for g in self.group_names_with_access(model, mode))
-            document_kind = self.env['ir.model']._get(model).name or model
-            msg_heads = {
-                # Messages are declared in extenso so they are properly exported in translation terms
-                'read': _lt(
-                    "You are not allowed to access '%(document_kind)s' (%(document_model)s) records.",
-                    document_kind=document_kind,
-                    document_model=model,
-                ),
-                'write':  _lt(
-                    "You are not allowed to modify '%(document_kind)s' (%(document_model)s) records.",
-                    document_kind=document_kind,
-                    document_model=model,
-                ),
-                'create': _lt(
-                    "You are not allowed to create '%(document_kind)s' (%(document_model)s) records.",
-                    document_kind=document_kind,
-                    document_model=model,
-                ),
-                'unlink': _lt(
-                    "You are not allowed to delete '%(document_kind)s' (%(document_model)s) records.",
-                    document_kind=document_kind,
-                    document_model=model,
-                ),
-            }
-            operation_error = msg_heads[mode]
-
-            if groups:
-                group_info = _("This operation is allowed for the following groups:\n%(groups_list)s", groups_list=groups)
-            else:
-                group_info = _("No group currently allows this operation.")
-
-            resolution_info = _("Contact your administrator to request access if necessary.")
-
-            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
-            msg = """{operation_error}
-
-{group_info}
-
-{resolution_info}""".format(
-                operation_error=operation_error,
-                group_info=group_info,
-                resolution_info=resolution_info)
-
-            raise AccessError(msg) from None
-
+            raise self._make_access_error(model, mode) from None
         return has_access
 
+    def _make_access_error(self, model: str, mode: str):
+        """ Return the exception corresponding to an access error. """
+        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
+
+        operation_error = str(ACCESS_ERROR_HEADER[mode]) % {
+            'document_kind': self.env['ir.model']._get(model).name or model,
+            'document_model': model,
+        }
+
+        groups = "\n".join(f"\t- {g}" for g in self.group_names_with_access(model, mode))
+        if groups:
+            group_info = str(ACCESS_ERROR_GROUPS) % {'groups_list': groups}
+        else:
+            group_info = str(ACCESS_ERROR_NOGROUP)
+
+        resolution_info = str(ACCESS_ERROR_RESOLUTION)
+
+        return AccessError(f"{operation_error}\n\n{group_info}\n\n{resolution_info}")
 
     @api.model
     def call_cache_clearing_methods(self):

@@ -97,6 +97,8 @@ class TestRules(TransactionCase):
     def test_access_rule_performance(self):
         env = self.env(user=self.env.ref('base.public_user'))
         Model = env['test_access_right.some_obj']
+        # cache warmup for check() in 'ir.model.access'
+        Model.check_access('read')
         with self.assertQueryCount(0):
             Model._filter_access_rules('read')
 
