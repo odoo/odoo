@@ -230,6 +230,7 @@
                 <field name="session_state"/>
                 <field name="success_ratio"/>
                 <field name="session_available" invisible="1"/>
+                <field name="survey_type" invisible="1"/>
                 <templates>
                     <div t-name="kanban-menu" t-if="widget.editable">
                         <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
@@ -275,6 +276,7 @@
                             <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
                                 <a type="object"
                                    name="action_survey_user_input"
+                                   invisible="survey_type not in ['assessment', 'custom', 'live_session', 'survey']"
                                    class="fw-bold">
                                     <field name="answer_count"/><br />
                                     <span class="text-muted">Registered</span>
@@ -283,6 +285,7 @@
                             <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 d-none d-sm-block py-0 my-2">
                                 <a type="object"
                                    name="action_survey_user_input_completed"
+                                   invisible="survey_type not in ['assessment', 'custom', 'live_session', 'survey']"
                                    class="fw-bold">
                                     <field name="answer_done_count"/><br />
                                     <span class="text-muted">Completed</span>
@@ -303,7 +306,7 @@
                                 <button name="action_send_survey"
                                         string="Share" type="object"
                                         class="btn btn-secondary"
-                                        invisible="not active">
+                                        invisible="not active or survey_type not in ['assessment', 'custom', 'live_session', 'survey']">
                                     Share
                                 </button>
                                 <button name="action_test_survey"
