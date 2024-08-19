@@ -206,6 +206,7 @@ test("Can undo/redo a delete pivot", async function () {
     const value = getEvaluatedCell(model, "B4").value;
     model.dispatch("REMOVE_PIVOT", { pivotId });
     model.dispatch("REQUEST_UNDO");
+    await animationFrame();
     expect(model.getters.getPivotIds().length).toBe(1);
     let B4 = getEvaluatedCell(model, "B4");
     expect(B4.value).toBe(value);
