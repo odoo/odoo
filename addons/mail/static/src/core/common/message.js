@@ -204,6 +204,7 @@ export class Message extends Component {
                 this.props.thread,
                 this.props.message
             ),
+            "o-editing": this.state.isEditing,
         };
     }
 
