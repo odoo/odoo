@@ -337,7 +337,7 @@ class WithContext(HttpCase):
         website = self.env['website'].browse([1])
         self.assertFalse(website.homepage_url)
 
-        test_page = self.env['website.page'].create({
+        test_page = self.env['website.page'].with_context(website_id=website.id).create({
             'name': 'HomepageUrlTest',
             'type': 'qweb',
             'arch': '<div>HomepageUrlTest</div>',
