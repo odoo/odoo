@@ -20,7 +20,7 @@ import {
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
+import { useSetupAction } from "@web/search/action_hook";
 
 class Foo extends models.Model {
     bar = fields.Many2one({ relation: "partner" });

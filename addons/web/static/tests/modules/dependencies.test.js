@@ -32,17 +32,7 @@ describe.current.tags("headless");
 
 test("modules only import from allowed folders", () => {
     expect(invalidImportsFrom("core", [])).toEqual({});
-    expect(invalidImportsFrom("search", ["core"])).toEqual({
-        // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
-        "@web/search/search_panel/search_panel": ["@web/webclient/actions/action_hook"],
-        "@web/search/with_search/with_search": ["@web/webclient/actions/action_hook"],
-    });
-    expect(invalidImportsFrom("model", ["core", "search"])).toEqual({
-        // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
-        "@web/model/model": ["@web/views/view_hook"],
-    });
-    expect(invalidImportsFrom("views", ["core", "search", "model"])).toEqual({
-        // FIXME: this dependency should not exist. Temporarily whitelist it so we don't add more, and remove ASAP
-        "@web/views/view_hook": ["@web/webclient/actions/action_hook"],
-    });
+    expect(invalidImportsFrom("search", ["core"])).toEqual({});
+    expect(invalidImportsFrom("model", ["core", "search"])).toEqual({});
+    expect(invalidImportsFrom("views", ["core", "search", "model"])).toEqual({});
 });

@@ -1,7 +1,7 @@
 import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
-import { useSetupView } from "@web/views/view_hook";
 import { buildSampleORM } from "./sample_server";
 
 import { EventBus, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
@@ -173,7 +173,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
         load(nextProps);
     });
 
-    useSetupView({
+    useSetupAction({
         getGlobalState() {
             if (component.props.useSampleModel) {
                 return { useSampleModel };
