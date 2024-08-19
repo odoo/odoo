@@ -30,10 +30,6 @@ export class LinkPlugin extends Plugin {
         this.ignoredClasses = new Set(this.resources["link_ignore_classes"] || []);
     }
 
-    destroy() {
-        this.removeLinkShortcut();
-    }
-
     handleCommand(command, payload) {
         switch (command) {
             case "NORMALIZE":

@@ -93,7 +93,9 @@ export class LinkPopoverPlugin extends Plugin {
             }
         );
     }
-
+    destroy() {
+        this.removeLinkShortcut();
+    }
     handleSelectionChange(selection) {
         if (!selection.isCollapsed) {
             this.overlay.close();
