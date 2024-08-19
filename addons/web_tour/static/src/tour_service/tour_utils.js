@@ -66,7 +66,7 @@ export const stepUtils = {
 
     showAppsMenuItem() {
         return {
-            isActive: ["auto", "community"],
+            isActive: ["auto", "community", "desktop"],
             trigger: ".o_navbar_apps_menu button:enabled",
             tooltipPosition: "bottom",
             run: "click",
@@ -76,7 +76,7 @@ export const stepUtils = {
     toggleHomeMenu() {
         return [
             {
-                isActive: ["enterprise"],
+                isActive: [".o_main_navbar .o_menu_toggle"],
                 trigger: ".o_main_navbar .o_menu_toggle",
                 content: _t("Click the top left corner to navigate across apps."),
                 tooltipPosition: "bottom",
