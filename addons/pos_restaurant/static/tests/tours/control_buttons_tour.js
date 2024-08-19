@@ -10,6 +10,12 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
+function activeTableIs(tableNumber) {
+    return {
+        trigger: `.table-free-order-label:contains("${tableNumber}")`,
+    };
+}
+
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     test: true,
     steps: () =>
@@ -17,11 +23,15 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test TransferOrderButton
             Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
+            activeTableIs("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
+            activeTableIs("4"),
+            Order.hasLine({ productName: "Water", withClass: ".selected" }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
+            activeTableIs("2"),
             ProductScreen.orderIsEmpty(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),

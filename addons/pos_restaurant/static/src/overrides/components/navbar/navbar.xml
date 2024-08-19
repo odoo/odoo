@@ -19,7 +19,7 @@
                         <span t-if="!ui.isSmall">Plan</span>
                         <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" alt="Floor Plan"/>
                     </button>
-                    <button class="btn btn-lg lh-lg" t-att-class="{'btn-primary': screen === 'ProductScreen'}" t-on-click="() => this.switchTable()">
+                    <button class="table-free-order-label btn btn-lg lh-lg" t-att-class="{'btn-primary': screen === 'ProductScreen'}" t-on-click="() => this.switchTable()">
                         <span t-if="pos.get_order()" t-esc="pos.get_order().table_id?.table_number || pos.get_order().getFloatingOrderName()"/>
                         <span t-elif="!ui.isSmall">Table</span>
                         <img t-else="" src="/pos_restaurant/static/img/table.svg" class="navbar-icon" alt="Table Selector"/>
