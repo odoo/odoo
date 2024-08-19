@@ -25,13 +25,11 @@ class TestIndexedTranslation(TransactionExpressionCase):
 
         # escaped and unescaped PG wildcards
         self.assertEqual(self._search(record_en, [('name', 'ilike', r'class%class')]), record_en)
-        self.assertEqual(record_en.search([('name', 'ilike', r'class="m_\_class')]), record_en)  # FIXME complement
-        # self.assertEqual(self._search(record_en, [('name', 'ilike', r'class="m_\_class')]), record_en)
+        self.assertEqual(self._search(record_en, [('name', 'ilike', r'class="m_\_class')]), record_en)
         self.assertEqual(self._search(record_en, [('name', 'ilike', 'bonjour')]), record_en.browse())
         self.assertEqual(self._search(record_en, [('name', 'ilike', '</div>\n<div/>')]), record_en)
         self.assertEqual(self._search(record_fr, [('name', 'ilike', '</div>\a<div/>')]), record_fr)
-        self.assertEqual(record_fr.search([('name', 'ilike', r'\%bonjour\\')]), record_fr)  # FIXME complement
-        # self.assertEqual(self._search(record_fr, [('name', 'ilike', r'\%bonjour\\')]), record_fr)
+        self.assertEqual(self._search(record_fr, [('name', 'ilike', r'\%bonjour\\')]), record_fr)
 
         self.assertEqual(
             self._search(record_en, [('name', '=', '<div class="my_class">hello</div>\n<div/>')]),

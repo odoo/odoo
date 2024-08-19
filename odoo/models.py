@@ -25,7 +25,6 @@ from __future__ import annotations
 import collections
 import contextlib
 import datetime
-import fnmatch
 import functools
 import inspect
 import itertools
@@ -6368,9 +6367,29 @@ class BaseModel(metaclass=MetaModel):
                     else:
                         def unaccent(x):
                             return str(x) if x else ''
-                    value_esc = unaccent(value).replace('_', '?').replace('%', '*').replace('[', '?')
-                    if not comparator.startswith('='):
-                        value_esc = f'*{value_esc}*'
+
+                    # build a regex that matches the SQL-like expression
+                    # note that '\' is used for escaping in SQL
+                    def build_like_regex(value: str, exact: bool):
+                        yield '^' if exact else '.*'
+                        escaped = False
+                        for char in value:
+                            if escaped:
+                                escaped = False
+                                yield re.escape(char)
+                            elif char == '\\':
+                                escaped = True
+                            elif char == '%':
+                                yield '.*'
+                            elif char == '_':
+                                yield '.'
+                            else:
+                                yield re.escape(char)
+                        if exact:
+                            yield '$'
+                        # no need to match r'.*' in else because we only use .match()
+
+                    like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))))
                 if comparator in ('=', '!=') and field.type in ('char', 'text', 'html') and not value:
                     # use the comparator 'in' for falsy comparison of strings
                     comparator = 'in' if comparator == '=' else 'not in'
@@ -6425,8 +6444,7 @@ class BaseModel(metaclass=MetaModel):
                     elif comparator == '>=':
                         ok = any(x is not None and x >= value for x in data)
                     elif comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
-                        # use fnmatchcase to avoid relying on file path case normalization
-                        ok = any(fnmatch.fnmatchcase(unaccent(x), value_esc) for x in data)
+                        ok = any(like_regex.match(unaccent(x)) for x in data)
                         if comparator.startswith('not'):
                             ok = not ok
                     elif comparator == 'any':
