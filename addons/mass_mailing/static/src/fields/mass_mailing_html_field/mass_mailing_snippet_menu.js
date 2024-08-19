@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import snippetsEditor from "@web_editor/js/editor/snippets.editor";
 import { MassMailingMobilePreviewDialog } from "../../js/mass_mailing_mobile_preview";
-import { markup, useEffect, useState } from "@odoo/owl";
+import { markup } from "@odoo/owl";
 import { Toolbar } from "@html_editor/main/toolbar/toolbar";
 
 export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
@@ -34,6 +34,14 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      */
     setup() {
         super.setup();
+    }
+    start() {
+        super.start(...arguments);
+        this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
+        $(this.options.wysiwyg.odooEditor.document.body).on(
+            "click",
+            this._checkEditorToolbarVisibilityCallback
+        );
     }
     /**
      * @override

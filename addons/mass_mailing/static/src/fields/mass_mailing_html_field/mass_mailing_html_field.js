@@ -483,18 +483,16 @@ export class MassMailingHtmlField extends HtmlField {
             .split(",")
             .map((s) => `${s}:not([data-oe-xpath])`)
             .join(",");
-        doc.defaultView.addEventListener(
-            "mousedown",
-            (e) => {
-                const isInMedia =
-                    e.target &&
-                    e.target.matches(mediaSelector) &&
-                    !e.target.parentElement.classList.contains("o_stars") &&
-                    (e.target.isContentEditable || e.target.parentElement?.isContentEditable);
-                this.lastMediaClicked = isInMedia && e.target;
-            },
-            true
-        );
+
+        const updateLastMediaClicked = (e) => {
+            const isInMedia =
+                e.target &&
+                e.target.matches(mediaSelector) &&
+                !e.target.parentElement.classList.contains("o_stars") &&
+                (e.target.isContentEditable || e.target.parentElement?.isContentEditable);
+            this.lastMediaClicked = isInMedia && e.target;
+        };
+        doc.defaultView.addEventListener("mouseup", updateLastMediaClicked, true);
     }
 }
 
