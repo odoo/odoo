@@ -232,7 +232,7 @@ export function createReporting(parentReporting) {
  * @returns {T}
  */
 export function createMock(target, descriptors) {
-    const mock = $create(target);
+    const mock = $assign($create($getPrototypeOf(target)), target);
     let owner = target;
     let keys;
 
