@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests.common import TransactionCase, Form, new_test_user, users
 
 
 class TestSalePurchaseStockFlow(TransactionCase):
@@ -27,18 +27,23 @@ class TestSalePurchaseStockFlow(TransactionCase):
                 'partner_id': cls.vendor.id,
             })],
         })
+        cls.user = new_test_user(
+            cls.env, login="test_sale_purchase_stock", groups="sales_team.group_sale_salesman"
+        )
+
+    def _create_sale_order(self):
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env.user.partner_id
+        with so_form.order_line.new() as line:
+            line.product_id = self.mto_product
+        return so_form.save()
 
     def test_cancel_so_with_draft_po(self):
         """
         Sell a MTO+Buy product -> a PO is generated
         Cancel the SO -> an activity should be added to the PO
         """
-        so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.user.partner_id
-        with so_form.order_line.new() as line:
-            line.product_id = self.mto_product
-        so = so_form.save()
-        so.action_confirm()
+        so = self._create_sale_order()
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
 
@@ -46,6 +51,17 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         self.assertTrue(po.activity_ids)
         self.assertIn(so.name, po.activity_ids.note)
+
+    @users("test_sale_purchase_stock")
+    def test_update_so_with_draft_po_salesman(self):
+        """
+        Sell a MTO+Buy product -> a PO is generated
+        Update the SO -> the PO should be updated with no access error
+        """
+        so = self._create_sale_order()
+        so.action_confirm()
+        so2 = self._create_sale_order()
+        so2.action_confirm()  # This shouldn't fail
 
     def test_qty_delivered_with_mto_and_done_quantity_change(self):
         """
