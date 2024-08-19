@@ -11,6 +11,10 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
     url: "/odoo",
     steps: () => [
+...stepUtils.toggleHomeMenu().map(step => {
+    step.isActive = ["community", "mobile"];
+    return step
+}),
 ...stepUtils.goToAppSteps('sale.sale_menu_root', markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 {
     isActive: ["mobile"],
@@ -1165,7 +1169,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons()),
     trigger: "span.text-bg-success:contains('Paid')",
 },
     ...stepUtils.toggleHomeMenu(),
-    ...stepUtils.goToAppSteps('accountant.menu_accounting', _t('Go to Accounting')),
+    stepUtils.goToAppSteps('accountant.menu_accounting', _t('Go to Accounting'))[2], // 2 -> Ent only
 {
     isActive: ["enterprise", "desktop"],
     trigger: "div.o_account_kanban div.o_kanban_card_header a.oe_kanban_action span:contains('Bank')",
