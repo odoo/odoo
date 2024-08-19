@@ -832,47 +832,23 @@
     </template>
 
     <template id="categorie_link" name="Category Link">
-        <t t-if="isOffcanvas" t-set="parentCategoryId" t-valuef="offcanvas"/>
-
         <a
             t-att-href="keep('/shop/category/' + slug(c), category=0)"
-            class="text-decoration-none p-0 text-900"
-        >
-            <div class="form-check d-inline-block">
-                <input
-                    type="radio"
-                    t-attf-name="wsale_categories_radios_{{parentCategoryId}}"
-                    class="form-check-input pe-none "
-                    t-att-id="c.id"
-                    t-att-value="c.id"
-                    t-att-checked="'true' if c.id == category.id else None"/>
-                <label class="form-check-label fw-normal" t-field="c.name"/>
-            </div>
-        </a>
+            t-attf-class="{{c.id == category.id and 'text-decoration-underline'}} p-0"
+            t-field="c.name"
+        />
     </template>
 
     <template id="website_sale.products_categories_list" active="True" name="eCommerce Categories">
         <h6 t-attf-class="o_categories_collapse_title mb-3 {{_titleClasses}}"><b>Categories</b></h6>
-
         <div class="wsale_products_categories_list">
-            <ul class="nav d-flex flex-column my-2">
+            <ul class="nav d-flex flex-column mt-3">
                 <li class="nav-item mb-1">
                     <a
                         t-att-href="keep('/shop', category=0)"
-                        class="text-decoration-none p-0 text-900"
+                        t-attf-class="{{not category and 'text-decoration-underline'}} p-0"
                     >
-                        <div class="form-check d-inline-block">
-                            <input
-                                type="radio"
-                                t-attf-name="wsale_categories_radios{{_radioGroup}}"
-                                class="form-check-input pe-none o_not_editable"
-                                t-att-id="all_products"
-                                t-att-value="all_products"
-                                t-att-checked="'true' if not category else None"/>
-                            <label class="form-check-label fw-normal" t-att-for="all_products">
-                                All Products
-                            </label>
-                        </div>
+                        All Products
                     </a>
                 </li>
                 <t t-foreach="categories" t-as="c">
@@ -900,7 +876,7 @@
                             type="button"/>
                 </div>
                 <ul t-attf-id="o_wsale_cat_accordion_{{c.id}}"
-                    t-attf-class="accordion-collapse list-unstyled ps-2 pb-2 collapse {{isOpen and 'show'}}"
+                    t-attf-class="accordion-collapse list-unstyled ps-2 collapse {{isOpen and 'show'}}"
                     t-attf-aria-labelledby="o_wsale_cat_accordion_title_{{c.id}}">
                     <t t-set="parentCategoryId" t-value="c.id"/>
                     <t t-if="isOffcanvas" t-set="parentCategoryId" t-valuef="offcanvas_{{c.id}}"/>
