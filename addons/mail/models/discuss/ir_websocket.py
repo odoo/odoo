@@ -30,6 +30,13 @@ class IrWebsocket(models.AbstractModel):
             identity_domain.append([("guest_id", "in", guest_ids)])
         return identity_domain
 
+    def _get_missed_presences_bus_target(self):
+        if self.env.user and not self.env.user._is_public():
+            return super()._get_missed_presences_bus_target()
+        if guest := self.env["mail.guest"]._get_guest_from_context():
+            return guest
+        return None
+
     @add_guest_to_context
     def _build_presence_channel_list(self, presences):
         channels = super()._build_presence_channel_list(presences)

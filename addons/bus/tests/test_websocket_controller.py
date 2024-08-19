@@ -2,6 +2,7 @@
 
 from odoo.tests import JsonRpcException
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
 class TestWebsocketController(HttpCaseWithUserDemo):
@@ -95,15 +96,33 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         session = self.authenticate("demo", "demo")
         headers = {"Cookie": f"session_id={session.sid};"}
         self.env["bus.presence"].create({"user_id": self.user_demo.id, "status": "online"})
-        message = self.make_jsonrpc_request(
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        # First request will get notifications and trigger the creation
+        # of the missed presences one.
+        last_id = self.env["bus.bus"]._bus_last_id()
+        self.make_jsonrpc_request(
             "/websocket/peek_notifications",
             {
                 "channels": [f"odoo-presence-res.partner_{self.partner_demo.id}"],
-                "last": self.env["bus.bus"]._bus_last_id(),
+                "last": last_id,
                 "is_first_poll": True,
             },
             headers=headers,
-        )["notifications"][0]["message"]
-        self.assertEqual(message["type"], "bus.bus/im_status_updated")
-        self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
-        self.assertEqual(message["payload"]["im_status"], "online")
+        )
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        notification = self.make_jsonrpc_request(
+            "/websocket/peek_notifications",
+            {
+                "channels": [f"odoo-presence-res.partner_{self.partner_demo.id}"],
+                "last": last_id,
+                "is_first_poll": True,
+            },
+            headers=headers,
+        )["notifications"][0]
+        bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
+        self.assertEqual(
+            bus_record.channel, json_dump(channel_with_db(self.env.cr.dbname, self.partner_demo))
+        )
+        self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
+        self.assertEqual(notification["message"]["payload"]["partner_id"], self.partner_demo.id)
+        self.assertEqual(notification["message"]["payload"]["im_status"], "online")

@@ -36,7 +36,8 @@ class WebsocketController(Controller):
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
         subscribe_data = request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
-        subscribe_data["missed_presences"]._send_presence()
+        if bus_target := request.env["ir.websocket"]._get_missed_presences_bus_target():
+            subscribe_data["missed_presences"]._send_presence(bus_target=bus_target)
         channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
         notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
         return {"channels": channels_with_db, "notifications": notifications}
