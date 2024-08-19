@@ -192,7 +192,13 @@ export class Composer extends Component {
                 }
             },
             pickers: { emoji: (emoji) => this.addEmoji(emoji) },
-            position: this.props.mode === "extended" ? "bottom-start" : "top-end",
+            position:
+                this.props.mode === "extended"
+                    ? "bottom-start"
+                    : this.props.composer.message
+                    ? "bottom-start"
+                    : "top-end",
+            fixed: !this.props.composer.message,
         };
     }
 
@@ -297,6 +303,10 @@ export class Composer extends Component {
             (!this.props.composer.text && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
+    }
+
+    get hasSendButtonNonEditing() {
+        return !this.extended;
     }
 
     get hasSuggestions() {

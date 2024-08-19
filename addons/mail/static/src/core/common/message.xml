@@ -82,7 +82,7 @@
                                                             'mb-0 py-2': !message.is_note,
                                                             'o-note': message.is_note,
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
-                                                            'o-mail-Message-editable flex-grow-1': state.isEditing,
+                                                            'flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">

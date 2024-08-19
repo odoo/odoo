@@ -73,6 +73,11 @@
     &:not(.o-note) {
         padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
         padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+
+        .o-mail-Message.o-editing & {
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
+        }
     }
 
     & > p {

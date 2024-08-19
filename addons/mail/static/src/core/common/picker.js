@@ -53,6 +53,7 @@ export class Picker extends Component {
         "pickers",
         "position?",
         "storeScroll",
+        "fixed?",
     ];
     static template = "mail.Picker";
 
@@ -85,7 +86,7 @@ export class Picker extends Component {
     get popoverSettings() {
         return {
             position: this.props.position,
-            fixedPosition: true,
+            fixedPosition: this.props.fixed,
             onClose: () => this.close(),
             closeOnClickAway: false,
             animation: false,

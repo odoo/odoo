@@ -214,6 +214,7 @@ export class Message extends Component {
                 this.props.message
             ),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
+            "o-editing": this.state.isEditing,
         };
     }
 
