@@ -14,10 +14,11 @@ class WebsiteControllerPage(models.Model):
     _description = 'Model Page'
     _order = 'website_id, id DESC'
     _sql_constraints = [
-        ('unique_name_slugified', 'UNIQUE(page_type, name_slugified)', 'url should be unique')
+        ('unique_name_slugified', 'UNIQUE(name_slugified)', 'url should be unique')
     ]
 
-    view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
+    view_id = fields.Many2one('ir.ui.view', string='Listing view', required=True, ondelete="cascade")
+    record_view_id = fields.Many2one('ir.ui.view', string='Record view', ondelete="cascade")
     menu_ids = fields.One2many('website.menu', 'controller_page_id', 'Related Menus')
 
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
@@ -32,9 +33,7 @@ class WebsiteControllerPage(models.Model):
     name_slugified = fields.Char(compute="_compute_name_slugified", store=True,
         string="URL", help="The name of the page usable in a URL", inverse="_inverse_name_slugified")
     url_demo = fields.Char(string="Demo URL", compute="_compute_url_demo")
-    page_type = fields.Selection(selection=[("listing", "Listing"), ("single", "Single record")],
-        default="listing", string="Page Type",
-        help="The type of the page. If set, it indicates whether the page displays a list of records or a single record")
+
     record_domain = fields.Char(string="Domain", help="Domain to restrict records that can be viewed publicly")
     default_layout = fields.Selection(
         selection=[
@@ -62,7 +61,7 @@ class WebsiteControllerPage(models.Model):
     @api.depends("model_id", "name")
     def _compute_name_slugified(self):
         for rec in self:
-            if not rec.model_id or not rec.page_type:
+            if not rec.model_id:
                 rec.name_slugified = False
                 continue
             rec.name_slugified = self.env['ir.http']._slugify(rec.name or '')
@@ -78,9 +77,10 @@ class WebsiteControllerPage(models.Model):
                 rec.url_demo = ""
                 continue
             url = ["", "model", rec.name_slugified]
-            if rec.page_type == "single":
-                url.append("record-slug-[id]")
             rec.url_demo = "/".join(url)
+
+    def _default_is_published(self):
+        return False
 
     def write(self, vals):
         res = super().write(vals)
@@ -108,10 +108,6 @@ class WebsiteControllerPage(models.Model):
 
     def open_website_url(self):
         url = f"/model/{self.name_slugified}"
-        if self.page_type == "single":
-            rec = self.env[self.model_id.model].search(literal_eval(self.record_domain or "[]"), limit=1)
-            if rec:
-                url += f"/{self.env['ir.http']._slug(rec)}"
         return {
             "type": "ir.actions.act_url",
             "url": url

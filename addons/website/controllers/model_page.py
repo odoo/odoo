@@ -20,22 +20,21 @@ class ModelPageController(Controller):
 
         website = request.website
 
-        page_type = "listing"
-        if record_slug is not None:
-            page_type = "single"
-
         website_page_domain = AND([
-            [("page_type", "=", page_type)],
             [("name_slugified", "=", page_name_slugified)],
-            [("website_published", "=", True)],
             website.website_domain(),
         ])
 
         page = request.env["website.controller.page"].search(website_page_domain, limit=1)
-        if not page:
+        if not page or\
+            (not page.website_published and not request.env.user.has_group('website.group_website_designer')):
             raise werkzeug.exceptions.NotFound()
 
-        view = page.sudo().view_id
+        if record_slug is not None:
+            view = page.sudo().record_view_id
+        else:
+            view = page.sudo().view_id
+
         if not view:
             raise werkzeug.exceptions.NotFound()
 
@@ -46,6 +45,9 @@ class ModelPageController(Controller):
 
         rec_domain = ast.literal_eval(page.record_domain or "[]")
         domains = [rec_domain]
+        implements_published_mixin = "website_published" in Model._fields
+        if implements_published_mixin and not request.env.user.has_group('website.group_website_designer'):
+            domains.append([("website_published", "=", True)])
 
         if record_slug:
             _, res_id = request.env['ir.http']._unslug(record_slug)
@@ -56,20 +58,13 @@ class ModelPageController(Controller):
             if not record.exists() or record_slug != request.env['ir.http']._slug(record):
                 raise werkzeug.exceptions.NotFound()
 
-            listing = request.env["website.controller.page"].search(AND([
-                [("name_slugified", "=", page_name_slugified)],
-                [("page_type", "=", "listing")],
-                [("model", "=", target_model_name)],
-                website.website_domain(),
-            ]))
-
             render_context = {
-                "main_object": page.sudo(), # The template reads some fields that are actually on view
+                "main_object": page.sudo() if not implements_published_mixin else record,  # The template reads some fields that are actually on view
                 "record": record,
                 "listing": {
                     'href': '.',
-                    'name': listing.name
-                } if listing else False
+                    'name': page.name
+                }
             }
             return request.render(view.key, render_context)
 
@@ -81,22 +76,8 @@ class ModelPageController(Controller):
         searches.setdefault("search", "")
         searches.setdefault("order", "create_date desc")
 
-        single_record_pages = request.env["website.controller.page"].search(AND([
-            [("page_type", "=", "single")],
-            [("model", "=", target_model_name)],
-            website.website_domain(),
-        ]))
-
-        single_record_page = single_record_pages.filtered(lambda rec: rec.name_slugified == page_name_slugified)
-        if single_record_page:
-            single_record_page = single_record_page[0]
-        else:
-            single_record_page = single_record_pages[:1]
-
         def record_to_url(record):
-            if not single_record_page:
-                return None
-            return "/model/%s/%s" % (single_record_page.name_slugified, request.env['ir.http']._slug(record))
+            return "/model/%s/%s" % (page.name_slugified, request.env['ir.http']._slug(record))
 
         if searches["search"]:
             # _name_search doesn't take offset, we reimplement the logic that builds the name domain here
