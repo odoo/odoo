@@ -21,7 +21,7 @@ class MailMessage(models.Model):
         for message in self:
             message.parent_body = message.parent_id.body if message.parent_id else False
 
-    def _to_store(self, store: Store, **kwargs):
+    def _to_store(self, store: Store, chatbot_step=True, **kwargs):
         """If we are currently running a chatbot.script, we include the information about
         the chatbot.message related to this mail.message.
         This allows the frontend display to include the additional features
@@ -29,6 +29,8 @@ class MailMessage(models.Model):
         super()._to_store(store, **kwargs)
         channel_messages = self.filtered(lambda message: message.model == "discuss.channel")
         channel_by_message = channel_messages._record_by_message()
+        if not chatbot_step:
+            return
         for message in channel_messages.filtered(
             lambda message: channel_by_message[message].channel_type == "livechat"
         ):
@@ -41,23 +43,22 @@ class MailMessage(models.Model):
                     .sudo()
                     .search([("mail_message_id", "=", message.id)], limit=1)
                 )
-                if chatbot_message.script_step_id:
+                if step := chatbot_message.script_step_id:
                     store.add(
                         message,
                         {
                             "chatbotStep": {
                                 "message": Store.one_id(message),
-                                "scriptStep": Store.one_id(chatbot_message.script_step_id),
+                                "scriptStep": Store.one_id(step),
                                 "chatbot": {
-                                    "script": Store.one_id(
-                                        chatbot_message.script_step_id.chatbot_script_id
-                                    ),
+                                    "script": Store.one_id(step.chatbot_script_id),
                                     "thread": Store.one_id(channel),
                                 },
+                                "isLast": step._is_last_step(channel),
                                 "selectedAnswer": Store.one_id(
                                     chatbot_message.user_script_answer_id
                                 ),
-                                "operatorFound": channel.chatbot_current_step_id.step_type
+                                "operatorFound": step.step_type
                                 == "forward_operator"
                                 and len(channel.channel_member_ids) > 2,
                             },

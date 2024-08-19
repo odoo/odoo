@@ -8,6 +8,6 @@ export class ChatbotScriptStepAnswer extends Record {
     /** @type {string} */
     label;
     /** @type {string|false} */
-    redirectLink;
+    redirect_link;
 }
 ChatbotScriptStepAnswer.register();

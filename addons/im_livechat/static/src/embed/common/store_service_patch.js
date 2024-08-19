@@ -1,6 +1,6 @@
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 
-import { Store, storeService } from "@mail/core/common/store_service";
+import { pyToJsModels, Store, storeService } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -30,3 +30,6 @@ patch(Store.prototype, {
         return params;
     },
 });
+
+pyToJsModels["chatbot.script.step"] = "ChatbotScriptStep";
+pyToJsModels["chatbot.script.answer"] = "ChatbotScriptStepAnswer";
