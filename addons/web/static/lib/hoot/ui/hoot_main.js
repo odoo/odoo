@@ -44,7 +44,10 @@ export class HootMain extends Component {
 
     static template = xml`
         <t t-if="env.runner.config.headless">
-            <div class="flex justify-center items-center text-3xl w-full h-full gap-3">
+            <div class="absolute bottom-0 start-1/2 -translate-x-1/2
+                flex z-4 mb-4 px-4 py-2 gap-2 whitespace-nowrap
+                text-xl rounded-full shadow bg-gray-200 dark:bg-gray-800"
+            >
                 Running in headless mode
                 <a class="text-primary hoot-link" t-att-href="createUrl({ headless: null })">
                     Run with UI
