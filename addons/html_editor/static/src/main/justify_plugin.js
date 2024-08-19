@@ -35,32 +35,31 @@ export class JustifyPlugin extends Plugin {
     static dependencies = ["selection"];
     /** @type { (p: JustifyPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        toolbarGroup: [
+        toolbarCategory: { id: "align", sequence: 10 },
+        toolbarItems: [
             {
                 id: "align",
-                sequence: 10,
-                buttons: [
-                    {
-                        id: "align",
-                        Component: ToolbarItemSelector,
-                        props: {
-                            getItems: () => justifyItems,
-                            getEditableSelection: p.shared.getEditableSelection.bind(p),
-                            onSelected: (item) => p.dispatch(item.commandId),
-                            getItemFromSelection: (selection) => {
-                                const block = closestBlock(selection.anchorNode);
-                                const textAlign = getComputedStyle(block).textAlign;
-                                return (
-                                    justifyItems.find((item) => item.cssProperty === textAlign) ||
-                                    justifyItems[0]
-                                );
-                            },
-                        },
+                category: "align",
+                Component: ToolbarItemSelector,
+                props: {
+                    getItems: () => justifyItems,
+                    getEditableSelection: p.shared.getEditableSelection.bind(p),
+                    onSelected: (item) => p.dispatch(item.commandId),
+                    getItemFromSelection: (selection) => {
+                        const block = closestBlock(selection.anchorNode);
+                        const textAlign = getComputedStyle(block).textAlign;
+                        return (
+                            justifyItems.find((item) => item.cssProperty === textAlign) ||
+                            justifyItems[0]
+                        );
                     },
-                ],
+                },
             },
         ],
     });
+    setup() {
+        console.warn("align called");
+    }
 
     handleCommand(command) {
         switch (command) {
