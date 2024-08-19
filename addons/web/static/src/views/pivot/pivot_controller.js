@@ -1,7 +1,7 @@
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
+import { useSetupAction } from "@web/search/action_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -22,7 +22,7 @@ export class PivotController extends Component {
     setup() {
         this.model = useModelWithSampleData(this.props.Model, this.props.modelParams);
 
-        useSetupView({
+        useSetupAction({
             rootRef: useRef("root"),
             getLocalState: () => {
                 const { data, metaData } = this.model;

@@ -11,7 +11,7 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
+import { useSetupAction } from "@web/search/action_hook";
 
 //-------------------------------------------------------------------------
 // Helpers

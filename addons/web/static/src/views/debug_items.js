@@ -53,13 +53,7 @@ export function editView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    let { viewId, viewType: type } = component.env.config || {}; // fallback is there for legacy
-    if ("viewInfo" in component.props) {
-        // legacy
-        viewId = component.props.viewInfo.view_id;
-        type = component.props.viewInfo.type;
-        type = type === "tree" ? "list" : type;
-    }
+    const { viewId, viewType: type } = component.env.config;
     if (!type) {
         return;
     }
@@ -85,14 +79,7 @@ export function editSearchView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    let { searchViewId } = component.props.info || {}; // fallback is there for legacy
-    if ("viewParams" in component.props) {
-        //legacy
-        if (!component.props.viewParams.action.controlPanelFieldsView) {
-            return null;
-        }
-        searchViewId = component.props.viewParams.action.controlPanelFieldsView.view_id;
-    }
+    const { searchViewId } = component.componentProps.info;
     if (searchViewId === undefined) {
         return null;
     }

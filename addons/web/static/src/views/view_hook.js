@@ -1,17 +1,9 @@
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 import { useComponent, useEffect, xml } from "@odoo/owl";
-
-export function useSetupView(params) {
-    const component = useComponent();
-    useDebugCategory("view", { component });
-    useSetupAction(params);
-}
 
 export function useViewArch(arch, params = {}) {
     const CATEGORY = "__processed_archs__";

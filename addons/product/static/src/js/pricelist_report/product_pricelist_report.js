@@ -5,7 +5,7 @@ import { Component, markup, onRendered, onWillStart, useState } from "@odoo/owl"
 import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
+import { useSetupAction } from "@web/search/action_hook";
 
 
 function sendCustomNotification(type, message) {
