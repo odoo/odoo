@@ -82,7 +82,7 @@ export function makeFixtureManager(runner) {
         }
         if (!fixture) {
             fixture = document.createElement("hoot-fixture");
-            if (runner.debug) {
+            if (runner.debug || runner.config.headless) {
                 fixture.setAttribute("style", FIXTURE_DEBUG_STYLE);
             } else {
                 fixture.setAttribute("style", FIXTURE_STYLE);
