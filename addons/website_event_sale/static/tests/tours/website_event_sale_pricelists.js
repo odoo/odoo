@@ -25,26 +25,26 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
         },
         {
             trigger:
-                '.modal#modal_attendees_registration:not(.o_inactive_modal) form[id="attendee_registration"]',
+                'form[id="attendee_registration"]',
         },
         {
             trigger:
-                ".modal#modal_attendees_registration:not(.o_inactive_modal) input[name*='1-name']",
+                "form[id='attendee_registration'] input[name*='1-name']",
             run: "edit Great Name",
         },
         {
             trigger:
-                ".modal#modal_attendees_registration:not(.o_inactive_modal) input[name*='1-phone']",
+                "form[id='attendee_registration'] input[name*='1-phone']",
             run: "edit 111 111",
         },
         {
             trigger:
-                ".modal#modal_attendees_registration:not(.o_inactive_modal) input[name*='1-email']",
+                "form[id='attendee_registration'] input[name*='1-email']",
             run: "edit great@name.com",
         },
         {
             trigger:
-                ".modal#modal_attendees_registration input[name*='1-name'], .modal#modal_attendees_registration input[name*='2-name']",
+                "form[id='attendee_registration'] input[name*='1-name'], form[id='attendee_registration'] input[name*='2-name']",
         },
         {
             trigger: "input[name*='1-name'], input[name*='2-name']",
@@ -52,11 +52,11 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
         {
             content: "Validate attendees details",
             trigger:
-                ".modal#modal_attendees_registration:not(.o_inactive_modal) button[type=submit]",
+                "div#attendee_registration_buttons button[type=submit].btn-primary",
             run: "click",
         },
         {
-            trigger: "body:not(:has(.modal#modal_attendees_registration))",
+            trigger: "body:not(:has(form[id='attendee_registration']))",
         },
         ...getPriceListChecksSteps({
             pricelistName: "EUR Without Discount Included",

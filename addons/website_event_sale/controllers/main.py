@@ -49,7 +49,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             ticket_sudo = event_ticket_by_id.get(ticket_id)
             cart_values = order_sudo._cart_update(
                 product_id=ticket_sudo.product_id.id,
-                add_qty=count,
+                set_qty=count,
                 event_ticket_id=ticket_id,
             )
             cart_data[ticket_id] = cart_values['line_id']
@@ -66,14 +66,40 @@ class WebsiteEventSaleController(WebsiteEventController):
         return super()._create_attendees_from_registration_post(event, registration_data)
 
     @route()
+    def registration_new(self, event, **post):
+        res = super().registration_new(event, **post)
+        res['website'] = {
+            'account_on_checkout': request.website.account_on_checkout,
+            'is_public_user': request.website.is_public_user(),
+        }
+        return res
+
+    @route()
+    def registration_modify(self, event, **post):
+        res = super().registration_modify(event, **post)
+        res['website'] = {
+            'account_on_checkout': request.website.account_on_checkout,
+            'is_public_user': request.website.is_public_user(),
+        }
+        return res
+
+    @route()
     def registration_confirm(self, event, **post):
         res = super().registration_confirm(event, **post)
 
-        registrations = self._process_attendees_form(event, post)
+        registrations = self._process_attendees_form(event, post)[0]
         order_sudo = request.website.sale_get_order()
         if not order_sudo.id:
             # order does not contain any lines related to the event, meaning we are confirming only free tickets of this event
             return res
+
+        # Remove any sale order line that is not linked to at least one registration
+        so_lines = request.env['sale.order.line'].sudo().search_fetch(
+            domain=[('order_id', '=', order_sudo.id), ('event_id', '=', event.id)],
+            field_names=['registration_ids'])
+        for so_line in so_lines:
+            if not so_line.registration_ids:
+                so_line.unlink()
 
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
@@ -87,7 +113,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                             partner.phone = first_registration['phone']
                         order_sudo.partner_id = partner
                 request.session['sale_last_order_id'] = order_sudo.id
-                return request.redirect("/shop/checkout")
+                return request.redirect("/shop/cart")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
             elif order_sudo:
                 order_sudo.action_confirm()  # tde notsure: email sending ?

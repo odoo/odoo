@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
     },
     {
         content: "Fill attendees details",
-        trigger: 'form[id="attendee_registration"] .btn[type=submit]',
+        trigger: 'div[id="attendee_registration_buttons"] .btn[type=submit]',
         run: function () {
             document.querySelector("input[name*='1-name']").value = "Att1";
             document.querySelector("input[name*='1-phone']").value = "111 111";
@@ -54,7 +54,12 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
     },
     {
         content: "Validate attendees details",
-        trigger: "button[type=submit]:contains(Go to Payment)",
+        trigger: "button[type=submit]:contains(Go to Cart)",
+        run: "click",
+    },
+    {
+        content: "Go to Checkout",
+        trigger: 'a[name="website_sale_main_button"]',
         run: "click",
     },
     ...wsTourUtils.fillAdressForm({
