@@ -547,7 +547,7 @@ export class Runner {
         let test = markRaw(new Test(parentSuite, name, config, runFn));
         const originalTest = this.tests.get(test.id);
         if (originalTest) {
-            if (originalTest.run) {
+            if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
                     `a test with that name already exists in the suite "${parentSuite.name}"`
