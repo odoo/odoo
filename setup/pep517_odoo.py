@@ -9,32 +9,25 @@ It is based on setuptools, and extends it to
 """
 import contextlib
 from pathlib import Path
-
 from setuptools import build_meta
-from setuptools.build_meta import *  # noqa: F403
 
 
 @contextlib.contextmanager
 def _symlink_addons():
-    symlinks = []
-    try:
-        target_addons_path = Path("addons")
-        addons_path = Path("odoo", "addons")
-        link_target = Path("..", "..", "addons")
-        if target_addons_path.is_dir():
-            for target_addon_path in target_addons_path.iterdir():
+    with contextlib.ExitStack() as stack:
+        odoo_root = Path(__file__).parent.parent
+        root_addons_path = odoo_root / "addons"
+
+        if root_addons_path.is_dir():
+            for target_addon_path in root_addons_path.iterdir():
                 if not target_addon_path.is_dir():
                     continue
-                addon_path = addons_path / target_addon_path.name
-                if not addon_path.is_symlink():
-                    addon_path.symlink_to(
-                        link_target / target_addon_path.name, target_is_directory=True
-                    )
-                    symlinks.append(addon_path)
+                symlink_path = odoo_root / "odoo" / "addons" / target_addon_path.name
+                link_target = root_addons_path / target_addon_path.name
+                if not symlink_path.exists() and (link_target / '__manifest__.py').exists():
+                    symlink_path.symlink_to(link_target)
+                    stack.callback(symlink_path.unlink)
         yield
-    finally:
-        for symlink in symlinks:
-            symlink.unlink()
 
 
 def build_sdist(*args, **kwargs):
