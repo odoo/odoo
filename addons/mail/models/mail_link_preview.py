@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import requests
+from urllib.parse import urlparse
 
 from datetime import timedelta
 from lxml import html
@@ -33,12 +35,16 @@ class LinkPreview(models.Model):
             return self
         urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
         link_previews = self.env['mail.link.preview']
+        link_preview_ignore_list = self.env["ir.config_parameter"].sudo().get_param("mail.link_preview_ignore_list", "").split("\n")
+        ignore_patterns = [re.compile(pattern) for pattern in link_preview_ignore_list if pattern]
         requests_session = requests.Session()
         link_preview_values = []
         link_previews_by_url = {
             preview.source_url: preview for preview in message.sudo().link_preview_ids
         }
         for url in urls:
+            if ignore_patterns and any(pattern.match(url) for pattern in ignore_patterns):
+                continue
             if url in link_previews_by_url:
                 preview = link_previews_by_url.pop(url)
                 if not preview.is_hidden:
@@ -142,3 +148,17 @@ class LinkPreview(models.Model):
             ('message_id', '=', False),
             ('create_date', '<', fields.Datetime.now() - timedelta(days=lifetime)),
         ], order='create_date ASC', limit=1000).unlink()
+
+    @api.model
+    def _init_ignore_list(self):
+        try:
+            base_url = urlparse(self.get_base_url())
+            port = base_url.port or False
+        except ValueError:
+            return
+        if not base_url.hostname:
+            return
+        base_ignore_pattern = f".*{base_url.hostname}/(web|odoo)"
+        if port:
+            base_ignore_pattern = f".*{base_url.hostname}:{port}/(web|odoo)"
+        self.env["ir.config_parameter"].set_param("mail.link_preview_ignore_list", base_ignore_pattern)

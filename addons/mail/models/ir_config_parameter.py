@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+import re
+
+from odoo import api, models, _
+from odoo.exceptions import ValidationError
 
 
 class IrConfigParameter(models.Model):
@@ -70,6 +73,8 @@ class IrConfigParameter(models.Model):
     #     sfu_server_key': rtc server usage and configuration;
     #   * 'discuss.tenor_api_key', 'discuss.tenor_gif_limit' and 'discuss.
     #     tenor_content_filter' used for gif fetch service;
+    #   * 'mail.link_preview_ignore_list', regexp list that can be used to
+    #   * exclude domain or url from the link preview generation.
     _inherit = 'ir.config_parameter'
 
     @api.model
@@ -90,3 +95,14 @@ class IrConfigParameter(models.Model):
             value = self.env['mail.alias']._sanitize_allowed_domains(value)
 
         return super().set_param(key, value)
+
+    @api.constrains("key", "value")
+    def _validate_link_preview_regexp(self):
+        for parameter in self.filtered(lambda r: r.key == "mail.link_preview_ignore_list"):
+            for pattern in parameter.value.split("\n"):
+                try:
+                    re.compile(pattern)
+                except re.error as e:
+                    raise ValidationError(
+                        _("Regexp error: %(error)s in %(pattern)s", error=str(e), pattern=pattern)
+                    )

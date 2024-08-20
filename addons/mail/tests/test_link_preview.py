@@ -170,3 +170,26 @@ class TestLinkPreview(MailCommon):
             url = self.source_url
             session = requests.Session()
             link_preview.get_link_preview_from_url(url, session)
+
+    def test_link_preview_ignore_list(self):
+        with patch.object(requests.Session, 'get', self._patch_with_og_properties), patch.object(requests.Session, 'head', self._patch_head_html):
+            ignore_list = [
+                (self.source_url, False, 1),
+                (self.source_url, self.source_url, 0),
+                (self.source_url, ".*nothing", 0),
+                (self.source_url, ".*odoo.com", 1),
+                ("https://www.odoo.com/web", ".*odoo.com/(web|odoo)", 0),
+                ("https://www.odoo.com/odoo", ".*odoo.com/(web|odoo)", 0),
+                ("https://www.odoo.com/", ".*odoo.com/(web|odoo)", 1),
+            ]
+            for (url, ignore, counter) in ignore_list:
+                with self.subTest(url=url, ignore=ignore, counter=counter):
+                    self.env["ir.config_parameter"].sudo().search([("key", "=", "mail.link_preview_ignore_list")]).unlink()
+                    if ignore:
+                        self.env["ir.config_parameter"].sudo().set_param("mail.link_preview_ignore_list", ignore)
+                    message = self.test_partner.message_post(
+                        body=Markup(f'<a href="{url}/test">Nothing link</a>'),
+                    )
+                    self.env["mail.link.preview"]._create_from_message_and_notify(message)
+                    link_preview_count = self.env["mail.link.preview"].search_count([("message_id", "=", message.id)])
+                    self.assertEqual(link_preview_count, counter)
