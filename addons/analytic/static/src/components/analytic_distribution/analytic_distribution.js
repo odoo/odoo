@@ -616,7 +616,7 @@ export class AnalyticDistribution extends Component {
 
         const selectors = [
             ".o_popover",
-            ".modal:not(.o_inactive_modal)",
+            ".modal:not(.o_inactive_modal):not(:has(.o_act_window))",
         ];
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
