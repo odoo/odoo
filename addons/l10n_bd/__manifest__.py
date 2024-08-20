@@ -10,6 +10,7 @@
     'depends': [
         'account',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/account.account.tag.csv',
         'data/res.country.state.csv',
