@@ -190,11 +190,19 @@ class ProductProduct(models.Model):
 
         # Warehouses
         warehouse_list = [
-            {'name': w.name,
+            {'id': w.id,
+            'name': w.name,
             'available_quantity': self.with_context({'warehouse_id': w.id}).qty_available,
             'forecasted_quantity': self.with_context({'warehouse_id': w.id}).virtual_available,
             'uom': self.uom_name}
             for w in self.env['stock.warehouse'].search([])]
+
+        if config.picking_type_id.warehouse_id:
+            # Sort the warehouse_list, prioritizing config.picking_type_id.warehouse_id
+            warehouse_list = sorted(
+                warehouse_list,
+                key=lambda w: w['id'] != config.picking_type_id.warehouse_id.id
+            )
 
         # Suppliers
         key = itemgetter('partner_id')
