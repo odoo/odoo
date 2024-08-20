@@ -146,6 +146,9 @@ class DisplayController(http.Controller):
             return {'status': 'updated'}
         if action == 'get':
             return {'status': 'retrieved', 'data': display.customer_display_data}
+        if action == 'rotate_screen':
+            display.set_orientation(Orientation(data))
+            return {'status': 'rotated'}
 
     def ensure_display(self):
         display: DisplayDriver = DisplayDriver.get_default_display()
@@ -193,14 +196,3 @@ class DisplayController(http.Controller):
         } for device in iot_devices]
 
         return json.dumps({'iot_device_status': iot_device})
-
-    @http.route(['/hw_proxy/rotate_screen'], type='json', auth='none', methods=['POST'])
-    def rotate_screen(self, orientation=Orientation.NORMAL):
-        """Rotate screen: use by 'iot.box' model when is_kiosk is checked"""
-        try:
-            display = self.ensure_display()
-        except werkzeug.exceptions.ServiceUnavailable:
-            return json.dumps({'status': 'failed', 'message': 'No display found'})
-
-        display.set_orientation(Orientation(orientation))
-        return json.dumps({'status': 'success'})
