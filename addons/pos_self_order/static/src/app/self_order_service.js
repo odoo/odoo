@@ -148,7 +148,7 @@ export class SelfOrder extends Reactive {
 
         const handleMessage = (data) => {
             let message = "";
-            this.models.replaceDataByKey("uuid", data);
+            this.models.loadData(data);
             const oUpdated = data["pos.order"].find((o) => o.uuid === this.selectedOrderUuid);
 
             if (["paid", "invoiced", "done"].includes(oUpdated?.state)) {
@@ -793,12 +793,17 @@ export class SelfOrder extends Reactive {
     showDownloadButton(order) {
         return this.config.self_ordering_mode === "mobile" && order.state === "paid";
     }
-    getReceiptHeaderData() {
+    getReceiptHeaderData(order) {
         // FIXME - We should extract this methods from PoS to be allowed to use it here.
         return {
             company: this.company,
-            cashier: "Self-Order",
+            cashier: _t("Self-Order"),
+            selfOrderingMode: this.config.self_ordering_mode,
             header: this.config.receipt_header,
+            trackingNumber: order.trackingNumber,
+            bigTrackingNumber: true,
+            pickingService: this.config.self_ordering_service_mode,
+            tableTracker: order.table_stand_number,
         };
     }
     orderExportForPrinting(order) {
