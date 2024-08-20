@@ -88,7 +88,9 @@ export class PartnerList extends Component {
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
-                      this.props.partner?.id === a.id ? -1 : a.name.localeCompare(b.name)
+                      this.props.partner?.id === a.id
+                          ? -1
+                          : (a.name || "").localeCompare(b.name || "")
                   );
 
         return availablePartners;
