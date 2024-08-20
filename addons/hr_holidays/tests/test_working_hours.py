@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
 
 from odoo.tests import tagged
@@ -78,14 +78,15 @@ class TestWorkingHours(TestHrCalendarCommon):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id, self.company_B.id]
 
-        self.env['hr.leave'].create({
+        company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'holiday from monday to tuesday',
-            'holiday_type': 'company',
-            'mode_company_id': self.company_A.id,
+            'allocation_mode': 'company',
+            'company_id': self.company_A.id,
             'holiday_status_id': self.leave_type.id,
-            'request_date_from': datetime(2023, 12, 25),
-            'request_date_to': datetime(2023, 12, 26, 23, 59, 59),
+            'date_from': date(2023, 12, 25),
+            'date_to': date(2023, 12, 26),
         })
+        company_leave.action_generate_time_off()
 
         work_hours = self.env['res.partner'].get_working_hours_for_all_attendees(
             [self.partnerA.id],
