@@ -32,6 +32,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { UNREAD_MSG_TITLE } from "@mail/core/web/out_of_focus_service_patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1023,11 +1024,12 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setParts(parts) {
-            if (parts._chat) {
+            if (parts[UNREAD_MSG_TITLE]) {
                 step("set_title_part");
             }
         },
     });
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -1062,11 +1064,12 @@ test("out-of-focus notif on needaction message in channel", async () => {
     mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setParts(parts) {
-            if (parts._chat) {
-                step(`set_title_part:${parts._chat}`);
+            if (parts[UNREAD_MSG_TITLE]) {
+                step(`set_title_part:${parts[UNREAD_MSG_TITLE]}`);
             }
         },
     });
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
     onRpcBefore("/mail/action", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
@@ -1107,11 +1110,12 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
     mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setParts(parts) {
-            if (parts._chat) {
-                step(`set_title_part:${parts._chat}`);
+            if (parts[UNREAD_MSG_TITLE]) {
+                step(`set_title_part:${parts[UNREAD_MSG_TITLE]}`);
             }
         },
     });
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
     onRpcBefore("/mail/action", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
@@ -1150,11 +1154,12 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
     mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setParts(parts) {
-            if (parts._chat) {
+            if (parts[UNREAD_MSG_TITLE]) {
                 step("set_title_part");
             }
         },
     });
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
     onRpcBefore("/mail/action", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
@@ -1202,22 +1207,23 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
     mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setParts(parts) {
-            if (!parts._chat) {
+            if (!parts[UNREAD_MSG_TITLE]) {
                 return;
             }
             stepCount++;
             step("set_title_part");
             if (stepCount === 1) {
-                expect(parts._chat).toBe("1 Message");
+                expect(parts[UNREAD_MSG_TITLE]).toBe("1 Message");
             }
             if (stepCount === 2) {
-                expect(parts._chat).toBe("2 Messages");
+                expect(parts[UNREAD_MSG_TITLE]).toBe("2 Messages");
             }
             if (stepCount === 3) {
-                expect(parts._chat).toBe("3 Messages");
+                expect(parts[UNREAD_MSG_TITLE]).toBe("3 Messages");
             }
         },
     });
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
@@ -1248,6 +1254,36 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
         })
     );
     await assertSteps(["set_title_part"]);
+});
+
+test("new message in tab title has precedence over action name", async () => {
+    const pyEnv = await startServer();
+    const bobUserId = pyEnv["res.users"].create({ name: "bob" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", user_ids: [bobUserId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+    });
+    mockService("presence", { isOdooFocused: () => false });
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
+    await start();
+    await openDiscuss();
+    await contains(".o_breadcrumb:contains(Inbox)"); // wait for action name being Inbox
+    const titleService = getService("title");
+    expect(titleService.current).toBe("Inbox");
+    // simulate receiving a new message in chat 1 with odoo out-of-focused
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello world!", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o_notification:contains(Hello World!)");
+    expect(titleService.current).toBe("1 Message - Inbox");
 });
 
 test("should auto-pin chat when receiving a new DM", async () => {
