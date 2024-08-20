@@ -37,7 +37,7 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
             messages: [],
         });
         this.promptInputRef = useRef("promptInput");
-        useAutofocus({ refName: "promptInput" });
+        useAutofocus({ refName: "promptInput", mobile: true });
         useEffect(
             () => {
                 // Resize the textarea to fit its content.

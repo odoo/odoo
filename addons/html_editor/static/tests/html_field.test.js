@@ -652,7 +652,7 @@ test("isDirty should be false when the content is being transformed by the edito
     expect(`.o_form_button_save`).not.toBeVisible();
 });
 
-test("link preview in Link Popover", async () => {
+test.tags("desktop")("link preview in Link Popover", async () => {
     Partner._records = [
         {
             id: 1,

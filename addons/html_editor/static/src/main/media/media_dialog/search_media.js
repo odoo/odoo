@@ -11,7 +11,7 @@ export class SearchMedia extends Component {
         </div>`;
     static props = ["searchPlaceholder", "search", "needle"];
     setup() {
-        useAutofocus();
+        useAutofocus({ mobile: true });
         this.debouncedSearch = useDebounced(this.props.search, 1000);
 
         this.state = useState({

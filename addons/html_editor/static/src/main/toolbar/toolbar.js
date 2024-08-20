@@ -33,6 +33,7 @@ export class Toolbar extends Component {
                                                 ...base,
                                                 Component: Function,
                                                 props: { type: Object, optional: true },
+                                                isAvailable: { type: Function, optional: true },
                                             });
                                         } else {
                                             validate(button, {

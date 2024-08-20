@@ -18,7 +18,25 @@ import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, moveSelectionOutsideEditor, setContent } from "./_helpers/selection";
 
-test("toolbar is only visible when selection is not collapsed", async () => {
+test.tags("desktop")(
+    "toolbar is only visible when selection is not collapsed in desktop",
+    async () => {
+        const { el } = await setupEditor("<p>test</p>");
+
+        // set a non-collapsed selection to open toolbar
+        expect(".o-we-toolbar").toHaveCount(0);
+        setContent(el, "<p>[test]</p>");
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveCount(1);
+
+        // set a collapsed selection to close toolbar
+        setContent(el, "<p>test[]</p>");
+        await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+        expect(".o-we-toolbar").toHaveCount(0);
+    }
+);
+
+test.tags("mobile")("toolbar is also visible when selection is collapsed in mobile", async () => {
     const { el } = await setupEditor("<p>test</p>");
 
     // set a non-collapsed selection to open toolbar
@@ -27,14 +45,14 @@ test("toolbar is only visible when selection is not collapsed", async () => {
     await waitFor(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(1);
 
-    // set a collapsed selection to close toolbar
     setContent(el, "<p>test[]</p>");
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
-    expect(".o-we-toolbar").toHaveCount(0);
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(1);
 });
 
 test("toolbar closes when selection leaves editor", async () => {
-    await setupEditor("<p>[test]</p>");
+    const { el } = await setupEditor("<p>test</p>");
+    setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
     click(document.body);
@@ -218,7 +236,7 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar [name='font-size']").toHaveText(h1Size);
 });
 
-test("toolbar should not open on keypress tab inside table", async () => {
+test.tags("desktop")("toolbar should not open on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
             <tbody>
@@ -247,7 +265,7 @@ test("toolbar should not open on keypress tab inside table", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test("toolbar should close on keypress tab inside table", async () => {
+test.tags("desktop")("toolbar should close on keypress tab inside table", async () => {
     const contentBefore = unformat(`
         <table>
             <tbody>
@@ -506,34 +524,40 @@ test("toolbar buttons should have title attribute with translated text", async (
     }
 });
 
-test("close the toolbar if the selection contains any nodes (traverseNode = [])", async () => {
-    const { el } = await setupEditor("<p>a</p><p>b</p>");
-    expect(".o-we-toolbar").toHaveCount(0);
+test.tags("desktop")(
+    "close the toolbar if the selection contains any nodes (traverseNode = [])",
+    async () => {
+        const { el } = await setupEditor("<p>a</p><p>b</p>");
+        expect(".o-we-toolbar").toHaveCount(0);
 
-    setContent(el, "<p>[a</p><p>]b</p>");
-    await tick(); // selectionChange
-    await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(1);
+        setContent(el, "<p>[a</p><p>]b</p>");
+        await tick(); // selectionChange
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
 
-    // This selection is possible when you double-click at the end of a line.
-    setContent(el, "<p>a[</p><p>]b</p>");
-    await tick(); // selectionChange
-    await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(0);
-});
+        // This selection is possible when you double-click at the end of a line.
+        setContent(el, "<p>a[</p><p>]b</p>");
+        await tick(); // selectionChange
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(0);
+    }
+);
 
-test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore whitespace)", async () => {
-    const { el } = await setupEditor("<p>a</p>\n<p>b</p>");
-    expect(".o-we-toolbar").toHaveCount(0);
+test.tags("desktop")(
+    "close the toolbar if the selection contains any nodes (traverseNode = [], ignore whitespace)",
+    async () => {
+        const { el } = await setupEditor("<p>a</p>\n<p>b</p>");
+        expect(".o-we-toolbar").toHaveCount(0);
 
-    setContent(el, "<p>[a</p>\n<p>]b</p>");
-    await tick(); // selectionChange
-    await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(1);
+        setContent(el, "<p>[a</p>\n<p>]b</p>");
+        await tick(); // selectionChange
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
 
-    // This selection is possible when you double-click at the end of a line.
-    setContent(el, "<p>a[</p>\n<p>]b</p>");
-    await tick(); // selectionChange
-    await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(0);
-});
+        // This selection is possible when you double-click at the end of a line.
+        setContent(el, "<p>a[</p>\n<p>]b</p>");
+        await tick(); // selectionChange
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(0);
+    }
+);
