@@ -82,6 +82,13 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
     _computeSnippetTemplates(html) {
         this.env.switchImages(this.fieldConfig.selectedTheme, $(html));
         html.querySelectorAll('img').forEach(img => img.setAttribute("loading", "lazy"));
+        // TODO: Remove in master and remove the background filter from the snippet
+        const cover_snippet = html.querySelector("[data-oe-type='snippet'] [data-snippet='s_cover']");
+        if (cover_snippet) {
+            cover_snippet.querySelector('.o_we_bg_filter.bg-black-50').remove();
+            cover_snippet.querySelector('h1').classList.remove("text-white");
+            cover_snippet.querySelector('p').classList.remove("text-white");
+        }
         return super._computeSnippetTemplates(html);
     }
     /**
