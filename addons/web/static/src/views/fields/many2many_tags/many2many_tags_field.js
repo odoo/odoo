@@ -169,7 +169,7 @@ export class Many2ManyTagsField extends Component {
             resId: record.resId,
             context: this.props.context,
             title: _t("Edit: %s", record.data.display_name),
-        })
+        });
     }
 
     get tags() {
@@ -264,7 +264,7 @@ export const many2ManyTagsField = {
         const noCreate = Boolean(options.no_create);
         const canCreate = noCreate ? false : hasCreatePermission;
         const hasEditPermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
-        const canEditTags = Boolean(options.edit_tags) ? hasEditPermission : false;
+        const canEditTags = options.edit_tags ? hasEditPermission : false;
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {
@@ -286,6 +286,7 @@ export const many2ManyTagsField = {
 registry.category("fields").add("many2many_tags", many2ManyTagsField);
 registry.category("fields").add("calendar.one2many", many2ManyTagsField);
 registry.category("fields").add("calendar.many2many", many2ManyTagsField);
+registry.category("fields").add("kanban.many2many", many2ManyTagsField);
 
 /**
  * A specialization that allows to edit the color with the colorpicker.
