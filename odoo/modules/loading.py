@@ -3,17 +3,21 @@
 """ Modules (also called addons) management.
 
 """
+from __future__ import annotations
 
 import itertools
 import logging
 import sys
 import threading
 import time
+import typing
+import warnings
 
 import odoo.sql_db
 import odoo.tools.sql
 import odoo.tools.translate
 from odoo import SUPERUSER_ID, api, tools
+from odoo.tools.misc import SENTINEL
 
 from . import db as modules_db
 from .graph import Graph
@@ -21,10 +25,17 @@ from .migration import MigrationManager
 from .module import adapt_version, initialize_sys_path, load_openerp_module
 from .registry import Registry
 
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection, Iterable
+    from odoo.api import Environment
+    from odoo.sql_db import BaseCursor
+    from odoo.tests.result import OdooTestResult
+    from .graph import Node
+
 _logger = logging.getLogger(__name__)
 
 
-def load_data(env, idref, mode, kind, package):
+def load_data(env: Environment, idref, mode: str, kind: str, package: Node) -> bool:
     """
 
     kind: data, demo, test, init_xml, update_xml, demo_xml.
@@ -36,14 +47,14 @@ def load_data(env, idref, mode, kind, package):
     :rtype: bool
     """
 
-    def _get_files_of_kind(kind):
+    def _get_files_of_kind(kind: str) -> list[str]:
         if kind == 'demo':
             keys = ['demo_xml', 'demo']
         elif kind == 'data':
             keys = ['init_xml', 'update_xml', 'data']
         if isinstance(kind, str):
             keys = [kind]
-        files = []
+        files: list[str] = []
         for k in keys:
             for f in package.data[k]:
                 if f in files:
@@ -76,7 +87,8 @@ def load_data(env, idref, mode, kind, package):
 
     return bool(filename)
 
-def load_demo(env, package, idref, mode):
+
+def load_demo(env: Environment, package: Node, idref, mode: str) -> bool:
     """
     Loads demo data for the specified package.
     """
@@ -103,7 +115,7 @@ def load_demo(env, package, idref, mode):
         return False
 
 
-def force_demo(env):
+def force_demo(env: Environment) -> None:
     """
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
@@ -115,15 +127,22 @@ def force_demo(env):
     module_list = [name for (name,) in env.cr.fetchall()]
     graph.add_modules(env.cr, module_list, ['demo'])
 
-    for package in graph:
+    for package in graph.packages():
         load_demo(env, package, {}, 'init')
 
     env['ir.module.module'].invalidate_model(['demo'])
     env['res.groups']._update_user_groups_view()
 
 
-def load_module_graph(env, graph, status=None, perform_checks=True,
-                      skip_modules=None, report=None, models_to_check=None):
+def load_module_graph(
+    env: Environment,
+    graph: Graph,
+    status=SENTINEL,
+    perform_checks: bool = True,
+    skip_modules: Collection[str] = (),
+    report: OdooTestResult | None = None,
+    models_to_check: set[str] | None = None,
+) -> tuple[list[str], list[str]]:
     """Migrates+Updates or Installs all module nodes from ``graph``
 
        :param env:
@@ -136,12 +155,15 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
        :param set models_to_check:
        :return: list of modules that were installed or updated
     """
+    if status is not SENTINEL:
+        warnings.warn("Deprecated since 19.0, status is ignored", DeprecationWarning)
     if models_to_check is None:
         models_to_check = set()
 
     processed_modules = []
     loaded_modules = []
     registry = env.registry
+    assert isinstance(env.cr, odoo.sql_db.Cursor), "Need for a real Cursor to load modules"
     migrations = MigrationManager(env.cr, graph)
     module_count = len(graph)
     _logger.info('loading %d modules...', module_count)
@@ -153,11 +175,11 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
 
     models_updated = set()
 
-    for index, package in enumerate(graph, 1):
+    for index, package in enumerate(graph.packages(), 1):
         module_name = package.name
         module_id = package.id
 
-        if skip_modules and module_name in skip_modules:
+        if module_name in skip_modules:
             continue
 
         module_t0 = time.time()
@@ -212,7 +234,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             # updated by this module because it's not marked as 'to upgrade/to install'.
             models_to_check |= set(model_names) & models_updated
 
-        idref = {}
+        idref: dict = {}
 
         if needs_update:
             # Can't put this line out of the loop: ir.module.module will be
@@ -271,7 +293,8 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                     _logger.warning('\n'.join(lines))
 
         updating = tools.config.options['init'] or tools.config.options['update']
-        test_time = test_queries = 0
+        test_time = 0.0
+        test_queries = 0
         test_results = None
         if tools.config.options['test_enable'] and (needs_update or not updating):
             from odoo.tests import loader  # noqa: PLC0415
@@ -282,6 +305,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
                 test_results = loader.run_suite(suite)
+                assert report is not None, "Missing report during tests"
                 report.update(test_results)
                 test_time = time.time() - tests_t0
                 test_queries = odoo.sql_db.sql_counter - tests_q0
@@ -332,29 +356,43 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
 
     return loaded_modules, processed_modules
 
-def _check_module_names(cr, module_names):
+
+def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
     mod_names = set(module_names)
     if 'base' in mod_names:
         # ignore dummy 'all' module
-        if 'all' in mod_names:
-            mod_names.remove('all')
+        mod_names.discard('all')
     if mod_names:
         cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
-        if cr.dictfetchone()['count'] != len(mod_names):
+        row = cr.fetchone()
+        assert row is not None  # for typing
+        if row[0] != len(mod_names):
             # find out what module name(s) are incorrect:
             cr.execute("SELECT name FROM ir_module_module")
             incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
-def load_marked_modules(env, graph, states, force, progressdict, report,
-                        loaded_modules, perform_checks, models_to_check=None):
+
+def load_marked_modules(
+    env: Environment,
+    graph: Graph,
+    states: Collection[str],
+    force: list[str],
+    progressdict: None,
+    report: OdooTestResult | None,
+    loaded_modules: list[str],
+    perform_checks: bool,
+    models_to_check: set[str] | None = None,
+) -> list[str]:
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
 
+    if progressdict is not None:
+        warnings.warn("Deprecated since 19.0, progressdict is ignored and should be set to None", DeprecationWarning)
     if models_to_check is None:
         models_to_check = set()
 
-    processed_modules = []
+    processed_modules: list[str] = []
     while True:
         env.cr.execute("SELECT name from ir_module_module WHERE state IN %s", (tuple(states),))
         module_list = [name for (name,) in env.cr.fetchall() if name not in graph]
@@ -363,8 +401,12 @@ def load_marked_modules(env, graph, states, force, progressdict, report,
         graph.add_modules(env.cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(
-            env, graph, progressdict, report=report, skip_modules=loaded_modules,
-            perform_checks=perform_checks, models_to_check=models_to_check
+            env,
+            graph,
+            report=report,
+            skip_modules=loaded_modules,
+            perform_checks=perform_checks,
+            models_to_check=models_to_check,
         )
         processed_modules.extend(processed)
         loaded_modules.extend(loaded)
@@ -372,17 +414,20 @@ def load_marked_modules(env, graph, states, force, progressdict, report,
             break
     return processed_modules
 
-def load_modules(registry, force_demo=False, status=None, update_module=False):
+
+def load_modules(registry: Registry, force_demo: bool = False, status: None = None, update_module: bool = False) -> None:
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
     """
+    if status is not None:
+        warnings.warn("Deprecated since 19.0, status is deprecated, do not set it")
     initialize_sys_path()
 
-    force = []
+    force: list[str] = []
     if force_demo:
         force.append('demo')
 
-    models_to_check = set()
+    models_to_check: set[str] = set()
 
     with registry.cursor() as cr:
         # prevent endless wait for locks on schema changes (during online
@@ -421,8 +466,12 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         report = registry._assertion_report
         env = api.Environment(cr, SUPERUSER_ID, {})
         loaded_modules, processed_modules = load_module_graph(
-            env, graph, status, perform_checks=update_module,
-            report=report, models_to_check=models_to_check)
+            env,
+            graph,
+            perform_checks=update_module,
+            report=report,
+            models_to_check=models_to_check,
+        )
 
         load_lang = tools.config._cli_options.pop('load_language', None)
         if load_lang or update_module:
@@ -474,18 +523,18 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         previously_processed = -1
         while previously_processed < len(processed_modules):
             previously_processed = len(processed_modules)
-            processed_modules += load_marked_modules(env, graph,
-                ['installed', 'to upgrade', 'to remove'],
-                force, status, report, loaded_modules, update_module, models_to_check)
+            processed_modules += load_marked_modules(
+                env, graph, ['installed', 'to upgrade', 'to remove'],
+                force, None, report, loaded_modules, update_module, models_to_check)
             if update_module:
-                processed_modules += load_marked_modules(env, graph,
-                    ['to install'], force, status, report,
-                    loaded_modules, update_module, models_to_check)
+                processed_modules += load_marked_modules(
+                    env, graph, ['to install'],
+                    force, None, report, loaded_modules, update_module, models_to_check)
 
         if update_module:
             # set up the registry without the patch for translated fields
             database_translated_fields = registry._database_translated_fields
-            registry._database_translated_fields = ()
+            registry._database_translated_fields = set()
             registry.setup_models(cr)
             # determine which translated fields should no longer be translated,
             # and make their model fix the database schema
@@ -511,7 +560,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
         # STEP 3.5: execute migration end-scripts
         migrations = MigrationManager(cr, graph)
-        for package in graph:
+        for package in graph.packages():
             migrations.migrate_module(package, 'end')
 
         # check that new module dependencies have been properly installed after a migration/upgrade
@@ -547,7 +596,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
             modules_to_remove = dict(cr.fetchall())
             if modules_to_remove:
-                pkgs = reversed([p for p in graph if p.name in modules_to_remove])
+                pkgs = reversed([p for p in graph.packages() if p.name in modules_to_remove])
                 for pkg in pkgs:
                     uninstall_hook = pkg.info.get('uninstall_hook')
                     if uninstall_hook:
@@ -562,12 +611,12 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 registry = Registry.new(
-                    cr.dbname, force_demo, status, update_module
+                    cr.dbname, force_demo, update_module=update_module
                 )
                 cr.reset()
                 registry.check_tables_exist(cr)
                 cr.commit()
-                return registry
+                return
 
         # STEP 5.5: Verify extended fields on every model
         # This will fix the schema of all models in a situation such as:
@@ -608,7 +657,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         env.flush_all()
 
 
-def reset_modules_state(db_name):
+def reset_modules_state(db_name: str) -> None:
     """
     Resets modules flagged as "to x" to their original state
     """

@@ -1,15 +1,22 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+""" Initialize the database for module management and Odoo installation. """
+from __future__ import annotations
+
+import logging
+import typing
+from enum import IntEnum
 
 from psycopg2.extras import Json
-import logging
-from enum import IntEnum
 
 import odoo.modules
 
+if typing.TYPE_CHECKING:
+    from odoo.sql_db import BaseCursor, Cursor
+
 _logger = logging.getLogger(__name__)
 
-def is_initialized(cr):
+
+def is_initialized(cr: Cursor) -> bool:
     """ Check if a database has been initialized for the ORM.
 
     The database can be initialized with the 'initialize' function below.
@@ -17,7 +24,8 @@ def is_initialized(cr):
     """
     return odoo.tools.sql.table_exists(cr, 'ir_module_module')
 
-def initialize(cr):
+
+def initialize(cr: Cursor) -> None:
     """ Initialize a database with for the ORM.
 
     This executes base/data/base_data.sql, creates the ir_module_categories
@@ -30,7 +38,7 @@ def initialize(cr):
     except FileNotFoundError:
         m = "File not found: 'base.sql' (provided by module 'base')."
         _logger.critical(m)
-        raise IOError(m)
+        raise OSError(m)
 
     with odoo.tools.misc.file_open(f) as base_sql_file:
         cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
@@ -65,16 +73,20 @@ def initialize(cr):
             info['license'],
             info['application'], info['icon'],
             info['sequence'], Json({'en_US': info['summary']})))
-        id = cr.fetchone()[0]
-        cr.execute('INSERT INTO ir_model_data \
-            (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_'+i, 'ir.module.module', 'base', id, True))
+        row = cr.fetchone()
+        assert row is not None  # for typing
+        module_id = row[0]
+        cr.execute(
+            'INSERT INTO ir_model_data'
+            '(name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)',
+            ('module_' + i, 'ir.module.module', 'base', module_id, True),
+        )
         dependencies = info['depends']
         for d in dependencies:
             cr.execute(
                 'INSERT INTO ir_module_module_dependency (module_id, name, auto_install_required)'
                 ' VALUES (%s, %s, %s)',
-                (id, d, d in (info['auto_install'] or ()))
+                (module_id, d, d in (info['auto_install'] or ()))
             )
 
     # Install recursively all auto-installing modules
@@ -106,10 +118,12 @@ def initialize(cr):
         """, [to_auto_install, to_auto_install])
         to_auto_install.extend(x[0] for x in cr.fetchall())
 
-        if not to_auto_install: break
+        if not to_auto_install:
+            break
         cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name in %s""", (tuple(to_auto_install),))
 
-def create_categories(cr, categories):
+
+def create_categories(cr: Cursor, categories: list[str]) -> int | None:
     """ Create the ir_module_category entries for some categories.
 
     categories is a list of strings forming a single category with its
@@ -127,26 +141,30 @@ def create_categories(cr, categories):
         cr.execute("SELECT res_id FROM ir_model_data WHERE name=%s AND module=%s AND model=%s",
                    (xml_id, "base", "ir.module.category"))
 
-        c_id = cr.fetchone()
-        if not c_id:
+        row = cr.fetchone()
+        if not row:
             cr.execute('INSERT INTO ir_module_category \
                     (name, parent_id) \
                     VALUES (%s, %s) RETURNING id', (Json({'en_US': categories[0]}), p_id))
-            c_id = cr.fetchone()[0]
+            row = cr.fetchone()
+            assert row is not None  # for typing
+            p_id = row[0]
             cr.execute('INSERT INTO ir_model_data (module, name, res_id, model, noupdate) \
-                       VALUES (%s, %s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category', True))
+                       VALUES (%s, %s, %s, %s, %s)', ('base', xml_id, p_id, 'ir.module.category', True))
         else:
-            c_id = c_id[0]
-        p_id = c_id
+            p_id = row[0]
+        assert isinstance(p_id, int)
         categories = categories[1:]
     return p_id
+
 
 class FunctionStatus(IntEnum):
     MISSING = 0  # function is not present (falsy)
     PRESENT = 1  # function is present but not indexable (not immutable)
     INDEXABLE = 2  # function is present and indexable (immutable)
 
-def has_unaccent(cr):
+
+def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     """ Test whether the database has function 'unaccent' and return its status.
 
     The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
@@ -170,7 +188,8 @@ def has_unaccent(cr):
     # https://www.postgresql.org/docs/current/catalog-pg-proc.html.
     return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
 
-def has_trigram(cr):
+
+def has_trigram(cr: BaseCursor) -> bool:
     """ Test if the database has the a word_similarity function.
 
     The word_similarity is supposed to be provided by the PostgreSQL built-in

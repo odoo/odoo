@@ -516,9 +516,10 @@ class BaseModel(metaclass=MetaModel):
       :attr:`~odoo.models.Model._inherits`-ed models, the inherited field will
       correspond to the last one (in the inherits list order).
     """
-    _table = None                   #: SQL table name used by model if :attr:`_auto`
-    _table_query = None             #: SQL expression of the table's content (optional)
+    _table: str = ''                 #: SQL table name used by model if :attr:`_auto`
+    _table_query: str | None = None  #: SQL expression of the table's content (optional)
     _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
+    _inherit_children: OrderedSet[str]
 
     _rec_name = None                #: field to use for labeling records, default: ``name``
     _rec_names_search: list[str] | None = None    #: fields to consider in ``name_search``

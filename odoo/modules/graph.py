@@ -1,34 +1,41 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Modules dependency graph. """
+from __future__ import annotations
 
 import functools
 import itertools
 import logging
+import typing
 
 import odoo.tools as tools
 
 from .module import get_manifest
 
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+    from odoo.sql_db import BaseCursor
+
 _logger = logging.getLogger(__name__)
 
 
 @functools.lru_cache(maxsize=1)
-def _ignored_modules(cr):
+def _ignored_modules(cr: BaseCursor) -> list[str]:
     result = ['studio_customization']
     if tools.sql.column_exists(cr, 'ir_module_module', 'imported'):
         cr.execute('SELECT name FROM ir_module_module WHERE imported')
         result += [m[0] for m in cr.fetchall()]
     return result
 
-class Graph(dict):
+
+class Graph(dict[str, 'Node']):
     """ Modules dependency graph.
 
     The graph is a mapping from module name to Nodes.
 
     """
 
-    def add_node(self, name, info):
+    def add_node(self, name: str, info: dict) -> Node:
         max_depth, father = 0, None
         for d in info['depends']:
             n = self.get(d) or Node(d, self, None)  # lazy creation, do not use default value for get()
@@ -40,7 +47,7 @@ class Graph(dict):
         else:
             return Node(name, self, info)
 
-    def update_from_db(self, cr):
+    def update_from_db(self, cr: BaseCursor):
         if not len(self):
             return
         # update the graph with values from the database (if exist)
@@ -59,10 +66,10 @@ class Graph(dict):
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
 
-    def add_module(self, cr, module, force=None):
+    def add_module(self, cr: BaseCursor, module: str, force: list[str] | None = None):
         self.add_modules(cr, [module], force)
 
-    def add_modules(self, cr, module_list, force=None):
+    def add_modules(self, cr: BaseCursor, module_list: list[str], force: list[str] | None = None):
         if force is None:
             force = []
         packages = []
@@ -74,8 +81,9 @@ class Graph(dict):
             elif module not in _ignored_modules(cr):
                 _logger.warning('module %s: not installable, skipped', module)
 
-        dependencies = dict([(p, info['depends']) for p, info in packages])
-        current, later = set([p for p, info in packages]), set()
+        dependencies = {p: info['depends'] for p, info in packages}
+        current: set[str] = {p for p, _info in packages}
+        later: set[str] = set()
 
         while packages and current > later:
             package, info = packages[0]
@@ -105,8 +113,7 @@ class Graph(dict):
 
         return len(self) - len_graph
 
-
-    def __iter__(self):
+    def packages(self) -> Iterator[Node]:
         level = 0
         done = set(self.keys())
         while done:
@@ -116,10 +123,11 @@ class Graph(dict):
                 yield module
             level += 1
 
-    def __str__(self):
-        return '\n'.join(str(n) for n in self if n.depth == 0)
+    def __str__(self) -> str:
+        return '\n'.join(str(n) for n in self.packages() if n.depth == 0)
 
-class Node(object):
+
+class Node:
     """ One module in the modules dependency graph.
 
     Node acts as a per-module singleton. A node is constructed via
@@ -127,7 +135,12 @@ class Node(object):
     ir_module_module (set by Graph.update_from_db()).
 
     """
-    def __new__(cls, name, graph, info):
+    id: int = 0
+    state: str = 'uninstalled'
+    installed_version: str | None = None
+    dbdemo: bool = False
+
+    def __new__(cls, name: str, graph: Graph, info):
         if name in graph:
             inst = graph[name]
         else:
@@ -135,20 +148,20 @@ class Node(object):
             graph[name] = inst
         return inst
 
-    def __init__(self, name, graph, info):
+    def __init__(self, name: str, graph: Graph, info: dict | None):
         self.name = name
         self.graph = graph
-        self.info = info or getattr(self, 'info', {})
+        self.info: dict = info or typing.cast(dict, getattr(self, 'info', {}))
         if not hasattr(self, 'children'):
-            self.children = []
+            self.children: list[Node] = []
         if not hasattr(self, 'depth'):
-            self.depth = 0
+            self.depth: int = 0
 
     @property
     def data(self):
         return self.info
 
-    def add_child(self, name, info):
+    def add_child(self, name: str, info: dict | None) -> Node:
         node = Node(name, self.graph, info)
         node.depth = self.depth + 1
         if node not in self.children:
@@ -160,7 +173,7 @@ class Node(object):
         return node
 
     def __setattr__(self, name, value):
-        super(Node, self).__setattr__(name, value)
+        super().__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
             tools.config[name][self.name] = 1
             for child in self.children:
@@ -178,17 +191,17 @@ class Node(object):
     def __str__(self):
         return self._pprint()
 
-    def _pprint(self, depth=0):
+    def _pprint(self, depth: int = 0):
         s = '%s\n' % self.name
         for c in self.children:
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
 
-    def should_have_demo(self):
-        return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)
+    def should_have_demo(self) -> bool:
+        return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)  # type: ignore
 
     @property
-    def parents(self):
+    def parents(self) -> Iterable[Node]:
         if self.depth == 0:
             return []
 
