@@ -44,6 +44,10 @@ export class Attachment extends FileModelMixin(Record) {
         return `${this.create_date.monthLong}, ${this.create_date.year}`;
     }
 
+    get uploading() {
+        return this.id < 0;
+    }
+
     /** Remove the given attachment globally. */
     delete() {
         if (this.tmpUrl) {

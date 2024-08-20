@@ -569,9 +569,13 @@ export class Composer extends Component {
     async processMessage(cb) {
         const el = this.ref.el;
         const attachments = this.props.composer.attachments;
-        if (
+        if (attachments.some(({ uploading }) => uploading)) {
+            this.env.services.notification.add(_t("Please wait while the file is uploading."), {
+                type: "warning",
+            });
+        } else if (
             this.props.composer.text.trim() ||
-            (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
+            attachments.length > 0 ||
             (this.message && this.message.attachments.length > 0)
         ) {
             if (!this.state.active) {
@@ -585,10 +589,6 @@ export class Composer extends Component {
             this.clear();
             this.state.active = true;
             el.focus();
-        } else if (attachments.some(({ uploading }) => Boolean(uploading))) {
-            this.env.services.notification.add(_t("Please wait while the file is uploading."), {
-                type: "warning",
-            });
         }
     }
 
