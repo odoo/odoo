@@ -271,15 +271,13 @@ export const datetimePickerService = {
                 const safeConvert = (operation, value) => {
                     const { type } = pickerProps;
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
+                    const options = { tz: pickerProps.tz, format: hookParams.format };
+                    if (operation === "format") {
+                        options.showSeconds = hookParams.showSeconds ?? true;
+                        options.condensed = hookParams.condensed || false;
+                    }
                     try {
-                        return [
-                            convertFn(value, {
-                                format: hookParams.format,
-                                tz: pickerProps.tz,
-                                showSeconds: hookParams.showSeconds ?? true,
-                            }),
-                            null,
-                        ];
+                        return [convertFn(value, options), null];
                     } catch (error) {
                         if (error?.name === "ConversionError") {
                             return [null, error];

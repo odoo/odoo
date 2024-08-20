@@ -547,7 +547,7 @@ test("edit a datetime field in form view with show_seconds option", async () => 
     });
 });
 
-test("list datetime with date widget test", async () => {
+test("datetime field in list with show_time option", async () => {
     mockTimeZone(+2);
     onRpc("has_group", () => true);
 
@@ -575,4 +575,43 @@ test("list datetime with date widget test", async () => {
     expect(queryFirst(".o_field_datetime input").value).toBe("02/08/2017 12:00:00", {
         message: "for datetime field both date and time should be visible with datetime widget",
     });
+});
+
+test("datetime field in form view with condensed option", async () => {
+    mockTimeZone(-2); // UTC-2
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="datetime" options="{'condensed': true}"/>
+                <field name="datetime" options="{'condensed': true}" readonly="1"/>
+            </form>`,
+    });
+
+    const expectedDateString = "2/8/2017 8:00:00"; // 10:00:00 without timezone
+    expect(".o_field_datetime input").toHaveValue(expectedDateString);
+    expect(".o_field_datetime.o_readonly_modifier").toHaveText(expectedDateString);
+});
+
+test("datetime field in kanban view with condensed option", async () => {
+    mockTimeZone(-2); // UTC-2
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="datetime" options="{'condensed': true}" widget="datetime"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    const expectedDateString = "2/8/2017 8:00:00"; // 10:00:00 without timezone
+    expect(".o_field_datetime:first").toHaveText(expectedDateString);
 });
