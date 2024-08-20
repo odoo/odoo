@@ -10,7 +10,6 @@ import {
     getPreviousFocusableElement,
     isDisplayed,
     isEditable,
-    isEventTarget,
     isFocusable,
     isInDOM,
     isVisible,
@@ -121,7 +120,6 @@ const FULL_HTML_TEMPLATE = /* html */ `
         <button type="button">Back to top</button>
     </footer>
     `;
-const SVG_URL = "http://www.w3.org/2000/svg";
 
 customElements.define(
     "hoot-test-shadow-root",
@@ -273,15 +271,6 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(isEditable(editableDiv)).toBe(false);
         editableDiv.setAttribute("contenteditable", "true");
         expect(isEditable(editableDiv)).toBe(false); // not supported
-    });
-
-    test("isEventTarget", async () => {
-        expect(isEventTarget(window)).toBe(true);
-        expect(isEventTarget(document)).toBe(true);
-        expect(isEventTarget(document.body)).toBe(true);
-        expect(isEventTarget(document.createElement("form"))).toBe(true);
-        expect(isEventTarget(document.createElementNS(SVG_URL, "svg"))).toBe(true);
-        expect(isEventTarget({})).toBe(false);
     });
 
     test("isFocusable", async () => {

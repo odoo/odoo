@@ -136,10 +136,9 @@ export const CONFIG_SCHEMA = {
     },
     /**
      * Determines the order of the tests execution.
-     *
-     * - fifo: tests will be run sequentially as declared in the file system.
-     * - lifo: tests will be run sequentially in the reverse order.
-     * - random: shuffles tests and suites within their parent suite.
+     * - `"fifo"`: tests will be run sequentially as declared in the file system.
+     * - `"lifo"`: tests will be run sequentially in the reverse order.
+     * - `"random"`: shuffles tests and suites within their parent suite.
      * @default "fifo"
      */
     order: {

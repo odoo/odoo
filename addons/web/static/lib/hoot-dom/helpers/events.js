@@ -1574,7 +1574,7 @@ const mapKeyboardEvent = (eventInit) => ({
 /**
  * Ensures that the given {@link Target} is checked.
  *
- * If it is not checked, a click is triggered on the input.
+ * If it is not checked, a click is simulated on the input.
  * If the input is still not checked after the click, an error is thrown.
  *
  * @see {@link click}
@@ -2226,6 +2226,14 @@ export function setInputFiles(files) {
 }
 
 /**
+ * Sets the given value to the given "input[type=range]" {@link Target}.
+ *
+ * The event sequence is as follow:
+ *  - `pointerdown`
+ *  - `input`
+ *  - `change`
+ *  - `pointerup`
+ *
  * @param {Target} target
  * @param {number} value
  * @param {PointerOptions} options
