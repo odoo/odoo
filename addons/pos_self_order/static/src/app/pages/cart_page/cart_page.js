@@ -54,24 +54,17 @@ export class CartPage extends Component {
         }
 
         if (
-            this.selfOrder.currentTable &&
-            !this.selfOrder.currentOrder.table_id &&
-            type === "mobile" &&
-            orderingMode === "table"
-        ) {
-            this.selfOrder.currentOrder.update({
-                table_id: this.selfOrder.currentTable,
-            });
-        }
-
-        if (
             type === "mobile" &&
             orderingMode === "table" &&
             !takeAway &&
-            !this.selfOrder.currentOrder.table_id
+            !this.selfOrder.currentTable
         ) {
             this.state.selectTable = true;
             return;
+        } else {
+            this.selfOrder.currentOrder.update({
+                table_id: this.selfOrder.currentTable,
+            });
         }
 
         this.selfOrder.rpcLoading = true;
@@ -81,10 +74,10 @@ export class CartPage extends Component {
 
     selectTable(table) {
         if (table) {
-            this.selfOrder.table = table;
             this.selfOrder.currentOrder.update({
                 table_id: table,
             });
+            this.selfOrder.currentTable = table;
             this.router.addTableIdentifier(table);
             this.pay();
         }

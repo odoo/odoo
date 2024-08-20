@@ -14,10 +14,10 @@
             </t>
         </xpath>
 
-        <xpath expr="//t[@t-esc='props.data.cashier']/.." position="attributes">
+        <xpath expr="//div[@t-esc='props.data.cashier']/.." position="attributes">
             <attribute name="t-if">!props.data.is_gcc_country</attribute>
         </xpath>
-        <xpath expr="//t[@t-esc='props.data.cashier']/.." position="after">
+        <xpath expr="//div[@t-esc='props.data.cashier']/.." position="after">
             <div t-if="props.data.is_gcc_country" t-translation="off">
                 <div>Served by / خدم بواسطة <t t-esc="props.data.cashier"/></div>
             </div>
