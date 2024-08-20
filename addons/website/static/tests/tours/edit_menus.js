@@ -349,3 +349,36 @@ registerWebsitePreviewTour('edit_menus', {
         run: "press ArrowDown",
     },
 ]);
+
+registerWebsitePreviewTour(
+    "edit_menus_delete_parent",
+    {
+        test: true,
+        url: "/",
+    },
+    () => [
+        {
+            trigger: ":iframe #wrapwrap",
+        },
+        {
+            content: "Open site menu",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            run: "click",
+        },
+        {
+            content: "Click on Edit Menu",
+            trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+            run: "click",
+        },
+        {
+            content: "Delete Home menu",
+            trigger: ".modal-body ul li:nth-child(1) button.js_delete_menu",
+            run: "click",
+        },
+        {
+            content: "Save",
+            trigger: ".modal-footer button:first-child",
+            run: "click",
+        },
+    ]
+);
