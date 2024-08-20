@@ -33,6 +33,12 @@ class HrContract(models.Model):
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
     '''
     )
+    work_entry_source_calendar_invalid = fields.Boolean(compute='_compute_work_entry_source_calendar_invalid')
+
+    @api.depends('work_entry_source', 'resource_calendar_id')
+    def _compute_work_entry_source_calendar_invalid(self):
+        for contract in self:
+            contract.work_entry_source_calendar_invalid = contract.work_entry_source == 'calendar' and not contract.resource_calendar_id
 
     @ormcache('self.structure_type_id')
     def _get_default_work_entry_type_id(self):
