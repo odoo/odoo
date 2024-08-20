@@ -34,6 +34,7 @@ import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
+import { queryOne } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -726,6 +727,38 @@ test("channel preview: basic rendering", async () => {
     await contains(".o-mail-NotificationItem img");
     await contains(".o-mail-NotificationItem-name", { text: "General" });
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
+});
+
+test("chat preview should not display correspondent name in body", async () => {
+    // DM chat with demo, the conversation is named "Demo" and body is simply message content
+    // not prefix like "Demo:"
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", email: "demo@odoo.com" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "<p>test</p>",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem img");
+    await contains(".o-mail-NotificationItem-name", { text: "Demo" });
+    await contains(".o-mail-NotificationItem-text", { text: "test" });
+    expect(queryOne(".o-mail-NotificationItem-text").textContent).toBe("test"); // exactly
 });
 
 test("filtered previews", async () => {
