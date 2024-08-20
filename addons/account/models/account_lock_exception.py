@@ -54,11 +54,11 @@ class AccountLockException(models.Model):
         help="The date the Tax Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     sale_lock_date = fields.Date(
-        string='Lock Sales',
+        string='Sales Lock Date',
         help="The date the Sale Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     purchase_lock_date = fields.Date(
-        string='Lock Purchases',
+        string='Purchase Lock Date',
         help="The date the Purchase Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
 
