@@ -17,20 +17,6 @@ export class DiscussCoreWeb {
     }
 
     setup() {
-        this.env.bus.addEventListener(
-            "discuss.channel/new_message",
-            ({ detail: { channel, message } }) => {
-                if (this.ui.isSmall || message.isSelfAuthored) {
-                    return;
-                }
-                if (channel.isCorrespondentOdooBot && this.store.odoobotOnboarding) {
-                    // this cancels odoobot onboarding auto-opening of chat window
-                    this.store.odoobotOnboarding = false;
-                    return;
-                }
-                channel.notifyMessageToUser(message);
-            }
-        );
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
