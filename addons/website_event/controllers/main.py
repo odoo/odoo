@@ -60,7 +60,7 @@ class WebsiteEventController(http.Controller):
         order = 'date_begin'
         if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
-        order = 'is_published desc, ' + order
+        order = 'is_published desc, ' + order + ', id desc'
         search = searches.get('search')
         event_count, details, fuzzy_search_term = website._search_with_fuzzy("events", search,
             limit=page * step, order=order, options=options)
