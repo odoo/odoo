@@ -138,7 +138,7 @@ class WebsiteForum(WebsiteProfile):
         if my:
             url_args['my'] = my
         pager = request.website.pager(url=url, total=question_count, page=page,
-                                      step=self._post_per_page, scope=self._post_per_page,
+                                      step=self._post_per_page, scope=5,
                                       url_args=url_args)
 
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
