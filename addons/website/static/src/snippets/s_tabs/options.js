@@ -76,7 +76,7 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
             .find('.nav-link');
         this._findLinksAndPanes();
         this._generateUniqueIDs();
-        $navLink.tab('show');
+        new window.Tab($navLink[0]).show();
     },
     /**
      * @override
@@ -86,7 +86,7 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
         const $navLinkToShow = this.$navLinks.eq((this.$navLinks.index($targetNavLink) + 1) % this.$navLinks.length);
         $targetNavLink.parent().remove();
         this._findLinksAndPanes();
-        $navLinkToShow.tab('show');
+        new window.Tab($navLinkToShow[0]).show();
     },
 });
 options.registry.NavTabsStyle = options.Class.extend({
