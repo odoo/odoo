@@ -5,10 +5,15 @@ import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
+import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static props = ["*"];
+    static props = ["withActionPanel?", "*"];
+    static defaultProps = {
+        withActionPanel: true,
+    };
+    static components = { ActionPanel };
 
     setup() {
         super.setup();
