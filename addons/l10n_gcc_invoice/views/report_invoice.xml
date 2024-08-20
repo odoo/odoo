@@ -349,23 +349,24 @@
                                     <!-- copy-pasted template "account.tax_groups_totals" with reversed columns order -->
                                     <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                                         <tr>
-                                            <t t-if="tax_totals['display_tax_base']">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
-                                                </td>
-                                                <td class="text-end">
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <strong>
                                                     <span t-esc="amount_by_group['tax_group_name']"/>
-                                                    <span class="text-nowrap"> on
-                                                        <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                                                    <t t-if="tax_totals['display_tax_base']">
+                                                        <span class="text-nowrap"> on
+                                                            <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                                                        </span>
+                                                    </t>
+                                                    <!-- Arabic translation of tax group -->
+                                                    <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['groups_by_subtotal'][o_sec.tax_totals['subtotals'][subtotal_index]['name']][amount_by_group_index]['tax_group_name']"/>
+                                                    <span t-if="arabic_tax_group_name != amount_by_group['tax_group_name']" class="text-nowrap">/
+                                                        <t t-esc="arabic_tax_group_name"/>
                                                     </span>
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']" />
-                                                </td>
-                                                <td class="text-end"><span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/></td>
-                                            </t>
+                                                </strong>
+                                            </td>
                                         </tr>
                                     </t>
 
