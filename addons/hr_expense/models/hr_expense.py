@@ -857,6 +857,12 @@ class HrExpense(models.Model):
     # Business
     # ----------------------------------------
 
+    def _get_move_line_name(self):
+        """ Helper to get the name of the account move lines related to an expense """
+        self.ensure_one()
+        expense_name = self.name.split("\n")[0][:64]
+        return _('%(employee_name)s: %(expense_name)s', employee_name=self.employee_id.name, expense_name=expense_name)
+
     def _prepare_payments_vals(self):
         self.ensure_one()
         self_ctx = self.with_context(caba_no_transition_account=self.payment_mode == 'company_account')
@@ -873,9 +879,8 @@ class HrExpense(models.Model):
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 1.0
         base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
         amount_currency = to_update['price_subtotal']
-        expense_name = self.name.split("\n")[0][:64]
         base_move_line = {
-            'name': f'{self.employee_id.name}: {expense_name}',
+            'name': self._get_move_line_name(),
             'account_id': base_line_data['account'].id,
             'product_id': base_line_data['product'].id,
             'analytic_distribution': base_line_data['analytic_distribution'],
@@ -906,9 +911,8 @@ class HrExpense(models.Model):
             }
             move_lines.append(tax_line)
         base_move_line['balance'] = self.total_amount - total_tax_line_balance
-        expense_name = self.name.split("\n")[0][:64]
         move_lines.append({  # Add outstanding payment line
-            'name': f'{self.employee_id.name}: {expense_name}',
+            'name': self._get_move_line_name(),
             'account_id': self.sheet_id._get_expense_account_destination(),
             'balance': -self.total_amount,
             'amount_currency': self.currency_id.round(-self.total_amount_currency),
@@ -970,9 +974,8 @@ class HrExpense(models.Model):
         self.ensure_one()
         account = self._get_base_account()
 
-        expense_name = self.name.split('\n')[0][:64]
         return {
-            'name': f'{self.employee_id.name}: {expense_name}',
+            'name': self._get_move_line_name(),
             'account_id': account.id,
             'quantity': self.quantity or 1,
             'price_unit': self.price_unit,
