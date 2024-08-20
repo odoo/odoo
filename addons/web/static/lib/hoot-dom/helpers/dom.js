@@ -287,7 +287,7 @@ const isNodeCssVisible = (node) => {
         return false;
     }
     const parent = element.parentNode;
-    return !parent || isNodeCssVisible(parent);
+    return !parent || isNodeCssVisible(parent.host || parent);
 };
 
 /**
