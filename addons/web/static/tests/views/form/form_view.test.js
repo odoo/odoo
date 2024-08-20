@@ -3521,6 +3521,67 @@ test(`onchange only send present fields value`, async () => {
     expect.verifySteps(["onchange"]);
 });
 
+test(`onchange send relation parent field values (including readonly)`, async () => {
+    ResUsers._fields.login = fields.Char();
+    ResUsers._onChanges = {
+        name: (obj) => {
+            // like computed field that depends on "name" field
+            obj.login = obj.name.toLowerCase() + "@example.org";
+        },
+    };
+    Partner._onChanges = {
+        float_field: () => {},
+    };
+
+    let checkOnchange = false;
+    onRpc("onchange", ({ args, kwargs }) => {
+        if (!checkOnchange) {
+            return;
+        }
+        expect(args[1]).toEqual({
+            float_field: 12.4,
+            user_id: {
+                id: 17,
+                name: "Test",
+                login: "test@example.org",
+                partner_ids: [[0, args[1].user_id.partner_ids[0][1], { float_field: 0 }]],
+            },
+        });
+        expect.step("onchange");
+    });
+
+    await mountView({
+        resModel: "res.users",
+        type: "form",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="login" readonly="True"/>
+                <field name="partner_ids">
+                    <tree editable="top">
+                        <field name="float_field"/>
+                    </tree>
+                </field>
+            </form>
+        `,
+        resId: 17,
+    });
+
+    // trigger an onchange that update a readonly field by modifying user name
+    await contains(`.o_field_widget[name=name] input`).edit("Test");
+
+    // add a o2m row
+    await contains(`.o_field_x2many_list_row_add a`).click();
+    expect.verifySteps([]);
+
+    // trigger an onchange by modifying float_field
+    checkOnchange = true;
+    await contains(`.o_field_one2many .o_field_widget[name=float_field] input`).edit("12.4", {
+        confirm: "tab",
+    });
+    expect.verifySteps(["onchange"]);
+});
+
 test(`evaluate in python field options`, async () => {
     class MyField extends Component {
         static props = ["*"];
