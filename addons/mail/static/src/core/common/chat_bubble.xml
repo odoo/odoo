@@ -39,11 +39,8 @@
         <t t-if="message.isSelfAuthored">
             <i class="fa fa-mail-reply me-1"/>You:
         </t>
-        <t t-elif="message.author and !message.author?.eq(thread.correspondent?.persona)">
-            <t t-esc="message.author.name"/>:
-        </t>
-        <t t-elif="message.email_from">
-            <t t-esc="message.email_from"/>:
+        <t t-elif="!message.author?.eq(thread.correspondent?.persona)">
+            <t t-esc="message.author?.name ?? message.email_from"/>:
         </t>
     </t>
 
