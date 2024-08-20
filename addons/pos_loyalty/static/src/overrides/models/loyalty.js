@@ -754,7 +754,7 @@ patch(Order.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id
