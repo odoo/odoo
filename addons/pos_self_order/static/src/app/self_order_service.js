@@ -156,8 +156,6 @@ export class SelfOrder extends Reactive {
                 message = _t("Your order has been paid");
             } else if (oUpdated?.state === "cancel") {
                 message = _t("Your order has been cancelled");
-            } else if (oUpdated) {
-                message = _t("Your order has been updated");
             }
 
             if (message) {
@@ -500,6 +498,10 @@ export class SelfOrder extends Reactive {
     }
 
     saveOrdersAccessTokens() {
+        if (this.self_ordering_mode === "kiosk") {
+            return new Set();
+        }
+
         const localStorageKey = `self_order_${this.access_token}`;
         const orderAccessToken = localStorage.getItem(localStorageKey);
         const orderAccessTokenSet = new Set();
@@ -664,7 +666,7 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 order_access_tokens: [...accessTokens, ...localAccessToken],
             });
-            this.models.replaceDataByKey("uuid", data);
+            this.models.loadData(data);
             this.selectedOrderUuid = null;
         } catch (error) {
             this.handleErrorNotification(
@@ -833,12 +835,16 @@ export class SelfOrder extends Reactive {
     showDownloadButton(order) {
         return this.config.self_ordering_mode === "mobile" && order.state === "paid";
     }
-    getReceiptHeaderData() {
+    getReceiptHeaderData(order) {
         // FIXME - We should extract this methods from PoS to be allowed to use it here.
         return {
             company: this.company,
-            cashier: "Self-Order",
+            cashier: _t("Self-Order"),
             header: this.config.receipt_header,
+            trackingNumber: order.trackingNumber,
+            bigTrackingNumber: true,
+            pickingService: this.config.self_ordering_service_mode,
+            tableTracker: order.table_stand_number,
         };
     }
     orderExportForPrinting(order) {

@@ -31,7 +31,7 @@ export class PaymentPage extends Component {
     get showFooterBtn() {
         return this.selfOrder.paymentError || this.state.selection;
     }
-    rpc;
+
     selectMethod(methodId) {
         this.state.selection = false;
         this.state.paymentMethodId = methodId;

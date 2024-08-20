@@ -19,7 +19,7 @@
                 <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
                 <div t-if="props.data.cashier" class="cashier">
                     <div>--------------------------------</div>
-                    <div>Served by <t t-esc="props.data.cashier" /></div>
+                    <div t-esc="props.data.cashier" />
                 </div>
                 <div t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
                     <span class="fs-2" t-esc="props.data.trackingNumber" />

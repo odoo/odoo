@@ -1628,7 +1628,7 @@ export class PosStore extends Reactive {
     getReceiptHeaderData(order) {
         return {
             company: this.company,
-            cashier: this.get_cashier()?.name,
+            cashier: _t("Served by %s", this.get_cashier()?.name),
             header: this.config.receipt_header,
         };
     }

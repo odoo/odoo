@@ -70,7 +70,6 @@ class PosOrder(models.Model):
 
     def _send_notification(self, order_ids):
         for order in order_ids:
-            order._ensure_access_token()
             order._notify('ORDER_STATE_CHANGED', {
                 'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
                 'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
