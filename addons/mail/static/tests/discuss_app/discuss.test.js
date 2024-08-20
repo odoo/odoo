@@ -32,7 +32,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
-import { UNREAD_MSG_TITLE } from "@mail/core/web/out_of_focus_service_patch";
+import { UNREAD_MSG_TITLE } from "@mail/core/public_web/out_of_focus_service_patch";
 
 describe.current.tags("desktop");
 defineMailModels();
