@@ -8,7 +8,6 @@ import { nbsp } from "@web/core/utils/strings";
 import { parseXML } from "@web/core/utils/xml";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
-import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
@@ -78,7 +77,6 @@ export function getDefaultConfig() {
         },
         viewSwitcherEntries: [],
         views: [],
-        Banner: OnboardingBanner,
     };
     return config;
 }
@@ -336,7 +334,6 @@ export class View extends Component {
         }
         const descr = viewRegistry.get(jsClass);
 
-        const bannerRoute = archXmlDoc.getAttribute("banner_route");
         const sample = archXmlDoc.getAttribute("sample");
         const className = computeViewClassName(type, archXmlDoc, [
             "o_view_controller",
@@ -349,7 +346,6 @@ export class View extends Component {
             viewId: viewDescription.id,
             viewType: type,
             viewSubType: jsClass,
-            bannerRoute,
             noBreadcrumbs: props.noBreadcrumbs,
             ...extractLayoutComponents(descr),
         });
