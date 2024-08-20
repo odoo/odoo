@@ -12031,30 +12031,6 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
     expect.verifySteps(["resequence"]);
 });
 
-test("renders banner_route", async () => {
-    onRpc("/mybody/isacage", () => {
-        expect.step("/mybody/isacage");
-        return { html: `<div class="setmybodyfree">myBanner</div>` };
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban banner_route="/mybody/isacage">
-                <templates>
-                    <t t-name="kanban-card">
-                        <div/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["bar"],
-    });
-
-    expect.verifySteps(["/mybody/isacage"]);
-    expect(".setmybodyfree").toHaveCount(1);
-});
-
 test("fieldDependencies support for fields", async () => {
     const customField = {
         component: class CustomField extends Component {

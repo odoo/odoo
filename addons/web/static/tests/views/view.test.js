@@ -1,6 +1,6 @@
 import { before, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
 import {
     defineModels,
@@ -17,7 +17,6 @@ import {
 
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
-import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
 import { CallbackRecorder } from "@web/search/action_hook";
 
@@ -26,7 +25,6 @@ const viewRegistry = registry.category("views");
 class ToyController extends Component {
     static props = ["*"];
     static template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
-    static components = { Banner: OnboardingBanner };
     setup() {
         this.class = "toy";
         this.template = xml`${this.props.arch.outerHTML}`;
@@ -698,233 +696,6 @@ test("can click on action-bound links -- 3", async () => {
     expect("a").toHaveCount(1);
     click("a");
     await animationFrame();
-});
-
-test("renders banner_route", async () => {
-    expect.assertions(2);
-    Animal._views[["toy", 1]] = /* xml */ `
-        <toy banner_route="/mybody/isacage">
-            <Banner t-if="env.config.bannerRoute" />
-        </toy>
-    `;
-    onRpc("/mybody/isacage", () => {
-        expect.step("root called");
-        return { html: `<div class="setmybodyfree">myBanner</div>` };
-    });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect(".setmybodyfree").toHaveCount(1);
-    expect.verifySteps(["root called"]);
-});
-
-test("renders banner_route with js and css assets", async () => {
-    expect.assertions(2);
-    Animal._views[["toy", 1]] = /* xml */ `
-        <toy banner_route="/mybody/isacage">
-            <Banner t-if="env.config.bannerRoute" />
-        </toy>
-    `;
-    const bannerArch = `
-        <div class="setmybodyfree">
-            <link rel="stylesheet" href="/mystyle"/>
-            <script type="text/javascript" src="/myscript"/>
-            myBanner
-        </div>
-    `;
-    onRpc("/mybody/isacage", () => {
-        expect.step("root called");
-        return { html: bannerArch };
-    });
-    const docCreateElement = document.createElement.bind(document);
-    const createElement = (tagName) => {
-        const elem = docCreateElement(tagName);
-        if (tagName === "link") {
-            Object.defineProperty(elem, "href", {
-                set(href) {
-                    if (href.includes("/mystyle")) {
-                        expect.step("css loaded");
-                    }
-                    Promise.resolve().then(() => elem.dispatchEvent(new Event("load")));
-                },
-            });
-        } else if (tagName === "script") {
-            Object.defineProperty(elem, "src", {
-                set(src) {
-                    if (src.includes("/myscript")) {
-                        expect.step("js loaded");
-                    }
-                    Promise.resolve().then(() => elem.dispatchEvent(new Event("load")));
-                },
-            });
-        }
-        return elem;
-    };
-    patchWithCleanup(document, { createElement });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect.verifySteps(["root called", "js loaded", "css loaded"]);
-    expect(".setmybodyfree").toHaveCount(1);
-});
-
-test("banner can re-render with new HTML", async () => {
-    expect.assertions(6);
-    Animal._views[["toy", 1]] = /* xml */ `
-        <toy banner_route="/mybody/isacage">
-            <Banner t-if="env.config.bannerRoute" />
-        </toy>
-    `;
-    const banners = [
-        `<div class="banner1">
-            <a type="action" data-method="setTheControl" data-model="animal" data-reload-on-close="true">link</a>
-        </div>`,
-        `<div class="banner2">
-            MyBanner
-        /div>`,
-    ];
-    onRpc("/mybody/isacage", () => {
-        expect.step("/mybody/isacage");
-        return { html: banners.shift() };
-    });
-    onRpc("setTheControl", () => {
-        return { type: "ir.actions.act_window_close" };
-    });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect.verifySteps(["/mybody/isacage"]);
-    expect(".banner1").toHaveCount(1);
-    expect(".banner2").toHaveCount(0);
-    click("a");
-    await animationFrame();
-    expect.verifySteps(["/mybody/isacage"]);
-    expect(".banner1").toHaveCount(0);
-    expect(".banner2").toHaveCount(1);
-});
-
-test("banner does not reload on render", async () => {
-    expect.assertions(3);
-    Animal._views[["toy", 1]] = /* xml */ `
-        <toy banner_route="/mybody/isacage">
-            <Banner t-if="env.config.bannerRoute" />
-        </toy>
-    `;
-    const bannerArch = `
-        <div class="setmybodyfree">
-            myBanner
-        </div>`;
-    let toy;
-    patchWithCleanup(ToyController.prototype, {
-        setup() {
-            super.setup();
-            toy = this;
-        },
-    });
-    onRpc("/mybody/isacage", () => {
-        expect.step("/mybody/isacage");
-        return { html: bannerArch };
-    });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect.verifySteps(["/mybody/isacage"]);
-    await toy.render();
-    await animationFrame();
-    expect.verifySteps([]);
-    expect(".setmybodyfree").toHaveCount(1);
-});
-
-test("click on action-bound links in banner (concurrency)", async () => {
-    expect.assertions(1);
-    const prom = new Deferred();
-    mockService("action", {
-        async doAction(actionRequest) {
-            expect(actionRequest).toEqual({
-                type: "ir.actions.client",
-                tag: "gout",
-            });
-            return true;
-        },
-    });
-    Animal._views[["toy", 1]] = /* xml */ `
-        <toy banner_route="/banner_route">
-            <Banner t-if="env.config.bannerRoute" />
-            <a type="action" data-method="setTheControl" data-model="animal">link</a>
-        </toy>
-    `;
-    onRpc("/banner_route", () => ({
-        html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal">link</a></div>`,
-    }));
-    onRpc("setTheControl", async () => {
-        await prom;
-        return {
-            type: "ir.actions.client",
-            tag: "toug",
-        };
-    });
-    onRpc("heartOfTheSun", () => ({
-        type: "ir.actions.client",
-        tag: "gout",
-    }));
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    click("a[data-method='setTheControl']");
-    await animationFrame();
-    click("a[data-method='heartOfTheSun']");
-    prom.resolve();
-    await animationFrame();
-});
-
-test("real life banner", async () => {
-    expect.assertions(6);
-    mockService("action", {
-        async doAction() {},
-    });
-    Animal._views[["toy", 1]] = /* xml */ `
-        <toy banner_route="/mybody/isacage">
-            <Banner t-if="env.config.bannerRoute" />
-        </toy>
-    `;
-    const bannerArch = `
-        <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Remove Configuration Tips</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Do you want to remove this configuration panel?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a type="action" class="btn btn-primary" data-bs-dismiss="modal" data-model="mah.model" data-method="mah_method" data-o-hide-banner="true">Remove</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="o_onboarding" />
-            <div class="o_onboarding_wrap" />
-                <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="float-end o_onboarding_btn_close">
-                    <i class="fa fa-times" title="Close the onboarding panel" id="closeOnboarding"></i>
-                </a>
-                <div class="bannerContent">Content</div>
-            </div>
-        </div>`;
-    onRpc("/mybody/isacage", async () => {
-        expect.step("/mybody/isacage");
-        return { html: bannerArch };
-    });
-    onRpc("/web/dataset/call_kw/mah.model/mah_method", async (request) => {
-        expect.step(new URL(request.url).pathname);
-        return true;
-    });
-    await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    expect.verifySteps(["/mybody/isacage"]);
-    expect(".modal").not.toBeVisible();
-    expect(".o_onboarding_container").toHaveClass("o-vertical-slide");
-    click("#closeOnboarding");
-    await animationFrame();
-    expect(".modal").toBeVisible();
-    click(queryOne(".modal a[type='action']"));
-    await animationFrame();
-    expect.verifySteps(["/web/dataset/call_kw/mah.model/mah_method"]);
-
-    runAllTimers();
-    await animationFrame();
-    expect(".o_onboarding_container").toHaveCount(0);
 });
 
 ////////////////////////////////////////////////////////////////////////////

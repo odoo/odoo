@@ -11,9 +11,6 @@ export function extractLayoutComponents(params) {
         ControlPanel: params.ControlPanel || ControlPanel,
         SearchPanel: params.SearchPanel || SearchPanel,
     };
-    if (params.Banner) {
-        layoutComponents.Banner = params.Banner;
-    }
     return layoutComponents;
 }
 

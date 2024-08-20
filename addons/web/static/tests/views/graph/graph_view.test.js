@@ -899,8 +899,20 @@ test("format total in hh:mm when measure is unit_amount", async () => {
     expect(measure).toBe("unit_amount", { message: `the measure should be "unit_amount"` });
     checkLegend(view, "Unit Amount");
     checkLabels(view, ["Total"]);
-    expect(fieldAttrs[measure].widget).toBe("float_time", { message: "should be a float_time widget" });
-    checkYTicks(view, ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00"]);
+    expect(fieldAttrs[measure].widget).toBe("float_time", {
+        message: "should be a float_time widget",
+    });
+    checkYTicks(view, [
+        "00:00",
+        "01:00",
+        "02:00",
+        "03:00",
+        "04:00",
+        "05:00",
+        "06:00",
+        "07:00",
+        "08:00",
+    ]);
     checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] }, 0);
 });
 
@@ -3781,28 +3793,6 @@ test("order='asc' on arch", async () => {
         data: [1, 1, 2, 2, 2],
         label: "Count",
     });
-});
-
-test("renders banner_route", async () => {
-    onRpc("/mybody/isacage", (request) => {
-        expect.step(new URL(request.url).pathname);
-        return {
-            html: /* xml */ `<div class="setmybodyfree">myBanner</div>`,
-        };
-    });
-
-    await mountView({
-        type: "graph",
-        resModel: "foo",
-        arch: /* xml */ `
-            <graph banner_route="/mybody/isacage">
-                <field name="foo" />
-            </graph>
-        `,
-    });
-
-    expect.verifySteps(["/mybody/isacage"]);
-    expect(".setmybodyfree").toHaveCount(1);
 });
 
 test("In the middle of a year, a graph view grouped by a date field with granularity 'year' should have a single group of SampleServer.MAIN_RECORDSET_SIZE records", async () => {
