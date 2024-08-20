@@ -96,6 +96,7 @@ export class Plugin {
         this.dispatch = dispatch;
         this._cleanups = [];
         this.resources = null; // set before start
+        this.isDestroyed = false;
     }
 
     setup() {}
@@ -121,5 +122,6 @@ export class Plugin {
         for (const cleanup of this._cleanups) {
             cleanup();
         }
+        this.isDestroyed = true;
     }
 }

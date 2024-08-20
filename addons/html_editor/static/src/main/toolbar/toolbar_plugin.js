@@ -1,6 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { Toolbar } from "./toolbar";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { registry } from "@web/core/registry";
+import { ToolbarMobile } from "./mobile_toolbar";
 
 export class ToolbarPlugin extends Plugin {
     static name = "toolbar";
@@ -33,8 +36,13 @@ export class ToolbarPlugin extends Plugin {
             {},
             ...this.resources.toolbarItems.map((button) => ({ [button.id]: button }))
         );
+        this.isMobileToolbar = hasTouch() && window.visualViewport;
 
-        this.overlay = this.shared.createOverlay(Toolbar, { position: "top-start" });
+        if (this.isMobileToolbar) {
+            this.overlay = new MobileToolbarOverlay(this.editable);
+        } else {
+            this.overlay = this.shared.createOverlay(Toolbar, { position: "top-start" });
+        }
         this.state = reactive({
             buttonsActiveState: this.buttonGroups.flatMap((g) =>
                 g.buttons.map((b) => [b.id, false])
@@ -52,6 +60,11 @@ export class ToolbarPlugin extends Plugin {
         for (const button of Object.values(this.buttonsDict)) {
             this.resolveButtonInheritance(button.id);
         }
+    }
+
+    destroy() {
+        super.destroy();
+        this.overlay.close();
     }
 
     /**
@@ -78,7 +91,7 @@ export class ToolbarPlugin extends Plugin {
             case "CONTENT_UPDATED":
                 if (this.overlay.isOpen) {
                     const selectionData = this.shared.getSelectionData();
-                    if (selectionData.editableSelection.isCollapsed) {
+                    if (selectionData.editableSelection.isCollapsed && !this.isMobileToolbar) {
                         this.overlay.close();
                     } else {
                         this.updateButtonsStates(selectionData.editableSelection);
@@ -129,7 +142,10 @@ export class ToolbarPlugin extends Plugin {
         const isCollapsed = selectionData.editableSelection.isCollapsed;
 
         if (this.overlay.isOpen) {
-            if (!inEditable || isCollapsed || !this.shared.getTraversedNodes().length) {
+            if (
+                !inEditable ||
+                ((isCollapsed || !this.shared.getTraversedNodes().length) && !this.isMobileToolbar)
+            ) {
                 const preventClosing = selectionData.documentSelection?.anchorNode?.closest?.(
                     "[data-prevent-closing-overlay]"
                 );
@@ -140,14 +156,18 @@ export class ToolbarPlugin extends Plugin {
             } else {
                 this.overlay.open({ props }); // will update position
             }
-        } else if (inEditable && !isCollapsed) {
+        } else if (inEditable && (!isCollapsed || this.isMobileToolbar)) {
             this.overlay.open({ props });
         }
     }
 
     updateButtonsStates(selection) {
         if (!this.updateSelection) {
-            queueMicrotask(() => this._updateButtonsStates());
+            queueMicrotask(() => {
+                if (!this.isDestroyed) {
+                    this._updateButtonsStates();
+                }
+            });
         }
         this.updateSelection = selection;
     }
@@ -172,5 +192,38 @@ export class ToolbarPlugin extends Plugin {
             }
         }
         this.updateSelection = null;
+    }
+}
+
+class MobileToolbarOverlay {
+    constructor(editable) {
+        this.isOpen = false;
+        this.overlayId = `mobile_toolbar_${Math.random().toString(16).slice(2)}`;
+        this.editable = editable;
+    }
+
+    open({ props }) {
+        props.class = "shadow";
+        if (!this.isOpen) {
+            const modal = this.editable.closest(".o_modal_full");
+            if (modal) {
+                // Same height of the toolbar
+                modal.style.paddingBottom = "40px";
+            }
+            registry.category("main_components").add(this.overlayId, {
+                Component: ToolbarMobile,
+                props,
+            });
+            this.isOpen = true;
+        }
+    }
+
+    close() {
+        const modal = this.editable.closest(".o_modal_full");
+        if (modal) {
+            modal.style.paddingBottom = "";
+        }
+        registry.category("main_components").remove(this.overlayId, "MobileToolbar");
+        this.isOpen = false;
     }
 }

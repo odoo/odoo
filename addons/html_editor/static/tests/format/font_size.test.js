@@ -1,10 +1,11 @@
-import { test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { test, expect } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { strong } from "../_helpers/tags";
 import { setFontSize } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { animationFrame } from "@odoo/hoot-mock";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -31,12 +32,11 @@ test("should change the font size of a whole heading after a triple click", asyn
 });
 
 test("should get ready to type with a different font size", async () => {
-    await testEditor({
-        contentBefore: "<p>ab[]cd</p>",
-        stepFunction: setFontSize("36px"),
-        contentAfterEdit: `<p>ab<span data-oe-zws-empty-inline="" style="font-size: 36px;">[]\u200B</span>cd</p>`,
-        contentAfter: "<p>ab[]cd</p>",
-    });
+    const { editor } = await setupEditor('<p class="p">ab[]cd</p>');
+    editor.dispatch("FORMAT_FONT_SIZE", { size: "36px" });
+    await animationFrame();
+    expect(".p span").toHaveStyle({ "font-size": "36px" });
+    expect(".p span").toHaveAttribute("data-oe-zws-empty-inline", "");
 });
 
 test("should change the font-size for a character in an inline that has a font-size", async () => {
