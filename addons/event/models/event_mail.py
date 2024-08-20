@@ -127,39 +127,81 @@ class EventMailScheduler(models.Model):
         self.notification_type = 'mail'
 
     def execute(self):
+        now = fields.Datetime.now()
         for scheduler in self:
-            now = fields.Datetime.now()
             if scheduler.interval_type == 'after_sub':
-                if self.env.context.get('event_mail_registration_ids'):
-                    new_registrations = self.env['event.registration'].search([
-                        ('id', 'in', self.env.context['event_mail_registration_ids']),
-                        ('event_id', '=', scheduler.event_id.id),
-                    ]) - scheduler.mail_registration_ids.registration_id
-                else:
-                    new_registrations = scheduler.event_id.registration_ids.filtered_domain(
-                        [('state', 'not in', ('cancel', 'draft'))]
-                    ) - scheduler.mail_registration_ids.registration_id
-                scheduler._create_missing_mail_registrations(new_registrations)
-
-                # execute scheduler on registrations
-                scheduler.mail_registration_ids.execute()
-                total_sent = len(scheduler.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
-                scheduler.update({
-                    'mail_done': total_sent >= (scheduler.event_id.seats_reserved + scheduler.event_id.seats_used),
-                    'mail_count_done': total_sent,
-                })
+                scheduler._execute_attendee_based()
             else:
-                # before or after event -> one shot email
-                if scheduler.mail_done or scheduler.notification_type != 'mail':
+                # before or after event -> one shot communication, once done skip
+                if scheduler.mail_done:
                     continue
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.mail_attendees(scheduler.template_ref.id)
-                    scheduler.update({
-                        'mail_done': True,
-                        'mail_count_done': scheduler.event_id.seats_taken,
-                    })
+                    scheduler._execute_event_based()
         return True
+
+    def _execute_event_based(self):
+        """ Main scheduler method when running in event-based mode aka
+        'after_event' or 'before_event'. This is a global communication done
+        once i.e. we do not track each registration individually. """
+        registrations = self.env["event.registration"].search([
+            ("event_id", "in", self.event_id.ids),
+            ("state", "not in", ("draft", "cancel")),
+        ])
+        if registrations:
+            self._execute_event_based_for_registrations(registrations)
+        # Mail is sent to all attendees (unconfirmed as well), so count all attendees
+        self.update({
+            'mail_done': True,
+            'mail_count_done': self.event_id.seats_taken,
+        })
+
+    def _execute_event_based_for_registrations(self, registrations):
+        """ Method doing notification and recipients specific implementation
+        of contacting attendees globally.
+
+        :param registrations: a recordset of registrations to contact
+        """
+        self.ensure_one()
+        if self.notification_type == "mail":
+            # not efficient, going to be replaced
+            self.event_id.mail_attendees(
+                self.template_ref.id,
+                filter_func=lambda self: self.id in registrations.ids,
+            )
+        return True
+
+    def _execute_attendee_based(self):
+        """ Main scheduler method when running in attendee-based mode aka
+        'after_sub'. This relies on a sub model allowing to know which
+        registrations have been contacted.
+
+        It currently does two main things
+          * generate missing 'event.mail.registrations' which are scheduled
+            communication linked to registrations;
+          * launch registration-based communication;
+        """
+        self.ensure_one()
+        # fillup on subscription lines
+        if self.env.context.get('event_mail_registration_ids'):
+            new_registrations = self.env['event.registration'].search([
+                ('id', 'in', self.env.context['event_mail_registration_ids']),
+                ('event_id', '=', self.event_id.id),
+            ]) - self.mail_registration_ids.registration_id
+        else:
+            new_registrations = self.env["event.registration"].search([
+                ("state", "not in", ("cancel", "draft")),
+                ('event_id', '=', self.event_id.id),
+            ]) - self.mail_registration_ids.registration_id
+        self._create_missing_mail_registrations(new_registrations)
+
+        # execute scheduler on registrations
+        self.mail_registration_ids.execute()
+        total_sent = len(self.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
+        self.update({
+            'mail_done': total_sent >= (self.event_id.seats_reserved + self.event_id.seats_used),
+            'mail_count_done': total_sent,
+        })
 
     def _create_missing_mail_registrations(self, registrations):
         new = []
