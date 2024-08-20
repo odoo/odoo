@@ -1432,7 +1432,6 @@ export class Wysiwyg extends Component {
                         // display the label input (e.g. some mega menu links).
                         needLabel: !link.querySelector('.fa, img'),
                         shouldFocusUrl,
-                        $button,
                         onColorCombinationClassChange: (colorCombinationClass) => {
                             this.linkToolsInfos.colorCombinationClass = colorCombinationClass;
                         },
