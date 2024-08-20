@@ -10,9 +10,6 @@ export const accountTourSteps = {
     goToAccountMenu(description="Open Invoicing Menu") {
         return stepUtils.goToAppSteps('account.menu_finance', description);
     },
-    onboarding() {
-        return [];
-    },
     newInvoice() {
         return [
             {
@@ -29,7 +26,6 @@ registry.category("web_tour.tours").add('account_tour', {
     sequence: 60,
     steps: () => [
     ...accountTourSteps.goToAccountMenu('Send invoices to your customers in no time with the <b>Invoicing app</b>.'),
-    ...accountTourSteps.onboarding(),
     ...accountTourSteps.newInvoice(),
     {
         isActive: ["auto"],

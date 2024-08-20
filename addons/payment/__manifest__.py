@@ -5,11 +5,10 @@
     'version': '2.0',
     'category': 'Hidden',
     'summary': "The payment engine used by payment provider modules.",
-    'depends': ['onboarding', 'portal'],
+    'depends': ['portal'],
     'data': [
         # Record data.
         'data/ir_actions_server_data.xml',
-        'data/onboarding_data.xml',
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',
         'data/payment_cron.xml',
@@ -33,7 +32,6 @@
         # Wizard views.
         'wizards/payment_capture_wizard_views.xml',
         'wizards/payment_link_wizard_views.xml',
-        'wizards/payment_onboarding_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [

@@ -14,7 +14,7 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
-    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest'],
+    'depends': ['base_setup', 'product', 'analytic', 'portal', 'digest'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -22,7 +22,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/digest_data.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',
-        'data/onboarding_data.xml',
         'views/account_payment_view.xml',
         'wizard/account_automatic_entry_wizard_views.xml',
         'wizard/account_autopost_bills_wizard.xml',

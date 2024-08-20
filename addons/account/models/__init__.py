@@ -45,6 +45,5 @@ from . import mail_tracking_value
 from . import merge_partner_automatic
 from . import res_currency
 from . import account_report
-from . import onboarding_onboarding_step
 from . import template_generic_coa
 from . import uom_uom

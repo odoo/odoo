@@ -13,7 +13,6 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const, utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
-from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
 
 
 _logger = logging.getLogger(__name__)
@@ -145,7 +144,6 @@ class PaymentProvider(models.Model):
             )
 
         if self.state == 'enabled':
-            self.env['onboarding.onboarding.step'].action_validate_step_payment_provider()
             action = {'type': 'ir.actions.act_window_close'}
         else:
             # Account creation
@@ -158,20 +156,12 @@ class PaymentProvider(models.Model):
                 menu = self.env.ref('account_payment.payment_provider_menu', False)
                 menu_id = menu and menu.id  # Only set if `account_payment` is installed.
 
-            account_link_url = self._stripe_create_account_link(connected_account['id'], menu_id)
-            if account_link_url:
-                action = {
-                    'type': 'ir.actions.act_url',
-                    'url': account_link_url,
-                    'target': 'self',
-                }
-            else:
-                action = {
-                    'type': 'ir.actions.act_window',
-                    'model': 'payment.provider',
-                    'views': [[False, 'form']],
-                    'res_id': self.id,
-                }
+            action = {
+                'type': 'ir.actions.act_window',
+                'model': 'payment.provider',
+                'views': [[False, 'form']],
+                'res_id': self.id,
+            }
 
         return action
 
@@ -361,36 +351,6 @@ class PaymentProvider(models.Model):
             'individual[email]': self.company_id.email or '',
             'business_profile[name]': self.company_id.name,
         }
-
-    def _stripe_create_account_link(self, connected_account_id, menu_id):
-        """ Create an account link and return its URL.
-
-        An account link url is the beginning URL of Stripe Onboarding.
-        This URL is only valid once, and can only be used once.
-
-        Note: self.ensure_one()
-
-        :param str connected_account_id: The id of the connected account.
-        :param int menu_id: The menu from which the user started the onboarding step, as an
-                            `ir.ui.menu` id
-        :return: The account link URL
-        :rtype: str
-        """
-        self.ensure_one()
-
-        base_url = self.company_id.get_base_url()
-        return_url = OnboardingController._onboarding_return_url
-        refresh_url = OnboardingController._onboarding_refresh_url
-        return_params = dict(provider_id=self.id, menu_id=menu_id)
-        refresh_params = dict(**return_params, account_id=connected_account_id)
-
-        account_link = self._stripe_make_proxy_request('account_links', payload={
-            'account': connected_account_id,
-            'return_url': f'{url_join(base_url, return_url)}?{url_encode(return_params)}',
-            'refresh_url': f'{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}',
-            'type': 'account_onboarding',
-        })
-        return account_link['url']
 
     def _stripe_make_proxy_request(self, endpoint, payload=None, version=1):
         """ Make a request to the Stripe proxy at the specified endpoint.

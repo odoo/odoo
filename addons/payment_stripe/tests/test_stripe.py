@@ -120,18 +120,6 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(url, data=self.notification_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
-    def test_onboarding_action_redirect_to_url(self):
-        """ Test that the action generate and return an URL when the provider is disabled. """
-        with patch.object(
-            type(self.env['payment.provider']), '_stripe_fetch_or_create_connected_account',
-            return_value={'id': 'dummy'},
-        ), patch.object(
-            type(self.env['payment.provider']), '_stripe_create_account_link',
-            return_value='https://dummy.url',
-        ):
-            onboarding_url = self.stripe.action_stripe_connect_account()
-        self.assertEqual(onboarding_url['url'], 'https://dummy.url')
-
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
         self.stripe.stripe_webhook_secret = False
@@ -145,15 +133,3 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with patch.object(type(self.env['payment.provider']), '_stripe_make_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 0)
-
-    def test_create_account_link_pass_required_parameters(self):
-        """ Test that the generation of an account link includes all the required parameters. """
-        with patch.object(
-            type(self.env['payment.provider']), '_stripe_make_proxy_request',
-            return_value={'url': 'https://dummy.url'},
-        ) as mock:
-            self.stripe._stripe_create_account_link('dummy', 'dummy')
-            mock.assert_called_once()
-            call_args = mock.call_args.kwargs['payload'].keys()
-            for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
-                self.assertIn(payload_param, call_args)

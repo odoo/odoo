@@ -360,14 +360,6 @@ class ResCompany(models.Model):
         for company in self:
             company.user_hard_lock_date = max(c.hard_lock_date or date.min for c in company.sudo().parent_ids)
 
-    def _initiate_account_onboardings(self):
-        account_onboarding_routes = [
-            'account_dashboard',
-        ]
-        onboardings = self.env['onboarding.onboarding'].sudo().search([('route_name', 'in', account_onboarding_routes)])
-        for company in self:
-            onboardings.with_company(company)._search_or_create_progress()
-
     @api.model_create_multi
     def create(self, vals_list):
         companies = super().create(vals_list)
@@ -844,17 +836,6 @@ class ResCompany(models.Model):
             opening_move.write(move_values)
         else:
             self.account_opening_move_id = self.env['account.move'].create(move_values)
-
-    def action_save_onboarding_sale_tax(self):
-        """ Set the onboarding step as done """
-        self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_sales_tax')
-
-    def action_save_onboarding_company_data(self):
-        self.ensure_one()
-        if self.street:
-            ref = 'account.onboarding_onboarding_step_company_data'
-            self.env['onboarding.onboarding.step'].with_company(self).action_validate_step(ref)
-        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def get_chart_of_accounts_or_fail(self):
         account = self.env['account.account'].search(self.env['account.account']._check_company_domain(self), limit=1)

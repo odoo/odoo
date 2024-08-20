@@ -382,7 +382,6 @@ class account_journal(models.Model):
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
         self._fill_general_dashboard_data(dashboard_data)
-        self._fill_onboarding_data(dashboard_data)
         return dashboard_data
 
     def _fill_dashboard_data_count(self, dashboard_data, model, name, domain):
@@ -660,35 +659,6 @@ class account_journal(models.Model):
                 'to_check_balance': currency.format(amount_total_signed_sum),
                 'drag_drop_settings': drag_drop_settings,
             })
-
-    def _fill_onboarding_data(self, dashboard_data):
-        """ Populate journals with onboarding data if they have no entries"""
-        journal_onboarding_map = {
-            'sale': 'account_invoice',
-            'general': 'account_dashboard',
-        }
-        onboarding_data = defaultdict(dict)
-        onboarding_progresses = self.env['onboarding.progress'].sudo().search([
-            ('onboarding_id.route_name', 'in', [*journal_onboarding_map.values()]),
-            ('company_id', 'in', self.company_id.ids),
-        ])
-        for progress in onboarding_progresses:
-            ob = progress.onboarding_id
-            ob_vals = ob.with_company(progress.company_id)._prepare_rendering_values()
-            onboarding_data[progress.company_id][ob.route_name] = ob_vals
-            onboarding_data[progress.company_id][ob.route_name]['current_onboarding_state'] = ob.current_onboarding_state
-            onboarding_data[progress.company_id][ob.route_name]['steps'] = [
-                {
-                    'id': step.id,
-                    'title': step.title,
-                    'description': step.description,
-                    'state': ob_vals['state'][step.id],
-                    'action': step.panel_step_open_action_name,
-                }
-                for step in ob_vals['steps']
-            ]
-        for journal in self:
-            dashboard_data[journal.id]['onboarding'] = onboarding_data[journal.company_id].get(journal_onboarding_map.get(journal.type))
 
     def _get_draft_sales_purchases_query(self):
         return self.env['account.move']._where_calc([

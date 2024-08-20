@@ -4452,7 +4452,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'mrp_mps',
             'quality_mrp',
             'quality_mrp_workorder',
-            'onboarding',
             'base_address_extended',
             'payment_adyen',
             'payment',
