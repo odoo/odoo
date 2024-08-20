@@ -1,6 +1,14 @@
 import { browser } from "./browser/browser";
 
-import { Component, useState, useEffect, xml, onWillUpdateProps, useComponent } from "@odoo/owl";
+import {
+    Component,
+    onWillUpdateProps,
+    status,
+    useComponent,
+    useEffect,
+    useState,
+    xml,
+} from "@odoo/owl";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
 // a reduced motion setting in the future?)
@@ -16,8 +24,11 @@ export const config = {
  *
  * @param {Object} options
  * @param {string} options.name the prefix to use for the transition classes
- * @param {boolean} [options.onOff] whether to start the transition in the on or
- *  off state
+ * @param {boolean} [options.initialVisibility=true] whether to start the
+ *  transition in the on or off state
+ * @param {number} [options.immediate=false] (only relevant when initialVisibility
+ *  is true) set to true to animate initially. By default, there's no animation
+ *  if the element is initially visible.
  * @param {number} [options.leaveDuration] the leaveDuration of the transition
  * @param {Function} [options.onLeave] a function that will be called when the
  *  element will be removed in the next render cycle
@@ -28,6 +39,7 @@ export const config = {
 export function useTransition({
     name,
     initialVisibility = true,
+    immediate = false,
     leaveDuration = 500,
     onLeave = () => {},
 }) {
@@ -79,13 +91,17 @@ export function useTransition({
             // when true - transition from enter to enter-active
             // when false - transition from enter-active to leave, unmount after leaveDuration
             if (newState) {
-                state.stage = "enter";
-                state.shouldMount = true;
-                // force a render here so that we get a patch even if the state didn't change
-                component.render();
-                onNextPatch = () => {
+                if (status(component) === "mounted" || immediate) {
+                    state.stage = "enter";
+                    // force a render here so that we get a patch even if the state didn't change
+                    component.render();
+                    onNextPatch = () => {
+                        state.stage = "enter-active";
+                    };
+                } else {
                     state.stage = "enter-active";
-                };
+                }
+                state.shouldMount = true;
             } else {
                 state.stage = "leave";
                 timer = browser.setTimeout(() => {
@@ -117,15 +133,17 @@ export class Transition extends Component {
     static props = {
         name: String,
         visible: { type: Boolean, optional: true },
+        immediate: { type: Boolean, optional: true },
         leaveDuration: { type: Number, optional: true },
         onLeave: { type: Function, optional: true },
         slots: Object,
     };
 
     setup() {
-        const { visible, leaveDuration, name, onLeave } = this.props;
+        const { immediate, visible, leaveDuration, name, onLeave } = this.props;
         this.transition = useTransition({
             initialVisibility: visible,
+            immediate,
             leaveDuration,
             name,
             onLeave,
