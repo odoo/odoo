@@ -978,15 +978,18 @@ class Channel(models.Model):
         """
         for channel in self:
             if not channel.message_ids.ids:
-                return
+                continue
             # a bit not-modular but helps understanding code
             if channel.channel_type not in {'chat', 'whatsapp'}:
-                return
+                continue
             last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
             member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
+            if not member:
+                # member not a part of the channel
+                continue
             if member.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
-                return
+                continue
             # Avoid serialization error when multiple tabs are opened.
             query = """
                 UPDATE discuss_channel_member
