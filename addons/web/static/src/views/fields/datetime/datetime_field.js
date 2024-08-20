@@ -61,6 +61,7 @@ export class DateTimeField extends Component {
             optional: true,
             validate: (props) => ["days", "months", "years", "decades"].includes(props),
         },
+        condensed: { type: Boolean, optional: true },
     };
     static defaultProps = {
         showSeconds: true,
@@ -129,6 +130,7 @@ export class DateTimeField extends Component {
         const dateTimePicker = useDateTimePicker({
             target: "root",
             showSeconds: this.props.showSeconds,
+            condensed: this.props.condensed,
             get pickerProps() {
                 return getPickerProps();
             },
@@ -188,10 +190,11 @@ export class DateTimeField extends Component {
      */
     getFormattedValue(valueIndex) {
         const value = this.values[valueIndex];
+        const { condensed, showSeconds } = this.props;
         return value
             ? this.field.type === "date" || !this.props.showTime
-                ? formatDate(value)
-                : formatDateTime(value, { showSeconds: this.props.showSeconds })
+                ? formatDate(value, { condensed })
+                : formatDateTime(value, { showSeconds, condensed })
             : "";
     }
 
@@ -338,6 +341,12 @@ export const dateField = {
                 { label: _t("Decades"), value: "decades" },
             ],
         },
+        {
+            label: _t("Condensed display"),
+            name: "condensed",
+            type: "boolean",
+            help: _t(`Set to true to display days, months (and hours) with unpadded numbers`),
+        },
     ],
     supportedTypes: ["date"],
     extractProps: ({ attrs, options }, dynamicInfo) => ({
@@ -352,6 +361,7 @@ export const dateField = {
         warnFuture: exprToBoolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
+        condensed: options.condensed,
     }),
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];

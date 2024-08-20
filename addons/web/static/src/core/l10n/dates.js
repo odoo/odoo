@@ -15,6 +15,8 @@ const { DateTime, Settings } = luxon;
  * @property {string} [format]
  *  Format used to format a DateTime or to parse a formatted string.
  *  > Default: the session localization format.
+ * @property {boolean} [condensed] if true, months, days and hours will be formatted without
+ *  leading 0.
  *
  * @typedef {luxon.DateTime} DateTime
  *
@@ -325,6 +327,25 @@ export function today() {
 // Formatting
 //-----------------------------------------------------------------------------
 
+const condensedFormats = {};
+/**
+ * Given a date(time) format, returns a format where months, days and hours are
+ * displayed without the leading 0 (e.g. 03/05/2024 08:00:00 => 3/5/2024 8:00:00).
+ *
+ * @param {string} format
+ * @returns string
+ */
+function getCondensedFormat(format) {
+    const originalFormat = format;
+    if (!condensedFormats[originalFormat]) {
+        format = format.replace(/(^|[^M])M{2}([^M]|$)/, "$1M$2");
+        format = format.replace(/(^|[^d])d{2}([^d]|$)/, "$1d$2");
+        format = format.replace(/(^|[^H])H{2}([^H]|$)/, "$1H$2");
+        condensedFormats[originalFormat] = format;
+    }
+    return condensedFormats[originalFormat];
+}
+
 /**
  * Formats a DateTime object to a date string
  *
@@ -335,7 +356,13 @@ export function formatDate(value, options = {}) {
     if (!value) {
         return "";
     }
-    const format = options.format || localization.dateFormat;
+    let format = options.format;
+    if (!format) {
+        format = localization.dateFormat;
+        if (options.condensed) {
+            format = getCondensedFormat(format);
+        }
+    }
     return value.toFormat(format);
 }
 
@@ -349,9 +376,16 @@ export function formatDateTime(value, options = {}) {
     if (!value) {
         return "";
     }
-    var format = options.format || localization.dateTimeFormat;
-    if (options.showSeconds === false) {
-        format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+    let format = options.format;
+    if (!format) {
+        if (options.showSeconds === false) {
+            format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+        } else {
+            format = localization.dateTimeFormat;
+        }
+        if (options.condensed) {
+            format = getCondensedFormat(format);
+        }
     }
     return value.setZone(options.tz || "default").toFormat(format);
 }
