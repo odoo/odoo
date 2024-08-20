@@ -1,13 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-from odoo import fields, models
+from odoo import fields, models, api
 
 class PosBusMixin(models.AbstractModel):
     _name = "pos.bus.mixin"
     _description = "Bus Mixin"
 
     access_token = fields.Char('Security Token', copy=False)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            record._ensure_access_token()
+        return records
 
     def _ensure_access_token(self):
         if self.access_token:
