@@ -121,6 +121,28 @@ const compilePseudoClassRegex = () => {
 };
 
 /**
+ * @param {Element[]} elements
+ * @param {string} selector
+ */
+const elementsMatch = (elements, selector) => {
+    if (!elements.length) {
+        return false;
+    }
+    return parseSelector(selector).some((selectorParts) => {
+        const [baseSelector, ...filters] = selectorParts.at(-1);
+        for (let i = 0; i < elements.length; i++) {
+            if (baseSelector && !elements[i].matches(baseSelector)) {
+                return false;
+            }
+            if (!filters.every((filter) => matchFilter(filter, elements, i))) {
+                return false;
+            }
+        }
+        return true;
+    });
+};
+
+/**
  * @param {Node} node
  * @returns {Element | null}
  */
@@ -921,7 +943,7 @@ customPseudoClasses
         };
     });
 
-let rCustomPseudoClass = compilePseudoClassRegex();
+const rCustomPseudoClass = compilePseudoClassRegex();
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -956,6 +978,9 @@ export function defineRootNode(node) {
 }
 
 /**
+ * Returns a standardized representation of the given `string` value as a human-readable
+ * XML string template (or HTML if the `type` option is `"html"`).
+ *
  * @param {string} value
  * @param {FormatXmlOptions} [options]
  * @returns {string}
@@ -967,6 +992,9 @@ export function formatXml(value, options) {
 }
 
 /**
+ * Returns the active element in the given document (or in the owner document of
+ * the given node).
+ *
  * @param {Node} [node]
  */
 export function getActiveElement(node) {
@@ -1277,7 +1305,7 @@ export function isDisplayed(target) {
  * Returns whether the given node is editable, meaning that it is an `":enabled"`
  * `<input>` or `<textarea>` {@link Element};
  *
- * Note: this does NOT support elements with `contenteditable="true"`.
+ * Note: this does **NOT** support elements with `contenteditable="true"`.
  *
  * @param {Node} node
  * @returns {boolean}
@@ -1354,12 +1382,22 @@ export function isFocusable(target, options) {
  * @param {Window | Node} target
  * @returns {boolean}
  * @example
- *  isInDOM(document.querySelector("div")); // true
+ *  isInDOM(queryFirst("div")); // true
  * @example
- *  isInDOM(document.createElement("div")); // false
+ *  isInDOM(document.createElement("div")); // Not attached -> false
  */
 export function isInDOM(target) {
     return ensureElement(target)?.isConnected;
+}
+
+/**
+ * Checks whether a target is *at least partially* visible in the current viewport.
+ *
+ * @param {Target} target
+ * @returns {boolean}
+ */
+export function isInViewPort(target) {
+    return queryAll(target, { viewPort: true }).length > 0;
 }
 
 /**
@@ -1398,7 +1436,7 @@ export function isScrollable(target, axis) {
 }
 
 /**
- * Checks whether an target is visible, meaning that it is "displayed" (see {@link isDisplayed}),
+ * Checks whether a target is visible, meaning that it is "displayed" (see {@link isDisplayed}),
  * has a non-zero width and height, and is not hidden by "opacity" or "visibility"
  * CSS properties.
  *
@@ -1414,28 +1452,20 @@ export function isVisible(target) {
 }
 
 /**
- * @param {MaybeIterable<Node>} node
+ * Equivalent to the native `node.matches(selector)`, with a few differences:
+ * - it can take any {@link Target} (strings, nodes and iterable of nodes);
+ * - it supports custom pseudo-classes, such as ":contains" or ":visible".
+ *
+ * @param {Target} target
  * @param {string} selector
  * @returns {boolean}
+ * @example
+ *  matches("input[name=surname]", ":value(John)");
+ * @example
+ *  matches(buttonEl, ":contains(Submit)");
  */
-export function matches(node, selector) {
-    const nodes = isIterable(node) && !isNode(node) ? [...node] : [node];
-    if (!nodes.length) {
-        return false;
-    }
-
-    return parseSelector(selector).some((selectorParts) => {
-        const [baseSelector, ...filters] = selectorParts.at(-1);
-        for (let i = 0; i < nodes.length; i++) {
-            if (baseSelector && !nodes[i].matches(baseSelector)) {
-                return false;
-            }
-            if (!filters.every((filter) => matchFilter(filter, nodes, i))) {
-                return false;
-            }
-        }
-        return true;
-    });
+export function matches(target, selector) {
+    return elementsMatch(queryAll(target), selector);
 }
 
 /**
@@ -1571,6 +1601,8 @@ export function parsePosition(position) {
  *  nodes doesn't match);
  * - `focusable`: whether the nodes must be "focusable" (see {@link isFocusable});
  * - `root`: the root node to query the selector in (defaults to the current fixture);
+ * - `viewPort`: whether the nodes must be partially visible in the current viewport
+ *  (see {@link isInViewPort});
  * - `visible`: whether the nodes must be "visible" (see {@link isVisible}).
  *      * This option implies `displayed`
  *
@@ -1833,18 +1865,6 @@ export function queryValue(target, options) {
 }
 
 /**
- * @param {string} pseudoClass
- * @param {PseudoClassPredicateBuilder} predicate
- */
-export function registerPseudoClass(pseudoClass, predicate) {
-    if (customPseudoClasses.has(pseudoClass)) {
-        throw new HootDomError(`cannot register pseudo-class: '${pseudoClass}' already exists`);
-    }
-    customPseudoClasses.set(pseudoClass, predicate);
-    rCustomPseudoClass = compilePseudoClassRegex();
-}
-
-/**
  * @param {number} width
  * @param {number} height
  */
@@ -1881,7 +1901,7 @@ export function toSelector(node, options) {
 /**
  * Combination of {@link queryAll} and {@link waitUntil}: waits for a given target
  * to match elements in the DOM and returns the first matching node when it appears
- * (or immediatlly if it is already present).
+ * (or immediately if it is already present).
  *
  * @see {@link queryAll}
  * @see {@link waitUntil}
@@ -1900,7 +1920,8 @@ export function waitFor(target, options) {
 }
 
 /**
- * Opposite of {@link waitFor}: waits for a given target to disappear from the DOM.
+ * Opposite of {@link waitFor}: waits for a given target to disappear from the DOM
+ * (resolves instantly if the selector is already missing).
  *
  * @see {@link waitFor}
  * @param {Target} target
@@ -1928,8 +1949,8 @@ export function waitForNone(target, options) {
  * Returns a promise fulfilled when the given `predicate` returns a truthy value,
  * with the value of the promise being the return value of the `predicate`.
  *
- * The `predicate` is run once initially and then each time the DOM is mutated (see
- * {@link observe} for more information).
+ * The `predicate` is run once initially, and then on each animation frame until
+ * it succeeds or fail.
  *
  * The promise automatically rejects after a given `timeout` (defaults to 5 seconds).
  *
@@ -1940,7 +1961,7 @@ export function waitForNone(target, options) {
  * @example
  *  await waitUntil(() => []); // -> []
  * @example
- *  const button = await waitUntil(() => document.querySelector("button"));
+ *  const button = await waitUntil(() => queryOne("button:visible"));
  *  button.click();
  */
 export async function waitUntil(predicate, options) {
