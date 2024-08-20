@@ -635,6 +635,13 @@ const parseSelector = (selector) => {
             if (parens[0] === parens[1]) {
                 const [pseudo, content] = currentPseudo;
                 const makeFilter = customPseudoClasses.get(pseudo);
+                if (pseudo === "iframe" && !currentPart[0].startsWith("iframe")) {
+                    // Special case: to optimise the ":iframe" pseudo class, we
+                    // always select actual `iframe` elements.
+                    // Note that this may create "impossible" tag names (like "iframediv")
+                    // but this pseudo won't work on non-iframe elements anyway.
+                    currentPart[0] = `iframe${currentPart[0]}`;
+                }
                 currentPart.push(makeFilter(getStringContent(content)));
                 currentPseudo = null;
             } else if (registerChar) {
@@ -870,9 +877,8 @@ customPseudoClasses
     })
     .set("iframe", () => {
         return function iframe(node) {
-            if (getTag(node) !== "iframe") {
-                return false;
-            }
+            // Note: should only apply on `iframe` elements
+            /** @see parseSelector */
             const doc = node.contentDocument;
             return doc && doc.readyState !== "loading" ? doc : false;
         };
