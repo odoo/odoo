@@ -326,7 +326,7 @@ class Contract(models.Model):
                 contract.state = 'close'
 
         if 'resource_calendar_id' in vals:
-            calendar = vals['resource_calendar_id']  # when False (fully flexible), sync the employee's calendar as well to False
+            calendar = vals['resource_calendar_id']
             self.filtered(
                 lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
             ).employee_id.resource_calendar_id = calendar
