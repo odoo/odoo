@@ -775,7 +775,7 @@ export class Matcher {
      * Returns a set of matchers which will await the received value as a promise
      * and will be applied to a value resolved by that promise. The matcher will
      * throw an error should the promise reject instead of being resolved.
-
+     *
      * @returns {Omit<Matcher<R, A, true>, "rejects" | "resolves">}
      * @example
      *  await expect(Promise.resolve("foo")).resolves.toBe("foo");
@@ -795,7 +795,7 @@ export class Matcher {
     //-------------------------------------------------------------------------
 
     /**
-     * Expects the received value to be strictly equal to the `expected` value.
+     * Expects the received value to be *strictly* equal to the `expected` value.
      *
      * @param {R} expected
      * @param {ExpectOptions} [options]
@@ -823,7 +823,8 @@ export class Matcher {
     }
 
     /**
-     * Expects the received value to be strictly equal to the `expected` value.
+     * Expects the received value to be close to the `expected` value up to a given
+     * amount of digits (default is 2).
      *
      * @param {R} expected
      * @param {ExpectOptions & { digits?: number }} [options]
@@ -980,7 +981,7 @@ export class Matcher {
     }
 
     /**
-     * Expects the received value to be of the given type.
+     * Expects the received value to be of the given `type`.
      *
      * @param {ArgumentType} type
      * @param {ExpectOptions} [options]
@@ -1052,7 +1053,7 @@ export class Matcher {
     }
 
     /**
-     * Expects the received value to be deeply equal to the `expected` value.
+     * Expects the received value to be *deeply* equal to the `expected` value.
      *
      * @param {R} expected
      * @param {ExpectOptions} [options]
@@ -1160,7 +1161,7 @@ export class Matcher {
     }
 
     /**
-     * Expects the received value to match the given matcher (string or RegExp).
+     * Expects the received value to match the given `matcher`.
      *
      * @param {import("../hoot_utils").Matcher} matcher
      * @param {ExpectOptions} [options]
@@ -1192,7 +1193,7 @@ export class Matcher {
     }
 
     /**
-     * Expects the received value (`Function`) to throw an error after being called.
+     * Expects the received {@link Function} to throw an error after being called.
      *
      * @param {import("../hoot_utils").Matcher} [matcher=Error]
      * @param {ExpectOptions} [options]
@@ -1502,9 +1503,9 @@ export class Matcher {
     }
 
     /**
-     * Expects the received {@link Target} to contain exactly `<amount>` element(s).
-     * Note that the `amount` parameter can be omitted, in which case it will match
-     * any amount of elements.
+     * Expects the received {@link Target} to contain exactly `amount` element(s).
+     * Note that the `amount` parameter can be omitted, in which case the function
+     * will expect *at least* one element.
      *
      * @param {number} [amount]
      * @param {ExpectOptions} [options]
@@ -1543,16 +1544,14 @@ export class Matcher {
     }
 
     /**
-     * Expects the received node's outerHTML to match the `expected` regex, or to
-     * be the `expected` string (upon formatting).
+     * Expects the `innerHTML` of the received {@link Target} to match the `expected`
+     * value (upon formatting).
      *
      * @param {string | RegExp} [expected]
      * @param {ExpectOptions & FormatXmlOptions} [options]
      * @example
      *  expect(".my_element").toHaveInnerHTML(`
-     *      <div>
-     *          A
-     *      </div>
+     *      Some <strong>text</strong>
      *  `);
      */
     toHaveInnerHTML(expected, options) {
@@ -1564,15 +1563,15 @@ export class Matcher {
     }
 
     /**
-     * Expects the received node's outerHTML to match the `expected` regex, or to
-     * be the `expected` string (upon formatting).
+     * Expects the `outerHTML` of the received {@link Target} to match the `expected`
+     * value (upon formatting).
      *
      * @param {string | RegExp} [expected]
      * @param {ExpectOptions & FormatXmlOptions} [options]
      * @example
      *  expect(".my_element").toHaveOuterHTML(`
      *      <div class="my_element">
-     *          <span>A</span>
+     *          Some <strong>text</strong>
      *      </div>
      *  `);
      */
@@ -1585,8 +1584,8 @@ export class Matcher {
     }
 
     /**
-     * Expects the received {@link Target} to have the given attribute set on
-     * itself, and for that attribute value to match the given `value` if any.
+     * Expects the received {@link Target} to have its given property value match
+     * the given `value`.
      *
      * @param {string} property
      * @param {any} [value]
@@ -1604,7 +1603,7 @@ export class Matcher {
         const expectsValue = !isNil(value);
 
         return this._resolve({
-            name: "toHaveAttribute",
+            name: "toHaveProperty",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
             predicate: each((node) => {
@@ -1632,8 +1631,8 @@ export class Matcher {
      * `rect` object.
      *
      * The `rect` object can either be:
-     * - a {@link DOMRect} object,
-     * - a CSS selector string (to get the rect of the *only* matching element),
+     * - a {@link DOMRect} object;
+     * - a CSS selector string (to get the rect of the *only* matching element);
      * - a node.
      *
      * If the resulting `rect` value is a node, then both nodes' rects will be compared.
@@ -1682,7 +1681,7 @@ export class Matcher {
     }
 
     /**
-     * Expects the received {@link Target} to have the given class name(s).
+     * Expects the received {@link Target} to match the given style properties.
      *
      * @param {string | Record<string, string | RegExp>} style
      * @param {ExpectOptions} [options]
@@ -1716,8 +1715,8 @@ export class Matcher {
 
     /**
      * Expects the text content of the received {@link Target} to either:
-     * - be strictly equal to a given string,
-     * - match a given regular expression;
+     * - be strictly equal to a given string;
+     * - match a given regular expression.
      *
      * @param {string | RegExp} [text]
      * @param {ExpectOptions & QueryTextOptions} [options]
@@ -1755,9 +1754,9 @@ export class Matcher {
 
     /**
      * Expects the value of the received {@link Target} to either:
-     * - be strictly equal to a given string or number,
-     * - match a given regular expression,
-     * - contain file objects matching the given `files` list;
+     * - be strictly equal to a given string or number;
+     * - match a given regular expression;
+     * - contain file objects matching the given `files` list.
      *
      * @param {ReturnType<typeof getNodeValue>} [value]
      * @param {ExpectOptions} [options]
@@ -1931,30 +1930,30 @@ export class Matcher {
 
     /**
      * @private
-     * @param {"innerHTML" | "outerHTML"} fname
+     * @param {"innerHTML" | "outerHTML"} property
      * @param {string | RegExp} expected
      * @param {ExpectOptions & FormatXmlOptions} [options]
      */
-    _toHaveHTML(fname, expected, options) {
+    _toHaveHTML(property, expected, options) {
         options = { type: "html", ...options };
         if (!(expected instanceof RegExp)) {
             expected = formatXml(expected, options);
         }
 
         return this._resolve({
-            name: fname === "innerHTML" ? "toHaveInnerHTML" : "toHaveOuterHTML",
+            name: `toHave${property[0].toUpperCase()}${property.slice(1)}`,
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
             predicate: each((node) =>
-                regexMatchOrStrictEqual(formatXml(node[fname], options), expected)
+                regexMatchOrStrictEqual(formatXml(node[property], options), expected)
             ),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `${fname} of node is[! not] equal to expected value`
-                    : `expected ${fname} of node to match the given value`),
+                    ? `${property} of node is[! not] equal to expected value`
+                    : `expected ${property} of node to match the given value`),
             failedDetails: (actual) =>
-                detailsFromValuesWithDiff(expected, formatXml(actual[0][fname], options)),
+                detailsFromValuesWithDiff(expected, formatXml(actual[0][property], options)),
         });
     }
 }
