@@ -2,9 +2,9 @@ import { _t } from "@web/core/l10n/translation";
 import { Record } from "./record";
 
 export class DiscussApp extends Record {
-    static new(data) {
+    static new() {
         /** @type {import("models").DiscussApp} */
-        const res = super.new(data);
+        const res = super.new(...arguments);
         Object.assign(res, {
             channels: {
                 extraClass: "o-mail-DiscussSidebarCategory-channel",
