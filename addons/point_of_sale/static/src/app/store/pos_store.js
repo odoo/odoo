@@ -168,7 +168,7 @@ export class PosStore extends Reactive {
         this.unwatched.printers = [];
         for (const relPrinter of this.models["pos.printer"].getAll()) {
             const printer = relPrinter.serialize();
-            const HWPrinter = this.create_printer(printer);
+            const HWPrinter = this.createPrinter(printer);
 
             HWPrinter.config = printer;
             this.unwatched.printers.push(HWPrinter);
@@ -189,7 +189,7 @@ export class PosStore extends Reactive {
             this.computeProductPricelistCache.bind(this)
         );
         if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
-            await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
+            await this.loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
             delete this.data.loadedIndexedDBProducts;
         }
         this.computeProductPricelistCache();
@@ -252,13 +252,13 @@ export class PosStore extends Reactive {
         }
     }
     afterOrderDeletion() {
-        this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
+        this.setOrder(this.getOpenOrders().at(-1) || this.createNewOrder());
     }
 
     async deleteOrders(orders, serverIds = []) {
         const ids = new Set();
         for (const order of orders) {
-            if (order && (await this._onBeforeDeleteOrder(order))) {
+            if (order && (await this.onBeforeDeleteOrder(order))) {
                 if (Object.keys(order.last_order_preparation_change).length > 0) {
                     await this.sendOrderInPreparationUpdateLastChange(order, true);
                 }
@@ -294,7 +294,7 @@ export class PosStore extends Reactive {
      * @param {*} order
      * @returns {boolean}
      */
-    async _onBeforeDeleteOrder(order) {
+    async onBeforeDeleteOrder(order) {
         return true;
     }
     computeProductPricelistCache(data) {
@@ -391,11 +391,11 @@ export class PosStore extends Reactive {
             }
         }
         if (data && data.length > 0 && data[0].model.modelName === "product.product") {
-            this._loadMissingPricelistItems(products);
+            this.loadMissingPricelistItems(products);
         }
     }
 
-    async _loadMissingPricelistItems(products) {
+    async loadMissingPricelistItems(products) {
         if (!products.length) {
             return;
         }
@@ -416,7 +416,7 @@ export class PosStore extends Reactive {
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
                 ? openOrders[openOrders.length - 1].uuid
-                : this.add_new_order().uuid;
+                : this.addNewOrder().uuid;
         }
 
         this.markReady();
@@ -458,15 +458,15 @@ export class PosStore extends Reactive {
         };
     }
     getDefaultPricelist() {
-        const current_order = this.get_order();
+        const current_order = this.getOrder();
         if (current_order) {
             return current_order.pricelist_id;
         }
         return this.config.pricelist_id;
     }
 
-    async set_tip(tip) {
-        const currentOrder = this.get_order();
+    async setTip(tip) {
+        const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;
         let line = currentOrder.lines.find((line) => line.product_id.id === tipProduct.id);
 
@@ -494,11 +494,11 @@ export class PosStore extends Reactive {
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         let merge = true;
 
-        let order = this.get_order();
+        let order = this.getOrder();
         order.assert_editable();
 
         if (!order) {
-            order = this.add_new_order();
+            order = this.addNewOrder();
         }
 
         const options = {
@@ -515,7 +515,7 @@ export class PosStore extends Reactive {
             price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
             price_unit: 0,
-            order_id: this.get_order(),
+            order_id: this.getOrder(),
             qty: 1,
             tax_ids: product.taxes_id.map((tax) => ["link", tax]),
             ...vals,
@@ -656,7 +656,7 @@ export class PosStore extends Reactive {
             let pack_lot_ids = {};
             const packLotLinesToEdit =
                 (!values.product_id.isAllowOnlyOneLot() &&
-                    this.get_order()
+                    this.getOrder()
                         .get_orderlines()
                         .filter((line) => !line.get_discount())
                         .find((line) => line.product_id.id === values.product_id.id)
@@ -764,11 +764,11 @@ export class PosStore extends Reactive {
         return line;
     }
 
-    create_printer(config) {
+    createPrinter(config) {
         const url = deduceUrl(config.proxy_ip || "");
         return new HWPrinter({ url });
     }
-    async _loadFonts() {
+    async loadFonts() {
         return new Promise(function (resolve, reject) {
             // Waiting for fonts to be loaded to prevent receipt printing
             // from printing empty receipt while loading Inconsolata
@@ -812,10 +812,10 @@ export class PosStore extends Reactive {
      * Return the current cashier (in this case, the user)
      * @returns {name: string, id: int, role: string}
      */
-    get_cashier() {
+    getCashier() {
         return this.user;
     }
-    get_cashier_user_id() {
+    getCashierUserId() {
         return this.user.id;
     }
     get orderPreparationCategories() {
@@ -825,9 +825,9 @@ export class PosStore extends Reactive {
         return new Set();
     }
     cashierHasPriceControlRights() {
-        return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
+        return !this.config.restrict_price_control || this.getCashier()._role == "manager";
     }
-    generate_unique_id() {
+    generateUniqueId() {
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
         // to fit into EAN-13 barcodes, should it be needed
@@ -852,7 +852,7 @@ export class PosStore extends Reactive {
             return fp.id === this.config.default_fiscal_position_id?.id;
         });
 
-        const uniqId = this.generate_unique_id();
+        const uniqId = this.generateUniqueId();
         const order = this.models["pos.order"].create({
             session_id: this.session,
             company_id: this.company,
@@ -872,9 +872,9 @@ export class PosStore extends Reactive {
         order.set_pricelist(this.config.pricelist_id);
         return order;
     }
-    add_new_order(data = {}) {
-        if (this.get_order()) {
-            this.get_order().updateSavedQuantity();
+    addNewOrder(data = {}) {
+        if (this.getOrder()) {
+            this.getOrder().updateSavedQuantity();
         }
 
         const order = this.createNewOrder(data);
@@ -888,7 +888,7 @@ export class PosStore extends Reactive {
         if (orders.length > 0) {
             this.selectedOrderUuid = orders[0].uuid;
         } else {
-            this.add_new_order();
+            this.addNewOrder();
         }
     }
 
@@ -1034,7 +1034,7 @@ export class PosStore extends Reactive {
         }
     }
 
-    push_single_order(order) {
+    pushSingleOrder(order) {
         return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
     }
 
@@ -1042,7 +1042,7 @@ export class PosStore extends Reactive {
         this.loadingOrderState = bool;
     }
     async pay() {
-        const currentOrder = this.get_order();
+        const currentOrder = this.getOrder();
 
         if (!currentOrder.canPay()) {
             return;
@@ -1086,7 +1086,7 @@ export class PosStore extends Reactive {
         return orders;
     }
     async getProductInfo(product, quantity, priceExtra = 0) {
-        const order = this.get_order();
+        const order = this.getOrder();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
         const productInfo = await this.data.call("product.product", "get_product_info_pos", [
@@ -1128,7 +1128,7 @@ export class PosStore extends Reactive {
         return await this.data.call("pos.session", "get_closing_control_data", [[this.session.id]]);
     }
     // return the current order
-    get_order() {
+    getOrder() {
         if (!this.selectedOrderUuid) {
             return undefined;
         }
@@ -1136,26 +1136,26 @@ export class PosStore extends Reactive {
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
     get selectedOrder() {
-        return this.get_order();
+        return this.getOrder();
     }
 
     // change the current order
-    set_order(order, options) {
-        if (this.get_order()) {
-            this.get_order().updateSavedQuantity();
+    setOrder(order, options) {
+        if (this.getOrder()) {
+            this.getOrder().updateSavedQuantity();
         }
         this.selectedOrderUuid = order?.uuid;
     }
 
     // return the list of unpaid orders
-    get_open_orders() {
+    getOpenOrders() {
         return this.models["pos.order"].filter((o) => !o.finalized);
     }
 
     // To be used in the context of closing the POS
     // Saves the order locally and try to send it to the backend.
     // If there is an error show a popup
-    async push_orders_with_closing_popup(opts = {}) {
+    async pushOrderWithClosingPopup(opts = {}) {
         try {
             await this.syncAllOrders(opts);
             return true;
@@ -1191,7 +1191,7 @@ export class PosStore extends Reactive {
         let taxes = product.taxes_id;
 
         // Fiscal position.
-        const order = this.get_order();
+        const order = this.getOrder();
         if (order && order.fiscal_position_id) {
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
@@ -1222,7 +1222,7 @@ export class PosStore extends Reactive {
      * @param {str} terminalName
      */
     getPendingPaymentLine(terminalName) {
-        return this.get_order().payment_ids.find(
+        return this.getOrder().payment_ids.find(
             (paymentLine) =>
                 paymentLine.payment_method_id.use_payment_terminal === terminalName &&
                 !paymentLine.is_done()
@@ -1257,8 +1257,7 @@ export class PosStore extends Reactive {
         this.mobilePane = this.mobilePane === "left" ? "right" : "left";
     }
     switchPaneTicketScreen() {
-        this.ticketScreenMobilePane =
-            this.ticketScreenMobilePane === "left" ? "right" : "left";
+        this.ticketScreenMobilePane = this.ticketScreenMobilePane === "left" ? "right" : "left";
     }
     async logEmployeeMessage(action, message) {
         await this.data.call("pos.session", "log_partner_message", [
@@ -1274,7 +1273,7 @@ export class PosStore extends Reactive {
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
         if (component.storeOnOrder ?? true) {
-            this.get_order()?.set_screen_data({ name, props });
+            this.getOrder()?.set_screen_data({ name, props });
         }
     }
     orderExportForPrinting(order) {
@@ -1286,16 +1285,16 @@ export class PosStore extends Reactive {
         const isPrinted = await this.printer.print(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(this.get_order()),
+                data: this.orderExportForPrinting(this.getOrder()),
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }
         );
         if (isPrinted) {
-            this.get_order()._printed = true;
+            this.getOrder()._printed = true;
         }
     }
-    getOrderChanges(skipped = false, order = this.get_order()) {
+    getOrderChanges(skipped = false, order = this.getOrder()) {
         return getOrderChanges(order, skipped, this.orderPreparationCategories);
     }
     // Now the printer should work in PoS without restaurant
@@ -1338,13 +1337,13 @@ export class PosStore extends Reactive {
     }
     closeScreen() {
         this.addOrderIfEmpty();
-        const { name: screenName } = this.get_order().get_screen_data();
+        const { name: screenName } = this.getOrder().get_screen_data();
         this.showScreen(screenName);
     }
 
     addOrderIfEmpty() {
-        if (!this.get_order()) {
-            this.add_new_order();
+        if (!this.getOrder()) {
+            this.addNewOrder();
         }
     }
 
@@ -1423,17 +1422,17 @@ export class PosStore extends Reactive {
         }
 
         // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.push_orders_with_closing_popup();
+        const syncSuccess = await this.pushOrderWithClosingPopup();
         if (syncSuccess) {
             this.redirectToBackend();
         }
     }
     async selectPricelist(pricelist) {
-        await this.get_order().set_pricelist(pricelist);
+        await this.getOrder().set_pricelist(pricelist);
     }
     async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
-        const currentOrder = this.get_order();
+        const currentOrder = this.getOrder();
         if (!currentOrder) {
             return;
         }
@@ -1599,7 +1598,7 @@ export class PosStore extends Reactive {
     getReceiptHeaderData(order) {
         return {
             company: this.company,
-            cashier: _t("Served by %s", this.get_cashier()?.name),
+            cashier: _t("Served by %s", this.getCashier()?.name),
             header: this.config.receipt_header,
         };
     }
@@ -1608,7 +1607,7 @@ export class PosStore extends Reactive {
         if (this.isTicketScreenShown) {
             this.closeScreen();
         } else {
-            if (this._shouldLoadOrders()) {
+            if (this.shouldLoadOrders()) {
                 try {
                     this.setLoadingOrderState(true);
                     const orders = await this.getServerOrders();
@@ -1633,7 +1632,7 @@ export class PosStore extends Reactive {
         return this.mainScreen.component === TicketScreen;
     }
 
-    _shouldLoadOrders() {
+    shouldLoadOrders() {
         return this.config.raw.trusted_config_ids.length > 0;
     }
 

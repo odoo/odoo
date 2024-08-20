@@ -70,7 +70,7 @@ export class TicketScreen extends Component {
             nbrPage: 1,
             filter: null,
             search: this.pos.getDefaultSearchDetails(),
-            selectedOrder: this.pos.get_order() || null,
+            selectedOrder: this.pos.getOrder() || null,
             selectedOrderlineIds: {},
         });
         Object.assign(this.state, this.props.stateOverride || {});
@@ -114,7 +114,7 @@ export class TicketScreen extends Component {
         }
     }
     onCreateNewOrder() {
-        this.pos.add_new_order();
+        this.pos.addNewOrder();
         this.pos.showScreen("ProductScreen");
     }
     async onNextPage() {
@@ -277,8 +277,8 @@ export class TicketScreen extends Component {
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
 
-        if (this.pos.get_order().uuid !== destinationOrder.uuid) {
-            this.pos.set_order(destinationOrder);
+        if (this.pos.getOrder().uuid !== destinationOrder.uuid) {
+            this.pos.setOrder(destinationOrder);
         }
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
@@ -407,7 +407,7 @@ export class TicketScreen extends Component {
         const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
         return (
             order.get_orderlines().length === 0 &&
-            this.pos.get_open_orders().length === 1 &&
+            this.pos.getOpenOrders().length === 1 &&
             status === productScreenStatus &&
             order.payment_ids.length === 0
         );
@@ -495,7 +495,7 @@ export class TicketScreen extends Component {
                 }
             }
         }
-        return emptyOrderForPartner || emptyOrder || this.pos.add_new_order();
+        return emptyOrderForPartner || emptyOrder || this.pos.addNewOrder();
     }
     _doesOrderHaveSoleItem(order) {
         const orderlines = order.get_orderlines();
@@ -569,7 +569,7 @@ export class TicketScreen extends Component {
         if (this.pos.isOpenOrderShareable()) {
             await this.pos.syncAllOrders();
         }
-        this.pos.set_order(order);
+        this.pos.setOrder(order);
         this.closeTicketScreen();
     }
     _getOrderList() {

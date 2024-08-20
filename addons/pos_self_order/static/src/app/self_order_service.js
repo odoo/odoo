@@ -438,7 +438,7 @@ export class SelfOrder extends Reactive {
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {
-            const printer = this.create_printer(printerConfig);
+            const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig;
                 this.kitchenPrinters.push(printer);
@@ -446,7 +446,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    create_printer(printer) {
+    createPrinter(printer) {
         const url = deduceUrl(printer.proxy_ip || "");
         return new HWPrinter({ url });
     }

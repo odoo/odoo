@@ -5,7 +5,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class PaymentMercadoPago extends PaymentInterface {
     async create_payment_intent() {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const line = order.selected_paymentline;
         // Build informations for creating a payment intend on Mercado Pago.
         // Data in "external_reference" are send back with the webhook notification
@@ -24,7 +24,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         );
     }
     async get_last_status_payment_intent() {
-        const line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.getOrder().selected_paymentline;
         // mp_payment_intent_get will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
@@ -34,7 +34,7 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 
     async cancel_payment_intent() {
-        const line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.getOrder().selected_paymentline;
         // mp_payment_intent_cancel will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
@@ -50,7 +50,7 @@ export class PaymentMercadoPago extends PaymentInterface {
 
     async send_payment_request(cid) {
         await super.send_payment_request(...arguments);
-        const line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.getOrder().selected_paymentline;
         try {
             // During payment creation, user can't cancel the payment intent
             line.set_payment_status("waitingCapture");
@@ -92,7 +92,7 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 
     async handleMercadoPagoWebhook() {
-        const line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.getOrder().selected_paymentline;
         const MAX_RETRY = 5; // Maximum number of retries for the "ON_TERMINAL" BUG
         const RETRY_DELAY = 1000; // Delay between retries in milliseconds for the "ON_TERMINAL" BUG
         const showMessageAndResolve = (messageKey, status, resolverValue) => {

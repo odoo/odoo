@@ -61,7 +61,7 @@ export class PaymentVivaWallet extends PaymentInterface {
          * Override
          */
         super.send_payment_request(...arguments);
-        var order = this.pos.get_order();
+        var order = this.pos.getOrder();
         var line = order.get_selected_paymentline();
         let customerTrns = " ";
         line.set_payment_status("waitingCard");
@@ -79,7 +79,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         var data = {
             sessionId: line.sessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
-            cashRegisterId: this.pos.get_cashier().name,
+            cashRegisterId: this.pos.getCashier().name,
             amount: line.amount * 100,
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.sessionId + "/" + this.pos.session.id,
@@ -98,11 +98,11 @@ export class PaymentVivaWallet extends PaymentInterface {
          * Override
          */
         super.send_payment_cancel(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().get_selected_paymentline();
 
         var data = {
             sessionId: line.sessionId,
-            cashRegisterId: this.pos.get_cashier().name,
+            cashRegisterId: this.pos.getCashier().name,
         };
         return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel").then((data) => {
             this._viva_wallet_handle_response(data);

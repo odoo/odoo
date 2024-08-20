@@ -10,7 +10,7 @@ patch(CashierName.prototype, {
     //@Override
     get avatar() {
         if (this.pos.config.module_pos_hr) {
-            const cashier = this.pos.get_cashier();
+            const cashier = this.pos.getCashier();
             if (!(cashier && cashier.id)) {
                 return "";
             }

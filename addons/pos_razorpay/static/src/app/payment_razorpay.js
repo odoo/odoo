@@ -83,7 +83,7 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 
     _process_razorpay(cid) {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const line = order.get_selected_paymentline();
 
         if (line.amount < 0) {
@@ -113,7 +113,7 @@ export class PaymentRazorpay extends PaymentInterface {
      */
 
     async _waitForPaymentConfirmation() {
-        const paymentLine = this.pos.get_order().get_selected_paymentline();
+        const paymentLine = this.pos.getOrder().get_selected_paymentline();
         if (!paymentLine || paymentLine.payment_status == "retry") {
             return false;
         }

@@ -15,7 +15,7 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     },
     get hasChangesToPrint() {
         const hasChange = this.pos.getOrderChanges();

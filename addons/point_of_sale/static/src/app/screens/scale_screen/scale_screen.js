@@ -55,7 +55,7 @@ export class ScaleScreen extends Component {
         return weightRound - parseFloat(this.state.tare);
     }
     get _activePricelist() {
-        const current_order = this.pos.get_order();
+        const current_order = this.pos.getOrder();
         let current_pricelist = this.pos.config.pricelist_id;
         if (current_order) {
             current_pricelist = current_order.pricelist_id;
@@ -98,10 +98,10 @@ export class ScaleScreen extends Component {
         const product = this.props.product;
         const priceUnit = product.get_price(this._activePricelist, 1);
         let taxes = product.taxes_id;
-        if (this.pos.get_order().fiscal_position_id) {
+        if (this.pos.getOrder().fiscal_position_id) {
             taxes = getTaxesAfterFiscalPosition(
                 taxes,
-                this.pos.get_order().fiscal_position_id,
+                this.pos.getOrder().fiscal_position_id,
                 this.pos.models
             );
         }

@@ -11,7 +11,7 @@ patch(PaymentStripe.prototype, {
     },
 
     canBeAdjusted(uuid) {
-        var order = this.pos.get_order();
+        var order = this.pos.getOrder();
         var line = order.get_paymentline_by_uuid(uuid);
         return (
             this.pos.config.set_tip_after_payment &&

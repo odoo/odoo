@@ -90,7 +90,7 @@ export class PaymentScreen extends Component {
         return config;
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
     get paymentLines() {
         return this.currentOrder.payment_ids;
@@ -175,7 +175,7 @@ export class PaymentScreen extends Component {
             startingValue: this.env.utils.formatCurrency(value, false),
             formatDisplayedValue: (x) => `${this.pos.currency.symbol} ${x}`,
             getPayload: async (num) => {
-                await this.pos.set_tip(parseFloat(num ?? ""));
+                await this.pos.setTip(parseFloat(num ?? ""));
             },
         });
     }
@@ -222,7 +222,7 @@ export class PaymentScreen extends Component {
     async validateOrder(isForceValidate) {
         this.numberBuffer.capture();
         if (this.pos.config.cash_rounding) {
-            if (!this.pos.get_order().check_paymentlines_rounding()) {
+            if (!this.pos.getOrder().check_paymentlines_rounding()) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Rounding error in payment lines"),
                     body: _t(
@@ -331,14 +331,14 @@ export class PaymentScreen extends Component {
                 const printResult = await this.printer.print(
                     OrderReceipt,
                     {
-                        data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                        data: this.pos.orderExportForPrinting(this.pos.getOrder()),
                         formatCurrency: this.env.utils.formatCurrency,
                     },
                     { webPrintFallback: true }
                 );
 
                 if (printResult && this.pos.config.iface_print_skip_screen) {
-                    this.pos.add_new_order();
+                    this.pos.addNewOrder();
                     nextScreen = "ProductScreen";
                 }
             }
@@ -562,7 +562,7 @@ export class PaymentScreen extends Component {
         // the current order is fully paid and due is zero.
         const config = this.pos.config;
         const currency = this.pos.currency;
-        const currentOrder = this.pos.get_order();
+        const currentOrder = this.pos.getOrder();
         if (
             isPaymentSuccessful &&
             currentOrder.is_paid() &&

@@ -22,7 +22,7 @@ patch(ControlButtons.prototype, {
         return this.pos.models["loyalty.program"].filter((p) => p.program_type == "ewallet");
     },
     async onClickWallet() {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const eWalletPrograms = this._getEWalletPrograms();
         const orderTotal = order.get_total_with_tax();
         const eWalletRewards = this._getEWalletRewards(order);
@@ -107,7 +107,7 @@ patch(ControlButtons.prototype, {
     },
 
     getPotentialRewards() {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         // Claimable rewards excluding those from eWallet programs.
         // eWallet rewards are handled in the eWalletButton.
         let rewards = [];
@@ -141,7 +141,7 @@ patch(ControlButtons.prototype, {
      * @param {Integer} coupon_id
      */
     async _applyReward(reward, coupon_id, potentialQty) {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         order.uiState.disabledRewards.delete(reward.id);
 
         const args = {};

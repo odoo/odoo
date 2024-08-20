@@ -22,7 +22,7 @@ export class OrderTabs extends Component {
     }
     newFloatingOrder() {
         this.pos.selectedTable = null;
-        this.pos.add_new_order();
+        this.pos.addNewOrder();
         this.pos.showScreen("ProductScreen");
         if (this.env.inDialog) {
             this.dialog.closeAll();

@@ -13,13 +13,13 @@ patch(ReceiptScreen.prototype, {
         this.doPrintEventBadge = useTrackedAsync(() => this.printEventBadge());
     },
     async printEventFull() {
-        const registrations = this.pos.get_order().eventRegistrations.map((reg) => reg.id);
+        const registrations = this.pos.getOrder().eventRegistrations.map((reg) => reg.id);
         await this.report.doAction("event.action_report_event_registration_full_page_ticket", [
             registrations,
         ]);
     },
     async printEventBadge() {
-        const registrations = this.pos.get_order().eventRegistrations.map((reg) => reg.id);
+        const registrations = this.pos.getOrder().eventRegistrations.map((reg) => reg.id);
         await this.report.doAction("event.action_report_event_registration_badge", [registrations]);
     },
 });

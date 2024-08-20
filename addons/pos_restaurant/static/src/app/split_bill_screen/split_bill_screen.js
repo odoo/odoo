@@ -18,7 +18,7 @@ export class SplitBillScreen extends Component {
     }
 
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
 
     get orderlines() {
@@ -56,7 +56,7 @@ export class SplitBillScreen extends Component {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
-        const newOrder = this.pos.add_new_order();
+        const newOrder = this.pos.addNewOrder();
         newOrder.note = `${newOrder.tracking_number} Split from ${originalOrder.table_id.table_number}`;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;
@@ -101,7 +101,7 @@ export class SplitBillScreen extends Component {
         originalOrder.customerCount -= 1;
         originalOrder.set_screen_data({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
-        this.pos.set_order(newOrder);
+        this.pos.setOrder(newOrder);
         this.back();
     }
 

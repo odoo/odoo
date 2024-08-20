@@ -12,8 +12,8 @@ export class PaymentPaytm extends PaymentInterface {
      */
     async send_payment_request(uuid) {
         await super.send_payment_request(...arguments);
-        const paymentLine = this.pos.get_order()?.get_selected_paymentline();
-        const order = this.pos?.get_order();
+        const paymentLine = this.pos.getOrder()?.get_selected_paymentline();
+        const order = this.pos?.getOrder();
         const retry = this._retryCountUtility(order.uuid);
         let transactionId = order.name.replace(" ", "").replaceAll("-", "").toUpperCase();
         if (retry > 0) {
@@ -56,7 +56,7 @@ export class PaymentPaytm extends PaymentInterface {
      */
     async send_payment_cancel(order, uuid) {
         await super.send_payment_cancel(...arguments);
-        const paymentLine = this.pos.get_order()?.get_selected_paymentline();
+        const paymentLine = this.pos.getOrder()?.get_selected_paymentline();
         paymentLine.set_payment_status("retry");
         this._incrementRetry(order.uuid);
         clearTimeout(this.pollTimeout);
@@ -71,7 +71,7 @@ export class PaymentPaytm extends PaymentInterface {
      */
     async pollPayment(transactionId, referenceId, timestamp) {
         const fetchPaymentStatus = async (resolve, reject) => {
-            const paymentLine = this.pos.get_order()?.get_selected_paymentline();
+            const paymentLine = this.pos.getOrder()?.get_selected_paymentline();
             if (!paymentLine || paymentLine.payment_status == "retry") {
                 return false;
             }
@@ -107,7 +107,7 @@ export class PaymentPaytm extends PaymentInterface {
                     );
                 }
             } catch (error) {
-                const order = this.pos.get_order();
+                const order = this.pos.getOrder();
                 this._incrementRetry(order.uuid);
                 paymentLine.set_payment_status("force_done");
                 this._showError(error, "paytmFetchPaymentStatus");

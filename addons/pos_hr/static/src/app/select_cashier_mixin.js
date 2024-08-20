@@ -23,7 +23,7 @@ export function useCashierSelector(
                 );
                 if (
                     employee &&
-                    employee !== pos.get_cashier() &&
+                    employee !== pos.getCashier() &&
                     (!employee._pin || (await checkPin(employee)))
                 ) {
                     pos.set_cashier(employee);
@@ -70,7 +70,7 @@ export function useCashierSelector(
             return;
         }
         const employeesList = pos.models["hr.employee"]
-            .filter((employee) => employee.id !== pos.get_cashier().id)
+            .filter((employee) => employee.id !== pos.getCashier().id)
             .map((employee) => {
                 return {
                     id: employee.id,

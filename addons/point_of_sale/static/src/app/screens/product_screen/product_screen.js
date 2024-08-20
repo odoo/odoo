@@ -164,7 +164,7 @@ export class ProductScreen extends Component {
         this.numberBuffer.sendKey(buttonValue);
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
     get total() {
         return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
@@ -199,7 +199,7 @@ export class ProductScreen extends Component {
 
             if (records && records["product.product"].length > 0) {
                 product = records["product.product"][0];
-                await this.pos._loadMissingPricelistItems([product]);
+                await this.pos.loadMissingPricelistItems([product]);
             }
         }
 

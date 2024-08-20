@@ -74,7 +74,7 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     _adyen_pay_data() {
-        var order = this.pos.get_order();
+        var order = this.pos.getOrder();
         var config = this.pos.config;
         var line = order.get_selected_paymentline();
         var data = {
@@ -108,7 +108,7 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     _adyen_pay(uuid) {
-        var order = this.pos.get_order();
+        var order = this.pos.getOrder();
 
         if (order.get_selected_paymentline().amount < 0) {
             this._show_error(_t("Cannot process transactions with negative amount."));
@@ -282,7 +282,7 @@ export class PaymentAdyen extends PaymentInterface {
 
         const tip_amount = payment_result.AmountsResp.TipAmount;
         if (config.adyen_ask_customer_for_tip && tip_amount > 0) {
-            this.pos.set_tip(tip_amount);
+            this.pos.setTip(tip_amount);
             line.set_amount(payment_result.AmountsResp.AuthorizedAmount);
         }
 

@@ -19,7 +19,7 @@ patch(ControlButtons.prototype, {
     async clickPrintBill() {
         // Need to await to have the result in case of automatic skip screen.
         (await this.printer.print(OrderReceipt, {
-            data: this.pos.orderExportForPrinting(this.pos.get_order()),
+            data: this.pos.orderExportForPrinting(this.pos.getOrder()),
             formatCurrency: this.env.utils.formatCurrency,
         })) || this.dialog.add(BillScreen);
     },
@@ -46,8 +46,8 @@ patch(ControlButtons.prototype, {
         });
     },
     clickTransferOrder() {
-        this.pos.orderToTransferUuid = this.pos.get_order().uuid;
-        this.pos.get_order().setBooked(true);
+        this.pos.orderToTransferUuid = this.pos.getOrder().uuid;
+        this.pos.getOrder().setBooked(true);
         this.pos.showScreen("FloorScreen");
     },
     clickTakeAway() {

@@ -20,7 +20,7 @@ export class ReceiptScreen extends Component {
         this.renderer = useService("renderer");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.currentOrder = this.pos.get_order();
+        this.currentOrder = this.pos.getOrder();
         const partner = this.currentOrder.get_partner();
         this.state = useState({
             input: partner?.email || "",
@@ -29,14 +29,14 @@ export class ReceiptScreen extends Component {
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doPrint = useTrackedAsync(() => this.pos.printReceipt());
         onMounted(() => {
-            const order = this.pos.get_order();
+            const order = this.pos.getOrder();
             this.currentOrder.uiState.locked = true;
             this.pos.sendOrderInPreparation(order);
         });
     }
 
     _addNewOrder() {
-        this.pos.add_new_order();
+        this.pos.addNewOrder();
     }
     actionSendReceipt() {
         if (this.state.mode === "email" && this.isValidEmail(this.state.input)) {
@@ -91,7 +91,7 @@ export class ReceiptScreen extends Component {
         this.pos.showScreen(name, props);
     }
     isResumeVisible() {
-        return this.pos.get_open_orders().length > 0;
+        return this.pos.getOpenOrders().length > 0;
     }
     async _sendReceiptToCustomer({ action }) {
         const order = this.currentOrder;
@@ -107,7 +107,7 @@ export class ReceiptScreen extends Component {
         const ticketImage = await this.renderer.toJpeg(
             OrderReceipt,
             {
-                data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                data: this.pos.orderExportForPrinting(this.pos.getOrder()),
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { addClass: "pos-receipt-print" }

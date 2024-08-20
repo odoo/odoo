@@ -63,7 +63,7 @@ export class Navbar extends Component {
         return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
     }
     getOrderTabs() {
-        return this.pos.get_open_orders();
+        return this.pos.getOpenOrders();
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
@@ -71,7 +71,7 @@ export class Navbar extends Component {
     }
 
     get orderCount() {
-        return this.pos.get_open_orders().length;
+        return this.pos.getOpenOrders().length;
     }
 
     get appUrl() {

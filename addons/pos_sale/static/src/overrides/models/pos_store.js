@@ -34,7 +34,7 @@ patch(PosStore.prototype, {
         const sale_order = await this._getSaleOrder(clickedOrderId);
         sale_order.shipping_date = this.config.ship_later && sale_order.shipping_date;
 
-        const currentSaleOrigin = this.get_order()
+        const currentSaleOrigin = this.getOrder()
             .get_orderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
         if (currentSaleOrigin?.id) {
@@ -44,7 +44,7 @@ patch(PosStore.prototype, {
                 linkedSO.partner_invoice_id?.id !== sale_order.partner_invoice_id?.id ||
                 linkedSO.partner_shipping_id?.id !== sale_order.partner_shipping_id?.id
             ) {
-                this.add_new_order({
+                this.addNewOrder({
                     partner_id: sale_order.partner_id,
                 });
                 this.notification.add(_t("A new order has been created."));
@@ -56,17 +56,17 @@ patch(PosStore.prototype, {
                 (position) => position.id === sale_order.fiscal_position_id
             );
         if (orderFiscalPos) {
-            this.get_order().update({
+            this.getOrder().update({
                 fiscal_position_id: orderFiscalPos,
             });
         }
         if (sale_order.partner_id) {
-            this.get_order().set_partner(sale_order.partner_id);
+            this.getOrder().set_partner(sale_order.partner_id);
         }
         selectedOption == "settle"
             ? await this.settleSO(sale_order, orderFiscalPos)
             : await this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
-        this.selectOrderLine(this.get_order(), this.get_order().lines.at(-1));
+        this.selectOrderLine(this.getOrder(), this.getOrder().lines.at(-1));
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];
@@ -83,7 +83,7 @@ patch(PosStore.prototype, {
     },
     async settleSO(sale_order, orderFiscalPos) {
         if (sale_order.pricelist_id) {
-            this.get_order().set_pricelist(sale_order.pricelist_id);
+            this.getOrder().set_pricelist(sale_order.pricelist_id);
         }
         let useLoadedLots = false;
         let userWasAskedAboutLoadedLots = false;
@@ -116,7 +116,7 @@ patch(PosStore.prototype, {
                 sale_order_line_id: line,
                 customer_note: line.customer_note,
                 description: line.name,
-                order_id: this.get_order(),
+                order_id: this.getOrder(),
             };
             if (line.display_type === "line_section") {
                 continue;
@@ -240,7 +240,7 @@ patch(PosStore.prototype, {
                 this.models
             );
             const new_line = await this.addLineToCurrentOrder({
-                order_id: this.get_order(),
+                order_id: this.getOrder(),
                 product_id: this.config.down_payment_product_id,
                 price_unit: new_price,
                 sale_order_origin_id: sale_order,

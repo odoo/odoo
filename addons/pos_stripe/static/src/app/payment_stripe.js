@@ -59,7 +59,7 @@ export class PaymentStripe extends PaymentInterface {
             this._showError(error);
             return false;
         }
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().get_selected_paymentline();
         // Because the reader can only connect to one instance of the SDK at a time.
         // We need the disconnect this reader if we want to use another one
         if (
@@ -82,7 +82,7 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async connectReader() {
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().get_selected_paymentline();
         const discoveredReaders = JSON.parse(this.pos.discoveredReaders);
         for (const selectedReader of discoveredReaders) {
             if (selectedReader.serial_number == this.payment_method_id.stripe_serial_number) {
@@ -139,7 +139,7 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async collectPayment(amount) {
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().get_selected_paymentline();
         const clientSecret = await this.fetchPaymentIntentClientSecret(
             line.payment_method_id,
             amount
@@ -260,7 +260,7 @@ export class PaymentStripe extends PaymentInterface {
          * Override
          */
         await super.send_payment_request(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().get_selected_paymentline();
         line.set_payment_status("waiting");
         try {
             if (await this.checkReader()) {
@@ -277,7 +277,7 @@ export class PaymentStripe extends PaymentInterface {
          * Override
          */
         super.send_payment_cancel(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().get_selected_paymentline();
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
             line.set_payment_status("retry");

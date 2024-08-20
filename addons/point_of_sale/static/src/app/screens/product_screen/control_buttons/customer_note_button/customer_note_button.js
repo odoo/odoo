@@ -26,7 +26,7 @@ export class OrderlineNoteButton extends Component {
         this.dialog = useService("dialog");
     }
     async onClick() {
-        const selectedOrderline = this.pos.get_order().get_selected_orderline();
+        const selectedOrderline = this.pos.getOrder().get_selected_orderline();
         const selectedNote = this.props.getter(selectedOrderline);
         const notes = this.pos.models["pos.note"].getAll();
         let buttons;
