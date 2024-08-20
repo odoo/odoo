@@ -153,7 +153,7 @@ class ResDevice(models.Model):
 
     @api.model
     def _select(self):
-        return "SELECT DISTINCT ON (D.session_identifier, D.platform, D.browser) D.*"
+        return "SELECT DISTINCT ON (D.user_id, D.session_identifier, D.platform, D.browser) D.*"
 
     @api.model
     def _from(self):
@@ -165,7 +165,7 @@ class ResDevice(models.Model):
 
     @api.model
     def _order_by(self):
-        return "ORDER BY D.session_identifier, D.platform, D.browser, D.last_activity DESC"
+        return "ORDER BY D.user_id, D.session_identifier, D.platform, D.browser, D.last_activity DESC"
 
     @property
     def _query(self):
