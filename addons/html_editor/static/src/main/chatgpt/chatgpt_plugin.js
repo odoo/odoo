@@ -20,6 +20,9 @@ export class ChatGPTPlugin extends Plugin {
                 id: "translate",
                 category: "ai",
                 title: _t("Translate with AI"),
+                isAvailable: (selection) => {
+                    return !selection.isCollapsed;
+                },
                 Component: LanguageSelector,
             },
             {
@@ -120,6 +123,12 @@ export class ChatGPTPlugin extends Plugin {
                 { ...dialogParams, originalText, sanitize },
                 { onClose }
             );
+        }
+        if (this.services.ui.isSmall) {
+            // If the dialog is opened on a small screen, remove all selection
+            // because the selection can be seen through the dialog on some devices.
+            // TODO: Find a better way and avoid modifying range
+            this.document.getSelection()?.removeAllRanges();
         }
     }
 }

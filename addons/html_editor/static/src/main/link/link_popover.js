@@ -41,6 +41,10 @@ export class LinkPopover extends Component {
         { style: "flat", label: _t("Flat") },
     ];
     setup() {
+        this.ui = useService("ui");
+        this.notificationService = useService("notification");
+        this.http = useService("http");
+
         this.state = useState({
             editing: this.props.linkEl.href ? false : true,
             url: this.props.linkEl.href || "",
@@ -60,9 +64,6 @@ export class LinkPopover extends Component {
             buttonStyle: this.initButtonStyle(this.props.linkEl.className),
             isImage: this.props.isImage,
         });
-        this.notificationService = useService("notification");
-
-        this.http = useService("http");
 
         this.editingWrapper = useRef("editing-wrapper");
         useAutofocus({
