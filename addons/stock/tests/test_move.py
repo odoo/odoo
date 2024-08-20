@@ -6791,3 +6791,25 @@ class StockMove(TransactionCase):
         # Since both moves have the same date, ensure that the reservation is changed on the latest created
         self.assertEqual(move_1.state, 'assigned')
         self.assertEqual(move_2.state, 'partially_available')
+
+    def test_compute_show_info(self):
+        """
+        Test that `lot_name` and `lot_id` are hidden in the view and that
+        `quant` is displayed when the picking type has `use_create_lots`
+        and `use_existing_lots` set to True.
+        """
+        picking_type_in = self.env.ref('stock.picking_type_in')
+        picking_type_in.use_create_lots = True
+        picking_type_in.use_existing_lots = True
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product_lot.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+            'picking_type_id': picking_type_in.id,
+        })
+        self.assertFalse(move1.show_lots_text)
+        self.assertFalse(move1.show_lots_m2o)
+        self.assertTrue(move1.show_quant)
