@@ -80,6 +80,18 @@ class TestMailTemplate(TestMailTemplateCommon):
         self.assertEqual(action.name, 'Send Mail (%s)' % self.test_template.name)
         self.assertEqual(action.binding_model_id.model, 'mail.test.lang')
 
+    def test_template_copy(self):
+        """ Test copying template, notably for attachments management """
+        template = self.test_template
+        self.assertEqual(template.attachment_ids.mapped("res_id"), [template.id] * 2)
+        copy = template.copy()
+        self.assertEqual(template.attachment_ids, copy.attachment_ids)
+        self.assertEqual(
+            template.attachment_ids.mapped("res_id"), [copy.id] * 2,
+            "Updated res_id, seems strange"
+        )
+        self.assertEqual(copy.attachment_ids.mapped("res_id"), [copy.id] * 2)
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_template_schedule_email(self):
@@ -237,6 +249,8 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(len(mails), 100)
         for idx, (mail, record) in enumerate(zip(mails, self.test_records_batch)):
             self.assertEqual(sorted(mail.attachment_ids.mapped('name')), ['first.txt', 'second.txt'])
+            self.assertEqual(mail.attachment_ids.mapped("res_id"), [self.test_template_wreports.id] * 2)
+            self.assertEqual(mail.attachment_ids.mapped("res_model"), [template._name] * 2)
             self.assertEqual(mail.email_cc, self.test_template.email_cc)
             self.assertEqual(mail.email_to, self.test_template.email_to)
             self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
@@ -278,6 +292,16 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
             self.assertEqual(
                 sorted(mail.attachment_ids.mapped('name')),
                 [f'TestReport for {record.name}.html', f'TestReport2 for {record.name}.html', 'first.txt', 'second.txt']
+            )
+            self.assertEqual(
+                sorted(mail.attachment_ids.mapped("res_id")),
+                sorted([self.test_template_wreports.id] * 2 + [mail.mail_message_id.id] * 2),
+                "Attachments: attachment_ids -> linked to template, attachments -> to mail.message"
+            )
+            self.assertEqual(
+                sorted(mail.attachment_ids.mapped("res_model")),
+                sorted([template._name] * 2 + ["mail.message"] * 2),
+                "Attachments: attachment_ids -> linked to template, attachments -> to mail.message"
             )
             self.assertEqual(mail.email_cc, self.test_template.email_cc)
             self.assertEqual(mail.email_to, self.test_template.email_to)
