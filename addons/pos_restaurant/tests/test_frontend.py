@@ -205,6 +205,13 @@ class TestFrontend(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('account.group_account_invoice').id),
             ]
         })
+        dummy_fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+        })
+        self.pos_config.write({
+            'takeaway': True,
+            'takeaway_fp_id': dummy_fiscal_position.id,
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
 
         self.start_pos_tour('pos_restaurant_sync')
