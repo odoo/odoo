@@ -36,7 +36,7 @@ from .tools.misc import Callbacks
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
-    from .api import Transaction
+    from odoo.orm.environments import Transaction
 
     T = typing.TypeVar('T')
 
@@ -160,6 +160,7 @@ class BaseCursor(_CursorProtocol):
 
     transaction: Transaction | None
     cache: dict[typing.Any, typing.Any]
+    dbname: str
 
     def __init__(self) -> None:
         self.precommit = Callbacks()
@@ -236,6 +237,24 @@ class BaseCursor(_CursorProtocol):
                 self.commit()
         finally:
             self.close()
+
+    def dictfetchone(self) -> dict[str, typing.Any] | None:
+        """ Return the first row as a dict (column_name -> value) or None if no rows are available. """
+        raise NotImplementedError
+
+    def dictfetchmany(self, size: int) -> list[dict[str, typing.Any]]:
+        res: list[dict[str, typing.Any]] = []
+        while size > 0 and (row := self.dictfetchone()) is not None:
+            res.append(row)
+            size -= 1
+        return res
+
+    def dictfetchall(self) -> list[dict[str, typing.Any]]:
+        """ Return all rows as dicts (column_name -> value). """
+        res: list[dict[str, typing.Any]] = []
+        while (row := self.dictfetchone()) is not None:
+            res.append(row)
+        return res
 
     def split_for_in_conditions(self, ids: Iterable[T], size: int = 0) -> Iterator[tuple[T, ...]]:
         """Split a list of identifiers into one or more smaller tuples
@@ -319,7 +338,6 @@ class Cursor(BaseCursor):
     sql_from_log: dict[str, tuple[int, float]]
     sql_into_log: dict[str, tuple[int, float]]
     sql_log_count: int
-    dbname: str
 
     def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict):
         super().__init__()
@@ -647,6 +665,16 @@ class TestCursor(BaseCursor):
 
     def __getattr__(self, name):
         return getattr(self._cursor, name)
+
+    def dictfetchone(self):
+        """ Return the first row as a dict (column_name -> value) or None if no rows are available. """
+        return self._cursor.dictfetchone()
+
+    def dictfetchmany(self, size):
+        return self._cursor.dictfetchmany(size)
+
+    def dictfetchall(self):
+        return self._cursor.dictfetchall()
 
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``datetime.now()``. """

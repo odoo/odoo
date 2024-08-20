@@ -1760,7 +1760,7 @@ class Website(models.Model):
             try:
                 model = self.env[model_name]
                 field = model._fields[field_name]
-                if model._abstract or model._table_query is not None or not field.store:
+                if model._abstract or model._table_query or not field.store:
                     continue
             except KeyError:
                 continue
