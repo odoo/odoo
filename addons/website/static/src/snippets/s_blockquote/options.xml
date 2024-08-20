@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.s_blockquote_option_layout">
+    <!-- Layout -->
+    <WeRange title.translate="Edge Spacing" selectClass="'p-1|p-2|p-3|p-4|p-5'"/>
+    <WeSelect title.translate="Decoration">
+        <WeButton selectClass="'s_blockquote_default'">None</WeButton>
+        <WeButton selectClass="'s_blockquote_with_line'" name="'blockquote_with_line_opt'">Left line</WeButton>
+        <WeButton selectClass="'s_blockquote_with_icon'">Icon</WeButton>
+    </WeSelect>
+    <WeRow title.translate="Style" class="'o_we_sublevel_1'">
+        <WeInput cssProperty="'width'" selectStyle="''" unit="'px'" dependencies="'blockquote_with_line_opt'" applyTo="'.s_blockquote_line_elt'"/>
+        <WeColorpicker tooltip.translate="Color"
+            name="'bg_color_opt'"
+            applyTo="'.s_blockquote_line_elt'"
+            selectStyle="''"
+            cssProperty="'background-color'"
+            colorPrefix="'bg-'"
+            withGradients="'true'"
+            dependencies="'blockquote_with_line_opt'"
+        />
+    </WeRow>
+    <WeSelect title.translate="Author Alignment" applyTo="'.s_blockquote_infos'">
+        <WeButton selectClass="'flex-row align-items-start justify-content-start text-start'">Left</WeButton>
+        <WeButton selectClass="'flex-column align-items-center text-center'">Center</WeButton>
+        <WeButton selectClass="'flex-row-reverse align-items-start justify-content-start text-end'">Right</WeButton>
+    </WeSelect>
+</t>
+</templates>

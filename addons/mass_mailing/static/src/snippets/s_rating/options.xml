@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="mass_mailing.s_rating_option">
+    <WeRow title.translate="Icon">
+        <WeSelect>
+            <WeButton setIcons="'fa-star'"><i class="fa fa-fw fa-star"/> Stars</WeButton>
+            <WeButton setIcons="'fa-thumbs-up'"><i class="fa fa-fw fa-thumbs-up"/> Thumbs</WeButton>
+            <WeButton setIcons="'fa-circle'"><i class="fa fa-fw fa-circle"/> Circles</WeButton>
+            <WeButton setIcons="'fa-square'"><i class="fa fa-fw fa-square"/> Squares</WeButton>
+            <WeButton setIcons="'fa-heart'"><i class="fa fa-fw fa-heart"/> Hearts</WeButton>
+            <WeButton setIcons="'custom'" class="'d-none'">Custom</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Active" class="'o_we_sublevel_1'">
+        <WeColorpicker selectStyle="''" applyTo="'.s_rating_active_icons'" cssProperty="'color'" colorPrefix="'text-'"/>
+        <WeButton customIcon="'true'" customActiveIcon="'true'" noPreview="'true'">
+            <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+        </WeButton>
+    </WeRow>
+    <WeRow title.translate="Inactive" class="'o_we_sublevel_1'">
+        <WeColorpicker selectStyle="''" applyTo="'.s_rating_inactive_icons'" cssProperty="'color'" colorPrefix="'text-'"/>
+        <WeButton customIcon="'true'" customActiveIcon="'false'" noPreview="'true'">
+            <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+        </WeButton>
+    </WeRow>
+    <WeRow title.translate="Score">
+        <WeInput activeIconsNumber="'true'" step="'1'"/>
+        <span class="mx-2">/</span>
+        <WeInput totalIconsNumber="'true'" step="'1'"/>
+    </WeRow>
+    <WeRow title.translate="Size">
+        <WeButtonGroup applyTo="'.s_rating_icons'">
+            <WeButton selectClass="''" tooltip.translate="Small" img="'/website/static/src/img/snippets_options/size_small.svg'"/>
+            <WeButton selectClass="'fa-2x'" tooltip.translate="Medium" img="'/website/static/src/img/snippets_options/size_medium.svg'"/>
+            <WeButton selectClass="'fa-3x'" tooltip.translate="Large" img="'/website/static/src/img/snippets_options/size_large.svg'"/>
+        </WeButtonGroup>
+    </WeRow>
+    <WeRow title.translate="Title Position">
+        <WeSelect>
+            <WeButton selectClass="''">Top</WeButton>
+            <WeButton selectClass="'s_rating_inline'">Left</WeButton>
+            <WeButton selectClass="'s_rating_no_title'">None</WeButton>
+        </WeSelect>
+    </WeRow>
+</t>
+
+</templates>

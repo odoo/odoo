@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_website_form_form_option">
+    <WeRow t-if="!renderContext.modelCantChange and renderContext.models"
+            title.translate="Action">
+        <WeSelect noPreview="'true'">
+            <t t-foreach="renderContext.models" t-as="model" t-key="model.name">
+                <WeButton t-out="model.website_form_label" selectAction="model.id.toString()"/>
+            </t>
+        </WeSelect>
+    </WeRow>
+    <t t-if="renderContext.formInfo.fields">
+        <t t-foreach="renderContext.formInfo.fields" t-as="field" t-key="field.name">
+            <WeRow t-if="field.type === 'many2one'" title="field.string">
+                <WeSelect
+                    noPreview="'true'"
+                    fieldName="field.name"
+                    isSelect="'true'"
+                >
+                    <WeButton t-if="!field.required" addActionField="'0'">
+                        None
+                    </WeButton>
+                    <WeButton t-foreach="field.records" t-as="record" t-key="record.id"
+                        addActionField="record.id.toString()"
+                    >
+                        <t t-out="record.display_name"/>
+                    </WeButton>
+                </WeSelect>
+                <WeButton t-if="field.createAction" class="'fa fa-fw fa-plus'"
+                    tooltip.translate="Create New" noPreview="'true'"
+                    promptSaveRedirect="field.createAction"
+                />
+            </WeRow>
+            <WeInput t-if="field.type === 'char'" class="'o_we_large'" title="field.string"
+                noPreview="'true'"
+                fieldName="field.name"
+                addActionField="''"
+            />
+        </t>
+    </t>
+    <WeRow title.translate="Marked Fields">
+        <WeSelect name="'field_mark_select'">
+            <WeButton selectClass="''">None</WeButton>
+            <WeButton selectClass="'o_mark_required'" name="'form_required_opt'">Required</WeButton>
+            <WeButton selectClass="'o_mark_optional'" name="'form_optional_opt'">Optional</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Mark Text">
+        <WeInput setMark="''" dependencies="'form_required_opt, form_optional_opt'"/>
+    </WeRow>
+    <WeRow title.translate="Labels Width">
+        <WeInput
+            selectStyle="''" cssProperty="'width'"
+            unit="'px'" applyTo="'.s_website_form_label'"/>
+    </WeRow>
+    <WeRow title.translate="On Success">
+        <WeSelect noPreview="'true'">
+            <WeButton onSuccess="'nothing'">Nothing</WeButton>
+            <WeButton onSuccess="'redirect'" name="'show_redirect_opt'">Redirect</WeButton>
+            <WeButton onSuccess="'message'" name="'show_message_opt'">Show Message</WeButton>
+        </WeSelect>
+        <WeButton class="'fa fa-fw fa-eye align-self-end toggle-edit-message'" tooltip.translate="Edit Message" name="'message_opt'" dependencies="'show_message_opt'"/>
+    </WeRow>
+    <WeRow title.translate="URL">
+        <WeUrlPicker selectDataAttribute="'/contactus-thank-you'" attributeName="'successPage'" name="'url_opt'" dependencies="'show_redirect_opt'"/>
+    </WeRow>
+    <WeCheckbox t-if="renderContext.hasRecaptchaKey" title.translate="Show reCaptcha Policy" toggleRecaptchaLegal="''" noPreview="'true'"/>
+</t>
+
+<t t-name="website.s_website_form_add_field_form_option">
+    <t t-set="tooltip">Add a new field at the end</t>
+    <WeButton class="'o_we_bg_brand_primary'"
+        tooltip="tooltip"
+        addField="''"
+        noPreview="'true'">
+        + Field
+    </WeButton>
+</t>
+
+<t t-name="website.s_website_form_add_field_option">
+    <t t-set="tooltip">Add a new field after this one</t>
+    <WeButton class="'o_we_bg_brand_primary'"
+        tooltip="tooltip"
+        addField="''"
+        noPreview="'true'">
+        + Field
+    </WeButton>
+</t>
+
+<t t-name="website.s_website_form_field_required_option">
+    <!-- Disable the delete option of model required fields and show
+    alert and tooltip on delete buttons -->
+    <we-alert class="mt-2"><span t-out="env.renderContext.alertText"/></we-alert>
+</t>
+
+<t t-name="website.s_website_form_field_option">
+    <WeRow title.translate="Type">
+        <WeSelect name="'type_opt'" noPreview="'true'">
+            <we-title>Custom Field</we-title>
+            <WeButton customField="'char'">Text</WeButton>
+            <WeButton customField="'text'">Long Text</WeButton>
+            <WeButton customField="'email'">Email</WeButton>
+            <WeButton customField="'tel'">Telephone</WeButton>
+            <WeButton customField="'url'">Url</WeButton>
+            <WeButton customField="'integer'">Number</WeButton>
+            <WeButton customField="'float'">Decimal Number</WeButton>
+            <WeButton customField="'boolean'">Checkbox</WeButton>
+            <WeButton customField="'one2many'">Multiple Checkboxes</WeButton>
+            <WeButton customField="'selection'">Radio Buttons</WeButton>
+            <WeButton customField="'many2one'">Selection</WeButton>
+            <WeButton customField="'date'">Date</WeButton>
+            <WeButton customField="'datetime'">Date &amp; Time</WeButton>
+            <WeButton customField="'binary'">File Upload</WeButton>
+            <t t-if="renderContext.availableFields.length">
+                <we-title>Existing fields</we-title>
+                <WeButton t-foreach="renderContext.availableFields" t-as="field" t-key="field.name"
+                    existingField="field.name"
+                >
+                    <t t-out="field.string"/>
+                </WeButton>
+            </t>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Input Type">
+        <WeSelect name="'char_input_type_opt'" noPreview="'true'">
+            <WeButton selectType="'char'">Text</WeButton>
+            <WeButton selectType="'email'">Email</WeButton>
+            <WeButton selectType="'tel'">Telephone</WeButton>
+            <WeButton selectType="'url'">Url</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Selection type">
+        <WeSelect name="'existing_field_select_type_opt'" noPreview="'true'">
+            <WeButton existingFieldSelectType="'many2one'">Dropdown List</WeButton>
+            <WeButton existingFieldSelectType="'selection'">Radio</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Display" class="'o_we_sublevel_1'">
+        <WeSelect name="'multi_check_display_opt'" noPreview="'true'">
+            <WeButton multiCheckboxDisplay="'horizontal'">Horizontal</WeButton>
+            <WeButton multiCheckboxDisplay="'vertical'">Vertical</WeButton>
+        </WeSelect>
+    </WeRow>
+    <t t-set="unit_textarea_height">rows</t>
+    <WeRow title.translate="Height" class="'o_we_sublevel_1'">
+        <WeInput
+            applyTo="'textarea'"
+            unit="unit_textarea_height" step="'1'"
+            selectAttribute="'3#' + unit_textarea_height"
+            attributeName="'rows'"/>
+    </WeRow>
+    <WeInput title.translate="Label" class="'o_we_large'" setLabelText="''"/>
+    <WeRow title.translate="Position" class="'o_we_sublevel_1'">
+        <WeButtonGroup>
+            <WeButton tooltip.translate="Hide" selectLabelPosition="'none'">
+                <i class="fa fa-eye-slash"/>
+            </WeButton>
+            <WeButton tooltip.translate="Top"
+                       selectLabelPosition="'top'"
+                       img="'/website/static/src/img/snippets_options/pos_top.svg'"/>
+            <WeButton tooltip.translate="Left"
+                       selectLabelPosition="'left'"
+                       img="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <WeButton tooltip.translate="Right"
+                       selectLabelPosition="'right'"
+                       img="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </WeButtonGroup>
+    </WeRow>
+    <WeCheckbox title.translate="Description" toggleDescription="'true'" noPreview="'true'"/>
+    <WeInput title.translate="Placeholder" class="'o_we_large'"
+        selectAttribute="''" attributeName="'placeholder'"
+        applyTo="`input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea`"/>
+    <!-- TODO: @owl-options see if all these cannot be inside the same row -->
+    <t t-set="default_value_label">Default Value</t>
+    <WeInput title="default_value_label" class="'o_we_large'" selectTextareaValue="''" applyTo="'textarea'"/>
+    <WeCheckbox title="default_value_label" selectAttribute="'checked'" attributeName="'checked'"
+                applyTo="`.col-sm > * > input[type='checkbox']`" noPreview="'true'"/>
+    <WeInput title="default_value_label" class="'o_we_large'" selectAttribute="''" attributeName="'value'" selectProperty="''"
+              propertyName="'value'" applyTo="`input[type='text']:not(.datetimepicker-input), input[type='email'], input[type='tel'], input[type='url']`"/>
+    <WeInput title="default_value_label" class="'o_we_large'" selectAttribute="''" attributeName="'value'" selectProperty="''"
+              step="'1'" propertyName="'value'" applyTo="`input[type='number']`"/>
+    <WeRow title="default_value_label">
+        <WeDatetime selectAttribute="''" attributeName="'value'" selectValueProperty="''"
+                           applyTo="'.s_website_form_datetime input'"/>
+    </WeRow>
+    <WeRow title="default_value_label">
+        <WeDatetime selectAttribute="''" attributeName="'value'" selectValueProperty="''"
+                pickerType="'date'"
+                applyTo="'.s_website_form_date input'"/>
+    </WeRow>
+    <WeRow title.translate="Required">
+        <WeCheckbox name="'required_opt'" noPreview="'true'"
+            toggleRequired="'s_website_form_required'"/>
+    </WeRow>
+    <WeRow title.translate="Max # of Files">
+        <WeInput name="'max_files_number_opt'"
+            tooltip.translate="The maximum number of files that can be uploaded."
+            attributeName="'maxFilesNumber'"
+            selectDataAttribute="'1'"
+            applyTo="`input[type='file']`"
+            step="'1'"/>
+    </WeRow>
+    <WeRow title.translate="Max File Size">
+        <WeInput
+            tooltip.translate="The maximum size (in MB) an uploaded file can have."
+            attributeName="'maxFileSize'"
+            selectDataAttribute="'1MB'"
+            applyTo="`input[type='file']`"
+            unit="'MB'"/>
+    </WeRow>
+    <WeList t-if="renderContext.valueList"
+        title="renderContext.valueList.title"
+        addItemTitle="renderContext.valueList.addItemTitle"
+        renderListItems="''"
+        hasDefault="renderContext.valueList.hasDefault"
+        defaults="renderContext.valueList.defaults"
+        availableRecords="renderContext.valueList.availableRecords"
+        newRecordId="renderContext.valueList.newRecordId"
+    />
+    <WeSelect title.translate="Visibility" noPreview="'true'">
+        <WeButton setVisibility="'visible'" selectClass="''">Always Visible</WeButton>
+        <WeButton setVisibility="'hidden'" selectClass="'s_website_form_field_hidden'">Hidden</WeButton>
+        <WeButton setVisibility="'conditional'" selectClass="'s_website_form_field_hidden_if d-none'">Visible only if</WeButton>
+    </WeSelect>
+    <WeRow name="'hidden_condition_opt'">
+        <WeSelect name="'hidden_condition_opt'" noPreview="'true'">
+            <!-- Load every existing form input -->
+            <WeButton t-foreach="renderContext.conditionInputs" t-as="input" t-key="input.name"
+                setVisibilityDependency="input.name"
+            >
+                <t t-out="input.textContent"/>
+            </WeButton>
+        </WeSelect>
+        <WeSelect name="'hidden_condition_no_text_opt'" attributeName="'visibilityComparator'" noPreview="'true'">
+            <WeButton selectDataAttribute="'selected'">Is equal to</WeButton>
+            <WeButton selectDataAttribute="'!selected'">Is not equal to</WeButton>
+            <WeButton selectDataAttribute="'contains'">Contains</WeButton>
+            <WeButton selectDataAttribute="'!contains'">Doesn't contain</WeButton>
+        </WeSelect>
+        <WeSelect name="'hidden_condition_text_opt'" attributeName="'visibilityComparator'" noPreview="'true'">
+            <!-- str comparator possibilities -->
+            <WeButton selectDataAttribute="'contains'">Contains</WeButton>
+            <WeButton selectDataAttribute="'!contains'">Doesn't contain</WeButton>
+            <WeButton selectDataAttribute="'equal'">Is equal to</WeButton>
+            <WeButton selectDataAttribute="'!equal'">Is not equal to</WeButton>
+            <WeButton selectDataAttribute="'set'">Is set</WeButton>
+            <WeButton selectDataAttribute="'!set'">Is not set</WeButton>
+        </WeSelect>
+        <WeSelect name="'hidden_condition_num_opt'" attributeName="'visibilityComparator'" noPreview="'true'">
+            <!-- number comparator possibilities -->
+            <WeButton selectDataAttribute="'equal'">Is equal to</WeButton>
+            <WeButton selectDataAttribute="'!equal'">Is not equal to</WeButton>
+            <WeButton selectDataAttribute="'greater'">Is greater than</WeButton>
+            <WeButton selectDataAttribute="'less'">Is less than</WeButton>
+            <WeButton selectDataAttribute="'greater or equal'">Is greater than or equal to</WeButton>
+            <WeButton selectDataAttribute="'less or equal'">Is less than or equal to</WeButton>
+            <WeButton selectDataAttribute="'set'">Is set</WeButton>
+            <WeButton selectDataAttribute="'!set'">Is not set</WeButton>
+        </WeSelect>
+        <WeSelect name="'hidden_condition_time_comparators_opt'" attributeName="'visibilityComparator'" noPreview="'true'">
+            <!-- date & datetime comparator possibilities -->
+            <WeButton selectDataAttribute="'dateEqual'">Is equal to</WeButton>
+            <WeButton selectDataAttribute="'date!equal'">Is not equal to</WeButton>
+            <WeButton selectDataAttribute="'after'">Is after</WeButton>
+            <WeButton selectDataAttribute="'before'">Is before</WeButton>
+            <WeButton selectDataAttribute="'equal or after'">Is after or equal to</WeButton>
+            <WeButton selectDataAttribute="'equal or before'">Is before or equal to</WeButton>
+            <WeButton selectDataAttribute="'set'">Is set</WeButton>
+            <WeButton selectDataAttribute="'!set'">Is not set</WeButton>
+            <WeButton selectDataAttribute="'between'">Is between (included)</WeButton>
+            <WeButton selectDataAttribute="'!between'">Is not between (excluded)</WeButton>
+        </WeSelect>
+        <WeSelect name="'hidden_condition_file_opt'" attributeName="'visibilityComparator'" noPreview="'true'">
+            <!-- file comparator possibilities -->
+            <WeButton selectDataAttribute="'fileSet'">Is set</WeButton>
+            <WeButton selectDataAttribute="'!fileSet'">Is not set</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeSelect t-if="renderContext.conditionValueList" class="'o_we_large'" name="'hidden_condition_no_text_opt'" attributeName="'visibilityCondition'" noPreview="'true'">
+        <!-- checkbox, select, radio possible values -->
+        <WeButton t-foreach="renderContext.conditionValueList" t-as="record" t-key="record.value"
+            selectDataAttribute="record.value"
+        >
+            <t t-out="record.textContent"/>
+        </WeButton>
+    </WeSelect>
+    <WeInput class="'o_we_large'" name="'hidden_condition_additional_text'" attributeName="'visibilityCondition'" selectDataAttribute="''"/>
+    <WeDatetime name="'hidden_condition_additional_datetime'" attributeName="'visibilityCondition'" selectDataAttribute="''" />
+    <WeDatetime name="'hidden_condition_additional_date'" attributeName="'visibilityCondition'" selectDataAttribute="''" pickerType="'date'"/>
+    <WeDatetime name="'hidden_condition_datetime_between'" attributeName="'visibilityBetween'" selectDataAttribute="''"/>
+    <WeDatetime name="'hidden_condition_date_between'" attributeName="'visibilityBetween'" selectDataAttribute="''" pickerType="'date'"/>
+</t>
+
+<t t-name="website.s_website_form_submit_option">
+    <WeRow title.translate="Button Position">
+        <WeSelect>
+            <WeButton selectClass="'text-start s_website_form_no_submit_label'">Left</WeButton>
+            <WeButton selectClass="'text-center s_website_form_no_submit_label'">Center</WeButton>
+            <WeButton selectClass="'text-end s_website_form_no_submit_label'">Right</WeButton>
+            <WeButton selectClass="''">Input Aligned</WeButton>
+        </WeSelect>
+    </WeRow>
+</t>
+
+</templates>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_sale.s_dynamic_snippet_products_template_option" t-inherit="website.s_dynamic_snippet_carousel_option" t-inherit-mode="primary">
+    <xpath expr="//WeRow[.//WeSelect[@name=&quot;'filter_opt'&quot;]]" position="after">
+        <WeRow>
+            <t t-set-slot="title">Category</t>
+            <WeSelect name="'product_category_opt'" attributeName="'productCategoryId'" noPreview="'true'">
+                <WeButton selectDataAttribute="'all'">All Products</WeButton>
+                <WeButton selectDataAttribute="'current'">Current Category or All</WeButton>
+                <WeButton t-foreach="renderContext.productCategories" t-as="category" t-key="category.id"
+                    selectDataAttribute="category.id.toString()"
+                >
+                    <t t-out="category.name"/>
+                </WeButton>
+            </WeSelect>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Tags</t>
+            <WeMany2many
+                name="'product_tag_opt'"
+                attributeName="'productTagIds'"
+                noPreview="'true'"
+                model="'product.tag'"
+                allowDelete="'true'"
+                fakem2m="'true'"
+                selectDataAttribute="''"/>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Show variants</t>
+            <WeCheckbox
+                selectDataAttribute="'true'"
+                attributeName="'showVariants'"
+                noPreview="'true'"/>
+        </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Product Names</t>
+            <t t-set="title">Comma-separated list of parts of product names, barcodes or internal reference</t>
+            <t t-set="placeholder">e.g. lamp,bin</t>
+            <WeInput class="'o_we_large'" name="'product_names_opt'"
+                attributeName="'productNames'" noPreview="'true'" selectDataAttribute="''"
+                placeholder="placeholder" title="title"/>
+        </WeRow>
+    </xpath>
+</t>
+
+</templates>

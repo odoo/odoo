@@ -64,9 +64,9 @@ wTourUtils.registerWebsitePreviewTour("scroll_to_new_grid_item", {
     ...wTourUtils.dragNDrop({id: "s_image_text", name: "Image - Text", groupName: "Content"}),
     // Toggle the first snippet to grid mode.
     ...wTourUtils.clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
-    wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
+    wTourUtils.changeOption("WebsiteLayoutColumn", 'we-button[data-name="grid_mode"]'),
     // Add a new grid item.
-    wTourUtils.changeOption("layout_column", 'we-button[data-add-element="image"]'),
+    wTourUtils.changeOption("WebsiteLayoutColumn", 'we-button[data-add-element="image"]'),
     {
         content: "Select the new image in the media dialog",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',

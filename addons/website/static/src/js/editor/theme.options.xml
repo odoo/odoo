@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<!-- Theme options -->
+<t t-name="website.theme_colors_option">
+    <we-alert class="o_old_color_system_warning mt-2" t-att-class="{'d-none': !renderContext.showOldColorSystemWarning}">
+        It appears your website is still using the old color system of
+        Odoo 13.0 in some places. We made sure it is still working but
+        we recommend you to try to use the new color system, which is
+        still customizable.
+    </we-alert>
+    <WeRow class="'o_we_theme_colors_selector'">
+        <div class="o_we_theme_colors_selector_group">
+            <we-title>Main</we-title>
+            <WeColorpicker name="'color_1_opt'" tooltip.translate="Primary"
+                            customizeWebsiteColor="''" color="'o-color-1'"
+                            useCssColor="'true'" selectedTab="'custom-colors'"/>
+            <WeColorpicker name="'color_2_opt'" tooltip.translate="Secondary"
+                            customizeWebsiteColor="''" color="'o-color-2'"
+                            useCssColor="'true'" selectedTab="'custom-colors'"/>
+        </div>
+        <div class="o_we_theme_colors_selector_group">
+            <we-title>Light &amp; Dark</we-title>
+            <WeColorpicker customizeWebsiteColor="''" color="'o-color-3'"
+                            useCssColor="'true'" selectedTab="'custom-colors'"/>
+            <WeColorpicker customizeWebsiteColor="''" color="'o-color-4'"
+                            useCssColor="'true'" selectedTab="'custom-colors'"/>
+            <WeColorpicker customizeWebsiteColor="''" color="'o-color-5'"
+                            useCssColor="'true'" selectedTab="'custom-colors'"/>
+        </div>
+        <!-- TODO: @owl-options WeSelect img is supposed to do this o_we_icon_select and toggler slot -->
+        <WeSelect class="'o_we_theme_colors_select o_we_icon_select'" variable="'color-palettes-name'">
+            <t t-set-slot="toggler"><img src="/website/static/src/img/snippets_options/palette.svg"/></t>
+            <t t-foreach="renderContext.palettes" t-as="palette" t-key="palette.name">
+                <WeButton class="'o_palette_color_preview_button'"
+                    customizeWebsiteVariable="palette.name"
+                >
+                    <span t-foreach="palette.colors" t-as="color" t-key="color_index"
+                        class="o_palette_color_preview"
+                        t-attf-style="background-color: #{color};"
+                    />
+                </WeButton>
+            </t>
+        </WeSelect>
+    </WeRow>
+    <WeCollapse class="'o_we_theme_presets_collapse'">
+        <t t-set-slot="first">
+            <WeRow class="'o_we_collapse_toggler'" title.translate="Color Presets">
+                <WeButton class="'d-none'"/>
+            </WeRow>
+        </t>
+        <WeCollapse t-foreach="[1, 2, 3, 4, 5]" t-as="i" t-key="i">
+            <t t-call="website.color_combination_edition_option">
+                <t t-set="number" t-value="i"/>
+                <t t-set-slot="first">
+                    <t t-call="web_editor.color.combination.preview">
+                        <!-- TODO: @owl-options did not require text-center in legacy -->
+                        <t t-set="class" t-value="'text-center o_colored_level o_we_collapse_toggler o_cc' + i"/>
+                    </t>
+                </t>
+            </t>
+        </WeCollapse>
+    </WeCollapse>
+</t>
+<t t-name="website.color_combination_edition_option">
+    <WeRow title.translate="Background">
+        <WeColorpicker customizeWebsiteLayer2Color="'null'"
+            layerColor="'o-cc' + number + '-bg'"
+            layerGradient="'o-cc' + number + '-bg-gradient'"
+            loaderOnOptionPanel="'true'"
+            noBundleReload="'true'" withGradients="'true'"/>
+    </WeRow>
+    <WeRow title.translate="Text">
+        <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number +'-text'"/>
+    </WeRow>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Headings">
+                <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-headings'"/>
+            </WeRow>
+        </t>
+        <WeRow title.translate="Headings 2">
+            <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-h2'"/>
+        </WeRow>
+        <WeRow title.translate="Headings 3">
+            <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-h3'"/>
+        </WeRow>
+        <WeRow title.translate="Headings 4">
+            <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-h4'"/>
+        </WeRow>
+        <WeRow title.translate="Headings 5">
+            <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-h5'"/>
+        </WeRow>
+        <WeRow title.translate="Headings 6">
+            <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-h6'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeRow title.translate="Links">
+        <WeColorpicker customizeWebsiteColor="'null'" color="'o-cc' + number + '-link'"/>
+    </WeRow>
+    <WeRow title.translate="Primary Buttons">
+        <WeColorpicker tooltip.translate="Background" customizeWebsiteColor="'null'" color="'o-cc' + number + '-btn-primary'"/>
+        <WeColorpicker tooltip.translate="Border" customizeWebsiteColor="'null'" color="'o-cc' + number + '-btn-primary-border'"/>
+    </WeRow>
+    <WeRow title.translate="Secondary Buttons">
+        <WeColorpicker tooltip.translate="Background" customizeWebsiteColor="'null'" color="'o-cc' + number + '-btn-secondary'"/>
+        <WeColorpicker tooltip.translate="Border" customizeWebsiteColor="'null'" color="'o-cc' + number + '-btn-secondary-border'"/>
+    </WeRow>
+</t>
+<t t-name="website.theme_settings_option">
+    <WeRow title.translate="Theme">
+        <WeButton switchTheme="''" noPreview="'true'" class="'o_we_bg_brand_primary'">Switch Theme</WeButton>
+    </WeRow>
+    <WeRow title.translate="Language">
+        <WeButton addLanguage="''" noPreview="'true'" class="'o_we_bg_brand_primary'">Add a Language</WeButton>
+    </WeRow>
+    <WeRow title.translate="Page Layout">
+        <WeSelect variable="'layout'" noPreview="'true'">
+            <WeButton customizeWebsiteVariable="&quot;'full'&quot;" name="'layout_full_opt'">Full</WeButton>
+            <WeButton customizeWebsiteVariable="&quot;'boxed'&quot;">Boxed</WeButton>
+            <WeButton customizeWebsiteVariable="&quot;'framed'&quot;">Framed</WeButton>
+            <WeButton customizeWebsiteVariable="&quot;'postcard'&quot;">Postcard</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Background">
+        <WeColorpicker dependencies="'!layout_full_opt'" noPreview="'true'"
+                        customizeWebsiteColor="''"
+                        color="'body'"/>
+        <WeButtonGroup imagepicker="'body_bg_image_opt'" noPreview="'true'">
+            <WeButton tooltip.translate="Image" class="'fa fa-fw fa-camera'"
+                       customizeBodyBgType="&quot;'image'&quot;"/>
+            <WeButton tooltip.translate="Pattern" class="'fa fa-fw fa-th'"
+                       customizeBodyBgType="&quot;'pattern'&quot;"/>
+            <WeButton tooltip.translate="None" class="'fa fa-fw fa-ban'"
+                       customizeBodyBgType="'NONE'"/>
+        </WeButtonGroup>
+        <!-- Hidden imagepicker enabled by above button-group -->
+        <WeMediapicker mediaType="'images'" name="'body_bg_image_opt'"
+                        customizeBodyBg="''"/>
+    </WeRow>
+</t>
+<t t-name="website.theme_paragraph_option">
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Font Size">
+                <WeInput
+                        customizeWebsiteVariable="'null'"
+                        variable="'font-size-base'"
+                        unit="'px'"
+                        saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput
+                    customizeWebsiteVariable="'null'"
+                    variable="'small-font-size'"
+                    unit="'px'"
+                    saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeRow title.translate="Font Family">
+        <WeFontFamilyPicker variable="'font'"/>
+    </WeRow>
+    <WeRow title.translate="Line Height">
+        <!-- "× ": \u00D7\u2000 -->
+        <WeInput
+                  customizeWebsiteVariable="'null'"
+                  variable="'body-line-height'"
+                  fakeUnit="'× '"/>
+    </WeRow>
+    <WeRow title.translate="Margins">
+        <WeInput tooltip.translate="Top" customizeWebsiteVariable="''" variable="'paragraph-margin-top'" unit="'px'" saveUnit="'px'"/>
+        <WeInput tooltip.translate="Bottom" customizeWebsiteVariable="''" variable="'paragraph-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+    </WeRow>
+</t>
+<t t-name="website.theme_headings_option">
+    <t t-set="heading_label">Heading</t>
+    <t t-set="display_label">Display</t>
+    <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Font Size">
+                <WeInput
+                          tooltip.translate="Heading 1"
+                          customizeWebsiteVariable="'null'"
+                          variable="'h1-font-size'"
+                          unit="'px'"
+                          saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth" class="'o_we_sublevel_1'" title="heading_label + ' ' + depth">
+            <WeInput
+                      customizeWebsiteVariable="'null'"
+                      variable="'h' + depth + '-font-size'"
+                      unit="'px'"
+                      saveUnit="'rem'"/>
+        </WeRow>
+        <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
+        <WeRow t-foreach="used_display_font_sizes" t-as="depth" t-key="depth" class="'o_we_sublevel_1'" title="display_label + ' ' + depth">
+            <WeInput class="'o_we_sublevel_1'"
+                      customizeWebsiteVariable="'null'"
+                      variable="'display-' + depth + '-font-size'"
+                      unit="'px'"
+                      saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Font Family" tooltip.translate="Heading 1">
+                <WeFontFamilyPicker variable="'headings-font'"/>
+                <WeButton class="'fa fa-fw fa-remove o_we_hover_danger o_we_link'" tooltip.translate="Reset to Paragraph Font Family"
+                    customizeWebsiteVariable="''" variable="'headings-font'"
+                    removeFont="'set-headings-font'" noPreview="'true'"/>
+            </WeRow>
+        </t>
+        <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+            <WeRow class="'o_we_sublevel_1'" title="heading_label + ' ' + depth">
+                <WeFontFamilyPicker variable="'h' + depth + '-font'"/>
+                <WeButton class="'fa fa-fw fa-remove o_we_hover_danger o_we_link'" tooltip.translate="Reset to Headings Font Family"
+                    customizeWebsiteVariable="''" variable="'h' + depth + '-font'"
+                    removeFont="'set-h' + depth + '-font'" noPreview="'true'"/>
+            </WeRow>
+        </t>
+        <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+            <WeRow class="'o_we_sublevel_1'" title="display_label + ' ' + depth">
+                <WeFontFamilyPicker variable="'display-' + depth + '-font'"/>
+                <WeButton class="'fa fa-fw fa-remove o_we_hover_danger o_we_link'" tooltip.translate="Reset to Headings Font Family"
+                    customizeWebsiteVariable="''" variable="'display-' + depth + '-font'"
+                    removeFont="'set-display-' + depth + '-font'" noPreview="'true'"/>
+            </WeRow>
+        </t>
+    </WeCollapse>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Line Height">
+                <!-- "× ": \u00D7\u2000 -->
+                <WeInput
+                          tooltip.translate="Heading 1"
+                          customizeWebsiteVariable="'null'"
+                          variable="'headings-line-height'"
+                          fakeUnit="'× '"/>
+            </WeRow>
+        </t>
+        <WeRow t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth" class="'o_we_sublevel_1'" title="heading_label + ' ' + depth">
+            <WeInput
+                      customizeWebsiteVariable="'null'"
+                      variable="'h' + depth + '-line-height'"
+                      fakeUnit="'× '"/>
+        </WeRow>
+        <WeRow t-foreach="used_display_font_sizes" t-as="depth" t-key="depth" class="'o_we_sublevel_1'" title="display_label + ' ' + depth">
+            <WeInput
+                      customizeWebsiteVariable="'null'"
+                      variable="'display-' + depth + '-line-height'"
+                      fakeUnit="'× '"/>
+        </WeRow>
+    </WeCollapse>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Margins" tooltip.translate="Heading 1">
+                <WeInput tooltip.translate="Top" customizeWebsiteVariable="''" variable="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
+                <WeInput tooltip.translate="Bottom" customizeWebsiteVariable="''" variable="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+            </WeRow>
+        </t>
+        <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+            <WeRow class="'o_we_sublevel_1'" title="heading_label + ' ' + depth">
+                <WeInput tooltip.translate="Top" customizeWebsiteVariable="''" variable="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                <WeInput tooltip.translate="Bottom" customizeWebsiteVariable="''" variable="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+            </WeRow>
+        </t>
+        <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+            <WeRow class="'o_we_sublevel_1'" title="display_label + ' ' + depth">
+                <WeInput tooltip.translate="Top" customizeWebsiteVariable="''" variable="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                <WeInput tooltip.translate="Bottom" customizeWebsiteVariable="''" variable="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+            </WeRow>
+        </t>
+    </WeCollapse>
+</t>
+<t t-name="website.theme_button_option">
+    <WeRow title.translate="Primary Style">
+        <WeSelect button="'primary'" noPreview="'true'">
+            <WeButton customizeButtonStyle="'fill'">Fill</WeButton>
+            <WeButton customizeButtonStyle="'outline'" name="'btn_primary_outline_opt'">Outline</WeButton>
+            <WeButton customizeButtonStyle="'flat'">Flat</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Border Width">
+        <WeInput class="'o_we_sublevel_1'" customizeWebsiteVariable="''"
+            variable="'btn-primary-outline-border-width'" dependencies="'btn_primary_outline_opt'"
+            unit="'px'" saveUnit="'rem'"/>
+    </WeRow>
+    <WeRow title.translate="Secondary Style">
+        <WeSelect button="'secondary'" noPreview="'true'">
+            <WeButton customizeButtonStyle="'fill'">Fill</WeButton>
+            <WeButton customizeButtonStyle="'outline'" name="'btn_secondary_outline_opt'">Outline</WeButton>
+            <WeButton customizeButtonStyle="'flat'">Flat</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Border Width">
+        <WeInput class="'o_we_sublevel_1'" customizeWebsiteVariable="''"
+            variable="'btn-secondary-outline-border-width'" dependencies="'btn_secondary_outline_opt'"
+            unit="'px'" saveUnit="'rem'"/>
+    </WeRow>
+    <WeRow title.translate="Font Family">
+        <WeFontFamilyPicker variable="'buttons-font'"/>
+        <WeButton class="'fa fa-fw fa-remove o_we_hover_danger o_we_link'" tooltip.translate="Reset to Paragraph Font Family"
+            customizeWebsiteVariable="''" variable="'buttons-font'"
+            removeFont="'set-buttons-font'" noPreview="'true'"/>
+    </WeRow>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Padding">
+                <WeInput tooltip="'Y'" customizeWebsiteVariable="''" variable="'btn-padding-y'" unit="'px'" saveUnit="'rem'"/>
+                <WeInput tooltip="'X'" customizeWebsiteVariable="''" variable="'btn-padding-x'" unit="'px'" saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput tooltip="'Y'" customizeWebsiteVariable="''" variable="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
+            <WeInput tooltip="'X'" customizeWebsiteVariable="''" variable="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Large">
+            <WeInput tooltip="'Y'" customizeWebsiteVariable="''" variable="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
+            <WeInput tooltip="'X'" customizeWebsiteVariable="''" variable="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Font Size">
+                <WeInput customizeWebsiteVariable="''" variable="'btn-font-size'" unit="'px'" saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput customizeWebsiteVariable="''" variable="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Large">
+            <WeInput customizeWebsiteVariable="''" variable="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Round Corners">
+                <WeInput customizeWebsiteVariable="''" variable="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput customizeWebsiteVariable="''" variable="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Large">
+            <WeInput customizeWebsiteVariable="''" variable="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeRow title.translate="On Click Effect">
+        <WeSelect variable="'btn-ripple'">
+            <WeButton customizeWebsiteVariable="'false'">None</WeButton>
+            <WeButton customizeWebsiteVariable="'true'" customizeWebsiteAssets="'website.ripple_effect_scss, website.ripple_effect_js'">Ripple</WeButton>
+        </WeSelect>
+    </WeRow>
+</t>
+<t t-name="website.theme_link_option">
+    <WeRow title.translate="Link Style">
+        <WeSelect variable="'link-underline'">
+            <WeButton customizeWebsiteVariable="&quot;'never'&quot;">No Underline</WeButton>
+            <WeButton customizeWebsiteVariable="&quot;'hover'&quot;">Underline On Hover</WeButton>
+            <WeButton customizeWebsiteVariable="&quot;'always'&quot;">Always Underline</WeButton>
+        </WeSelect>
+    </WeRow>
+</t>
+<t t-name="website.theme_input_option">
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Paddings">
+                <WeInput tooltip="'Y'" customizeWebsiteVariable="''" variable="'input-padding-y'" unit="'px'" saveUnit="'rem'"/>
+                <WeInput tooltip="'X'" customizeWebsiteVariable="''" variable="'input-padding-x'" unit="'px'" saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput tooltip="'Y'" customizeWebsiteVariable="''" variable="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
+            <WeInput tooltip="'X'" customizeWebsiteVariable="''" variable="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Large">
+            <WeInput tooltip="'Y'" customizeWebsiteVariable="''" variable="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
+            <WeInput tooltip="'X'" customizeWebsiteVariable="''" variable="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Font Size">
+                <WeInput customizeWebsiteVariable="''" variable="'input-font-size'" unit="'px'" saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput customizeWebsiteVariable="''" variable="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Large">
+            <WeInput customizeWebsiteVariable="''" variable="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeRow title.translate="Border Width">
+        <WeInput customizeWebsiteVariable="''" variable="'input-border-width'" unit="'px'" saveUnit="'rem'"/>
+    </WeRow>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <WeRow title.translate="Border Radius">
+                <WeInput customizeWebsiteVariable="''" variable="'input-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            </WeRow>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Small">
+            <WeInput customizeWebsiteVariable="''" variable="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Large">
+            <WeInput customizeWebsiteVariable="''" variable="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+        </WeRow>
+    </WeCollapse>
+    <WeRow title.translate="Background">
+        <WeColorpicker tooltip.translate="Background"
+            noTransparency="'true'"
+            customizeWebsiteColor="''"
+            color="'input'"/>
+    </WeRow>
+</t>
+<t t-name="website.theme_advanced_option">
+    <WeRow title.translate="Show Header">
+        <WeCheckbox
+                     customizeWebsiteViews="'website.option_layout_hide_header|'"
+                     reload="'/'"/>
+    </WeRow>
+    <WeRow title.translate="Code Injection" tooltip.translate="Enter code that will be added into every page of your site">
+        <WeButton noPreview="'true'" openCustomCodeDialog="'head'">&lt;head&gt; and &lt;/body&gt;</WeButton>
+    </WeRow>
+    <WeRow title.translate="Google Map">
+        <WeButton configureApiKey="''" noPreview="'true'">Custom Key</WeButton>
+    </WeRow>
+    <WeRow title.translate="Status Colors">
+        <WeColorpicker tooltip.translate="Success" customizeWebsiteColor="''" colorType="'theme'" color="'success'" selectedTab="'custom-colors'"/>
+        <WeColorpicker tooltip.translate="Info" customizeWebsiteColor="''" colorType="'theme'" color="'info'" selectedTab="'custom-colors'"/>
+        <WeColorpicker tooltip.translate="Warning" customizeWebsiteColor="''" colorType="'theme'" color="'warning'" selectedTab="'custom-colors'"/>
+        <WeColorpicker tooltip.translate="Error" customizeWebsiteColor="''" colorType="'theme'" color="'danger'" selectedTab="'custom-colors'"/>
+    </WeRow>
+    <WeCollapse>
+        <t t-set-slot="first">
+            <we-row class="o_we_gray_preview o_we_collapse_toggler">
+                <we-title>Grays</we-title>
+                <div>
+                    <t t-set="gray_header">Gray</t>
+                    <t t-foreach="['900', '800', '700', '600', '500', '400', '300', '200', '100']" t-as="grayCode" t-key="grayCode">
+                        <span t-attf-title="#{gray_header} #{grayCode}"
+                              t-attf-variable="#{grayCode}"
+                              t-attf-style="background-color: #{renderContext.grays[grayCode]} !important;"
+                              t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"/>
+                    </t>
+                </div>
+            </we-row>
+        </t>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Hue">
+            <WeRange class="'o_we_slider_tint'" customizeGray="''" param="'gray-hue'" min="'0'" max="'359.9'" step="'0.1'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Saturation">
+            <WeRange customizeGray="''" param="'gray-extra-saturation'" step="'0.1'"
+                min="renderContext.extraSaturationRangeMin.toString()"
+                max="renderContext.extraSaturationRangeMax.toString()"
+            />
+        </WeRow>
+    </WeCollapse>
+</t>
+</templates>

@@ -177,10 +177,10 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']"),
-    wTourUtils.changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
-    wTourUtils.changeOption("ImageTools", 'we-button:contains("Blur")'),
+    wTourUtils.changeOption("ImageToolsAnimate", 'we-select:contains("Filter") we-toggler:contains("None")'),
+    wTourUtils.changeOption("ImageToolsAnimate", 'we-button:contains("Blur")'),
     {
-        trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+        trigger: ".snippet-option-ImageToolsAnimate we-select:contains('Filter') we-toggler:contains('Blur')",
     },
     {
         content: "Check that the Blur filter has been applied on the image",

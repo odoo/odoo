@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_forum.s_searchbar_options" t-inherit="website.s_searchbar_options" t-inherit-mode="extension">
+        <xpath expr="//WeSelect[@name=&quot;'scope_opt'&quot;]" position="inside">
+            <!-- Using /website/search/forums as result because the current forum search results page cannot be used across several forums -->
+            <WeButton setSearchType="'forums'" selectDataAttribute="'forums'" name="'search_forums_opt'" formAction="'/website/search/forums'">Forums</WeButton>
+        </xpath>
+        <xpath expr="//WeSelect[@name=&quot;'order_opt'&quot;]" position="inside">
+            <WeButton setOrderBy="'write_date asc'" selectDataAttribute="'write_date asc'" dependencies="'search_forums_opt'" name="'date_asc_opt'">Date (low to high)</WeButton>
+            <WeButton setOrderBy="'write_date desc'" selectDataAttribute="'write_date desc'" dependencies="'search_forums_opt'" name="'date_desc_opt'">Date (high to low)</WeButton>
+        </xpath>
+        <xpath expr="//div[@dependencies=&quot;'limit_opt'&quot;]" position="inside">
+            <WeCheckbox title.translate="Description"
+                        dependencies="'search_forums_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDescription'"
+                        applyTo="'.search-query'"/>
+            <WeCheckbox title.translate="Date"
+                        dependencies="'search_forums_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDetail'"
+                        applyTo="'.search-query'"/>
+        </xpath>
+    </t>
+
+</templates>

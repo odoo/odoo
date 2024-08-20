@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_process_steps_option">
+    <WeRow title.translate="Connector">
+        <WeSelect name="'connector_type'">
+            <WeButton selectClass="''" name="'no_connector_opt'">None</WeButton>
+            <WeButton selectClass="'s_process_steps_connector_line'">Line</WeButton>
+            <WeButton selectClass="'s_process_steps_connector_arrow'">Straight arrow</WeButton>
+            <WeButton selectClass="'s_process_steps_connector_curved_arrow'">Curved arrow</WeButton>
+        </WeSelect>
+        <WeColorpicker
+            selectStyle="'true'"
+            name="'connector_color_opt'"
+            dependencies="'!no_connector_opt'"
+            applyTo="'.s_process_step_connector path'"
+            cssProperty="'stroke'" changeColor="'true'"/>
+    </WeRow>
+</t>
+
+</templates>

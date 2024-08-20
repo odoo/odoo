@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mass_mailing.s_masonry_block_options" inherit_id="mass_mailing.snippet_options">
+        <WeSelect title.translate="Template"
+                  name="'masonry_template_opt'"
+                  attributeName="'masonryTemplate'"
+                  attributeDefaultValue="'default'">
+            <WeButton tooltip.translate="Default"
+                      selectTemplate="'mass_mailing.s_masonry_block_default_template'"
+                      selectDataAttribute="'default'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_default.svg'"/>
+            <WeButton tooltip.translate="Default Reversed"
+                      selectTemplate="'mass_mailing.s_masonry_block_reversed_template'"
+                      selectDataAttribute="'default_reversed'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_reversed.svg'"/>
+            <WeButton tooltip.translate="Images"
+                      selectTemplate="'mass_mailing.s_masonry_block_images_template'"
+                      selectDataAttribute="'images'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_images.svg'"/>
+            <WeButton tooltip.translate="Image Text Image"
+                      selectTemplate="'mass_mailing.s_masonry_block_image_texts_image_template'"
+                      selectDataAttribute="'image_text_image'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_image_texts_image.svg'"/>
+            <WeButton tooltip.translate="Mosaic"
+                      selectTemplate="'mass_mailing.s_masonry_block_mosaic_template'"
+                      selectDataAttribute="'mosaic'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_mosaic.svg'"/>
+            <WeButton tooltip.translate="Text Image Text"
+                      selectTemplate="'mass_mailing.s_masonry_block_texts_image_texts_template'"
+                      selectDataAttribute="'text_image_text'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_texts_image_texts.svg'"/>
+            <WeButton tooltip.translate="Alternate Text"
+                      selectTemplate="'mass_mailing.s_masonry_block_alternation_text_template'"
+                      selectDataAttribute="'alternate_text'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_texts.svg'"/>
+            <WeButton tooltip.translate="Alternate Text Image"
+                      selectTemplate="'mass_mailing.s_masonry_block_alternation_text_image_template'"
+                      selectDataAttribute="'alternate_text_image'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_text_image.svg'"/>
+            <WeButton tooltip.translate="Alternate Image Text"
+                      selectTemplate="'mass_mailing.s_masonry_block_alternation_image_text_template'"
+                      selectDataAttribute="'alternate_image_text'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_image_text.svg'"/>
+            <WeButton tooltip.translate="Alternate Text Image Text"
+                      selectTemplate="'mass_mailing.s_masonry_block_alternation_text_image_text_template'"
+                      selectDataAttribute="'alternate_text_image_text'"
+                      img="'/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_text_image_text.svg'"/>
+        </WeSelect>
+    </t>
+
+</templates>

@@ -198,6 +198,11 @@ class Website(models.Model):
             ('list_price desc', _("Price - High to Low")),
         ]
 
+    @staticmethod
+    @api.model
+    def get_product_sort_mapping():
+        return Website._get_product_sort_mapping()
+
     #=== BUSINESS METHODS ===#
 
     # This method is cached, must not return records! See also #8795
@@ -665,5 +670,3 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
-
-

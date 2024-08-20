@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_tabs_option">
+    <t t-set="tooltip">Add Tab</t>
+    <WeButton addItem="''" item="'.tab-content:first > .tab-pane.active'" noPreview="'true'" class="'o_we_text_success ms-0'" tooltip="tooltip" ariaLabel="tooltip">
+        <i class="fa fa-fw fa-plus"/>
+    </WeButton>
+    <t t-set="tooltip">Remove Tab</t>
+    <WeButton removeItem="''" item="'.tab-content:first > .tab-pane.active'" name="'remove_tab_opt'" noPreview="'true'" class="'o_we_text_danger me-3'" tooltip="tooltip" ariaLabel="tooltip">
+        <i class="fa fa-fw fa-minus"/>
+    </WeButton>
+</t>
+
+<t t-name="website.s_tabs_style_option">
+    <WeRow title.translate="Style">
+        <WeSelect>
+            <WeButton setStyle="'tabs'" name="'tabs_opt'" trigger="'horizontal_opt'">Tabs</WeButton>
+            <WeButton setStyle="'pills'" name="'pills_opt'" trigger="'tabs_color_opt'" triggerValue="''">Buttons</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Tabs Color">
+        <WeColorpicker dependencies="'tabs_opt'" name="'tabs_color_opt'" selectStyle="'true'" cssProperty="'background-color'" colorPrefix="'bg-'"/>
+    </WeRow>
+    <WeRow title.translate="Direction" dependencies="'pills_opt'">
+        <WeSelect>
+            <WeButton setDirection="'horizontal'" name="'horizontal_opt'">Horizontal</WeButton>
+            <WeButton setDirection="'vertical'" trigger="'left_alignment_opt'">Vertical</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Alignment" dependencies="'horizontal_opt'">
+        <WeSelect applyTo="'.s_tabs_nav:first .nav'">
+            <WeButton selectClass="''" name="'left_alignment_opt'">Left</WeButton>
+            <WeButton selectClass="'justify-content-center'">Center</WeButton>
+            <WeButton selectClass="'justify-content-end'">Right</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Fill and Justify" dependencies="'horizontal_opt'">
+        <WeSelect applyTo="'.s_tabs_nav:first .nav'">
+            <WeButton selectClass="''">Regular</WeButton>
+            <WeButton selectClass="'nav-fill'">Full Width</WeButton>
+            <WeButton selectClass="'nav-justified'">Equal Widths</WeButton>
+        </WeSelect>
+    </WeRow>
+    <we-divider/>
+    <WeRow title.translate="Slide">
+        <WeButtonGroup applyTo="'.s_tabs_content:first'">
+            <WeButton class="'fa fa-fw fa-long-arrow-left'" tooltip.translate="Slide Left" selectClass="'s_tabs_slide_left'"/>
+            <WeButton class="'fa fa-fw fa-long-arrow-up'" tooltip.translate="Slide Up" selectClass="'s_tabs_slide_up'"/>
+            <WeButton class="'fa fa-fw fa-long-arrow-down'" tooltip.translate="Slide Down" selectClass="'s_tabs_slide_down'"/>
+            <WeButton class="'fa fa-fw fa-long-arrow-right'" tooltip.translate="Slide Right" selectClass="'s_tabs_slide_right'"/>
+            <WeButton class="'fa fa-fw fa-ban'" tooltip.translate="No Slide Effect" selectClass="''"/>
+        </WeButtonGroup>
+    </WeRow>
+</t>
+
+</templates>

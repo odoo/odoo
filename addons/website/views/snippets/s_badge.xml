@@ -7,23 +7,6 @@
     </span>
 </template>
 
-<template id="s_badge_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='Box']" position="before">
-        <div data-selector=".s_badge">
-            <we-select string="Style">
-                <we-button data-select-class="text-bg-primary">Primary</we-button>
-                <we-button data-select-class="text-bg-secondary">Secondary</we-button>
-                <we-button data-select-class="text-bg-success">Success</we-button>
-                <we-button data-select-class="text-bg-info">Info</we-button>
-                <we-button data-select-class="text-bg-warning">Warning</we-button>
-                <we-button data-select-class="text-bg-danger">Danger</we-button>
-                <we-button data-select-class="text-bg-light">Light</we-button>
-                <we-button data-select-class="text-bg-dark">Dark</we-button>
-            </we-select>
-        </div>
-    </xpath>
-</template>
-
 <record id="website.s_badge_000_variables_scss" model="ir.asset">
     <field name="name">Badge 000 variables SCSS</field>
     <field name="bundle">web._assets_primary_variables</field>

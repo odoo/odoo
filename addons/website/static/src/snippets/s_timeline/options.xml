@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_timeline_multiple_option">
+    <WeRow title.translate="Date">
+        <WeButton addItem="''" item="'.s_timeline_row:first'" selectItem="''" addBefore="'true'" noPreview="'true'" class="'o_we_bg_brand_primary'">
+            Add Date
+        </WeButton>
+    </WeRow>
+</t>
+
+<t t-name="website.s_timeline_overlay_option">
+    <WeOverlay target="'.o_overlay_options_wrap'">
+        <WeButton timelineCard="''" noPreview="'true'" class="'o_we_overlay_opt'"><i class="fa fa-fw fa-angle-left"/><i class="fa fa-fw fa-angle-right"/></WeButton>
+    </WeOverlay>
+</t>
+
+<t t-name="website.s_timeline_color_option">
+    <WeRow title.translate="Line Color">
+        <WeColorpicker selectStyle="'true'" cssProperty="'border-color'" colorPrefix="'border-'" applyTo="'.s_timeline_line'"/>
+    </WeRow>
+</t>
+
+<t t-name="website.s_timeline_row_color_option">
+    <WeRow title.translate="Dot color">
+        <WeColorpicker selectStyle="'true'" cssProperty="'color'" colorPrefix="'text-'" applyTo="'.s_timeline_dot'"/>
+    </WeRow>
+</t>
+
+</templates>

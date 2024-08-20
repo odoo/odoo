@@ -27,6 +27,53 @@ patch(WysiwygAdapterComponent.prototype, {
         this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
     },
     /**
+     * Returns a copy of this.ribbons.
+     */
+    getRibbons() {
+        return Object.assign({}, this.ribbons);
+    },
+    /**
+     * Returns all ribbon classes, current and deleted, so they can be removed.
+     */
+    getRibbonClasses() {
+        return Object.values(this.ribbons).reduce((classes, ribbon) => {
+            return classes + ` ${this.ribbonPositionClasses[ribbon.position]}`;
+        }, '') + this.deletedRibbonClasses;
+    },
+    /**
+     * Deletes a ribbon.
+     *
+     * @param {number} id - The id of the ribbon to delete.
+     */
+    deleteRibbon(id) {
+        this.deletedRibbonClasses += ` ${
+            this.ribbonPositionClasses[this.ribbons[id].position]
+        }`;
+        delete this.ribbons[id];
+    },
+    /**
+     * Sets a ribbon.
+     *
+     * @param {Object} ribbon
+     * @property {number} ribbon.id
+     */
+    setRibbon(ribbon) {
+        const previousRibbon = this.ribbons[ribbon.id];
+        if (previousRibbon) {
+            this.deletedRibbonClasses += ` ${this.ribbonPositionClasses[previousRibbon.position]}`;
+        }
+        this.ribbons[ribbon.id] = ribbon;
+    },
+    /**
+     * Sets which ribbon is used by a product template.
+     *
+     * @param {number} templateId - The product template's id.
+     * @param {number|false} ribbonId - The ribbon's id.
+     */
+    setProductRibbon(templateId, ribbonId) {
+        this.productTemplatesRibbons.push({templateId, ribbonId});
+    },
+    /**
      * @override
      */
     async _saveViewBlocks() {
@@ -131,75 +178,6 @@ patch(WysiwygAdapterComponent.prototype, {
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Returns a copy of this.ribbons through a callback.
-     *
-     * @private
-     */
-    _onGetRibbons(ev) {
-        ev.data.callback(Object.assign({}, this.ribbons));
-    },
-    /**
-     * Returns all ribbon classes, current and deleted, so they can be removed.
-     *
-     * @private
-     */
-    _onGetRibbonClasses(ev) {
-        const classes = Object.values(this.ribbons).reduce((classes, ribbon) => {
-            return classes + ` ${this.ribbonPositionClasses[ribbon.position]}`;
-        }, '') + this.deletedRibbonClasses;
-        ev.data.callback(classes);
-    },
-    /**
-     * Deletes a ribbon.
-     *
-     * @private
-     */
-    _onDeleteRibbon(ev) {
-        this.deletedRibbonClasses += ` ${
-            this.ribbonPositionClasses[this.ribbons[ev.data.id].position]
-        }`;
-        delete this.ribbons[ev.data.id];
-    },
-    /**
-     * Sets a ribbon;
-     *
-     * @private
-     */
-    _onSetRibbon(ev) {
-        const {ribbon} = ev.data;
-        const previousRibbon = this.ribbons[ribbon.id];
-        if (previousRibbon) {
-            this.deletedRibbonClasses += ` ${this.ribbonPositionClasses[previousRibbon.position]}`;
-        }
-        this.ribbons[ribbon.id] = ribbon;
-    },
-    /**
-     * Sets which ribbon is used by a product template.
-     *
-     * @private
-     */
-    _onSetProductRibbon(ev) {
-        const {templateId, ribbonId} = ev.data;
-        this.productTemplatesRibbons.push({templateId, ribbonId});
-    },
-    /**
-     * @override
-     */
-    _trigger_up(ev) {
-        const methods = {
-            get_ribbons: this._onGetRibbons.bind(this),
-            get_ribbon_classes: this._onGetRibbonClasses.bind(this),
-            delete_ribbon: this._onDeleteRibbon.bind(this),
-            set_ribbon: this._onSetRibbon.bind(this),
-            set_product_ribbon: this._onSetProductRibbon.bind(this),
-        }
-        if (methods[ev.name]) {
-            return methods[ev.name](ev);
-        } else {
-            return super._trigger_up(...arguments);
-        }
-    },
     // TODO this whole patch actually seems unnecessary. The bug it solved seems
     // to stay solved if this is removed. To investigate.
     /**

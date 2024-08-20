@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.SnippetOptionComponent">
+    <t t-set="className" t-value="`snippet-option-${props.snippetOption.name}`"/>
+    <we-customizeblock-option t-att-class="{'d-none': !renderContext.showUI, [className]: true}">
+        <!-- Some options do not have a template -->
+        <t t-if="props.snippetOption.template" t-call="{{props.snippetOption.template}}"/>
+    </we-customizeblock-option>
+</t>
+<t t-name="web_editor.TestSnippetOption">
+    <WeMediapicker mediaType="'videos'"/>
+    <WeButton selectClass="'test_class'">Test Class</WeButton>
+    <WeRow>
+        <t t-set-slot="title">Checkbox</t>
+        <WeCheckbox selectClass="'test_class'">Test Class</WeCheckbox>
+    </WeRow>
+    <WeSelect>
+        <WeButton selectClass="'test_class_1'" name="'test_class_1'">Test Class 1</WeButton>
+        <WeButton selectClass="'test_class_2'">Test Class 2</WeButton>
+        <WeButton selectClass="'test_class_3'">Test Class 3</WeButton>
+        <WeButton selectClass="'test_class_4'">Test Class 4</WeButton>
+        <WeButton selectClass="'test_class_5'">Test Class 5</WeButton>
+    </WeSelect>
+    <WeButtonGroup>
+        <t t-set-slot="title">Test Button Group</t>
+        <WeButton selectClass="'test_class_6'">6</WeButton>
+        <WeButton selectClass="'test_class_7'">7</WeButton>
+        <WeButton selectClass="'test_class_8'">8</WeButton>
+    </WeButtonGroup>
+    <WeInput unit="'px'" step="'5'" selectStyle="'0'" cssProperty="'border-width'" extraClass="'border'"/>
+    <WeDatetime selectDataAttribute="''" attributeName="'datetime'"/>
+    <WeDatetime selectDataAttribute="''" attributeName="'dateonly'" pickerType="'date'"/>
+    <WeButton selectClass="''" dependencies="'test_class_1'">Show when test_class_1</WeButton>
+    <WeRow>
+        <t t-set-slot="title">Row</t>
+        <WeButton dependencies="'test_class_1'" selectClass="'visible_class_test'">Button</WeButton>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Low to high</t>
+        <WeRange selectDataAttribute="''"
+            attributeName="'range'"
+            min="'-100'"
+            step="'10'"/>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">High to low</t>
+        <WeRange string="'Reversed Range'"
+                selectDataAttribute="''"
+                attributeName="'revrange'"
+                displayRangeValue="'true'"
+                min="'100'"
+                max="'-100'"
+                step="'10'"/>
+    </WeRow>
+    <!-- Try with `hasDefault` = unique/multiple or not set,  with/out `addItemTitle`, `inputType` = number, with/out `defaultValue`,
+        with/out `availableRecords`, with/out `unsortable`, `notEditable`, `allowEmpty`, `newElementsNotToggleable`, `renderOnInputBlur`
+    -->
+    <WeList addItemTitle="'Add new item to list'" renderListItems="''" hasDefault="'unique'" availableRecords='`[{"id":1,"title":"delectus   aut   autem","completed":false,"display_name":"delectus   aut   autem"},{"id":2,"title":"quis ut nam facilis et officia qui ","completed":false,"display_name":"quis ut nam facilis et officia qui "},{"id":3,"title":"fugiat veniam minus","completed":false,"display_name":"fugiat veniam minus"},{"id":4,"title":"et porro tempora","completed":true,"display_name":"et porro tempora"},{"id":5,"title":"laboriosam mollitia et enim quasi adipisci quia provident illum","completed":false,"display_name":"laboriosam mollitia et enim quasi adipisci quia provident illum"},{"id":6,"title":"qui ullam ratione quibusdam voluptatem quia omnis","completed":false,"display_name":"qui ullam ratione quibusdam voluptatem quia omnis"},{"id":7,"title":"illo expedita consequatur quia in","completed":false,"display_name":"illo expedita consequatur quia in"},{"id":8,"title":"quo adipisci enim quam ut ab","completed":true,"display_name":"quo adipisci enim quam ut ab"},{"id":9,"title":"molestiae perspiciatis ipsa","completed":false,"display_name":"molestiae perspiciatis ipsa"},{"id":10,"title":"illo est ratione doloremque quia maiores aut","completed":true,"display_name":"illo est ratione doloremque quia maiores aut"}]`'>
+    <!-- <WeList addItemTitle="'Add new item to list'" renderListItems="''" hasDefault="'multiple'" defaultValue="'Something'"> -->
+        <t t-set-slot="title">A wonderful WeList</t>
+    </WeList>
+    <!-- Disabled because creates errors in tours with restricted editor
+    <WeMany2one title="'Menu'"
+                setPageTemplate="''"
+                model="'website.page'"
+                noPreview="'true'"
+                domain='`[["is_published", "=", true]]`'
+                createMethod="'createPage'"/>
+    <WeMany2many noPreview="'true'"
+            model="'website.menu'"
+            m2oField="'group_ids'"
+            setGroups="''"
+            createMethod="'createGroup'">
+        <t t-set-slot="title">Menu groups</t>
+    </WeMany2many>
+    -->
+</t>
+
+<t t-name="web_editor.snippet_move_option_vertical">
+    <WeOverlay target="'.o_overlay_move_options'">
+        <WeButton class="'fa fa-fw fa-angle-up'" moveSnippet="'prev'" noPreview="'true'" name="'move_up_opt'"/>
+        <WeButton class="'fa fa-fw fa-angle-down'" moveSnippet="'next'" noPreview="'true'" name="'move_down_opt'"/>
+    </WeOverlay>
+</t>
+<t t-name="web_editor.snippet_move_option_horizontal">
+    <WeOverlay target="'.o_overlay_move_options'">
+        <WeButton class="'fa fa-fw fa-angle-left'" moveSnippet="'prev'" noPreview="'true'" name="'move_left_opt'"/>
+        <WeButton class="'fa fa-fw fa-angle-right'" moveSnippet="'next'" noPreview="'true'" name="'move_right_opt'"/>
+    </WeOverlay>
+</t>
+
+<t t-name="web_editor.container_width">
+    <WeButtonGroup title.translate="Content Width">
+        <WeButton selectClass="'o_container_small'"
+                  tooltip.translate="Small"
+                  img="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
+        <WeButton selectClass="'container'"
+                  img="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                  tooltip.translate="Regular"/>
+        <WeButton selectClass="'container-fluid'"
+                  img="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                  tooltip.translate="Full"/>
+    </WeButtonGroup>
+</t>
+
+<t t-name="web_editor.outdated_block_message_option">
+    <we-alert t-if="renderContext.showAlert" class="d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
+        <we-title>This block is outdated.</we-title>
+        <span>You might not be able to customize it anymore.</span>
+        <WeButton class="'o_we_bg_brand_primary py-2 my-4 border-0'" noPreview="'true'" replaceSnippet="''">REPLACE BY NEW VERSION</WeButton>
+        <span>You can still access the block options but it might be ineffective.</span>
+        <WeButton class="'o_we_bg_brand_primary py-2 my-4 border-0'" noPreview="'true'" discardAlert="''">ACCESS OPTIONS ANYWAY</WeButton>
+    </we-alert>
+</t>
+
+<t t-name="web_editor.replace_media_option">
+    <!-- Replace a media -->
+    <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
+    <WeRow title.translate="Media">
+        <WeButton class="'o_we_bg_success'" replaceMedia="'true'" noPreview="'true'">Replace</WeButton>
+        <div>
+            <WeButton class="'fa fa-link'"
+                name="'media_link_opt'"
+                setLink="'true'" noPreview="'true'"
+                tooltip.translate="Redirect the user elsewhere when he clicks on the media."
+            />
+        </div>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Your URL">
+        <t t-set="urlInputComponent" t-value="'WeInput'"/>
+        <t t-component="this.constructor.components[urlInputComponent]"
+            class="'o_we_large'"
+            name="'media_url_opt'" dependencies="'media_link_opt'"
+            setUrl="''" noPreview="'true'"
+            placeholder="'www.example.com'"
+            requestFocus="'true'"
+            t-props="extraAttributes or {}"
+        />
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Open in New Window">
+        <WeCheckbox
+            dependencies="'media_url_opt'"
+            setNewWindow="'true'" noPreview="'true'"/>
+    </WeRow>
+</t>
+
+<t t-name="web_editor.dynamic_svg_option">
+    <WeRow name="'colors'" title.translate="Dynamic Colors">
+        <WeColorpicker color="'true'" colorName="'c1'"/>
+        <WeColorpicker color="'true'" colorName="'c2'"/>
+        <WeColorpicker color="'true'" colorName="'c3'"/>
+        <WeColorpicker color="'true'" colorName="'c4'"/>
+        <WeColorpicker color="'true'" colorName="'c5'"/>
+    </WeRow>
+</t>
+
+<t t-name="web_editor.WeTitle">
+    <we-title t-att-class="props.class" t-att-style="props.style"
+                t-att-data-tooltip="props.tooltip">
+        <t t-if="props.slots?.title" t-slot="title"/>
+        <t t-else="" t-out="props.title"/>
+    </we-title>
+</t>
+
+<t t-name="web_editor.WeRow">
+    <we-row t-att-class="{'d-none': !this.state.show, [props.class]: true}" t-att-data-tooltip="props.tooltip">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"
+                style="props.fontFamily ? `font-family: ${props.fontFamily}` : ''"/>
+        <div>
+            <t t-slot="default"/>
+        </div>
+    </we-row>
+</t>
+
+<t t-name="web_editor.WeCollapse">
+    <we-collapse t-att-class="{'d-none': !this.state.show, 'active': this.state.active, [props.class]: true}" t-att-data-tooltip="props.title || props.tooltip">
+        <t t-slot="first"/>
+    <!-- TODO @owl-options: supposed to add class on we-title
+        <we-title t-if="props.slots.title" class="o_we_collapse_toggler" t-att-style="props.fontFamily ? `font-family: ${props.fontFamily}` : false ">
+            <t t-slot="title"/>
+        </we-title>
+    -->
+        <we-toggler class="o_we_collapse_toggler" t-att-class="{'active': this.state.active}" t-on-click="toggle"/>
+        <div>
+            <t t-slot="default"/>
+        </div>
+    </we-collapse>
+</t>
+
+<t t-name="web_editor.WeButton">
+    <!-- 
+         TODO: @owl-options tooltips are not automatically translated. To Check
+        How we can solve that issue.
+    -->
+    <we-button t-ref="text-content"
+               t-on-mouseenter="this._onUserValuePreview"
+               t-on-mouseleave="this._onUserValueReset"
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget"
+               t-att-data-tooltip="props.tooltip"
+               t-att-class="getAllClasses()"
+               t-att="getAllDataAttributes()">
+            <div>
+                <t t-if="this.img">
+                    <img t-att-src="this.previewImg &amp;&amp; this.state.isPreviewed() ? this.previewImg : this.img"/>
+                </t>
+                <t t-if="this.props.icon">
+                    <i t-attf-class="fa {{ this.props.icon }}"/>
+                </t>
+                <t t-if="this.svg">
+                    <t t-out="this.svg"/>
+                </t>
+                <t t-slot="default"/>
+            </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeCheckbox">
+    <we-button t-ref="text-content"
+               t-on-mouseenter="this._onUserValuePreview"
+               t-on-mouseleave="this._onUserValueReset"
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget o_we_checkbox_wrapper"
+               t-att-data-tooltip="props.tooltip"
+               t-att-class="getAllClasses()"
+               t-att="getAllDataAttributes()">
+            <WeTitle t-if="props.slots?.title || props.title"
+                    title="props.title" slots="{title: props.slots?.title}"/>
+            <div>
+                <we-checkbox/>
+            </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeSelect">
+    <we-select class="o_we_user_value_widget" t-att-class="getAllClasses()" t-on-click="_onClick"
+               t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+               title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <t t-if="props.slots?.toggler">
+                <we-toggler t-att-class="{ 'active': state.opened }">
+                    <t t-slot="toggler"/>
+                </we-toggler>
+            </t>
+            <t t-else="">
+                <we-toggler t-att-class="{ 'active': state.opened }">
+                    <t t-if="state.toggler.textContent" t-out="state.toggler.textContent"/>
+                    <t t-if="state.toggler.faIcon">
+                        <i t-att-class="`fa ${state.toggler.faIcon}`"/>
+                    </t>
+                    <t t-if="state.toggler.imgSrc">
+                        <img t-att-src="state.toggler.imgSrc"/>
+                    </t>
+                </we-toggler>
+            </t>
+            <we-selection-items t-ref="menu">
+                <t t-slot="default"/>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+<t t-name="web_editor.WeButtonGroup">
+        <we-button-group class="o_we_user_value_widget" t-att-class="getAllClasses()">
+        <WeTitle t-if="props.slots?.title || props.title" tooltip="props.tooltip"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <we-selection-items>
+                <t t-slot="default"/>
+            </we-selection-items>
+        </div>
+    </we-button-group>
+</t>
+<t t-name="web_editor.WeInput">
+    <we-input class="o_we_user_value_widget" t-att-class="getAllClasses()"
+              t-att-data-tooltip="props.tooltip" t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+              title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <t t-set="isNumber" t-value="this.state._isNumeric() || !! !!this.props.hideUnit"/>
+            <t t-set="showUnit" t-value="(!!this.props.unit || !!this.props.fakeUnit) and !this.props.hideUnit"/>
+            <input t-ref="input" t-att-name="this.props.optionName"
+                t-att-type="isNumber ? 'number' : 'text'"
+                t-att-class="{'text-end': isNumber, 'text-start': !isNumber}"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+            <span t-if="showUnit" t-out="this.props.fakeUnit || this.props.unit"/>
+        </div>
+    </we-input>
+</t>
+<t t-name="web_editor.WeDatetime">
+    <we-input class="o_we_user_value_widget o_we_large" t-att-class="getAllClasses()"
+              t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <input t-ref="input" type="text" class="datetimepicker-input mx-0 text-start"
+                t-on-blur="this._onInputBlur"
+                t-on-input="this._onDateInputInput"
+            />
+        </div>
+    </we-input>
+</t>
+<t t-name="web_editor.WeRange">
+    <we-range class="o_we_user_value_widget" t-att-class="getAllClasses()"
+              t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <!-- TODO w-100 did not exist in legacy, but output spans beyond div without it -->
+            <input type="range" class="w-100" t-att-class="{o_we_inverted_range: this.inverted}"
+                t-att-min="this.min"
+                t-att-max="this.state.max"
+                t-att-step="this.props.step"
+                t-att-value="this.state.value"
+                t-on-change="this._onInputChange"
+                t-on-input="this._onInputInput"
+            />
+            <output t-if="this.props.displayRangeValue" class="ms-2" t-out="this.state.displayValue"/>
+        </div>
+    </we-range>
+</t>
+<t t-name="web_editor.WeMediapicker">
+    <WeTitle t-if="props.slots?.title || props.title"
+            title="props.title" slots="{title: props.slots?.title}"/>
+    <we-button class="o_we_user_value_widget"
+               t-on-click="this._onEditMedia"
+               t-att-data-tooltip="props.tooltip"
+               t-att-class="getAllClasses()">
+        <div>
+            <t t-if="props.buttonStyle"><i class="fa fa-fw fa-camera" alt="Add media"></i></t>
+            <t t-else="">Replace</t>
+        </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeColorpicker">
+    <we-select class="o_we_user_value_widget o_we_so_color_palette" t-att-class="getAllClasses()"
+                t-att-data-tooltip="props.tooltip" t-on-click="this._onClick">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <span class="o_we_color_preview" t-att="getPreviewAttributes()"/>
+            <we-toggler t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <div class="o_we_color_palette_wrapper" style="display: contents;">
+                    <!-- Only render the ColorPalette when the toggler is active -->
+                    <ColorPalette t-if="state.opened" t-props="options" selectedCC="this.state.ccValue" selectedColor="this.state.value" />
+                </div>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+<t t-name="web_editor.WeMulti">
+    <we-multi class="o_we_user_value_widget" t-att-class="getAllClasses()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <t t-slot="default"/>
+        </div>
+    </we-multi>
+</t>
+<t t-name="web_editor.WeList">
+    <we-list class="o_we_user_value_widget o_we_fw" t-att-class="getAllClasses()" t-on-mousedown="_onWeListMousedown">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <div class="o_we_table_wrapper">
+                <table t-ref="table">
+                    <t t-foreach="state.listRecords" t-as="listRecord" t-key="listRecord.id">
+                        <tr>
+                            <td t-if="props.unsortable !== 'true'">
+                                <we-button class="o_we_drag_handle o_we_link fa fa-fw fa-arrows" data-no-preview="true"/>
+                            </td>
+                            <td class="o_we_list_record_name" t-att-class="{[listRecord.firstInputClass]: props.doubleInput === 'true'}">
+                                <input t-att-type="props.inputType" t-att-value="listRecord.display_name || props.defaultValue"
+                                    t-att-name="listRecord.id" t-att-placeholder="listRecord.placeholder"
+                                    t-att="this.getInputDataAtts(listRecord)"
+                                    t-on-input="_onListItemBlurInput"
+                                    t-on-blur="_onListItemBlurInput"
+                                    t-att-disabled="!state.isCustom"/>
+                            </td>
+                            <td t-if="props.doubleInput === 'true'" t-att-class="listRecord.secondInputClass">
+                                <input type="text" t-att-value="listRecord.secondInputText"
+                                       t-att-name="listRecord.id"
+                                       t-on-input="_onListItemBlurInput"
+                                       t-on-blur="_onListItemBlurInput"/>
+                            </td>
+                            <td t-if="props.hasDefault and !listRecord.notToggleable">
+                                <we-button class="o_we_user_value_widget o_we_checkbox_wrapper"
+                                           t-att-data-select="listRecord.id"
+                                           t-att-class="{'active': state.selected.includes(listRecord.id) || listRecord.selected}"
+                                           t-on-click="_onAddItemCheckboxClick">
+                                    <we-checkbox/>
+                                </we-button>
+                            </td>
+                            <td t-if="!listRecord.undeletable">
+                                <we-button class="o_we_select_remove_option o_we_link o_we_text_danger fa fa-fw fa-minus"
+                                           t-att-data-remove-option="listRecord.id" t-on-click="_onRemoveItemClick"/>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+            <t t-slot="createUserValue"/>
+            <t t-if="!props.slots?.createUserValue">
+                <we-button t-if="state.isCustom" class="o_we_list_add_optional" t-on-click="_onAddCustomItemClick">
+                    <t t-out="props.addItemTitle"/>
+                </we-button>
+                <we-select t-else="" class="o_we_user_value_widget o_we_add_list_item" t-on-click="_onClick">
+                    <div>
+                        <we-toggler t-att-class="{'active': state.opened}" t-out="props.addItemTitle"/>
+                        <we-selection-items>
+                            <t t-set="noRecordInList" t-value="true"/>
+                            <t t-foreach="state.existingRecords" t-as="record" t-key="record.id">
+                                <t t-if="!state.listRecords.find(v => v.id === record.id)">
+                                    <t t-set="noRecordInList" t-value="false"/>
+                                    <we-button class="o_we_list_add_existing" t-att-data-add-option="record.id" data-no-preview="true" t-on-click="_onAddExistingItemClick">
+                                        <div t-out="record.display_name"/>
+                                    </we-button>
+                                </t>
+                            </t>
+                            <we-title t-if="noRecordInList">No more records</we-title>
+                        </we-selection-items>
+                    </div>
+                </we-select>
+            </t>
+        </div>
+    </we-list>
+</t>
+
+<t t-name="web_editor.WeMany2one" t-inherit="web_editor.WeSelect" t-inherit-mode="primary">
+    <!-- The component already extends WeSelect: we can't use <WeSelect> here,
+        we have to xpath it. -->
+    <xpath expr="//we-select" position="attributes">
+        <attribute name="class" add="o_we_many2one" separator=" "/>
+    </xpath>
+    <xpath expr="//we-selection-items/t" position="replace">
+        <div class="o_we_m2o_search">
+            <t t-set="input_placeholder">Search for records</t>
+            <input t-att-placeholder="input_placeholder" t-on-input="_onSearchInput" t-on-keydown="_onSearchKeydown"/>
+        </div>
+        <t t-foreach="state.records" t-as="record" t-key="record.id">
+            <WeButton t-props="getButtonProps(record)" t-esc="record.display_name"/>
+        </t>
+        <t t-set="search_more_title">Search to show more records</t>
+        <div t-if="state.hasMore" class="o_we_m2o_search_more" t-att-title="search_more_title" t-on-click="_onSearchMoreClick">
+            Search more...
+        </div>
+        <t t-if="props.createMethod">
+            <WeRow class="'o_we_full_row o_we_m2o_create p-1'">
+                <input type="text" class="o_we_large" t-on-input="_onCreateInputInput"/>
+                <WeButton class="'flex-grow-0 flex-shrink-0'" noPreview="'true'" t-props="{[props.createMethod]: ''}">
+                    Create
+                </WeButton>
+            </WeRow>
+        </t>
+    </xpath>
+</t>
+<t t-name="web_editor.WeMany2many">
+    <div class="o_we_user_value_widget o_we_m2m position-relative" t-att-class="getAllClasses()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <WeList unsortable="'true'" notEditable="'true'" allowEmpty="'true'">
+                <t t-set-slot="createUserValue">
+                    <WeMany2one createUserValue="'true'" t-props="state.m2oProps"/>
+                </t>
+            </WeList>
+
+        </div>
+    </div>
+</t>
+
+<t t-name="web_editor.WeSelectPager">
+    <we-select class="o_we_user_value_widget o_we_select_pager" t-att-class="getAllClasses()" t-on-click="_onClick">
+        <div>
+            <we-toggler t-out="state.toggler.textContent" class="o_we_toggler_pager" t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu" class="o_we_has_pager position-fixed top-0 end-0 z-1 rounded-0">
+                <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
+                    <div class="d-flex align-items-center">
+                        <button class="o_pager_nav_angle fa fa-angle-left btn btn-secondary bg-transparent border-0" t-on-click="_onClickCloseMenu"/>
+                        <t t-slot="title"/>
+                    </div>
+                    <div class="d-flex" t-on-click="_onClickScrollPage">
+                        <t t-slot="buttons"/>
+                    </div>
+                </header>
+                <div class="o_pager_container" t-on-scroll="__onScroll">
+                    <t t-slot="default"/>
+                </div>
+            </we-selection-items>
+        </div>
+    </we-select>
+</t>
+
+<t t-name="web_editor.snippet_options_image_optimization_widgets">
+    <t t-set="indent" t-value="props.snippetOption.indent"/>
+    <WeSelect class="indent and 'o_we_sublevel_2'" title.translate="Filter">
+        <WeButton glFilter="''">None</WeButton>
+        <WeButton glFilter="'blur'">Blur</WeButton>
+        <WeButton glFilter="'1977'">1977</WeButton>
+        <WeButton glFilter="'aden'">Aden</WeButton>
+        <WeButton glFilter="'brannan'">Brannan</WeButton>
+        <WeButton glFilter="'earlybird'">EarlyBird</WeButton>
+        <WeButton glFilter="'inkwell'">Inkwell</WeButton>
+        <WeButton glFilter="'maven'">Maven</WeButton>
+        <WeButton glFilter="'toaster'">Toaster</WeButton>
+        <WeButton glFilter="'walden'">Walden</WeButton>
+        <WeButton glFilter="'valencia'">Valencia</WeButton>
+        <WeButton glFilter="'xpro'">Xpro</WeButton>
+        <WeButton glFilter="'custom'" name="'custom_glfilter_opt'">Custom</WeButton>
+    </WeSelect>
+    <WeRow class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'" title.translate="Color">
+        <WeSelect filterProperty="'blend'" dependencies="'custom_glfilter_opt'">
+            <WeButton customFilter="'normal'">Normal</WeButton>
+            <WeButton customFilter="'overlay'">overlay</WeButton>
+            <WeButton customFilter="'screen'">screen</WeButton>
+            <WeButton customFilter="'multiply'">multiply</WeButton>
+            <WeButton customFilter="'lighter'">add</WeButton>
+            <WeButton customFilter="'exclusion'">exclusion</WeButton>
+            <WeButton customFilter="'darken'">darken</WeButton>
+            <WeButton customFilter="'lighten'">lighten</WeButton>
+        </WeSelect>
+        <WeColorpicker dependencies="'custom_glfilter_opt'" customFilter="''" filterProperty="'filterColor'" excluded="'common, theme'"/>
+    </WeRow>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'saturation'"
+            min="'-100'"
+            step="'10'"
+            title.translate="Saturation"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'contrast'"
+            min="'-100'"
+            step="'10'"
+            title.translate="Contrast"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'brightness'"
+            min="'-100'"
+            step="'10'"
+            title.translate="Brightness"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'sepia'"
+            step="'5'"
+            title.translate="Sepia"/>
+    <WeRange class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
+            dependencies="'custom_glfilter_opt'"
+            customFilter="''"
+            filterProperty="'blur'"
+            max="'2000'"
+            step="'100'"
+            title.translate="Blur"/>
+
+    <WeSelect class="indent and 'o_we_sublevel_2'"
+              name="'format_select_opt'"
+              title.translate="Format">
+        <t t-set="availableFormats" t-value="renderContext.availableFormats"/>
+        <t t-foreach="renderContext.availableFormats || []" t-as="format" t-key="format">
+            <t t-set="value" t-value="format[0]"/>
+            <t t-set="label" t-value="format[1][0]"/>
+            <t t-set="targetFormat" t-value="format[1][1]"/>
+            <WeButton selectFormat="`${Math.round(value)} ${targetFormat}`" class="'o_we_badge_at_end'">
+                <t t-out="label"/> <span class="badge rounded-pill text-bg-dark"><t t-out="targetFormat.split('/')[1]"/></span>
+            </WeButton>
+        </t>
+    </WeSelect>
+
+    <WeRange t-if="!renderContext.noQuality" class="indent and 'o_we_sublevel_2'"
+              setQuality="''" title.translate="Quality"/>
+</t>
+
+<t t-name="web_editor.snippet_options_background_color_widget">
+    <WeColorpicker tooltip.translate="Color"
+                    name="'bg_color_opt'"
+                    selectColorCombination="option.withColorCombinations ? '' : false"
+                    selectStyle="''"
+                    cssProperty="'background-color'"
+                    colorPrefix="'bg-'"
+                    withCombinations="option.withColorCombinations and 'selectColorCombination' or false"
+                    withGradients="option.withGradients and 'true' or false"
+                    cssCompatible="option.cssCompatible and 'true' or false"/>
+</t>
+<t t-name="web_editor.snippet_options_background_options">
+    <t t-set="option" t-value="props.snippetOption"/>
+    <WeRow t-if="option.withColors or option.withImages" class="'o_we_full_row'"
+            title.translate="Background">
+        <t t-if="option.withColors" t-call="web_editor.snippet_options_background_color_widget"/>
+        <t t-if="option.withImages">
+            <WeButton tooltip.translate="Image" class="'ms-auto fa fa-fw fa-camera'"
+                        name="'bg_image_toggle_opt'"
+                        dependencies="option.imagesDependencies || false"
+                        toggleBgImage="'true'"
+                        noPreview="'true'"/>
+            <t t-if="option.withShapes">
+                <WeButton tooltip.translate="Shape"
+                        toggleBgShape="'true'"
+                        dependencies="option.imagesDependencies || false"
+                        noPreview="'true'"
+                        img="'/web_editor/static/src/img/snippets_options/bg_shape.svg'"/>
+            </t>
+        </t>
+    </WeRow>
+</t>
+<t t-name="web_editor.animated_shape_label">
+    <span class="o_we_shape_animated_label">
+        <t t-if="imgSize">
+            <i class="fa fa-expand"/><span t-out="imgSize"/>
+        </t>
+        <t t-else="">
+            <!-- We do it like that to keep the translations. -->
+            <t t-set="animated">Animated</t>
+            <t t-out="animated[0]"/><span t-out="animated.substring(1)"/>
+        </t>
+    </span>
+</t>
+<t t-name="web_editor.WeShapeBtn">
+    <t t-set="shapeClassName" t-value="`o_${props.shape.replace(new RegExp('/', 'g'), '_')}`"/>
+    <t t-set="bgUrl" t-value="renderContext._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`]"/>
+    <WeButton shape="props.shape" selectLabel="props.selectLabel" animated="props.animated and 'true'">
+        <div class="o_we_shape_btn_content position-relative border-dark">
+            <div class="o_we_shape"
+                 t-att-class="shapeClassName"
+                 t-attf-style="background-image: {{bgUrl}}">
+                <t t-if="props.animated">
+                    <t t-call="web_editor.animated_shape_label"/>
+                </t>
+            </div>
+        </div>
+    </WeButton>
+</t>
+<t t-name="web_editor.BackgroundShapes">
+    <WeRow class="'o_we_sublevel_1'" title.translate="Shapes">
+        <!-- TODO: @owl-options remove the owl in the name -->
+        <WeSelectPager dependencies="'!shape_none_opt'" name="'bg_shape_opt'">
+            <t t-set-slot="title">
+                <h5 class="o_pager_nav_title mb-0 text-white">Shapes</h5>
+            </t>
+            <t t-set-slot="buttons">
+                <button type="button" class="o_pager_nav_btn p-0 text-uppercase active" data-scroll-to="o_scroll_bgshapes_basic">
+                    <span class="w-100">Basic</span>
+                </button>
+                <button type="button" class="o_pager_nav_btn p-0 text-uppercase" data-scroll-to="o_scroll_bgshapes_linear">
+                    <span class="w-100">Linear</span>
+                </button>
+                <button type="button" class="o_pager_nav_btn p-0 text-uppercase" data-scroll-to="o_scroll_bgshapes_creative">
+                    <span class="w-100">Creative</span>
+                </button>
+            </t>
+            <div class="o_scroll_bgshapes_basic">
+                <we-title class="">Geometrics</we-title>
+                <we-select-page>
+                    <WeShapeBtn shape="'web_editor/Origins/02_001'" selectLabel="'Origins 01'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/04_001'" selectLabel="'Origins 02'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/05'" selectLabel="'Origins 03'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/06_001'" selectLabel="'Origins 04'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/07_002'" selectLabel="'Origins 05'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/08'" selectLabel="'Origins 06'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/09_001'" selectLabel="'Origins 07'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/11_001'" selectLabel="'Origins 08'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/14_001'" selectLabel="'Origins 09'"/>
+                    <WeShapeBtn shape="'web_editor/Origins/16'" selectLabel="'Origins 10'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Origins/17'" selectLabel="'Origins 11'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Origins/18'" selectLabel="'Origins 12'" animated="true"/>
+                </we-select-page>
+                <we-title>Bold</we-title>
+                <we-select-page string="Bold">
+                    <WeShapeBtn shape="'web_editor/Bold/01'" selectLabel="'Bold 01'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/02'" selectLabel="'Bold 02'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/03'" selectLabel="'Bold 03'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/04'" selectLabel="'Bold 04'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/05_001'" selectLabel="'Bold 05'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/06_001'" selectLabel="'Bold 06'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/07_001'" selectLabel="'Bold 07'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/08'" selectLabel="'Bold 08'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/09'" selectLabel="'Bold 09'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/10_001'" selectLabel="'Bold 10'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/11_001'" selectLabel="'Bold 11'"/>
+                    <WeShapeBtn shape="'web_editor/Bold/12_001'" selectLabel="'Bold 12'"/>
+                </we-select-page>
+                <we-select-page string="Blobs">
+                    <WeShapeBtn shape="'web_editor/Blobs/01_001'" selectLabel="'Blobs 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/02'" selectLabel="'Blobs 02'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/03'" selectLabel="'Blobs 03'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/04'" selectLabel="'Blobs 04'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/05'" selectLabel="'Blobs 05'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/06'" selectLabel="'Blobs 06'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/07'" selectLabel="'Blobs 07'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/08'" selectLabel="'Blobs 08'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/09'" selectLabel="'Blobs 09'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/10_001'" selectLabel="'Blobs 10'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/11'" selectLabel="'Blobs 11'"/>
+                    <WeShapeBtn shape="'web_editor/Blobs/12'" selectLabel="'Blobs 12'"/>
+                </we-select-page>
+            </div>
+            <div class="o_scroll_bgshapes_linear">
+                <we-title>Airy &amp; Zigs</we-title>
+                <we-select-page string="Airy &amp; Zigs">
+                    <WeShapeBtn shape="'web_editor/Airy/01'" selectLabel="'Airy 01'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/02'" selectLabel="'Airy 02'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/03_001'" selectLabel="'Airy 03'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/04_001'" selectLabel="'Airy 04'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/05_001'" selectLabel="'Airy 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/06'" selectLabel="'Airy 06'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/07'" selectLabel="'Airy 07'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/08'" selectLabel="'Airy 08'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/09'" selectLabel="'Airy 09'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/10'" selectLabel="'Airy 10'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/11'" selectLabel="'Airy 11'"/>
+                    <WeShapeBtn shape="'web_editor/Airy/12_001'" selectLabel="'Airy 12'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/13_001'" selectLabel="'Airy 13'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Airy/14'" selectLabel="'Airy 14'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/01_001'" selectLabel="'Zigs 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/02_001'" selectLabel="'Zigs 02'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/03'" selectLabel="'Zigs 03'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/04'" selectLabel="'Zigs 04'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/05'" selectLabel="'Zigs 05'"/>
+                    <WeShapeBtn shape="'web_editor/Zigs/06'" selectLabel="'Zigs 06'"/>
+                </we-select-page>
+            </div>
+            <div class="o_scroll_bgshapes_creative">
+                <we-title>Wavy</we-title>
+                <we-select-page string="Wavy">
+                    <WeShapeBtn shape="'web_editor/Wavy/01_001'" selectLabel="'Wavy 01'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/02_001'" selectLabel="'Wavy 02'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/03'" selectLabel="'Wavy 03'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/10'" selectLabel="'Wavy 04'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/24'" selectLabel="'Wavy 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/25'" selectLabel="'Wavy 06'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/26'" selectLabel="'Wavy 07'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/27'" selectLabel="'Wavy 08'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/04'" selectLabel="'Wavy 09'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/05'" selectLabel="'Wavy 10'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/06_001'" selectLabel="'Wavy 11'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/07'" selectLabel="'Wavy 12'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/08'" selectLabel="'Wavy 13'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/09'" selectLabel="'Wavy 14'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/11'" selectLabel="'Wavy 15'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/12_001'" selectLabel="'Wavy 16'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/28'" selectLabel="'Wavy 17'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/13_001'" selectLabel="'Wavy 18'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/14'" selectLabel="'Wavy 19'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/15'" selectLabel="'Wavy 20'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/16'" selectLabel="'Wavy 21'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/17'" selectLabel="'Wavy 22'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/18'" selectLabel="'Wavy 23'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/19'" selectLabel="'Wavy 24'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/20'" selectLabel="'Wavy 25'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/21'" selectLabel="'Wavy 26'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/22'" selectLabel="'Wavy 27'"/>
+                    <WeShapeBtn shape="'web_editor/Wavy/23'" selectLabel="'Wavy 28'"/>
+                </we-select-page>
+                <we-title>Block &amp; Rainy</we-title>
+                <we-select-page string="Blocks &amp; Rainy">
+                    <WeShapeBtn shape="'web_editor/Blocks/02_001'" selectLabel="'Blocks 01'"/>
+                    <WeShapeBtn shape="'web_editor/Blocks/01_001'" selectLabel="'Blocks 02'"/>
+                    <WeShapeBtn shape="'web_editor/Blocks/03'" selectLabel="'Blocks 03'"/>
+                    <WeShapeBtn shape="'web_editor/Blocks/04'" selectLabel="'Blocks 04'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/01_001'" selectLabel="'Rainy 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/02_001'" selectLabel="'Rainy 02'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/06'" selectLabel="'Rainy 03'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/07'" selectLabel="'Rainy 04'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/10'" selectLabel="'Rainy 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/04'" selectLabel="'Rainy 06'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/05_001'" selectLabel="'Rainy 07'"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/03_001'" selectLabel="'Rainy 08'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/08_001'" selectLabel="'Rainy 09'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Rainy/09_001'" selectLabel="'Rainy 10'"/>
+                </we-select-page>
+                <we-title>Floating Shapes</we-title>
+                <we-select-page string="Floating Shapes">
+                    <WeShapeBtn shape="'web_editor/Floats/01'" selectLabel="'Float 01'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/02'" selectLabel="'Float 02'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/03'" selectLabel="'Float 03'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/04'" selectLabel="'Float 04'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/05'" selectLabel="'Float 05'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/06'" selectLabel="'Float 06'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/07'" selectLabel="'Float 07'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/08'" selectLabel="'Float 08'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/09'" selectLabel="'Float 09'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/10'" selectLabel="'Float 10'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/11'" selectLabel="'Float 11'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/12'" selectLabel="'Float 12'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/13'" selectLabel="'Float 13'" animated="true"/>
+                    <WeShapeBtn shape="'web_editor/Floats/14'" selectLabel="'Float 14'" animated="true"/>
+                </we-select-page>
+            </div>
+        </WeSelectPager>
+        <WeButton class="'o_we_device'" showOnMobile="'false'" tooltip.translate="Show/Hide on Mobile"
+            dependencies="'!shape_none_opt'" noPreview="'true'"
+            img="'/website/static/src/img/snippets_options/mobile_invisible.svg'"/>
+        <WeButton shape="''" name="'shape_none_opt'" dependencies="'!shape_none_opt'" noPreview="'true'" class="'o_we_image_shape_remove o_we_bg_danger fa fa-fw fa-times'"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" title.translate="Flip">
+        <WeButton class="'oi oi-fw oi-arrows-h'" flipX="'true'" noPreview="'true'" dependencies="'!shape_none_opt'"/>
+        <WeButton class="'oi oi-fw oi-arrows-v'" flipY="'true'" noPreview="'true'" dependencies="'!shape_none_opt'"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" name="'colors'" title.translate="Colors">
+        <t t-foreach="renderContext.colorPickers" t-as="colorName" t-key="colorName">
+            <WeColorpicker color="'true'" colorName="colorName"/>
+        </t>
+        <WeColorpicker selectStyle="''" cssProperty="'background-color'" colorPrefix="'bg-'" applyTo="'> .o_we_shape'"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" title.translate="Speed">
+        <WeRange name="'bg_shape_anim_speed_opt'"
+                    noPreview="'true'"
+                    displayRangeValue="'true'"
+                    setBgShapeAnimationSpeed="''"
+                    max="'2'"
+                    min="'-2'"
+                    step="'0.1'"
+                    toRatio="'true'"/>
+    </WeRow>
+</t>
+<t t-name="web_editor.BackgroundImage">
+    <WeRow title.translate="Image" class="'o_we_sublevel_1'">
+        <WeMediapicker tooltip.translate="Edit image"
+                        mediaType="'images'"
+                        background="''"
+                        name="'bg_image_opt'"
+                        dependencies="'bg_image_opt'"/>
+        <span t-if="renderContext.filesize" t-out="renderContext.filesize" class="o_we_image_weight o_we_tag" title="Size"/>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_2'" title.translate="Main Color" name="'main_color_opt'">
+        <WeColorpicker dynamicColor="'true'" colorName="'c1'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c2'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c3'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c4'"/>
+        <WeColorpicker dynamicColor="'true'" colorName="'c5'"/>
+    </WeRow>
+</t>
+<t t-name="web_editor.BackgroundPosition">
+    <WeRow class="'o_we_sublevel_2'" title.translate="Position">
+        <WeSelect noPreview="'true'">
+            <WeButton backgroundType="'cover'">Cover</WeButton>
+            <WeButton backgroundType="'repeat-pattern'" name="'background_repeat_opt'">Repeat pattern</WeButton>
+        </WeSelect>
+        <WeButton class="'fa fa-fw fa-crosshairs'" tooltip.translate="Background Position"
+                backgroundPositionOverlay="'true'" noPreview="'true'"/>
+    </WeRow>
+    <WeMulti cssProperty="'background-size'" dependencies="'background_repeat_opt'">
+        <WeInput title.translate="Width" class="'o_we_sublevel_3'"
+                selectStyle="'auto'" placeholder.translate="auto" unit="'px'"/>
+        <WeInput title.translate="Height" class="'o_we_sublevel_3'"
+                selectStyle="'auto'" placeholder.translate="auto" unit="'px'"/>
+    </WeMulti>
+</t>
+<t t-name="web_editor.BackgroundFilter">
+    <t t-set="color_filter_dependencies" t-value="'bg_image_toggle_opt'"/>
+    <WeColorpicker title.translate="Color Filter"
+                    class="'o_we_sublevel_2'"
+                    dependencies="color_filter_dependencies"
+                    name="'bg_filter_opt'"
+                    selectFilterColor="''"
+                    colorPrefix="'bg-'"
+                    opacity="'0.5'"
+                    withGradients="'1'"
+                    selectedTab="'gradients'"
+                    excluded="'theme, common'"/>
+</t>
+
+<t t-name="web_editor.WeImgShapeBtn">
+    <WeButton class="'position-relative'" setImgShape="props.setImgShape" animated="props.animated" t-props="props">
+        <img t-att-src="this.src"/>
+        <t t-if="props.animated || props.imgSize" t-call="web_editor.animated_shape_label">
+            <t t-set="imgSize" t-out="props.imgSize"/>
+        </t>
+    </WeButton>
+</t>
+
+<t t-name="web_editor.ImageTools">
+    <t t-set="no_animations" t-value="false"/>
+    <div class="o_we_image_shape">
+        <WeRow class="'o_we_full_row'" title.translate="Shape">
+            <WeSelectPager name="'shape_img_opt'" class="'o_we_fake_transparent_background'">
+                <t t-set-slot="title"><h5 class="o_pager_nav_title mb-0 text-white">Shapes</h5></t>
+                <t t-set-slot="buttons">
+                    <button type="button" class="o_pager_nav_btn p-0 text-uppercase active" data-scroll-to="o_scroll_shapes_basic">
+                        <span class="w-100">Basic</span>
+                    </button>
+                    <button type="button" class="o_pager_nav_btn p-0 text-uppercase" data-scroll-to="o_scroll_shapes_decorative">
+                        <span class="w-100">Decorative</span>
+                    </button>
+                    <button type="button" class="o_pager_nav_btn p-0 text-uppercase" data-scroll-to="o_scroll_shapes_devices">
+                        <span class="w-100">Devices</span>
+                    </button>
+                </t>
+                <div class="o_scroll_shapes_basic">
+                    <we-title class="">Geometrics</we-title>
+                    <we-select-page string="Geometrics">
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square'" noTransform="'true'" name="'shape_img_square_opt'"/> <!-- hidden and only used for hover effects -->
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_shuriken'" selectLabel="'Shuriken'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_diamond'" selectLabel="'Diamond'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_triangle'" selectLabel="'Triangle'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_cornered_triangle'" selectLabel="'Corner Triangle'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_pentagon'" selectLabel="'Pentagon'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_hexagon'" selectLabel="'Hexagon'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_heptagon'" selectLabel="'Heptagon'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_star'" selectLabel="'Star 1'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_star_8pin'" selectLabel="'Star 2'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_star_16pin'" selectLabel="'Star 3'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_slanted'" selectLabel="'Slanted'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_emerald'" selectLabel="'Emerald'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_tetris'" selectLabel="'Tetris'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_kayak'" selectLabel="'Kayak'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_tear'" selectLabel="'Tear'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_gem'" selectLabel="'Gem'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_sonar'" selectLabel="'Sonar'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_door'" selectLabel="'Door'" unstretch="'true'"/>
+                        <t t-if="!no_animations">
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square_1'" selectLabel="'Square 1'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square_2'" selectLabel="'Square 2'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square_3'" selectLabel="'Square 3'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square_4'" selectLabel="'Square 4'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square_5'" selectLabel="'Square 5'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric/geo_square_6'" selectLabel="'Square 6'" animated="'true'"/>
+                        </t>
+                    </we-select-page>
+
+                    <we-title>Geometrics Rounded</we-title>
+                    <we-select-page string="Geometrics Rounded">
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_circle'" selectLabel="'Circle'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_square'" selectLabel="'Square (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_diamond'" selectLabel="'Diamond (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_shuriken'" selectLabel="'Shuriken (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_triangle'" selectLabel="'Triangle (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_pentagon'" selectLabel="'Pentagon (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_hexagon'" selectLabel="'Hexagon (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_heptagon'" selectLabel="'Heptagon (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_star'" selectLabel="'Star 1 (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_star_7pin'" selectLabel="'Star 2 (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_star_8pin'" selectLabel="'Star 3 (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_star_16pin'" selectLabel="'Star 4 (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_emerald'" selectLabel="'Emerald (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_lemon'" selectLabel="'Lemon (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_tear'" selectLabel="'Tear (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_pill'" selectLabel="'Pill (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_gem'" selectLabel="'Gem (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_cornered'" selectLabel="'Cornered'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_door'" selectLabel="'Door (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_sonar'" selectLabel="'Sonar (R)'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_clover'" selectLabel="'Clover (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_bread'" selectLabel="'Bread (R)'" noTransform="'true'" unstretch="'true'"/>
+                        <t t-if="!no_animations">
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_square_1'" selectLabel="'Square 1 (R)'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_square_2'" selectLabel="'Square 2 (R)'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_blob_soft'" selectLabel="'Blob Soft'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_blob_medium'" selectLabel="'Blob Medium'" animated="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/geometric_round/geo_round_blob_hard'" selectLabel="'Blob Hard'" animated="'true'"/>
+                        </t>
+                    </we-select-page>
+
+                    <we-title>Geometrics Panels</we-title>
+                    <we-select-page string="Panels">
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_duo'" selectLabel="'Duo'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_duo_r'" selectLabel="'Duo (R)'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_duo_step'" selectLabel="'Duo Step'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_duo_step_pill'" selectLabel="'Duo Step Pill'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_trio_in_r'" selectLabel="'Trio In (R)'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_trio_out_r'" selectLabel="'Trio Out (R)'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/panel/panel_window'" selectLabel="'Window'" noTransform="'true'" unstretch="'true'"/>
+                    </we-select-page>
+
+                    <we-title>Composites</we-title>
+                    <we-select-page string="Composites">
+                        <WeImgShapeBtn setImgShape="'web_editor/composite/composite_double_pill'" selectLabel="'Double Pill'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/composite/composite_triple_pill'" selectLabel="'Triple Pill'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/composite/composite_half_circle'" selectLabel="'Half Circle'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/composite/composite_sonar'" selectLabel="'Double Sonar'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/composite/composite_cut_circle'" selectLabel="'Cut Circle'"/>
+                    </we-select-page>
+                </div>
+                <div class="o_scroll_shapes_decorative">
+                    <we-title>Brushed</we-title>
+                    <we-select-page string="Brushed">
+                        <WeImgShapeBtn setImgShape="'web_editor/brushed/brush_1'" selectLabel="'Brush 1'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/brushed/brush_2'" selectLabel="'Brush 2'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/brushed/brush_3'" selectLabel="'Brush 3'" unstretch="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/brushed/brush_4'" selectLabel="'Brush 4'"/>
+                    </we-select-page>
+
+                    <we-title>Composition</we-title>
+                    <we-select-page string="Composition">
+                        <WeImgShapeBtn setImgShape="'web_editor/composition/composition_organic_line'" selectLabel="'Organic Line'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/composition/composition_oval_line'" selectLabel="'Oval Line'" noTransform="'true'"/>
+                        <t t-if="!no_animations">
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_triangle_line'" selectLabel="'Triangle Line'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_line_1'" selectLabel="'Line 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_line_3'" selectLabel="'Line 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_line_2'" selectLabel="'Line 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_mixed_1'" selectLabel="'Mixed 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_mixed_2'" selectLabel="'Mixed 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_planet_1'" selectLabel="'Planet 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_planet_2'" selectLabel="'Planet 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_square_1'" selectLabel="'Square Dot 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_square_2'" selectLabel="'Square Dot 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_square_3'" selectLabel="'Square Dot 3'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_square_4'" selectLabel="'Square Dot 4'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/composition/composition_square_line'" selectLabel="'Square Line'" animated="'true'" noTransform="'true'"/>
+                        </t>
+                    </we-select-page>
+
+                    <we-title>Patterns</we-title>
+                    <we-select-page string="Patterns">
+                        <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_organic_cross'" selectLabel="'Organic Cross'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_organic_caps'" selectLabel="'Organic Caps'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_oval_zebra'" selectLabel="'Oval Zebra'" noTransform="'true'"/>
+                        <t t-if="!no_animations">
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_wave_1'" selectLabel="'Wave 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_line_star'" selectLabel="'Star'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_line_sun'" selectLabel="'Sun'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_wave_2'" selectLabel="'Wave 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_wave_3'" selectLabel="'Wave 3'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_point'" selectLabel="'Point'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_organic_dot'" selectLabel="'Organic Dot'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_labyrinth'" selectLabel="'Labyrinth'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_circuit'" selectLabel="'Circuit'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/pattern/pattern_wave_4'" selectLabel="'Wave 4'" animated="'true'" noTransform="'true'"/>
+                        </t>
+                    </we-select-page>
+
+                    <we-title>Solids</we-title>
+                    <we-select-page string="Solids">
+                        <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_1'" selectLabel="'Blob 1'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_2'" selectLabel="'Blob 2'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_3'" selectLabel="'Blob 3'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_4'" selectLabel="'Blob 4'" noTransform="'true'"/>
+                        <t t-if="!no_animations">
+                            <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_5'" selectLabel="'Blob 5'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_shadow_1'" selectLabel="'Blob Shadow 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/solid/solid_blob_shadow_2'" selectLabel="'Blob Shadow 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/solid/solid_square_1'" selectLabel="'Square Shadow 1'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/solid/solid_square_2'" selectLabel="'Square Shadow 2'" animated="'true'" noTransform="'true'"/>
+                            <WeImgShapeBtn setImgShape="'web_editor/solid/solid_square_3'" selectLabel="'Square Shadow 3'" animated="'true'" noTransform="'true'"/>
+                        </t>
+                    </we-select-page>
+
+                    <we-title>Specials</we-title>
+                    <we-select-page string="Specials" t-if="!no_animations">
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_speed'" selectLabel="'Speed'" animated="'true'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_rain'" selectLabel="'Rain'" animated="'true'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_snow'" selectLabel="'Snow'" animated="'true'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_layered'" selectLabel="'Layered'" animated="'true'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_filter'" selectLabel="'Filter'" animated="'true'" noTransform="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_flag'" selectLabel="'Flag'" animated="'true'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/special/special_organic'" selectLabel="'Organic'" animated="'true'"/>
+                    </we-select-page>
+                </div>
+                <div class="o_scroll_shapes_devices">
+                    <we-title>Devices</we-title>
+                    <we-select-page string="Devices">
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/iphone_front_portrait'" selectLabel="'iPhone #1'" imgSize="'0.46:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/iphone_3d_portrait_01'" selectLabel="'iPhone #2'" imgSize="'0.46:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/iphone_3d_portrait_02'" selectLabel="'iPhone #3'" imgSize="'0.46:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/iphone_front_landscape'" selectLabel="'iPhone #4'" imgSize="'2.17:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/iphone_3d_landscape_01'" selectLabel="'iPhone #5'" imgSize="'2.17:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/iphone_3d_landscape_02'" selectLabel="'iPhone #6'" imgSize="'2.17:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/galaxy_front_portrait'" selectLabel="'Galaxy S #1'" imgSize="'0.45:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/galaxy_3d_portrait_01'" selectLabel="'Galaxy S #2'" imgSize="'0.45:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/galaxy_3d_portrait_02'" selectLabel="'Galaxy S #3'" imgSize="'0.45:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/galaxy_front_landscape'" selectLabel="'Galaxy S #4'" imgSize="'2.22:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/galaxy_3d_landscape_01'" selectLabel="'Galaxy S #5'" imgSize="'2.22:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/galaxy_3d_landscape_02'" selectLabel="'Galaxy S #6'" imgSize="'2.22:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/ipad_front_portrait'" selectLabel="'iPad #1'" imgSize="'0.75:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/ipad_3d_portrait_01'" selectLabel="'iPad #2'" imgSize="'0.75:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/ipad_3d_portrait_02'" selectLabel="'iPad #3'" imgSize="'0.75:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/ipad_front_landscape'" selectLabel="'iPad #4'" imgSize="'4:3'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/ipad_3d_landscape_01'" selectLabel="'iPad #5'" imgSize="'4:3'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/ipad_3d_landscape_02'" selectLabel="'iPad #6'" imgSize="'4:3'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/imac_front'" selectLabel="'iMac #1'" imgSize="'16:9'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/imac_3d_01'" selectLabel="'iMac #2'" imgSize="'16:9'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/imac_3d_02'" selectLabel="'iMac #3'" imgSize="'16:9'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/macbook_front'" selectLabel="'MacBook #1'" imgSize="'1.6:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/macbook_3d_01'" selectLabel="'MacBook #2'" imgSize="'1.6:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/macbook_3d_02'" selectLabel="'MacBook #3'" imgSize="'1.6:1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/browser_01'" selectLabel="'Browser #1'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/browser_02'" selectLabel="'Browser #2'"/>
+                        <WeImgShapeBtn setImgShape="'web_editor/devices/browser_03'" selectLabel="'Browser #3'"/>
+                    </we-select-page>
+                </div>
+            </WeSelectPager>
+            <WeButton setImgShape="''" noPreview="'true'" label="'None'" dependencies="'shape_img_opt'"
+                class="'o_we_image_shape_remove o_we_bg_danger fa fa-fw fa-times'" name="'remove_img_shape_opt'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Colors">
+            <WeColorpicker setImgShapeColor="'true'" dependencies="'shape_img_opt'" name="'img-shape-color-0'" colorId="'0'"/>
+            <WeColorpicker setImgShapeColor="'true'" dependencies="'shape_img_opt'" name="'img-shape-color-1'" colorId="'1'"/>
+            <WeColorpicker setImgShapeColor="'true'" dependencies="'shape_img_opt'" name="'img-shape-color-2'" colorId="'2'"/>
+            <WeColorpicker setImgShapeColor="'true'" dependencies="'shape_img_opt'" name="'img-shape-color-3'" colorId="'3'"/>
+            <WeColorpicker setImgShapeColor="'true'" dependencies="'shape_img_opt'" name="'img-shape-color-4'" colorId="'4'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Transform">
+            <WeButton class="'oi oi-fw oi-arrows-h'" name="'img_shape_transform_flip_x_opt'" setImgShapeFlipX="'true'"
+                noPreview="'true'" dependencies="'shape_img_opt'" tooltip.translate="Horizontal mirror"/>
+            <WeButton class="'oi oi-fw oi-arrows-v'" name="'img_shape_transform_flip_y_opt'" setImgShapeFlipY="'true'"
+                noPreview="'true'" dependencies="'shape_img_opt'" tooltip.translate="Vertical mirror"/>
+            <WeButton class="'fa fa-fw fa-rotate-left'" name="'img_shape_transform_rotate_x_opt'" setImgShapeRotateLeft="'true'"
+                noPreview="'true'" dependencies="'shape_img_opt'" tooltip.translate="Rotate left"/>
+            <WeButton class="'fa fa-fw fa-rotate-right'" name="'img_shape_transform_rotate_y_opt'" setImgShapeRotateRight="'true'"
+                noPreview="'true'" dependencies="'shape_img_opt'" tooltip.translate="Rotate right"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Speed">
+            <WeRange name="'shape_anim_speed_opt'"
+                noPreview="'true'"
+                displayRangeValue="'true'"
+                attributeName="'shapeAnimationSpeed'"
+                selectDataAttribute="''"
+                max="'2'"
+                min="'-2'"
+                step="'0.1'"
+                toRatio="'true'"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Stretch">
+            <WeCheckbox removeStretch="'true'" dependencies="'shape_img_opt'" noPreview="'true'" name="'toggle_stretch_opt'"/>
+        </WeRow>
+    </div>
+    <t t-set="inputTitle">'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).</t>
+    <WeInput class="'o_we_large'" selectAttribute="''" attributeName="'alt'"
+             title.translate="Description" placeholder.translate="Alt tag" tooltip="inputTitle"/>
+    <t t-set="inputTitle">'Title tag' is shown as a tooltip when you hover the picture.</t>
+    <WeInput class="'o_we_large'" selectAttribute="''" attributeName="'title'"
+             title.translate="Tooltip" placeholder.translate="Title tag" tooltip="inputTitle"/>
+    <WeRow title.translate="Transform">
+        <WeButton class="'fa fa-fw fa-crop'" crop="'true'" noPreview="'true'" tooltip.translate="Crop Image"/>
+        <WeButton class="'o_we_bg_danger ms-0 border-start-0'" resetCrop="''" noPreview="'true'" tooltip.translate="Reset crop">
+            Reset
+        </WeButton>
+        <WeButton class="'fa fa-fw fa-object-ungroup'" name="'image_transform_opt'"
+                  transform="'true'" noPreview="'true'" tooltip.translate="Transform the picture"/>
+        <WeButton class="'ms-0 border-start-0'" resetTransform="''" noPreview="'true'"
+                  tooltip.translate="Reset transformation">
+            Reset
+        </WeButton>
+    </WeRow>
+
+    <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+
+    <WeButtonGroup cssProperty="'width'" title.translate="Size">
+        <WeButton selectStyle="''" tooltip.translate="Resize Default">Default</WeButton>
+        <WeButton selectStyle="'25%'" tooltip.translate="Resize Quarter">25%</WeButton>
+        <WeButton selectStyle="'50%'" tooltip.translate="Resize Half">50%</WeButton>
+        <WeButton selectStyle="'100%'" tooltip.translate="Resize Full">100%</WeButton>
+    </WeButtonGroup>
+</t>
+
+<t t-name="web_editor.IconTools">
+    <WeSelect stateToFirstClass="'true'" title.translate="Alignment">
+        <WeButton selectClass="''" tooltip.translate="Unalign">None</WeButton>
+        <WeButton selectClass="'me-auto float-start'" tooltip.translate="Align Left">Left</WeButton>
+        <WeButton selectClass="'mx-auto d-block'" tooltip.translate="Align Center">Center</WeButton>
+        <WeButton selectClass="'ms-auto float-end'" tooltip.translate="Align Right">Right</WeButton>
+    </WeSelect>
+
+    <WeRow title.translate="Style">
+        <WeButton class="'fa fa-fw fa-square'" selectClass="'rounded'" tooltip.translate="Shape: Rounded"/>
+        <WeButton class="'fa fa-fw fa-circle-o'" selectClass="'rounded-circle'" tooltip.translate="Shape: Circle"/>
+        <WeButton class="'fa fa-fw fa-sun-o'" selectClass="'shadow'" tooltip.translate="Shadow"/>
+        <WeButton class="'fa fa-fw fa-picture-o'" selectClass="'img-thumbnail'" tooltip.translate="Shape: Thumbnail"/>
+    </WeRow>
+
+    <WeInput selectStyle="''" unit="'px'" cssProperty="'padding'" title.translate="Padding"/>
+</t>
+
+<t t-name="web_editor.many2one">
+    <WeMany2one changeRecord="''" model="renderContext.model" fields="renderContext.fields"
+                title="renderContext.modelName"/>
+</t>
+
+</templates>

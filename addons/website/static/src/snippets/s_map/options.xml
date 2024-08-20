@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website.s_map_options">
+        <WeInput title.translate="Address" attributeName="'mapAddress'" selectDataAttribute="''"
+                 noPreview="'true'" placeholder.translate="e.g. De Brouckere, Brussels, Belgium"/>
+        <WeSelect title.translate="Type" attributeName="'mapType'" noPreview="'true'">
+            <WeButton selectDataAttribute="'m'">Road</WeButton>
+            <WeButton selectDataAttribute="'k'">Satellite</WeButton>
+        </WeSelect>
+        <WeSelect title.translate="Zoom" attributeName="'mapZoom'" selectDataAttribute="'12'" noPreview="'true'">
+            <WeButton selectDataAttribute="'21'">2.5 m</WeButton>
+            <WeButton selectDataAttribute="'20'">5 m</WeButton>
+            <WeButton selectDataAttribute="'19'">10 m</WeButton>
+            <WeButton selectDataAttribute="'18'">20 m</WeButton>
+            <WeButton selectDataAttribute="'17'">50 m</WeButton>
+            <WeButton selectDataAttribute="'16'">100 m</WeButton>
+            <WeButton selectDataAttribute="'15'">200 m</WeButton>
+            <WeButton selectDataAttribute="'14'">400 m</WeButton>
+            <WeButton selectDataAttribute="'13'">1 km</WeButton>
+            <WeButton selectDataAttribute="'12'">2 km</WeButton>
+            <WeButton selectDataAttribute="'11'">4 km</WeButton>
+            <WeButton selectDataAttribute="'10'">8 km</WeButton>
+            <WeButton selectDataAttribute="'9'">15 km</WeButton>
+            <WeButton selectDataAttribute="'8'">30 km</WeButton>
+            <WeButton selectDataAttribute="'7'">50 km</WeButton>
+            <WeButton selectDataAttribute="'6'">100 km</WeButton>
+            <WeButton selectDataAttribute="'5'">200 km</WeButton>
+            <WeButton selectDataAttribute="'4'">400 km</WeButton>
+            <WeButton selectDataAttribute="'3'">1000 km</WeButton>
+            <WeButton selectDataAttribute="'2'">2000 km</WeButton>
+        </WeSelect>
+        <WeColorpicker title.translate="Color Filter" selectStyle="'true'"
+                        cssProperty="'background-color'" colorPrefix="'bg-'" applyTo="'.s_map_color_filter'"/>
+        <WeCheckbox title.translate="Description" noPreview="'true'" showDescription="'true'"/>
+    </t>
+
+</templates>

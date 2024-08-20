@@ -283,7 +283,7 @@
             <t t-call="website.form_field">
                 <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <option t-esc="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
+                        <option t-esc="record.display_name" t-att-id="field.id + record_index" t-att-value="field.custom ? record.display_name : record.id" t-att="{selected: record.selected and 'selected' or None}"/>
                     </t>
                 </select>
             </t>

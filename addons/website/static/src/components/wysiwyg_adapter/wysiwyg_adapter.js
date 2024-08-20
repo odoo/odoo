@@ -442,6 +442,60 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         return super.destroy(...arguments);
     }
 
+    /**
+     * Get an option linked to the page.
+     *
+     * @param {string} name The name of the page option
+     * @return {*}
+     */
+    getPageOption(name) {
+        return this.pageOptions[name].value;
+    }
+    /**
+     * Toggles or force an option linked to the page.
+     *
+     * @see {PageOption}
+     *
+     * @param {string} name The name of the page option
+     * @param {*} [value] The value if needed to be forced
+     */
+    togglePageOption(name, value) {
+        const pageOption = this.pageOptions[name];
+        pageOption.value = value === undefined ? !pageOption.value : value;
+    }
+    /**
+     * Opens the menu dialog.
+     *
+     * @param {string} name - The link's display text
+     * @param {string} url - The link's url
+     * @param {function} saveCallback - Called when saved
+     * @param {boolean} [isMegaMenu]
+     */
+    openMenuDialog(name, url, saveCallback, isMegaMenu = false) {
+        this.dialogs.add(MenuDialog, {
+            name: name,
+            url: url,
+            isMegaMenu: isMegaMenu,
+            save: async (...args) => {
+                await saveCallback(...args);
+            },
+        });
+    }
+    /**
+     * Opens the edit menu dialog.
+     *
+     * @param {number} rootId - The ID of the root menu to edit
+     */
+    openEditMenuDialog(rootId) {
+        return this.dialogs.add(EditMenuDialog, {
+            rootID: rootId,
+            save: () => {
+                // TODO: Rework _onSaveRequest to not take Events
+                return this._onSaveRequest({ data: { reload: true } });
+            },
+        });
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -657,6 +711,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      *
      * @param {Event} event the event that triggerd the action.
      * @returns {*}
+     * @deprecated TODO @owl-options - legacy: remove once no usage
      * @private
      */
     async _handleAction(event) {
@@ -664,32 +719,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const params = event.data.params;
         switch (actionName) {
             case 'get_page_option':
-                 return event.data.onSuccess(this.pageOptions[params[0]].value);
+                 return event.data.onSuccess(this.getPageOption(params[0]));
             case 'toggle_page_option':
-                this._togglePageOption(...params);
+                this.togglePageOption(params[0].name, params[0].value);
                 return event.data.onSuccess();
             case 'edit_menu':
-                return this.dialogs.add(EditMenuDialog, {
-                    rootID: params[0],
-                    save: () => {
-                        // TODO: Rework _onSaveRequest to not take Events
-                        this._onSaveRequest({ data: { reload: true} });
-                    },
-                });
+                return this.openEditMenuDialog(params[0]);
         }
-    }
-    /**
-     * Toggles or force an option linked to the page.
-     *
-     * @see {PageOption}
-     * @param {Object} params
-     * @param {string} params.name the name of the page option,
-     * @param {*} params.value the value if needed to be forced
-     * @private
-     */
-    _togglePageOption(params) {
-        const pageOption = this.pageOptions[params.name];
-        pageOption.value = params.value === undefined ? !pageOption.value : params.value;
     }
     /**
      * Triggers an event on the iframe's public root.
@@ -902,13 +938,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             'will_remove_snippet': this._onRootEventRequest.bind(this),
             'request_save': this._onSaveRequest.bind(this),
             'context_get': this._onContextGet.bind(this),
-            'action_demand': this._handleAction.bind(this),
+            'action_demand': this._handleAction.bind(this), // TODO: @owl-options - legacy: remove once no usage
             'request_cancel': this._onCancelRequest.bind(this),
             'snippet_will_be_cloned': this._onSnippetWillBeCloned.bind(this),
             'snippet_cloned': this._onSnippetCloned.bind(this),
             'snippet_removed': this._onSnippetRemoved.bind(this),
             'reload_bundles': this._reloadBundles.bind(this),
-            'menu_dialog': this._onMenuDialogRequest.bind(this),
             'open_edit_head_body_dialog': this._onOpenEditHeadBodyDialog.bind(this),
         };
 
@@ -1292,22 +1327,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             $empty.empty(); // Remove any superfluous whitespace
             this._addEditorMessages();
         }
-    }
-    /**
-     * Adds / Edit an entry in the website menu.
-     *
-     * @param event
-     * @private
-     */
-    _onMenuDialogRequest(event) {
-        this.dialogs.add(MenuDialog, {
-            name: event.data.name,
-            url: event.data.url,
-            isMegaMenu: event.data.isMegaMenu,
-            save: async (...args) => {
-                await event.data.save(...args);
-            },
-        });
     }
     /**
      * Called when a child needs to know about the views that can

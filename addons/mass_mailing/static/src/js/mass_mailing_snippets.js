@@ -1,7 +1,11 @@
 /** @odoo-module **/
 
-import options from "@web_editor/js/editor/snippets.options";
+import { registry } from "@web/core/registry";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 import { loadImage } from "@web_editor/js/editor/image_processing";
+import { BackgroundImage, ImageTools, registerBackgroundOptions } from "@web_editor/js/editor/snippets.options";
+import { updateOption } from "@web_editor/js/editor/snippets.registry";
+import { registerSnippetAdditionSelector } from "@web_editor/js/editor/snippets.registry";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 import weUtils from "@web_editor/js/common/utils";
 import {
@@ -11,25 +15,47 @@ import {
     transformFontFamilySelector,
 } from "@mass_mailing/js/mass_mailing_design_constants";
 import { isCSSColor, normalizeCSSColor } from "@web/core/utils/colors";
-
+import {
+    SnippetOption,
+    WeButton,
+    WeSelect,
+} from "@web_editor/js/editor/snippets.options";
+import { registerMassMailingOption } from "./snippets.registry";
 
 //--------------------------------------------------------------------------
 // Options
 //--------------------------------------------------------------------------
 
+registerSnippetAdditionSelector(".o_mail_snippet_general");
+
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
-options.registry.MassMailingBackgroundImage = options.registry.BackgroundImage.extend({
-    start: function () {
-        this._super();
+class MassMailingBackgroundImage extends BackgroundImage {
+    /**
+     * @override
+     */
+    willStart() {
+        super.willStart(...arguments);
         const $table_target = this.$target.find('table:first');
         if ($table_target.length) {
             this.$target = $table_target;
         }
     }
+}
+// Allow changing background images in Masonry and Cover
+registerBackgroundOptions("MassMailingBackgroundImage", {
+        selector: ".s_masonry_block .row > div, .s_cover .oe_img_bg",
+        withImages: true,
+        withVideos: false,
+        withShapes: false,
+    },
+    (name) => name === "toggler" && "mass_mailing.snippet_options_background_options"
+);
+updateOption("MassMailingBackgroundImage-bgToggler", {
+    Class: () => MassMailingBackgroundImage,
 });
 
-options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
+class MassMailingImageTools extends ImageTools {
 
     //--------------------------------------------------------------------------
     // Private
@@ -48,13 +74,12 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
         const colorValue = window.getComputedStyle(tempEl).getPropertyValue("background-color").trim();
         tempEl.parentNode.removeChild(tempEl);
         return normalizeCSSColor(colorValue).replace(/"/g, "'");
-    },
-
+    }
     /**
      * @override
      */
     async computeShape(svgText, img) {
-        const dataURL = await this._super(...arguments);
+        const dataURL = await super.computeShape(...arguments);
         const image = await loadImage(dataURL);
         const canvas = document.createElement("canvas");
         const imgFilename = (img.dataset.originalSrc.split("/").pop()).split(".")[0];
@@ -65,43 +90,46 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
         canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
         return canvas.toDataURL(`image/png`, 1.0);
     }
-});
-
-options.userValueWidgetsRegistry['we-fontfamilypicker'] = SelectUserValueWidget.extend({
-    /**
-     * @override
-     * @see FONT_FAMILIES
-     */
-    start: async function () {
-        const res = await this._super(...arguments);
-        // Populate the `we-select` with the font family buttons
-        for (const fontFamily of FONT_FAMILIES) {
-            const button = document.createElement('we-button');
-            button.style.setProperty('font-family', fontFamily);
-            button.dataset.customizeCssProperty = fontFamily;
-            button.dataset.cssProperty = 'font-family';
-            button.dataset.selectorText = this.el.dataset.selectorText;
-            button.textContent = getFontName(fontFamily);
-            this.menuEl.appendChild(button);
-        };
-        return res;
-    },
-});
-
-options.registry.DesignTab = options.Class.extend({
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
+    _relocateWeightEl() {}
+}
+registerMassMailingOption("MassMailingImageTools", {
+    Class: MassMailingImageTools,
+    template: "mass_mailing.ImageTools",
+    selector: "img",
+}, { sequence: 49 });
+
+class MassMailingWeFontFamilyPicker extends WeSelect {
+    static isContainer = true;
+    static template = "mass_mailing.MassMailingWeFontFamilyPicker";
+    static components = { WeSelect, WeButton };
+
+    setup() {
+        super.setup();
+        this.fontFamilies = FONT_FAMILIES;
+        this.getFontName = getFontName;
+    }
+}
+// Widget registry is shared - prefixing component name to avoid collision.
+registry.category("snippet_widgets").add("MassMailingWeFontFamilyPicker", MassMailingWeFontFamilyPicker);
+
+
+export class DesignTab extends SnippetOption {
+    /**
+     * @override
+     */
+    constructor() {
+        super(...arguments);
         // Set the target on the whole editable so apply-to looks within it.
         this.setTarget(this.options.wysiwyg.getEditable());
-    },
+    }
     /**
      * @override
      */
-    async start() {
-        const res = await this._super(...arguments);
+    async willStart() {
+        const res = await super.willStart(...arguments);
         const $editable = this.options.wysiwyg.getEditable();
         this.document = $editable[0].ownerDocument;
         this.$layout = $editable.find('.o_layout');
@@ -123,7 +151,7 @@ options.registry.DesignTab = options.Class.extend({
         sheetOwner.textContent = this.styleElement.textContent;
         this.styleSheet = sheetOwner.sheet;
         return res;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -196,7 +224,7 @@ options.registry.DesignTab = options.Class.extend({
             }
         }
         this._commitCss();
-    },
+    }
     /**
      * Option method to change the size of buttons.
      *
@@ -221,7 +249,7 @@ options.registry.DesignTab = options.Class.extend({
             }
         }
         this._commitCss();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -239,12 +267,12 @@ options.registry.DesignTab = options.Class.extend({
         // Flush the rules cache for convert_inline, to make sure they are
         // recomputed to account for the change.
         this.options.wysiwyg._rulesCache = undefined;
-    },
+    }
     /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        const res = await this._super(...arguments);
+        const res = await super._computeWidgetState(...arguments);
         if (res === undefined) {
             switch (methodName) {
                 case 'applyButtonSize':
@@ -299,7 +327,7 @@ options.registry.DesignTab = options.Class.extend({
         } else {
             return res;
         }
-    },
+    }
     /**
      * Take a CSS selector and split it into separate selectors, all prefixed
      * with the `CSS_PREFIX`. Return them as an array.
@@ -310,7 +338,7 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getSelectors(selectorText) {
         return selectorText.split(',').map(t => `${t.startsWith(CSS_PREFIX) ? '' : CSS_PREFIX + ' '}${t.trim()}`.trim());;
-    },
+    }
     /**
      * Take a CSS selector and find its matching rule in the mailing's custom
      * stylesheet, if it exists.
@@ -320,5 +348,22 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
-    },
+    }
+}
+
+registerMassMailingOption("DesignTab", {
+    Class: DesignTab,
+    template: "mass_mailing.design_tab",
+    selector: "design-options",
+    noCheck: true,
+});
+
+registerMassMailingOption("mass_mailing_block_width", {
+    template: "mass_mailing.block_width_option",
+    selector: ".s_mail_blockquote, .s_mail_text_highlight",
+});
+
+registerMassMailingOption("mass_mailing_block_align", {
+    template: "mass_mailing.block_align_option",
+    selector: ".s_mail_blockquote, .s_mail_text_highlight",
 });

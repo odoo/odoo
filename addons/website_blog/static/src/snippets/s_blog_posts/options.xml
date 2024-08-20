@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_blog.s_blog_posts_option" t-inherit="website.s_dynamic_snippet_option" t-inherit-mode="primary">
+    <xpath expr="//WeRow[.//WeSelect[@name=&quot;'filter_opt'&quot;]]" position="after">
+        <WeRow>
+            <t t-set-slot="title">Blog</t>
+            <WeSelect noPreview="'true'" name="'blog_opt'" attributeName="'filterByBlogId'">
+                <WeButton selectDataAttribute="'-1'">All blogs</WeButton>
+                <WeButton t-foreach="renderContext.blogs" t-as="blog" t-key="blog.id"
+                    selectDataAttribute="blog.id.toString()"
+                >
+                    <t t-out="blog.name"/>
+                </WeButton>
+            </WeSelect>
+        </WeRow>
+    </xpath>
+    <xpath expr="//WeRow[.//WeSelect[@name=&quot;'template_opt'&quot;]]" position="after">
+        <WeRow>
+            <t t-set-slot="title">Hover Effect</t>
+            <WeSelect class="'o_we_sublevel_1 o_we_inline'"
+                   noWidgetRefresh="'true'" name="'hover_effect_opt'">
+                <WeButton selectClass="''">None</WeButton>
+                <WeButton selectClass="'s_blog_posts_effect_marley'">Marley</WeButton>
+                <WeButton selectclass="'s_blog_posts_effect_dexter'">Dexter</WeButton>
+                <WeButton selectClass="'s_blog_posts_effect_chico'">Silly-Chico</WeButton>
+            </WeSelect>
+        </WeRow>
+    </xpath>
+</t>
+
+</templates>

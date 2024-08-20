@@ -341,11 +341,19 @@ function _normalizeColor(color) {
 /**
  * Parse an element's background-image's url.
  *
- * @param {string} string a css value in the form 'url("...")'
+ * @param {string|HTMLElement} string a css value in the form 'url("...")'
  * @returns {string|false} the src of the image or false if not parsable
  */
 function _getBgImageURL(el) {
-    const parts = _backgroundImageCssToParts($(el).css('background-image'));
+    let value = el;
+    // Testing if the element is HTMLElement would make more sense, but in
+    // some browsers the HTMLElement is different in the window and iframe.
+    // So just assume that the arguments passed are either string, jQuery
+    // or HTMLElement.
+    if (!(el instanceof String)) {
+        value = $(el).css('background-image');
+    }
+    const parts = _backgroundImageCssToParts(value);
     const string = parts.url || '';
     const match = string.match(/^url\((['"])(.*?)\1\)$/);
     if (!match) {

@@ -63,8 +63,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
         trigger: ':iframe #wrap .s_cover .o_we_shape',
     },
     // Add a column
-    wTourUtils.changeOption('layout_column', 'we-toggler'),
-    wTourUtils.changeOption('layout_column', '[data-select-count="1"]'),
+    wTourUtils.changeOption('WebsiteLayoutColumn', 'we-toggler'),
+    wTourUtils.changeOption('WebsiteLayoutColumn', '[data-select-count="1"]'),
     {
         content: "Click on the created column",
         trigger: ':iframe #wrap .s_cover .row > :first-child',

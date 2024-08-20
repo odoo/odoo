@@ -119,6 +119,9 @@ Featuring
         'web.assets_tests': [
             'website_slides/static/tests/tours/*.js',
         ],
+        'website.assets_wysiwyg': [
+            'website_slides/static/src/snippets/s_searchbar/options.xml',
+        ],
         'website_slides.slide_embed_assets': [
             # TODO this bundle now includes 'assets_common' files directly, but
             # most of these files are useless in this context, clean this up.

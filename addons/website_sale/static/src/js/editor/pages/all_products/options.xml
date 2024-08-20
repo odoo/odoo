@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- All products page -->
+    <t t-name="website_sale.WebsiteSaleGridLayout">
+        <WeSelect title.translate="Layout" noPreview="'true'" reload="'/'">
+            <WeButton customizeWebsiteViews="''" name="'grid_view_opt'">Grid</WeButton>
+            <WeButton customizeWebsiteViews="'website_sale.products_list_view'">List</WeButton>
+        </WeSelect>
+        <WeRow title.translate="Size" class="'o_we_sublevel_1'">
+            <WeInput setPpg="''" step="'1'" noPreview="'true'" reload="'/'"/>
+            <span class="'mx-2 o_wsale_ppr_by'" t-att-class="{'d-none': renderContext.isListLayoutEnabled}">by</span>
+            <WeSelect class="'o_wsale_ppr_submenu' + (renderContext.isListLayoutEnabled ? ' d-none' : '')"
+                      dependencies="'grid_view_opt'"
+                      noPreview="'true'"
+                      reload="'/'">
+                <WeButton setPpr="'2'">2</WeButton>
+                <WeButton setPpr="'3'">3</WeButton>
+                <WeButton setPpr="'4'">4</WeButton>
+            </WeSelect>
+        </WeRow>
+        <WeSelect title.translate="Style" class="'o_we_sublevel_1'">
+            <WeButton selectClass="`''`"
+                      customizeWebsiteViews="''">
+                Default
+            </WeButton>
+            <WeButton selectClass="`'o_wsale_design_cards'`"
+                      customizeWebsiteViews="'website_sale.products_design_card'">
+                Cards
+            </WeButton>
+            <WeButton selectClass="`'o_wsale_design_thumbs'`"
+                      customizeWebsiteViews="'website_sale.products_design_thumbs'">
+                Thumbnails
+            </WeButton>
+            <WeButton selectClass="`'o_wsale_design_grid'`"
+                      customizeWebsiteViews="'website_sale.products_design_grid'">
+                Grid
+            </WeButton>
+        </WeSelect>
+        <WeSelect title.translate="Images Size" class="'o_we_sublevel_1'">
+            <WeButton selectClass="`'o_wsale_context_thumb_4_3'`"
+                      customizeWebsiteViews="'website_sale.products_thumb_4_3'">
+                Landscape (4/3)
+            </WeButton>
+            <WeButton selectClass="`''`"
+                      customizeWebsiteViews="''">
+                Default (1/1)
+            </WeButton>
+            <WeButton selectClass="`'o_wsale_context_thumb_4_5'`"
+                      customizeWebsiteViews="'website_sale.products_thumb_4_5'">
+                Portrait (4/5)
+            </WeButton>
+            <WeButton selectClass="`'o_wsale_context_thumb_2_3'`"
+                      customizeWebsiteViews="'website_sale.products_thumb_2_3'">
+                Vertical (2/3)
+            </WeButton>
+        </WeSelect>
+        <WeButtonGroup title.translate="Fill" class="'o_we_sublevel_2'" variable="'thumb_size'">
+            <WeButton selectClass="`''`"
+                      img="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                      customizeWebsiteViews="''">
+            </WeButton>
+            <WeButton selectClass="`'o_wsale_context_thumb_cover'`"
+                      name="'thumb_cover'"
+                      variable="'thumb_cover'"
+                      img="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                      customizeWebsiteViews="'website_sale.products_thumb_cover'">
+            </WeButton>
+        </WeButtonGroup>
+        <WeCheckbox title.translate="Search Bar"
+                    customizeWebsiteViews="'website_sale.search'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeCheckbox title.translate="Prod. Desc."
+                    customizeWebsiteViews="'website_sale.products_description'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeRow title.translate="Categories" id="o_wsale_grid_left_panel" variable="'filmstrip'">
+            <WeButton customizeWebsiteViews="'website_sale.products_categories'"
+                      name="'categories_opt'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Left
+            </WeButton>
+            <WeButton customizeWebsiteViews="'website_sale.products_categories_top'"
+                      name="'categories_opt_top'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Top
+            </WeButton>
+        </WeRow>
+        <WeCheckbox title.translate="Collapse Category Recursive"
+                    id="collapse_category_recursive"
+                    class="'o_we_sublevel_1'"
+                    customizeWebsiteViews="'website_sale.option_collapse_products_categories'"
+                    dependencies="'categories_opt'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeRow title.translate="Attributes" class="'o_we_full_row'">
+            <WeButton customizeWebsiteViews="'website_sale.products_attributes'"
+                      name="'attributes_opt'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Left
+            </WeButton>
+            <WeButton customizeWebsiteViews="'website_sale.products_attributes_top'"
+                      name="'attributes_opt_top'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Top
+            </WeButton>
+        </WeRow>
+        <WeCheckbox title.translate="Price Filter"
+                    class="'o_we_sublevel_1'"
+                    customizeWebsiteViews="'website_sale.filter_products_price'"
+                    dependencies="'attributes_opt, attributes_opt_top'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeCheckbox title.translate="Product Tags Filter"
+                    class="'o_we_sublevel_1'"
+                    customizeWebsiteViews="'website_sale.filter_products_tags'"
+                    dependencies="'attributes_opt, attributes_opt_top'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeRow title.translate="Top Bar" class="'o_we_full_row'">
+            <WeButton customizeWebsiteViews="'website_sale.sort'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Sort by
+            </WeButton>
+            <WeButton customizeWebsiteViews="'website_sale.add_grid_or_list_option'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Layout
+            </WeButton>
+        </WeRow>
+        <WeSelect title.translate="Default Sort" class="'o_wsale_sort_submenu'" noPreview="'true'" reload="'/'">
+            <t t-foreach="renderContext.productSorts" t-as="query_and_label" t-key="query_and_label[0]">
+                <WeButton setDefaultSort="query_and_label[0]"><t t-esc="query_and_label[1]"/></WeButton>
+            </t>
+        </WeSelect>
+        <WeRow title.translate="Buttons" class="'o_we_full_row'">
+            <WeButton tooltip.translate="Add to Cart"
+                      class="'fa fa-fw fa-shopping-cart o_we_add_to_cart_btn'"
+                      customizeWebsiteViews="'website_sale.products_add_to_cart'"
+                      noPreview="'true'"
+                      reload="'/'"/>
+        </WeRow>
+    </t>
+    <!-- Product -->
+    <t t-name="website_sale.WebsiteSaleProductsItem">
+        <div class="o_wsale_soptions_menu_sizes" t-att-class="{'d-none': renderContext.isListLayoutEnabled}">
+            <WeRow title.translate="Size">
+                <div class="oe_size_table">
+                    <t t-foreach="[...Array(renderContext.ppr).keys()]" t-as="y" t-key="y">
+                        <div class="oe_size_row">
+                            <t t-foreach="[...Array(renderContext.ppr).keys()]" t-as="x" t-key="x">
+                                <WeButton setProductSize="`${x + 1},${y + 1}`"
+                                          class="'oe_size_cell' + (x + 1 lte renderContext.selectedSize.x and y + 1 lte renderContext.selectedSize.y ? ' selected' : '')"/>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </WeRow>
+        </div>
+
+        <WeRow title.translate="Re-order">
+            <WeButton tooltip.translate="Push to top" changeSequence="'top'" noPreview="'true'" class="'fa fa-fw fa-angle-double-left'"/>
+            <WeButton tooltip.translate="Push up" changeSequence="'up'" noPreview="'true'" class="'fa fa-fw fa-angle-left'"/>
+            <WeButton tooltip.translate="Push down" changeSequence="'down'" noPreview="'true'" class="'fa fa-fw fa-angle-right'"/>
+            <WeButton tooltip.translate="Push to bottom" changeSequence="'bottom'" noPreview="'true'" class="'fa fa-fw fa-angle-double-right'"/>
+        </WeRow>
+
+        <WeRow>
+            <WeSelect title.translate="Ribbon" class="'o_wsale_ribbon_select'">
+                <WeButton setRibbon="''" name="'no_ribbon_opt'">None</WeButton>
+                <t t-foreach="renderContext.ribbons" t-as="id" t-key="id">
+                    <t t-set="ribbon" t-value="renderContext.ribbons[id]"/>
+                    <WeButton setRibbon="ribbon.id?.toString() || ''">
+                        <t t-out="ribbon.name"/>
+                        <i t-attf-class="fa fa-arrow-#{ribbon.position === 'left' ? 'left' : 'right'} ms-1"/>
+                        <span
+                            t-attf-class="o_wsale_color_preview ms-1"
+                            t-attf-style="background-color: #{ribbon.bg_color}"
+                        />
+                        <span
+                            t-attf-class="o_wsale_color_preview ms-1"
+                            t-attf-style="background-color: #{ribbon.text_color || renderContext.defaultTextColor} !important;"
+                        />
+                    </WeButton>
+                </t>
+            </WeSelect>
+            <WeButton editRibbon="''" tooltip.translate="Edit" class="'fa fa-edit'" noPreview="'true'" dependencies="'!no_ribbon_opt'"/>
+            <WeButton createRibbon="''" name="'create_ribbon_opt'" tooltip.translate="Create" class="'fa fa-plus text-success'" noPreview="'true'"/>
+        </WeRow>
+        <div name="'ribbon_customize_opt'" t-att-class="{'d-none': !renderContext.ribbonEditMode}">
+            <WeInput title.translate="Name"
+                     class="'o_we_sublevel_1 o_we_large'"
+                     setRibbonName="'Ribbon name'"
+                     applyTo="'.o_ribbon'"/>
+            <WeColorpicker title.translate="Background"
+                           class="'o_we_sublevel_1'"
+                           selectStyle="''"
+                           cssProperty="'background-color'"
+                           colorPrefix="'text-bg-'"
+                           applyTo="'.o_ribbon'"/>
+            <WeColorpicker title.translate="Text"
+                           class="'o_we_sublevel_1'"
+                           selectStyle="''"
+                           cssProperty="'color'"
+                           applyTo="'.o_ribbon'"/>
+            <WeSelect title.translate="Position" class="'o_we_sublevel_1'">
+                <WeButton setRibbonPosition="'left'">Left</WeButton>
+                <WeButton setRibbonPosition="'right'">Right</WeButton>
+            </WeSelect>
+            <WeRow title="' '">
+                <WeButton class="'o_we_bg_danger'" deleteRibbon="''" noPreview="'true'">
+                    Delete Ribbon
+                </WeButton>
+            </WeRow>
+        </div>
+    </t>
+</templates>

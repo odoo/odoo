@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website.s_alert_options">
+        <WeSelect title.translate="Type" applyTo="'.fa.s_alert_icon'" trigger="'alert_colorpicker_opt'">
+            <WeButton selectClass="'fa-user-circle'" triggerValue="'primary'">Primary</WeButton>
+            <WeButton selectClass="'fa-user-circle-o'" triggerValue="'secondary'">Secondary</WeButton>
+            <WeButton selectClass="'fa-info-circle'" triggerValue="'info'">Info</WeButton>
+            <WeButton selectClass="'fa-check-circle'" triggerValue="'success'">Success</WeButton>
+            <WeButton selectClass="'fa-exclamation-triangle'" triggerValue="'warning'">Warning</WeButton>
+            <WeButton selectClass="'fa-exclamation-circle'" triggerValue="'danger'">Danger</WeButton>
+        </WeSelect>
+
+        <t t-call="website.block_width_option"/>
+
+        <WeSelect title.translate="Size">
+            <WeButton selectClass="'s_alert_sm'">Small</WeButton>
+            <WeButton selectClass="'s_alert_md'">Medium</WeButton>
+            <WeButton selectClass="'s_alert_lg'">Large</WeButton>
+        </WeSelect>
+
+        <WeColorpicker title.translate="Color"
+                       data-name="alert_colorpicker_opt"
+                       selectStyle="'true'"
+                       cssProperty="'background-color'"
+                       colorPrefix="'alert-'"/>
+    </t>
+
+</templates>

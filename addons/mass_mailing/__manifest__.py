@@ -149,7 +149,11 @@
         ],
         'mass_mailing.assets_wysiwyg': [
             'mass_mailing/static/src/js/mass_mailing_snippets.js',
+            'mass_mailing/static/src/js/snippets.options.xml',
+            'mass_mailing/static/src/snippets/s_alert/options.js',
+            'mass_mailing/static/src/snippets/s_alert/options.xml',
             'mass_mailing/static/src/snippets/s_masonry_block/options.js',
+            'mass_mailing/static/src/snippets/s_masonry_block/options.xml',
             'mass_mailing/static/src/snippets/s_media_list/options.js',
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js'
@@ -157,7 +161,11 @@
         'mass_mailing.assets_snippets_menu': [
             ('include', 'web_editor.assets_snippets_menu'),
             'mass_mailing/static/src/js/snippets.editor.js',
+            'mass_mailing/static/src/js/snippets.registry.js',
             'mass_mailing/static/src/xml/mass_mailing.editor.xml',
+            'mass_mailing/static/src/js/snippets.options.xml',
+            'mass_mailing/static/src/js/snippets.registry.js',
+            'mass_mailing/static/src/snippets/s_hr/options.xml',
         ],
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',
@@ -171,6 +179,7 @@
             'mass_mailing/static/src/snippets/s_media_list/options.js',
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js',
+            'mass_mailing/static/src/snippets/s_rating/options.xml',
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
         ],
     },

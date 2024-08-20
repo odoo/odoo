@@ -1,16 +1,22 @@
 /** @odoo-module **/
 
 import { attachComponent } from "@web_editor/js/core/owl_utils";
+import { uniqueId } from "@web/core/utils/functions";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { throttleForAnimation, debounce } from "@web/core/utils/timing";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useSortable } from "@web/core/utils/sortable_owl";
+import { camelToKebab } from "@web/core/utils/strings";
+import { useThrottleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import { scrollTo } from "@web/core/utils/scrolling";
 import Widget from "@web_editor/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import {ColumnLayoutMixin} from "@web_editor/js/common/column_layout_mixin";
+import { ColumnLayoutMixin } from "@web_editor/js/common/column_layout_mixin";
 const {
     normalizeColor,
     getBgImageURL,
@@ -41,6 +47,26 @@ import {
  } from '@web/core/utils/colors';
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
+import snippetsOptionsLegacy from "./snippets.options.legacy";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillStart,
+    onWillUpdateProps,
+    onPatched,
+    onWillDestroy,
+    onWillUnmount,
+    reactive,
+    useEffect,
+    useChildSubEnv,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { registerOption } from "./snippets.registry";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
@@ -49,12 +75,17 @@ let _serviceCache = {
     orm: {},
     rpc: {},
 };
-const clearServiceCache = () => {
+export const clearServiceCache = () => {
     _serviceCache = {
         orm: {},
         rpc: {},
     };
 };
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// TODO: This should be removed when all options are propperly migrated to OWL
+const SnippetOptionWidget = snippetsOptionsLegacy.SnippetOptionWidget;
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -70,31 +101,43 @@ const SVG_DUR_TIMECOUNT_VAL_REGEX =
     /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
 const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
 /**
- * Caches rpc/orm service
- * @param {Function} service
- * @param  {...any} args
- * @returns
+ * Caches the calls to a service.
+ *
+ * @param {Object} [env] - Object to find services in, if undefined, assume RPC
+ * @param {String} [serviceName] - service name, if empty, assume RPC
+ * @param {String[]} [exclude] - methodNames to exclude from the cache
+ *
+ * @returns {Object|Function} if RPC, a cached function, else a Proxy that
+ * caches the call to the services.
  */
-function serviceCached(service) {
-    const cache = _serviceCache;
-    return Object.assign(Object.create(service), {
-        call() {
-            // FIXME
-            const serviceName = Object.prototype.hasOwnProperty.call(service, "call")
-                ? "orm"
-                : "rpc";
-            const cacheId = JSON.stringify(arguments);
-            if (!cache[serviceName][cacheId]) {
-                cache[serviceName][cacheId] =
-                    serviceName == "rpc" ? service(...arguments) : service.call(...arguments);
+export function serviceCached(env, serviceName, exclude = []) {
+    function cachedCall(func, args, cache) {
+        const cacheId = JSON.stringify(args);
+        if (!cache[cacheId]) {
+            cache[cacheId] = func(...args);
+        }
+        return cache[cacheId];
+    }
+
+    if (!env || !serviceName || serviceName === "rpc") {
+        return (...args) => cachedCall(rpc, args, _serviceCache["rpc"]);
+    } else {
+        const service = env.services[serviceName];
+        if (!_serviceCache[serviceName]) {
+            _serviceCache[serviceName] = {};
+        }
+        return new Proxy(service, {
+            get: (target, prop, receiver) => {
+                if (typeof target[prop] === "function" && !exclude.includes(prop)) {
+                    return (...args) => cachedCall(target[prop].bind(target), args, _serviceCache[serviceName]);
+                }
             }
-            return cache[serviceName][cacheId];
-        },
-    });
+        });
+    }
 }
 // Outdated snippets whose alert has been discarded.
 const controlledSnippets = new Set();
-const clearControlledSnippets = () => controlledSnippets.clear();
+export const clearControlledSnippets = () => controlledSnippets.clear();
 /**
  * @param {HTMLElement} el
  * @param {string} [title]
@@ -188,27 +231,87 @@ async function _buildImgElement(src) {
     const node = await _buildImgElementCache[src];
     return node.cloneNode(true);
 }
-/**
- * Build the correct DOM for a we-row element.
- *
- * @param {string} [title] - @see _buildElement
- * @param {Object} [options] - @see _buildElement
- * @param {HTMLElement[]} [options.childNodes]
- * @returns {HTMLElement}
- */
-function _buildRowElement(title, options) {
-    const groupEl = _buildElement('we-row', title, options);
 
-    const rowEl = document.createElement('div');
-    groupEl.appendChild(rowEl);
-
-    if (options && options.childNodes) {
-        options.childNodes.forEach(node => rowEl.appendChild(node));
+const _buildSvgElementCache = {};
+async function buildSvgElement(src) {
+    if (!(src in _buildSvgElementCache)) {
+        _buildSvgElementCache[src] = (async () => {
+            let text;
+            try {
+                const response = await window.fetch(src);
+                text = await response.text();
+            } catch {
+                // In some tours, the tour finishes before the fetch is done
+                // and when a tour is finished, the python side will ask the
+                // browser to stop loading resources. This causes the fetch
+                // to fail and throw an error which crashes the test even
+                // though it completed successfully.
+                // So return an empty SVG to ensure everything completes
+                // correctly.
+                text = "<svg></svg>";
+            }
+            return markup(text);
+        })();
     }
-
-    return groupEl;
+    const svgMarkup = await _buildSvgElementCache[src];
+    return svgMarkup;
 }
+
+export class WeTitle extends Component {
+    static template = "web_editor.WeTitle";
+    static props = {
+        title: { type: String, optional: true },
+        class: { type: String, optional: true },
+        style: { type: String, optional: true },
+        "*": { optional: true },
+    };
+}
+
+export class WeRow extends Component {
+    static template = "web_editor.WeRow";
+    static props = {
+        class: { type: String, optional: true },
+        fontFamily: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        title: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
+        "*": { optional: true },
+    };
+    static components = { WeTitle };
+    setup() {
+        /** @type {Object.<string, UserValue>} */
+        this.userValues = {};
+        this.state = useState({
+            show: false,
+        });
+        this.env.registerLayoutElement({ state: this.state, userValues: this.userValues }, true);
+        useChildSubEnv({
+            registerUserValue: (userValue) => {
+                this.userValues[userValue.id] = userValue;
+                this.env.registerUserValue(userValue);
+            },
+            unregisterUserValue: (userValue) => {
+                delete this.userValues[userValue.id];
+                this.env.unregisterUserValue(userValue);
+            },
+        });
+    }
+}
+
+registry.category("snippet_widgets").add("WeRow", WeRow);
+
+export class WeCollapse extends WeRow {
+    static template = "web_editor.WeCollapse";
+
+    toggle() {
+        this.state.active = !this.state.active;
+    }
+}
+
+registry.category("snippet_widgets").add("WeCollapse", WeCollapse);
+
 /**
+ * TODO: @owl-options remove when done.
  * Build the correct DOM for a we-collapse element.
  *
  * @param {string} [title] - @see _buildElement
@@ -216,7 +319,7 @@ function _buildRowElement(title, options) {
  * @param {HTMLElement[]} [options.childNodes]
  * @returns {HTMLElement}
  */
-function _buildCollapseElement(title, options) {
+export function _buildCollapseElement(title, options) {
     const groupEl = _buildElement('we-collapse', title, options);
     const titleEl = groupEl.querySelector('we-title');
 
@@ -269,20 +372,6 @@ function createPropertyProxy(obj, propertyName, value) {
         },
     });
 }
-/**
- * Creates and registers a UserValueWidget by tag-name
- *
- * @param {string} widgetName
- * @param {SnippetOptionWidget|UserValueWidget|null} parent
- * @param {string} title
- * @param {Object} options
- * @returns {UserValueWidget}
- */
-function registerUserValueWidget(widgetName, parent, title, options, $target) {
-    const widget = new userValueWidgetsRegistry[widgetName](parent, title, options, $target);
-    parent.registerSubWidget(widget);
-    return widget;
-}
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -292,42 +381,86 @@ const NULL_ID = '__NULL__';
  * Base class for components to be used in snippet options widgets to retrieve
  * user values.
  */
-const UserValueWidget = Widget.extend({
-    className: 'o_we_user_value_widget',
-    custom_events: {
+const UserValueWidget = Widget;
+
+export class UserValue {
+    static custom_events = {
         'user_value_update': '_onUserValueNotification',
-    },
+    };
 
     /**
      * @constructor
+     * @param {string} id
+     * @param {Object} state
+     * @param {Object} env
+     * @param {SnippetOption} option
+     * @param {Object} data
      */
-    init: function (parent, title, options, $target) {
-        this._super(...arguments);
-        this.title = title;
-        this.options = options;
-        this._userValueWidgets = [];
-        this._value = '';
-        this.$target = $target;
-    },
+    constructor(id, state, env, option, data) {
+        this.id = id;
+        this.option = option;
+        this.env = env;
+        // TODO: @owl-option maybe we should take the opportunity to remove this.
+        this.$target = env.$target;
+        /** @type {UserValue[]} */
+        this._subValues = {};
+        this.mounted = false;
+        this.textContent = "";
+        this._state = state;
+        this._state.preview = false;
+        this._state.active = false;
+        this._state.show = true;
+        this._data = data;
+    }
     /**
-     * @override
+     * Returns the value that is currently in the state. This allows components
+     * to react to state changes, and is different than what a SnippetOption
+     * would need.
+     */
+    get value() {
+        return this._state.value;
+    }
+
+    set value(value) {
+        this._state.value = value;
+    }
+    /**
+     * Returns whether the component that posses this state should be visible
+     * or not. Cannot be set directly, use {@link toggleVisibility} instead.
+     */
+    get show() {
+        return this._state.show;
+    }
+    /**
+     * Returns whether sub widgets should or shouldn't be shown. Typically in
+     * the case of a list, we do not want to show all buttons at all time, so
+     * instead they will only be shown when this value is true.
+     *
+     * @type {boolean}
+     */
+    get opened() {
+        return this._state.opened;
+    }
+    /**
+     * Gives the opportunity for values to prepare asynchronous content.
+     * E.g. fetch external data.
+     */
+    async start() {
+        this.started = true;
+    }
+    /**
+     * @TODO: @owl-options: This should be moved into the component
      */
     async willStart() {
         await this._super(...arguments);
-        if (this.options.dataAttributes.img) {
-            this.illustrationEl = await _buildImgElement(this.options.dataAttributes.img);
-        } else if (this.options.dataAttributes.icon) {
-            this.illustrationEl = document.createElement('i');
-            this.illustrationEl.classList.add('fa', this.options.dataAttributes.icon);
-        }
         if (this.options.dataAttributes.reload) {
             this.options.dataAttributes.noPreview = "true";
         }
-    },
+    }
     /**
-     * @override
+     * @TODO: @owl-options: This should be moved into the component
      */
-    _makeDescriptive: function () {
+    _makeDescriptive() {
         const $el = this._super(...arguments);
         const el = $el[0];
         _addTitleAndAllowedAttributes(el, this.title, this.options);
@@ -339,38 +472,7 @@ const UserValueWidget = Widget.extend({
 
         el.appendChild(this.containerEl);
         return $el;
-    },
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-
-        if (this.el.classList.contains('o_we_img_animate')) {
-            const buildImgExtensionSwitcher = (from, to) => {
-                const regex = new RegExp(`${from}$`, 'i');
-                return ev => {
-                    const img = ev.currentTarget.getElementsByTagName("img")[0];
-                    img.src = img.src.replace(regex, to);
-                };
-            };
-            this.$el.on('mouseenter.img_animate', buildImgExtensionSwitcher('png', 'gif'));
-            this.$el.on('mouseleave.img_animate', buildImgExtensionSwitcher('gif', 'png'));
-        }
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        // Check if $el exists in case the widget is destroyed before it has
-        // been fully initialized.
-        // TODO there is probably better to do. This case was found only in
-        // tours, where the editor is left before the widget icon is loaded.
-        if (this.$el) {
-            this.$el.off('.img_animate');
-        }
-        this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -379,15 +481,8 @@ const UserValueWidget = Widget.extend({
     /**
      * Closes the widget (only meaningful for widgets that can be closed).
      */
-    close: function () {
-        if (!this.el) {
-            // In case the method is called while the widget is not fully
-            // initialized yet. No need to prevent that case: asking a non
-            // initialized widget to close itself should just not be a problem
-            // and just be ignored.
-            return;
-        }
-        if (!this.el.classList.contains('o_we_widget_opened')) {
+    close() {
+        if (!this._state.opened) {
             // Small optimization: it would normally not matter asking to
             // remove a class of an element if it does not already have it but
             // in this case we do more: we trigger_up an event and ask to close
@@ -397,22 +492,25 @@ const UserValueWidget = Widget.extend({
             // instructions being done at each click in the editor.
             return;
         }
-        this.trigger_up('user_value_widget_closing');
-        this.el.classList.remove('o_we_widget_opened');
-        this._userValueWidgets.forEach(widget => widget.close());
-    },
+        this.env.userValueWidgetClosing();
+        this._state.opened = false;
+        Object.values(this._subValues).forEach(widget => widget.close());
+    }
     /**
-     * Simulates the correct event on the element to make it active.
+     * Triggers a value change in non preview mode.
+     * Should be overridden by Sub-classes to properly reflect what enabling
+     * their component means.
      */
     enable() {
-        this.$el.click();
-    },
+        this.notifyValueChange(false);
+    }
+    // TODO: @owl-options: rename this to findUserValue
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
-    findWidget: function (name) {
-        for (const widget of this._userValueWidgets) {
+    findWidget(name) {
+        for (const widget of Object.values(this._subValues)) {
             if (widget.getName() === name) {
                 return widget;
             }
@@ -422,7 +520,7 @@ const UserValueWidget = Widget.extend({
             }
         }
         return null;
-    },
+    }
     /**
      * Focus the main focusable element of the widget.
      */
@@ -431,7 +529,7 @@ const UserValueWidget = Widget.extend({
         if (el) {
             el.focus();
         }
-    },
+    }
     /**
      * Returns the value that the widget would hold if it was active, by default
      * the internal value it holds.
@@ -439,9 +537,9 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {string}
      */
-    getActiveValue: function (methodName) {
-        return this._value;
-    },
+    getActiveValue(methodName) {
+        return this.value;
+    }
     /**
      * Returns the default value the widget holds when inactive, by default the
      * first "possible value".
@@ -449,25 +547,25 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {string}
      */
-    getDefaultValue: function (methodName) {
+    getDefaultValue(methodName) {
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
         return possibleValues && possibleValues[0] || '';
-    },
+    }
     /**
      * @returns {string[]}
      */
-    getDependencies: function () {
+    getDependencies() {
         return this._dependencies;
-    },
+    }
     /**
      * Returns the names of the option methods associated to the widget. Those
      * are loaded with @see loadMethodsData.
      *
      * @returns {string[]}
      */
-    getMethodsNames: function () {
-        return this._methodsNames;
-    },
+    getMethodsNames() {
+        return [...this._methodsNames.values()];
+    }
     /**
      * Returns the option parameters associated to the widget (for a given
      * method name or not). Most are loaded with @see loadMethodsData.
@@ -475,7 +573,7 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {Object}
      */
-    getMethodsParams: function (methodName) {
+    getMethodsParams(methodName) {
         const params = Object.assign({}, this._methodsParams);
         if (methodName) {
             params.possibleValues = params.optionsPossibleValues[methodName] || [];
@@ -483,13 +581,13 @@ const UserValueWidget = Widget.extend({
             params.defaultValue = this.getDefaultValue(methodName);
         }
         return params;
-    },
+    }
     /**
      * @returns {string} empty string if no name is used by the widget
      */
-    getName: function () {
+    getName() {
         return this._methodsParams.name || '';
-    },
+    }
     /**
      * Returns the user value that the widget currently holds. The value is a
      * string, this is the value that will be received in the option methods
@@ -498,62 +596,69 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {string}
      */
-    getValue: function (methodName) {
+    getValue(methodName) {
         const isActive = this.isActive();
-        if (!methodName || !this._methodsNames.includes(methodName)) {
+        if (!methodName || !this._methodsNames.has(methodName)) {
             return isActive ? 'true' : '';
         }
         if (isActive) {
             return this.getActiveValue(methodName);
         }
         return this.getDefaultValue(methodName);
-    },
+    }
     /**
      * Returns whether or not the widget is active (holds a value).
      *
      * @returns {boolean}
      */
-    isActive: function () {
-        return this._value && this._value !== NULL_ID;
-    },
+    isActive() {
+        return this.value && this.value !== NULL_ID;
+    }
     /**
      * Indicates if the widget can contain sub user value widgets or not.
      *
      * @returns {boolean}
      */
-    isContainer: function () {
+    isContainer() {
         return false;
-    },
+    }
     /**
      * Indicates if the widget is being previewed or not: the user is
      * manipulating it. Base case: if an internal <input/> element is focused.
      *
      * @returns {boolean}
      */
-    isPreviewed: function () {
-        const focusEl = document.activeElement;
-        if (focusEl && focusEl.tagName === 'INPUT'
-                && (this.el === focusEl || this.el.contains(focusEl))) {
-            return true;
-        }
-        return this.el.classList.contains('o_we_preview');
-    },
+    isPreviewed() {
+        // const focusEl = document.activeElement;
+        // TODO: @owl-options: implement this on input values
+        // if (focusEl && focusEl.tagName === 'INPUT'
+        //         && (this.el === focusEl || this.el.contains(focusEl))) {
+        //     return true;
+        // }
+        return this._state.preview;
+    }
     /**
      * Loads option method names and option method parameters.
      *
      * @param {string[]} validMethodNames
      * @param {Object} extraParams
      */
-    loadMethodsData: function (validMethodNames, extraParams) {
-        this._methodsNames = [];
+    loadMethodsData(validMethodNames, extraParams) {
+        this._validMethodNames = validMethodNames;
+        this._methodsNames = new Set();
         this._methodsParams = Object.assign({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
         this._dependencies = [];
         this._triggerWidgetsNames = [];
         this._triggerWidgetsValues = [];
 
-        for (const key in this.el.dataset) {
-            const dataValue = this.el.dataset[key].trim();
+        for (const key in this._data) {
+            // Ignore values set to false or undefined but not empty strings.
+            if (this._data[key] === false || this._data[key] === undefined) {
+                continue;
+            }
+
+            const dataValue = this._data[key].trim();
 
             if (key === 'dependencies') {
                 this._dependencies.push(...dataValue.split(/\s*,\s*/g));
@@ -562,47 +667,18 @@ const UserValueWidget = Widget.extend({
             } else if (key === 'triggerValue') {
                 this._triggerWidgetsValues.push(...dataValue.split(/\s*,\s*/g));
             } else if (validMethodNames.includes(key)) {
-                this._methodsNames.push(key);
+                this._methodsNames.add(key);
                 this._methodsParams.optionsPossibleValues[key] = dataValue.split(/\s*\|\s*/g);
             } else {
                 this._methodsParams[key] = dataValue;
             }
         }
-        this._userValueWidgets.forEach(widget => {
-            const inheritedParams = Object.assign({}, this._methodsParams);
-            inheritedParams.optionsPossibleValues = null;
-            widget.loadMethodsData(validMethodNames, inheritedParams);
-            const subMethodsNames = widget.getMethodsNames();
-            const subMethodsParams = widget.getMethodsParams();
-
-            for (const methodName of subMethodsNames) {
-                if (!this._methodsNames.includes(methodName)) {
-                    this._methodsNames.push(methodName);
-                    this._methodsParams.optionsPossibleValues[methodName] = [];
-                }
-                for (const subPossibleValue of subMethodsParams.optionsPossibleValues[methodName]) {
-                    this._methodsParams.optionsPossibleValues[methodName].push(subPossibleValue);
-                }
-            }
-        });
-        for (const methodName of this._methodsNames) {
-            const arr = this._methodsParams.optionsPossibleValues[methodName];
-            const uniqArr = arr.filter((v, i, arr) => i === arr.indexOf(v));
-            this._methodsParams.optionsPossibleValues[methodName] = uniqArr;
-        }
-
-        // Method names come from the widget's dataset whose keys' order cannot
-        // be relied on. We explicitely sort them by alphabetical order allowing
-        // consistent behavior, while relying on order for such methods should
-        // not be done when possible (the methods should be independent from
-        // each other when possible).
-        this._methodsNames.sort();
-    },
+    }
     /**
      * @param {boolean} [previewMode=false]
      * @param {boolean} [isSimulatedEvent=false]
      */
-    notifyValueChange: function (previewMode, isSimulatedEvent) {
+    notifyValueChange(previewMode, isSimulatedEvent) {
         // In the case we notify a change update, force a preview update if it
         // was not already previewed
         const isPreviewed = this.isPreviewed();
@@ -614,6 +690,7 @@ const UserValueWidget = Widget.extend({
             previewMode: previewMode || false,
             isSimulatedEvent: !!isSimulatedEvent,
         };
+        // @owl-options: Could we change this?
         // TODO improve this. The preview state has to be updated only when the
         // actual option _select is gonna be called... but this is delayed by a
         // mutex. So, during test tours, we would notify both 'preview' and
@@ -625,29 +702,59 @@ const UserValueWidget = Widget.extend({
             // an inverted state)... but if, for example, a modal opens before
             // handling that non-preview, a 'reset' will be thrown thus removing
             // the preview class. So we force it in non-preview too.
-            data.prepare = () => this.el.classList.add('o_we_preview');
+            data.prepare = () => this._state.preview = true;
         } else if (previewMode === 'reset') {
-            data.prepare = () => this.el.classList.remove('o_we_preview');
+            data.prepare = () => this._state.preview = false;
         }
 
-        this.trigger_up('user_value_update', data);
-    },
+        this.userValueNotification(data);
+    }
     /**
      * Opens the widget (only meaningful for widgets that can be opened).
      */
     open() {
-        this.trigger_up('user_value_widget_opening');
-        this.el.classList.add('o_we_widget_opened');
-    },
+        this.env.userValueWidgetOpening(this);
+        this._state.opened = true;
+    }
     /**
-     * Adds the given widget to the known list of user value sub-widgets (useful
-     * for container widgets).
+     * Adds the given userValue to the list of sub values (useful for container
+     * components).
      *
-     * @param {UserValueWidget} widget
+     * @param {UserValue} userValue
      */
-    registerSubWidget: function (widget) {
-        this._userValueWidgets.push(widget);
-    },
+    registerUserValue(userValue) {
+        this._subValues[userValue.id] = (userValue);
+        const inheritedParams = Object.assign({}, this._methodsParams);
+        inheritedParams.optionsPossibleValues = null;
+        userValue.loadMethodsData(this._validMethodNames, inheritedParams);
+        const subMethodsNames = userValue.getMethodsNames();
+        const subMethodsParams = userValue.getMethodsParams();
+
+        for (const methodName of subMethodsNames) {
+            if (!this._methodsNames.has(methodName)) {
+                this._methodsNames.add(methodName);
+                this._methodsParams.optionsPossibleValues[methodName] = [];
+            }
+            for (const subPossibleValue of subMethodsParams.optionsPossibleValues[methodName]) {
+                if (!this._methodsParams.optionsPossibleValues[methodName].includes(subPossibleValue)) {
+                    this._methodsParams.optionsPossibleValues[methodName].push(subPossibleValue);
+                }
+            }
+        }
+        // Method names' order cannot be relied on. We explicitely sort them by
+        // alphabetical order allowing consistent behavior, while relying on
+        // order for such methods should not be done when possible (the methods
+        // should be independent from each other when possible).
+        this._methodsNames = new Set([...this._methodsNames].sort());
+    }
+    /**
+     * Removes the given userValue from the list of sub values.
+     *
+     * @param {UserValue} userValue
+     */
+    unregisterUserValue(userValue) {
+        delete this._subValues[userValue.id];
+    }
     /**
      * Sets the user value that the widget should currently hold, for the
      * given method name.
@@ -662,23 +769,24 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      */
     async setValue(value, methodName) {
-        this._value = value;
-        this.el.classList.remove('o_we_preview');
-    },
+        this._state.preview = false;
+        this.value = value;
+    }
     /**
      * @param {boolean} show
      */
-    toggleVisibility: function (show) {
-        let doFocus = false;
-        if (show) {
-            const wasInvisible = this.el.classList.contains('d-none');
-            doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
-        }
-        this.el.classList.toggle('d-none', !show);
-        if (doFocus) {
-            this.focus();
-        }
-    },
+    toggleVisibility(show) {
+        this._state.show = show;
+        // let doFocus = false;
+        // if (show) {
+        //     const wasInvisible = this.el.classList.contains('d-none');
+        //     doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
+        // }
+        // this.el.classList.toggle('d-none', !show);
+        // if (doFocus) {
+        //     this.focus();
+        // }
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -692,15 +800,191 @@ const UserValueWidget = Widget.extend({
      * @private
      * @returns {HTMLElement}
      */
-    _getFocusableElement: function () {
+    _getFocusableElement() {
         return null;
-    },
+    }
+    /**
+     * Allows container widgets to add additional data if needed.
+     *
+     * @private
+     * @param {Object} params
+     */
+    userValueNotification(params) {
+        params.widget = this;
+
+        if (!params.triggerWidgetsNames) {
+            params.triggerWidgetsNames = [];
+        }
+        params.triggerWidgetsNames.push(...this._triggerWidgetsNames);
+
+        if (!params.triggerWidgetsValues) {
+            params.triggerWidgetsValues = [];
+        }
+        params.triggerWidgetsValues.push(...this._triggerWidgetsValues);
+        this.env.userValueNotification(params);
+    }
+}
+
+export class UserValueComponent extends Component {
+
+    static props = {
+        name: { type: String, optional: true },
+        slots: { type: Object, optional: true },
+        animateImg: { type: String, optional: true },
+        // Allow any prop as they will reference a method of SnippetOption
+        "*": {},
+    };
+
+    static defaultProps = {
+        animateImg: false,
+    };
+
+    static StateModel = UserValue;
+
+    // This is an abstract component, it should not be used alone.
+    static template = "";
+
+    setup() {
+        const id = uniqueId("userValue");
+        const state = useState({});
+        const stateParams = this.getStateParams();
+        this.state = new this.constructor.StateModel(
+            id,
+            state,
+            this.env,
+            this.env.snippetOption,
+            stateParams
+        );
+        if (this.props.multiSequence) {
+            this.state.multiSequence = this.props.multiSequence;
+        }
+
+        this.env.registerUserValue(this.state);
+
+        if (this.constructor.isContainer) {
+            // If this component contains other UserValueComponents, they should
+            // not register to the options, but to this Component's state instead, so
+            // that this one's UserValue can handle their state, as they are
+            // heavily dependent on the parent's state.
+            useChildSubEnv({
+                registerUserValue: (userValue) => {
+                    this.state.registerUserValue(userValue);
+                    if (this.env.isContained) {
+                        this.env.registerUserValue(userValue);
+                    }
+                },
+                unregisterUserValue: (userValue) => {
+                    this.state.unregisterUserValue(userValue);
+                },
+                userValueNotification: (params) => {
+                    this.state.userValueNotification(params);
+                },
+                isContained: true,
+            });
+        }
+
+        onWillStart(async () => {
+            if (this.props.img) {
+                const src = this.props.img;
+                if (src.split(".").pop() === "svg") {
+                    this.svg = await buildSvgElement(src);
+                } else {
+                    this.img = src;
+
+                    if (this.props.animateImg) {
+                        this.previewImg = this.img.replace(/png$/i, "gif");
+                    }
+                }
+            }
+        });
+        // Track the changes to the textContent slot so that parent widgets can
+        // use it (e.g. WeSelect use the active value's textContent for its
+        // toggler).
+        this.textContentRef = useRef("text-content");
+        useEffect(
+            () => {
+                const textContent = this.textContentRef.el?.textContent || "";
+                if (textContent && textContent !== this.state.textContent) {
+                    this.state.textContent = textContent;
+                } else if (!textContent) {
+                    const fakeImgEl = this.textContentRef.el?.querySelector('.o_we_fake_img_item');
+                    if (fakeImgEl) {
+                        this.state.fakeImg = markup(fakeImgEl.outerHTML);
+                    }
+                }
+            },
+            () => [this.textContentRef.el]
+        );
+
+        onWillDestroy(() => {
+            this.env.unregisterUserValue(this.state);
+        });
+    }
+    /**
+     * Returns an object containing the classes defined in the props
+     *
+     * @returns {Object}
+     */
+    getPropsClass() {
+        if (typeof this.props.class === "string") {
+            return { [this.props.class]: true };
+        }
+        if (Array.isArray(this.props.class)) {
+            const classes = this.props.class.join(" ");
+            return { [classes]: this.props.class.length > 0 };
+        }
+        if (typeof this.props.class === "object") {
+            return this.props.class;
+        }
+	}
+    /**
+     * Returns all the classes that should be applied on the root of the widget.
+     *
+     * @returns {Object}
+     */
+    getAllClasses() {
+        return {
+            "active": this.state.active,
+            "o_we_preview": this.state.isPreviewed(),
+            "d-none": !this.state.show,
+            "o_we_widget_opened": this.state.opened,
+            "o_we_icon_button": this.img || this.svg || this.props.icon,
+            "o_we_img_animate": this.props.animateImg,
+            ...this.getPropsClass(),
+        };
+    }
+    /**
+     * Sets all props as data attributes to match with existing tours.
+     * @TODO this should be removed or only shown when tours are actually 
+     * activated. However, some SCSS styles are using attributes to style some
+     * buttons (e.g. BackgroundShape).
+     */
+    getAllDataAttributes() {
+        const dataAttributes = {};
+        for (const key of Object.getOwnPropertyNames(this.state._data)) {
+            const kebabName = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+            dataAttributes[`data-${kebabName}`] = this.props[key];
+        }
+        return dataAttributes;
+    }
+    /**
+     * Prepare the values that will be passed as parameters to the state.
+     * 
+     * @private
+     * @return {Objectl}
+     */
+    getStateParams() {
+        const propsCopy = { ...this.props };
+        delete propsCopy.slots;
+        delete propsCopy.multiSequence;
+        return propsCopy;
+    }
     /**
      * @private
      * @param {OdooEvent|Event}
      * @returns {boolean}
      */
-    _handleNotifierEvent: function (ev) {
+    _handleNotifierEvent(ev) {
         if (!ev) {
             return true;
         }
@@ -712,7 +996,7 @@ const UserValueWidget = Widget.extend({
             ev.preventDefault();
         }
         return true;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -725,30 +1009,11 @@ const UserValueWidget = Widget.extend({
      * @private
      * @param {OdooEvent|Event} [ev]
      */
-    _onUserValueChange: function (ev) {
+    _onUserValueChange(ev) {
         if (this._handleNotifierEvent(ev)) {
-            this.notifyValueChange(false);
+            this.state.notifyValueChange(false);
         }
-    },
-    /**
-     * Allows container widgets to add additional data if needed.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onUserValueNotification: function (ev) {
-        ev.data.widget = this;
-
-        if (!ev.data.triggerWidgetsNames) {
-            ev.data.triggerWidgetsNames = [];
-        }
-        ev.data.triggerWidgetsNames.push(...this._triggerWidgetsNames);
-
-        if (!ev.data.triggerWidgetsValues) {
-            ev.data.triggerWidgetsValues = [];
-        }
-        ev.data.triggerWidgetsValues.push(...this._triggerWidgetsValues);
-    },
+    }
     /**
      * Should be called when an user event on the widget indicates a value
      * preview.
@@ -756,11 +1021,11 @@ const UserValueWidget = Widget.extend({
      * @private
      * @param {OdooEvent|Event} [ev]
      */
-    _onUserValuePreview: function (ev) {
+    _onUserValuePreview(ev) {
         if (this._handleNotifierEvent(ev)) {
-            this.notifyValueChange(true);
+            this.state.notifyValueChange(true);
         }
-    },
+    }
     /**
      * Should be called when an user event on the widget indicates a value
      * reset.
@@ -768,31 +1033,83 @@ const UserValueWidget = Widget.extend({
      * @private
      * @param {OdooEvent|Event} [ev]
      */
-    _onUserValueReset: function (ev) {
+    _onUserValueReset(ev) {
         if (this._handleNotifierEvent(ev)) {
-            this.notifyValueChange('reset');
+            this.state.notifyValueChange('reset');
         }
-    },
-});
+    }
+}
 
-const ButtonUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-button',
-    events: {
-        'click': '_onButtonClick',
-        'click [role="button"]': '_onInnerButtonClick',
-        'mouseenter': '_onUserValuePreview',
-        'mouseleave': '_onUserValueReset',
-    },
 
+export class ButtonUserValue extends UserValue {
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await super.setValue(...arguments);
+        let active = !!value;
+        if (methodName) {
+            if (!this._methodsNames.has(methodName)) {
+                return;
+            }
+            active = (this.getActiveValue(methodName) === value);
+        }
+        this._state.active = active;
+        // TODO: @owl-options: Some of this code is no longer used, it should
+        // probably be removed in its own commit.
+        // if (this.illustrationEl && this.activeImgEl) {
+        //     this.illustrationEl.classList.toggle('d-none', active);
+        //     this.activeImgEl.classList.toggle('d-none', !active);
+        // }
+        // this.el.classList.toggle('active', active);
+    }
+
+    get active() {
+        return this._state.active;
+    }
+    /**
+     * @override
+     */
+    getActiveValue(methodName) {
+        const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+        return possibleValues && possibleValues[possibleValues.length - 1] || '';
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return (this.isPreviewed() !== this._state.active);
+    }
+    /**
+     * @override
+     */
+    loadMethodsData(validMethodNames) {
+        super.loadMethodsData(...arguments);
+        for (const methodName of this._methodsNames.values()) {
+            const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+            if (possibleValues.length <= 1) {
+                possibleValues.unshift('');
+            }
+        }
+    }
+}
+
+export class WeButton extends UserValueComponent {
+    static template = "web_editor.WeButton";
+    static StateModel = ButtonUserValue;
+    setup() {
+        super.setup();
+    }
     /**
      * @override
      */
     async willStart() {
         await this._super(...arguments);
         if (this.options.dataAttributes.activeImg) {
+            // TODO: @owl-options: this is no longer used.
             this.activeImgEl = await _buildImgElement(this.options.dataAttributes.activeImg);
         }
-    },
+    }
     /**
      * @override
      */
@@ -805,66 +1122,17 @@ const ButtonUserValueWidget = UserValueWidget.extend({
             this.containerEl.appendChild(this.activeImgEl);
         }
         return $el;
-    },
+    }
     /**
      * @override
      */
-    start: function (parent, title, options) {
+    start(parent, title, options) {
         if (this.options && this.options.childNodes) {
             this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
         }
 
         return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    getActiveValue: function (methodName) {
-        const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-        return possibleValues && possibleValues[possibleValues.length - 1] || '';
-    },
-    /**
-     * @override
-     */
-    isActive: function () {
-        return (this.isPreviewed() !== this.el.classList.contains('active'));
-    },
-    /**
-     * @override
-     */
-    loadMethodsData: function (validMethodNames) {
-        this._super.apply(this, arguments);
-        for (const methodName of this._methodsNames) {
-            const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-            if (possibleValues.length <= 1) {
-                possibleValues.unshift('');
-            }
-        }
-    },
-    /**
-     * @override
-     */
-    async setValue(value, methodName) {
-        await this._super(...arguments);
-        let active = !!value;
-        if (methodName) {
-            if (!this._methodsNames.includes(methodName)) {
-                return;
-            }
-            active = (this.getActiveValue(methodName) === value);
-        }
-        if (this.illustrationEl && this.activeImgEl) {
-            this.illustrationEl.classList.toggle('d-none', active);
-            this.activeImgEl.classList.toggle('d-none', !active);
-        }
-        this.el.classList.toggle('active', active);
-    },
-
+    }
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -872,33 +1140,28 @@ const ButtonUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
-    _onButtonClick: function (ev) {
+    _onButtonClick(ev) {
         if (!ev._innerButtonClicked) {
             this._onUserValueChange(ev);
         }
-    },
+    }
     /**
      * @private
      */
-    _onInnerButtonClick: function (ev) {
+    _onInnerButtonClick(ev) {
         // Cannot just stop propagation as the click needs to be propagated to
         // potential parent widgets for event delegation on those inner buttons.
         ev._innerButtonClicked = true;
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeButton", WeButton);
 
-const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
-    className: (ButtonUserValueWidget.prototype.className || '') + ' o_we_checkbox_wrapper',
+const ButtonUserValueWidget = Widget.extend({className: ''});
+const CheckboxUserValueWidget = ButtonUserValueWidget.extend({});
 
-    /**
-     * @override
-     */
-    start: function () {
-        const checkboxEl = document.createElement('we-checkbox');
-        this.containerEl.appendChild(checkboxEl);
-
-        return this._super(...arguments);
-    },
+class WeCheckbox extends WeButton {
+    static template = "web_editor.WeCheckbox";
+    static components = { WeTitle };
 
     //--------------------------------------------------------------------------
     // Public
@@ -908,8 +1171,9 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
      * @override
      */
     enable() {
+        // TODO: @owl-options adapt
         this.$('we-checkbox').click();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -923,30 +1187,32 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
             // Only consider clicks on the label and the checkbox control itself
             return;
         }
-        return this._super(...arguments);
-    },
-});
+        return super._onButtonClick(...arguments);
+    }
+}
+registry.category("snippet_widgets").add("WeCheckbox", WeCheckbox);
 
-const BaseSelectionUserValueWidget = UserValueWidget.extend({
+const BaseSelectionUserValueWidget = UserValueWidget.extend({});
+class BaseSelectionUserValue extends UserValue {
     /**
      * @override
      */
     async start() {
-        await this._super(...arguments);
+        await super.start(...arguments);
 
-        this.menuEl = document.createElement('we-selection-items');
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => {
-                // Ensure to only put element nodes inside the selection menu
-                // as there could be an :empty CSS rule to handle the case when
-                // the menu is empty (so it should not contain any whitespace).
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    this.menuEl.appendChild(node);
-                }
-            });
-        }
-        this.containerEl.appendChild(this.menuEl);
-    },
+        // this.menuEl = document.createElement('we-selection-items');
+        // if (this.options && this.options.childNodes) {
+        //     this.options.childNodes.forEach(node => {
+        //         // Ensure to only put element nodes inside the selection menu
+        //         // as there could be an :empty CSS rule to handle the case when
+        //         // the menu is empty (so it should not contain any whitespace).
+        //         if (node.nodeType === Node.ELEMENT_NODE) {
+        //             this.menuEl.appendChild(node);
+        //         }
+        //     });
+        // }
+        // this.containerEl.appendChild(this.menuEl);
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -956,13 +1222,13 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
      * @override
      */
     getMethodsParams(methodName) {
-        const params = this._super(...arguments);
+        const params = super.getMethodsParams(...arguments);
         const activeWidget = this._getActiveSubWidget();
         if (!activeWidget) {
             return params;
         }
         return Object.assign(activeWidget.getMethodsParams(...arguments), params);
-    },
+    }
     /**
      * @override
      */
@@ -971,23 +1237,23 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
         if (activeWidget) {
             return activeWidget.getActiveValue(methodName);
         }
-        return this._super(...arguments);
-    },
+        return super.getValue(...arguments);
+    }
     /**
      * @override
      */
     isContainer() {
         return true;
-    },
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
-        const _super = this._super.bind(this);
-        for (const widget of this._userValueWidgets) {
+        const subValues = Object.values(this._subValues);
+        for (const widget of subValues) {
             await widget.setValue(NULL_ID, methodName);
         }
-        for (const widget of [...this._userValueWidgets].reverse()) {
+        for (const widget of subValues.reverse()) {
             await widget.setValue(value, methodName);
             if (widget.isActive()) {
                 // Only one select item can be true at a time, we consider the
@@ -995,8 +1261,8 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
                 break;
             }
         }
-        await _super(...arguments);
-    },
+        await super.setValue(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1004,23 +1270,131 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
     /**
      * @private
-     * @returns {UserValueWidget|undefined}
+     * @returns {UserValue|undefined}
      */
     _getActiveSubWidget() {
-        const previewedWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
+        const previewedWidget = Object.values(this._subValues).find(value => value.isPreviewed());
         if (previewedWidget) {
             return previewedWidget;
         }
-        return this._userValueWidgets.find(widget => widget.isActive());
-    },
-});
+        return Object.values(this._subValues).find(value => value.isActive());
+    }
+}
+export class SelectUserValue extends BaseSelectionUserValue {
 
-const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
-    tagName: 'we-select',
-    events: {
-        'click': '_onClick',
-    },
-    PLACEHOLDER_TEXT: _t("None"),
+    static PLACEHOLDER_TEXT = _t("None");
+
+    constructor() {
+        super(...arguments);
+        this._state.toggler = {
+            faIcon: false,
+            imgSrc: false,
+            textContent: this.constructor.PLACEHOLDER_TEXT,
+        };
+    }
+    /**
+     * Informations about the toggler element, to be used in the template.
+     *
+     * @type {Object}
+     */
+    get toggler() {
+        return this._state.toggler;
+    }
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await super.setValue(...arguments);
+        // Re-initialising the toggler.
+        const newToggler = {
+            textContent: "",
+            faIcon: false,
+            imgSrc: false,
+        };
+        const activeWidget = Object.values(this._subValues).find(value => !value.isPreviewed() && value.isActive());
+        if (activeWidget) {
+            const params = activeWidget.getMethodsParams(methodName);
+            // Check the param for svg on buttons
+            const svgSrc = params.svgSrc; // useful to avoid searching text content in svg element
+            const text = (params.selectLabel || (!svgSrc && activeWidget.textContent.trim()));
+            const imgSrc = params.img;
+            const icon = params.icon;
+            if (text) {
+                newToggler.textContent = text;
+            } else if (icon) {
+                newToggler.faIcon = icon;
+            } else if (imgSrc) {
+                newToggler.imgSrc = imgSrc;
+            } else {
+                // TODO: @owl-options: check this? See the "border-style" option
+                // that appears when you add a border for an example. e.g.: on
+                // Images Wall.
+                if (activeWidget.fakeImg) {
+                   newToggler.textContent = activeWidget.fakeImg;
+                } else {
+                    newToggler.textContent = this.constructor.PLACEHOLDER_TEXT;
+                }
+            }
+        } else {
+            newToggler.textContent = this.constructor.PLACEHOLDER_TEXT;
+        }
+
+        this._state.toggler = newToggler;
+    }
+    /**
+     * @override
+     */
+    isPreviewed() {
+        return super.isPreviewed() || this.opened;
+    }
+    /**
+     * @override
+     */
+    enable() {
+        if (!this.opened) {
+            this.open();
+        }
+    }
+}
+const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({});
+export class WeSelect extends UserValueComponent {
+    static isContainer = true;
+    static template = "web_editor.WeSelect";
+    static components = { Dropdown, WeTitle };
+    static StateModel = SelectUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        title: { type: String, optional: true },
+    }
+
+    setup() {
+        // Use this ref to adjust the dropdown's position upwards if not enough
+        // space downwards.
+        this.menuRef = useRef("menu");
+
+        useEffect(
+            (opened) => {
+                if (opened) {
+                    this._adjustDropdownPosition();
+                }
+                return () => {
+                    const containerEl = this.menuRef.el?.closest(".o_we_user_value_widget");
+                    containerEl.classList.remove("o_we_select_dropdown_up");
+                };
+            },
+            () => [this.state.opened]
+        );
+
+        super.setup();
+    }
+    /**
+     * @override
+     */
+    getStateParams() {
+        const propsCopy = super.getStateParams();
+        delete propsCopy.title;
+        return propsCopy;
+    }
 
     /**
      * @override
@@ -1051,89 +1425,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         const dropdownCaretEl = document.createElement('span');
         dropdownCaretEl.classList.add('o_we_dropdown_caret');
         this.containerEl.appendChild(dropdownCaretEl);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    close: function () {
-        this._super(...arguments);
-        this.el.classList.remove("o_we_select_dropdown_up");
-        if (this.menuTogglerEl) {
-            this.menuTogglerEl.classList.remove('active');
-        }
-    },
-    /**
-     * @override
-     */
-    isPreviewed: function () {
-        return this._super(...arguments) || this.menuTogglerEl.classList.contains('active');
-    },
-    /**
-     * @override
-     */
-    open() {
-        this._super(...arguments);
-        this.menuTogglerEl.classList.add('active');
-        this._adjustDropdownPosition();
-    },
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-
-        if (this.iconEl) {
-            return;
-        }
-
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerItemEl.remove();
-            this.menuTogglerItemEl = null;
-        }
-
-        let textContent = '';
-        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        if (activeWidget) {
-            const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
-            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
-            const imgSrc = activeWidget.el.dataset.img;
-            const icon = activeWidget.el.dataset.icon;
-            if (value) {
-                textContent = value;
-            } else if (icon) {
-                this.menuTogglerItemEl = document.createElement('i');
-                this.menuTogglerItemEl.classList.add('fa', icon);
-            } else if (imgSrc) {
-                this.menuTogglerItemEl = document.createElement('img');
-                this.menuTogglerItemEl.src = imgSrc;
-            } else {
-                const fakeImgEl = activeWidget.el.querySelector('.o_we_fake_img_item');
-                if (fakeImgEl) {
-                    this.menuTogglerItemEl = fakeImgEl.cloneNode(true);
-                }
-            }
-        } else {
-            textContent = this.PLACEHOLDER_TEXT;
-        }
-
-        this.menuTogglerEl.textContent = textContent;
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
-        }
-    },
-    /**
-     * @override
-     */
-    enable() {
-        if (!this.menuTogglerEl.classList.contains('active')) {
-            this.menuTogglerEl.click();
-        }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1145,7 +1437,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     _shouldIgnoreClick(ev) {
         return !!ev.target.closest('[role="button"]');
-    },
+    }
     /**
      * Decides whether the dropdown should be positioned below or above the
      * selector based on the available space.
@@ -1153,14 +1445,22 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @private
      */
     _adjustDropdownPosition() {
-        const customizePanelEl = this.menuEl.closest(".o_we_customize_panel");
+        if (!this.state.opened) {
+            return;
+        }
+        const customizePanelEl = this.menuRef.el?.closest(".o_we_customize_panel");
         if (!customizePanelEl) {
             return;
         }
 
-        this.el.classList.remove("o_we_select_dropdown_up");
+        const containerEl = this.menuRef.el.closest(".o_we_user_value_widget");
+        if (!containerEl) {
+            return;
+        }
+
+        containerEl.classList.remove("o_we_select_dropdown_up");
         const customizePanelElCoords = customizePanelEl.getBoundingClientRect();
-        let dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+        let dropdownMenuElCoords = this.menuRef.el.getBoundingClientRect();
 
         // Adds a margin to prevent the dropdown from sticking to the edge of
         // the customize panel.
@@ -1168,15 +1468,15 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         // If after opening, the dropdown list overflows the customization
         // panel at the bottom, opens the dropdown above the selector.
         if ((dropdownMenuElCoords.bottom + dropdownMenuMargin) > customizePanelElCoords.bottom) {
-            this.el.classList.add("o_we_select_dropdown_up");
-            dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+            containerEl.classList.add("o_we_select_dropdown_up");
+            dropdownMenuElCoords = this.menuRef.el.getBoundingClientRect();
             // If there is no available space above it either, then we open
             // it below the selector.
             if (dropdownMenuElCoords.top < customizePanelElCoords.top) {
-                this.el.classList.remove("o_we_select_dropdown_up");
+                containerEl.classList.remove("o_we_select_dropdown_up");
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1187,40 +1487,39 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      *
      * @private
      */
-    _onClick: function (ev) {
+    _onClick(ev) {
         if (this._shouldIgnoreClick(ev)) {
             return;
         }
 
-        if (!this.menuTogglerEl.classList.contains('active')) {
-            this.open();
+        if (!this.state.opened) {
+            this.state.open();
         } else {
-            this.close();
+            this.state.close();
         }
-        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
-        if (activeButton) {
-            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+        const activeItem = this.menuRef.el?.querySelector(".active");
+        if (activeItem) {
+            this.menuRef.el.scrollTop = activeItem.offsetTop - (this.menuRef.el.offsetHeight / 2);
         }
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeSelect", WeSelect);
+
+class WeButtonGroup extends UserValueComponent {
+    static template = "web_editor.WeButtonGroup";
+    static isContainer = true;
+    static components = { WeTitle };
+    static StateModel = BaseSelectionUserValue;
+}
+
+registry.category("snippet_widgets").add("WeButtonGroup", WeButtonGroup);
 
 const ButtonGroupUserValueWidget = BaseSelectionUserValueWidget.extend({
     tagName: 'we-button-group',
 });
 
-const UnitUserValueWidget = UserValueWidget.extend({
-    /**
-     * @override
-     */
-    start: async function () {
-        const unit = this.el.dataset.unit || '';
-        this.el.dataset.unit = unit;
-        if (this.el.dataset.saveUnit === undefined) {
-            this.el.dataset.saveUnit = unit;
-        }
-
-        return this._super(...arguments);
-    },
+const UnitUserValueWidget = UserValueWidget.extend({});
+class UnitUserValue extends UserValue {
 
     //--------------------------------------------------------------------------
     // Public
@@ -1229,12 +1528,16 @@ const UnitUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getActiveValue: function (methodName) {
-        const activeValue = this._super(...arguments);
+    getActiveValue(methodName) {
+        const activeValue = this._nextValue || super.getActiveValue(...arguments) || "";
 
         const params = this._methodsParams;
         if (!this._isNumeric()) {
             return activeValue;
+        }
+        // TODO find correct way to apply this
+        if (params.saveUnit === undefined) {
+            params.saveUnit = params.unit;
         }
 
         const defaultValue = this.getDefaultValue(methodName, false);
@@ -1248,13 +1551,13 @@ const UnitUserValueWidget = UserValueWidget.extend({
                 return `${this._floatToStr(value)}${params.saveUnit}`;
             }
         }).join(' ');
-    },
+    }
     /**
      * @override
      * @param {boolean} [useInputUnit=false]
      */
-    getDefaultValue: function (methodName, useInputUnit) {
-        const defaultValue = this._super(...arguments);
+    getDefaultValue(methodName, useInputUnit) {
+        const defaultValue = super.getDefaultValue(...arguments);
 
         const params = this._methodsParams;
         if (!this._isNumeric()) {
@@ -1267,21 +1570,32 @@ const UnitUserValueWidget = UserValueWidget.extend({
             return defaultValue;
         }
         return `${this._floatToStr(numValue)}${unit}`;
-    },
+    }
     /**
      * @override
      */
-    isActive: function () {
-        const isSuperActive = this._super(...arguments);
+    isActive() {
+        const isSuperActive = super.isActive(...arguments);
         if (!this._isNumeric()) {
             return isSuperActive;
         }
         return isSuperActive && (
-            this._floatToStr(parseFloat(this._value)) !== '0'
+            this._floatToStr(parseFloat(this.value)) !== '0'
             // Or is a composite value.
-            || !!this._value.match(/\d+\s+\d+/)
+            || !!this.value.match(/\d+\s+\d+/)
         );
-    },
+    }
+    /**
+     * @override
+     */
+    loadMethodsData() {
+        super.loadMethodsData(...arguments);
+        const params = this._methodsParams;
+        const unit = params.unit || '';
+        if (params.saveUnit === undefined) {
+            params.saveUnit = unit;
+        }
+    }
     /**
      * @override
      */
@@ -1296,8 +1610,8 @@ const UnitUserValueWidget = UserValueWidget.extend({
                 return this._floatToStr(numValue);
             }).join(' ');
         }
-        return this._super(value, methodName);
-    },
+        return super.setValue(value, methodName);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1310,9 +1624,9 @@ const UnitUserValueWidget = UserValueWidget.extend({
      * @param {number} value
      * @returns {string}
      */
-    _floatToStr: function (value) {
+    _floatToStr(value) {
         return `${parseFloat(value.toFixed(5))}`;
-    },
+    }
     /**
      * Checks whether the widget contains a numeric value.
      *
@@ -1320,60 +1634,64 @@ const UnitUserValueWidget = UserValueWidget.extend({
      * @returns {Boolean} true if the value is numeric, false otherwise.
      */
     _isNumeric() {
-        const params = this._methodsParams || this.el.dataset;
+        const params = this._methodsParams;
         return !!params.unit;
-    },
-});
+    }
+}
 
-const InputUserValueWidget = UnitUserValueWidget.extend({
-    tagName: 'we-input',
-    events: {
-        'input input': '_onInputInput',
-        'blur input': '_onInputBlur',
-        'change input': '_onUserValueChange',
-        'keydown input': '_onInputKeydown',
-    },
-
+const InputUserValueWidget = UnitUserValueWidget.extend({});
+class InputUserValue extends UnitUserValue {
     /**
      * @override
      */
-    start: async function () {
-        await this._super(...arguments);
+    async setValue() {
+        await super.setValue(...arguments);
+        this._oldValue = this.value;
+    }
+    /**
+     * @override
+     */
+    _isNumeric() {
+        const isNumeric = super._isNumeric(...arguments);
+        const params = this._methodsParams;
+        return isNumeric || !!params.fakeUnit || !!params.step;
+    }
+}
+export class WeInput extends UserValueComponent {
+    static template = 'web_editor.WeInput';
+    static props = { ...UserValueComponent.props,
+        unit: { type: String, optional: true },
+        step: { type: String, optional: true },
+        saveUnit: { type: String, optional: true },
+        // withUnit: { type: String, optional: true }, // ? boolean ?
+        fakeUnit: { type: String, optional: true }, // ? boolean ?
+        hideUnit: { type: String, optional: true }, // ? boolean ?
+        extraClass: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+    static defaultProps = {
+        unit: "",
+    };
+    static components = { WeTitle };
+    static StateModel = InputUserValue;
 
-        const unit = this.el.dataset.unit;
-        this.inputEl = document.createElement('input');
-        this.inputEl.setAttribute('type', 'text');
-        this.inputEl.setAttribute('autocomplete', 'chrome-off');
-        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        const useNumberAlignment = this._isNumeric() || !!this.el.dataset.hideUnit;
-        this.inputEl.classList.toggle('text-start', !useNumberAlignment);
-        this.inputEl.classList.toggle('text-end', useNumberAlignment);
-        this.containerEl.appendChild(this.inputEl);
-
-        const showUnit = (!!unit || !!this.el.dataset.fakeUnit) && !this.el.dataset.hideUnit;
-        if (showUnit) {
-            var unitEl = document.createElement('span');
-            const unitText = this.el.dataset.fakeUnit || unit;
-            unitEl.textContent = unitText;
-            this.containerEl.appendChild(unitEl);
-            if (unitText.length > 3) {
-                this.el.classList.add('o_we_large');
-            }
-        }
-    },
+    setup() {
+        super.setup();
+        this.inputRef = useRef("input");
+    }
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-        this.inputEl.value = this._value;
-        this._oldValue = this._value;
-    },
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "o_we_large": (
+                !this.props.unit && !this.props.fakeUnit
+            ) || this.props.hideUnit,
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1383,16 +1701,8 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
      * @override
      */
     _getFocusableElement() {
-        return this.inputEl;
-    },
-    /**
-     * @override
-     */
-    _isNumeric() {
-        const isNumeric = this._super(...arguments);
-        const params = this._methodsParams || this.el.dataset;
-        return isNumeric || !!params.fakeUnit || !!params.step;
-    },
+        return this.inputRef.el;
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1402,17 +1712,17 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onInputInput: function (ev) {
+    _onInputInput(ev) {
         // First record the input value as the new current value and bound it if
         // necessary (min / max params).
-        this._value = this.inputEl.value;
+        this.state.value = this.inputRef.el?.value;
 
-        const params = this._methodsParams;
+        const params = this.props;
         const hasMin = ('min' in params);
         const hasMax = ('max' in params);
         if (hasMin || hasMax) {
             // Bounding the value in [min, max] if specified.
-            const boundedValue = this._value.split(/\s+/g).map(v => {
+            const boundedValue = this.state.value.split(/\s+/g).map(v => {
                 let numValue = parseFloat(v);
                 if (isNaN(numValue)) {
                     return hasMin ? params.min : v;
@@ -1425,14 +1735,14 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
 
             // If the bounded version is different from the value, forget about
             // the old value so that we properly update the UI in any case.
-            this._oldValue = undefined;
+            this.state._oldValue = undefined;
 
             // Note: we do not change the input's value because we want the user
             // to be able to enter anything without it being auto-fixed. For
             // example, just emptying the input to enter new numbers: you don't
             // want the min value to pop up unexpectedly. The next UI update
             // will take care of showing the user that the value was bound.
-            this._value = boundedValue;
+            this.state.value = boundedValue;
         }
 
         // When the value changes as a result of a arrow up/down, the change
@@ -1444,12 +1754,12 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             this.changeEventWillBeTriggered = true;
         }
         this._onUserValuePreview(ev);
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onInputBlur: function (ev) {
+    _onInputBlur(ev) {
         if (this.notifyValueChangeOnBlur && !this.changeEventWillBeTriggered) {
             // In case the input value has been modified with arrow up/down, the
             // change event is not triggered (except if there has been a natural
@@ -1459,14 +1769,14 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             this.notifyValueChangeOnBlur = false;
         }
         this.changeEventWillBeTriggered = false;
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onInputKeydown: function (ev) {
-        const params = this._methodsParams;
-        if (!this._isNumeric()) {
+    _onInputKeydown(ev) {
+        const params = this.props;
+        if (!this.state._isNumeric()) {
             return;
         }
         switch (ev.key) {
@@ -1475,6 +1785,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                 break;
             case "ArrowUp":
             case "ArrowDown": {
+                ev.preventDefault(); // Do not let it be handled as an hotkey.
                 const input = ev.currentTarget;
                 let parts = (input.value || input.placeholder).match(/-?\d+\.\d+|-?\d+/g);
                 if (!parts) {
@@ -1512,7 +1823,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                     value += (increasing ? step : -step);
                     value = hasMin ? Math.max(params.min, value) : value;
                     value = hasMax ? Math.min(value, params.max) : value;
-                    return this._floatToStr(value);
+                    return this.state._floatToStr(value);
                 }).join(" ");
                 if (newValue === (input.value || input.placeholder)) {
                     return;
@@ -1532,29 +1843,29 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                 break;
             }
         }
-    },
+    }
     /**
      * @override
      */
     _onUserValueChange() {
-        if (this._oldValue !== this._value) {
-            this._super(...arguments);
+        if (this.state._oldValue !== this.state.value) {
+            super._onUserValueChange(...arguments);
         }
     }
-});
+}
+registry.category("snippet_widgets").add("WeInput", WeInput);
 
-const MultiUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-multi',
+class MultiUserValue extends UserValue {
 
-    /**
-     * @override
-     */
-    start: function () {
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
+    get sortedValues() {
+        if (!this._sortedValues) {
+            this._sortedValues = Object.values(this._subValues);
+            this._sortedValues.sort((a, b) => {
+                return a.multiSequence - b.multiSequence;
+            });
         }
-        return this._super(...arguments);
-    },
+        return this._sortedValues;
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -1563,148 +1874,94 @@ const MultiUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getValue: function (methodName) {
-        const value = this._userValueWidgets.map(widget => {
-            return widget.getValue(methodName);
+    getValue(methodName) {
+        const value = this.sortedValues.map(subValue => {
+            return subValue.getValue(methodName);
         }).join(' ').trim();
 
-        return value || this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    isContainer: function () {
-        return true;
-    },
+        return value || super.getValue(...arguments);
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
+        // TODO: @owl-options avoid null
+        value ||= "";
         let values = value.split(/\s*\|\s*/g);
         if (values.length === 1) {
             values = value.split(/\s+/g);
         }
-        for (let i = 0; i < this._userValueWidgets.length - 1; i++) {
-            await this._userValueWidgets[i].setValue(values.shift() || '', methodName);
+        for (let i = 0; i < this.sortedValues.length - 1; i++) {
+            await this.sortedValues[i].setValue(values.shift() || '', methodName);
         }
-        await this._userValueWidgets[this._userValueWidgets.length - 1].setValue(values.join(' '), methodName);
-    },
-});
+        await this.sortedValues[this.sortedValues.length - 1].setValue(values.join(' '), methodName);
+    }
+}
 
-const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
+const MultiUserValueWidget = UserValueWidget.extend({});
+class WeMulti extends UserValueComponent {
+    static template = "web_editor.WeMulti";
+    static isContainer = true;
+    static StateModel = MultiUserValue;
+    static components = { WeTitle };
+}
+registry.category("snippet_widgets").add("WeMulti", WeMulti);
 
+export class ColorpickerUserValue extends SelectUserValue {
+    /** 
+     * The Color Combination value, which is a string ranging from 1 to 5
+     *
+     * @type {string}
+     */
+    get ccValue() {
+        return this._state.ccValue;
+    }
+    set ccValue(value) {
+        this._state.ccValue = value;
+    }
+    /**
+     * A custom color value, selected through the color picker of the color
+     * palette
+     *
+     * @type {string}
+     */
+    get customColorValue() {
+        return this._state.cutomColorValue;
+    }
+    set customColorValue(value) {
+        this._state.customColorValue = value;
+    }
     /**
      * @override
      */
-    start: async function () {
-        const _super = this._super.bind(this);
-        const args = arguments;
-
-        this.resetTabCount = 0;
-
-        // Build the select element with a custom span to hold the color preview
-        this.colorPreviewEl = document.createElement('span');
-        this.colorPreviewEl.classList.add('o_we_color_preview');
-        // todo: This div should be removed whenever possible (like when
-        // converting the uservaluewidget to owl).
-        this.colorPaletteEl = document.createElement('div');
-        this.colorPaletteEl.classList.add('o_we_color_palette_wrapper');
-        this.colorPaletteEl.style.display = 'contents';
-        this.colorPaletteColorNames = [];
-        this.options.childNodes = [this.colorPaletteEl];
-        this.options.valueEl = this.colorPreviewEl;
-        // TODO: find a better way to do this.
-        // The colorpicker widget is started before the ColorPalette component
-        // is attached to the DOM (which only happens once the user opens the
-        // picker). However, the colorNames are only set after the ColorPalette
-        // has been mounted. Initializing the colorNames through a direct call
-        // to the `getColorPickerTemplateService` so that the widget starts
-        // with possible default values is thus necessary to avoid bugs on
-        // `_computeWidgetState()`.
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            const colorpickerTemplate = await wysiwyg.getColorpickerTemplate.call(wysiwyg);
-            this.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
-        }
-        return _super(...args);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    open: function () {
-        if (this.colorPaletteWrapper) {
-            this.colorPaletteWrapper?.update({
-                selectedCC: this._ccValue,
-                selectedColor: this._value,
-                resetTabCount: ++this.resetTabCount,
-            });
-            this._super(...arguments);
-        } else {
-            // TODO review in master, this does async stuff. Maybe the open
-            // method should now be async. This is not really robust as the
-            // colorPalette can be used without it to be fully rendered but
-            // the use of the saved promise where we can should mitigate that
-            // issue.
-            this._colorPaletteRenderPromise = this._renderColorPalette();
-            this._super(...arguments);
-            this._colorPaletteRenderPromise.then(() => {
-                // Re-adjust the position of the colorpicker once the
-                // colorpalette is completely rendered (once that the
-                // colorpicker has its final height.
-                // TODO should not be needed once everything will be converted
-                // to owl.
-                this._adjustDropdownPosition();
-            });
-        }
-    },
-    /**
-     * @override
-     */
-    close: function () {
-        this._super(...arguments);
-        if (this._customColorValue && this._customColorValue !== this._value) {
-            this._value = this._customColorValue;
-            this._customColorValue = false;
-            this._onUserValueChange();
-        }
-    },
-    /**
-     * @override
-     */
-    getMethodsParams: function () {
-        return Object.assign(this._super(...arguments), {
+    getMethodsParams() {
+        return Object.assign(super.getMethodsParams(...arguments), {
             colorNames: this.colorPaletteColorNames,
         });
-    },
+    }
     /**
      * @override
      */
-    getValue: function (methodName) {
+    getValue(methodName) {
         const isCCMethod = (this._methodsParams.withCombinations === methodName);
-        let value = this._super(...arguments);
+        let value = super.getValue(...arguments);
         if (isCCMethod) {
-            value = this._ccValue;
-        } else if (typeof this._customColorValue === 'string') {
-            value = this._customColorValue;
+            value = this.ccValue;
+        } else if (typeof this.customColorValue === 'string') {
+            value = this.customColorValue;
         }
 
         // TODO strange there is some processing below for the normal value but
         // not for the preview value? To check in older stable versions as well.
-        if (typeof this._previewColor === 'string') {
-            return isCCMethod ? this._previewCC : this._previewColor;
+        if (typeof this.previewColor === 'string') {
+            return isCCMethod ? this.previewCC : this.previewColor;
         }
 
         if (value) {
             // TODO probably something to be done to handle gradients properly
             // in this code.
-            const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
-            const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
+            const useCssColor = this._data.useCssColor;
+            const cssCompatible = this._data.cssCompatible;
             if ((useCssColor || cssCompatible) && !isCSSColor(value)) {
                 if (useCssColor) {
                     value = weUtils.getCSSVariableValue(value);
@@ -1714,20 +1971,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             }
         }
         return value;
-    },
-    /**
-     * @override
-     */
-    isContainer: function () {
-        return false;
-    },
-    /**
-     * @override
-     */
-    isActive: function () {
-        return !!this._ccValue
-            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
-    },
+    }
     /**
      * Updates the color preview + re-render the whole color palette widget.
      *
@@ -1740,30 +1984,134 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         // available in `_ccValue`.
         const isCCMethod = (this._methodsParams.withCombinations === methodName);
         // Always call _super but don't change _value if meant for the CC value.
-        await this._super(isCCMethod ? this._value : color, methodName, ...rest);
+        await super.setValue(isCCMethod ? this.value : color, methodName, ...rest);
         if (isCCMethod) {
-            this._ccValue = color;
+            this.ccValue = color;
         }
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return !!this.ccValue
+            || !weUtils.areCssValuesEqual(this.value, 'rgba(0, 0, 0, 0)');
+    }
+    /**
+     * @override
+     */
+    close() {
+        super.close();
+        if (this._state.customColorValue && this._state.customColorValue !== this._state.value) {
+            this._state.value = this._state.customColorValue;
+            this._state.customColorValue = false;
+            this.notifyValueChange(false);
+        }
+    }
+}
 
-        await this._colorPaletteRenderPromise;
+export class WeColorpicker extends WeSelect {
+    static StateModel = ColorpickerUserValue;
+    static template = "web_editor.WeColorpicker";
+    static components = { ...WeSelect.components, ColorPalette };
+    static isContainer = false;
 
+    setup() {
+        super.setup();
+        this.getColorPickerTemplateService = useService("get_color_picker_template");
+        onWillStart(async () => {
+            // TODO: find a better way to do this.
+            // The colorpicker widget is started before the ColorPalette component
+            // is attached to the DOM (which only happens once the user opens the
+            // picker). However, the colorNames are only set after the ColorPalette
+            // has been mounted. Initializing the colorNames through a direct call
+            // to the `getColorPickerTemplateService` so that the widget starts
+            // with possible default values is thus necessary to avoid bugs on
+            // `_computeWidgetState()`.
+            const colorpickerTemplate = await this.getColorPickerTemplateService();
+            this.state.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
+        });
+        this.colorPaletteColorNames = [];
+        // Colorpalette Props.
+        this.resetTabCount = 0;
+        const options = {
+            getCustomColors: () => {
+                let result = [];
+                if (this.env.getCustomColors) {
+                    result = this.env.getCustomColors();
+                }
+                return result;
+            },
+            onCustomColorPicked: this._onCustomColorPicked.bind(this),
+            onColorPicked: this._onColorPicked.bind(this),
+            onColorHover: this._onColorHovered.bind(this),
+            onColorLeave: this._onColorLeft.bind(this),
+            onInputEnter: this._onEnterKey.bind(this),
+        };
+        if (this.props.excluded) {
+            options.excluded = this.props.excluded.replace(/ /g, '').split(',');
+        }
+        if (this.props.opacity) {
+            options.opacity = parseFloat(this.props.opacity);
+        }
+        if (this.props.withCombinations) {
+            options.withCombinations = !!this.props.withCombinations;
+        }
+        if (this.props.withGradients) {
+            options.withGradients = !!this.props.withGradients;
+        }
+        if (this.props.noTransparency) {
+            options.noTransparency = !!this.props.noTransparency;
+            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
+        }
+        if (this.props.selectedTab) {
+            options.selectedTab = this.props.selectedTab;
+        }
+        options.getTemplate = this.getColorPickerTemplateService;
+        this.options = options;
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
+     * @override
+     */
+    isContainer() {
+        return false;
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return !!this._ccValue
+            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
+    }
+    getPreviewAttributes() {
         const classes = weUtils.computeColorClasses(this.colorPaletteColorNames);
-        this.colorPreviewEl.classList.remove(...classes);
-        this.colorPreviewEl.style.removeProperty('background-color');
-        this.colorPreviewEl.style.removeProperty('background-image');
-        const prefix = this.options.dataAttributes.colorPrefix || 'bg';
-        if (this._ccValue) {
-            this.colorPreviewEl.style.backgroundColor = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')})`;
-            this.colorPreviewEl.style.backgroundImage = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')}-gradient)`;
+        // this.colorPreviewEl.classList.remove(...classes);
+        // this.colorPreviewEl.style.removeProperty('background-color');
+        // this.colorPreviewEl.style.removeProperty('background-image');
+        const prefix = this.props.colorPrefix || 'bg';
+        const style = {
+            "background-color": "",
+            "background-image": "",
+        };
+        const attributes = {
+            class: "",
+            style: "",
+        };
+        if (this.state.ccValue) {
+            style["background-color"] = `var(--we-cp-o-cc${this.state.ccValue}-${prefix.replace(/-/, '')})`;
+            style["background-image"] = `var(--we-cp-o-cc${this.state.ccValue}-${prefix.replace(/-/, '')}-gradient)`;
         }
-        if (this._value) {
-            this.colorPreviewEl.style.backgroundImage = 'none';
-            if (isCSSColor(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = this._value;
-            } else if (weUtils.isColorGradient(this._value)) {
-                this.colorPreviewEl.style.backgroundImage = this._value;
-            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
+        if (this.state.value) {
+            style["background-image"] = "none";
+            if (isCSSColor(this.state.value)) {
+                style["background-color"] = this.state.value;
+            } else if (weUtils.isColorGradient(this.state.value)) {
+                style["background-image"] = this.state.value;
+            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this.state.value)) {
+                style["background-color"] = `var(--we-cp-${this.state.value}`;
             } else {
                 // Checking if the className actually exists seems overkill but
                 // it is actually needed to prevent a crash. As an example, if a
@@ -1778,90 +2126,26 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
                 // space inside). In that case, we simply do not show any color.
                 // We could choose to handle this split-value case specifically
                 // but it was decided that this is enough for the moment.
-                const className = `bg-${this._value}`;
+                const className = `bg-${this.state.value}`;
                 if (classes.includes(className)) {
-                    this.colorPreviewEl.classList.add(className);
+                    attributes.class = className;
                 }
             }
         }
+        attributes.style = Object.entries(style).map(([k, v]) => `${k}: ${v}`).join("; ");
         // If the palette was already opened (e.g. modifying a gradient), the new DOM state must be
         // reflected in the palette, but the tab selection must not be impacted.
-        this.colorPaletteWrapper?.update({
-            selectedCC: this._ccValue,
-            selectedColor: this._value,
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _renderColorPalette: async function () {
-        this.resetTabCount = 0;
-        const options = {
-            resetTabCount: this.resetTabCount,
-            selectedCC: this._ccValue,
-            selectedColor: this._value,
-            getCustomColors: () => {
-                let result = [];
-                this.trigger_up('get_custom_colors', {
-                    onSuccess: (colors) => result = colors,
-                });
-                return result;
-            },
-            onCustomColorPicked: this._onCustomColorPicked.bind(this),
-            onColorPicked: this._onColorPicked.bind(this),
-            onColorHover: this._onColorHovered.bind(this),
-            onColorLeave: this._onColorLeft.bind(this),
-            onInputEnter: this._onEnterKey.bind(this),
-        };
-        if (this.options.dataAttributes.excluded) {
-            options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
-        }
-        if (this.options.dataAttributes.opacity) {
-            options.opacity = parseFloat(this.options.dataAttributes.opacity);
-        }
-        if (this.options.dataAttributes.withCombinations) {
-            options.withCombinations = !!this.options.dataAttributes.withCombinations;
-        }
-        if (this.options.dataAttributes.withGradients) {
-            options.withGradients = !!this.options.dataAttributes.withGradients;
-        }
-        if (this.options.dataAttributes.noTransparency) {
-            options.noTransparency = !!this.options.dataAttributes.noTransparency;
-            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
-        }
-        if (this.options.dataAttributes.selectedTab) {
-            options.selectedTab = this.options.dataAttributes.selectedTab;
-        }
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            options.document = this.$target[0].ownerDocument;
-            options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
-        }
-        this.colorPaletteWrapper?.destroy();
-        const sidebarDocument = this.colorPaletteEl.ownerDocument;
-        if (!(this.colorPaletteEl instanceof sidebarDocument.defaultView.HTMLElement)) {
-            // When inside an iframe, the element for mounting a component must
-            // be an instance of the iframe's HTMLElement, or else target
-            // validation for attachComponent fails.
-            const newEl = sidebarDocument.importNode(this.colorPaletteEl, true);
-            this.colorPaletteEl.before(newEl);
-            this.colorPaletteEl.remove();
-            this.colorPaletteEl = newEl;
-        }
-        this.colorPaletteWrapper = await attachComponent(this, this.colorPaletteEl, ColorPalette, options);
-    },
+        // TODO: @owl-options this used to be part of setValue, now it isn't.
+        // this.options.selectedCC = this.state.ccValue;
+        // this.options.selectedColor = this.state.value;
+        return attributes;
+    }
     /**
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
-    },
+        return ev.__isColorpickerClick || super._shouldIgnoreClick(...arguments);
+    }
     /**
      * Browses the colorpicker XML template to return all possible values of
      * [data-color].
@@ -1881,7 +2165,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             }
         });
         return colorNames;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1894,75 +2178,67 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      * @param {Object} params
      */
-    _onCustomColorPicked: function (params) {
-        this._customColorValue = params.color;
-    },
+    _onCustomColorPicked(params) {
+        this.state.customColorValue = params.color;
+    }
     /**
      * Called when a color button is clicked -> confirms the preview.
      *
      * @private
      * @param {Object} params
      */
-    _onColorPicked: function (params) {
-        this._previewCC = false;
-        this._previewColor = false;
-        this._customColorValue = false;
+    _onColorPicked(params) {
+        this.state.previewCC = false;
+        this.state.previewColor = false;
+        this.state.customColorValue = false;
 
-        this._ccValue = params.ccValue;
-        this._value = params.color;
+        this.state.ccValue = params.ccValue;
+        this.state.value = params.color;
 
         this._onUserValueChange();
-    },
+    }
     /**
      * Called when a color button is entered -> previews the background color.
      *
      * @private
      * @param {Object} params
      */
-    _onColorHovered: function (params) {
-        this._previewCC = params.ccValue;
-        this._previewColor = params.color;
+    _onColorHovered(params) {
+        this.state.previewCC = params.ccValue;
+        this.state.previewColor = params.color;
         this._onUserValuePreview();
-    },
+    }
     /**
      * Called when a color button is left -> cancels the preview.
      *
      * @private
      */
-    _onColorLeft: function () {
-        this._previewCC = false;
-        this._previewColor = false;
+    _onColorLeft() {
+        this.state.previewCC = false;
+        this.state.previewColor = false;
         this._onUserValueReset();
-    },
+    }
     /**
      * @private
      */
-    _onEnterKey: function () {
-        this.close();
-    },
-});
-
-const MediapickerUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-button',
-    events: {
-        'click': '_onEditMedia',
-    },
-
+    _onEnterKey() {
+        this.state.close();
+    }
     /**
      * @override
      */
-    async start() {
-        await this._super(...arguments);
-        if (this.options.dataAttributes.buttonStyle) {
-            const iconEl = document.createElement('i');
-            iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
-            $(this.containerEl).prepend(iconEl);
-        } else {
-            this.el.classList.add('o_we_no_toggle', 'o_we_bg_success');
-            this.containerEl.textContent = _t("Replace");
+    _onClick() {
+        super._onClick(...arguments);
+        if (this.state.opened) {
+            this.options.resetTabCount++;
         }
-    },
+    }
+}
 
+registry.category("snippet_widgets").add("WeColorpicker", WeColorpicker);
+
+const MediapickerUserValueWidget = UserValueWidget.extend({});
+class MediapickerUserValue extends UserValue {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1978,9 +2254,10 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      *   default: false
      */
     _openDialog(el, {images = false, videos = false, save}) {
-        el.src = this._value;
-        const $editable = this.$target.closest('.o_editable');
-        this.call("dialog", "add", MediaDialog, {
+        el.src = this.value || "";
+        // @TODO: @owl-options: review this line. Put it in the env maybe?
+        const editableEl = this.option.$target[0].closest('.o_editable');
+        this.env.services.dialog.add(MediaDialog, {
             noImages: !images,
             noVideos: !videos,
             noIcons: true,
@@ -1988,12 +2265,28 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             isForBgVideo: true,
             vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
                 '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
-            'res_model': $editable.data('oe-model'),
-            'res_id': $editable.data('oe-id'),
+            'res_model': editableEl ? editableEl.dataset.oeModel : null,
+            'res_id': editableEl ? editableEl.dataset.oeId : null,
             save,
             media: el,
         });
-    },
+    }
+    /**
+     * Opens a dialog to select a new image and sets the new src
+     */
+    _editMedia() {
+        // Need a dummy element for the media dialog to modify.
+        const tagName = this._data.mediaType === "images" ? "img" : "iframe";
+        const dummyEl = document.createElement(tagName);
+        this._openDialog(dummyEl, {
+            [this._data.mediaType]: true,
+            save: (media) => {
+                this.value = this._data.mediaType === "images"
+                    ? media.getAttribute('src')
+                    : media.querySelector(tagName).src;
+                this.notifyValueChange(false);
+        }});
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2003,9 +2296,40 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      * @override
      */
     async setValue() {
-        await this._super(...arguments);
-        this.el.classList.toggle('active', this.isActive());
-    },
+        await super.setValue(...arguments);
+        this._state.active = this.isActive();
+    }
+    /**
+     * @override
+     */
+    enable() {
+        this._editMedia();
+    }
+}
+
+class WeMediapicker extends UserValueComponent {
+    static template = "web_editor.WeMediapicker";
+    static StateModel = MediapickerUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        mediaType: { type: String }, // One of "images", "videos"
+        buttonStyle: { type: Boolean, optional: true },
+    };
+    static components = { WeTitle };
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "o_we_no_toggle o_we_bg_success": !this.props.buttonStyle,
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2016,215 +2340,60 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      *
      * @private
      * @param {Event} ev
-     */
-    _onEditMedia: function (ev) {},
-});
+    */
+    _onEditMedia(ev) {
+        this.state._editMedia();
+    }
+}
+registry.category("snippet_widgets").add("WeMediapicker", WeMediapicker);
 
-const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({});
+const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({});
 
+const DatetimePickerUserValueWidget = InputUserValueWidget.extend({});
+class WeDatetime extends WeInput {
+    static template = "web_editor.WeDatetime";
+    static props = { ...WeInput.props,
+        pickerType: { type: String, optional: true },
+    };
+    static defaultProps = {
+        pickerType: "datetime",
+    };
     /**
      * @override
      */
-    _onEditMedia(ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement('img');
-        this._openDialog(dummyEl, {
-            images: true,
-            save: (media) => {
-                // Accessing the value directly through dummyEl.src converts the url to absolute,
-                // using getAttribute allows us to keep the url as it was inserted in the DOM
-                // which can be useful to compare it to values stored in db.
-                this._value = media.getAttribute('src');
-                this._onUserValueChange();
-            }
+    setup() {
+        super.setup();
+        this.datetimePicker = useService("datetime_picker");
+        onMounted(() => {
+            this.picker = this.datetimePicker.create({
+                target: this.inputRef.el,
+                onChange: this._onDateTimePickerChange.bind(this),
+                pickerProps: {
+                    type: this.props.pickerType,
+                    minDate: DateTime.fromObject({ year: 1000 }),
+                    maxDate: DateTime.now().plus({ year: 200 }),
+                    value: this.state.value,
+                    rounding: 0,
+                },
+            });
+            this.picker.enable();
         });
-    },
-});
 
-const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onEditMedia(ev) {
-        // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement('iframe');
-        this._openDialog(dummyEl, {
-            videos: true,
-            save: (media) => {
-                this._value = media.querySelector('iframe').src;
-                this._onUserValueChange();
-        }});
-    },
-});
-
-const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
-        'blur input': '_onInputBlur',
-        'input input': '_onDateInputInput',
-    },
-    pickerType: 'datetime',
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super(...arguments);
-        this._value = DateTime.now().toUnixInteger().toString();
-    },
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-
-        this.el.classList.add('o_we_large');
-        this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-start');
-
-        this.picker = this.call("datetime_picker", "create", {
-            target: this.inputEl,
-            onChange: this._onDateTimePickerChange.bind(this),
-            pickerProps: {
-                type: this.pickerType,
-                minDate: DateTime.fromObject({ year: 1000 }),
-                maxDate: DateTime.now().plus({ year: 200 }),
-                value: DateTime.fromSeconds(parseInt(this._value)),
-                rounding: 0,
+        useEffect(
+            (value) => {
+                let dateTime = null;
+                if (value) {
+                    dateTime = DateTime.fromSeconds(parseInt(value));
+                    if (!dateTime.isValid) {
+                        dateTime = DateTime.now();
+                    }
+                }
+                this.picker.state.value = dateTime;
             },
-        });
-        this.picker.enable();
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    getMethodsParams: function () {
-        return Object.assign(this._super(...arguments), {
-            format: this.defaultFormat,
-        });
-    },
-    /**
-     * @override
-     */
-    isPreviewed: function () {
-        return this._super(...arguments) || this.picker.isOpen;
-    },
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-        let dateTime = null;
-        if (this._value) {
-            dateTime = DateTime.fromSeconds(parseInt(this._value))
-            if (!dateTime.isValid) {
-                dateTime = DateTime.now();
-            }
-        }
-        this.picker.state.value = dateTime;
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onDateTimePickerChange: function (newDateTime) {
-        if (!newDateTime || !newDateTime.isValid) {
-            this._value = '';
-        } else {
-            this._value = newDateTime.toUnixInteger().toString();
-        }
-        this._onUserValuePreview();
-    },
-    /**
-     * Handles the clear button of the datepicker.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onDateInputInput(ev) {
-        if (!this.inputEl.value) {
-            this._value = '';
-            this._onUserValuePreview(ev);
-        }
-    },
-});
-
-const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({
-    pickerType: 'date',
-});
-
-const ListUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-list',
-    events: {
-        'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
-        'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
-        'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
-        'click we-select.o_we_user_value_widget.o_we_add_list_item': '_onAddItemSelectClick',
-        'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
-        'input table input': '_onListItemBlurInput',
-        'blur table input': '_onListItemBlurInput',
-        'mousedown': '_onWeListMousedown',
-    },
-
-    /**
-     * @override
-     */
-    willStart() {
-        if (this.options.createWidget) {
-            this.createWidget = this.options.createWidget;
-            this.createWidget.setParent(this);
-            this.registerSubWidget(this.createWidget);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start() {
-        this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
-        if (this.el.dataset.availableRecords) {
-            this.records = JSON.parse(this.el.dataset.availableRecords);
-        } else {
-            this.isCustom = !this.el.dataset.notEditable;
-        }
-        if (this.el.dataset.defaults || this.el.dataset.hasDefault) {
-            this.hasDefault = this.el.dataset.hasDefault || 'unique';
-            this.selected = this.el.dataset.defaults ? JSON.parse(this.el.dataset.defaults) : [];
-        }
-        this.listTable = document.createElement('table');
-        const tableWrapper = document.createElement('div');
-        tableWrapper.classList.add('o_we_table_wrapper');
-        tableWrapper.appendChild(this.listTable);
-        this.containerEl.appendChild(tableWrapper);
-        this.el.classList.add('o_we_fw');
-        this._makeListItemsSortable();
-        if (this.createWidget) {
-            return this.createWidget.appendTo(this.containerEl);
-        }
-    },
-
-    /**
-     * @override
-     */
-    destroy() {
-        this.bindedSortable?.cleanup();
-        this._super(...arguments);
-    },
+            () => [this.state.value]
+        );
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2235,74 +2404,171 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     getMethodsParams() {
         return Object.assign(this._super(...arguments), {
-            records: this.records,
+            format: this.defaultFormat,
         });
-    },
+    }
+    /**
+     * @override
+     */
+    isPreviewed() {
+        return this._super(...arguments) || this.picker.isOpen;
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onDateTimePickerChange(newDateTime) {
+        if (!newDateTime || !newDateTime.isValid) {
+            this.state.value = "";
+        } else {
+            this.state.value = newDateTime.toUnixInteger().toString();
+        }
+        this._onUserValuePreview();
+    }
+    /**
+     * Handles the clear button of the datepicker.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onDateInputInput(ev) {
+        if (!this.inputRef.el.value) {
+            this.state.value = "";
+            this._onUserValuePreview(ev);
+        }
+    }
+}
+registry.category("snippet_widgets").add("WeDatetime", WeDatetime);
+
+const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({});
+
+const ListUserValueWidget = UserValueWidget.extend({});
+class ListUserValue extends UserValue {
+    constructor() {
+        super(...arguments);
+        this._state.listRecords = [];
+        this._state.selected = [];
+
+        if (this._data.availableRecords) {
+            this.existingRecords = JSON.parse(this._data.availableRecords);
+        } else {
+            this.isCustom = this._data.notEditable !== "true";
+        }
+        if (this._data.defaults || this._data.hasDefault) {
+            this.hasDefault = this._data.hasDefault || 'unique';
+            this._state.selected = this._data.defaults ? JSON.parse(this._data.defaults) : [];
+        }
+    }
+    /**
+     * @type {Object[]}
+     */
+    get listRecords() {
+        return this._state.listRecords;
+    }
+    set listRecords(value) {
+        this._state.listRecords = value;
+    }
+    /**
+     * @type {integer|string[]}
+     */
+    get selected() {
+        return this._state.selected;
+    }
+    set selected(value) {
+        this._state.selected = value;
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMethodsParams() {
+        return Object.assign(super.getMethodsParams(...arguments), {
+            records: this.existingRecords,
+        });
+    }
     /**
      * @override
      */
     setValue() {
-        this._super(...arguments);
-        const currentValues = this._value ? JSON.parse(this._value) : [];
-        this.listTable.innerHTML = '';
-        if (this.addItemButton) {
-            this.addItemButton.remove();
-        }
+        super.setValue(...arguments);
+        const currentValues = this._state.value ? JSON.parse(this._state.value) : [];
 
-        if (this.createWidget) {
+        if (this.createUserValue) {
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
             // Note: it's important to simplify the domain at its maximum as the
             // rpc using it are cached. Similar domain components should be
             // written the same way for the cache to work.
-            this.createWidget.options.domainComponents.selected = selectedIds.length ? ['id', 'not in', selectedIds] : null;
-            this.createWidget.setValue('');
-            this.createWidget.inputEl.value = '';
-            $(this.createWidget.inputEl).trigger('input');
-        } else {
-            if (this.isCustom) {
-                this.addItemButton = document.createElement('we-button');
-                this.addItemButton.textContent = this.addItemTitle;
-                this.addItemButton.classList.add('o_we_list_add_optional');
-            } else {
-                // TODO use a real select widget ?
-                this.addItemButton = document.createElement('we-select');
-                this.addItemButton.classList.add('o_we_user_value_widget', 'o_we_add_list_item');
-                const divEl = document.createElement('div');
-                this.addItemButton.appendChild(divEl);
-                const togglerEl = document.createElement('we-toggler');
-                togglerEl.textContent = this.addItemTitle;
-                divEl.appendChild(togglerEl);
-                this.selectMenuEl = document.createElement('we-selection-items');
-                divEl.appendChild(this.selectMenuEl);
-            }
-            this.containerEl.appendChild(this.addItemButton);
+            this.createUserValue.options.domainComponents.selected = selectedIds.length ? ['id', 'not in', selectedIds] : null;
+            this.createUserValue.setValue("");
+            // Reset the search with an empty needle and the proper selected ids
+            this.createUserValue._search("");
+            // Reset the input value after creating a new record. The actual
+            // input element's value is reset `_onClick` of the WeMany2one.
+            this.createUserValue.createInputValue = "";
         }
-        currentValues.forEach(value => {
-            if (typeof value === 'object') {
-                const recordData = value;
-                const { id, display_name } = recordData;
-                delete recordData.id;
-                delete recordData.display_name;
-                this._addItemToTable(id, display_name, recordData);
+        this.listRecords = [];
+        this.selected = [];
+        currentValues.forEach((value) => {
+            if (typeof value === "object") {
+                const record = this._updateListRecords(value);
+                if (value.selected) {
+                    this.selected.push(record.id);
+                }
             } else {
-                this._addItemToTable(value, value);
+                this.listRecords.push({ id: value, display_name: value });
+                this.selected.push(value);
             }
         });
-        if (!this.createWidget && !this.isCustom) {
-            this._reloadSelectDropdown(currentValues);
-        }
-        this._makeListItemsSortable();
-    },
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        if (this.createWidget && this.createWidget.getMethodsNames().includes(methodName)) {
-            return this.createWidget.getValue(methodName);
+        if (this.createUserValue?.getMethodsNames().includes(methodName)) {
+            return this.createUserValue.getValue(methodName);
         }
-        return this._value;
-    },
+        return this._state.value;
+    }
+    /**
+     * @override
+     */
+    registerUserValue(userValue) {
+        if (userValue instanceof Many2oneUserValue && userValue._data.createUserValue) {
+            this.createUserValue = userValue;
+        }
+        super.registerUserValue(userValue);
+    }
+    /**
+     * @override
+     */
+    userValueNotification(params) {
+        const { widget, previewMode, prepare } = params;
+        if (widget && widget === this.createUserValue) {
+            if (widget.options.createMethod && widget.getValue(widget.options.createMethod)) {
+                return super.userValueNotification(...arguments);
+            }
+            if (previewMode) {
+                return;
+            }
+            prepare();
+            const recordData = JSON.parse(widget.getMethodsParams('addRecord').recordData);
+            if (!this.listRecords.find((record) => record.id === recordData.id)) {
+                this._updateListRecords(recordData);
+                this._notifyCurrentState();
+            }
+        }
+        return super.userValueNotification(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2310,160 +2576,170 @@ const ListUserValueWidget = UserValueWidget.extend({
 
     /**
      * @private
-     * @param {string || integer} id
-     * @param {string} [value]
-     * @param {Object} [recordData] key, values that will be added to the
-     *     element's dataset
+     * @param {Object} newRecord
      */
-    _addItemToTable(id, value = this.el.dataset.defaultValue || _t("Item"), recordData) {
-        const trEl = document.createElement('tr');
-        if (!this.el.dataset.unsortable) {
-            const draggableEl = document.createElement('we-button');
-            draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
-            draggableEl.dataset.noPreview = 'true';
-            const draggableTdEl = document.createElement('td');
-            draggableTdEl.appendChild(draggableEl);
-            trEl.appendChild(draggableTdEl);
+    _updateListRecords(newRecord) {
+        let id = newRecord.id;
+        // Create an ID if there is none, and avoid duplicate IDs.
+        if (
+            !newRecord.id
+            || this.listRecords.find((record) => record.id === this._toComparableId(newRecord.id))
+        ) {
+            id = uniqueId("list_record_");
         }
-        let recordDataSelected = false;
-        const inputEl = document.createElement('input');
-        inputEl.type = this.el.dataset.inputType || 'text';
-        if (value) {
-            inputEl.value = value;
+        const record = Object.assign({}, newRecord, {
+            id: this._toComparableId(id),
+            name: this._trimmed(newRecord.name),
+            display_name: this._trimmed(newRecord.display_name) || this._data.defaultValue,
+        });
+        this.listRecords.push(record);
+        return record;
+    }
+    /**
+     * @param {string} str
+     * @returns {string}
+     */
+    _trimmed(str) {
+        if (typeof str !== "string") {
+            return str;
         }
-        if (id) {
-            inputEl.name = id;
+        return str.trim().replace(/\s+/g, " ");
+    }
+    /**
+     * Cast ids to the right type (number or string) to compare them between
+     * record / state / DOM.
+     *
+     * @private
+     * @param {string|number} id
+     * @returns {string|number}
+     */
+    _toComparableId(id) {
+        if (typeof id === "string") {
+            id = this._trimmed(id);
+            return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
         }
-        if (recordData) {
-            recordDataSelected = recordData.selected;
-            if (recordData.placeholder) {
-                inputEl.placeholder = recordData.placeholder;
-            }
-            for (const key of Object.keys(recordData)) {
-                inputEl.dataset[key] = recordData[key];
-            }
-        }
-        inputEl.disabled = !this.isCustom;
-        const inputTdEl = document.createElement('td');
-        inputTdEl.classList.add('o_we_list_record_name');
-        inputTdEl.appendChild(inputEl);
-        trEl.appendChild(inputTdEl);
-        if (this.hasDefault) {
-            const checkboxEl = document.createElement('we-button');
-            checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
-            if (this.selected.includes(id) || recordDataSelected) {
-                checkboxEl.classList.add('active');
-            }
-            if (!recordData || !recordData.notToggleable) {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('we-checkbox');
-                div.appendChild(checkbox);
-                checkboxEl.appendChild(div);
-                checkboxEl.appendChild(checkbox);
-                const checkboxTdEl = document.createElement('td');
-                checkboxTdEl.appendChild(checkboxEl);
-                trEl.appendChild(checkboxTdEl);
-            }
-        }
-        if (!recordData || !recordData.undeletable) {
-            const buttonTdEl = document.createElement('td');
-            const buttonEl = document.createElement('we-button');
-            buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
-            buttonEl.dataset.removeOption = id;
-            buttonTdEl.appendChild(buttonEl);
-            trEl.appendChild(buttonTdEl);
-        }
-        this.listTable.appendChild(trEl);
-    },
+        return id;
+    }
+}
+
+class WeList extends UserValueComponent {
+    static template = "web_editor.WeList";
+    static StateModel = ListUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        availableRecords: { type: String, optional: true },
+        hasDefault: { type: String, optional: true },
+        inputType: { type: String, optional: true },
+        defaults: { type: String, optional: true },
+        defaultValue: { type: String, optional: true },
+        addItemTitle: { type: String, optional: true },
+        unsortable: { type: String, optional: true },
+        notEditable: { type: String, optional: true },
+        allowEmpty: { type: String, optional: true },
+        newElementsNotToggleable: { type: String, optional: true },
+        renderOnInputBlur: { type: String, optional: true },
+        doubleInput: { type: String, optional: true },
+    };
+    static defaultProps = {
+        inputType: "text",
+        defaultValue: _t("Item"),
+        addItemTitle: _t("Add"),
+    };
+    static isContainer = true;
+    static components = { WeTitle };
+
+    setup() {
+        super.setup();
+        this.tableRef = useRef("table");
+
+        this._makeListItemsSortable();
+        this.state._notifyCurrentState = this._notifyCurrentState.bind(this);
+
+        useEffect(
+            () => {
+                if (this.scrollToLast) {
+                    // Scroll to the new list element.
+                    this.tableRef.el.querySelector('tr:last-child')
+                        .scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                    this.scrollToLast = false;
+                }
+            },
+            () => [this.state.listRecords.length]
+        );
+    }
+
+    //------------------------------------------------------------------
+    // PRIVATE
+    //------------------------------------------------------------------
+
     /**
      * @override
      */
     _getFocusableElement() {
-        return this.listTable.querySelector('input');
-    },
+        return this.tableRef.el.querySelector("input");
+    }
     /**
      * @private
      */
     _makeListItemsSortable() {
-        if (this.el.dataset.unsortable) {
+        if (this.props.unsortable === "true") {
             return;
         }
-        this.bindedSortable = this.call(
-            "sortable",
-            "create",
-            {
-                ref: { el: this.listTable },
-                elements: "tr",
-                followingElementClasses: ["opacity-50"],
-                handle: ".o_we_drag_handle",
-                onDrop: () => this._notifyCurrentState(),
-                applyChangeOnDrop: true,
+        useSortable({
+            ref: this.tableRef,
+            elements: "tr",
+            followingElementClasses: ["opacity-50"],
+            handle: ".o_we_drag_handle",
+            onDrop: ({ element, next }) => {
+                const id = this.state._toComparableId(element.querySelector("input").name);
+                const recordIdx = this.state.listRecords.findIndex((rec) => rec.id === id);
+                const record = this.state.listRecords.splice(recordIdx, 1)[0];
+                const insertIdx = next
+                    ? this.state.listRecords.findIndex((rec) =>
+                        rec.id === this.state._toComparableId(next.querySelector("input").name)
+                    ) : this.state.listRecords.length;
+                this.state.listRecords.splice(insertIdx, 0, record);
+                this._notifyCurrentState();
             },
-        ).enable();
-    },
+            applyChangeOnDrop: true,
+        });
+    }
     /**
      * @private
      * @param {Boolean} [preview]
      */
     _notifyCurrentState(preview = false) {
-        const isIdModeName = this.el.dataset.idMode === "name" || !this.isCustom;
-        const trimmed = (str) => str.trim().replace(/\s+/g, " ");
-        const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = trimmed(isIdModeName ? el.name : el.value);
-            return Object.assign({
-                id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
-                name: trimmed(el.value),
-                display_name: trimmed(el.value),
-            }, el.dataset);
-        });
-        if (this.hasDefault) {
-            const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
-            this.selected = checkboxes.map(el => {
-                const input = el.parentElement.previousSibling.firstChild;
-                const id = trimmed(isIdModeName ? input.name : input.value);
-                return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
-            });
-            values.forEach(v => {
+        if (this.state.hasDefault) {
+            this.state.listRecords.forEach((v) => {
+                const id = this.state._toComparableId(v.id);
                 // Elements not toggleable are considered as always selected.
-                // We have to check that it is equal to the string 'true'
-                // because this information comes from the dataset.
-                v.selected = this.selected.includes(v.id) || v.notToggleable === 'true';
+                v.selected = this.state.selected.includes(id) || v.notToggleable;
             });
         }
-        this._value = JSON.stringify(values);
+
+        this.state.value = JSON.stringify(this.state.listRecords);
         if (preview) {
             this._onUserValuePreview();
         } else {
             this._onUserValueChange();
         }
-        if (!this.createWidget && !this.isCustom) {
-            this._reloadSelectDropdown(values);
-        }
-    },
+    }
     /**
+     * Maps listRecord properties to data-attributes.
+     *
      * @private
-     * @param {Array} currentValues
+     * @param {Object} listRecord
+     * @returns {Object}
      */
-    _reloadSelectDropdown(currentValues) {
-        this.selectMenuEl.innerHTML = '';
-        this.records.forEach(el => {
-            if (!currentValues.find(v => v.id === el.id)) {
-                const option = document.createElement('we-button');
-                option.classList.add('o_we_list_add_existing');
-                option.dataset.addOption = el.id;
-                option.dataset.noPreview = 'true';
-                const divEl = document.createElement('div');
-                divEl.textContent = el.display_name;
-                option.appendChild(divEl);
-                this.selectMenuEl.appendChild(option);
+    getInputDataAtts(listRecord) {
+        return Object.entries(listRecord).reduce((obj, entry) => {
+            if (["display_name", "id", "placeholder"].includes(entry[0])) {
+                return obj;
             }
-        });
-        if (!this.selectMenuEl.children.length) {
-            const title = document.createElement('we-title');
-            title.textContent = _t("No more records");
-            this.selectMenuEl.appendChild(title);
-        }
-    },
+            obj[`data-${camelToKebab(entry[0])}`] = entry[1];
+            return obj;
+        }, {});
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2472,58 +2748,78 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
+    _onClick(ev) {
+        if (!this.state.opened) {
+            this.state.open();
+        } else {
+            this.state.close();
+        }
+    }
+    /**
+     * @private
+     */
     _onAddCustomItemClick() {
         const recordData = {};
-        if (this.el.dataset.newElementsNotToggleable) {
+        if (this.props.newElementsNotToggleable === "true") {
             recordData.notToggleable = true;
         }
-        this._addItemToTable(undefined, this.el.dataset.defaultValue, recordData);
+        if (this.props.newRecordId) {
+            recordData.id = this.props.newRecordId;
+        }
+        this.state._updateListRecords(recordData);
         this._notifyCurrentState();
-        // Scroll to the new list element.
-        this.el.querySelector('tr:last-child')
-            .scrollIntoView({behavior: 'smooth', block: 'nearest'});
-    },
+        this.scrollToLast = true;
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onAddExistingItemClick(ev) {
-        const value = ev.currentTarget.dataset.addOption;
-        this._addItemToTable(value, ev.currentTarget.textContent);
+        const record = this.state.existingRecords.find((record) => {
+            return record.id === this.state._toComparableId(ev.currentTarget.dataset.addOption);
+        });
+        this.state._updateListRecords(record);
         this._notifyCurrentState();
-    },
+        this.scrollToLast = true;
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onAddItemSelectClick(ev) {
-        ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAddItemCheckboxClick: function (ev) {
-        const isActive = ev.currentTarget.classList.contains('active');
-        if (this.hasDefault === 'unique') {
-            this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active').forEach(el => el.classList.remove('active'));
+    _onAddItemCheckboxClick(ev) {
+        const recordId = this.state._toComparableId(ev.currentTarget.dataset.select);
+        const isActive = this.state.selected.includes(recordId);
+        if (this.props.hasDefault === 'unique') {
+            this.state.selected = [];
         }
-        ev.currentTarget.classList.toggle('active', !isActive);
+        if (isActive) {
+            this.state.selected.splice(this.state.selected.indexOf(recordId), 1);
+        } else {
+            this.state.selected.push(recordId);
+        }
         this._notifyCurrentState();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onListItemBlurInput(ev) {
         const preview = ev.type === 'input';
-        if (preview || !this.el.contains(ev.relatedTarget) || this.el.dataset.renderOnInputBlur) {
+        if (preview || !this.tableRef.el.contains(ev.relatedTarget) || this.props.renderOnInputBlur === "true") {
             // We call the function below only if the element that recovers the
             // focus after this blur is not an element of the we-list or if it
             // is an input event (preview). This allows to use the TAB key to go
             // from one input to another in the list. This behavior can be
             // cancelled if the widget has reloadOnInputBlur = "true" in its
-            // dataset.
+            // props.
+            const recordToUpdate = this.state.listRecords.find((rec) =>
+                rec.id === this.state._toComparableId(ev.currentTarget.name)
+            );
+            if (ev.currentTarget.closest(".o_we_list_record_name")) {
+                recordToUpdate.display_name = ev.currentTarget.value;
+            } else {
+                recordToUpdate.secondInputText = ev.currentTarget.value;
+            }
             const timeSinceMousedown = ev.timeStamp - this.mousedownTime;
             if (timeSinceMousedown < 500) {
                 // Without this "setTimeOut", "click" events are not triggered when
@@ -2536,81 +2832,61 @@ const ListUserValueWidget = UserValueWidget.extend({
                 this._notifyCurrentState(preview);
             }
         }
-    },
+    }
     /**
      * @private
      */
     _onWeListMousedown(ev) {
         this.mousedownTime = ev.timeStamp;
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onRemoveItemClick(ev) {
-        const minElements = this.el.dataset.allowEmpty ? 0 : 1;
-        if (ev.target.closest('table').querySelectorAll('tr').length > minElements) {
-            ev.target.closest('tr').remove();
+        const minElements = this.props.allowEmpty ? 0 : 1;
+        if (this.state.listRecords.length > minElements) {
+            const removeId = this.state._toComparableId(ev.currentTarget.dataset.removeOption);
+            const recordIdx = this.state.listRecords.findIndex((record) => record.id === removeId);
+            if (recordIdx >= 0) {
+                this.state.listRecords.splice(recordIdx, 1);
+            }
+            if (this.state.hasDefault) {
+                const selectedIdx = this.state.selected.indexOf(removeId);
+                if (selectedIdx >= 0) {
+                    this.state.selected.splice(selectedIdx, 1);
+                }
+            }
             this._notifyCurrentState();
         }
-    },
+    }
+}
+registry.category("snippet_widgets").add("WeList", WeList);
+
+class RangeUserValue extends UnitUserValue {
+    constructor() {
+        super(...arguments);
+        this._state.max = undefined;
+        this._state.displayValue = false;
+    }
     /**
-     * @override
+     * @type {number}
      */
-    _onUserValueNotification(ev) {
-        const { widget, previewMode, prepare } = ev.data;
-        if (widget && widget === this.createWidget) {
-            if (widget.options.createMethod && widget.getValue(widget.options.createMethod)) {
-                return this._super(ev);
-            }
-            ev.stopPropagation();
-            if (previewMode) {
-                return;
-            }
-            prepare();
-            const recordData = JSON.parse(widget.getMethodsParams('addRecord').recordData);
-            const { id, display_name } = recordData;
-            delete recordData.id;
-            delete recordData.display_name;
-            this._addItemToTable(id, display_name, recordData);
-            this._notifyCurrentState();
-        }
-        return this._super(ev);
-    },
-});
-
-const RangeUserValueWidget = UnitUserValueWidget.extend({
-    tagName: 'we-range',
-    events: {
-        'change input': '_onInputChange',
-        'input input': '_onInputInput',
-    },
-
+    get max() {
+        return this._state.max;
+    }
+    set max(value) {
+        this._state.max = value;
+    }
     /**
-     * @override
+     * @type {string|number}
      */
-    async start() {
-        await this._super(...arguments);
-        this.input = document.createElement('input');
-        this.input.type = "range";
-        let min = this.el.dataset.min && parseFloat(this.el.dataset.min) || 0;
-        let max = this.el.dataset.max && parseFloat(this.el.dataset.max) || 100;
-        const step = this.el.dataset.step && parseFloat(this.el.dataset.step) || 1;
-        this.displayValue = this.el.dataset.displayRangeValue;
-        if (min > max) {
-            [min, max] = [max, min];
-            this.input.classList.add('o_we_inverted_range');
-        }
-        this._setInputAttributes(min, max, step);
-        this.containerEl.appendChild(this.input);
-        if (this.displayValue) {
-            this.outputEl = document.createElement('output');
-            this.outputEl.classList.add('ms-2');
-            this.containerEl.appendChild(this.outputEl);
-        }
-
-        this._onInputChange = debounce(this._onInputChange, 100);
-    },
+    get displayValue() {
+        return this._state.displayValue;
+    }
+    set displayValue(value) {
+        this._state.displayValue = value;
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2620,35 +2896,85 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
      * @override
      */
     loadMethodsData(validMethodNames) {
-        this._super(...arguments);
+        super.loadMethodsData(...arguments);
         for (const methodName of this._methodsNames) {
             const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
             if (possibleValues.length > 1) {
-                this._setInputAttributes(0, possibleValues.length - 1, 1);
+                this.max = possibleValues.length - 1;
                 break;
             }
         }
-    },
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
-        await this._super(...arguments);
+        await super.setValue(value, methodName);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-        const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
-        this.input.value = inputValue;
-        if (this.displayValue) {
+        const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this.value;
+        if (this._data.displayRangeValue) {
             this._computeDisplayValue(inputValue);
         }
-    },
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        const value = this._super(...arguments);
+        const value = super.getValue(...arguments);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
         return possibleValues.length > 1 ? possibleValues[+value] : value;
-    },
+    }
+    /**
+     * @private
+     * @param {string} inputValue 
+     */
+    _computeDisplayValue(inputValue) {
+        if (this.toRatio) {
+            const inputValueAsNumber = Number(inputValue);
+            const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
+            this.displayValue = `${ratio.toFixed(2)}x`;
+        } else if (this._data.displayRangeValueUnit) {
+            this.displayValue = inputValue + this._data.displayRangeValueUnit;
+        } else {
+            this.displayValue = inputValue;
+        }
+    }
+}
+
+const RangeUserValueWidget = UnitUserValueWidget.extend({});
+class WeRange extends WeInput {
+    static template = "web_editor.WeRange";
+    static StateModel = RangeUserValue;
+    static props = {
+        ...WeInput.props,
+        min: { type: String, optional: true },
+        max: { type: String, optional: true },
+        step: { type: String, optional: true },
+        toRatio: { type: String, optional: true },
+        displayRangeValue: { type: String, optional: true },
+    };
+    static defaultProps = {
+        min: "0",
+        max: "100",
+        step: "1",
+        toRatio: "",
+        displayRangeValue: "",
+        unit: "",
+    };
+    setup() {
+        this._onInputChange = debounce(this._onInputChange, 100);
+        super.setup();
+        this.state.toRatio = this.props.toRatio;
+        if (Number(this.props.min) > Number(this.props.max)) {
+            this.state.max = this.props.min;
+            this.min = this.props.max;
+            this.inverted = true;
+        } else {
+            this.min = this.props.min;
+            this.state.max ||= this.props.max;
+            this.inverted = false;
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2658,72 +2984,33 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
      * @private
      */
     _onInputChange(ev) {
-        this._value = ev.target.value;
+        this.state.value = ev.target.value;
         this._onUserValueChange(ev);
-    },
-    /**
-     * @private
-     * @param {string} inputValue 
-     */
-    _computeDisplayValue(inputValue) {
-        if (this.el.dataset.toRatio) {
-            const inputValueAsNumber = Number(inputValue);
-            const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
-            this.outputEl.value = `${ratio.toFixed(2)}x`;
-        } else if (this.el.dataset.displayRangeValueUnit) {
-            this.outputEl.value = inputValue + this.el.dataset.displayRangeValueUnit;
-        } else {
-            this.outputEl.value = inputValue;
-        }
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onInputInput(ev) {
-        this._value = ev.target.value;
-        if (this.displayValue) {
-            this._computeDisplayValue(this._value);
+        this.state.value = ev.target.value;
+        if (this.props.displayRangeValue) {
+            this.state._computeDisplayValue(this.state.value);
         }
         this._onUserValuePreview(ev);
-    },
-    /**
-     * @private
-     */
-    _setInputAttributes(min, max, step) {
-        this.input.setAttribute('min', min);
-        this.input.setAttribute('max', max);
-        this.input.setAttribute('step', step);
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeRange", WeRange);
 
-const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_select_pager',
-    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
-        'click .o_pager_nav_btn': '_onClickScrollPage',
-        'click .o_pager_nav_angle': '_onClickCloseMenu',
-    }),
+class WeSelectPager extends WeSelect {
+
+    static template = "web_editor.WeSelectPager";
     /**
      * @override
      */
-    async start() {
-        const _super = this._super.bind(this);
-
-        await _super(...arguments);
-        this.menuEl.classList.add('o_we_has_pager', 'position-fixed', 'top-0', 'end-0', 'z-1', 'rounded-0');
-        this.menuTogglerEl.classList.add('o_we_toggler_pager');
-
-        this.pagerContainerEl = this.el.querySelector('.o_pager_container');
-        this.__onScroll = throttleForAnimation(this._onScroll.bind(this));
-        this.pagerContainerEl.addEventListener('scroll', this.__onScroll);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        this.pagerContainerEl.removeEventListener('scroll', this.__onScroll);
-    },
+    setup() {
+        super.setup();
+        this.__onScroll = useThrottleForAnimation(this._onScroll);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2737,13 +3024,13 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      */
     _adjustDropdownPosition() {
         return;
-    },
+    }
     /**
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return !!ev.target.closest('.o_pager_nav') || this._super(...arguments);
-    },
+        return !!ev.target.closest('.o_pager_nav') || super._shouldIgnoreClick(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2755,181 +3042,144 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     _onClickScrollPage(ev) {
-        const navButtonEl = ev.currentTarget;
+        const navButtonEl = ev.target.closest("[data-scroll-to]");
+        if (!navButtonEl) {
+            return;
+        }
         const attribute = navButtonEl.dataset.scrollTo;
-        const destinationOffset = this.menuEl.querySelector('.' + attribute).offsetTop;
+        const destinationOffset = this.menuRef.el.querySelector('.' + attribute).offsetTop;
 
-        const pagerNavEl = this.menuEl.querySelector('.o_pager_nav');
-        this.pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
-    },
+        const pagerNavEl = this.menuRef.el.querySelector(".o_pager_nav");
+        const pagerContainerEl = this.menuRef.el.querySelector(".o_pager_container");
+        pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
+    }
     /**
      * @private
      */
     _onClickCloseMenu(ev) {
-        this.close();
-    },
+        this.state.close();
+    }
     /**
      * @private
      */
     _onScroll(ev) {
-        const pagerContainerHeight = this.pagerContainerEl.getBoundingClientRect().height;
+        const pagerContainerEl = this.menuRef.el.querySelector(".o_pager_container");
+        const pagerContainerHeight = pagerContainerEl.getBoundingClientRect().height;
         // The threshold for when a menu element is defined as 'active' is half
         // of the container's height. This has a drawback as if a section
         // is too small it might never get `active` if it's the last section.
-        const threshold = this.pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
-        const anchorElements = this.menuEl.querySelectorAll('[data-scroll-to]');
+        const threshold = pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
+        const anchorElements = this.menuRef.el.querySelectorAll('[data-scroll-to]');
         for (const anchorEl of anchorElements) {
             const destination = anchorEl.getAttribute('data-scroll-to');
-            const sectionEl = this.menuEl.querySelector(`.${destination}`);
+            const sectionEl = this.menuRef.el.querySelector(`.${destination}`);
             const nextSectionEl = sectionEl.nextElementSibling;
             anchorEl.classList.toggle('active', sectionEl.offsetTop < threshold &&
             (!nextSectionEl || nextSectionEl.offsetTop > threshold));
         }
     }
-});
+}
+registry.category("snippet_widgets").add("WeSelectPager", WeSelectPager);
 
-const Many2oneUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
-    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
-        'input .o_we_m2o_search input': '_onSearchInput',
-        'keydown .o_we_m2o_search input': '_onSearchKeydown',
-        'click .o_we_m2o_search_more': '_onSearchMoreClick',
-    }),
-    // Data-attributes that will be read into `this.options` on init and not
+const Many2oneUserValueWidget = SelectUserValueWidget.extend({});
+
+export class Many2oneUserValue extends SelectUserValue {
+    // Props that will be read into `this.options` on setup and not
     // transfered to inner buttons.
     // `domain` is the static part of the domain used in searches, not
     // depending on already selected ids and other filters.
-    configAttributes: [
+    static configProps = [
         "model", "fields", "limit", "domain",
         "callWith", "createMethod", "filterInModel", "filterInField", "nullText",
         "defaultMessage",
-    ],
+    ];
 
-    /**
-     * @override
-     */
-    init(parent, title, options, $target) {
-        this.afterSearch = [];
+    constructor() {
+        super(...arguments);
+        this.orm = serviceCached(this.env, "orm");
+        this._state.records = [];
+        this._state.hasMore = false;
+
         this.displayNameCache = {};
-        const {dataAttributes} = options;
-        Object.assign(options, {
+        this.options = Object.assign({}, this._data, {
             limit: '5',
             fields: '[]',
             domain: '[]',
             callWith: 'id',
+            dataAttributes: {},
         });
-        this.configAttributes.forEach(attr => {
-            if (dataAttributes.hasOwnProperty(attr)) {
-                options[attr] = dataAttributes[attr];
-                delete dataAttributes[attr];
-            }
-        });
-        options.limit = parseInt(options.limit);
-        options.fields = JSON.parse(options.fields);
-        if (!options.fields.includes('display_name')) {
-            options.fields.push('display_name');
-        }
-        options.domain = JSON.parse(options.domain);
-        options.domainComponents = {};
-        options.nullText = $target[0].dataset.nullText ||
-            JSON.parse($target[0].dataset.oeContactOptions || '{}')['null_text'];
+        this._updateOptions(this._data);
+        this.options.domainComponents = {};
 
-        this.orm = serviceCached(this.bindService("orm"));
-
-        return this._super(...arguments);
-    },
+        this.constructorPatch();
+    }
+    constructorPatch() {}
     /**
-     * @override
+     * @type {Object[]}
      */
-    async start() {
-        await this._super(...arguments);
+    get records() {
+        return this._state.records;
+    }
+    set records(value) {
+        this._state.records = value;
+    }
+    /**
+     * @type {boolean}
+     */
+    get hasMore() {
+        return this._state.hasMore;
+    }
 
-        this.inputEl = document.createElement('input');
-        this.inputEl.setAttribute('placeholder', _t("Search for records..."));
-        const searchEl = document.createElement('div');
-        searchEl.classList.add('o_we_m2o_search');
-        searchEl.appendChild(this.inputEl);
-        this.menuEl.appendChild(searchEl);
-
-        this.searchMore = document.createElement('div');
-        this.searchMore.classList.add('o_we_m2o_search_more');
-        this.searchMore.textContent = _t("Search more...");
-        this.searchMore.title = _t("Search to show more records");
-
-        if (this.options.createMethod) {
-            this.createInput = new InputUserValueWidget(this, undefined, {
-                classes: ['o_we_large'],
-                dataAttributes: { noPreview: 'true' },
-            }, this.$target);
-            this.createButton = new ButtonUserValueWidget(this, undefined, {
-                classes: ['flex-grow-0'],
-                dataAttributes: {
-                    noPreview: 'true',
-                    [this.options.createMethod]: '', // Value through getValue.
-                },
-                childNodes: [document.createTextNode(_t("Create"))],
-            }, this.$target);
-            // Override isActive so it doesn't show up in toggler
-            this.createButton.isActive = () => false;
-
-            await Promise.all([
-                this.createInput.appendTo(document.createDocumentFragment()),
-                this.createButton.appendTo(document.createDocumentFragment()),
-            ]);
-            this.registerSubWidget(this.createInput);
-            this.registerSubWidget(this.createButton);
-            this.createWidget = _buildRowElement('', {
-                classes: ['o_we_full_row', 'o_we_m2o_create', 'p-1'],
-                childNodes: [this.createInput.el, this.createButton.el],
-            });
-        }
-
-        return this._search('');
-    },
     /**
      * @override
      */
     async setValue(value, methodName) {
-        await this._super(...arguments);
-        if (this.menuTogglerEl.textContent === this.PLACEHOLDER_TEXT.toString()) {
+        await super.setValue(...arguments);
+        if (this._state.toggler.textContent === this.constructor.PLACEHOLDER_TEXT.toString()) {
             // The currently selected value is not present in the search, need to read
             // its display name.
             if (value !== '') {
                 // FIXME: value may not be an id if callWith is specified!
-                this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
+                this._state.toggler.textContent = await this._getDisplayName(parseInt(value));
             } else {
-                this.menuTogglerEl.textContent = this.options.defaultMessage || _t("Choose a record...");
+                this._state.toggler.textContent = this.options.defaultMessage || _t("Choose a record...");
             }
         }
-    },
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        if (methodName === this.options.createMethod && this.createInput) {
-            return this.createInput._value;
+        if (methodName === this.options.createMethod && this.createInputValue) {
+            return this.createInputValue;
         }
-        return this._super(...arguments);
-    },
-    /**
-     * Prevents double widget instanciation for we-buttons that have been
-     * created manually by _search (container widgets will have their innner
-     * html searched for userValueWidgets to instanciate during option startup)
-     *
-     * @override
-     */
-    isContainer() {
-        return false;
-    },
+        return super.getValue(...arguments);
+    }
     /**
      * @override
      */
-    open() {
-        if (this.createInput) {
-            this.createInput.setValue('');
+    registerUserValue(userValue) {
+        // Get a reference to the createButton and make sure it is always
+        // inactive.
+        if (this._data.createMethod) {
+            if (
+                !this.createButton
+                && userValue instanceof ButtonUserValue
+                && userValue._data[this._data.createMethod] !== undefined
+            ) {
+                this.createButton = userValue;
+                this.createButton.isActive = () => false;
+            }
         }
-        return this._super(...arguments);
-    },
+        super.registerUserValue(userValue);
+    }
+    /**
+     * @override
+     */
+    close() {
+        super.close(...arguments);
+        this._search("");
+    }
     /**
      * Updates the domain with defined inclusive filter to make sure that only
      * records that are linked to specific records are retrieved.
@@ -2956,12 +3206,37 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         if (allowedIds.size) {
             this.options.domainComponents.filterInModel = ['id', 'in', [...allowedIds]];
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    _updateOptions(props) {
+        for (const prop in props) {
+            // TODO: @owl-options: remove undefined props in UserValue directly?
+            if (props[prop] === undefined) {
+                continue;
+            }
+            if (this.constructor.configProps.includes(prop)) {
+                this.options[prop] = props[prop];
+            } else {
+                this.options.dataAttributes[prop] = props[prop];
+            }
+        }
+        this.options.limit = parseInt(this.options.limit);
+        if (typeof this.options.fields === "string") {
+            this.options.fields = JSON.parse(this.options.fields);
+        }
+        if (!this.options.fields.includes('display_name')) {
+            this.options.fields.push('display_name');
+        }
+        if (typeof this.options.domain === "string") {
+            this.options.domain = JSON.parse(this.options.domain);
+        }
+        this.options.nullText = this.$target[0].dataset.nullText ||
+            JSON.parse(this.$target[0].dataset.oeContactOptions || '{}')['null_text'];
+    }
     /**
      * Searches the database for corresponding records and updates the dropdown
      *
@@ -2981,18 +3256,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             recTuples.map(([id, _name]) => id),
             this.options.fields
         );
-        // Remove select options.
-        this._userValueWidgets.filter(widget => {
-            return widget instanceof ButtonUserValueWidget &&
-                !widget.isDestroyed() &&
-                widget.el.parentElement.matches('we-selection-items');
-        }).forEach(button => {
-            if (button.isPreviewed()) {
-                button.notifyValueChange('reset');
-            }
-            button.destroy();
-        });
-        this._userValueWidgets = this._userValueWidgets.filter(widget => !widget.isDestroyed());
+
         if (this.options.nullText &&
                 this.options.nullText.toLowerCase().includes(needle.toLowerCase())) {
             // Beware of RPC cache.
@@ -3004,55 +3268,13 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             this.displayNameCache[record.id] = record.display_name;
         });
 
-        await Promise.all(records.slice(0, this.options.limit).map(async record => {
-            // Copy over the data-attributes from the main element, and default the value
-            // to the callWith field of the record so that if it's a method, it will
-            // be called with that value
-            const buttonDataAttributes = Object.assign({}, this.options.dataAttributes);
-            Object.keys(buttonDataAttributes).forEach(key => {
-                buttonDataAttributes[key] = buttonDataAttributes[key] || record[this.options.callWith];
-            });
-            // REMARK: this syntax is very similar to React.createComponent, maybe we could
-            // write a transformer like there is for JSX?
-            const buttonWidget = new ButtonUserValueWidget(this, undefined, {
-                dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
-                childNodes: [document.createTextNode(record.display_name)],
-            }, this.$target);
-            this.registerSubWidget(buttonWidget);
-            await buttonWidget.appendTo(this.menuEl);
-            if (this._methodsNames) {
-                buttonWidget.loadMethodsData(this._methodsNames);
-            }
-        }));
-        // Load methodsData for new buttons if possible. It will not be possible
-        // when the widget is first created (as this._methodsNames will be undefined)
-        // but the snippetOption lifecycle will load the methods data explicitely
-        // just after creating the widget
-        if (this._methodsNames) {
-            this._methodsNames.forEach(methodName => {
-                this.setValue(this._value, methodName);
-            });
-        }
+        this.records = records.slice(0, this.options.limit);
+        this._state.hasMore = records.length > this.options.limit;
 
-        const hasMore = records.length > this.options.limit;
-        if (hasMore) {
-            this.menuEl.appendChild(this.searchMore);
-            this.searchMore.classList.remove('d-none');
-        } else {
-            this.searchMore.classList.add('d-none');
-        }
-
-        if (this.createWidget) {
-            this.menuEl.appendChild(this.createWidget);
-        }
-
-        this.waitingForSearch = false;
-        this.afterSearch.forEach(cb => cb());
-        this.afterSearch = [];
         if (this.options.nullText && !this.getValue()) {
             this.setValue(0);
         }
-    },
+    }
     /**
      * Returns the domain to use for the search.
      *
@@ -3060,7 +3282,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     async _getSearchDomain() {
         return this.options.domain;
-    },
+    }
     /**
      * Returns the display name for a given record.
      *
@@ -3071,7 +3293,136 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             this.displayNameCache[recordId] = (await this.orm.read(this.options.model, [recordId], ['display_name']))[0].display_name;
         }
         return this.displayNameCache[recordId];
-    },
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    userValueNotification(params) {
+        const { widget } = params;
+        if (widget && widget === this.createButton && !params.previewMode) {
+            // When the create button is clicked, make sure the state value
+            // matches the value of the input element because it might have been
+            // removed after closing the dropdown.
+            if (this.displayedValue && !this.createInputValue) {
+                this.createInputValue = this.displayedValue;
+                delete this.displayedValue;
+            }
+            // Prevent creating a record if the input is empty.
+            if (!this.createInputValue) {
+                return;
+            }
+        }
+        if (widget !== this.createButton && this.createInputValue) {
+            // Remove the createInputValue if something else than the
+            // createButton was clicked or hovered, so that it doesn't create a
+            // record. We reset it after the value handling.
+            this.displayedValue = this.createInputValue;
+            this.createInputValue = "";
+        }
+        super.userValueNotification(...arguments);
+        // Reset the createInputValue after value handling, only with
+        // previewMode === true or 'reset'.
+        if (this.displayedValue && params.previewMode) {
+            this.createInputValue = this.displayedValue;
+            delete this.displayedValue;
+        }
+    }
+}
+
+class WeMany2one extends WeSelect {
+    static template = "web_editor.WeMany2one";
+    static StateModel = Many2oneUserValue;
+    static components = { ...WeSelect.components, WeRow, WeInput, WeButton };
+    static configProps = {
+        model: { type: String },
+        domain: { type: String, optional: true },
+        fields: { type: String, optional: true },
+        limit: { type: String, optional: true },
+        callWith: { type: String, optional: true },
+        createMethod: { type: String, optional: true },
+        filterInModel: { type: String, optional: true },
+        filterInField: { type: String, optional: true },
+        nullText: { type: String, optional: true },
+        defaultMessage: { type: String, optional: true },
+    };
+    static props = {
+        ...WeSelect.props,
+        ...this.configProps,
+    };
+
+    setup() {
+        super.setup();
+        const keepLast = new KeepLast();
+        this.afterSearch = [];
+
+        onWillStart(async () => {
+            await this.state._search("");
+        });
+
+        onWillUpdateProps(async (nextProps) => {
+            this.state._updateOptions(nextProps);
+            // Make sure the update is reflected in the prefetched records.
+            await this.state._search("");
+        });
+
+        useEffect(
+            () => {
+                // Load methodsData for WeButtons generated from
+                // this.state.records.
+                if (this.state._methodsNames) {
+                    Object.values(this.state._subValues).forEach(widget => {
+                        if (widget instanceof ButtonUserValue && widget._data.recordData) {
+                            widget.loadMethodsData([...this.state._methodsNames]);
+                        }
+                    });
+                    if (this.state.value !== undefined) {
+                        this.state._methodsNames.forEach(async (methodName) =>
+                            await keepLast.add(this.state.setValue(this.state.value, methodName))
+                        );
+                    }
+                }
+                this.waitingForSearch = false;
+                this.afterSearch.forEach(cb => cb());
+                this.afterSearch = [];
+            },
+            () => [this.state.records]
+        );
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "position-static": this.props.createUserValue,
+        };
+    }
+    /**
+     * Copy over the props from the main element, and default the value
+     * to the callWith field of the record so that if it's a method, it will
+     * be called with that value
+     *
+     * @param {Object} record
+     * @returns {Object}
+     */
+    getButtonProps(record) {
+        const buttonProps = Object.assign({}, this.state.options.dataAttributes);
+        Object.keys(buttonProps).forEach((key) => {
+            buttonProps[key] = buttonProps[key] || record[this.state.options.callWith].toString();
+        });
+        buttonProps.recordData = JSON.stringify(record);
+        return buttonProps;
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -3087,8 +3438,16 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             ev.stopPropagation();
             return;
         }
-        return this._super(...arguments);
-    },
+        if (ev.target.closest("we-button")) {
+            this.menuRef.el.querySelector(".o_we_m2o_search input").value = "";
+        }
+        // Reset the input value when creating a new record. The state value is
+        // reset on `setValue` of the ListUserValue.
+        if (ev.target.closest(".o_we_m2o_create") && ev.target.closest("we-button")) {
+            this.menuRef.el.querySelector(".o_we_m2o_create input").value = "";
+        }
+        return super._onClick(...arguments);
+    }
     /**
      * Handles changes to the search bar.
      *
@@ -3100,10 +3459,10 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         // is one that is ongoing (ie currently waiting for the debounce or RPC)
         clearTimeout(this.searchIntent);
         this.waitingForSearch = true;
-        this.searchIntent = setTimeout(() => {
-            this._search(ev.target.value);
+        this.searchIntent = setTimeout(async () => {
+            await this.state._search(ev.target.value);
         }, 500);
-    },
+    }
     /**
      * Selects the first option when pressing enter in the search input.
      *
@@ -3114,7 +3473,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             return;
         }
         const action = () => {
-            const firstButton = this.menuEl.querySelector(':scope > we-button');
+            const firstButton = this.menuRef.el.querySelector(':scope > we-button');
             if (firstButton) {
                 firstButton.click();
             }
@@ -3124,162 +3483,107 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         } else {
             action();
         }
-    },
+    }
     /**
      * Focuses the search input when clicking on the "Search more..." button.
      *
      * @private
      */
     _onSearchMoreClick(ev) {
-        this.inputEl.focus();
-    },
+        this.menuRef.el.querySelector(".o_we_m2o_search input").focus();
+    }
     /**
-     * @override
+     * @private
      */
-    _onUserValueNotification(ev) {
-        const { widget } = ev.data;
-        if (widget && widget === this.createInput) {
-            ev.stopPropagation();
-            return;
-        }
-        if (widget && widget === this.createButton) {
-            // When the create button is clicked, make sure the text
-            // value is restored from the actual input element because
-            // it might have been removed when hovering existing tags.
-            // TODO review this, there is probably better to do
-            this.createInput._value = this.createInput.el.querySelector('input').value;
-            if (!this.createInput._value) {
-                ev.stopPropagation();
-            }
-            return;
-        }
-        if (widget !== this.createButton && this.createInput) {
-            this.createInput._value = '';
-        }
-        return this._super(ev);
-    },
-});
+    _onCreateInputInput(ev) {
+        this.state.createInputValue = ev.currentTarget.value;
+    }
+}
+registry.category("snippet_widgets").add("WeMany2one", WeMany2one);
 
-const Many2manyUserValueWidget = UserValueWidget.extend({
-    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'],
 
-    /**
-     * @override
-     */
-    init(parent, title, options, $target) {
-        const { dataAttributes } = options;
-        this.configAttributes.forEach(attr => {
-            if (dataAttributes.hasOwnProperty(attr)) {
-                options[attr] = dataAttributes[attr];
-                delete dataAttributes[attr];
+const Many2manyUserValueWidget = UserValueWidget.extend({});
+
+class Many2manyUserValue extends UserValue {
+    static configProps = ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'];
+
+    constructor() {
+        super(...arguments);
+        this._state.m2oProps = {};
+
+        for (const prop in this._data) {
+            if (
+                !this.constructor.configProps.includes(prop)
+                && Many2oneUserValue.configProps.includes(prop)
+            ) {
+                this.m2oProps[prop] = this._data[prop];
             }
-        });
-        this.filterIn = options.filterIn !== undefined;
+        }
+
+        this.filterIn = this._data.filterIn !== undefined;
         if (this.filterIn) {
             // Transfer filter-in values to child m2o.
-            dataAttributes.filterInModel = options.model;
-            dataAttributes.filterInField = options.m2oField;
+            this.m2oProps.filterInModel = this._data.model;
+            this.m2oProps.filterInField = this._data.m2oField;
         }
-        this.orm = this.bindService("orm");
-        this.fields = this.bindService("field");
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async willStart() {
-        await this._super(...arguments);
-        // If the widget does not have a real m2m field in the database
-        // We do not need to fetch anything from the DB
-        if (this.options.fakem2m) {
-            this.m2oModel = this.options.model;
-            return;
-        }
-        const { model, recordId, m2oField } = this.options;
-        const [record] = await this.orm.read(model, [parseInt(recordId)], [m2oField]);
-        const selectedRecordIds = record[m2oField];
-        // TODO: handle no record
-        const modelData = await this.fields.loadFields(model, { fieldNames: [m2oField] });
-        // TODO: simultaneously fly both RPCs
-        this.m2oModel = modelData[m2oField].relation;
-        this.m2oName = modelData[m2oField].field_description; // Use as string attr?
+    }
+    get m2oProps() {
+        return this._state.m2oProps;
+    }
+    set m2oProps(value) {
+        this._state.m2oProps = value;
+    }
 
-        const selectedRecords = await this.orm.read(this.m2oModel, selectedRecordIds, ['display_name']);
-        // TODO: reconcile the fact that this widget sets its own initial value
-        // instead of it coming through setValue(_computeWidgetState)
-        this._value = JSON.stringify(selectedRecords);
-    },
-    /**
-     * @override
-     */
-    async start() {
-        this.el.classList.add('o_we_m2m');
-        const m2oDataAttributes = Object.entries(this.options.dataAttributes).filter(([attrName]) => {
-            return Many2oneUserValueWidget.prototype.configAttributes.includes(attrName);
-        });
-        m2oDataAttributes.push(
-            ['model', this.m2oModel],
-            ['addRecord', ''],
-            ['createMethod', this.options.createMethod],
-        );
-        // Don't register this one as a subWidget because it will be a subWidget
-        // of the listWidget
-        this.createWidget = new Many2oneUserValueWidget(null, undefined, {
-            dataAttributes: Object.fromEntries(m2oDataAttributes),
-        }, this.$target);
-
-        this.listWidget = registerUserValueWidget('we-list', this, undefined, {
-            dataAttributes: { unsortable: 'true', notEditable: 'true', allowEmpty: 'true' },
-            createWidget: this.createWidget,
-        }, this.$target);
-        await this.listWidget.appendTo(this.containerEl);
-
-        // Make this.el the select's offsetParent so the we-selection-items has
-        // the correct width
-        this.listWidget.el.querySelector('we-select').style.position = 'static';
-        this.el.style.position = 'relative';
-    },
     /**
      * Only allow to fetch/select records which are linked (via `m2oField`) to the
      * specified records.
      *
      * @param {integer[]} linkedRecordsIds
      * @returns {Promise}
-     * @see Many2oneUserValueWidget.setFilterInDomainIds
+     * @see Many2oneUserValue.setFilterInDomainIds
      */
     async setFilterInDomainIds(linkedRecordsIds) {
         if (this.filterIn) {
-            return this.listWidget.createWidget.setFilterInDomainIds(linkedRecordsIds);
+            return this.listUserValue.createUserValue.setFilterInDomainIds(linkedRecordsIds);
         }
-    },
+    }
     /**
      * @override
      */
     loadMethodsData(validMethodNames, ...rest) {
         // TODO: check that addRecord is still needed.
-        this._super(['addRecord', ...validMethodNames], ...rest);
-        this._methodsNames = this._methodsNames.filter(name => name !== 'addRecord');
-    },
+        super.loadMethodsData(['addRecord', ...validMethodNames], ...rest);
+    }
     /**
      * @override
      */
     setValue(value, methodName) {
-        if (methodName === this.options.createMethod) {
-            return this.createWidget.setValue(value, methodName);
+        if (methodName === this._data.createMethod) {
+            return this.listUserValue?.createUserValue.setValue(value, methodName);
         }
         if (!value) {
             // TODO: why do we need this.
-            value = this._value;
+            value = this.value;
         }
-        this._super(value, methodName);
-        this.listWidget.setValue(this._value);
-    },
+        super.setValue(value, methodName);
+        this.listUserValue?.setValue(this.value);
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        return this.listWidget.getValue(methodName);
-    },
+        return this.listUserValue.getValue(methodName);
+    }
+    /**
+     * @override
+     */
+    registerUserValue(userValue) {
+        if (!this.listUserValue && userValue instanceof ListUserValue) {
+            this.listUserValue = userValue;
+        }
+        super.registerUserValue(userValue);
+        this._methodsNames.delete("addRecord");
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3288,85 +3592,198 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    _onUserValueNotification(ev) {
-        const { widget, previewMode } = ev.data;
+    userValueNotification(params) {
+        const { widget, previewMode } = params;
         if (!widget) {
-            return this._super(ev);
+            return super.userValueNotification(...arguments);
         }
-        if (widget === this.listWidget) {
-            ev.stopPropagation();
-            this._value = widget._value;
+        if (widget === this.listUserValue) {
+            this.value = widget.value;
             this.notifyValueChange(previewMode);
         }
-    },
-});
+    }
+}
 
-const userValueWidgetsRegistry = {
+class WeMany2many extends UserValueComponent {
+    static isContainer = true;
+    static template = "web_editor.WeMany2many";
+    static StateModel = Many2manyUserValue;
+    static components = { WeList, WeMany2one, WeTitle };
+    static configProps = {
+        // "model" and "createMethod" are already part of the WeMany2one props.
+        fakem2m: { type: String, optional: true },
+        filterIn: { type: String, optional: true },
+        m2oField: { type: String, optional: true },
+        recordId: { type: String, optional: true },
+    };
+    static props = {
+        ...UserValueComponent.props,
+        ...WeMany2one.configProps,
+        ...this.configProps,
+    };
+
+    setup() {
+        super.setup(...arguments);
+        this.orm = useService("orm");
+        this.field = useService("field");
+
+        onWillStart(async () => {
+            let m2oModel;
+            // If the widget does not have a real m2m field in the database
+            // We do not need to fetch anything from the DB
+            if (this.props.fakem2m) {
+                m2oModel = this.props.model;
+            } else {
+                const { model, recordId, m2oField } = this.props;
+                const [record] = await this.orm.read(model, [parseInt(recordId)], [m2oField]);
+                const selectedRecordIds = record[m2oField];
+                // TODO: handle no record
+                const modelData = await this.field.loadFields(model, { fieldNames: [m2oField] });
+                m2oModel = modelData[m2oField].relation;
+
+                const selectedRecords = await this.orm.read(m2oModel, selectedRecordIds, ['display_name']);
+                this.state.value = JSON.stringify(selectedRecords);
+            }
+
+            Object.assign(this.state.m2oProps, {
+                model: m2oModel,
+                addRecord: '',
+                createMethod: this.props.createMethod,
+            });
+        });
+    }
+}
+registry.category("snippet_widgets").add("WeMany2many", WeMany2many);
+
+// TODO: @owl-options properly remove this registry
+export const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
     'we-select': SelectUserValueWidget,
     'we-button-group': ButtonGroupUserValueWidget,
     'we-input': InputUserValueWidget,
     'we-multi': MultiUserValueWidget,
-    'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
     'we-datepicker': DatePickerUserValueWidget,
     'we-list': ListUserValueWidget,
     'we-imagepicker': ImagepickerUserValueWidget,
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
-    'we-select-pager': SelectPagerUserValueWidget,
     'we-many2one': Many2oneUserValueWidget,
     'we-many2many': Many2manyUserValueWidget,
 };
 
 /**
+ * This component is responsible for rendering the widgets. Once it's mounted
+ * it means all "UserValue" states have been created, and the templates are
+ * accessible. So it notifies the SnippetsMenu that the initial "updateUI" is
+ * ready to be done.
+ * @TODO @owl-options: If an option renders a widget **after** the initial
+ * onMounted, the SnippetsMenu will not have a computed state for its widgets.
+ * It should therefore ask for a new updateUI. This should probably be improved.
+ * To discuss.
+ */
+export class SnippetOptionComponent extends Component {
+
+    static template = "web_editor.SnippetOptionComponent";
+
+    static props = {
+        snippetOption: Object,
+        onOptionMounted: Function,
+    };
+
+    setup() {
+        this.$overlay = this.props.snippetOption.instance.$overlay;
+        this.renderContext = useState(this.props.snippetOption.instance.renderContext);
+        // When a component is mounted or unmounted, the state of other
+        // components might be impacted. (i.e. dependencies behaving 
+        // differently when a component is in the DOM or when it isn't)
+        this.updateUI = false;
+
+        useSubEnv({
+            snippetOption: this.props.snippetOption.instance,
+            userValueNotification: this.props.snippetOption.instance.onUserValueUpdate,
+            registerUserValue: (userValue) => {
+                this.updateUI = true;
+                return this.props.snippetOption.instance.registerUserValue(userValue);
+            },
+            unregisterUserValue: (userValue) => {
+                this.updateUI = true;
+                return this.props.snippetOption.instance.unregisterUserValue(userValue);
+            },
+            renderContext: this.renderContext,
+            registerLayoutElement: (layoutElement) => {
+                return this.props.snippetOption.instance.registerLayoutElement(layoutElement);
+            },
+            $target: this.props.snippetOption.instance.$target,
+        });
+
+        onMounted(() => {
+            this.props.onOptionMounted();
+            this.updateUI = false;
+        });
+
+        onPatched(() => {
+            if (this.updateUI) {
+                this.updateUI = false;
+                this.props.onOptionMounted();
+            }
+        });
+    }
+}
+/**
  * Handles a set of options for one snippet. The registry returned by this
  * module contains the names of the specialized SnippetOptionWidget which can be
  * referenced thanks to the data-js key in the web_editor options template.
  */
-const SnippetOptionWidget = Widget.extend({
-    tagName: 'we-customizeblock-option',
-    events: {
+export class SnippetOption {
+    static events = {
         'click .o_we_collapse_toggler': '_onCollapseTogglerClick',
-    },
-    custom_events: {
+    };
+    static custom_events = {
         'user_value_update': '_onUserValueUpdate',
         'user_value_widget_critical': '_onUserValueWidgetCritical',
-    },
+    };
     /**
      * Indicates if the option should be displayed in the button group at the
      * top of the options panel, next to the clone/remove button.
      *
      * @type {boolean}
      */
-    isTopOption: false,
+    static isTopOption = false;
     /**
      * Indicates if the option should be the first one displayed in the button
      * group at the top of the options panel, next to the clone/remove button.
      *
      * @type {boolean}
      */
-    isTopFirstOption: false,
+    static isTopFirstOption = false;
     /**
      * Forces the target to not be possible to remove. It will also hide the
      * clone button.
      *
      * @type {boolean}
      */
-    forceNoDeleteButton: false,
+    static forceNoDeleteButton = false;
     /**
      * The option needs the handles overlay to be displayed on the snippet.
      *
      * @type {boolean}
      */
-    displayOverlayOptions: false,
+    static displayOverlayOptions = false;
     /**
      * Forces the target to be duplicable.
      *
      * @type {boolean}
      */
-    forceDuplicateButton: false,
+    static forceDuplicateButton = false;
+    /**
+     * Default component to use for rendering.
+     * Can be overridden when registering a snippet option in snippet_options registry.
+     *
+     * @type {Class<SnippetOptionComponent>}
+     */
+    static defaultRenderingComponent = SnippetOptionComponent;
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -3376,42 +3793,59 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $uiElements, $target, $overlay, data, options) {
-        this._super.apply(this, arguments);
+    constructor({ editor, $target, $overlay, data, options, callbacks }) {
 
-        this.$originalUIElements = $uiElements;
-
+        this.env = options.env;
         this.$target = $target;
         this.$overlay = $overlay;
         this.data = data;
         this.options = options;
+        // TODO: @owl-options better name or do it differently? It's to replace
+        // what was previously done by trigger_up's.
+        this.callbacks = callbacks;
 
         this.className = 'snippet-option-' + this.data.optionName;
 
         this.ownerDocument = this.$target[0].ownerDocument;
 
+        /** @type {UserValue[]} */
+        this._userValues = {};
+        this._layoutElements = [];
         this._userValueWidgets = [];
         this._actionQueues = new Map();
 
-        this.dialog = this.bindService("dialog");
-    },
+        this.dialog = this.env.services.dialog;
+        // Passed as props to components so bind it here, that way
+        // it will always have the same reference.
+        this.onUserValueUpdate = this._onUserValueUpdate.bind(this);
+
+        this.constructorPatch();
+    }
+    /**
+     * To be patched.
+     */
+    constructorPatch() {}
+    /**
+     * Called after the constructor. Allows the option to do async stuff
+     * before the widgets are mounted.
+     */
+    async willStart() {
+        const context = await this._getRenderContext();
+        this.renderContext = reactive({...context});
+        if (this.data.groups) {
+            for (const group of this.data.groups) {
+                this.isRestrictedGroup ||= !(await user.hasGroup(group));
+            }
+        }
+    }
+    destroy() {}
     /**
      * @override
      */
-    willStart: async function () {
-        await this._super(...arguments);
-        return this._renderOriginalXML().then(uiFragment => {
-            this.uiFragment = uiFragment;
-        });
-    },
-    /**
-     * @override
-     */
-    renderElement: function () {
-        this._super(...arguments);
+    renderElement() {
         this.el.appendChild(this.uiFragment);
         this.uiFragment = null;
-    },
+    }
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * (the first time, this follows the call to the @see start method).
@@ -3419,7 +3853,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    async onFocus() {},
+    async onFocus() {}
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * for the first time, when it is a new snippet dropped from the d&d snippet
@@ -3432,7 +3866,7 @@ const SnippetOptionWidget = Widget.extend({
      *        the main element has been built).
      * @returns {Promise|undefined}
      */
-    async onBuilt(options) {},
+    async onBuilt(options) {}
     /**
      * Called when the parent edition overlay is removed from the associated
      * snippet (another snippet enters edition for example).
@@ -3440,7 +3874,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    async onBlur() {},
+    async onBlur() {}
     /**
      * Called when the associated snippet is the result of the cloning of
      * another snippet (so `this.$target` is a cloned element).
@@ -3452,20 +3886,20 @@ const SnippetOptionWidget = Widget.extend({
      *        was cloned (so not a clone of a child of this main element that
      *        was cloned)
      */
-    onClone: function (options) {},
+    onClone(options) {}
     /**
      * Called when the associated snippet is moved to another DOM location.
      *
      * @abstract
      */
-    onMove: function () {},
+    onMove() {}
     /**
      * Called when the associated snippet is about to be removed from the DOM.
      *
      * @abstract
      * @returns {Promise|undefined}
      */
-    onRemove: async function () {},
+    async onRemove() {}
     /**
      * Called when the target is shown, only meaningful if the target was hidden
      * at some point (typically used for 'invisible' snippets).
@@ -3473,7 +3907,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    onTargetShow: async function () {},
+    async onTargetShow() {}
     /**
      * Called when the target is hidden (typically used for 'invisible'
      * snippets).
@@ -3481,7 +3915,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    onTargetHide: async function () {},
+    async onTargetHide() {}
     /**
      * Called when the template which contains the associated snippet is about
      * to be saved.
@@ -3489,7 +3923,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @return {Promise|undefined}
      */
-    cleanForSave: async function () {},
+    async cleanForSave() {}
     /**
      * Called when the associated snippet UI needs to be cleaned (e.g. from
      * visual effects like previews).
@@ -3498,15 +3932,32 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @return {Promise|undefined}
      */
-    cleanUI: async function () {},
+    async cleanUI() {}
     /**
      * Adds the given widget to the known list of user value widgets
      *
-     * @param {UserValueWidget} widget
+     * @param {UserValue} userValue
      */
-    registerSubWidget(widget) {
-        this._userValueWidgets.push(widget);
-    },
+    registerUserValue(userValue) {
+        this._userValues[userValue.id] = (userValue);
+        userValue.loadMethodsData(this.getMethodsNames());
+    }
+    /**
+     * Removes the give user value to the known list of user values.
+     *
+     * @param {UserValue} userValue
+     */
+    unregisterUserValue(userValue) {
+        delete this._userValues[userValue.id];
+    }
+    /**
+     * Register a layout element to hide them if no component is visible
+     * within it.
+     * @params {Object} layoutElement
+     */
+    registerLayoutElement(layoutElement) {
+        this._layoutElements.push(layoutElement);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -3527,7 +3978,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectClass: function (previewMode, widgetValue, params) {
+    selectClass(previewMode, widgetValue, params) {
         for (const classNames of params.possibleValues) {
             if (classNames) {
                 this.$target[0].classList.remove(...classNames.trim().split(/\s+/g));
@@ -3536,7 +3987,7 @@ const SnippetOptionWidget = Widget.extend({
         if (widgetValue) {
             this.$target[0].classList.add(...widgetValue.trim().split(/\s+/g));
         }
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as a data attribute. The name of the data attribute is
@@ -3547,10 +3998,10 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectDataAttribute: function (previewMode, widgetValue, params) {
+    selectDataAttribute(previewMode, widgetValue, params) {
         const value = this._selectAttributeHelper(widgetValue, params);
         this.$target[0].dataset[params.attributeName] = value;
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as an attribute. The name of the attribute is
@@ -3561,14 +4012,14 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectAttribute: function (previewMode, widgetValue, params) {
+    selectAttribute(previewMode, widgetValue, params) {
         const value = this._selectAttributeHelper(widgetValue, params);
         if (value) {
             this.$target[0].setAttribute(params.attributeName, value);
         } else {
             this.$target[0].removeAttribute(params.attributeName);
         }
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as a property. The name of the property is
@@ -3578,13 +4029,13 @@ const SnippetOptionWidget = Widget.extend({
      * @param {string} widgetValue
      * @param {Object} params
      */
-    selectProperty: function (previewMode, widgetValue, params) {
+    selectProperty(previewMode, widgetValue, params) {
         if (!params.propertyName) {
             throw new Error('Property name missing');
         }
         const value = this._selectValueHelper(widgetValue, params);
         this.$target[0][params.propertyName] = value;
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as a css style. The name of the css property is
@@ -3603,7 +4054,7 @@ const SnippetOptionWidget = Widget.extend({
      *      an effect.
      * @returns {Promise|undefined}
      */
-    selectStyle: async function (previewMode, widgetValue, params) {
+    async selectStyle(previewMode, widgetValue, params) {
         // Disable all transitions for the duration of the method as many
         // comparisons will be done on the element to know if applying a
         // property has an effect or not. Also, changing a css property via the
@@ -3761,7 +4212,7 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         _restoreTransitions();
-    },
+    }
     /**
      * Sets a color combination.
      *
@@ -3777,7 +4228,7 @@ const SnippetOptionWidget = Widget.extend({
                 this.$target[0].classList.add('o_cc', `o_cc${widgetValue}`);
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -3789,21 +4240,21 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @override
      */
-    $: function () {
+    $() {
         return this.$target.find.apply(this.$target, arguments);
-    },
+    }
     /**
      * Closes all user value widgets.
      */
-    closeWidgets: function () {
-        this._userValueWidgets.forEach(widget => widget.close());
-    },
+    closeWidgets() {
+        Object.values(this._userValues).forEach(widget => widget.close());
+    }
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
-    findWidget: function (name) {
-        for (const widget of this._userValueWidgets) {
+    findWidget(name) {
+        for (const widget of Object.values(this._userValues)) {
             if (widget.getName() === name) {
                 return widget;
             }
@@ -3813,7 +4264,7 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
         return null;
-    },
+    }
     /**
      * Sometimes, options may need to notify other options, even in parent
      * editors. This can be done thanks to the 'option_update' event, which
@@ -3822,13 +4273,13 @@ const SnippetOptionWidget = Widget.extend({
      * @param {string} name - an identifier for a type of update
      * @param {*} data
      */
-    notify: function (name, data) {
+    notify(name, data) {
         // We prefer to avoid refactoring this notify mechanism to make it
         // asynchronous because the upcoming conversion to owl might remove it.
         if (name === 'target') {
             this.setTarget(data);
         }
-    },
+    }
     /**
      * Sometimes, an option is binded on an element but should in fact apply on
      * another one. For example, elements which contain slides: we want all the
@@ -3840,9 +4291,21 @@ const SnippetOptionWidget = Widget.extend({
      * @param {jQuery} $target - the new target element
      * @returns {Promise}
      */
-    setTarget: function ($target) {
+    setTarget($target) {
         this.$target = $target;
-    },
+    }
+    getMethodsNames() {
+        // TODO: @owl-options either add all possible method or find a way to compute it.
+        function getMethods(obj) {
+            if (!obj || obj === Object) {
+                return [];
+            }
+            const properties = Object.getOwnPropertyNames(obj);
+            const methods = properties.filter(name => typeof obj[name] === "function");
+            return [...methods, ...getMethods(Object.getPrototypeOf(obj))];
+        }
+        return getMethods(this);
+    }
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
      *
@@ -3858,11 +4321,15 @@ const SnippetOptionWidget = Widget.extend({
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
-        const proms = this._userValueWidgets.map(async widget => {
+        const useValueStates = Object.values(this._userValues);
+        const proms = useValueStates.map(async (userValue) => {
+            if (!userValue.started) {
+                await userValue.start();
+            }
             // Update widget value (for each method)
-            const methodsNames = widget.getMethodsNames();
+            const methodsNames = userValue.getMethodsNames();
             for (const methodName of methodsNames) {
-                const params = widget.getMethodsParams(methodName);
+                const params = userValue.getMethodsParams(methodName);
 
                 let obj = this;
                 if (params.applyTo) {
@@ -3878,7 +4345,7 @@ const SnippetOptionWidget = Widget.extend({
                     continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
-                await widget.setValue(normalizedValue, methodName);
+                await userValue.setValue(normalizedValue, methodName);
             }
         });
         await Promise.all(proms);
@@ -3886,22 +4353,22 @@ const SnippetOptionWidget = Widget.extend({
         if (!noVisibility) {
             await this.updateUIVisibility();
         }
-    },
+    }
     /**
      * Updates the UI visibility - @see _computeVisibility. For widget update,
      * @see _computeWidgetVisibility.
      *
      * @returns {Promise}
      */
-    updateUIVisibility: async function () {
-        const proms = this._userValueWidgets.map(async widget => {
-            const params = widget.getMethodsParams();
+    async updateUIVisibility() {
+        const proms = Object.values(this._userValues).map(async userValue => {
+            const params = userValue.getMethodsParams();
 
             let obj = this;
             if (params.applyTo) {
                 const $firstSubTarget = this.$(params.applyTo).eq(0);
                 if (!$firstSubTarget.length) {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
                 obj = createPropertyProxy(this, '$target', $firstSubTarget);
@@ -3910,23 +4377,23 @@ const SnippetOptionWidget = Widget.extend({
             // Make sure to check the visibility of all sub-widgets. For
             // simplicity and efficiency, those will be checked with main
             // widgets params.
-            const allSubWidgets = [widget];
+            const allSubValues = [userValue];
             let i = 0;
-            while (i < allSubWidgets.length) {
-                allSubWidgets.push(...allSubWidgets[i]._userValueWidgets);
+            while (i < allSubValues.length) {
+                allSubValues.push(...Object.values(allSubValues[i]._subValues));
                 i++;
             }
-            const proms = allSubWidgets.map(async widget => {
-                const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+            const proms = allSubValues.map(async userValue => {
+                const show = await this._computeWidgetVisibility.call(obj, userValue.getName(), params);
                 if (!show) {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
 
-                const dependencies = widget.getDependencies();
+                const dependencies = userValue.getDependencies();
 
                 if (dependencies.length === 1 && dependencies[0] === 'fake') {
-                    widget.toggleVisibility(false);
+                    userValue.toggleVisibility(false);
                     return;
                 }
 
@@ -3937,47 +4404,40 @@ const SnippetOptionWidget = Widget.extend({
                         depName = depName.substr(1);
                     }
 
-                    const widget = this._requestUserValueWidgets(depName, true)[0];
-                    if (widget) {
+                    const userValue = this._requestUserValueWidgets(depName, true)[0];
+                    if (userValue) {
                         dependenciesData.push({
-                            widget: widget,
+                            userValue: userValue,
                             toBeActive: toBeActive,
                         });
                     }
                 });
                 const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
-                    return (depData.widget.isActive() === depData.toBeActive);
+                    return (depData.userValue.isActive() === depData.toBeActive);
                 });
 
-                widget.toggleVisibility(dependenciesOK);
+                userValue.toggleVisibility(dependenciesOK);
             });
             return Promise.all(proms);
         });
 
-        const showUI = await this._computeVisibility();
-        this.el.classList.toggle('d-none', !showUI);
+        this.renderContext.showUI = await this._computeVisibility();
 
         await Promise.all(proms);
 
+        for (const layout of this._layoutElements) {
+            const shouldShow = Object.values(layout.userValues)
+                .some(uv => uv.show);
+            layout.state.show = shouldShow;
+        }
+
+        // TODO: @owl-options, layout should probably be hidden in template.
         // Hide layouting elements which contains only hidden widgets
         // TODO improve this, this is hackish to rely on DOM structure here.
         // Layouting elements should be handled as widgets or other.
-        for (const el of this.$el.find('we-row')) {
-            const $userValueWidget = $(el).find('> div > .o_we_user_value_widget');
-            el.classList.toggle('d-none', $userValueWidget.length && !$userValueWidget.not('.d-none').length);
-        }
-        for (const el of this.$el.find('we-collapse')) {
-            const $el = $(el);
-            el.classList.toggle('d-none', $el.children().first().hasClass('d-none'));
-            const hasNoVisibleElInCollapseMenu = !$el.children().last().children().not('.d-none').length;
-            if (hasNoVisibleElInCollapseMenu) {
-                this._toggleCollapseEl(el, false);
-            }
-            el.querySelector('.o_we_collapse_toggler').classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
-        }
 
-        return !this.displayOverlayOptions && showUI;
-    },
+        return !this.displayOverlayOptions && this.renderContext.showUI;
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3997,7 +4457,7 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
         return messages.join(' ');
-    },
+    }
     /**
      * @private
      * @param {UserValueWidget[]} widgets
@@ -4005,14 +4465,14 @@ const SnippetOptionWidget = Widget.extend({
      */
     async _checkIfWidgetsUpdateNeedReload(widgets) {
         return false;
-    },
+    }
     /**
      * @private
      * @returns {Promise<boolean>|boolean}
      */
-    _computeVisibility: async function () {
+    async _computeVisibility() {
         return true;
-    },
+    }
     /**
      * Returns the string value that should be hold by the widget which is
      * related to the given method name.
@@ -4024,7 +4484,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise<string|undefined>|string|undefined}
      */
-    _computeWidgetState: async function (methodName, params) {
+    async _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'selectClass': {
                 let maxNbClasses = 0;
@@ -4154,7 +4614,6 @@ const SnippetOptionWidget = Widget.extend({
                 if (value === "currentColor") {
                     return styles.color;
                 }
-
                 return value;
             }
             case 'selectColorCombination': {
@@ -4172,22 +4631,22 @@ const SnippetOptionWidget = Widget.extend({
                 return '';
             }
         }
-    },
+    }
     /**
      * @private
      * @param {string} widgetName
      * @param {Object} params
      * @returns {Promise<boolean>|boolean}
      */
-    _computeWidgetVisibility: async function (widgetName, params) {
+    async _computeWidgetVisibility(widgetName, params) {
         return true;
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} el
      * @returns {Object}
      */
-    _extraInfoFromDescriptionElement: function (el) {
+    _extraInfoFromDescriptionElement(el) {
         return {
             title: el.getAttribute('string'),
             options: {
@@ -4198,110 +4657,33 @@ const SnippetOptionWidget = Widget.extend({
                 childNodes: [...el.childNodes],
             },
         };
-    },
+    }
     /**
      * @private
      * @param {*}
      * @returns {string}
      */
-    _normalizeWidgetValue: function (value) {
+    _normalizeWidgetValue(value) {
         value = `${value}`.trim(); // Force to a trimmed string
         value = normalizeCSSColor(value); // If is a css color, normalize it
         return value;
-    },
+    }
     /**
+     * Allows options to share a context to their template / components.
+     *
      * @private
-     * @param {HTMLElement} uiFragment
      * @returns {Promise}
      */
-    _renderCustomWidgets: function (uiFragment) {
-        return Promise.resolve();
-    },
-    /**
-     * @private
-     * @param {HTMLElement} uiFragment
-     * @returns {Promise}
-     */
-    _renderCustomXML: function (uiFragment) {
-        return Promise.resolve();
-    },
-    /**
-     * @private
-     * @param {jQuery} [$xml] - default to original xml content
-     * @returns {Promise}
-     */
-    _renderOriginalXML: async function ($xml) {
-        const uiFragment = document.createDocumentFragment();
-        ($xml || this.$originalUIElements).clone(true).appendTo(uiFragment);
-
-        await this._renderCustomXML(uiFragment);
-
-        // Build layouting components first
-        for (const [itemName, build] of [['we-row', _buildRowElement], ['we-collapse', _buildCollapseElement]]) {
-            uiFragment.querySelectorAll(itemName).forEach(el => {
-                const infos = this._extraInfoFromDescriptionElement(el);
-                const groupEl = build(infos.title, infos.options);
-                el.parentNode.insertBefore(groupEl, el);
-                el.parentNode.removeChild(el);
-            });
-        }
-
-        // Load widgets
-        await this._renderXMLWidgets(uiFragment);
-        await this._renderCustomWidgets(uiFragment);
-
-        if (this.isDestroyed()) {
-            // TODO there is probably better to do. This case was found only in
-            // tours, where the editor is left before the widget are fully
-            // loaded (loadMethodsData doesn't work if the widget is destroyed).
-            return uiFragment;
-        }
-
-        const validMethodNames = [];
-        for (const key in this) {
-            validMethodNames.push(key);
-        }
-        this._userValueWidgets.forEach(widget => {
-            widget.loadMethodsData(validMethodNames);
-        });
-
-        return uiFragment;
-    },
-    /**
-     * @private
-     * @param {HTMLElement} parentEl
-     * @param {SnippetOptionWidget|UserValueWidget} parentWidget
-     * @returns {Promise}
-     */
-    _renderXMLWidgets: function (parentEl, parentWidget) {
-        const proms = [...parentEl.children].map(el => {
-            const widgetName = el.tagName.toLowerCase();
-            if (!userValueWidgetsRegistry.hasOwnProperty(widgetName)) {
-                return this._renderXMLWidgets(el, parentWidget);
-            }
-
-            const infos = this._extraInfoFromDescriptionElement(el);
-            const widget = registerUserValueWidget(widgetName, parentWidget || this, infos.title, infos.options, this.$target);
-            return widget.insertAfter(el).then(() => {
-                // Remove the original element afterwards as the insertion
-                // operation may move some of its inner content during
-                // widget start.
-                parentEl.removeChild(el);
-
-                if (widget.isContainer() && !widget.isDestroyed()) {
-                    return this._renderXMLWidgets(widget.el, widget);
-                }
-            });
-        });
-        return Promise.all(proms);
-    },
+    async _getRenderContext() {
+        return {};
+    }
     /**
      * @private
      * @param {...string} widgetNames
      * @param {boolean} [allowParentOption=false]
      * @returns {UserValueWidget[]}
      */
-    _requestUserValueWidgets: function (...args) {
+    _requestUserValueWidgets(...args) {
         const widgetNames = args;
         let allowParentOption = false;
         const lastArg = args[args.length - 1];
@@ -4313,9 +4695,8 @@ const SnippetOptionWidget = Widget.extend({
         const widgets = [];
         for (const widgetName of widgetNames) {
             let widget = null;
-            this.trigger_up('user_value_widget_request', {
+            widget = this.callbacks.requestUserValue({
                 name: widgetName,
-                onSuccess: _widget => widget = _widget,
                 allowParentOption: allowParentOption,
             });
             if (widget) {
@@ -4323,13 +4704,13 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
         return widgets;
-    },
+    }
     /**
      * @private
      * @param {function<Promise<jQuery>>} [callback]
      * @returns {Promise}
      */
-    _rerenderXML: async function (callback) {
+    async _rerenderXML(callback) {
         this._userValueWidgets.forEach(widget => widget.destroy());
         this._userValueWidgets = [];
         this.$el.empty();
@@ -4343,7 +4724,7 @@ const SnippetOptionWidget = Widget.extend({
             this.$el.append(uiFragment);
             return this.updateUI();
         });
-    },
+    }
     /**
      * Activates the option associated to the given DOM element.
      *
@@ -4352,10 +4733,10 @@ const SnippetOptionWidget = Widget.extend({
      *        - truthy if the option is enabled for preview or if leaving it (in
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
-     * @param {UserValueWidget} widget - the widget which triggered the option change
+     * @param {UserValue} widget - the widget which triggered the option change
      * @returns {Promise}
      */
-    _select: async function (previewMode, widget) {
+    async _select(previewMode, widget) {
         let $applyTo = null;
 
         if (previewMode === true) {
@@ -4389,7 +4770,7 @@ const SnippetOptionWidget = Widget.extend({
         // this.$target could not be in an editable element while the elements
         // targeted by apply-to are.
         ($applyTo || this.$target).trigger('content_changed');
-    },
+    }
     /**
      * Used to handle attribute or data attribute value change
      *
@@ -4400,7 +4781,7 @@ const SnippetOptionWidget = Widget.extend({
             throw new Error('Attribute name missing');
         }
         return this._selectValueHelper(value, params);
-    },
+    }
     /**
      * Used to handle value of a select
      *
@@ -4418,7 +4799,7 @@ const SnippetOptionWidget = Widget.extend({
             this.$target.toggleClass(params.extraClass, params.defaultValue !== value);
         }
         return value;
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} collapseEl
@@ -4427,7 +4808,7 @@ const SnippetOptionWidget = Widget.extend({
     _toggleCollapseEl(collapseEl, show) {
         collapseEl.classList.toggle('active', show);
         collapseEl.querySelector('we-toggler.o_we_collapse_toggler').classList.toggle('active', show);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -4443,26 +4824,25 @@ const SnippetOptionWidget = Widget.extend({
         for (const collapseEl of currentCollapseEl.querySelectorAll('we-collapse')) {
             this._toggleCollapseEl(collapseEl, false);
         }
-    },
+    }
     /**
      * Called when a widget notifies a preview/change/reset.
      *
      * @private
      * @param {Event} ev
      */
-    _onUserValueUpdate: async function (ev) {
-        ev.stopPropagation();
-        const widget = ev.data.widget;
-        const previewMode = ev.data.previewMode;
+    async _onUserValueUpdate(params) {
+        const widget = params.widget;
+        const previewMode = params.previewMode;
 
         // First check if the updated widget or any of the widgets it triggers
         // will require a reload or a confirmation choice by the user. If it is
         // the case, warn the user and potentially ask if he agrees to save its
         // current changes. If not, just do nothing.
         let requiresReload = false;
-        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
-            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
-            const widgets = [ev.data.widget].concat(linkedWidgets);
+        if (!params.previewMode && !params.isSimulatedEvent) {
+            const linkedWidgets = this._requestUserValueWidgets(...params.triggerWidgetsNames);
+            const widgets = [params.widget].concat(linkedWidgets);
 
             const warnMessage = await this._checkIfWidgetsUpdateNeedWarning(widgets);
             if (warnMessage) {
@@ -4489,18 +4869,20 @@ const SnippetOptionWidget = Widget.extend({
         this._actionQueues.get(widget).push(currentAction);
 
         // Ask a mutexed snippet update according to the widget value change
-        const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
+        const shouldRecordUndo = (!previewMode && !params.isSimulatedEvent);
         if (shouldRecordUndo) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
-        const useLoaderOnOptionPanel = ev.target.el.dataset.loaderOnOptionPanel;
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        // TODO: @owl-options make it go through props + params.
+        // const useLoaderOnOptionPanel = ev.target.el.dataset.loaderOnOptionPanel;
+        const useLoaderOnOptionPanel = false;
+        this.options.snippetEditionRequest({exec: async () => {
             // If some previous snippet edition in the mutex removed the target from
             // the DOM, the widget can be destroyed, in that case the edition request
             // is now useless and can be discarded.
-            if (this.isDestroyed()) {
-                return;
-            }
+            // if (this.isDestroyed()) {
+            //     return;
+            // }
             // Filter actions that are counterbalanced by earlier/later actions
             const actionQueue = this._actionQueues.get(widget).filter(({previewMode}, i, actions) => {
                 const prev = actions[i - 1];
@@ -4519,11 +4901,12 @@ const SnippetOptionWidget = Widget.extend({
             }
             this._actionQueues.set(widget, actionQueue.filter(action => action !== currentAction));
 
-            if (ev.data.prepare) {
-                ev.data.prepare();
+            if (params.prepare) {
+                // Why must this be done before checking noPreview ?
+                params.prepare();
             }
 
-            if (previewMode && (widget.$el.closest('[data-no-preview="true"]').length)) {
+            if (previewMode && (widget.getMethodsParams().noPreview)) {
                 // TODO the flag should be fetched through widget params somehow
                 return;
             }
@@ -4544,15 +4927,14 @@ const SnippetOptionWidget = Widget.extend({
             await new Promise(resolve => setTimeout(() => {
                 // Will update the UI of the correct widgets for all options
                 // related to the same $target/editor
-                this.trigger_up('snippet_option_update', {
-                    onSuccess: () => resolve(),
-                });
+                this.options.optionUpdate().then(resolve);
             // Set timeout needed so that the user event which triggered the
             // option can bubble first.
             }));
         }, optionsLoader: useLoaderOnOptionPanel});
 
-        if (ev.data.isSimulatedEvent) {
+        // TODO: @owl-options is this still needed?
+        if (params.isSimulatedEvent) {
             // If the user value update was simulated through a trigger, we
             // prevent triggering further widgets. This could be allowed at some
             // point but does not work correctly in complex website cases (see
@@ -4560,13 +4942,14 @@ const SnippetOptionWidget = Widget.extend({
             return;
         }
 
+        // TODO: @owl-options support triggerWidgets.
         // Check linked widgets: force their value and simulate a notification
         // It is possible that we don't have the widget, we continue because a
         // reload might be needed. For example, change template header without
         // being on a website.page (e.g: /shop).
-        const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+        const linkedWidgets = this._requestUserValueWidgets(...params.triggerWidgetsNames);
         let i = 0;
-        const triggerWidgetsValues = ev.data.triggerWidgetsValues;
+        const triggerWidgetsValues = params.triggerWidgetsValues;
         for (const linkedWidget of linkedWidgets) {
             const widgetValue = triggerWidgetsValues[i];
             if (widgetValue !== undefined) {
@@ -4589,13 +4972,13 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         if (requiresReload) {
-            this.trigger_up('request_save', {
+            this.env.requestSave({
                 reloadEditor: true,
                 optionSelector: this.data.selector,
                 url: this.data.reload,
             });
         }
-    },
+    }
     /**
      * @private
      */
@@ -4603,13 +4986,102 @@ const SnippetOptionWidget = Widget.extend({
         this.trigger_up('remove_snippet', {
             $snippet: this.$target,
         });
-    },
-});
-const registry = {};
+    }
+}
+
+
+// class TestOption extends SnippetOption {
+//     constructor() {
+//         super(...arguments);
+//         this.orm = serviceCached(this.env, "orm");
+//         this.listItems = ["Test1", "Test2", "Test3"];
+//         // M2O
+//         this.pageId = "";
+//         this.newPage = {};
+//         // M2m
+//         this.allGroupsByID = {};
+//         this.groupIDs = [];
+
+//         this.fetchGroups();
+//     }
+//     async fetchGroups() {
+//         const groups = await this.orm.searchRead(
+//             "res.groups",
+//             [],
+//             ["id", "name", "display_name"]
+//         );
+//         for (const group of groups) {
+//             this.allGroupsByID[group.id] = group;
+//         }
+//     }
+
+//     renderListItems(previewMode, widgetValue, params) {
+//         this.listItems = JSON.parse(widgetValue);
+//     }
+
+//     setPageTemplate(previewMode, widgetValue, params) {
+//         this.pageId = widgetValue;
+//     }
+//     createPage(previewMode, widgetValue, params) {
+//         if (!widgetValue) {
+//             return;
+//         }
+//         this.newPage = {
+//             'id': Math.floor(Math.random() * 8) + 1,
+//             'name': widgetValue,
+//             'display_name': widgetValue,
+//         };
+//         this.pageId = this.newPage.id.toString();
+//     }
+
+//     setGroups(previewMode, widgetValue, params) {
+//         this.groupIDs = JSON.parse(widgetValue).map(group => group.id);
+//     }
+//     createGroup(previewMode, widgetValue, params) {
+//         if (!widgetValue) {
+//             return;
+//         }
+//         const existing = Object.values(this.allGroupsByID).some(group => {
+//             // A group is already existing only if it was already defined (i.e.
+//             // id is a number) or if it appears in the current list of groups.
+//             return group.name.toLowerCase() === widgetValue.toLowerCase()
+//                 && (typeof(group.id) === 'number' || this.groupIDs.includes(group.id));
+//         });
+//         if (existing) {
+//             return;
+//         }
+//         const newGroupID = uniqueId("new_group_");
+//         this.allGroupsByID[newGroupID] = {
+//             'id': newGroupID,
+//             'name': widgetValue,
+//             'display_name': widgetValue,
+//         };
+//         this.groupIDs.push(newGroupID);
+//     }
+
+//     _computeWidgetState(methodName, params) {
+//         if (methodName === "renderListItems") {
+//             return JSON.stringify(this.listItems);
+//         } else if (methodName === "setPageTemplate") {
+//             return this.pageId;
+//         } else if (methodName === "setGroups") {
+//             return JSON.stringify(this.groupIDs.map(id => this.allGroupsByID[id]));
+//         }
+//         return super._computeWidgetState(...arguments);
+//     }
+// }
+// TODO: @owl-options remove this or include it in some tests?
+//registerOption("test_option", {
+//    Class: TestOption,
+//    template: "web_editor.TestSnippetOption",
+//    selector: "section",
+//});
+
+const legacyRegistry = {};
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-registry.sizing = SnippetOptionWidget.extend({
+legacyRegistry.sizing = SnippetOptionWidget.extend({
     displayOverlayOptions: true,
 
     /**
@@ -4980,7 +5452,7 @@ registry.sizing = SnippetOptionWidget.extend({
 /**
  * Handles the edition of padding-top and padding-bottom.
  */
-registry['sizing_y'] = registry.sizing.extend({
+legacyRegistry['sizing_y'] = legacyRegistry.sizing.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -5013,7 +5485,7 @@ registry['sizing_y'] = registry.sizing.extend({
         return this.grid;
     },
 });
-registry['sizing_x'] = registry.sizing.extend({
+legacyRegistry['sizing_x'] = legacyRegistry.sizing.extend({
     /**
      * @override
      */
@@ -5125,7 +5597,7 @@ registry['sizing_x'] = registry.sizing.extend({
 /**
  * Handles the sizing in grid mode: edition of grid-{column|row}-{start|end}.
  */
-registry['sizing_grid'] = registry.sizing.extend({
+legacyRegistry['sizing_grid'] = legacyRegistry.sizing.extend({
     /**
      * @override
      */
@@ -5227,7 +5699,7 @@ registry['sizing_grid'] = registry.sizing.extend({
 /**
  * Controls box properties.
  */
-registry.Box = SnippetOptionWidget.extend({
+export class Box extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -5283,7 +5755,7 @@ registry.Box = SnippetOptionWidget.extend({
             }
         }
         await this.selectStyle(previewMode, shadow, Object.assign({cssProperty: 'box-shadow'}, params));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5300,8 +5772,8 @@ registry.Box = SnippetOptionWidget.extend({
             }
             return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -5309,8 +5781,8 @@ registry.Box = SnippetOptionWidget.extend({
         if (widgetName === 'fake_inset_shadow_opt') {
             return false;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @private
      * @param {string} type
@@ -5328,18 +5800,18 @@ registry.Box = SnippetOptionWidget.extend({
         const shadow = `${$(el).css('box-shadow')}${type === 'inset' ? ' inset' : ''}`;
         el.remove();
         return shadow;
-    },
-});
+    }
+}
 
 
 
-registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
+export class LayoutColumn extends ColumnLayoutMixin(SnippetOption) {
     /**
      * @override
      */
     cleanUI() {
         this._removeGridPreview();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -5350,7 +5822,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      *
      * @see this.selectClass for parameters
      */
-    selectCount: async function (previewMode, widgetValue, params) {
+    async selectCount(previewMode, widgetValue, params) {
         // Make sure the "Custom" option is read-only.
         if (widgetValue === "custom") {
             return;
@@ -5375,15 +5847,15 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             resetOuids($row[0]);
             $row.contents().unwrap().contents().unwrap();
             restoreCursor();
-            this.trigger_up('activate_snippet', {$snippet: this.$target});
+            this.env.activateSnippet(this.$target);
         } else if (previousNbColumns === 0) {
-            this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
+            this.env.activateSnippet(this.$('> .row').children().first());
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_columns',
+        this.callbacks.notifyOptions({
+            optionNames: ["StepsConnector"],
+            name: "change_columns",
         });
-    },
+    }
     /**
      * Changes the layout (columns or grid).
      *
@@ -5394,7 +5866,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const rowEl = this.$target[0].querySelector('.row');
             if (!rowEl || !rowEl.classList.contains('o_grid_mode')) { // Prevent toggling grid mode twice.
                 gridUtils._toggleGridMode(this.$target[0]);
-                this.trigger_up('activate_snippet', {$snippet: this.$target});
+                this.env.activateSnippet(this.$target);
             }
         } else {
             // Toggle normal mode only if grid mode was activated (as it's in
@@ -5402,14 +5874,10 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
                 this._toggleNormalMode(rowEl);
-                this.trigger_up('activate_snippet', {$snippet: this.$target});
+                this.env.activateSnippet(this.$target);
             }
         }
-        this.trigger_up('option_update', {
-            optionName: 'StepsConnector',
-            name: 'change_columns',
-        });
-    },
+    }
     /**
      * Adds an image, some text or a button in the grid.
      *
@@ -5445,7 +5913,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             // Choose an image with the media dialog.
             let isImageSaved = false;
             await new Promise(resolve => {
-                this.call("dialog", "add", MediaDialog, {
+                this.env.services.dialog.add(MediaDialog, {
                     onlyImages: true,
                     save: imageEl => {
                         isImageSaved = true;
@@ -5518,13 +5986,13 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
             newColumnEl.scrollIntoView({behavior: "smooth", block: "center"});
         }
-        this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
-    },
+        this.env.activateSnippet($(newColumnEl));
+    }
     /**
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        await this._super(previewMode, widgetValue, params);
+        await super.selectStyle(previewMode, widgetValue, params);
 
         const rowEl = this.$target[0];
         const isMobileView = weUtils.isMobileView(rowEl);
@@ -5542,7 +6010,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             this.removeGridPreview = this._removeGridPreview.bind(this);
             rowEl.addEventListener("animationend", this.removeGridPreview);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5551,7 +6019,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'selectCount') {
             const isMobile = this._isMobile();
             const columnEls = this.$target[0].querySelector(":scope > .row")?.children;
@@ -5564,8 +6032,8 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 return 'normal';
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -5590,8 +6058,8 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 this._areColsCustomized(this.$target[0].querySelector(":scope > .row").children,
                 isMobile);
         }
-        return this._super(...arguments);
-    },
+        return super._computeVisibility(...arguments);
+    }
     /**
      * If the number of columns requested is greater than the number of items,
      * adds new columns which are clones of the last one. If there are less
@@ -5618,14 +6086,14 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             for (let i = 0; i < itemsDelta; i++) {
                 const lastEl = rowEl.lastElementChild;
                 newItems.push(new Promise(resolve => {
-                    this.trigger_up("clone_snippet", {$snippet: $(lastEl), onSuccess: resolve});
+                    this.env.cloneSnippet($(lastEl)).then(resolve);
                 }));
             }
             await Promise.all(newItems);
         }
 
-        this.trigger_up('cover_update');
-    },
+        this.callbacks.cover();
+    }
     /**
      * Resizes the columns for the mobile or desktop view.
      *
@@ -5655,7 +6123,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const hasDesktopOffset = columnEl.className.match(/(^|\s+)offset-lg-[1-9][0-1]?(?!\S)/);
             columnEl.classList.toggle("offset-lg-0", hasMobileOffset && !hasDesktopOffset);
         }
-    },
+    }
     /**
      * Toggles the normal mode.
      *
@@ -5667,12 +6135,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         rowEl.classList.remove('o_grid_mode');
         const columnEls = rowEl.children;
         // Removing the grid previews (if any).
-        await new Promise(resolve => {
-            this.trigger_up("clean_ui_request", {
-                targetEl: this.$target[0].closest("section"),
-                onSuccess: resolve,
-            });
-        });
+        await this.env.cleanUI(this.$target[0].closest("section"))
 
         for (const columnEl of columnEls) {
             // Reloading the images.
@@ -5686,7 +6149,7 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         rowEl.style.removeProperty('--grid-item-padding-x');
         rowEl.style.removeProperty('--grid-item-padding-y');
         rowEl.style.removeProperty("gap");
-    },
+    }
     /**
      * Removes the grid preview that was added when changing the grid gaps.
      *
@@ -5701,23 +6164,23 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         }
         delete this.removeGridPreview;
         this.options.wysiwyg.odooEditor.observerActive("removeGridPreview");
-    },
+    }
     /**
      * @returns {boolean}
      */
     _isMobile() {
         return weUtils.isMobileView(this.$target[0]);
-    },
-});
+    }
+}
 
-registry.GridColumns = SnippetOptionWidget.extend({
+export class GridColumns extends SnippetOption {
     /**
      * @override
      */
     cleanUI() {
         // Remove the padding highlights.
         this._removePaddingPreview();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -5727,7 +6190,7 @@ registry.GridColumns = SnippetOptionWidget.extend({
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectStyle(...arguments);
         if (["--grid-item-padding-y", "--grid-item-padding-x"].includes(params.cssProperty)) {
             // Reset the animation.
             this._removePaddingPreview();
@@ -5741,7 +6204,7 @@ registry.GridColumns = SnippetOptionWidget.extend({
             this.removePaddingPreview = this._removePaddingPreview.bind(this);
             this.$target[0].addEventListener("animationend", this.removePaddingPreview);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5754,8 +6217,8 @@ registry.GridColumns = SnippetOptionWidget.extend({
         if (["grid_padding_y_opt", "grid_padding_x_opt"].includes(widgetName)) {
             return this.$target[0].parentElement.classList.contains("o_grid_mode");
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Removes the padding highlights that were added when changing the grid
      * item padding.
@@ -5768,10 +6231,10 @@ registry.GridColumns = SnippetOptionWidget.extend({
         this.$target[0].classList.remove("o_we_padding_highlight");
         delete this.removePaddingPreview;
         this.options.wysiwyg.odooEditor.observerActive("removePaddingPreview");
-    },
-});
+    }
+}
 
-registry.vAlignment = SnippetOptionWidget.extend({
+export class vAlignment extends SnippetOption {
     /**
      * @override
      */
@@ -5784,25 +6247,46 @@ registry.vAlignment = SnippetOptionWidget.extend({
             return 'align-items-stretch';
         }
         return value;
-    },
-});
+    }
+}
+
+
+/**
+ * Portal component that target the overlay
+ */
+export class WeOverlay extends Component {
+    static template = "__portal__";
+    static props = [
+        "target",
+    ];
+
+    setup() {
+        const node = this.__owl__;
+        onMounted(() => {
+            const targetEl = this.env.snippetOption.$overlay[0].querySelector(this.props.target);
+            const portal = node.bdom;
+            portal.content.moveBeforeDOMNode(targetEl.firstChild, targetEl);
+        });
+        onWillUnmount(() => {
+            const portal = node.bdom;
+            portal.remove();
+        });
+    }
+}
+registry.category("snippet_widgets").add("WeOverlay", WeOverlay);
+
+
 
 /**
  * Allows snippets to be moved before the preceding element or after the following.
  */
-registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
-    displayOverlayOptions: true,
-
+export class SnippetMove extends ColumnLayoutMixin(SnippetOption) {
+    static displayOverlayOptions = true;
+    
     /**
      * @override
      */
-    start: function () {
-        var $buttons = this.$el.find('we-button');
-        var $overlayArea = this.$overlay.find('.o_overlay_move_options');
-        // Putting the arrows side by side.
-        $overlayArea.prepend($buttons[1]);
-        $overlayArea.prepend($buttons[0]);
-
+    willStart() {
         // Needed for compatibility (with already dropped snippets).
         // If the target is a column, check if all the columns are either mobile
         // ordered or not. If they are not consistent, then we remove the mobile
@@ -5816,13 +6300,13 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             }
         }
 
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
     onClone(options) {
-        this._super.apply(this, arguments);
+        super.onClone(arguments);
         const mobileOrder = this.$target[0].style.order;
         // If the order has been adapted on mobile, it must be different
         // for each clone.
@@ -5839,20 +6323,20 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 }
             });
         }
-    },
+    }
     /**
      * @override
      */
     onMove() {
-        this._super.apply(this, arguments);
+        super.onMove(arguments);
         // Remove all the mobile order classes after a drag and drop.
         this._removeMobileOrders(this.$target[0].parentElement.children);
-    },
+    }
     /**
      * @override
      */
     onRemove() {
-        this._super.apply(this, arguments);
+        super.onRemove(arguments);
         const targetMobileOrder = this.$target[0].style.order;
         // If the order has been adapted on mobile, the gap created by the
         // removed snippet must be filled in.
@@ -5860,7 +6344,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const targetOrder = parseInt(targetMobileOrder);
             this._fillRemovedItemGap(this.$target[0].parentElement, targetOrder);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -5871,7 +6355,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      *
      * @see this.selectClass for parameters
      */
-    moveSnippet: function (previewMode, widgetValue, params) {
+    moveSnippet(previewMode, widgetValue, params) {
         const isMobile = this._isMobile();
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
@@ -5934,14 +6418,20 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 });
             }
         }
+        // TODO: @owl-options were parameters even used in there ?
+        this.options.optionUpdate("StepsConnector", "move_snippet");
+        /*
         this.trigger_up('option_update', {
             optionName: 'StepsConnector',
             name: 'move_snippet',
         });
+        */
         // Update the "Invisible Elements" panel as the order of invisible
         // snippets could have changed on the page.
-        this.trigger_up("update_invisible_dom");
-    },
+        // TODO: @owl-options ?
+        // this.options._updateInvisibleDom();
+        // this.trigger_up("update_invisible_dom");
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -5993,8 +6483,8 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             }
             return !!siblingEl;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Swaps the mobile orders.
      *
@@ -6016,24 +6506,40 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             comparedEl.style.order = targetMobileOrder;
             break;
         }
-    },
+    }
     /**
      * @returns {Boolean}
      */
     _isMobile() {
         return false;
-    },
+    }
+}
+
+registerOption("SnippetMove (Vertical)", {
+    Class: SnippetMove,
+    template: "web_editor.snippet_move_option_vertical",
+    selector: "section, .s_accordion .accordion-item, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr",
+    noScroll: ".s_accordion .accordion-item",
 });
+
+registerOption("SnippetMove (Horizontal)", {
+    Class: SnippetMove,
+    template: "web_editor.snippet_move_option_horizontal",
+    selector: ".row:not(.s_col_no_resize) > div, .nav-item",
+    exclude: ".s_showcase .row > div",
+    name: "move_horizontally_opt",
+});
+
 
 /**
  * Allows for media to be replaced.
  */
-registry.ReplaceMedia = SnippetOptionWidget.extend({
-    init: function () {
-        this._super(...arguments);
+export class ReplaceMedia extends SnippetOption {
+    constructor() {
+        super(...arguments);
         this._activateLinkTool = this._activateLinkTool.bind(this);
         this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
-    },
+    }
 
     /**
      * @override
@@ -6044,14 +6550,14 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         // When we start editing an image, rerender the UI to ensure the
         // we-select that suggests the anchors is in a consistent state.
         this.rerender = true;
-    },
+    }
     /**
      * @override
      */
     onBlur() {
         this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
         this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -6065,7 +6571,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     async replaceMedia() {
         // open mediaDialog and replace the media.
         await this.options.wysiwyg.openMediaDialog({ node:this.$target[0] });
-    },
+    }
     /**
      * Makes the image a clickable link by wrapping it in an <a>.
      * This function is also called for the opposite operation.
@@ -6090,7 +6596,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             fragment.append(...parentEl.childNodes);
             parentEl.replaceWith(fragment);
         }
-    },
+    }
     /**
      * Changes the image link so that the URL is opened on another tab or not
      * when it is clicked.
@@ -6104,7 +6610,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         } else {
             linkEl.removeAttribute('target');
         }
-    },
+    }
     /**
      * Records the target url of the hyperlink.
      *
@@ -6128,18 +6634,18 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         linkEl.setAttribute('href', url);
         this.rerender = true;
         this.$target.trigger('href_changed');
-    },
+    }
     /**
      * @override
      */
     async updateUI() {
         if (this.rerender) {
             this.rerender = false;
-            await this._rerenderXML();
+            // await this._rerenderXML();
             return;
         }
-        return this._super.apply(this, arguments);
-    },
+        return super.updateUI(this, arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -6154,7 +6660,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
-    },
+    }
     /**
      * @private
      */
@@ -6163,7 +6669,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
-    },
+    }
     /**
      * @override
      */
@@ -6183,8 +6689,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
                 return target && target === '_blank' ? 'true' : '';
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -6195,38 +6701,42 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+
+registerOption("ReplaceMedia", {
+    Class: ReplaceMedia,
+    template: "web_editor.replace_media_option",
+    selector: "img, .media_iframe_video, span.fa, i.fa",
+    exclude: "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa",
 });
 
 /*
  * Abstract option to be extended by the ImageTools and BackgroundOptimize
  * options that handles all the common parts.
  */
-const ImageHandlerOption = SnippetOptionWidget.extend({
+export class ImageHandlerOption extends SnippetOption {
     /**
      * @override
      */
     async willStart() {
-        const _super = this._super.bind(this);
         await this._initializeImage();
-        return _super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
+     *
      */
     async start() {
+        // TODO: @owl-options This is currently not called
         await this._super(...arguments);
-        const weightEl = document.createElement('span');
-        weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'd-none');
-        weightEl.title = _t("Size");
-        this.$weight = $(weightEl);
         // Perform the loading of the image info synchronously in order to
         // avoid an intermediate rendering of the Blocks tab during the
         // loadImageInfo RPC that obtains the file size.
         // This does not update the target.
         await this._applyOptions(false);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -6236,18 +6746,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     async updateUI() {
-        await this._super(...arguments);
+        await super.updateUI(...arguments);
 
         if (this._filesize === undefined) {
-            this.$weight.addClass('d-none');
             await this._applyOptions(false);
         }
-        if (this._filesize !== undefined) {
-            this.$weight.text(`${this._filesize.toFixed(1)} kb`);
-            this.$weight.removeClass('d-none');
-            this._relocateWeightEl();
-        }
-    },
+
+        this._relocateWeightEl();
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -6269,7 +6775,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             image.dataset.mimetype = values[1];
         }
         return this._applyOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -6279,7 +6785,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         this._getImg().dataset.quality = widgetValue;
         return this._applyOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -6291,7 +6797,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             delete dataset.glFilter;
         }
         return this._applyOptions();
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -6305,7 +6811,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const newOptions = Object.assign(JSON.parse(filterOptions || "{}"), {[filterProperty]: widgetValue});
         img.dataset.filterOptions = JSON.stringify(newOptions);
         return this._applyOptions();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -6317,13 +6823,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     _computeVisibility() {
         const src = this._getImg().getAttribute('src');
         return src && src !== '/';
-    },
+    }
     /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
         const img = this._getImg();
-        const _super = this._super.bind(this);
 
         // Make sure image is loaded because we need its naturalWidth
         await new Promise((resolve, reject) => {
@@ -6351,32 +6856,26 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
                 return options[filterProperty] || defaultValue;
             }
         }
-        return _super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @abstract
      */
-    _relocateWeightEl() {},
+    _relocateWeightEl() {}
     /**
      * @override
      */
-    async _renderCustomXML(uiFragment) {
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
         const img = this._getImg();
         if (!this.originalSrc || !this._isImageSupportedForProcessing(img)) {
-            return;
+            return context;
         }
-        const $select = $(uiFragment).find('we-select[data-name=format_select_opt]');
-        (await this._computeAvailableFormats()).forEach(([value, [label, targetFormat]]) => {
-            $select.append(`<we-button data-select-format="${Math.round(value)} ${targetFormat}" class="o_we_badge_at_end">${label} <span class="badge rounded-pill text-bg-dark">${targetFormat.split('/')[1]}</span></we-button>`);
-        });
+        context.availableFormats = await this._computeAvailableFormats();
+        context.noQuality = !['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img));
 
-        if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
-            const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
-            if (optQuality) {
-                optQuality.remove();
-            }
-        }
-    },
+        return context;
+    }
     /**
      * Returns a list of valid formats for a given image or an empty list if
      * there is no mimetypeBeforeConversion data attribute on the image.
@@ -6411,7 +6910,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
-    },
+    }
     /**
      * Applies all selected options on the original image.
      *
@@ -6448,7 +6947,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return loadedImg;
         }
         return img;
-    },
+    }
     /**
      * Loads the image's attachment info.
      *
@@ -6465,7 +6964,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         this.originalId = img.dataset.originalId;
         this.originalSrc = img.dataset.originalSrc;
         this.mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
-    },
+    }
     /**
      * Sets the image's width to its suggested size.
      *
@@ -6473,7 +6972,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _autoOptimizeImage() {
         await this._loadImageInfo();
-        await this._rerenderXML();
+        const newContext = await this._getRenderContext();
+        Object.assign(this.renderContext, newContext);
         const img = this._getImg();
         if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
             // Convert to recommended format and width.
@@ -6485,7 +6985,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         await this._applyOptions();
         await this.updateUI();
-    },
+    }
     /**
      * Returns the image that is currently being modified.
      *
@@ -6493,7 +6993,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @abstract
      * @returns {HTMLImageElement} the image to use for modifications
      */
-    _getImg() {},
+    _getImg() {}
     /**
      * Computes the image's maximum display width.
      *
@@ -6501,7 +7001,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @abstract
      * @returns {Int} the maximum width at which the image can be displayed
      */
-    _computeMaxDisplayWidth() {},
+    _computeMaxDisplayWidth() {}
     /**
      * Use the processed image when it's needed in the DOM.
      *
@@ -6509,7 +7009,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @abstract
      * @param {HTMLImageElement} img
      */
-    _applyImage(img) {},
+    _applyImage(img) {}
     /**
      * @private
      * @param {HTMLImageElement} img
@@ -6517,13 +7017,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _getImageMimetype(img) {
         return img.dataset.mimetype;
-    },
+    }
     /**
      * @private
      */
     async _initializeImage() {
         return this._loadImageInfo();
-    },
+    }
      /**
      * @private
      * @param {HTMLImageElement} img
@@ -6532,7 +7032,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _isImageSupportedForProcessing(img, strict = false) {
         return isImageSupportedForProcessing(this._getImageMimetype(img), strict);
-    },
+    }
     /**
      * @override
      */
@@ -6545,7 +7045,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return this._isImageSupportedForProcessing(img, true);
         }
         return isImageSupportedForStyle(this._getImg());
-    },
+    }
     /**
      * Indicates if an option should be applied only on supported mimetypes.
      *
@@ -6558,63 +7058,56 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             || 'customFilter' in params.optionsPossibleValues
             || params.optionsPossibleValues.setQuality
             || widgetName === 'format_select_opt';
-    },
-});
-
-/**
- * @param {Element} containerEl
- * @param {boolean} labelIsDimension - Optional display imgsize attribute instead of animated
- * @returns {Element}
- */
-const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl, labelIsDimension = false) {
-    const labelEl = document.createElement('span');
-    labelEl.classList.add('o_we_shape_animated_label');
-    let labelStr = _t("Animated");
-    const spanEl = document.createElement('span');
-    if (labelIsDimension) {
-        const dimensionIcon = document.createElement('i');
-        labelStr = containerEl.dataset.imgSize;
-        dimensionIcon.classList.add('fa', 'fa-expand');
-        labelEl.append(dimensionIcon);
-        spanEl.textContent = labelStr;
-    } else {
-        labelEl.textContent = labelStr[0];
-        spanEl.textContent = labelStr.substr(1);
     }
-    labelEl.appendChild(spanEl);
-    containerEl.classList.add('position-relative');
-    containerEl.appendChild(labelEl);
-    return labelEl;
-};
+    /**
+     *
+     */
+    _readableFilesize() {
+        return this._filesize && `${this._filesize.toFixed(1)} kb` || undefined;
+    }
+}
+
+class WeImgShapeBtn extends Component {
+    static template = "web_editor.WeImgShapeBtn";
+    static components = { WeButton };
+    static props = {
+         setImgShape: String,
+         animated: { type: String, optional: true },
+         imgSize: { type: String, optional: true },
+         "*": {},
+    };
+
+    constructor() {
+        super(...arguments);
+        const [moduleName, directory, shapeName] = this.props.setImgShape.split('/');
+        this.src = `/${encodeURIComponent(moduleName)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(shapeName)}.svg`;
+    }
+    setup() {
+        this.renderContext = useState(this.env.renderContext);
+    }
+}
+registry.category("snippet_widgets").add("WeImgShapeBtn", WeImgShapeBtn);
 
 /**
  * Controls image width and quality.
  */
-registry.ImageTools = ImageHandlerOption.extend({
-    MAX_SUGGESTED_WIDTH: 1920,
 
-    /**
-     * @constructor
-     */
-    init() {
+export class ImageTools extends ImageHandlerOption {
+    constructor() {
+        super(...arguments);
+        this.MAX_SUGGESTED_WIDTH = 1920;
         this.shapeCache = {};
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start() {
+
         this.$target.on('image_changed.ImageOptimization', this._onImageChanged.bind(this));
         this.$target.on('image_cropped.ImageOptimization', this._onImageCropped.bind(this));
-        return this._super(...arguments);
-    },
+    }
     /**
      * @override
      */
     destroy() {
         this.$target.off('.ImageOptimization');
-        return this._super(...arguments);
-    },
+        return super.destroy(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -6628,11 +7121,11 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async removeStretch(previewMode, widgetValue, params) {
         this.options.wysiwyg.odooEditor.historyPauseSteps();
-        this.trigger_up("disable_loading_effect");
+        this.env.disableLoadingEffect();
         // Preserve the cursor to be able to replace the image afterwards.
         const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
         const img = this._getImg();
-        const document = this.el.ownerDocument;
+        const document = this.env.ownerDocument();
         const imageCropWrapperElement = document.createElement("div");
         imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
         document.body.append(imageCropWrapperElement);
@@ -6654,21 +7147,21 @@ registry.ImageTools = ImageHandlerOption.extend({
         imageCropWrapper.destroy();
         imageCropWrapperElement.remove();
         restoreCursor();
-        this.trigger_up("enable_loading_effect");
+        this.env.enableLoadingEffect();
         if (!widgetValue) {
             this._onImageCropped();
         }
         this.options.wysiwyg.odooEditor.historyUnpauseSteps();
-    },
+    }
     /**
      * Displays the image cropping tools
      *
      * @see this.selectClass for parameters
      */
     async crop() {
-        this.trigger_up('disable_loading_effect');
+        this.env.disableLoadingEffect();
         const img = this._getImg();
-        const document = this.$el[0].ownerDocument;
+        const document = this.env.ownerDocument();
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
@@ -6688,16 +7181,16 @@ registry.ImageTools = ImageHandlerOption.extend({
         });
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
-        this.trigger_up('enable_loading_effect');
-    },
+        this.env.enableLoadingEffect();
+    }
     /**
      * Displays the image transformation tools
      *
      * @see this.selectClass for parameters
      */
     async transform() {
-        this.trigger_up('hide_overlay');
-        this.trigger_up('disable_loading_effect');
+        this.env.hideOverlay();
+        this.env.disableLoadingEffect();
 
         const document = this.$target[0].ownerDocument;
         const playState = this.$target[0].style.animationPlayState;
@@ -6729,8 +7222,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         await new Promise(resolve => {
             document.addEventListener('mouseup', resolve, {once: true});
         });
-        this.trigger_up('enable_loading_effect');
-    },
+        this.env.enableLoadingEffect();
+    }
     /**
      * Resets the image cropping
      *
@@ -6756,7 +7249,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         imageCropWrapperElement.remove();
 
         await this._reapplyCurrentShape();
-    },
+    }
     /**
      * Resets the image rotation and translation
      *
@@ -6766,12 +7259,12 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.$target
             .attr('style', (this.$target.attr('style') || '')
             .replace(/[^;]*transform[\w:]*;?/g, ''));
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
     async setImgShape(previewMode, widgetValue, params) {
-        this.trigger_up("disable_loading_effect");
+        this.env.disableLoadingEffect();
         const img = this._getImg();
         let clonedImgEl;
 
@@ -6787,7 +7280,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             img.insertAdjacentElement("afterend", clonedImgEl);
             img.classList.add("d-none");
 
-            const document = this.el.ownerDocument;
+            const document = this.env.ownerDocument();
             const imageCropWrapperElement = document.createElement("div");
             imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
             document.body.append(imageCropWrapperElement);
@@ -6823,13 +7316,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
 
         const saveData = previewMode === false;
-        if (img.dataset.hoverEffect && !widgetValue) {
-            // When a shape is removed and there is a hover effect on the
-            // image, we then place the "Square" shape as the default because a
-            // shape is required for the hover effects to work.
-            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-            widgetValue = shapeImgSquareWidget.getActiveValue("setImgShape");
-        }
+        widgetValue = this._removeImgShapeWithHoverEffectHook(img, widgetValue);
         if (widgetValue) {
             await this._loadShape(widgetValue);
             if (previewMode === 'reset' && img.dataset.shapeColors) {
@@ -6847,20 +7334,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 // When the user selects a shape, we remove the data attributes
                 // that are not compatible with this shape.
                 if (saveData) {
-                    if (!this._isTransformableShape()) {
-                        delete img.dataset.shapeFlip;
-                        delete img.dataset.shapeRotate;
-                    }
-                    if (!this._canHaveHoverEffect()) {
-                        delete img.dataset.hoverEffect;
-                        delete img.dataset.hoverEffectColor;
-                        delete img.dataset.hoverEffectStrokeWidth;
-                        delete img.dataset.hoverEffectIntensity;
-                        img.classList.remove("o_animate_on_hover");
-                    }
-                    if (!this._isAnimatedShape()) {
-                        delete img.dataset.shapeAnimationSpeed;
-                    }
+                    this._resetImgShape(img);
                 }
             }
         } else {
@@ -6885,8 +7359,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             clonedImgEl.remove();
             img.classList.remove("d-none");
         }
-        this.trigger_up("enable_loading_effect");
-    },
+        this.env.enableLoadingEffect();
+    }
     /**
      * Handles color assignment on the shape. Widget is a color picker.
      * If no value, we reset to the current color palette.
@@ -6901,7 +7375,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
         await this._applyShapeAndColors(true, newColors);
         img.classList.add('o_modified_image_to_save');
-    },
+    }
     /**
      * Flips the image shape horizontally.
      *
@@ -6909,7 +7383,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShapeFlipX(previewMode, widgetValue, params) {
         await this._setImgShapeFlip("x");
-    },
+    }
     /**
      * Flips the image shape vertically.
      *
@@ -6917,7 +7391,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShapeFlipY(previewMode, widgetValue, params) {
         await this._setImgShapeFlip("y");
-    },
+    }
     /**
      * Rotates the image shape 90 degrees to the left.
      *
@@ -6925,7 +7399,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShapeRotateLeft(previewMode, widgetValue, params) {
         await this._setImgShapeRotate(-90);
-    },
+    }
     /**
      * Rotates the image shape 90 degrees to the right.
      *
@@ -6933,137 +7407,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShapeRotateRight(previewMode, widgetValue, params) {
         await this._setImgShapeRotate(90);
-    },
-    /**
-     * Sets the hover effects of the image shape.
-     *
-     * @see this.selectClass for parameters
-     */
-    async setImgShapeHoverEffect(previewMode, widgetValue, params) {
-        const imgEl = this._getImg();
-        if (previewMode !== "reset") {
-            this.prevHoverEffectColor = imgEl.dataset.hoverEffectColor;
-            this.prevHoverEffectIntensity = imgEl.dataset.hoverEffectIntensity;
-            this.prevHoverEffectStrokeWidth = imgEl.dataset.hoverEffectStrokeWidth;
-        }
-        delete imgEl.dataset.hoverEffectColor;
-        delete imgEl.dataset.hoverEffectIntensity;
-        delete imgEl.dataset.hoverEffectStrokeWidth;
-        if (previewMode === true) {
-            if (params.name === "hover_effect_overlay_opt") {
-                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
-            } else if (params.name === "hover_effect_outline_opt") {
-                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
-                imgEl.dataset.hoverEffectStrokeWidth = 10;
-            } else {
-                imgEl.dataset.hoverEffectIntensity = 20;
-                if (params.name !== "hover_effect_mirror_blur_opt") {
-                    imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
-                }
-            }
-        } else {
-            if (this.prevHoverEffectColor) {
-                imgEl.dataset.hoverEffectColor = this.prevHoverEffectColor;
-            }
-            if (this.prevHoverEffectIntensity) {
-                imgEl.dataset.hoverEffectIntensity = this.prevHoverEffectIntensity;
-            }
-            if (this.prevHoverEffectStrokeWidth) {
-                imgEl.dataset.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
-            }
-        }
-        await this._reapplyCurrentShape();
-        // When the hover effects are first activated from the "animationMode"
-        // function of the "WebsiteAnimate" class, the history was paused to
-        // avoid recording intermediate steps. That's why we unpause it here.
-        if (this.firstHoverEffect) {
-            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
-            delete this.firstHoverEffect;
-        }
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
-            await this._reapplyCurrentShape();
-        }
-    },
-    /**
-     * Sets the color of hover effects.
-     *
-     * @see this.selectClass for parameters
-     */
-    async setHoverEffectColor(previewMode, widgetValue, params) {
-        const img = this._getImg();
-        let defaultColor = "rgba(0, 0, 0, 0)";
-        if (img.dataset.hoverEffect === "overlay") {
-            defaultColor = "black-25";
-        } else if (img.dataset.hoverEffect === "outline") {
-            defaultColor = "primary";
-        }
-        img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
-        await this._reapplyCurrentShape();
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    notify(name) {
-        if (name === "enable_hover_effect") {
-            this.trigger_up("snippet_edition_request", {exec: () => {
-                // Add the "square" shape to the image if it has no shape
-                // because the "hover effects" need a shape to work.
-                const imgEl = this._getImg();
-                const shapeName = imgEl.dataset.shape?.split("/")[2];
-                if (!shapeName) {
-                    const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-                    shapeImgSquareWidget.enable();
-                    shapeImgSquareWidget.getParent().close(); // FIXME remove this ugly hack asap
-                }
-                // Add the "Overlay" hover effect to the shape.
-                this.firstHoverEffect = true;
-                const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
-                hoverEffectOverlayWidget.enable();
-                hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
-            }});
-        } else if (name === "disable_hover_effect") {
-            this._disableHoverEffect();
-        } else {
-            this._super(...arguments);
-        }
-    },
-    /**
-     * @override
-     */
-    async updateUI() {
-        await this._super(...arguments);
-        // Adapts the colorpicker label according to the selected "On Hover"
-        // animation.
-        const hoverEffectName = this.$target[0].dataset.hoverEffect;
-        if (hoverEffectName) {
-            const hoverEffectColorWidget = this.findWidget("hover_effect_color_opt");
-            const needToAdaptLabel = ["image_zoom_in", "image_zoom_out", "dolly_zoom"].includes(hoverEffectName);
-            const labelEl = hoverEffectColorWidget.el.querySelector("we-title");
-            if (!this._originalHoverEffectColorLabel) {
-                this._originalHoverEffectColorLabel = labelEl.textContent;
-            }
-            labelEl.textContent = needToAdaptLabel
-                ? _t("Overlay")
-                : this._originalHoverEffectColorLabel;
-        }
-        // Move the "hover effects" options to the 'websiteAnimate' options.
-        const hoverEffectsOptionsEl = this.$el[0].querySelector("#o_hover_effects_options");
-        const animationEffectWidget = this._requestUserValueWidgets("animation_effect_opt")[0];
-        if (hoverEffectsOptionsEl && animationEffectWidget) {
-            animationEffectWidget.getParent().$el[0].append(hoverEffectsOptionsEl);
-        }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -7074,18 +7418,18 @@ registry.ImageTools = ImageHandlerOption.extend({
 ￼    */
     _isTransformed() {
         return this.$target.is('[style*="transform"]');
-    },
+    }
     /**
 ￼    * @private
 ￼    */
     _isCropped() {
         return this.$target.hasClass('o_we_image_cropped');
-    },
+    }
     /**
      * @override
      */
     async _applyOptions() {
-        const img = await this._super(...arguments);
+        const img = await super._applyOptions(...arguments);
         if (img && img.dataset.shape) {
             await this._loadShape(img.dataset.shape);
             if (/^data:/.test(img.src)) {
@@ -7094,7 +7438,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         }
         return img;
-    },
+    }
     /**
      * Loads the shape into cache if not already and sets it in the dataset of
      * the img
@@ -7110,7 +7454,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             this.shapeCache[fileName] = shape;
         }
         this._getImg().dataset.shape = shapeName;
-    },
+    }
 
     /**
      * Applies the shape in img.dataset.shape and replaces the previous hex
@@ -7142,7 +7486,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         // Also apply to carousel thumbnail if applicable.
         weUtils.forwardToThumbnail(img);
-    },
+    }
     /**
      * Replace animation durations in SVG and CSS with modified values.
      *
@@ -7189,7 +7533,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             svg = svg.replace(regex, subst);
         }
         return svg;
-    },
+    }
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
      *
@@ -7199,44 +7543,10 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _writeShape(svgText) {
         const img = this._getImg();
-        let needToRefreshPublicWidgets = false;
-        let hasHoverEffect = false;
-
-        // Add shape animations on hover.
-        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
-            // The "ImageShapeHoverEffet" public widget needs to restart
-            // (e.g. image replacement).
-            needToRefreshPublicWidgets = true;
-            hasHoverEffect = true;
-        }
-
         const dataURL = await this.computeShape(svgText, img);
-
-        let clonedImgEl = null;
-        if (hasHoverEffect) {
-            // This is useful during hover effects previews. Without this, in
-            // Chrome, the 'mouse out' animation is triggered very briefly when
-            // previewMode === 'reset' (when transitioning from one hover effect
-            // to another), causing a visual glitch. To avoid this, we hide the
-            // image with its clone when the source is set.
-            clonedImgEl = img.cloneNode(true);
-            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
-            img.classList.add("d-none");
-            img.insertAdjacentElement("afterend", clonedImgEl);
-            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
-        }
         const loadedImg = await loadImage(dataURL, img);
-        if (hasHoverEffect) {
-            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
-            clonedImgEl.remove();
-            img.classList.remove("d-none");
-            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
-        }
-        if (needToRefreshPublicWidgets) {
-            await this._refreshPublicWidgets();
-        }
         return loadedImg;
-    },
+    }
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
      *
@@ -7275,10 +7585,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             svg.querySelector("#filterPath").setAttribute("style", `transform: ${shapeTransformValues.join(" ")}; ${transformOrigin}`);
         }
 
-        // Add shape animations on hover.
-        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
-            this._addImageShapeHoverEffect(svg, img);
-        }
+        this._computeImgShapeHoverEffect(svg, img);
 
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
         // We will store the image in base64 inside the SVG.
@@ -7318,7 +7625,12 @@ registry.ImageTools = ImageHandlerOption.extend({
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
         return dataURL;
-    },
+    }
+    /**
+     * @param {SVGElement} svgEl
+     * @param {HTMLImageElement} imgEl
+     */
+    async _computeImgShapeHoverEffect(svgEl, imgEl) {}
     /**
      * @override
      */
@@ -7353,21 +7665,26 @@ registry.ImageTools = ImageHandlerOption.extend({
         // If it's not in a container, it's probably not going to change size
         // depending on breakpoints. We still keep a margin safety.
         return Math.round(Math.min(displayWidth * 1.5, this.MAX_SUGGESTED_WIDTH));
-    },
+    }
     /**
      * @override
      */
     _getImg() {
         return this.$target[0];
-    },
+    }
     /**
      * @override
      */
     _relocateWeightEl() {
-        const leftPanelEl = this.$overlay.data('$optionsSection')[0];
-        const titleTextEl = leftPanelEl.querySelector('we-title > span');
-        this.$weight.appendTo(titleTextEl);
-    },
+        this.renderContext.filesize = this._readableFilesize();
+        this.callbacks.updateExtraTitle(
+            markup(
+                `<span class="o_we_image_weight o_we_tag" title="${_t('Size')}">
+                    ${this.renderContext.filesize}
+                </span>`
+            )
+        );
+    }
     /**
      * @override
      */
@@ -7399,15 +7716,6 @@ registry.ImageTools = ImageHandlerOption.extend({
             "img_shape_transform_rotate_x_opt", "img_shape_transform_rotate_y_opt"].includes(params.name)) {
             return this._isTransformableShape();
         }
-        if (widgetName === "hover_effect_none_opt") {
-            // The hover effects are removed with the "WebsiteAnimate" animation
-            // selector so this option should not be visible.
-            return false;
-        }
-        if (params.optionsPossibleValues.setImgShapeHoverEffect) {
-            const imgEl = this._getImg();
-            return imgEl.classList.contains("o_animate_on_hover") && this._canHaveHoverEffect();
-        }
         // If "Description" or "Tooltip" options.
         if (["alt", "title"].includes(params.attributeName)) {
             return isImageSupportedForStyle(this._getImg());
@@ -7428,8 +7736,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (widgetName === "toggle_stretch_opt") {
             return this._isCropRequired();
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
@@ -7469,40 +7777,13 @@ registry.ImageTools = ImageHandlerOption.extend({
                 const imgEl = this._getImg();
                 return imgEl.dataset.shapeFlip?.includes("y") || "";
             }
-            case 'setHoverEffectColor': {
-                const imgEl = this._getImg();
-                return imgEl.dataset.hoverEffectColor || "";
-            }
             case "removeStretch": {
                 const imgEl = this._getImg();
                 return imgEl.dataset.aspectRatio !== "1/1";
             }
         }
-        return this._super(...arguments);
-    },
-    /**
-     * Appends the SVG as an image.
-     * Due to the nature of image_shapes' SVGs, it is easier to render them as
-     * img compared to appending their content to the DOM
-     * (which is what the current data-img does)
-     *
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        await this._super(...arguments);
-        uiFragment.querySelectorAll('we-select-page we-button[data-set-img-shape]').forEach(btn => {
-            const image = document.createElement('img');
-            const [moduleName, directory, shapeName] = btn.dataset.setImgShape.split('/');
-            image.src = `/${encodeURIComponent(moduleName)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(shapeName)}.svg`;
-            $(btn).prepend(image);
-
-            if (btn.dataset.animated) {
-                _addAnimatedShapeLabel(btn);
-            } else if (btn.dataset.imgSize) {
-                _addAnimatedShapeLabel(btn, true);
-            }
-        });
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -7510,8 +7791,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (img.dataset.shape && img.dataset.originalMimetype) {
             return img.dataset.originalMimetype;
         }
-        return this._super(...arguments);
-    },
+        return super._getImageMimetype(...arguments);
+    }
     /**
      * Gets the CSS value of a color variable name so it can be used on shapes.
      *
@@ -7523,7 +7804,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             return color;
         }
         return weUtils.getCSSVariableValue(color);
-    },
+    }
     /**
      * Overridden to set attachment data on theme images (with default shapes).
      *
@@ -7531,7 +7812,6 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @private
      */
     async _initializeImage() {
-        const _super = this._super.bind(this);
         let img = this._getImg();
 
         // Check first if the `src` and eventual `data-original-src` attributes
@@ -7574,14 +7854,14 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
             return this._loadImageInfo(`/web/image/${encodeURIComponent(match)}`);
         }
-        return _super(...arguments);
-    },
+        return super._initializeImage(...arguments);
+    }
     /**
      * @override
      * @private
      */
     async _loadImageInfo() {
-        await this._super(...arguments);
+        await super._loadImageInfo(...arguments);
         const img = this._getImg();
         if (img.dataset.shape) {
             if (img.dataset.mimetype !== "image/svg+xml") {
@@ -7594,12 +7874,8 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete img.dataset.originalMimetype;
                 delete img.dataset.shapeFlip;
                 delete img.dataset.shapeRotate;
-                delete img.dataset.hoverEffect;
-                delete img.dataset.hoverEffectColor;
-                delete img.dataset.hoverEffectStrokeWidth;
-                delete img.dataset.hoverEffectIntensity;
-                img.classList.remove("o_animate_on_hover");
                 delete img.dataset.shapeAnimationSpeed;
+                this._deleteHoverAttributes(img);
                 return;
             }
             if (img.dataset.mimetype !== "image/svg+xml") {
@@ -7609,7 +7885,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 img.dataset.mimetype = "image/svg+xml";
             }
         }
-    },
+    }
     /**
      * @private
      */
@@ -7620,7 +7896,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
             img.classList.add("o_modified_image_to_save");
         }
-    },
+    }
     /**
      * @override
      */
@@ -7628,8 +7904,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (widgetName === 'shape_img_opt') {
             return !isGif(this._getImageMimetype(this._getImg()));
         }
-        return this._super(...arguments);
-    },
+        return super._isImageProcessingWidget(...arguments);
+    }
     /**
      * Flips the image shape (vertically or/and horizontally).
      *
@@ -7649,7 +7925,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
         imgEl.classList.add("o_modified_image_to_save");
-    },
+    }
     /**
      * Rotates the image shape 90 degrees.
      *
@@ -7667,7 +7943,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
         imgEl.classList.add("o_modified_image_to_save");
-    },
+    }
     /**
      * Checks if the shape is in the "devices" category.
      *
@@ -7682,7 +7958,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         const shapeCategory = imgEl.dataset.shape.split("/")[1];
         return shapeCategory === "devices";
-    },
+    }
     /**
      * Checks if the shape is transformable.
      *
@@ -7692,7 +7968,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     _isTransformableShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return (shapeImgWidget && !shapeImgWidget.getMethodsParams().noTransform) && !this._isDeviceShape();
-    },
+    }
     /**
      * Checks if the shape is in animated.
      *
@@ -7702,7 +7978,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     _isAnimatedShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return shapeImgWidget?.getMethodsParams().animated;
-    },
+    }
     /**
      * Checks if squaring of image is required before application of shape.
      *
@@ -7712,184 +7988,30 @@ registry.ImageTools = ImageHandlerOption.extend({
     _isCropRequired() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return shapeImgWidget?.getMethodsParams().unstretch;
-    },
+    }
     /**
-     * Checks if the shape can have a hover effect.
-     *
      * @private
-     * @returns {boolean}
+     * @param {HTMLImageElement} imgEl
      */
-    _canHaveHoverEffect() {
-        return !this._isDeviceShape() && !this._isAnimatedShape() && this._isImageSupportedForShapes();
-    },
+    _resetImgShape(imgEl) {
+        if (!this._isTransformableShape()) {
+            delete imgEl.dataset.shapeFlip;
+            delete imgEl.dataset.shapeRotate;
+        }
+    }
     /**
-     * Adds hover effect to the SVG.
-     *
      * @private
-     * @param {HTMLElement} svgEl
-     * @param {HTMLImageElement} [img] img element
+     * @param {HTMLImageElement} imgEl
+     * @see this.selectClass for widgetValue
      */
-    async _addImageShapeHoverEffect(svgEl, img) {
-        let rgba = null;
-        let rbg = null;
-        let opacity = null;
-        // Add the required parts for the hover effects to the SVG.
-        const hoverEffectName = img.dataset.hoverEffect;
-        if (!this.hoverEffectsSvg) {
-            this.hoverEffectsSvg = await this._getHoverEffects();
-        }
-        const hoverEffectEls = this.hoverEffectsSvg.querySelectorAll(`#${hoverEffectName} > *`);
-        hoverEffectEls.forEach(hoverEffectEl => {
-            svgEl.appendChild(hoverEffectEl.cloneNode(true));
-        });
-        // Modifies the svg according to the chosen hover effect and the value
-        // of the options.
-        const animateEl = svgEl.querySelector("animate");
-        const animateTransformEls = svgEl.querySelectorAll("animateTransform");
-        const animateElValues = animateEl?.getAttribute("values");
-        let animateTransformElValues = animateTransformEls[0]?.getAttribute("values");
-        if (img.dataset.hoverEffectColor) {
-            rgba = convertCSSColorToRgba(img.dataset.hoverEffectColor);
-            rbg = `rgb(${rgba.red},${rgba.green},${rgba.blue})`;
-            opacity = rgba.opacity / 100;
-            if (!["outline", "image_mirror_blur"].includes(hoverEffectName)) {
-                svgEl.querySelector('[fill="hover_effect_color"]').setAttribute("fill", rbg);
-                animateEl.setAttribute("values", animateElValues.replace("hover_effect_opacity", opacity));
-            }
-        }
-        switch (hoverEffectName) {
-            case "outline": {
-                svgEl.querySelector('[stroke="hover_effect_color"]').setAttribute("stroke", rbg);
-                svgEl.querySelector('[stroke-opacity="hover_effect_opacity"]').setAttribute("stroke-opacity", opacity);
-                // The stroke width needs to be multiplied by two because half
-                // of the stroke is invisible since it is centered on the path.
-                const strokeWidth = parseInt(img.dataset.hoverEffectStrokeWidth) * 2;
-                animateEl.setAttribute("values", animateElValues.replace("hover_effect_stroke_width", strokeWidth));
-                break;
-            }
-            case "image_zoom_in":
-            case "image_zoom_out":
-            case "dolly_zoom": {
-                const imageEl = svgEl.querySelector("image");
-                const clipPathEl = svgEl.querySelector("#clip-path");
-                imageEl.setAttribute("id", "shapeImage");
-                // Modify the SVG so that the clip-path is not zoomed when the
-                // image is zoomed.
-                imageEl.setAttribute("style", "transform-origin: center; width: 100%; height: 100%");
-                imageEl.setAttribute("preserveAspectRatio", "none");
-                svgEl.setAttribute("viewBox", "0 0 1 1");
-                svgEl.setAttribute("preserveAspectRatio", "none");
-                clipPathEl.setAttribute("clipPathUnits", "userSpaceOnUse");
-                const clipPathValue = imageEl.getAttribute("clip-path");
-                imageEl.removeAttribute("clip-path");
-                const gEl = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                gEl.setAttribute("clip-path", clipPathValue);
-                imageEl.parentNode.replaceChild(gEl, imageEl);
-                gEl.appendChild(imageEl);
-                let zoomValue = 1.01 + parseInt(img.dataset.hoverEffectIntensity) / 200;
-                animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
-                if (hoverEffectName === "image_zoom_out") {
-                    // Set zoom intensity for the image.
-                    const styleAttr = svgEl.querySelector("style");
-                    styleAttr.textContent = styleAttr.textContent.replace("hover_effect_zoom", zoomValue);
-                }
-                if (hoverEffectName === "dolly_zoom") {
-                    clipPathEl.setAttribute("style", "transform-origin: center;");
-                    // Set zoom intensity for clip-path and overlay.
-                    zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 2000;
-                    animateTransformEls.forEach((animateTransformEl, index) => {
-                        if (index > 0) {
-                            animateTransformElValues = animateTransformEl.getAttribute("values");
-                            animateTransformEl.setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
-                        }
-                    });
-                }
-                break;
-            }
-            case "image_mirror_blur": {
-                const imageEl = svgEl.querySelector("image");
-                imageEl.setAttribute('id', 'shapeImage');
-                imageEl.setAttribute('style', 'transform-origin: center;');
-                const imageMirrorEl = imageEl.cloneNode();
-                imageMirrorEl.setAttribute("id", 'shapeImageMirror');
-                imageMirrorEl.setAttribute("filter", "url(#blurFilter)");
-                imageEl.insertAdjacentElement("beforebegin", imageMirrorEl);
-                const zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 200;
-                animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
-                break;
-            }
-        }
-    },
+    _removeImgShapeWithHoverEffectHook(imgEl, widgetValue) {
+        return widgetValue;
+    }
     /**
-     * Gets the hover effects list.
-     *
      * @private
-     * @returns {HTMLElement}
+     * @param {HTMLImageElement} imgEl
      */
-    _getHoverEffects() {
-        const hoverEffectsURL = "/website/static/src/svg/hover_effects.svg";
-        return fetch(hoverEffectsURL)
-            .then(response => response.text())
-            .then(text => {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(text, "text/xml");
-                return xmlDoc.getElementsByTagName("svg")[0];
-            });
-    },
-    /**
-     * Disables the hover effect on the image.
-     *
-     * @private
-     */
-    async _disableHoverEffect() {
-        const imgEl = this._getImg();
-        const shapeName = imgEl.dataset.shape?.split("/")[2];
-        delete imgEl.dataset.hoverEffect;
-        delete imgEl.dataset.hoverEffectColor;
-        delete imgEl.dataset.hoverEffectStrokeWidth;
-        delete imgEl.dataset.hoverEffectIntensity;
-        await this._applyOptions();
-        // If "Square" shape, remove it, it doesn't make sense to keep it
-        // without hover effect.
-        if (shapeName === "geo_square") {
-            this._requestUserValueWidgets("remove_img_shape_opt")[0].enable();
-        }
-    },
-    /**
-     * @override
-     */
-    async _select(previewMode, widget) {
-        await this._super(...arguments);
-        // This is a special case where we need to override the "_select"
-        // function in order to trigger mouse events for hover effects on the
-        // images when previewing the options. This is done here because if it
-        // was done in one of the widget methods, the animation would be
-        // canceled when "_refreshPublicWidgets" is executed in the "_super"
-        if (widget.$el[0].closest("#o_hover_effects_options")) {
-            const hasSetImgShapeHoverEffectMethod = widget.getMethodsNames().includes("setImgShapeHoverEffect");
-            // We trigger the animation when preview mode is "false", except for
-            // the "setImgShapeHoverEffect" option, where we trigger it when
-            // preview mode is "true".
-            if (previewMode === hasSetImgShapeHoverEffectMethod) {
-                this.$target[0].dispatchEvent(new Event("mouseover"));
-                this.hoverTimeoutId = setTimeout(() => {
-                    this.$target[0].dispatchEvent(new Event("mouseout"));
-                }, 700);
-            } else if (previewMode === "reset") {
-                clearTimeout(this.hoverTimeoutId);
-            }
-        }
-    },
-    /**
-     * Checks if a shape can be applied on the target.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _isImageSupportedForShapes() {
-        const imgEl = this._getImg();
-        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
-    },
+    _deleteHoverAttributes(imgEl) {}
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -7902,11 +8024,11 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @param {Event} ev
      */
     async _onImageChanged(ev) {
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        this.env.snippetEditionRequest(async () => {
             await this._autoOptimizeImage();
-            this.trigger_up('cover_update');
-        }});
-    },
+            this.callbacks.coverUpdate();
+        });
+    }
     /**
      * Available widths will change, need to rerender the width select.
      *
@@ -7914,28 +8036,31 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @param {Event} ev
      */
     async _onImageCropped(ev) {
-        await this._rerenderXML();
-    },
-});
+        this.env.snippetEditionRequest(async () => {
+            await this._autoOptimizeImage();
+            this.callbacks.coverUpdate();
+        });
+    }
+}
 
 /**
  * Controls background image width and quality.
  */
-registry.BackgroundOptimize = ImageHandlerOption.extend({
+export class BackgroundOptimize extends ImageHandlerOption {
     /**
      * @override
      */
-    start() {
+    async willStart() {
         this.$target.on('background_changed.BackgroundOptimize', this._onBackgroundChanged.bind(this));
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
-    destroy() {
+    cleanForSave() {
         this.$target.off('.BackgroundOptimize');
-        return this._super(...arguments);
-    },
+        return super.cleanForSave(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -7946,13 +8071,13 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     _getImg() {
         return this.img;
-    },
+    }
     /**
      * @override
      */
     _computeMaxDisplayWidth() {
         return 1920;
-    },
+    }
     /**
      * Initializes this.img to an image with the background image url as src.
      *
@@ -7977,18 +8102,18 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
             // modified)
             this.img.src = src.startsWith("/") ? src : "";
         }
-        return await this._super(...arguments);
-    },
+        return await super._loadImageInfo(...arguments);
+    }
     /**
      * @override
      */
     _relocateWeightEl() {
-        this.trigger_up('option_update', {
-            optionNames: ['BackgroundImage'],
-            name: 'add_size_indicator',
-            data: this.$weight,
-        });
-    },
+        this.callbacks.notifyOptions({
+           optionNames: ['BackgroundImage'],
+           name: 'add_size_indicator',
+           data: this._readableFilesize(),
+       });
+    }
     /**
      * @override
      */
@@ -8012,7 +8137,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
             this.$target[0].dataset[key] = value;
         });
         this.$target[0].dataset.bgSrc = img.getAttribute("src");
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -8026,14 +8151,14 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     async _onBackgroundChanged(ev, previewMode) {
         ev.stopPropagation();
         if (!previewMode) {
-            this.trigger_up('snippet_edition_request', {exec: async () => {
+            this.env.snippetEditionRequest(async () => {
                 await this._autoOptimizeImage();
-            }});
+            });
         }
-    },
-});
+    }
+}
 
-registry.BackgroundToggler = SnippetOptionWidget.extend({
+export class BackgroundToggler extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -8049,13 +8174,13 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
-            const bgImageOpt = bgImageWidget.getParent();
+            const bgImageOpt = bgImageWidget.option;
             return bgImageOpt.background(false, '', bgImageWidget.getMethodsParams('background'));
         } else {
             // TODO: use trigger instead of el.click when possible
-            this._requestUserValueWidgets('bg_image_opt')[0].el.click();
+            this._requestUserValueWidgets('bg_image_opt')[0].enable();
         }
-    },
+    }
     /**
      * Toggles background shape on or off.
      *
@@ -8063,11 +8188,11 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgShape(previewMode, widgetValue, params) {
         const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
-        const shapeOption = shapeWidget.getParent();
+        const shapeOption = shapeWidget.option;
         // TODO: open select after shape was selected?
         // TODO: use setWidgetValue instead of calling shapeOption method directly when possible
         return shapeOption._toggleShape();
-    },
+    }
     /**
      * Sets a color filter.
      *
@@ -8102,7 +8227,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
         const obj = createPropertyProxy(this, '$target', $(filterEl));
         params.cssProperty = 'background-color';
         return this.selectStyle.call(obj, previewMode, widgetValue, params);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8115,12 +8240,12 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
         switch (methodName) {
             case 'toggleBgImage': {
                 const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
-                const bgImageOpt = bgImageWidget.getParent();
+                const bgImageOpt = bgImageWidget.option;
                 return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
             }
             case 'toggleBgShape': {
                 const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
-                const shapeOption = shapeWidget.getParent();
+                const shapeOption = shapeWidget.option;
                 return !!shapeOption._computeWidgetState('shape', shapeWidget.getMethodsParams('shape'));
             }
             case 'selectFilterColor': {
@@ -8133,27 +8258,27 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
                 return this._computeWidgetState.call(obj, 'selectStyle', params);
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
     _getLastPreFilterLayerElement() {
         return null;
-    },
-});
+    }
+}
 
 /**
  * Handles the edition of snippet's background image.
  */
-registry.BackgroundImage = SnippetOptionWidget.extend({
+export class BackgroundImage extends SnippetOption {
     /**
      * @override
      */
-    start: function () {
+    willStart() {
         this.__customImageSrc = getBgImageURL(this.$target[0]);
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -8164,7 +8289,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: async function (previewMode, widgetValue, params) {
+    async background(previewMode, widgetValue, params) {
         if (previewMode === true) {
             this.__customImageSrc = getBgImageURL(this.$target[0]);
         } else if (previewMode === 'reset') {
@@ -8179,7 +8304,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
             this.$target.trigger('background_changed', [previewMode]);
         }
-    },
+    }
     /**
      * Changes the main color of dynamic SVGs.
      *
@@ -8203,7 +8328,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         if (!previewMode) {
             this.previousSrc = src;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -8214,15 +8339,15 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      */
     notify(name, data) {
         if (name === 'add_size_indicator') {
-            this._requestUserValueWidgets('bg_image_opt')[0].$el.after(data);
+            this.renderContext.filesize = data;
         } else {
-            this._super(...arguments);
+            super.notify(...arguments);
         }
-    },
+    }
     /**
      * @override
      */
-    setTarget: function () {
+    setTarget() {
         // When we change the target of this option we need to transfer the
         // background-image and the dataset information relative to this image
         // from the old target to the new one.
@@ -8240,7 +8365,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         // target as its image source will be deleted.
         this.$target[0].classList.remove("o_modified_image_to_save");
         this._setBackground('');
-        this._super(...arguments);
+        super.setTarget(...arguments);
         if (oldBgURL) {
             this._setBackground(oldBgURL);
             filteredOldDataset.forEach(([key, value]) => {
@@ -8251,7 +8376,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
 
         // TODO should be automatic for all options as equal to the start method
         this.__customImageSrc = getBgImageURL(this.$target[0]);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8260,15 +8385,15 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'background':
                 return getBgImageURL(this.$target[0]);
             case 'dynamicColor':
                 return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get(params.colorName);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -8280,8 +8405,8 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @private
      * @param {string} backgroundURL
@@ -8306,23 +8431,28 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         this.selectStyle(false, combined, {
             cssProperty: 'background-image',
         });
-    },
-});
+    }
+}
 
 /**
  * Handles background shapes.
  */
-registry.BackgroundShape = SnippetOptionWidget.extend({
+export class BackgroundShape extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.debugRow = true;
+    }
     /**
      * @override
      */
-    updateUI({assetsChanged} = {}) {
+    async updateUI({assetsChanged} = {}) {
         if (this.rerender || assetsChanged) {
             this.rerender = false;
-            return this._rerenderXML();
+            const newContext = await this._getRenderContext();
+            Object.assign(this.renderContext, newContext);
         }
-        return this._super.apply(this, arguments);
-    },
+        return super.updateUI(this, arguments);
+    }
     /**
      * @override
      */
@@ -8334,7 +8464,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 return {flip: this._getShapeData().flip};
             });
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -8355,7 +8485,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 shapeAnimationSpeed: this._getShapeData().shapeAnimationSpeed,
             };
         });
-    },
+    }
     /**
      * Sets the current background shape's colors.
      *
@@ -8369,7 +8499,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             const newColors = Object.assign(previousColors, {[colorName]: newColor});
             return {colors: newColors};
         });
-    },
+    }
     /**
      * Flips the shape on its x axis.
      *
@@ -8377,7 +8507,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     flipX(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'x');
-    },
+    }
     /**
      * Flips the shape on its y axis.
      *
@@ -8385,7 +8515,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     flipY(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'y');
-    },
+    }
     /**
      * Shows/Hides the shape on mobile.
      *
@@ -8395,7 +8525,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         this._handlePreviewState(previewMode, () => {
             return {showOnMobile: !this._getShapeData().showOnMobile};
         });
-    },
+    }
     /**
      * Sets the speed of the animation of a background shape.
      *
@@ -8405,7 +8535,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         this._handlePreviewState(previewMode, () => {
             return { shapeAnimationSpeed: widgetValue };
         });
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8442,8 +8572,8 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 return this._getShapeData().shapeAnimationSpeed;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -8452,16 +8582,14 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             const bgShapeWidget = this._requestUserValueWidgets("bg_shape_opt")[0];
             return bgShapeWidget.getMethodsParams().animated === "true";
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
-    _renderCustomXML(uiFragment) {
-        Object.keys(this._getDefaultColors()).map(colorName => {
-            uiFragment.querySelector('[data-name="colors"]')
-                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
-        });
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
+        const colorPickers = Object.keys(this._getDefaultColors());
 
         // Inventory shape URLs per class.
         const style = window.getComputedStyle(this.$target[0]);
@@ -8481,30 +8609,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                     }
                 }
             }
+            context._shapeBackgroundImagePerClass = this._shapeBackgroundImagePerClass;
         }
-
-        uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
-            const btnContent = document.createElement('div');
-            btnContent.classList.add('o_we_shape_btn_content', 'position-relative', 'border-dark');
-            const btnContentInnerDiv = document.createElement('div');
-            btnContentInnerDiv.classList.add('o_we_shape');
-            btnContent.appendChild(btnContentInnerDiv);
-
-            if (btn.dataset.animated) {
-                _addAnimatedShapeLabel(btnContent);
-            }
-
-            const {shape} = btn.dataset;
-            const shapeEl = btnContent.querySelector('.o_we_shape');
-            const shapeClassName = `o_${shape.replace(/\//g, '_')}`;
-            shapeEl.classList.add(shapeClassName);
-            // Match current palette.
-            const shapeBackgroundImage = this._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
-            shapeEl.style.setProperty("background-image", shapeBackgroundImage);
-            btn.append(btnContent);
-        });
-        return uiFragment;
-    },
+        context.colorPickers = colorPickers;
+        return context;
+    }
     /**
      * Flips the shape on its x/y axis.
      *
@@ -8521,7 +8630,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             }
             return {flip: [...flip]};
         });
-    },
+    }
     /**
      * Inserts or removes the given container at the right position in the
      * document.
@@ -8544,7 +8653,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             }
         }
         return newContainer;
-    },
+    }
     /**
      * Creates and inserts a container for the shape with the right classes.
      *
@@ -8555,7 +8664,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         this.$target[0].style.position = 'relative';
         shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
         return shapeContainer;
-    },
+    }
     /**
      * Handles everything related to saving state before preview and restoring
      * it after a preview or locking in the changes when not in preview.
@@ -8632,14 +8741,14 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             this.prevShapeContainer = shapeContainer.cloneNode(true);
             this.prevShape = target.dataset.oeShapeData;
         }
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} shapeEl
      */
     _removeShapeEl(shapeEl) {
         shapeEl.remove();
-    },
+    }
     /**
      * Overwrites shape properties with the specified data.
      *
@@ -8660,7 +8769,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         } else {
             this.$target[0].dataset.oeShapeData = JSON.stringify(shapeData);
         }
-    },
+    }
     /**
      * @private
      */
@@ -8670,7 +8779,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             return $filterEl[0];
         }
         return null;
-    },
+    }
     /**
      * Returns the src of the shape corresponding to the current parameters.
      *
@@ -8693,7 +8802,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             searchParams.push(`shapeAnimationSpeed=${encodeURIComponent(shapeAnimationSpeed)}`);
         }
         return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join('&')}`;
-    },
+    }
     /**
      * Retrieves current shape data from the target's dataset.
      *
@@ -8711,7 +8820,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         };
         const json = target.dataset.oeShapeData;
         return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
-    },
+    }
     /**
      * Returns the default colors for the currently selected shape.
      *
@@ -8734,7 +8843,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
-    },
+    }
     /**
      * Returns the default colors for the a shape in the selector.
      *
@@ -8742,12 +8851,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @param {String} shapeId identifier of the shape
      */
     _getShapeDefaultColors(shapeId) {
-        const $shapeContainer = this.$el.find(".o_we_bg_shape_menu we-button[data-shape='" + shapeId + "'] div.o_we_shape");
-        const shapeContainer = $shapeContainer[0];
-        const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
+        const shapeClassName = `o_we_shape.${shapeId.replace(new RegExp('/', 'g'), '_')}`;
+        const shapeSrc = getBgImageURL(this.renderContext._shapeBackgroundImagePerClass[shapeClassName]);
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
-    },
+    }
     /**
      * Returns the implicit colors for the currently selected shape.
      *
@@ -8772,7 +8880,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const defaultKeys = Object.keys(defaultColors);
         colors = Object.assign(defaultColors, colors);
         return pick(colors, ...defaultKeys);
-    },
+    }
     /**
      * Toggles whether there is a shape or not, to be called from bg toggler.
      *
@@ -8785,7 +8893,8 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             const target = this.$target[0];
             const previousSibling = target.previousElementSibling;
             const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
-            const possibleShapes = shapeWidget.getMethodsParams('shape').possibleValues;
+            const params = shapeWidget.getMethodsParams("shape");
+            const possibleShapes = params.possibleValues;
             let shapeToSelect;
             if (previousSibling) {
                 const previousShape = this._getShapeData(previousSibling).shape;
@@ -8802,9 +8911,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             }
             // Only show on mobile by default if toggled from mobile view
             const showOnMobile = weUtils.isMobileView(this.$target[0]);
-            this.trigger_up('snippet_edition_request', {exec: () => {
+            this.options.snippetEditionRequest({exec: () => {
                 // options for shape will only be available after _toggleShape() returned
-                this._requestUserValueWidgets('bg_shape_opt')[0].enable();
+                this._requestUserValueWidgets('bg_shape_opt')[0].open();
             }});
             this._createShapeContainer(shapeToSelect);
             return this._handlePreviewState(false, () => (
@@ -8815,55 +8924,68 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 }
             ));
         }
-    },
-});
+    }
+}
+
+export class WeShapeBtn extends Component {
+    static template = "web_editor.WeShapeBtn";
+    static components = { WeButton };
+    static props = {
+        shape: String,
+        selectLabel: String,
+        animated: { type: Boolean, optional: true },
+    };
+    setup() {
+        this.renderContext = useState(this.env.renderContext);
+    }
+}
+
+registry.category("snippet_widgets").add("WeShapeBtn", WeShapeBtn);
+
+export class BackgroundShapePosition extends SnippetOptionComponent {
+    static template = "web_editor.BackgroundShape";
+}
 
 /**
  * Handles the edition of snippets' background image position.
  */
-registry.BackgroundPosition = SnippetOptionWidget.extend({
+class BackgroundPosition extends SnippetOption {
     /**
      * @override
      */
-    start: function () {
-        this._super.apply(this, arguments);
-
+    willStart() {
         this._initOverlay();
-
-        // Resize overlay content on window resize because background images
-        // change size, and on carousel slide because they sometimes take up
-        // more space and move elements around them.
         $(window).on('resize.bgposition', () => this._dimensionOverlay());
-    },
+        return super.willStart();
+    }
     /**
      * @override
      */
-    destroy: function () {
+    cleanUI() {
         this._toggleBgOverlay(false);
         $(window).off('.bgposition');
-        this._super.apply(this, arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
-    /**
+    /*
      * Sets the background type (cover/repeat pattern).
      *
      * @see this.selectClass for params
      */
-    backgroundType: function (previewMode, widgetValue, params) {
+    backgroundType(previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
         this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
-    },
+    }
     /**
      * Saves current background position and enables overlay.
      *
      * @see this.selectClass for params
      */
-    backgroundPositionOverlay: async function (previewMode, widgetValue, params) {
+    async backgroundPositionOverlay(previewMode, widgetValue, params) {
         // Updates the internal image
         await new Promise(resolve => {
             this.img = document.createElement('img');
@@ -8896,11 +9018,11 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             await scrollTo(this.$target[0], { behavior: "smooth", offset: 50 });
         }
         this._toggleBgOverlay(true);
-    },
+    }
     /**
      * @override
      */
-    selectStyle: function (previewMode, widgetValue, params) {
+    selectStyle(previewMode, widgetValue, params) {
         if (params.cssProperty === 'background-size'
                 && !this.$target.hasClass('o_bg_img_opt_repeat')) {
             // Disable the option when the image is in cover mode, otherwise
@@ -8908,7 +9030,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
         this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -8917,25 +9039,25 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeVisibility: function () {
-        return this._super(...arguments) && !!getBgImageURL(this.$target[0]);
-    },
+    _computeVisibility() {
+        return super._computeVisibility && !!getBgImageURL(this.$target[0]);
+    }
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         if (methodName === 'backgroundType') {
             return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Initializes the overlay, binds events to the buttons, inserts it in
      * the DOM.
      *
      * @private
      */
-    _initOverlay: function () {
+    _initOverlay() {
         this.$backgroundOverlay = $(renderToElement('web_editor.background_position_overlay'));
         this.$overlayContent = this.$backgroundOverlay.find('.o_we_overlay_content');
         this.$overlayBackground = this.$overlayContent.find('.o_overlay_background');
@@ -8949,14 +9071,14 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         });
 
         this.$backgroundOverlay.insertAfter(this.$overlay);
-    },
+    }
     /**
      * Sets the overlay in the right place so that the draggable background
      * renders over the target, and size the background item like the target.
      *
      * @private
      */
-    _dimensionOverlay: function () {
+    _dimensionOverlay() {
         if (!this.$backgroundOverlay.is('.oe_active')) {
             return;
         }
@@ -8978,22 +9100,22 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
-    },
+    }
     /**
      * Toggles the overlay's display and renders a background clone inside of it.
      *
      * @private
      * @param {boolean} activate toggle the overlay on (true) or off (false)
      */
-    _toggleBgOverlay: function (activate) {
+    _toggleBgOverlay(activate) {
         if (!this.$backgroundOverlay || this.$backgroundOverlay.is('.oe_active') === activate) {
             return;
         }
 
         if (!activate) {
             this.$backgroundOverlay.removeClass('oe_active');
-            this.trigger_up('unblock_preview_overlays');
-            this.trigger_up('activate_snippet', {$snippet: this.$target});
+            this.env.unblockPreviewOverlays();
+            this.env.activateSnippet(this.$target);
 
             $(document).off('click.bgposition');
             if (this.$bgDragger) {
@@ -9002,12 +9124,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             return;
         }
 
-        this.trigger_up('hide_overlay');
-        this.trigger_up('activate_snippet', {
-            $snippet: this.$target,
-            previewMode: true,
-        });
-        this.trigger_up('block_preview_overlays');
+        this.env.hideOverlay();
+        this.env.activateSnippet(this.$target, true);
+        this.env.blockPreviewOverlays();
 
         // Create empty clone of $target with same display size, make it draggable and give it a tooltip.
         this.$bgDragger = this.$target.clone().empty();
@@ -9035,14 +9154,14 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
         // This is caused by the click event which we are currently handling bubbling up to the document.
         window.setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
-    },
+    }
     /**
      * Returns the difference between the target's size and the background's
      * rendered size. Background position values in % are a percentage of this.
      *
      * @private
      */
-    _getBackgroundDelta: function () {
+    _getBackgroundDelta() {
         const bgSize = this.$target.css('background-size');
         if (bgSize !== 'cover') {
             let [width, height] = bgSize.split(' ');
@@ -9069,7 +9188,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             x: this.$target.outerWidth() - Math.round(renderRatio * this.img.naturalWidth),
             y: this.$target.outerHeight() - Math.round(renderRatio * this.img.naturalHeight),
         };
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -9080,7 +9199,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      *
      * @private
      */
-    _onDragBackgroundStart: function (ev) {
+    _onDragBackgroundStart(ev) {
         ev.preventDefault();
         this.$bgDragger.addClass('o_we_grabbing');
         const $document = $(this.$target[0].ownerDocument);
@@ -9089,13 +9208,13 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             this.$bgDragger.removeClass('o_we_grabbing');
             $document.off('mousemove.bgposition');
         });
-    },
+    }
     /**
      * Drags the overlay's background image, copied to target on "Apply".
      *
      * @private
      */
-    _onDragBackgroundMove: function (ev) {
+    _onDragBackgroundMove(ev) {
         ev.preventDefault();
 
         const delta = this._getBackgroundDelta();
@@ -9119,18 +9238,18 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             bounds = bounds.sort();
             return Math.max(bounds[0], Math.min(val, bounds[1]));
         }
-    },
+    }
     /**
      * Deactivates the overlay if the user clicks outside of it.
      *
      * @private
      */
-    _onDocumentClicked: function (ev) {
+    _onDocumentClicked(ev) {
         if (!$(ev.target).closest('.o_we_background_position_overlay').length) {
             this._toggleBgOverlay(false);
         }
-    },
-});
+    }
+}
 
 /**
  * Marks color levels of any element that may get or has a color classes. This
@@ -9138,20 +9257,20 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
  * snippet drop (so that base snippet definition do not need to care about that)
  * and on first focus (for compatibility).
  */
-registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
+export class ColoredLevelBackground extends BackgroundToggler {
     /**
      * @override
      */
-    start: function () {
+    start() {
         this._markColorLevel();
         return this._super(...arguments);
-    },
+    }
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt() {
         this._markColorLevel();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9165,20 +9284,20 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
      *
      * @private
      */
-    _markColorLevel: function () {
+    _markColorLevel() {
         this.options.wysiwyg.odooEditor.observerUnactive('_markColorLevel');
         this.$target.addClass('o_colored_level');
         this.options.wysiwyg.odooEditor.observerActive('_markColorLevel');
-    },
-});
+    }
+}
 
-registry.ContainerWidth = SnippetOptionWidget.extend({
+class ContainerWidth extends SnippetOption {
     /**
      * @override
      */
-    cleanForSave: function () {
+    cleanForSave() {
         this.$target.removeClass('o_container_preview');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -9187,43 +9306,56 @@ registry.ContainerWidth = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
+    async selectClass(previewMode, widgetValue, params) {
+        await super.selectClass(...arguments);
         if (previewMode === 'reset') {
             this.$target.removeClass('o_container_preview');
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');
         }
-        this.trigger_up('option_update', {
+        this.callbacks.notifyOptions({
             optionName: 'StepsConnector',
             name: 'change_container_width',
         });
-    },
+    }
+}
+
+registerOption("container_width", {
+    Class: ContainerWidth,
+    template: "web_editor.container_width",
+    selector: "section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item",
+    exclude: "[data-snippet] :not(.oe_structure) > [data-snippet]",
+    target: "> .container, > .container-fluid, > .o_container_small",
 });
 
 /**
  * Allows to replace a text value with the name of a database record.
  * @todo replace this mechanism with real backend m2o field ?
  */
-registry.many2one = SnippetOptionWidget.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
-
+export class Many2oneOption extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
+    }
     /**
      * @override
      */
     async willStart() {
+        await super.willStart(...arguments);
         const {oeMany2oneModel, oeMany2oneId} = this.$target[0].dataset;
         this.fields = ['name', 'display_name'];
-        return Promise.all([
-            this._super(...arguments),
+        
+        const [{name: modelName}] = await this.orm.searchRead("ir.model", [['model', '=', oeMany2oneModel]], ['name']);
+        this.renderContext.model = oeMany2oneModel;
+        this.renderContext.fields = JSON.stringify(this.fields);
+        this.renderContext.modelName = modelName;
+
+        return Promise.resolve([
             this.orm.read(oeMany2oneModel, [parseInt(oeMany2oneId)], this.fields).then(([initialRecord]) => {
                 this.initialRecord = initialRecord;
             }),
         ]);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -9263,7 +9395,7 @@ registry.many2one = SnippetOptionWidget.extend({
             this.$prevContents = this.$target.contents();
             this.prevRecordName = record.name;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9276,22 +9408,8 @@ registry.many2one = SnippetOptionWidget.extend({
         if (methodName === 'changeRecord') {
             return this.$target[0].dataset.oeMany2oneId;
         }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        const many2oneWidget = document.createElement('we-many2one');
-        many2oneWidget.dataset.changeRecord = '';
-
-        const model = this.$target[0].dataset.oeMany2oneModel;
-        const [{name: modelName}] = await this.orm.searchRead("ir.model", [['model', '=', model]], ['name']);
-        many2oneWidget.setAttribute('String', modelName);
-        many2oneWidget.dataset.model = model;
-        many2oneWidget.dataset.fields = JSON.stringify(this.fields);
-        uiFragment.appendChild(many2oneWidget);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
@@ -9326,12 +9444,19 @@ registry.many2one = SnippetOptionWidget.extend({
                     node.textContent = defaultText;
                 }
             }));
-    },
+    }
+}
+registerOption("Many2oneOption", {
+    Class: Many2oneOption,
+    template: "web_editor.many2one",
+    selector: "[data-oe-many2one-model]:not([data-oe-readonly])",
+    noCheck: true,
 });
+
 /**
  * Allows to display a warning message on outdated snippets.
  */
-registry.VersionControl = SnippetOptionWidget.extend({
+class VersionControl extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -9343,7 +9468,7 @@ registry.VersionControl = SnippetOptionWidget.extend({
     async replaceSnippet() {
         // Getting the new block version.
         let newBlockEl;
-        this.trigger_up("find_snippet_template", {
+        this.env.findSnippetTemplate({
             snippet: this.$target[0],
             callback: (snippet) => {
                 newBlockEl = snippet.baseBody.cloneNode(true);
@@ -9363,27 +9488,27 @@ registry.VersionControl = SnippetOptionWidget.extend({
                 });
             });
             await new Promise(resolve => {
-                this.trigger_up("remove_snippet",
-                    {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false}
-                );
+                this.env.removeSnippet({
+                    data: {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false},
+                    stopPropagation: (ev) => {},
+                });
             });
             this.options.wysiwyg.odooEditor.historyUnpauseSteps();
             newBlockEl.classList.remove("oe_snippet_body");
             this.options.wysiwyg.odooEditor.historyStep();
         });
-    },
+    }
     /**
      * Allows to still access the options of an outdated block, despite the
      * warning.
      */
     discardAlert() {
-        const alertEl = this.$el[0].querySelector("we-alert");
+        this.renderContext.showAlert = false;
         const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
-        alertEl.remove();
         optionsSectionEl.classList.remove("o_we_outdated_block_options");
         // Preventing the alert to reappear at each render.
         controlledSnippets.add(this.$target[0].dataset.snippet);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9392,32 +9517,40 @@ registry.VersionControl = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _renderCustomXML(uiFragment) {
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
         const snippetName = this.$target[0].dataset.snippet;
         // Do not display the alert if it was previously discarded.
-        if (controlledSnippets.has(snippetName)) {
-            return;
+        if (! controlledSnippets.has(snippetName)) {
+            this.env.getSnippetVersions({
+                snippetName: snippetName,
+                onSuccess: snippetVersions => {
+                    const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
+                    if (!isUpToDate) {
+                        context.showAlert = true;
+                        // uiFragment.prepend(renderToElement("web_editor.outdated_block_message"));
+                        // Hide the other options, to only have the alert displayed.
+                        const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
+                        optionsSectionEl.classList.add("o_we_outdated_block_options");
+                    }
+                },
+            });
         }
-        this.trigger_up("get_snippet_versions", {
-            snippetName: snippetName,
-            onSuccess: snippetVersions => {
-                const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
-                if (!isUpToDate) {
-                    uiFragment.prepend(renderToElement("web_editor.outdated_block_message"));
-                    // Hide the other options, to only have the alert displayed.
-                    const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
-                    optionsSectionEl.classList.add("o_we_outdated_block_options");
-                }
-            },
-        });
-    },
+        return context;
+    }
+}
+
+registerOption("VersionControl", {
+    Class: VersionControl,
+    template: "web_editor.outdated_block_message_option",
+    selector: "[data-snippet]",
 });
 
 /**
  * Handle the save of a snippet as a template that can be reused later
  */
-registry.SnippetSave = SnippetOptionWidget.extend({
-    isTopOption: true,
+export class SnippetSave extends SnippetOption {
+    static isTopOption = true;
 
     //--------------------------------------------------------------------------
     // Options
@@ -9426,7 +9559,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    saveSnippet: function (previewMode, widgetValue, params) {
+    saveSnippet(previewMode, widgetValue, params) {
         return new Promise(resolve => {
             this.dialog.add(ConfirmationDialog, {
                 body: _t("To save a snippet, we need to save all your previous modifications and reload the page."),
@@ -9437,13 +9570,9 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     const isButton = this.$target[0].matches("a.btn");
                     const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
                     let thumbnailURL;
-                    this.trigger_up('snippet_thumbnail_url_request', {
+                    this.env.snippetThumbnailUrlRequest({
                         key: snippetKey,
                         onSuccess: url => thumbnailURL = url,
-                    });
-                    let context;
-                    this.trigger_up('context_get', {
-                        callback: ctx => context = ctx,
                     });
                     if (this.$target[0].matches("[data-snippet=s_popup]")) {
                         // Do not "cleanForSave" the popup before copying the
@@ -9451,7 +9580,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                         // therefore not visible in the "add snippet" dialog.
                         targetCopyEl = this.$target[0].cloneNode(true);
                     }
-                    this.trigger_up('request_save', {
+                    this.env.requestSave({
                         reloadEditor: true,
                         invalidateSnippetCache: true,
                         onSuccess: async () => {
@@ -9478,20 +9607,16 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                     break;
                                 }
                             }
-                            context['model'] = editableParentEl.dataset.oeModel;
-                            context['field'] = editableParentEl.dataset.oeField;
-                            context['resId'] = editableParentEl.dataset.oeId;
-                            await rpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
-                                model: "ir.ui.view",
-                                method: "save_snippet",
-                                args: [],
-                                kwargs: {
-                                    'name': defaultSnippetName,
-                                    'arch': targetCopyEl.outerHTML,
-                                    'template_key': this.options.snippets,
-                                    'snippet_key': snippetKey,
-                                    'thumbnail_url': thumbnailURL,
-                                    'context': context,
+                            await this.env.services.orm.call("ir.ui.view", "save_snippet", [], {
+                                'name': defaultSnippetName,
+                                'arch': targetCopyEl.outerHTML,
+                                'template_key': this.options.snippets,
+                                'snippet_key': snippetKey,
+                                'thumbnail_url': thumbnailURL,
+                                'context': {
+                                    'model': editableParentEl.dataset.oeModel,
+                                    'field': editableParentEl.dataset.oeField,
+                                    'resId': editableParentEl.dataset.oeId,
                                 },
                             });
                         },
@@ -9500,27 +9625,13 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                 },
             });
         });
-    },
-});
+    }
+}
 
 /**
  * Handles the dynamic colors for dynamic SVGs.
  */
-registry.DynamicSvg = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start() {
-        this.$target.on('image_changed.DynamicSvg', this._onImageChanged.bind(this));
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.$target.off('.DynamicSvg');
-        return this._super(...arguments);
-    },
+export class DynamicSvg extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -9549,7 +9660,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
         if (!previewMode) {
             this.previousSrc = src;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9563,8 +9674,8 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
             case 'color':
                 return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -9572,31 +9683,26 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
         if ('colorName' in params) {
             return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
     _computeVisibility(methodName, params) {
         return this.$target.is("img[src^='/web_editor/shape/']");
-    },
+    }
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onImageChanged(methodName, params) {
-        return this.updateUI();
-    },
+registerOption("DynamicSvg", {
+    Class: DynamicSvg,
+    template: "web_editor.dynamic_svg_option",
+    selector: "img",
 });
 
 /**
  * Allows to handle snippets with a list of items.
  */
-registry.MultipleItems = SnippetOptionWidget.extend({
+export class MultipleItems extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -9610,22 +9716,17 @@ registry.MultipleItems = SnippetOptionWidget.extend({
         const addBeforeItem = params.addBefore === 'true';
         if ($target.length) {
             await new Promise(resolve => {
-                this.trigger_up('clone_snippet', {
-                    $snippet: $target,
-                    onSuccess: resolve,
-                });
+                this.env.cloneSnippet($target).then(resolve);
             });
             if (addBeforeItem) {
                 $target.before($target.next());
             }
             if (params.selectItem !== 'false') {
-                this.trigger_up('activate_snippet', {
-                    $snippet: addBeforeItem ? $target.prev() : $target.next(),
-                });
+                this.env.activateSnippet(addBeforeItem ? $target.prev() : $target.next());
             }
             this._addItemCallback($target);
         }
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -9633,14 +9734,17 @@ registry.MultipleItems = SnippetOptionWidget.extend({
         const $target = this.$(params.item);
         if ($target.length) {
             await new Promise(resolve => {
-                this.trigger_up('remove_snippet', {
-                    $snippet: $target,
-                    onSuccess: resolve,
+                this.env.removeSnippet({
+                    data: {
+                        $snippet: $target,
+                        onSuccess: resolve,
+                    },
+                    stopPropagation: (ev) => {},
                 });
             });
             this._removeItemCallback($target);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9653,37 +9757,45 @@ registry.MultipleItems = SnippetOptionWidget.extend({
      * @abstract
      * @param {jQueryElement} $target
      */
-    _addItemCallback($target) {},
+    _addItemCallback($target) {}
     /**
      * @private
      * @abstract
      * @param {jQueryElement} $target
      */
-    _removeItemCallback($target) {},
-});
+    _removeItemCallback($target) {}
+}
 
-registry.SelectTemplate = SnippetOptionWidget.extend({
-    custom_events: Object.assign({}, SnippetOptionWidget.prototype.custom_events, {
-        'user_value_widget_opening': '_onWidgetOpening',
-    }),
+export class SelectTemplateComponent extends SnippetOptionComponent {
+    setup() {
+        super.setup();
+        useChildSubEnv({
+            userValueWidgetOpening: (userValue) => {
+                this.env.userValueWidgetOpening(userValue);
+                this.props.snippetOption.instance.onUserValueWidgetOpening(userValue);
+            },
+        });
+    }
+}
 
+export class SelectTemplate extends SnippetOption {
     /**
-     * @constructor
+     * @override
      */
-    init() {
-        this._super(...arguments);
+    static defaultRenderingComponent = SelectTemplateComponent;
+
+    constructor() {
+        super(...arguments);
         this.containerSelector = '';
         this.selectTemplateWidgetName = '';
-        this.orm = this.bindService("orm");
-    },
-    /**
-     * @constructor
-     */
-    async start() {
+        this.orm = this.env.services.orm;
+    }
+
+    async willStart() {
+        await super.willStart(...arguments);
         this.containerEl = this.containerSelector ? this.$target.find(this.containerSelector)[0] : this.$target[0];
         this._templates = {};
-        return this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -9732,7 +9844,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
             // added by other options or custo).
             this.beforePreviewNodes = null;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9743,7 +9855,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
      *
      * @private
      * @param {string} xmlid
-     * @returns {string}
+     * @returns {Promise<string>}
      */
     async _getTemplate(xmlid) {
         if (!this._templates[xmlid]) {
@@ -9755,21 +9867,20 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
             );
         }
         return this._templates[xmlid];
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {OdooEvent} ev
+     * @override
      */
-    _onWidgetOpening(ev) {
-        if (this._templatesLoading || ev.target.getName() !== this.selectTemplateWidgetName) {
+    onUserValueWidgetOpening(userValue) {
+        if (this._templatesLoading || userValue.getName() !== this.selectTemplateWidgetName) {
             return;
         }
-        const templateParams = ev.target.getMethodsParams('selectTemplate');
+        const templateParams = userValue.getMethodsParams('selectTemplate');
         const proms = templateParams.possibleValues.map(async xmlid => {
             if (!xmlid) {
                 return;
@@ -9780,16 +9891,15 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
             await this._getTemplate(xmlid);
         });
         this._templatesLoading = Promise.all(proms);
-    },
-});
+    }
+}
 
 /*
  * Abstract option to be extended by the Carousel and gallery options (through
  * the "CarouselHandler" option) that handles all the common parts (reordering
  * of elements).
  */
-registry.GalleryHandler = SnippetOptionWidget.extend({
-
+export class GalleryHandler extends SnippetOption {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -9800,7 +9910,7 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
      * @override
      */
     notify(name, data) {
-        this._super(...arguments);
+        super.notify(...arguments);
         if (name === "reorder_items") {
             const itemsEls = this._getItemsGallery();
             const oldPosition = itemsEls.indexOf(data.itemEl);
@@ -9826,7 +9936,7 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
             }
             this._reorderItems(itemsEls, itemsEls.indexOf(data.itemEl));
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9839,7 +9949,7 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
      * @abstract
      * @returns {HTMLElement[]}
      */
-    _getItemsGallery() {},
+    _getItemsGallery() {}
     /**
      * Called to reorder the items of the gallery.
      *
@@ -9847,15 +9957,14 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
      * @param {HTMLElement[]} itemsEls - the items to reorder.
      * @param {integer} newItemPosition - the new position of the moved items.
      */
-    _reorderItems(itemsEls, newItemPosition) {},
-});
+    _reorderItems(itemsEls, newItemPosition) {}
+}
 
 /*
  * Abstract option to be extended by the Carousel and gallery options that
  * handles the update of the carousel indicator.
  */
-registry.CarouselHandler = registry.GalleryHandler.extend({
-
+export class CarouselHandler extends GalleryHandler {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -9877,36 +9986,48 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
         }
         this.$target[0].querySelector(`.carousel-indicators li[data-bs-slide-to="${position}"]`)
                     .classList.add("active");
-        this.trigger_up("activate_snippet", {
-            $snippet: $(this.$target[0].querySelector(".carousel-item.active img")),
-            ifInactiveOptions: true,
-        });
+        this.env.activateSnippet($(this.$target[0].querySelector(".carousel-item.active img")), false, true);
         carouselEl.classList.add("slide");
-    },
-});
+    }
+}
 
+export function registerBackgroundOptions(name, options, getTemplateName = () => null) {
+    registerOption(`${name}-bgToggler`, {
+        Class: (
+            options.withColors
+            && options.withColorCombinations
+            && ColoredLevelBackground
+        ) || BackgroundToggler,
+        template: getTemplateName("toggler") || "web_editor.snippet_options_background_options",
+        ...options
+    }, { sequence: 25 });
+    if (options.withImages) {
+        registerOption(`${name}-bgImg`, {
+            Class: BackgroundImage,
+            template: getTemplateName("img") || "web_editor.BackgroundImage",
+            ...options
+        }, { sequence: 27 });
+        registerOption(`${name}-bgPosition`, {
+            Class: BackgroundPosition,
+            template: getTemplateName("position") || "web_editor.BackgroundPosition",
+            ...options,
+        }, { sequence: 29 });
+        registerOption(`${name}-bgOptimize`, {
+            Class: BackgroundOptimize,
+            template: getTemplateName("optimize") || "web_editor.snippet_options_image_optimization_widgets",
+            indent: true,
+            ...options,
+        }, { sequence: 31 });
+        registerOption(`${name}-filter`, {
+            Class: options.withColors && options.withColorCombinations && ColoredLevelBackground || BackgroundToggler,
+            template: getTemplateName("filter") || "web_editor.BackgroundFilter",
+            ...options,
+        }, { sequence: 33 });
+        registerOption(`${name}-shape`, {
+            Class: BackgroundShape,
+            template: getTemplateName("shape") || "web_editor.BackgroundShapes",
+            ...options,
+        }, { sequence: 35 });
+    }
+}
 
-export default {
-    SnippetOptionWidget: SnippetOptionWidget,
-    snippetOptionRegistry: registry,
-
-    NULL_ID: NULL_ID,
-    UserValueWidget: UserValueWidget,
-    userValueWidgetsRegistry: userValueWidgetsRegistry,
-    UnitUserValueWidget: UnitUserValueWidget,
-
-    addTitleAndAllowedAttributes: _addTitleAndAllowedAttributes,
-    buildElement: _buildElement,
-    buildTitleElement: _buildTitleElement,
-    buildRowElement: _buildRowElement,
-    buildCollapseElement: _buildCollapseElement,
-
-    addAnimatedShapeLabel: _addAnimatedShapeLabel,
-
-    // Other names for convenience
-    Class: SnippetOptionWidget,
-    registry: registry,
-    serviceCached,
-    clearServiceCache,
-    clearControlledSnippets,
-};

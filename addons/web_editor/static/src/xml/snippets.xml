@@ -50,15 +50,6 @@
             </we-title>
         </we-customizeblock-options>
     </t>
-    <t t-name="web_editor.outdated_block_message">
-        <we-alert class="d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
-            <we-title>This block is outdated.</we-title>
-            <span>You might not be able to customize it anymore.</span>
-            <we-button class="o_we_bg_brand_primary py-2 my-4 border-0" data-no-preview="true" data-replace-snippet="">REPLACE BY NEW VERSION</we-button>
-            <span>You can still access the block options but it might be ineffective.</span>
-            <we-button class="o_we_bg_brand_primary py-2 my-4 border-0" data-no-preview="true" data-discard-alert="">ACCESS OPTIONS ANYWAY</we-button>
-        </we-alert>
-    </t>
 
     <!-- options -->
     <div t-name="web_editor.ColorPalette" class="colorpicker" t-ref="el" t-on-click="this._onColorpickerClick">
@@ -119,7 +110,7 @@
         </div>
     </div>
     <t t-name="web_editor.color.combination.preview">
-        <div class="o_we_cc_preview_wrapper d-flex justify-content-between">
+        <div t-attf-class="#{class} o_we_cc_preview_wrapper d-flex justify-content-between">
             <h1 class="o_we_color_combination_btn_title">Title</h1>
             <p class="o_we_color_combination_btn_text flex-grow-1">Text</p>
             <span class="o_we_color_combination_btn_btn btn btn-sm btn-primary o_btn_preview me-1"><small>Button</small></span>
@@ -216,7 +207,43 @@
                     </div>
                 </t>
             </div>
-            <div class="o_we_customize_panel" t-ref="customize-panel" t-att-class="{ 'd-none': state.currentTab === constructor.tabs.BLOCKS }">
+        <div class="o_we_customize_panel" t-ref="customize-panel" t-att-class="{ 'd-none': state.currentTab === constructor.tabs.BLOCKS }">
+                <div class="d-none" id="legacyOptionsLimiter"/>
+                <t t-foreach="[...state.enabledEditorHierarchy].reverse()" t-as="editor" t-key="editor.key">
+                    <t t-set="snippetOptions" t-value="editor.getOptions()"/>
+                    <we-customizeblock-options t-if="snippetOptions.length > 0" t-att-class="{ 'd-none': !editor.shouldShow }">
+                        <we-title>
+                            <span>
+                                <t t-out="editor.name"/>
+                                <t t-out="editor.extraTitle"/>
+                            </span>
+                            <we-top-button-group>
+                                <t t-foreach="snippetOptions" t-as="option" t-key="option_index">
+                                    <t t-if="option.isTopOption" t-component="option.renderingComponent"
+                                        snippetOption="option"
+                                        onOptionMounted.bind="onOptionMounted"/>
+                                </t>
+                                <we-button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success"
+                                            title="Duplicate Container"
+                                            aria-label="Duplicate Container"
+                                            t-on-click="editor.onCloneClick"/>
+                                <we-button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger"
+                                            title="Remove Block"
+                                            aria-label="Remove Block"
+                                            t-on-click="editor.onRemoveClick"/>
+                            </we-top-button-group>
+                        </we-title>
+                        <t t-foreach="snippetOptions" t-as="option" t-key="option_index">
+                            <!-- todo: @owl-options this div encapsulation is
+                            there so solve a weird crash -->
+                            <div t-if="!option.isTopOption">
+                                <t t-component="option.renderingComponent"
+                                    snippetOption="option"
+                                    onOptionMounted.bind="onOptionMounted"/>
+                            </div>
+                         </t>
+                    </we-customizeblock-options>
+                </t>
                 <we-customizeblock-options id="o_we_editor_toolbar_container" t-att-class="{ 'd-none': !state.showToolbar }">
                     <we-title>
                         <span t-out="state.toolbarTitle"/>

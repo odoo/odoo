@@ -2,7 +2,7 @@
 
 import wTourUtils from "@website/js/tours/tour_utils";
 
-const columnCountOptSelector = ".snippet-option-layout_column we-select[data-name='column_count_opt']";
+const columnCountOptSelector = ".snippet-option-WebsiteLayoutColumn we-select[data-name='column_count_opt']";
 const columnsSnippetRow = ":iframe .s_three_columns .row";
 const textImageSnippetRow = ":iframe .s_text_image .row";
 const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName) => {

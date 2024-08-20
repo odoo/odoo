@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-export const ColumnLayoutMixin = {
+export const ColumnLayoutUtils = {
     /**
      * Calculates the number of columns for the mobile or desktop version.
      * If all elements don't have the same size, returns "custom".
@@ -111,4 +111,11 @@ export const ColumnLayoutMixin = {
             }
         });
     },
+};
+
+export const ColumnLayoutMixin = (T) => class extends T {
+    constructor() {
+        super(...arguments);
+        Object.assign(this, ColumnLayoutUtils);
+    }
 };

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_media_list_option_add_media">
+    <WeRow title.translate="Media">
+        <WeButton addItem="''" item="'.s_media_list_item:last'" selectItem="''" noPreview="'true'" class="'o_we_bg_brand_primary'">
+            Add Media
+        </WeButton>
+    </WeRow>
+</t>
+<t t-name="website.s_media_list_option_layout">
+    <WeRow title.translate="Layout">
+        <WeButtonGroup>
+            <WeButton tooltip.translate="Left" name="'media_left_opt'" selectClass="''" img="'/website/static/src/img/snippets_options/image_left.svg'"/>
+            <WeButton tooltip.translate="Right" selectClass="'flex-row-reverse'" img="'/website/static/src/img/snippets_options/image_right.svg'"/>
+        </WeButtonGroup>
+    </WeRow>
+</t>
+<t t-name="website.s_media_list_option_item_layout">
+    <WeRow title.translate="Image Size">
+        <WeButtonGroup dependencies="'media_left_opt'">
+            <WeButton layout="'3'" img="'/website/static/src/img/snippets_options/media_layout_1_4.svg'" tooltip="'1/4 - 3/4'"/>
+            <WeButton layout="'4'" img="'/website/static/src/img/snippets_options/media_layout_1_3.svg'" tooltip="'1/3 - 2/3'"/>
+            <WeButton layout="'6'" img="'/website/static/src/img/snippets_options/media_layout_1_2.svg'" tooltip="'1/2 - 1/2'"/>
+        </WeButtonGroup>
+        <WeButtonGroup dependencies="'!media_left_opt'">
+            <WeButton layout="'3'" img="'/website/static/src/img/snippets_options/media_layout_1_4_right.svg'" tooltip="'1/4 - 3/4'"/>
+            <WeButton layout="'4'" img="'/website/static/src/img/snippets_options/media_layout_1_3_right.svg'" tooltip="'1/3 - 2/3'"/>
+            <WeButton layout="'6'" img="'/website/static/src/img/snippets_options/media_layout_1_2_right.svg'" tooltip="'1/2 - 1/2'"/>
+        </WeButtonGroup>
+    </WeRow>
+</t>
+<t t-name="website.s_media_list_option_vertical_alignment">
+    <!-- Don't use the standard Vert. Alignement option to not suggest
+         Equal Height, which is useless for this snippet. -->
+    <WeRow title.translate="Text Position">
+        <WeButtonGroup dependencies="'media_left_opt'">
+            <WeButton tooltip.translate="Align Top" selectClass="'align-items-start'" img="'/website/static/src/img/snippets_options/align_top_right.svg'"/>
+            <WeButton tooltip.translate="Align Middle" selectClass="'align-items-center'" img="'/website/static/src/img/snippets_options/align_middle_right.svg'"/>
+            <WeButton tooltip.translate="Align Bottom" selectClass="'align-items-end'" img="'/website/static/src/img/snippets_options/align_bottom_right.svg'"/>
+        </WeButtonGroup>
+        <WeButtonGroup dependencies="'!media_left_opt'">
+            <WeButton tooltip.translate="Align Top" selectClass="'align-items-start'" img="'/website/static/src/img/snippets_options/align_top.svg'"/>
+            <WeButton tooltip.translate="Align Middle" selectClass="'align-items-center'" img="'/website/static/src/img/snippets_options/align_middle.svg'"/>
+            <WeButton tooltip.translate="Align Bottom" selectClass="'align-items-end'" img="'/website/static/src/img/snippets_options/align_bottom.svg'"/>
+        </WeButtonGroup>
+    </WeRow>
+</t>
+
+</templates>

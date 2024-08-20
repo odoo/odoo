@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.s_searchbar_options" t-inherit="website.s_searchbar_options" t-inherit-mode="extension">
+        <xpath expr="//WeSelect[@name=&quot;'scope_opt'&quot;]" position="inside">
+            <WeButton setSearchType="'products'" selectDataAttribute="'products'" name="'search_products_opt'" formAction="'/shop'">Products</WeButton>
+        </xpath>
+        <xpath expr="//WeSelect[@name=&quot;'order_opt'&quot;]" position="inside">
+            <t t-foreach="renderContext.productSorts" t-as="query_and_label" t-key="query_and_label[0]">
+                <!-- name asc is already part of the general sorting methods of this snippet. -->
+                <WeButton t-if="query_and_label[0] != 'name asc'"
+                          setOrderBy="query_and_label[0]"
+                          selectDataAttribute="query_and_label[0]"
+                          dependencies="'search_products_opt'">
+                    <t t-out="query_and_label[1]"/>
+                </WeButton>
+            </t>
+        </xpath>
+        <xpath expr="//div[@dependencies=&quot;'limit_opt'&quot;]" position="inside">
+            <WeCheckbox title.translate="Description"
+                        dependencies="'search_products_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDescription'"
+                        applyTo="'.search-query'"/>
+            <WeCheckbox title.translate="Category"
+                        dependencies="'search_products_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayExtraLink'"
+                        applyTo="'.search-query'"/>
+            <WeCheckbox title.translate="Price"
+                        dependencies="'search_products_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayDetail'"
+                        applyTo="'.search-query'"/>
+            <WeCheckbox title.translate="Image"
+                        dependencies="'search_products_opt'"
+                        selectDataAttribute="'true'"
+                        attributeName="'displayImage'"
+                        applyTo="'.search-query'"/>
+        </xpath>
+    </t>
+
+</templates>

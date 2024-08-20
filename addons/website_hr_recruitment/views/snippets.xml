@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-
-<template id="jobs_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="jobs search bar snippet options">
-    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
-        <we-button data-set-search-type="jobs" data-select-data-attribute="jobs" data-name="search_jobs_opt" data-form-action="/jobs">Jobs</we-button>
-    </xpath>
-    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
-        <we-checkbox string="Description" data-dependencies="search_jobs_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
-            data-apply-to=".search-query"/>
-    </xpath>
-</template>
-
 <template id="snippet_options" inherit_id="website.snippet_options" name="Hr Recruitment Snippet Options">
     <xpath expr="." position="inside">
         <div data-selector="main:has(.o_website_hr_recruitment_jobs_list)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Jobs Page">

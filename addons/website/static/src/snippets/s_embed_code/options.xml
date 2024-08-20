@@ -1,0 +1,16 @@
+<templates id="template" xml:space="preserve">
+<t t-name="website.s_embed_code">
+    <WeRow title.translate="Code">
+        <WeButton editCode="''" noPreview="'true'"
+                  class="'o_we_edit_code o_we_no_toggle o_we_bg_success active'"
+                  tooltip.translate="Edit embedded code">
+            Edit
+        </WeButton>
+    </WeRow>
+    <WeButtonGroup title.translate="Alignment">
+        <WeButton class="'fa fa-fw fa-align-left'" tooltip.translate="Left" selectClass="'text-start'"/>
+        <WeButton class="'fa fa-fw fa-align-center'" tooltip.translate="Center" selectClass="'text-center'"/>
+        <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="Right" selectClass="'text-end'"/>
+    </WeButtonGroup>
+</t>
+</templates>

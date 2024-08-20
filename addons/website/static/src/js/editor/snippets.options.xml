@@ -1,0 +1,1447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.anchor">
+    <WeButton class="'fa fa-fw fa-link o_we_link'"
+              tooltip.translate="Create a link to target this section"
+              noPreview="'true'"
+              copyAnchorToClipboard="''"
+    />
+</t>
+<!-- =================================================================== -->
+<!-- Modify generic snippet options                                      -->
+<!-- =================================================================== -->
+
+<t t-name="website.snippet_options_background_options" t-inherit="web_editor.snippet_options_background_options">
+    <xpath expr="//WeButton[@toggleBgImage]" position="after">
+        <t t-if="option.withVideos">
+            <WeButton tooltip.translate="Video" class="'fa fa-fw fa-film'"
+                    name="'bg_video_toggler_opt'"
+                    dependencies="option.imagesDependencies || false"
+                    toggleBgVideo="'true'"
+                    noPreview="'true'"/>
+        </t>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.ImageTools" t-inherit-mode="extension">
+    <xpath expr="//WeButton[@name=&quot;'image_transform_opt'&quot;]" position="attributes">
+        <attribute name="dependencies">'no_animation_opt'</attribute>
+    </xpath>
+</t>
+
+
+<!-- =================================================================== -->
+<!-- Adding website specific snippet options                             -->
+<!-- =================================================================== -->
+
+<t t-name="website.BackgroundVideo">
+    <WeRow class="'o_we_sublevel_1'" title.translate="Video">
+        <WeMediapicker tooltip.translate="Edit video"
+                        background="''"
+                        mediaType="'videos'"
+                        name="'bg_video_opt'"
+                        dependencies="'bg_video_opt'"/>
+    </WeRow>
+</t>
+<t t-name="website.column_count_option">
+    <WeSelect class="with_grid and 'o_grid'" noPreview="'true'" title="title" name="'column_count_opt'" dependencies="with_grid and 'normal_mode'">
+        <!-- TODO: @owl-options
+            This should be working but slots cannot be conditional so instead
+            make the caller define the title.
+            <t t-set-slot="title"><t t-if="!with_grid">Columns</t></t>
+        -->
+        <WeButton selectCount="'0'" name="'zero_cols_opt'">None</WeButton>
+        <WeButton selectCount="'1'">1</WeButton>
+        <WeButton selectCount="'2'">2</WeButton>
+        <WeButton selectCount="'3'">3</WeButton>
+        <WeButton selectCount="'4'">4</WeButton>
+        <WeButton selectCount="'5'">5</WeButton>
+        <WeButton selectCount="'6'">6</WeButton>
+        <WeButton selectCount="'custom'" name="'custom_cols_opt'">Custom</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.grid_columns_option">
+    <WeRow title.translate="Padding (Y, X)">
+        <WeInput selectStyle="''" cssProperty="'--grid-item-padding-y'" unit="'px'" name="'grid_padding_y_opt'"/>
+        <WeInput selectStyle="''" cssProperty="'--grid-item-padding-x'" unit="'px'" name="'grid_padding_x_opt'"/>
+    </WeRow>
+</t>
+<t t-name="website.grid_layout_options">
+    <WeButtonGroup class="indent and 'o_we_sublevel_1'" noPreview="'true'"
+                   dependencies="'grid_mode'" title.translate="Add Elements">
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'image'" tooltip.translate="Image" name="'image'">Image</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'text'" tooltip.translate="Text" name="'text'">Text</WeButton>
+        <WeButton class="'o_we_bg_brand_primary o_grid'" addElement="'button'" tooltip.translate="Button" name="'button'">Button</WeButton>
+    </WeButtonGroup>
+    <WeRow class="indent and 'o_we_sublevel_1'" title.translate="Spacing (Y, X)">
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'row-gap'" unit="'px'" preventImportant="'true'" applyTo="'.row'"/>
+        <WeInput dependencies="'grid_mode'" selectStyle="''" cssProperty="'column-gap'" unit="'px'" max="'60'" preventImportant="'true'" applyTo="'.row'"/>
+    </WeRow>
+</t>
+<t t-name="website.layout_column">
+    <WeRow>
+        <WeButtonGroup noPreview="'true'" title.translate="Layout">
+            <WeButton selectLayout="'grid'" name="'grid_mode'">Grid</WeButton>
+            <WeButton selectLayout="'normal'" name="'normal_mode'">Cols</WeButton>
+        </WeButtonGroup>
+        <t t-call="website.column_count_option">
+            <t t-set="with_grid" t-value="true"/>
+        </t>
+    </WeRow>
+    <t t-call="website.grid_layout_options">
+        <t t-set="indent" t-value="true"/>
+    </t>
+</t>
+<t t-name="website.vertical_alignment_option">
+    <WeButtonGroup class="'o_we_sublevel_1'" title.translate="Vert. Alignment"
+                tooltip.translate="Vertical Alignment" dependencies="'normal_mode'">
+        <WeButton tooltip.translate="Align Top"
+            selectClass="'align-items-start'"
+            img="'/website/static/src/img/snippets_options/align_top.svg'"
+        />
+        <WeButton tooltip.translate="Align Middle"
+            selectClass="'align-items-center'"
+            img="'/website/static/src/img/snippets_options/align_middle.svg'"
+        />
+        <WeButton tooltip.translate="Align Bottom"
+            selectClass="'align-items-end'"
+            img="'/website/static/src/img/snippets_options/align_bottom.svg'"
+        />
+        <WeButton tooltip.translate="Stretch to Equal Height"
+            selectClass="'align-items-stretch'"
+            img="'/website/static/src/img/snippets_options/align_stretch.svg'"
+        />
+    </WeButtonGroup>
+</t>
+<!-- Scroll to next section button (only for full height) -->
+<t t-name="website.scroll_button_option">
+    <!-- Min height of section -->
+    <WeButtonGroup title.translate="Height" showScrollButton="''">
+        <WeButton name="'minheight_auto_opt'" selectClass="''" tooltip.translate="Fit content">Auto</WeButton>
+        <WeButton selectClass="'o_half_screen_height'" tooltip.translate="Half screen">50%</WeButton>
+        <WeButton selectClass="'o_full_screen_height'" tooltip.translate="Full screen" name="'full_height_opt'" showScrollButton="'true'">100%</WeButton>
+    </WeButtonGroup>
+    <WeInput title.translate="Height" class="'o_we_sublevel_1'" name="'fixed_height_opt'"
+        dependencies="'minheight_auto_opt'" selectStyle="''" unit="'px'"
+        cssProperty="'height'" forceStyle="''"/>
+        <!--    ↑ ↑ ↑
+            For this setting, we need to always force the style (= if the block
+            is naturally 800px tall and the user enters 800px for this setting,
+            we set 800px as inline style anyway). Indeed, this snippet's style
+            is based on the height that is forced but once the related public
+            widgets are started, the inner carousel items receive a min-height
+            which makes it so the snippet "natural" height is equal to the
+            initially forced height... so if the style is not forced, it would
+            ultimately be removed by mistake thinking it is not necessary.
+            Note: this is forced as not important as we still need the height to
+            be reset to 'auto' in mobile (generic css rules).
+        -->
+    <WeCheckbox title.translate="Scroll Down Button" name="'scroll_button_opt'"
+        dependencies="'full_height_opt'" toggleButton="'true'" noPreview="'true'"/>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Colors">
+        <WeColorpicker dependencies="'scroll_button_opt'"
+            applyTo="'.o_scroll_button'"
+            selectStyle="'true'" cssProperty="'background-color'"
+            colorPrefix="'bg-'"
+        />
+        <WeColorpicker dependencies="'scroll_button_opt'"
+            applyTo="'.o_scroll_button'"
+            selectStyle="'true'" cssProperty="'color'"
+            colorPrefix="'text-'"
+        />
+    </WeRow>
+    <WeSelect class="'o_we_sublevel_1'" title.translate="Spacing"
+            applyTo="'.o_scroll_button'" dependencies="'scroll_button_opt'">
+        <WeButton selectClass="''">None</WeButton>
+        <WeButton selectClass="'mb-1'">Extra-Small</WeButton>
+        <WeButton selectClass="'mb-2'">Small</WeButton>
+        <WeButton selectClass="'mb-3'">Medium</WeButton>
+        <WeButton selectClass="'mb-4'">Large</WeButton>
+        <WeButton selectClass="'mb-5'">Extra-Large</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.snippet_options_border_line_widgets">
+    <WeRow class="classname || ''" title="label">
+        <WeInput name="'border_width_opt'"
+            applyTo="apply_to || ''"
+            selectStyle="'0'"
+            cssProperty="'border-' + (direction ? direction + '-' : '') + 'width'"
+            unit="'px'"
+            extraClass="with_bs_class ? 'border' : ''"
+            variable="width_variable || ''"
+        />
+        <WeSelect dependencies="'border_width_opt'"
+            cssProperty="'border-' + (direction ? direction + '-' : '') + 'style'"
+            applyTo="apply_to || ''"
+            variable="style_variable || ''">
+            <WeButton tooltip.translate="Solid" selectStyle="'solid'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></WeButton>
+            <WeButton tooltip.translate="Dashed" selectStyle="'dashed'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></WeButton>
+            <WeButton tooltip.translate="Dotted" selectStyle="'dotted'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></WeButton>
+            <WeButton tooltip.translate="Double" selectStyle="'double'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></WeButton>
+        </WeSelect>
+        <WeColorpicker dependencies="'border_width_opt'"
+            applyTo="apply_to || ''"
+            selectStyle="'true'"
+            cssProperty="'border-' + (direction ? direction + '-' : '') + 'color'"
+            colorPrefix="'border-'"
+            color="color_variable || ''"
+        />
+    </WeRow>
+</t>
+<t t-name="website.snippet_options_border_widgets">
+    <t t-call="website.snippet_options_border_line_widgets">
+        <t t-set="label">Border</t>
+        <t t-set="with_bs_class" t-value="true"/>
+    </t>
+    <WeRow title.translate="Round Corners">
+        <WeInput t-if="!no_border_radius"
+            dependencies="!so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
+            applyTo="apply_to || ''"
+            selectStyle="'0'" cssProperty="'border-radius'"
+            unit="'px'" extraClass="'rounded'"
+            variable="radius_variable || ''"/>
+    </WeRow>
+</t>
+<t t-name="website.snippet_options_shadow_widgets">
+    <!-- Shadow -->
+    <!-- TODO: @owl-options what is the variable="shadow_variable" on the button group ? -->
+    <WeButtonGroup shadowClass="'shadow'" title.translate="Shadow">
+        <WeButton setShadow="''">None</WeButton>
+        <WeButton setShadow="'outset'" img="'/website/static/src/img/snippets_options/shadow_out.svg'" name="'shadow_active_opt'" tooltip.translate="Outset"/>
+        <WeButton setShadow="'inset'" img="'/website/static/src/img/snippets_options/shadow_in.svg'" name="'shadow_inset_opt'" tooltip.translate="Inset"/>
+    </WeButtonGroup>
+    <!-- TODO: @owl-options what is the variable="shadow_variable" on the multi ? -->
+    <WeMulti cssProperty="'box-shadow'" dependencies="'shadow_active_opt, shadow_inset_opt'">
+        <WeRow class="'o_we_sublevel_1'" title.translate="Color">
+            <WeColorpicker multiSequence="10" selectStyle="''" cssCompatible="''"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Offset (X, Y)">
+            <WeInput multiSequence="20" unit="'px'" selectStyle="''"/>
+            <WeInput multiSequence="30" unit="'px'" selectStyle="''"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Blur">
+            <WeInput multiSequence="40" unit="'px'" selectStyle="''"/>
+        </WeRow>
+        <WeRow class="'o_we_sublevel_1'" title.translate="Spread">
+            <WeInput multiSequence="50" unit="'px'" selectStyle="''"/>
+        </WeRow>
+        <!-- Inset parameter always hidden (as controlled above) but needed -->
+        <!-- for the we-multi widget to work properly. -->
+        <WeCheckbox multiSequence="60" name="'fake_inset_shadow_opt'" selectStyle="'inset'"/>
+    </WeMulti>
+</t>
+<t t-name="website.card_color_border_shadow">
+    <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
+    <WeColorpicker title.translate="Colors"
+        selectStyle="'true'"
+        cssProperty="'background-color'"
+        colorPrefix="'bg-'"/>
+    <t t-call="website.snippet_options_border_widgets">
+        <t t-set="so_rounded_no_dependencies" t-value="True"/>
+    </t>
+    <t t-call="website.snippet_options_shadow_widgets"/>
+</t>
+<t t-name="website.card_color">
+    <!-- COLOR | .s_cards -->
+    <WeColorpicker title.translate="Color"
+        selectStyle="'true'"
+        cssProperty="'background-color'"
+        colorPrefix="'bg-'"/>
+</t>
+<t t-name="website.horizontal_alignment_option">
+    <WeButtonGroup title.translate="Alignment">
+        <WeButton class="'fa fa-fw fa-align-left'" tooltip.translate="Left" selectClass="'text-start'"/>
+        <WeButton class="'fa fa-fw fa-align-center'" tooltip.translate="Center" selectClass="'text-center'"/>
+        <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="Right" selectClass="'text-end'"/>
+    </WeButtonGroup>
+</t>
+<t t-name="website.block_width_option">
+    <WeSelect title.translate="Width">
+        <WeButton selectClass="'w-25'">25%</WeButton>
+        <WeButton selectClass="'w-50'">50%</WeButton>
+        <WeButton selectClass="'w-75'">75%</WeButton>
+        <WeButton selectClass="'w-100'" name="'so_width_100'">100%</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.block_align_option">
+    <WeButtonGroup title.translate="Alignment" dependencies="'!so_width_100'">
+        <WeButton class="'fa fa-fw fa-align-left'" tooltip.translate="'Left'" selectClass="'me-auto'"/>
+        <WeButton class="'fa fa-fw fa-align-center'" tooltip.translate="'Center'" selectClass="'mx-auto'"/>
+        <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="'Right'" selectClass="'ms-auto'"/>
+    </WeButtonGroup>
+</t>
+
+<!-- Header - Borders & Shadows -->
+<t t-name="website.HeaderBox">
+    <t t-call="website.snippet_options_border_widgets">
+        <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        <t t-set="width_variable" t-value="'menu-border-width'"/>
+        <t t-set="style_variable" t-value="'menu-border-style'"/>
+        <t t-set="color_variable" t-value="'menu-border-color'"/>
+        <t t-set="radius_variable" t-value="'menu-border-radius'"/>
+        <t t-set="no_border_radius" t-value="this.renderContext.noBorderRadius"/>
+    </t>
+    <t t-call="website.snippet_options_shadow_widgets">
+        <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
+    </t>
+</t>
+<t t-name="website.TopMenuVisibility">
+    <WeSelect title.translate="Header Position" noPreview="'true'" dependencies="'!header_sidebar_opt'">
+        <WeButton visibility="'transparent'">Over The Content</WeButton>
+        <WeButton visibility="'regular'">Regular</WeButton>
+        <WeButton visibility="'hidden'">Hidden</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.TopMenuColor">
+    <WeColorpicker title.translate="Background"
+                   class="'o_we_sublevel_1'"
+                   id="'option_header_transparent_color'"
+                   selectStyle="'true'"
+                   preventImportant="'true'"
+                   cssProperty="'background-color'"
+                   colorPrefix="'bg-'"
+                   excluded="'theme, common'"
+                   pageOptionName="'header_color'"/>
+    <WeColorpicker title.translate="Text Color"
+                   class="'o_we_sublevel_1'"
+                   id="'option_header_transparent_text_color'"
+                   selectStyle="'true'"
+                   cssProperty="'color'"
+                   colorPrefix="'text-'"
+                   pageOptionName="'header_text_color'"/>
+</t>
+
+<t t-name="website.HeaderElements">
+    <WeRow title.translate="Elements" class="'o_we_full_row align-items-start'">
+        <WeButton tooltip.translate="Show/hide text element" class="'d-flex justify-content-center flex-grow-1'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_text.svg'"
+                customizeWebsiteViews="'website.header_text_element'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide language selector" class="'fa fa-flag d-flex justify-content-center flex-grow-1'"
+                name="'header_language_selector_opt'"
+                customizeWebsiteViews="'website.header_language_selector'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide search bar" class="'fa fa-search d-flex justify-content-center flex-grow-1'"
+                customizeWebsiteViews="'website.header_search_box'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide sign in button" class="'fa fa-sign-in d-flex justify-content-center flex-grow-1'"
+                customizeWebsiteViews="'portal.user_sign_in'"
+                reload="'/'"
+                noPreview="'true'"/>
+    </WeRow>
+    <WeRow title="' '" class="'o_we_full_row align-items-start mt-1'">
+        <WeButton tooltip.translate="Show/hide social links" class="'flex-grow-1 d-flex justify-content-center'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_social.svg'"
+                customizeWebsiteViews="'website.header_social_links'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide button" class="'flex-grow-1 d-flex justify-content-center'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_cta.svg'"
+                customizeWebsiteViews="'website.header_call_to_action'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide logo" class="'flex-grow-1 d-flex justify-content-center'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_logo.svg'"
+                customizeWebsiteViews="'|website.option_header_brand_name|website.option_header_brand_logo'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+    </WeRow>
+</t>
+
+<t t-name="website.HeaderScrollEffect">
+    <WeSelect title.translate="Scroll Effect" dependencies="'!header_sidebar_opt'"
+              class="'o_scroll_effects_selector'"
+              variable="'header-scroll-effect'">
+        <WeButton id="'option_header_visibility_standard'"
+                  customizeWebsiteVariable="`'standard'`"
+                  name="'header_visibility_standard_opt'"
+                  selectClass="'o_header_standard'"
+                  customizeWebsiteViews="'website.header_visibility_standard'"
+                  img="'/website/static/src/img/snippets_options/header_effect_standard.png'"
+                  animateImg="'true'">
+            Standard
+        </WeButton>
+        <WeButton id="'option_header_effect_scroll'"
+                  customizeWebsiteVariable="`'scroll'`"
+                  name="'header_effect_scroll_opt'"
+                  selectClass="''"
+                  customizeWebsiteViews="''"
+                  img="'/website/static/src/img/snippets_options/header_effect_scroll.png'"
+                  animateImg="'true'">
+            Scroll
+        </WeButton>
+        <WeButton id="'option_header_effect_fixed'"
+                  customizeWebsiteVariable="`'fixed'`"
+                  name="'header_effect_fixed_opt'"
+                  selectClass="'o_header_fixed'"
+                  customizeWebsiteViews="'website.header_visibility_fixed'"
+                  img="'/website/static/src/img/snippets_options/header_effect_fixed.png'"
+                  animateImg="'true'">
+            Fixed
+        </WeButton>
+        <WeButton id="'option_header_effect_disappears'"
+                  customizeWebsiteVariable="`'disappears'`"
+                  name="'header_effect_disappears_opt'"
+                  selectClass="'o_header_disappears'"
+                  customizeWebsiteViews="'website.header_visibility_disappears'"
+                  img="'/website/static/src/img/snippets_options/header_effect_disappears.png'"
+                  animateImg="'true'">
+            Disappears
+        </WeButton>
+        <WeButton id="'option_header_effect_fade_out'"
+                  customizeWebsiteVariable="`'fade-out'`"
+                  name="'header_effect_fade_out_opt'"
+                  selectClass="'o_header_fade_out'"
+                  customizeWebsiteViews="'website.header_visibility_fade_out'"
+                  img="'/website/static/src/img/snippets_options/header_effect_fade_out.png'"
+                  animateImg="'true'">
+           Fade Out
+        </WeButton>
+    </WeSelect>
+</t>
+
+<t t-name="website.HeaderLanguageSelector">
+    <WeSelect title.translate="Style" reload="'/'">
+        <WeButton customizeWebsiteViews="'website.header_language_selector'">
+            Dropdown
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector, website.header_language_selector_inline'">
+            Inline
+        </WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Label" class="'o_we_sublevel_1'" reload="'/'" noPreview="'true'">
+        <WeButton customizeWebsiteViews="''">
+            Text
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_flag, website.header_language_selector_no_text'">
+            Flag
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_flag'">
+            Flag and Text
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_code, website.header_language_selector_no_text'">
+            Code
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_flag, website.header_language_selector_code, website.header_language_selector_no_text'">
+            Flag and Code
+        </WeButton>
+    </WeSelect>
+</t>
+
+<t t-name="website.HeaderBrand">
+    <WeSelect title.translate="Logo" reload="'/'">
+        <WeButton customizeWebsiteViews="''" name="'option_header_brand_none'">None</WeButton>
+        <WeButton customizeWebsiteViews="'website.option_header_brand_name'">Text</WeButton>
+        <WeButton customizeWebsiteViews="'website.option_header_brand_logo'">Image</WeButton>
+    </WeSelect>
+    <WeInput title.translate="Height" class="'o_we_sublevel_1'"
+             dependencies="'!option_header_brand_none'"
+             customizeWebsiteVariable="'null'"
+             variable="'logo-height'"
+             unit="'px'"
+             saveUnit="'rem'"/>
+    <WeInput title.translate="Height (Scrolled)" class="'o_we_sublevel_1'"
+             name="'option_logo_height_scrolled'"
+             customizeWebsiteVariable="'null'"
+             variable="'fixed-logo-height'"
+             unit="'px'"
+             saveUnit="'rem'"
+             dependencies="'!header_effect_scroll_opt'"/> <!-- TODO: @owl-options - dependency doesn't work -->
+</t>
+
+<!-- Header > Navbar Options -->
+<t t-name="website.HeaderNavbar">
+    <WeSelect title.translate="Mobile Alignment"
+              name="'header_mobile_alignment_opt'"
+              variable="'hamburger-position-mobile'"
+              reload="'/'">
+        <WeButton customizeWebsiteViews="''" customizeWebsiteVariable="`'left'`">Left</WeButton>
+        <WeButton customizeWebsiteViews="'website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center'"
+                  customizeWebsiteVariable="`'center'`">Center</WeButton>
+        <WeButton customizeWebsiteViews="'website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right'"
+                  customizeWebsiteVariable="`'right'`">Right</WeButton>
+    </WeSelect>
+
+    <WeRow title.translate="Font">
+        <WeFontFamilyPicker variable="'navbar-font'"/>
+    </WeRow>
+
+    <WeRow title.translate="Format" class="'o_we_header_font_row'">
+        <WeInput customizeWebsiteVariable="'null'" variable="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
+        <WeColorpicker variable="'header-text-color'" customizeWebsiteVariable="''"/>
+        <!-- Generic alignment option controlling all the template at once. -->
+        <!-- Currently needed to be this way as the SCSS variable controls -->
+        <!-- the mobile alignment which is the same for all templates. -->
+        <WeSelect class="'o_we_icon_select'"
+                  name="'header_alignment_opt'"
+                  variable="'hamburger-position'"
+                  reload="'/'"
+                  tooltip.translate="Alignment"
+                  dependencies="'header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt'">
+            <WeButton customizeWebsiteViews="''"
+                      customizeWebsiteVariable="`'left'`"
+                      icon="'fa-align-left'"/>
+            <WeButton customizeWebsiteViews="'website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center'"
+                      customizeWebsiteVariable="`'center'`"
+                      icon="'fa-align-center'"
+                      dependencies="'!header_hamburger_opt'"/>
+            <WeButton customizeWebsiteViews="'website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right'"
+                      customizeWebsiteVariable="`'right'`"
+                      icon="'fa-align-right'"/>
+        </WeSelect>
+    </WeRow>
+
+    <WeSelect title.translate="Links Style"
+              variable="'header-links-style'"
+              reload="'/'"
+              dependencies="'!header_stretch_opt'">
+        <WeButton name="'option_header_navbar_links_default'"
+                  customizeWebsiteViews="''"
+                  customizeWebsiteVariable="`'default'`">Default</WeButton>
+        <WeButton name="'option_header_navbar_links_fill'"
+                  customizeWebsiteViews="'website.header_navbar_pills_style'"
+                  customizeWebsiteVariable="`'fill'`">Fill</WeButton>
+        <WeButton name="'option_header_navbar_links_outline'"
+                  customizeWebsiteViews="''"
+                  customizeWebsiteVariable="`'outline'`">Outline</WeButton>
+        <WeButton name="'option_header_navbar_links_pills'"
+                  customizeWebsiteViews="'website.header_navbar_pills_style'"
+                  customizeWebsiteVariable="`'pills'`">Pills</WeButton>
+        <WeButton name="'option_header_navbar_block'"
+                  customizeWebsiteViews="'website.header_navbar_pills_style'"
+                  customizeWebsiteVariable="`'block'`">Block</WeButton>
+        <WeButton name="'option_header_navbar_border_bottom'"
+                  customizeWebsiteViews="''"
+                  customizeWebsiteVariable="`'border-bottom'`">Border Bottom</WeButton>
+    </WeSelect>
+
+    <WeSelect title.translate="Sub Menus"
+              id="'option_header_dropdown'"
+              dependencies="'!header_hamburger_opt'"
+              noPreview="'true'">
+        <WeButton selectClass="'o_hoverable_dropdown'"
+                  customizeWebsiteViews="'website.header_hoverable_dropdown'">
+            On Hover
+        </WeButton>
+        <WeButton selectClass="''"
+                  name="'header_dropdown_on_click_opt'">
+            On Click
+        </WeButton>
+    </WeSelect>
+</t>
+
+<!-- Footer - Borders & Shadows -->
+<t t-name="website.HideFooter">
+    <WeCheckbox title.translate="Page Visibility" visibility="'hidden|shown'" noPreview="'true'"/>
+</t>
+
+<!-- Scroll to Top -->
+<t t-name="website.FooterScrolltop">
+    <WeRow title.translate="Scroll Top Button">
+        <WeCheckbox name="'footer_scrolltop_opt'"
+                    customizeWebsiteViews="'website.option_footer_scrolltop'"
+                    customizeWebsiteVariable="'false|true'"
+                    variable="'footer-scrolltop'"
+                    reload="'/'"/>
+        <WeSelect dependencies="'footer_scrolltop_opt'" applyTo="'#o_footer_scrolltop_wrapper'">
+            <WeButton selectClass="'justify-content-start'">Left</WeButton>
+            <WeButton selectClass="'justify-content-center'">Center</WeButton>
+            <WeButton selectClass="'justify-content-end'">Right</WeButton>
+        </WeSelect>
+    </WeRow>
+</t>
+
+<t t-name="website.share_social_media_option">
+    <WeSelect title.translate="Title Position" applyTo="'.s_share_title, .s_social_media_title'">
+        <WeButton selectClass="'d-block'">Top</WeButton>
+        <WeButton selectClass="''">Left</WeButton>
+        <WeButton selectClass="'d-none'">None</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Layout" applyTo="'.fa'">
+        <WeButton selectClass="'rounded shadow-sm'">Square</WeButton>
+        <WeButton selectClass="'rounded-empty-circle shadow-sm'">Circle</WeButton>
+        <WeButton selectClass="'rounded-circle shadow-sm'">Disk</WeButton>
+        <WeButton selectClass="'fa-stack'">None</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Size" applyTo="'.fa'">
+        <WeButton selectClass="''">Small</WeButton>
+        <WeButton selectClass="'fa-2x'">Medium</WeButton>
+        <WeButton selectClass="'fa-3x'">Big</WeButton>
+    </WeSelect>
+    <!-- Compatibility, keep reverse logical, don't use `icon_color` -->
+    <WeCheckbox title.translate="Color" selectClass="'no_icon_color|'"/>
+</t>
+<t t-name="website.cookie_bar_options">
+    <WeSelect title.translate="Layout" class="'o_we_inline'">
+        <WeButton selectClass="'o_cookies_discrete'"
+                  selectLayout="'discrete'"
+                  trigger="'position_bottom,s_popup_size_full'">
+            Discrete
+        </WeButton>
+        <WeButton selectClass="'o_cookies_classic'"
+                  selectLayout="'classic'"
+                  trigger="'position_bottom,s_popup_size_full'">
+            Classic
+        </WeButton>
+        <WeButton name="'layout_popup_opt'"
+                  selectClass="'o_cookies_popup'"
+                  selectLayout="'popup'"
+                  trigger="'position_middle,s_popup_size_md'">
+            Popup
+        </WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.s_google_map_option">
+    <WeGpsPicker title.translate="Address"
+        selectDataAttribute="''" attributeName="'mapGps'"
+        setFormattedAddress="''"
+        placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
+        noPreview="'true'"/>
+    <WeSelect title.translate="Marker Style" attributeName="'pinStyle'">
+        <WeButton selectDataAttribute="''">Default</WeButton>
+        <WeButton selectDataAttribute="'flat'">Flat</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Type" attributeName="'mapType'" noPreview="'true'" resetMapColor="''">
+        <WeButton name="'roadmap_opt'" selectDataAttribute="'ROADMAP'">RoadMap</WeButton>
+        <WeButton selectDataAttribute="'TERRAIN'">Terrain</WeButton>
+        <WeButton selectDataAttribute="'SATELLITE'">Satellite</WeButton>
+        <WeButton selectDataAttribute="'HYBRID'">Hybrid</WeButton>
+    </WeSelect>
+    <WeSelect class="'o_we_sublevel_1'" title.translate="Style" dependencies="'roadmap_opt'" attributeName="'mapColor'" noPreview="'true'">
+        <WeButton selectDataAttribute="''" tooltip.translate="Default" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
+        <WeButton selectDataAttribute="'lightMonoMap'" tooltip.translate="Light Mono" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg'"/>
+        <WeButton selectDataAttribute="'cupertinoMap'" tooltip.translate="Cupertino" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg'"/>
+        <WeButton selectDataAttribute="'retroMap'" tooltip.translate="Retro" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg'"/>
+        <WeButton selectDataAttribute="'cobaltMap'" tooltip.translate="Cobalt" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg'"/>
+        <WeButton selectDataAttribute="'flatMap'" tooltip.translate="Flat" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg'"/>
+        <WeButton selectDataAttribute="'blueMap'" tooltip.translate="Blue" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg'"/>
+        <WeButton selectDataAttribute="'lillaMap'" tooltip.translate="Lilla" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg'"/>
+        <WeButton selectDataAttribute="'carMap'" tooltip.translate="Caramello" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg'"/>
+        <WeButton selectDataAttribute="'bwMap'" tooltip.translate="BW" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
+    </WeSelect>
+    <WeInput title.translate="Zoom" selectDataAttribute="'12'" noPreview="'true'" attributeName="'mapZoom'" step="'1'"/>
+    <WeCheckbox title.translate="Description" showDescription="'true'" noPreview="'true'"/>
+</t>
+<t t-name="web_editor.mega_menu_layout_options">
+    <WeSelect name="'mega_menu_template_opt'" title.translate="Template">
+        <t t-set="_label">Multi Menus</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_multi_menus'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Image Menu</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_menu_image_menu'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Odoo Menu</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_odoo_menu'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Little Icons</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_little_icons'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Big Icons Subtitles</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_big_icons_subtitles'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Images Subtitles</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_images_subtitles'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Logos</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_menus_logos'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Thumbnails</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_thumbnails'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg'"
+                  t-out="_label"/>
+        <t t-set="_label">Cards</t>
+        <WeButton selectLabel="_label"
+                  selectTemplate="'website.s_mega_menu_cards'"
+                  img="'/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg'"
+                  t-out="_label"/>
+    </WeSelect>
+    <WeSelect title.translate="Size">
+        <WeButton selectClass="''">Full-Width</WeButton>
+        <WeButton selectClass="'o_mega_menu_container_size'">Narrow</WeButton>
+    </WeSelect>
+</t>
+
+<t t-name="website.snippet_save_option">
+    <WeButton class="'fa fa-fw fa-save o_we_link o_we_hover_warning'"
+        tooltip.translate="Save the block to use it elsewhere"
+        saveSnippet="''"
+        noPreview="'true'"
+    />
+</t>
+
+<t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//WeRow" position="before">
+        <WeRow title.translate="URL">
+            <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
+        </WeRow>
+        <!-- Do not annoy devs with GMap key
+        <WeRow title.translate="Address">
+            <WeGpsPicker selectDataAttribute="''" attributeName="'mapGps'"
+                setFormattedAddress="''"
+                placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
+                noPreview="'true'"/>
+        </WeRow>
+        -->
+        <WeRow title.translate="Font">
+            <WeFontFamilyPicker selectMethod="'selectDataAttribute'" attributeName="'font'"/>
+        </WeRow>
+    </xpath>
+</t>
+
+<t t-name="website.WeUrlPicker">
+    <!-- TODO There was no w-100 -->
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-data-tooltip="this.props.tooltip"
+                t-att-placeholder="this.props.placeholder"
+                t-on-input="this._onInputInput"
+                t-on-blur="this._onInputBlur"
+                t-on-change="this._onUserValueChange"
+                t-on-keydown="this._onInputKeydown"
+                t-att-value="this.state.value"
+            />
+        </div>
+        <t t-set="tooltip">Preview this URL in a new tab</t>
+        <we-button class="o_we_redirect_to o_we_link ms-1"
+            t-att-data-tooltip="tooltip"
+            t-on-click="() => { this._onRedirectTo(); }"
+        >
+            <i class="fa fa-fw fa-external-link"/>
+        </we-button>
+    </we-input>
+</t>
+<t t-name="website.WeGpsPicker">
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-att-value="this.state.formattedAddress"
+            />
+        </div>
+    </we-input>
+</t>
+<t t-name="website.WeFontFamilyPicker">
+    <we-select class="o_we_user_value_widget" t-att-class="getAllClasses()" t-on-click="_onClick"
+                t-att="getAllDataAttributes()">
+        <WeTitle t-if="props.slots?.title || props.title"
+               title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <we-toggler t-out="state.toggler.textContent" t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <t t-foreach="state.fonts" t-as="font" t-key="font_index">
+                    <WeButton class="'o_we_user_value_widget'" t-props="forwardProps(font)">
+                        <div class="d-flex justify-content-between">
+                            <span t-attf-style="font-family: {{font.fontFamily}};">
+                                <i t-if="font.type === 'cloud'" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
+                                <t t-out="font.string"/>
+                            </span>
+                            <div class="text-end">
+                                <t t-if="font.indexForType >= 0">
+                                    <t t-set="delete_font_title">Delete this font</t>
+                                    <i role="button"
+                                       t-on-click.prevent="() => this._onDeleteFontClick(font)"
+                                       class="link-danger fa fa-trash-o o_we_delete_font_btn"
+                                       t-att-aria-label="delete_font_title"
+                                       t-att-title="delete_font_title"/>
+                                </t>
+                            </div>
+                        </div>
+                    </WeButton>
+                </t>
+                <WeButton class="'o_we_user_value_widget o_we_add_font_btn'" t-on-click="() => this._onAddFontClick()">Add a Custom Font</WeButton>
+                <t t-slot="default"/>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
+<t t-name="website.Parallax">
+    <WeSelect title.translate="Parallax"
+              class="'o_we_sublevel_2'"
+              attributeName="'scrollBackgroundRatio'"
+              attributeDefaultValue="'0'"
+              parallaxTypeOpt="'true'"
+              noPreview="'true'"
+              dependencies="'bg_image_opt'">
+        <WeButton name="'parallax_none_opt'" selectDataAttribute="'0'">None</WeButton>
+        <WeButton selectDataAttribute="'1'">Fixed</WeButton>
+        <WeButton name="'parallax_top_opt'" selectDataAttribute="'1.5'">Bottom to Top</WeButton>
+        <WeButton name="'parallax_bottom_opt'" selectDataAttribute="'-1.5'">Top to Bottom</WeButton>
+    </WeSelect>
+    <WeRange title.translate="Intensity"
+                class="'o_we_sublevel_3'"
+                dependencies="'parallax_top_opt'"
+                selectDataAttribute="''"
+                attributeName="'scrollBackgroundRatio'"
+                attributeDefaultValue="'0'"
+                noPreview="'true'"
+                min="'0'"
+                max="'3'"
+                step="'0.15'"/> <!-- Make sure this cannot land on 1 -->
+    <WeRange title.translate="Intensity"
+                class="'o_we_sublevel_3'"
+                dependencies="'parallax_bottom_opt'"
+                selectDataAttribute="''"
+                attributeName="'scrollBackgroundRatio'"
+                attributeDefaultValue="'0'"
+                noPreview="'true'"
+                min="'0'"
+                max="'-3'"
+                step="'0.15'"/> <!-- Make sure this cannot land on 1 -->
+</t>
+<t t-name="website.columns_only">
+    <t t-call="website.column_count_option">
+        <t t-set="title">Columns</t>
+    </t>
+</t>
+
+<t t-name="website.snippet_options_conditional_visibility">
+    <WeSelect title="option_name" class="'o_we_sublevel_1'" dependencies="'visibility_conditional'"
+               attributeName="attribute_rule" noPreview="'true'" isVisibilityCondition="'true'">
+        <WeButton selectDataAttribute="''">Visible for</WeButton>
+        <WeButton selectDataAttribute="'hide'">Hidden for</WeButton>
+    </WeSelect>
+    <WeMany2many title="' '" dependencies="'visibility_conditional'" selectRecord="''"
+                 noPreview="'true'" allowDelete="'true'" fakem2m="'true'"
+                 saveAttribute="save_attribute" attributeName="attribute_name" model="model"
+                 callWith="call_with" fields="data_fields" domain="domain">
+    </WeMany2many>
+</t>
+<t t-name="website._device_visibility_widgets">
+    <WeButton class="'o_we_device'" toggleDeviceVisibility="'no_desktop'" tooltip.translate="Show/Hide on Desktop"
+        noPreview="'true'" img="'/website/static/src/img/snippets_options/desktop_invisible.svg'"/>
+    <WeButton class="'o_we_device'" toggleDeviceVisibility="'no_mobile'" tooltip.translate="Show/Hide on Mobile"
+        noPreview="'true'" img="'/website/static/src/img/snippets_options/mobile_invisible.svg'"/>
+</t>
+<t t-name="website.ConditionalVisibility">
+    <we-collapse>
+        <WeRow title.translate="Visibility">
+            <t t-call="website._device_visibility_widgets"/>
+            <WeSelect class="'o_we_collapse_toggler'" attributeName="'visibility'" noPreview="'true'">
+                <WeButton selectDataAttribute="''">No condition</WeButton>
+                <WeButton selectDataAttribute="'conditional'" selectClass="'o_snippet_invisible'"
+                          name="'visibility_conditional'">
+                    Conditionally
+                </WeButton>
+            </WeSelect>
+        </WeRow>
+
+        <t t-if="renderContext.countryCode">
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">Country</t>
+                <t t-set="attribute_rule" t-value="'visibilityValueCountryRule'"/>
+                <t t-set="save_attribute" t-value="'visibilityValueCountry'"/>
+                <t t-set="attribute_name" t-value="'data-country'"/>
+                <t t-set="model" t-value="'res.country'"/>
+                <t t-set="call_with" t-value="'code'"/>
+                <t t-set="data_fields" t-value="'[&quot;code&quot;]'"/>
+            </t>
+        </t>
+        <t t-if="renderContext.currentWebsite.language_ids.length > 1">
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">Languages</t>
+                <t t-set="attribute_rule" t-value="'visibilityValueLangRule'"/>
+                <t t-set="save_attribute" t-value="'visibilityValueLang'"/>
+                <t t-set="attribute_name" t-value="'lang'"/>
+                <t t-set="model" t-value="'res.lang'"/>
+                <t t-set="call_with" t-value="'code'"/>
+                <t t-set="domain" t-value='`[["id", "in", [${renderContext.currentWebsite.language_ids}]]]`'/>
+                <t t-set="data_fields" t-value="'[&quot;code&quot;]'"/>
+            </t>
+        </t>
+        <t t-call="website.snippet_options_conditional_visibility">
+            <t t-set="option_name">UTM Campaign</t>
+            <t t-set="attribute_rule" t-value="'visibilityValueUtmCampaignRule'"/>
+            <t t-set="save_attribute" t-value="'visibilityValueUtmCampaign'"/>
+            <t t-set="attribute_name" t-value="'data-utm-campaign'"/>
+            <t t-set="model" t-value="'utm.campaign'"/>
+            <t t-set="call_with" t-value="'display_name'"/>
+        </t>
+        <t t-call="website.snippet_options_conditional_visibility">
+            <t t-set="option_name">UTM Medium</t>
+            <t t-set="attribute_rule" t-value="'visibilityValueUtmMediumRule'"/>
+            <t t-set="save_attribute" t-value="'visibilityValueUtmMedium'"/>
+            <t t-set="attribute_name" t-value="'data-utm-medium'"/>
+            <t t-set="model" t-value="'utm.medium'"/>
+            <t t-set="call_with" t-value="'display_name'"/>
+        </t>
+        <t t-call="website.snippet_options_conditional_visibility">
+            <t t-set="option_name">UTM Source</t>
+            <t t-set="attribute_rule" t-value="'visibilityValueUtmSourceRule'"/>
+            <t t-set="save_attribute" t-value="'visibilityValueUtmSource'"/>
+            <t t-set="attribute_name" t-value="'data-utm-source'"/>
+            <t t-set="model" t-value="'utm.source'"/>
+            <t t-set="call_with" t-value="'display_name'"/>
+        </t>
+        <WeSelect title.translate="Users"
+                  class="'o_we_sublevel_1'" dependencies="'visibility_conditional'"
+                  attributeName="'data-logged'" saveAttribute="'visibilityValueLogged'"
+                  noPreview="'true'" attributeDefaultValue="''">
+            <WeButton selectValue="'true'">Visible for Logged In</WeButton>
+            <WeButton selectValue="'false'">Visible for Logged Out</WeButton>
+            <WeButton selectValue="''">Visible for Everyone</WeButton>
+        </WeSelect>
+    </we-collapse>
+</t>
+<!-- Mobile/Desktop display options -->
+<t t-name="website.DeviceVisibility">
+    <WeRow title.translate="Visibility">
+        <t t-call="website._device_visibility_widgets"/>
+    </WeRow>
+</t>
+
+<t t-name="website.Carousel">
+    <WeRow title.translate="Slide">
+        <WeButton addSlide="'true'" noPreview="'true'" class="'o_we_bg_brand_primary'">Add Slide</WeButton>
+    </WeRow>
+    <WeSelect title.translate="Style">
+        <WeButton selectClass="'s_carousel_default'">Default</WeButton>
+        <WeButton selectClass="'s_carousel_bordered'">Bordered</WeButton>
+        <WeButton selectClass="'s_carousel_boxed'">Boxed</WeButton>
+        <WeButton selectClass="'s_carousel_rounded'">Rounded</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Transition">
+        <WeButton selectClass="'slide'">Slide</WeButton>
+        <WeButton selectClass="'carousel-fade slide'">Fade</WeButton>
+        <we-divider/>
+        <WeButton selectClass="''">None</WeButton>
+    </WeSelect>
+    <WeInput title.translate="Speed" selectDataAttribute="'0s'" attributeName="'bsInterval'"
+             unit="'s'" saveUnit="'ms'" step="'0.1'"/>
+</t>
+
+<t t-name="website.CarouselItem">
+    <WeButton class="'fa fa-fw fa-angle-left'" switchToSlide="'left'" noPreview="'true'"
+            tooltip.translate="Move Backward"/>
+    <WeButton class="'fa fa-fw fa-angle-right me-2'" switchToSlide="'right'" noPreview="'true'"
+            tooltip.translate="Move Forward"/>
+    <WeButton class="'fa fa-fw fa-plus o_we_bg_success'" addSlideItem="'true'" noPreview="'true'"
+            tooltip.translate="Add Slide"/>
+    <WeButton class="'fa fa-fw fa-minus o_we_bg_danger'" removeSlide="'true'" noPreview="'true'"
+            tooltip.translate="Remove Slide"/>
+</t>
+
+<t t-name="website.GalleryElement">
+<WeRow title.translate="Re-order">
+    <WeButton class="'fa fa-fw fa-angle-double-left'" tooltip.translate="Move to first"
+            position="'first'" noPreview="'true'"/>
+    <WeButton class="'fa fa-fw fa-angle-left'" tooltip.translate="Move to previous"
+            position="'prev'" noPreview="'true'"/>
+    <WeButton class="'fa fa-fw fa-angle-right'" tooltip.translate="Move to next"
+            position="'next'" noPreview="'true'"/>
+    <WeButton class="'fa fa-fw fa-angle-double-right'" tooltip.translate="Move to last"
+            position="'last'" noPreview="'true'"/>
+</WeRow>
+</t>
+
+<t t-name="website.replace_media_option" t-inherit="web_editor.replace_media_option" t-inherit-mode="extension">
+    <xpath expr="//t[@t-set='urlInputComponent']" position="after">
+        <t t-if="env.snippetOption.options.isWebsite">
+            <t t-set="urlInputComponent" t-value="'WeUrlPicker'"/>
+            <t t-set="tooltip">Hint: Type '/' to search an existing page and '#' to link to an anchor.</t>
+            <t t-set="extraAttributes" t-value="{tooltip: tooltip}"/>
+        </t>
+    </xpath>
+</t>
+<!-- Website Animate -->
+<t t-name="website.WebsiteAnimate">
+    <!-- Animation mode -->
+    <WeRow title.translate="Animation">
+        <WeSelect dependencies="'!image_transform_opt'" isAnimationTypeSelection="'true'"
+                  noPreview="'true'">
+            <WeButton animationMode="''" selectClass="''" name="'no_animation_opt'">None</WeButton>
+            <WeButton animationMode="'onAppearance'" forceAnimation="'true'"
+                      selectClass="'o_animate'" name="'animation_on_appearance_opt'">
+                On Appearance
+            </WeButton>
+            <WeButton animationMode="'onScroll'" selectClass="'o_animate o_animate_on_scroll'"
+                      forceAnimation="'true'" name="'animation_on_scroll_opt'">
+                On Scroll
+            </WeButton>
+            <WeButton animationMode="'onHover'" selectClass="'o_animate_on_hover'"
+                      name="'animation_on_hover_opt'">
+                On Hover
+            </WeButton>
+        </WeSelect>
+        <WeButtonGroup dependencies="'animation_on_scroll_opt'" noPreview="'true'"
+                       forceAnimation="'true'">
+            <WeButton selectClass="''">In</WeButton>
+            <WeButton selectClass="'o_animate_out'">Out</WeButton>
+        </WeButtonGroup>
+    </WeRow>
+    <!-- Effect -->
+    <WeSelect title.translate="Effect" class="'o_we_sublevel_1'" name="'animation_effect_opt'">
+        <WeButton selectClass="''" name="'o_anim_no_effect_opt'"
+                  dependencies="'no_animation_opt'">None</WeButton>
+        <WeButton selectClass="'o_anim_fade_in'" trigger="'animation_direction_in_place_opt'">
+            Fade
+        </WeButton>
+        <WeButton selectClass="'o_anim_slide_in'" name="'o_anim_slide_in_opt'"
+                  trigger="'animation_direction_from_right_opt'">Slide</WeButton>
+        <WeButton selectClass="'o_anim_bounce_in'" trigger="'animation_direction_in_place_opt'">
+            Bounce
+        </WeButton>
+        <WeButton selectClass="'o_anim_rotate_in'" name="'o_anim_rotate_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Rotate
+        </WeButton>
+        <WeButton selectClass="'o_anim_zoom_out'" trigger="'animation_direction_in_place_opt'">
+            Zoom Out
+        </WeButton>
+        <WeButton selectClass="'o_anim_zoom_in'" trigger="'animation_direction_in_place_opt'">
+            Zoom In
+        </WeButton>
+        <WeButton selectClass="'o_anim_flash'" dependencies="'animation_on_appearance_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Flash
+        </WeButton>
+        <WeButton selectClass="'o_anim_pulse'" dependencies="'animation_on_appearance_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Pulse
+        </WeButton>
+        <WeButton selectClass="'o_anim_shake'" dependencies="'animation_on_appearance_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Shake
+        </WeButton>
+        <WeButton selectClass="'o_anim_tada'" dependencies="'animation_on_appearance_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Tada
+        </WeButton>
+        <WeButton selectClass="'o_anim_flip_in_x'" dependencies="'animation_on_appearance_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Flip-In-X
+        </WeButton>
+        <WeButton selectClass="'o_anim_flip_in_y'" dependencies="'animation_on_appearance_opt'"
+                  trigger="'animation_direction_in_place_opt'">
+            Flip-In-Y
+        </WeButton>
+    </WeSelect>
+    <!-- Direction -->
+    <WeSelect title.translate="Direction" class="'o_we_sublevel_1'"
+              name="'animation_direction_opt'" animation="'true'">
+        <WeButton selectClass="''" name="'animation_direction_in_place_opt'"
+                  dependencies="'!o_anim_slide_in_opt'">
+            In Place
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_right'" name="'animation_direction_from_right_opt'"
+                  dependencies="'!o_anim_rotate_opt'">
+            From Right
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_left'" dependencies="'!o_anim_rotate_opt'">
+            From Left
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_bottom'" dependencies="'!o_anim_rotate_opt'">
+            From Bottom
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_top'" dependencies="'!o_anim_rotate_opt'">
+            From Top
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_top_right'" dependencies="'o_anim_rotate_opt'">
+            From Top Right
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_top_left'" dependencies="'o_anim_rotate_opt'">
+            From Top Left
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_bottom_right'" dependencies="'o_anim_rotate_opt'">
+            From Bottom Right
+        </WeButton>
+        <WeButton selectClass="'o_anim_from_bottom_left'" dependencies="'o_anim_rotate_opt'">
+            From Bottom Left
+        </WeButton>
+    </WeSelect>
+    <!-- Trigger -->
+    <WeSelect title.translate="Trigger" class="'o_we_sublevel_1'"
+              dependencies="'animation_on_appearance_opt'" name="'animation_trigger_opt'">
+        <WeButton selectClass="''">First Time Only</WeButton>
+        <WeButton selectClass="'o_animate_both_scroll'">Every Time</WeButton>
+    </WeSelect>
+    <!-- Intensity -->
+    <WeRange title.translate="Intensity" class="'o_we_sublevel_1'" name="'animation_intensity_opt'"
+             animationIntensity="''" min="'1'" max="'100'" step="'1'" displayRangeValue="'true'"
+             noPreview="'true'"/>
+    <!-- Scroll Zone -->
+    <WeRow title.translate="Scroll Zone" class="'o_we_sublevel_1'">
+        <WeInput unit="'%'" step="'1'" dependencies="'animation_on_scroll_opt'" noPreview="'true'"
+                 selectDataAttribute="''" attributeName="'scrollZoneStart'" forceAnimation="'true'"/>
+        <span class="mx-2">to</span>
+        <WeInput unit="'%'" step="'1'" dependencies="'animation_on_scroll_opt'" noPreview="'true'"
+                 selectDataAttribute="''" attributeName="'scrollZoneEnd'" forceAnimation="'true'"/>
+    </WeRow>
+    <!-- Start After -->
+    <WeInput title.translate="Start After" class="'o_we_sublevel_1 o_we_small_input'"
+             dependencies="'animation_on_appearance_opt'" name="'animation_delay_opt'"
+             selectStyle="'0s'" cssProperty="'animation-delay'" unit="'s'"/>
+    <!-- Duration -->
+    <WeInput title.translate="Duration" class="'o_we_sublevel_1 o_we_small_input'"
+             dependencies="'animation_on_appearance_opt'"
+             selectStyle="'0.4s'" cssProperty="'animation-duration'" unit="'s'"/>
+</t>
+
+<t t-name="website.ImageHoverAnimate" t-inherit="website.WebsiteAnimate">
+    <!-- Hover effects options -->
+    <xpath expr="//WeRow" position="after">
+        <WeSelect title.translate="Effect" class="'o_we_sublevel_1'" attributeName="'hoverEffect'"
+                  showHoverEffect="''" setImgShapeHoverEffect="'true'"
+                  dependencies="'animation_on_hover_opt'">
+            <WeButton selectDataAttribute="''" name="'hover_effect_none_opt'">None</WeButton>
+            <WeButton selectDataAttribute="'overlay'" name="'hover_effect_overlay_opt'">Overlay</WeButton>
+            <WeButton selectDataAttribute="'image_zoom_in'" name="'hover_effect_zoom_in_opt'">Zoom In</WeButton>
+            <WeButton selectDataAttribute="'image_zoom_out'" name="'hover_effect_zoom_out_opt'">Zoom Out</WeButton>
+            <WeButton selectDataAttribute="'dolly_zoom'" name="'hover_effect_dolly_zoom_opt'">Dolly Zoom</WeButton>
+            <WeButton selectDataAttribute="'outline'" name="'hover_effect_outline_opt'">Outline</WeButton>
+            <WeButton selectDataAttribute="'image_mirror_blur'" name="'hover_effect_mirror_blur_opt'">Mirror Blur</WeButton>
+        </WeSelect>
+        <WeRange title.translate="Intensity" class="'o_we_sublevel_2'" selectDataAttribute="''"
+                    attributeName="'hoverEffectIntensity'" showHoverEffect="''"
+                    dependencies="'hover_effect_zoom_in_opt, hover_effect_zoom_out_opt, hover_effect_mirror_blur_opt, hover_effect_dolly_zoom_opt'"
+                    min="'1'" max="'100'" step="'1'" displayRangeValue="'true'" noPreview="'true'"/>
+        <WeColorpicker title="renderContext.hoverEffectColorLabel" class="'o_we_sublevel_2'"
+                       dependencies="'hover_effect_dolly_zoom_opt, hover_effect_overlay_opt, hover_effect_zoom_in_opt, hover_effect_zoom_out_opt, hover_effect_outline_opt'"
+                       excluded="'theme, common'" name="'hover_effect_color_opt'"
+                       setHoverEffectColor="'true'" showHoverEffect="''" noPreview="'true'"/>
+        <WeInput title.translate="Stroke Width" class="'o_we_sublevel_2'"
+                 dependencies="'hover_effect_outline_opt'"
+                 selectDataAttribute="''" showHoverEffect="''"
+                 attributeName="'hoverEffectStrokeWidth'" noPreview="'true'"
+                 step="'1'" min="'1'" unit="'px'"/>
+    </xpath>
+</t>
+<t t-name="website.ImageToolsAnimate">
+    <t t-call="web_editor.ImageTools"/>
+    <t t-call="web_editor.IconTools"/>
+    <t t-call="website.ImageHoverAnimate"/>
+</t>
+<t t-name="website.switchable_views_option">
+    <t t-foreach="renderContext.switchableRelatedViews" t-as="view" t-key="view.name">
+        <WeRow title="view.name">
+            <WeCheckbox customizeWebsiteViews="view.key" noPreview="'true'" reload="'/'"/>
+        </WeRow>
+    </t>
+</t>
+<t t-name="website.grid_image_option">
+    <!-- Image position in grid -->
+    <WeSelect title.translate="Position">
+        <WeButton changeGridImageMode="'cover'">Cover</WeButton>
+        <WeButton changeGridImageMode="'contain'">Contain</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.cover_properties_option">
+    <WeRow class="'o_we_full_row'" title.translate="Background">
+        <t t-call="web_editor.snippet_options_background_color_widget">
+            <t t-set="option" t-value="{withColorCombinations: true, withGradients: true}"/>
+        </t>
+        <WeButtonGroup class="'ms-auto'">
+            <WeMediapicker mediaType="'images'" tooltip.translate="Image" background="''" buttonStyle="'true'"/>
+            <WeButton class="'fa fa-fw fa-ban'" tooltip.translate="None" background="''"/>
+        </WeButtonGroup>
+    </WeRow>
+    <WeSelect name="'size_opt'" coverOptName="'size'" title.translate="Size">
+        <WeButton selectClass="'o_full_screen_height'">Full Screen</WeButton>
+        <WeButton name="'record_cover_default_size_opt'" selectClass="'o_half_screen_height'">Half Screen</WeButton>
+        <WeButton selectClass="'cover_auto'">Fit text</WeButton>
+    </WeSelect>
+    <WeSelect name="'filters_opt'" coverOptName="'filters'" title.translate="Filter Intensity">
+        <WeButton filterValue="'0.0'">None</WeButton>
+        <WeButton filterValue="'0.2'">Low</WeButton>
+        <WeButton filterValue="'0.4'">Medium</WeButton>
+        <WeButton filterValue="'0.6'">High</WeButton>
+    </WeSelect>
+    <WeSelect name="'text_align_opt'" coverOptName="'text_align'" title.translate="Text Alignment">
+        <WeButton selectClass="''">Left</WeButton>
+        <WeButton selectClass="'text-center'">Centered</WeButton>
+        <WeButton selectClass="'text-end'">Right</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.header_option">
+    <WeRow title.translate="Template">
+        <WeSelect variable="'header-template'"
+               defaultVariables="'header-links-style: default'"
+               reload="'/'" noPreview="'true'">
+            <WeButton tooltip.translate="Default"
+                   name="'header_default_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_default'"
+                   customizeWebsiteVariable="&quot;'default'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_default.svg'"/>
+            <WeButton tooltip.translate="Hamburger menu"
+                   name="'header_hamburger_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_hamburger, website.no_autohide_menu'"
+                   customizeWebsiteVariable="&quot;'hamburger'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_hamburger.svg'"/>
+            <WeButton tooltip.translate="Rounded box menu"
+                   name="'header_boxed_opt'"
+                   trigger="'over_content_header_visibility_opt'"
+                   customizeWebsiteViews="'website.header_navbar_pills_style,website.template_header_boxed'"
+                   customizeWebsiteVariable="&quot;'boxed'&quot;"
+                   customizeWebsiteVariables="'header-links-style: pills'"
+                   img="'/website/static/src/img/snippets_options/header_template_boxed.svg'"/>
+            <WeButton tooltip.translate="Stretch menu"
+                   name="'header_stretch_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_stretch'"
+                   customizeWebsiteVariable="&quot;'stretch'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_stretch.svg'"/>
+            <WeButton tooltip.translate="Vertical"
+                   name="'header_vertical_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_vertical'"
+                   customizeWebsiteVariable="&quot;'vertical'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_vertical.svg'"/>
+            <WeButton tooltip.translate="Menu with Search bar"
+                   name="'header_search_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_search'"
+                   customizeWebsiteVariable="&quot;'search'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_search.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 1"
+                   name="'header_sales_one_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_one'"
+                   customizeWebsiteVariable="&quot;'sales_one'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_one.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 2"
+                   name="'header_sales_two_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_two'"
+                   customizeWebsiteVariable="&quot;'sales_two'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_two.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 3"
+                   name="'header_sales_three_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_three'"
+                   customizeWebsiteVariable="&quot;'sales_three'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_three.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 4"
+                   name="'header_sales_four_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_four'"
+                   customizeWebsiteVariable="&quot;'sales_four'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_four.svg'"/>
+            <WeButton tooltip.translate="Sidebar"
+                   name="'header_sidebar_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sidebar, website.no_autohide_menu'"
+                   customizeWebsiteVariable="&quot;'sidebar'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sidebar.svg'"/>
+        </WeSelect>
+    </WeRow>
+
+    <!-- Header Sidebar Template - Options -->
+    <WeRow title.translate="Width">
+        <WeInput
+              class="'o_we_sublevel_1'"
+              dependencies="'header_sidebar_opt'"
+              customizeWebsiteVariable="'null'"
+              variable="'sidebar-width'"
+              unit="'px'"
+              saveUnit="'rem'"/>
+    </WeRow>
+
+    <WeRow title.translate="Background">
+        <WeColorpicker customizeWebsiteColor="''" color="'menu'"
+                        customizeWebsiteLayer2Color="''" layerColor="'menu-custom'" layerGradient="'menu-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_one_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_one'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_one-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_two_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_two'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_two-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_three_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_three'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_three-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_four_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_four'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_four-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+    </WeRow>
+</t>
+<!-- Footer - Colors & Layouts -->
+<t t-name="website.footer_option">
+    <WeRow title.translate="Template">
+        <!-- Layouts -->
+        <WeSelect variable="'footer-template'" reload="'/'">
+            <WeButton tooltip.translate="Default"
+                   customizeWebsiteViews="'website.footer_custom'"
+                   customizeWebsiteVariable="&quot;'default'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_default.svg'"/>
+            <WeButton tooltip.translate="Descriptive"
+                   customizeWebsiteViews="'website.template_footer_descriptive'"
+                   customizeWebsiteVariable="&quot;'descriptive'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_descriptive.svg'"/>
+            <WeButton tooltip.translate="Centered"
+                   customizeWebsiteViews="'website.template_footer_centered'"
+                   customizeWebsiteVariable="&quot;'centered'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_centered.svg'"/>
+            <WeButton tooltip.translate="Links"
+                   customizeWebsiteViews="'website.template_footer_links'"
+                   customizeWebsiteVariable="&quot;'links'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_links.svg'"/>
+            <WeButton tooltip.translate="Minimalist"
+                   customizeWebsiteViews="'website.template_footer_minimalist'"
+                   customizeWebsiteVariable="&quot;'minimalist'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_minimalist.svg'"/>
+            <WeButton tooltip.translate="Contact"
+                   customizeWebsiteViews="'website.template_footer_contact'"
+                   customizeWebsiteVariable="&quot;'contact'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_contact.svg'"/>
+            <WeButton tooltip.translate="Call-to-action"
+                   customizeWebsiteViews="'website.template_footer_call_to_action'"
+                   customizeWebsiteVariable="&quot;'call_to_action'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_call_to_action.svg'"/>
+            <WeButton tooltip.translate="Headline"
+                   customizeWebsiteViews="'website.template_footer_headline'"
+                   customizeWebsiteVariable="&quot;'headline'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_headline.svg'"/>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Colors">
+        <!-- Colors -->
+        <WeColorpicker
+            customizeWebsiteColor="''" color="'footer'"
+            customizeWebsiteLayer2Color="''" layerColor="'footer-custom'" layerGradient="'footer-gradient'"
+            noBundleReload="'true'"
+            nullValue="&quot;'NULL'&quot;"
+            withCombinations="'customizeWebsiteColor'"
+            withGradients="'true'"/>
+    </WeRow>
+    <WeRow title.translate="Slideout Effect">
+        <WeSelect variable="'footer-effect'" reload="'/'">
+            <WeButton customizeWebsiteViews="''"
+                      customizeWebsiteVariable="''">Regular</WeButton>
+            <WeButton customizeWebsiteViews="'website.template_footer_slideout'"
+                      customizeWebsiteVariable="&quot;'slideout_slide_hover'&quot;">Slide Hover</WeButton>
+            <WeButton customizeWebsiteViews="'website.template_footer_slideout'"
+                      customizeWebsiteVariable="&quot;'slideout_shadow'&quot;">Shadow</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Copyright">
+        <WeCheckbox
+                name="'footer_copyright_opt'"
+                customizeWebsiteViews="'website.footer_no_copyright|'"
+                noPreview="'true'"
+                reload="'/'"/>
+    </WeRow>
+</t>
+<!-- Copyright -->
+<t t-name="website.footer_copyright_option">
+    <WeRow title.translate="Colors">
+        <!-- TODO @owl-options Find out why this crashes on click -->
+        <WeColorpicker
+                customizeWebsiteColor="''" color="'copyright'"
+                customizeWebsiteLayer2-Color="''" layerColor="'copyright-custom'" layerGradient="'copyright-gradient'"
+                noBundleReload="'true'"
+                nullValue="&quot;'NULL'&quot;"
+                withCombinations="'customizeWebsiteColor'"
+                withGradients="'true'"/>
+    </WeRow>
+    <WeRow title.translate="Language Selector">
+        <WeSelect name="'footer_language_selector_opt'" reload="'/'" noPreview="'true'">
+            <WeButton name="'language_selector_none_opt'"
+                      customizeWebsiteViews="''">None</WeButton>
+            <WeButton customizeWebsiteViews="'portal.footer_language_selector'">Dropdown</WeButton>
+            <WeButton customizeWebsiteViews="'portal.footer_language_selector, website.footer_language_selector_inline'">Inline</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Label">
+        <WeSelect name="'footer_language_selector_label_opt'" dependencies="'!language_selector_none_opt'" reload="'/'" noPreview="'true'">
+            <WeButton customizeWebsiteViews="''">Text</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_flag, website.footer_language_selector_no_text'">Flag</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_flag'">Flag and Text</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_code, website.footer_language_selector_no_text'">Code</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_flag, website.footer_language_selector_code, website.footer_language_selector_no_text'">Flag and Code</WeButton>
+        </WeSelect>
+    </WeRow>
+</t>
+
+<!-- Info page ('/website/info') -->
+<t t-name="website.InfoPage">
+    <WeCheckbox title.translate="Odoo Information"
+                customizeWebsiteViews="'website.show_website_info'"
+                noPreview="'true'"
+                reload="'/'"/>
+</t>
+
+<t t-name="website.WeTextHighlightBtn" t-inherit="web_editor.WeButton" t-inherit-mode="primary">
+    <xpath expr="//t[@t-slot='default']" position="inside">Text</xpath>
+</t>
+
+<!-- Text highlight effects -->
+<t t-name="website.TextHighlight">
+    <!-- Text highlight style -->
+    <WeTextHighlightSelect title.translate="Highlight" name="'text_highlight_opt'" class="'o_we_select_grid'">
+        <div class="grid gap-0">
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_underline'" setTextHighlight="'underline'" selectLabel.translate="Underline"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_freehand_1'" setTextHighlight="'freehand_1'" selectLabel.translate="Freehand 1"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_freehand_2 o_text_highlight_fill'" setTextHighlight="'freehand_2'" selectLabel.translate="Freehand 2"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_freehand_3 o_text_highlight_fill'" setTextHighlight="'freehand_3'" selectLabel.translate="Freehand 3"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_double'" setTextHighlight="'double'" selectLabel.translate="Double"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_wavy'" setTextHighlight="'wavy'" selectLabel.translate="Wavy"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_circle_1'" setTextHighlight="'circle_1'" selectLabel.translate="Circle 1"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_circle_2 o_text_highlight_fill'" setTextHighlight="'circle_2'" selectLabel.translate="Circle 2"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_circle_3 o_text_highlight_fill'" setTextHighlight="'circle_3'" selectLabel.translate="Circle 3"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_over_underline'" setTextHighlight="'over_underline'" selectLabel.translate="Over And Underline"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_scribble_1'" setTextHighlight="'scribble_1'" selectLabel.translate="Scribble 1"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_scribble_2 o_text_highlight_fill'" setTextHighlight="'scribble_2'" selectLabel.translate="Scribble 2"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_scribble_3 o_text_highlight_fill'" setTextHighlight="'scribble_3'" selectLabel.translate="Scribble 3"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_scribble_4 o_text_highlight_fill'" setTextHighlight="'scribble_4'" selectLabel.translate="Scribble 4"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_jagged'" setTextHighlight="'jagged'" selectLabel.translate="Jagged"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_cross'" setTextHighlight="'cross'" selectLabel.translate="Cross"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_diagonal'" setTextHighlight="'diagonal'" selectLabel.translate="Diagonal"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_strikethrough'" setTextHighlight="'strikethrough'" selectLabel.translate="Strikethrough"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_bold o_text_highlight_fill'" setTextHighlight="'bold'" selectLabel.translate="Bold"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_bold_1 o_text_highlight_fill'" setTextHighlight="'bold_1'" selectLabel.translate="Bold 1"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_bold_2 o_text_highlight_fill'" setTextHighlight="'bold_2'" selectLabel.translate="Bold 2"/>
+        </div>
+    </WeTextHighlightSelect>
+    <!-- Text highlight color -->
+    <WeColorpicker title.translate="Color" class="'o_we_sublevel_1'"
+                   dependencies="'text_highlight_opt'"
+                   cssProperty="'--text-highlight-color'" selectStyle="''"/>
+    <!-- Text highlight thickness -->
+    <WeInput title.translate="Thickness" class="'o_we_sublevel_1 o_we_small_input'"
+             dependencies="'text_highlight_opt'"
+             cssProperty="'--text-highlight-width'" selectStyle="''" unit="'px'"/>
+</t>
+
+</templates>

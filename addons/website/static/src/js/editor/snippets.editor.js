@@ -5,9 +5,9 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
-import wSnippetOptions from "@website/js/editor/snippets.options";
+import wLegacySnippetOptions from "@website/js/editor/snippets.options.legacy";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
@@ -18,7 +18,7 @@ snippetsEditorRegistry.add("no_parent_editor_snippets", ["s_popup", "o_mega_menu
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
-const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
+const FontFamilyPickerUserValueWidget = wLegacySnippetOptions.FontFamilyPickerUserValueWidget;
 
 const ANIMATED_TEXT_SELECTOR = ".o_animated_text";
 const HIGHLIGHTED_TEXT_SELECTOR = ".o_text_highlight";
@@ -58,6 +58,12 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      * @override
      */
     setup() {
+        useSubEnv({
+            getSwitchableRelatedViews: (data) => this._onGetSwitchableRelatedViews.call(this, { data }),
+            gmapApiRequest: (data) => this._onGMapAPIRequest.call(this, { data }),
+            gmapApiKeyRequest: (data) => this._onGMapAPIKeyRequest.call(this, { data }),
+            reloadBundles: (data) => this._onReloadBundles.call(this, { data }),
+        });
         super.setup();
         this.notification = useService("notification");
         this.dialog = useService("dialog");
@@ -225,6 +231,15 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         return super._computeSnippetTemplates(html);
     }
     /**
+     * @override
+     */
+    getOptions() {
+        const options = super.getOptions().filter(([optionID, option]) => {
+            return ["website", "web_editor"].includes(option.module);
+        });
+        return options;
+    }
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
@@ -352,7 +367,6 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      * @param {string} gmapRequestEventName
      */
     async _handleGMapRequest(ev, gmapRequestEventName) {
-        ev.stopPropagation();
         const reconfigured = await this._configureGMapAPI({
             alwaysReconfigure: ev.data.reconfigure,
             configureIfNecessary: ev.data.configureIfNecessary,
@@ -665,6 +679,11 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             this.props.setCSSVariables(this.el);
             oldSuccess(...args);
         };
+        // TODO: @owl-options Definitely not correct but at least it pretends to work
+        ev.name = 'reload_bundles';
+        this.options.wysiwyg._trigger_up(ev);
+        ev.data.onSuccess();
+        this.env.activateSnippet();
         for (const editor of this.snippetEditors) {
             if (!editor.$target[0].matches(excludeSelector)) {
                 if (this._currentTab === this.tabs.THEME) {

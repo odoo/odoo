@@ -6,7 +6,7 @@ import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.subscribe = publicWidget.Widget.extend({
-    selector: ".js_subscribe",
+    selector: ".js_subscribe", // TODO: @owl-options change to .s_newsletter_subscribe_form ?
     disabledInEditableMode: false,
     read_events: {
         'click .js_subscribe_btn': '_onSubscribeClick',
@@ -93,7 +93,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     },
 
     _getListId: function () {
-        return this.$el.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$el.data('list-id');
+        return this.$el.closest('[data-snippet=s_newsletter_block]').data('list-id') || this.$el.data('list-id');
     },
 
     //--------------------------------------------------------------------------

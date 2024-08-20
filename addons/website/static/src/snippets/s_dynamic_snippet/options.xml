@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_dynamic_snippet_option">
+    <WeRow title.translate="Filter">
+        <WeSelect name="'filter_opt'" attributeName="'filterId'" noPreview="'true'">
+            <WeButton t-foreach="renderContext.dynamicFilters" t-as="filter_key" t-key="filter_key"
+                img="renderContext.dynamicFilters[filter_key].thumb"
+                selectDataAttribute="filter_key"
+            >
+                <t t-out="renderContext.dynamicFilters[filter_key].name"/>
+            </WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Template">
+        <WeSelect name="'template_opt'" attributeName="'templateKey'" noPreview="'true'">
+            <WeButton t-foreach="renderContext.dynamicFilterTemplates" t-as="template_key" t-key="template_key"
+                img="renderContext.dynamicFilterTemplates[template_key].thumb || ''"
+                selectDataAttribute="template_key"
+            >
+                <t t-out="renderContext.dynamicFilterTemplates[template_key].name || ''"/>
+            </WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Fetched Elements">
+        <WeSelect name="'number_of_records_opt'" attributeName="'numberOfRecords'" noPreview="'true'">
+            <WeButton t-foreach="[...Array(16).keys()].map(k => (k + 1).toString())" t-as="value" t-key="value_index" selectDataAttribute="value">
+                <t t-out="value"/>
+            </WeButton>
+        </WeSelect>
+    </WeRow>
+    <t t-slot="default"/>
+</t>
+
+</templates>

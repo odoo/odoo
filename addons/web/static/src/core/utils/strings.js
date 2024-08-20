@@ -355,3 +355,14 @@ export function isNumeric(value) {
 export function exprToBoolean(str, trueIfEmpty = false) {
     return str ? !/^false|0$/i.test(str) : trueIfEmpty;
 }
+
+/**
+ * Transforms a camelCased string to return its kebab-cased version.
+ * Typically used to generate CSS properties from JS objects.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+export function camelToKebab(str) {
+    return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+}

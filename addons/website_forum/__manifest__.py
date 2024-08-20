@@ -63,6 +63,9 @@ Ask questions, get answers, no distractions
         'website.assets_editor': [
             'website_forum/static/src/js/systray_items/*.js',
         ],
+        'website.assets_wysiwyg': [
+            'website_forum/static/src/snippets/s_searchbar/options.xml',
+        ],
         'web.assets_tests': [
             'website_forum/static/tests/**/*',
         ],

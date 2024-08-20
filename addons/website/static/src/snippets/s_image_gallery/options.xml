@@ -1,0 +1,51 @@
+<templates id="template" xml:space="preserve">
+<t t-name="website.GalleryImageList">
+    <WeRow title.translate="Images">
+        <WeButton class="'o_we_bg_success'" addImages="'true'" noPreview="'true'">Add</WeButton>
+        <WeButton class="'o_we_bg_danger'" removeAllImages="'true'" noPreview="'true'">Remove all</WeButton>
+    </WeRow>
+</t>
+<t t-name="website.Gallery">
+    <WeSelect title.translate="Mode" dependencies="'!slideshow_mode_opt'">
+        <WeButton mode="'grid'" name="'grid_mode_opt'">Grid</WeButton>
+        <WeButton mode="'masonry'" name="'masonry_mode_opt'">Masonry</WeButton>
+        <WeButton mode="'nomode'">Float</WeButton>
+
+        <!-- Hidden option -->
+        <WeButton mode="'slideshow'" name="'slideshow_mode_opt'">Slideshow</WeButton>
+    </WeSelect>
+    <WeInput title.translate="Speed"
+             dependencies="'slideshow_mode_opt'"
+             applyTo="'.carousel:first'"
+             selectDataAttribute="'0s'" attributeName="'bsInterval'"
+             unit="'s'" saveUnit="'ms'" step="'0.1'"/>
+    <WeSelect title.translate="Columns" dependencies="'masonry_mode_opt, grid_mode_opt'">
+        <WeButton columns="'1'">1</WeButton>
+        <WeButton columns="'2'">2</WeButton>
+        <WeButton columns="'3'">3</WeButton>
+        <WeButton columns="'4'">4</WeButton>
+        <WeButton columns="'6'">6</WeButton>
+        <WeButton columns="'12'">12</WeButton>
+    </WeSelect>
+    <WeRange title.translate="Images Spacing"
+             dependencies="'!slideshow_mode_opt'"
+             selectClass="'o_spc-none|o_spc-small|o_spc-medium|o_spc-big'"/>
+    <WeSelect title.translate="Arrows" dependencies="'slideshow_mode_opt'">
+        <WeButton selectClass="''">Standard</WeButton>
+        <WeButton selectClass="'s_image_gallery_indicators_arrows_boxed'">Boxed</WeButton>
+        <WeButton selectClass="'s_image_gallery_indicators_arrows_rounded'">Rounded</WeButton>
+    </WeSelect>
+    <WeCheckbox title.translate="Image Cover" selectClass="'s_image_gallery_cover'" dependencies="'slideshow_mode_opt'"/>
+    <WeSelect title.translate="Indicators" dependencies="'slideshow_mode_opt'">
+        <WeButton selectClass="''">None</WeButton>
+        <WeButton selectClass="'s_image_gallery_show_indicators s_image_gallery_indicators_dots'">Dots</WeButton>
+        <WeButton selectClass="'s_image_gallery_show_indicators'">Squared Miniatures</WeButton>
+        <WeButton selectClass="'s_image_gallery_show_indicators s_image_gallery_indicators_rounded'">Rounded Miniatures</WeButton>
+    </WeSelect>
+    <t t-call="website.snippet_options_border_widgets">
+        <t t-set="apply_to" t-value="'img'"/>
+        <t t-set="so_rounded_no_dependencies" t-value="true"/>
+    </t>
+</t>
+<t t-name="website.GalleryImage"/>
+</templates>

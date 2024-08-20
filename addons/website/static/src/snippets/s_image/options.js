@@ -1,9 +1,16 @@
 /** @odoo-module **/
 
-import options from "@web_editor/js/editor/snippets.options";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
-options.registry.ImageSnippet = options.Class.extend({
+export class ImageSnippet extends SnippetOption {
+
+    constructor() {
+        super(...arguments);
+        this.dialog = this.env.services.dialog;
+    }
+
     /**
      * @override
      */
@@ -12,7 +19,7 @@ options.registry.ImageSnippet = options.Class.extend({
         // dialog.
         await new Promise(resolve => {
             let isImageSaved = false;
-            this.call("dialog", "add", MediaDialog, {
+            this.dialog.add(MediaDialog, {
                 onlyImages: true,
                 save: imageEl => {
                     isImageSaved = true;
@@ -34,9 +41,10 @@ options.registry.ImageSnippet = options.Class.extend({
                 }
             });
         });
-    },
-});
+    }
+}
 
-export default {
-    ImageSnippet: options.registry.ImageSnippet,
-};
+registerWebsiteOption("Image", {
+    Class: ImageSnippet,
+    selector: '.s_image',
+});

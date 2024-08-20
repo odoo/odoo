@@ -33,7 +33,10 @@
     'assets': {
         'website.assets_wysiwyg': [
             'website_blog/static/src/js/options.js',
+            'website_blog/static/src/js/options.xml',
             'website_blog/static/src/snippets/s_blog_posts/options.js',
+            'website_blog/static/src/snippets/s_blog_posts/options.xml',
+            'website_blog/static/src/snippets/s_searchbar/options.xml',
         ],
         'website.assets_editor': [
             'website_blog/static/src/js/tours/website_blog.js',

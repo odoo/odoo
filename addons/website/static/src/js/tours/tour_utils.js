@@ -101,7 +101,9 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
-        trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
+        // TODO: @owl-options when all options are converted to OWL, remove the
+        // the first part of the selector.
+        trigger: `${option_block} ${weName}, ${option_block} [title='${weName}'], ${option_block} [data-title='${weName}']`,
         content: markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
         tooltipPosition: position,
         run: "click",

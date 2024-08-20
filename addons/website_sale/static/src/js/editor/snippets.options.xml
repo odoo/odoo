@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Header shopping cart button -->
+    <t t-name="website_sale.HeaderShoppingCart">
+        <WeRow title.translate="Show Empty" class="'o_we_full_row'">
+            <div class="'d-flex gap-1 mb-1 w-100'">
+                <WeButton tooltip.translate="Show/hide shopping cart"
+                          class="'o_btn_show_empty_cart fa fa-shopping-cart d-flex justify-content-center flex-grow-1'"
+                          customizeWebsiteViews="'website_sale.header_hide_empty_cart_link|'"
+                          noPreview="'true'"
+                          reload="'/'"/>
+            </div>
+        </WeRow>
+    </t>
+
+</templates>

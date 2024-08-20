@@ -2,12 +2,13 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { useService } from "@web/core/utils/hooks";
-import options from '@web_editor/js/editor/snippets.options';
 import { _t } from "@web/core/l10n/translation";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { cloneContentEls } from "@website/js/utils";
 
 import { Component, useState } from "@odoo/owl";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
 class CodeEditorDialog extends Component {
     static template = "website.s_embed_code_dialog";
@@ -36,11 +37,11 @@ class CodeEditorDialog extends Component {
     }
 }
 
-options.registry.EmbedCode = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.dialog = this.bindService("dialog");
-    },
+class EmbedCode extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.dialog = this.env.services.dialog;
+    }
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -66,9 +67,13 @@ options.registry.EmbedCode = options.Class.extend({
                 onClose: resolve,
             });
         });
-    },
-});
+    }
+}
 
-export default {
-    EmbedCode: options.registry.EmbedCode,
-};
+registerWebsiteOption("EmbedCode", {
+    Class: EmbedCode,
+    template: "website.s_embed_code",
+    selector: ".s_embed_code",
+    // TODO: @owl-options
+    // position: before data-js='Box'
+});
