@@ -522,6 +522,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
             // :iframe
             expectSelector("iframe p:contains(iframe text content)").toEqualNodes("");
+            expectSelector("div:iframe p").toEqualNodes("");
             expectSelector(":iframe p:contains(iframe text content)").toEqualNodes("p", {
                 root: "iframe",
             });
