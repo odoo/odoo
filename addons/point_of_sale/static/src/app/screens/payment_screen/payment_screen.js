@@ -18,6 +18,7 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
 import { getUTCString } from "@point_of_sale/utils";
+import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -501,6 +502,47 @@ export class PaymentScreen extends Component {
     async _postPushOrderResolve(order, order_server_ids) {
         return true;
     }
+    async showQR(payment) {
+        let qr;
+        try {
+            qr = await this.pos.data.call("pos.payment.method", "get_qr_code", [
+                [payment.payment_method_id.id],
+                payment.amount,
+                payment.pos_order_id.name,
+                payment.pos_order_id.name,
+                this.pos.currency.id,
+                payment.pos_order_id.partner_id?.id,
+            ]);
+        } catch (error) {
+            qr = payment.payment_method_id.default_qr;
+            if (!qr) {
+                let message;
+                if (error instanceof ConnectionLostError) {
+                    message = _t(
+                        "Connection to the server has been lost. Please check your internet connection."
+                    );
+                } else {
+                    message = error.data.message;
+                }
+                this.env.services.dialog.add(AlertDialog, {
+                    title: _t("Failure to generate Payment QR Code"),
+                    body: message,
+                });
+                return false;
+            }
+        }
+        return await ask(
+            this.env.services.dialog,
+            {
+                title: payment.name,
+                line: payment,
+                order: payment.pos_order_id,
+                qrCode: qr,
+            },
+            {},
+            QRPopup
+        );
+    }
     async sendPaymentRequest(line) {
         // Other payment lines can not be reversed anymore
         this.numberBuffer.capture();
@@ -510,7 +552,7 @@ export class PaymentScreen extends Component {
 
         let isPaymentSuccessful = false;
         if (line.payment_method_id.payment_method_type === "qr_code") {
-            const resp = await this.pos.showQR(line);
+            const resp = await this.showQR(line);
             isPaymentSuccessful = line.handle_payment_response(resp);
         } else {
             isPaymentSuccessful = await line.pay();

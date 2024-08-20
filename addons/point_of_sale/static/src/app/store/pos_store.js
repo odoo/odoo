@@ -8,7 +8,6 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
-import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
@@ -29,7 +28,6 @@ import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
-import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 
 const { DateTime } = luxon;
@@ -1604,48 +1602,6 @@ export class PosStore extends Reactive {
             cashier: _t("Served by %s", this.get_cashier()?.name),
             header: this.config.receipt_header,
         };
-    }
-
-    async showQR(payment) {
-        let qr;
-        try {
-            qr = await this.data.call("pos.payment.method", "get_qr_code", [
-                [payment.payment_method_id.id],
-                payment.amount,
-                payment.pos_order_id.name,
-                payment.pos_order_id.name,
-                this.currency.id,
-                payment.pos_order_id.partner_id?.id,
-            ]);
-        } catch (error) {
-            qr = payment.payment_method_id.default_qr;
-            if (!qr) {
-                let message;
-                if (error instanceof ConnectionLostError) {
-                    message = _t(
-                        "Connection to the server has been lost. Please check your internet connection."
-                    );
-                } else {
-                    message = error.data.message;
-                }
-                this.env.services.dialog.add(AlertDialog, {
-                    title: _t("Failure to generate Payment QR Code"),
-                    body: message,
-                });
-                return false;
-            }
-        }
-        return await ask(
-            this.env.services.dialog,
-            {
-                title: payment.name,
-                line: payment,
-                order: payment.pos_order_id,
-                qrCode: qr,
-            },
-            {},
-            QRPopup
-        );
     }
 
     async onTicketButtonClick() {
