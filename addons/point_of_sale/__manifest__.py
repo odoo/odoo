@@ -199,7 +199,6 @@
             'web/static/src/search/**/*',
             'web/static/src/views/fields/field_tooltip.js',
             'web/static/src/views/fields/field.js',
-            'web/static/src/views/onboarding_banner.js',
             'web/static/src/views/utils.js',
             'web/static/src/views/view_hook.js',
             'web/static/src/views/view_service.js',

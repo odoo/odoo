@@ -14009,21 +14009,6 @@ test(`editable list group header click should unselect record`, async () => {
     expect(`.o_selected_row`).toHaveCount(0);
 });
 
-test(`renders banner_route`, async () => {
-    onRpc("/mybody/isacage", () => {
-        expect.step("/mybody/isacage");
-        return { html: `<div class="setmybodyfree">myBanner</div>` };
-    });
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<tree banner_route="/mybody/isacage"><field name="foo"/></tree>`,
-    });
-    expect.verifySteps(["/mybody/isacage"]);
-    expect(`.setmybodyfree`).toHaveCount(1);
-});
-
 test(`fieldDependencies support for fields`, async () => {
     Foo._records = [{ id: 1, int_field: 2 }];
 
