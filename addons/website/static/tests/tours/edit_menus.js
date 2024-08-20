@@ -295,3 +295,31 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         },
     },
 ]);
+
+wTourUtils.registerWebsitePreviewTour(
+    "edit_menus_delete_parent",
+    {
+        test: true,
+        url: "/",
+    },
+    () => [
+        {
+            content: "Open site menu",
+            extra_trigger: "iframe #wrapwrap",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "Click on Edit Menu",
+            trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        },
+        {
+            content: "Delete Home menu",
+            trigger: ".modal-body ul li:nth-child(1) button.js_delete_menu",
+        },
+        {
+            content: "Save",
+            trigger: ".modal-footer button:first-child",
+            run: "click",
+        },
+    ]
+);
