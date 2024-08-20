@@ -190,7 +190,7 @@ class AccountChartTemplate(models.AbstractModel):
             delay_account_group_sync=True,
             lang='en_US',
         )
-        company = company.with_env(self.env)
+        company = self.env['res.company'].browse(company.id)  # also update company.pool
 
         reload_template = template_code == company.chart_template
         company.chart_template = template_code
