@@ -84,7 +84,11 @@ export class Record {
                     }
                 }
                 // relational field (note: optional when OR)
-                return `(${data[expr]?.localId})`;
+                if (isRecord(data[expr])) {
+                    return `(${data[expr]?.localId})`;
+                }
+                const TargetModelName = Model._.fieldsTargetModel.get(expr);
+                return `(${Model.store[TargetModelName].get(data[expr])?.localId})`;
             }
             return data[expr];
         }
@@ -175,27 +179,12 @@ export class Record {
      *
      * @returns {Record}
      */
-    static new(data) {
+    static new(data, ids) {
         const Model = toRaw(this);
         const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordNew() {
             const recordProxy = new Model.Class();
             const record = toRaw(recordProxy)._raw;
-            const ids = Model._retrieveIdFromData(data);
-            for (const name in ids) {
-                if (
-                    ids[name] &&
-                    !isRecord(ids[name]) &&
-                    !isCommand(ids[name]) &&
-                    isRelation(Model, name)
-                ) {
-                    // preinsert that record in relational field,
-                    // as it is required to make current local id
-                    ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
-                        ids[name]
-                    );
-                }
-            }
             Object.assign(record._, { localId: Model.localId(ids) });
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
@@ -319,13 +308,26 @@ export class Record {
         record.update.call(record._proxy, data);
         return recordFullProxy;
     }
-    /**
-     * @returns {Record}
-     */
+    /** @returns {Record} */
     static preinsert(data) {
         const ModelFullProxy = this;
         const Model = toRaw(ModelFullProxy);
-        return Model.get.call(ModelFullProxy, data) ?? Model.new(data);
+        const ids = Model._retrieveIdFromData(data);
+        for (const name in ids) {
+            if (
+                ids[name] &&
+                !isRecord(ids[name]) &&
+                !isCommand(ids[name]) &&
+                isRelation(Model, name)
+            ) {
+                // preinsert that record in relational field,
+                // as it is required to make current local id
+                ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
+                    ids[name]
+                );
+            }
+        }
+        return Model.get.call(ModelFullProxy, data) ?? Model.new(data, ids);
     }
 
     /** @returns {import("models").Store} */
