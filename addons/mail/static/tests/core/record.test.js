@@ -9,7 +9,7 @@ import { reactive, toRaw } from "@odoo/owl";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/core/common/record";
-import { Markup } from "@mail/model/misc";
+import { AND, Markup } from "@mail/model/misc";
 import { registry } from "@web/core/registry";
 
 describe.current.tags("desktop");
@@ -999,4 +999,41 @@ test("setup() has precedence over instance class field definition", async () => 
     const store = await start();
     const test = store.Test2.insert();
     expect(test.x).toBe(true);
+});
+
+test("insert with id relation keeps existing field values", async () => {
+    class User extends Record {
+        static id = "id";
+        id;
+    }
+    User.register(localRegistry);
+    class Thread extends Record {
+        static id = "id";
+        id;
+    }
+    Thread.register(localRegistry);
+    class ChannelMember extends Record {
+        static id = AND("channel", "user");
+        is_internal = Record.attr(false);
+        channel = Record.one("Thread");
+        user = Record.one("User");
+    }
+    ChannelMember.register(localRegistry);
+    const store = await start();
+    const member1 = store.ChannelMember.insert({
+        is_internal: true,
+        user: { id: 1 },
+        channel: { id: 2 },
+    });
+    const user1 = member1.user;
+    const channel1 = member1.channel;
+    expect(member1.is_internal).toBe(true);
+    const member2 = store.ChannelMember.insert({
+        user: { id: 1 },
+        channel: { id: 2 },
+    });
+    expect(member2.eq(member1)).toBe(true);
+    expect(member2.user.eq(user1)).toBe(true);
+    expect(member2.channel.eq(channel1)).toBe(true);
+    expect(member2.is_internal).toBe(true);
 });
