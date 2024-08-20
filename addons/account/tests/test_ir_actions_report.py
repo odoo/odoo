@@ -6,7 +6,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning
 from odoo.tools import pdf
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -45,7 +45,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         test_record_report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.action_account_original_vendor_bill', res_ids=in_invoice_1.id)
         self.assertTrue(test_record_report, "The PDF should have been generated")
 
-    def test_download_one_encrypted_pdf(self):
+    def test_download_with_encrypted_pdf(self):
         """
         Same as test_download_one_corrupted_pdf
         but for encrypted pdf with no password and set encryption type to 5 (not known by PyPDF2)
@@ -96,7 +96,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
             'res_id': in_invoice_2.id,
         })
         # trying to merge with a corrupted attachment should not work
-        with self.assertRaises(UserError):
+        with self.assertRaises(RedirectWarning):
             self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.action_account_original_vendor_bill', res_ids=[in_invoice_1.id, in_invoice_2.id])
 
     def test_report_with_some_resources_reloaded_from_attachment(self):

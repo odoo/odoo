@@ -2,10 +2,12 @@
 
 import core, { _t } from 'web.core';
 import checkoutForm from 'payment.checkout_form';
+import { memoize } from "@web/core/utils/functions";
 
 checkoutForm.include({
     events: _.extend({}, checkoutForm.prototype.events || {}, {
         'change .o_wpayment_fee_impact': '_onFeeParameterChange',
+        'focus .o_wpayment_fee_impact': '_onFeeParameterChange',
     }),
 
     /**
@@ -13,6 +15,7 @@ checkoutForm.include({
      */
     start: function () {
         core.bus.on('update_shipping_cost', this, this._updateShippingCost);
+        this._memoizedGetProviderFees = memoize(this._getProviderFees.bind(this));
         return this._super.apply(this, arguments);
     },
 
@@ -116,6 +119,13 @@ checkoutForm.include({
         const targetId = ev.target.id;
         if (targetId.indexOf("amount") >= 0) {
             this.txContext.amount = ev.target.value;
+            if (targetId === "other_amount_value") {
+                //We need to do this because the custom amount is represented by two inputs.
+                const otherAmountInputEl = document.querySelector("input[id=\"other_amount\"]");
+                if (otherAmountInputEl) {
+                    otherAmountInputEl.value = ev.target.value;
+                }
+            }
         }
         const providerIds = [];
         for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
@@ -126,17 +136,17 @@ checkoutForm.include({
         }
         const countryId = this.$('select[name="country_id"]').val();
         if (providerIds && this.txContext.amount) {
-            this._rpc({
-                route: '/donation/get_provider_fees',
-                params: {
-                    'provider_ids': providerIds,
-                    'amount': this.txContext.amount !== undefined
-                        ? parseFloat(this.txContext.amount) : null,
-                    'currency_id': this.txContext.currencyId
-                        ? parseInt(this.txContext.currencyId) : null,
-                    'country_id': countryId,
-                },
-            }).then(feesPerProvider => {
+            const params = {
+                "provider_ids": providerIds,
+                'amount': this.txContext.amount !== undefined
+                    ? parseFloat(this.txContext.amount) : null,
+                'currency_id': this.txContext.currencyId
+                    ? parseInt(this.txContext.currencyId) : null,
+                'country_id': countryId,
+            }
+            const cacheKey = `${params.amount}-${params.currency_id}-${params.country_id}`;
+
+            this._memoizedGetProviderFees(cacheKey, params).then(feesPerProvider => {
                 for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
                     const radio = $(card).find('input[name="o_payment_radio"]');
                     let providerId;
@@ -157,5 +167,20 @@ checkoutForm.include({
                 );
             });
         }
+    },
+
+    /**
+     * Function to perform the RPC call to get provider fees.
+     *
+     * @private
+     * @param cacheKey - Key used for cache storage
+     * @param {Object} params - Parameters for the RPC call
+     * @returns {Promise}
+     */
+    _getProviderFees: function(cacheKey, params) {
+        return this._rpc({
+            route: "/donation/get_provider_fees",
+            params: params,
+        });
     },
 });
