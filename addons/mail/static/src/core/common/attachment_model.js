@@ -16,9 +16,9 @@ export class Attachment extends FileModelMixin(Record) {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static new(data) {
+    static new() {
         /** @type {import("models").Attachment} */
-        const attachment = super.new(data);
+        const attachment = super.new(...arguments);
         Record.onChange(attachment, ["extension", "filename"], () => {
             if (!attachment.extension && attachment.filename) {
                 attachment.extension = attachment.filename.split(".").pop();
