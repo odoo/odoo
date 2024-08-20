@@ -256,64 +256,6 @@ test(`Custom search panel`, async () => {
     expect(`.o_search_panel`).toHaveCount(0);
 });
 
-test(`Custom banner: no bannerRoute in env`, async () => {
-    class ToyComponent extends Component {
-        static props = ["*"];
-        static template = xml`
-            <Layout display="props.display">
-                <div class="o_toy_content"/>
-            </Layout>
-        `;
-        static components = { Layout };
-    }
-
-    class Banner extends Component {
-        static props = ["*"];
-        static template = xml`<div class="o_toy_banner"/>`;
-    }
-
-    await mountWithSearch(
-        ToyComponent,
-        {
-            resModel: "foo",
-            searchViewId: false,
-        },
-        { Banner }
-    );
-    expect(`.o_toy_content`).toHaveCount(1);
-    expect(`.o_toy_banner`).toHaveCount(0);
-});
-
-test(`Custom banner: with bannerRoute in env`, async () => {
-    class ToyComponent extends Component {
-        static props = ["*"];
-        static template = xml`
-            <Layout display="props.display">
-                <div class="o_toy_content"/>
-            </Layout>
-        `;
-        static components = { Layout };
-    }
-
-    class Banner extends Component {
-        static props = ["*"];
-        static template = xml`<div class="o_toy_banner"/>`;
-    }
-
-    await mountWithSearch(
-        ToyComponent,
-        {
-            resModel: "foo",
-            searchViewId: false,
-        },
-        { Banner, bannerRoute: "toy/banner/route" }
-    );
-    expect(`.o_toy_banner`).toHaveCount(1);
-    expect(`.o_content .o_toy_banner`).toHaveCount(0);
-    expect(`.o_toy_content`).toHaveCount(1);
-    expect(`.o_content .o_toy_content`).toHaveCount(1);
-});
-
 test(`Simple rendering: with dynamically displayed search`, async () => {
     const state = reactive({ displayLayoutActions: true });
 
