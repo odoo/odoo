@@ -13,6 +13,7 @@ Malta basic package that contains the chart of accounts, the taxes, tax reports,
         'account',
         'base_vat',
     ],
+    'auto_install': ['account'],
     'data': [
         'data/menuitem_data.xml',
         'data/account_tax_report_data.xml',
