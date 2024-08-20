@@ -7,6 +7,7 @@ import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDe
 import { CropOverlay } from "./crop_overlay";
 import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { pick } from "@web/core/utils/objects";
 
 export class BarcodeVideoScanner extends Component {
     static template = "web.BarcodeVideoScanner";
@@ -132,9 +133,12 @@ export class BarcodeVideoScanner extends Component {
         let barcodeDetected = false;
         try {
             const codes = await this.detector.detect(this.videoPreviewRef.el);
-            barcodeDetected = Boolean(codes.length);
             for (const code of codes) {
-                if (!this.isZXingBarcodeDetector() && this.overlayInfo.x && this.overlayInfo.y) {
+                if (
+                    !this.isZXingBarcodeDetector() &&
+                    this.overlayInfo.x !== undefined &&
+                    this.overlayInfo.y !== undefined
+                ) {
                     const { x, y, width, height } = this.adaptValuesWithRatio(code.boundingBox);
                     if (
                         x < this.overlayInfo.x ||
@@ -145,6 +149,7 @@ export class BarcodeVideoScanner extends Component {
                         continue;
                     }
                 }
+                barcodeDetected = true;
                 this.barcodeDetected(code.rawValue);
                 break;
             }
@@ -167,8 +172,8 @@ export class BarcodeVideoScanner extends Component {
         this.props.onResult(barcode);
     }
 
-    adaptValuesWithRatio(object, dividerRatio = false) {
-        const newObject = Object.assign({}, object);
+    adaptValuesWithRatio(domRect, dividerRatio = false) {
+        const newObject = pick(domRect, "x", "y", "width", "height");
         for (const key of Object.keys(newObject)) {
             if (dividerRatio) {
                 newObject[key] /= this.zoomRatio;
