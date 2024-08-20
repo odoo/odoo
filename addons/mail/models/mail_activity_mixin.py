@@ -164,7 +164,7 @@ class MailActivityMixin(models.AbstractModel):
         search_states_int = {integer_state_value.get(s or False) for s in search_states}
 
         self.env['mail.activity'].flush_model(['active', 'date_deadline', 'res_model', 'user_id'])
-        query = """
+        query = SQL("""(
           SELECT res_id
             FROM (
                 SELECT res_id,
@@ -187,17 +187,12 @@ class MailActivityMixin(models.AbstractModel):
               GROUP BY res_id
             ) AS res_record
           WHERE %(search_states_int)s @> ARRAY[activity_state]
-        """
-
-        self._cr.execute(
-            query,
-            {
-                'today_utc': pytz.utc.localize(datetime.utcnow()),
-                'res_model_table': self._name,
-                'search_states_int': list(search_states_int)
-            },
+            )""",
+            today_utc=pytz.utc.localize(datetime.utcnow()),
+            res_model_table=self._name,
+            search_states_int=list(search_states_int)
         )
-        return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
+        return [('id', 'not in' if reverse_search else 'in', query)]
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
