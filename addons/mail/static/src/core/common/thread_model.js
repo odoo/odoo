@@ -40,8 +40,8 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static new(data) {
-        const thread = super.new(data);
+    static new() {
+        const thread = super.new(...arguments);
         Record.onChange(thread, ["state"], () => {
             if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
                 const cw = this.store.ChatWindow?.insert({ thread });
