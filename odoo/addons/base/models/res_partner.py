@@ -447,6 +447,19 @@ class Partner(models.Model):
         if self._has_cycle():
             raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
 
+    @api.constrains('company_id')
+    def _check_partner_company(self):
+        for partner in self:
+            if partner.is_company and partner.company_id:
+                related_company = self.env['res.company'].search([
+                    ('partner_id', '=', partner.id)
+                ], limit=1)
+
+                if related_company and partner.company_id != related_company.id:
+                    raise ValidationError(
+                        "The company assigned to this partner does not match the company this partner represents."
+                    )
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
