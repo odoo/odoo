@@ -433,23 +433,6 @@ export class PosStore extends Reactive {
 
         this.markReady();
     }
-
-    get productListViewMode() {
-        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
-        if (viewMode === "grid") {
-            return "d-grid gap-2";
-        } else {
-            return "";
-        }
-    }
-    get productViewMode() {
-        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
-        if (viewMode === "grid") {
-            return "flex-column";
-        } else {
-            return "flex-row-reverse justify-content-between m-1";
-        }
-    }
     getProductPriceFormatted(product) {
         const formattedUnitPrice = this.env.utils.formatCurrency(this.getProductPrice(product));
 

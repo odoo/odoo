@@ -82,6 +82,18 @@ export class ProductScreen extends Component {
             useWithBarcode: true,
         });
     }
+    get viewMode() {
+        const smallMode = this.pos.productListView;
+        return smallMode && this.ui.isSmall ? smallMode : "grid";
+    }
+    get productListViewMode() {
+        return this.viewMode === "grid" ? "d-grid gap-2" : "";
+    }
+    get productViewMode() {
+        return this.viewMode === "grid"
+            ? "flex-column"
+            : "flex-row-reverse justify-content-between m-1";
+    }
     getAncestorsAndCurrent() {
         const selectedCategory = this.pos.selectedCategory;
         return selectedCategory
