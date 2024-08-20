@@ -141,7 +141,7 @@ export class TourStepAutomatic extends TourStep {
         } else if (this.isBlocked) {
             return "Element has been found but DOM is blocked by UI.";
         } else if (!this.hasRun) {
-            return `Element has been found. The error seems to be with step.run`;
+            return `Element has been found. The error seems to be with step.run.`;
         }
         return "";
     }
@@ -202,19 +202,21 @@ export class TourStepAutomatic extends TourStep {
     }
 
     /**
-     * @param {Array<string>} [errors]
+     * @param {string} [error]
      */
     throwError(error = "") {
         tourState.set(this.tour.name, "stepState", "errored");
         const debugMode = tourState.get(this.tour.name, "debug");
+        // console.error notifies the test runner that the tour failed.
+        const errors = [
+            `FAILED: ${this.describeMe}.`,
+            this.describeWhyIFailed,
+            error,
+        ]
+        console.error(errors.filter(Boolean).join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.
-        console.warn(this.describeWhyIFailedDetailed);
-        // console.error notifies the test runner that the tour failed.
-        console.error(`FAILED: ${this.describeMe}. ${this.describeWhyIFailed}`);
-        if (error.length) {
-            console.error(error);
-        }
+        console.dir(this.describeWhyIFailedDetailed);
         if (debugMode !== false) {
             // eslint-disable-next-line no-debugger
             debugger;
