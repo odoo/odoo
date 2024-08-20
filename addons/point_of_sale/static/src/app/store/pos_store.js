@@ -74,6 +74,7 @@ export class PosStore extends Reactive {
             sound,
         }
     ) {
+        // Services
         this.env = env;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
@@ -84,54 +85,43 @@ export class PosStore extends Reactive {
         this.data = pos_data;
         this.action = action;
         this.alert = alert;
+        this.hardwareProxy = hardware_proxy;
         this.sound = sound;
         this.notification = notification;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
 
-        // Business data; loaded from the server at launch
-        this.company_logo = null;
-        this.company_logo_base64 = "";
-        this.order_sequence = 1;
-        this.printers_category_ids_set = new Set();
-
-        // Object mapping the order's name (which contains the uuid) to it's server_id after
-        // validation (order paid then sent to the backend).
-        this.validated_orders_name_server_id_map = {};
-        this.numpadMode = "quantity";
-        this.mobile_pane = "right";
-        this.ticket_screen_mobile_pane = "left";
-        this.productListView = window.localStorage.getItem("productListView") || "grid";
-
-        this.ticketScreenState = {
-            offsetByDomain: {},
-            totalCount: 0,
-        };
-
+        // User UI state
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
-
-        // Handle offline mode
-        // All of Set of ids
-        this.pendingOrder = {
-            write: new Set(),
-            delete: new Set(),
-            create: new Set(),
-        };
-
+        this.validatedOrdersNameServerIdMap = {};
+        this.numpadMode = "quantity";
+        this.mobilePane = "right";
+        this.ticketScreenMobilePane = "left";
+        this.productListView = window.localStorage.getItem("productListView") || "grid";
         this.synch = { status: "connected", pending: 0 };
-        this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
         this.searchProductWord = "";
+        this.ticketScreenState = {
+            offsetByDomain: {},
+            totalCount: 0,
+        };
+
+        // Technical state
+        this.hardwareProxy.pos = this;
+        this.printersCategoryIdsSet = new Set();
+        this.pendingOrder = {
+            write: new Set(),
+            delete: new Set(),
+            create: new Set(),
+        };
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
 
-        // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
-        // the hardware proxy should just be part of the pos service?
-        this.hardwareProxy.pos = this;
+        // Init methods
         await this.initServerData();
         if (this.useProxy()) {
             await this.connectToProxy();
@@ -186,7 +176,7 @@ export class PosStore extends Reactive {
             this.unwatched.printers.push(HWPrinter);
 
             for (const id of printer.product_categories_ids) {
-                this.printers_category_ids_set.add(id);
+                this.printersCategoryIdsSet.add(id);
             }
         }
         this.config.iface_printers = !!this.unwatched.printers.length;
@@ -831,8 +821,8 @@ export class PosStore extends Reactive {
         return this.user.id;
     }
     get orderPreparationCategories() {
-        if (this.printers_category_ids_set) {
-            return new Set([...this.printers_category_ids_set]);
+        if (this.printersCategoryIdsSet) {
+            return new Set([...this.printersCategoryIdsSet]);
         }
         return new Set();
     }
@@ -1073,11 +1063,11 @@ export class PosStore extends Reactive {
                 ),
             });
             if (confirmed) {
-                this.mobile_pane = "right";
+                this.mobilePane = "right";
                 this.env.services.pos.showScreen("PaymentScreen");
             }
         } else {
-            this.mobile_pane = "right";
+            this.mobilePane = "right";
             this.env.services.pos.showScreen("PaymentScreen");
         }
     }
@@ -1266,11 +1256,11 @@ export class PosStore extends Reactive {
         return this.config.raw.trusted_config_ids.length > 0;
     }
     switchPane() {
-        this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
+        this.mobilePane = this.mobilePane === "left" ? "right" : "left";
     }
     switchPaneTicketScreen() {
-        this.ticket_screen_mobile_pane =
-            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
+        this.ticketScreenMobilePane =
+            this.ticketScreenMobilePane === "left" ? "right" : "left";
     }
     async logEmployeeMessage(action, message) {
         await this.data.call("pos.session", "log_partner_message", [
@@ -1312,7 +1302,7 @@ export class PosStore extends Reactive {
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
-        if (this.printers_category_ids_set.size) {
+        if (this.printersCategoryIdsSet.size) {
             try {
                 const changes = changesToOrder(
                     order,
@@ -1581,27 +1571,27 @@ export class PosStore extends Reactive {
     showBackButton() {
         return (
             (this.ui.isSmall && this.mainScreen.component !== ProductScreen) ||
-            (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
+            (this.mobilePane === "left" && this.mainScreen.component === ProductScreen)
         );
     }
     async onClickBackButton() {
         if (this.mainScreen.component === TicketScreen) {
-            if (this.ticket_screen_mobile_pane == "left") {
+            if (this.ticketScreenMobilePane == "left") {
                 this.closeScreen();
             } else {
-                this.ticket_screen_mobile_pane = "left";
+                this.ticketScreenMobilePane = "left";
             }
         } else if (
-            this.mobile_pane == "left" ||
+            this.mobilePane == "left" ||
             [PaymentScreen, ActionScreen].includes(this.mainScreen.component)
         ) {
-            this.mobile_pane = this.mainScreen.component === PaymentScreen ? "left" : "right";
+            this.mobilePane = this.mainScreen.component === PaymentScreen ? "left" : "right";
             this.showScreen("ProductScreen");
         }
     }
 
     showSearchButton() {
-        return this.mainScreen.component === ProductScreen && this.mobile_pane === "right";
+        return this.mainScreen.component === ProductScreen && this.mobilePane === "right";
     }
 
     doNotAllowRefundAndSales() {

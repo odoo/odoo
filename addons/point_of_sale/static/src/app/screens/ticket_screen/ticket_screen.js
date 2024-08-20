@@ -470,7 +470,7 @@ export class TicketScreen extends Component {
         this.pos.switchPaneTicketScreen();
     }
     closeTicketScreen() {
-        this.pos.ticket_screen_mobile_pane = "left";
+        this.pos.ticketScreenMobilePane = "left";
         this.pos.closeScreen();
     }
     /**

@@ -52,7 +52,7 @@ export class Navbar extends Component {
     onClickScan() {
         if (!this.pos.scanning) {
             this.pos.showScreen("ProductScreen");
-            this.pos.mobile_pane = "right";
+            this.pos.mobilePane = "right";
         }
         this.pos.scanning = !this.pos.scanning;
     }
