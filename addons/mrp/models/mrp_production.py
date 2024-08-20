@@ -1153,11 +1153,12 @@ class MrpProduction(models.Model):
                     line_data['qty'],
                     bom_line.product_uom_id,
                     operation,
-                    bom_line
+                    bom_line,
+                    line_data
                 ))
         return moves
 
-    def _get_move_raw_values(self, product, product_uom_qty, product_uom, operation_id=False, bom_line=False):
+    def _get_move_raw_values(self, product, product_uom_qty, product_uom, operation_id=False, bom_line=False, line_data=False):
         """ Warning, any changes done to this method will need to be repeated for consistency in:
             - Manually added components, i.e. "default_" values in view
             - Moves from a copied MO, i.e. move.create
