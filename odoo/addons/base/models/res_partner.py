@@ -174,6 +174,14 @@ class PartnerTitle(models.Model):
 
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
+    position = fields.Selection(
+        selection=[
+            ('before', 'Before Name'),
+            ('after', 'After Name'),
+        ],
+        help='Select if the title should be displayed before or after the partner name.',
+        default='before',
+    )
 
 
 class Partner(models.Model):
@@ -832,10 +840,20 @@ class Partner(models.Model):
                 }
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
-    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
+    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang', 'show_title')
     def _compute_display_name(self):
         for partner in self:
             name = partner.with_context({'lang': self.env.lang})._get_complete_name()
+            if partner.title and partner._context.get('show_title'):
+                if partner.title.position == 'before':
+                    # Avoid displaying the title before the company name, if any.
+                    splitted_names = name.split(', ')
+                    if len(splitted_names) > 1:
+                        name = f"{splitted_names[0]}, {partner.title.name} {splitted_names[1]}"
+                    else:
+                        name = f"{partner.title.name} {name}"
+                elif partner.title.position == 'after':
+                    name = f"{name} {partner.title.name}"
             if partner._context.get('show_address'):
                 name = name + "\n" + partner._display_address(without_company=True)
             name = re.sub(r'\s+\n', '\n', name)
