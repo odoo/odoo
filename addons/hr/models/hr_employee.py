@@ -598,6 +598,10 @@ class HrEmployeePrivate(models.Model):
             target_date = fields.Date.context_today(self.env.user)
         return relativedelta(target_date, self.birthday).years if self.birthday else 0
 
+    def _get_current_calendar(self):
+        self.ensure_one()
+        return self.resource_calendar_id
+
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------

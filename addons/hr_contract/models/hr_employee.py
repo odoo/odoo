@@ -132,6 +132,10 @@ class Employee(models.Model):
             return res
         return contracts[0].resource_calendar_id.sudo(False)
 
+    def _get_current_calendar(self):
+        self.ensure_one()
+        return self.sudo().contract_id.resource_calendar_id or super()._get_current_calendar()
+
     @api.model
     def _get_all_contracts(self, date_from, date_to, states=['open']):
         """
