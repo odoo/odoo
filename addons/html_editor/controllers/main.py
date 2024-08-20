@@ -355,7 +355,7 @@ class HTML_Editor(http.Controller):
         return attachment._get_media_info()
 
     @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, mimetype=None, alt_data=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
