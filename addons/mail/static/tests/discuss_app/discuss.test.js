@@ -1554,10 +1554,7 @@ test("mark channel as seen if last message is visible when switching channels wh
 test("warning on send with shortcut when attempting to post message with still-uploading attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpcBefore("/mail/attachment/upload", async (args) => {
-        // simulates attachment is never finished uploading
-        await new Deferred();
-    });
+    onRpcBefore("/mail/attachment/upload", async () => await new Deferred()); // simulates attachment is never finished uploading
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer input[type=file]");
@@ -1566,15 +1563,14 @@ test("warning on send with shortcut when attempting to post message with still-u
         contentType: "text/plain",
         name: "text.txt",
     });
+    await insertText(".o-mail-Composer-input", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await contains(".o-mail-AttachmentCard");
-    await contains(".o-mail-AttachmentCard.o-isUploading");
+    await contains(".o-mail-AttachmentCard .fa.fa-spinner");
     await contains(".o-mail-Composer-send:disabled");
     // Try to send message
     triggerHotkey("Enter");
-    await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
-        text: "Please wait while the file is uploading.",
-    });
+    await contains(".o_notification", { text: "Please wait while the file is uploading." });
 });
 
 test("failure on loading messages should display error", async () => {
