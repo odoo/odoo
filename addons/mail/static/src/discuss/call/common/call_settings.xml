@@ -2,13 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallSettings">
-        <t t-call="discuss.CallSettings.content"/>
+        <ActionPanel t-if="props.withActionPanel" title.translate="Voice settings">
+            <t t-call="discuss.CallSettings.content" />
+        </ActionPanel>
+        <t t-else="" t-call="discuss.CallSettings.content" />
     </t>
 
     <t t-name="discuss.CallSettings.content">
-        <div class="o-discuss-CallSettings d-flex flex-column p-1">
-            <h4>Voice Settings</h4>
-            <label class="d-flex align-items-baseline my-2" title="Input device" aria-label="Input device">
+        <div class="o-discuss-CallSettings d-flex flex-column">
+            <label class="d-flex align-items-baseline mb-2" title="Input device" aria-label="Input device">
                 <h5 class="flex-shrink-0 pe-2">
                     Input device
                 </h5>

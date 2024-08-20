@@ -48,7 +48,6 @@ threadActionsRegistry
         setup() {
             const component = useComponent();
             component.rtc = useState(useService("discuss.rtc"));
-            this.panelOuterClass = component.props.chatWindow ? "p-2" : "";
         },
         toggle: true,
     });
