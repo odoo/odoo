@@ -124,10 +124,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch im_livechat_channel
     #       - fetch country (anonymous_country)
     #   - _get_last_messages
-    #   13: message _to_store:
+    #   14: message _to_store:
     #       - search mail_message_schedule
     #       - fetch mail_message
     #       - search mail_message_reaction
+    #       - fetch mail_message_reaction
     #       - search message_attachment_rel
     #       - search mail_link_preview
     #       - search mail_message_subtype
@@ -138,7 +139,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_res_partner_starred_rel
     #       - search rating_rating
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 51
+    _query_count_discuss_channels = 52
 
     def setUp(self):
         super().setUp()
@@ -260,9 +261,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         }, headers={"Cookie": f"{self.guest._cookie_name}={self.guest._format_auth_cookie()};"})
         # add needaction
         self.users[0].notification_type = 'inbox'
-        message = self.channel_channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
+        message_0 = self.channel_channel_public_1.message_post(
+            body="test",
+            message_type="comment",
+            author_id=self.users[2].partner_id.id,
+            partner_ids=self.users[0].partner_id.ids,
+        )
         # add star
-        message.toggle_message_starred()
+        message_0.toggle_message_starred()
         self.env.company.sudo().name = 'YourCompany'
         # add folded channel
         members = self.channel_chat_1.channel_member_ids
@@ -277,7 +283,31 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         data = {"channel_id": self.channel_channel_group_1.id, "channel_member_id": member_2.id}
         session = self.env["discuss.channel.rtc.session"].sudo().create(data)
         member_0.rtc_inviting_session_id = session
+        # add some reactions with different users on different messages
+        message_1 = self.channel_general.message_post(
+            body="test", message_type="comment", author_id=self.users[0].partner_id.id
+        )
+        self.authenticate(self.users[0].login, self.password)
+        self._add_reactions(message_0, ["😊", "😏"])
+        self._add_reactions(message_1, ["😊"])
+        self.authenticate(self.users[1].login, self.password)
+        self._add_reactions(message_0, ["😊", "😏"])
+        self._add_reactions(message_1, ["😊", "😁"])
+        self.authenticate(self.users[2].login, self.password)
+        self._add_reactions(message_0, ["😊", "😁"])
+        self._add_reactions(message_1, ["😊", "😁", "👍"])
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+
+    def _add_reactions(self, message, reactions):
+        for reaction in reactions:
+            self.make_jsonrpc_request(
+                "/mail/message/reaction",
+                {
+                    "action": "add",
+                    "content": reaction,
+                    "message_id": message.id,
+                },
+            )
 
     def _run_test(self, /, *, fn, count, results):
         self.authenticate(self.users[0].login, self.password)
@@ -423,7 +453,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "starred",
                     "model": "mail.box",
                 },
-                "initChannelsUnreadCounter": 1,
+                "initChannelsUnreadCounter": 2,
                 "odoobotOnboarding": False,
             },
         }
@@ -479,6 +509,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(guest=True),
             ],
             "mail.message": self._filter_messages_fields(
+                self._expected_result_for_message(self.channel_general),
                 self._expected_result_for_message(self.channel_channel_public_1),
                 self._expected_result_for_message(self.channel_channel_public_2),
                 self._expected_result_for_message(self.channel_channel_group_1),
@@ -490,6 +521,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_notification(self.channel_channel_public_1),
             ],
             "mail.thread": self._filter_threads_fields(
+                self._expected_result_for_thread(self.channel_general),
                 self._expected_result_for_thread(self.channel_channel_public_1),
                 self._expected_result_for_thread(self.channel_channel_public_2),
                 self._expected_result_for_thread(self.channel_channel_group_1),
@@ -538,7 +570,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": False,
+                "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "name": "general",
@@ -907,7 +939,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
-                "message_unread_counter": 0,
+                "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
                 "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": 0,
@@ -1168,6 +1200,64 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         members = channel.channel_member_ids
         member_g = members.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
+        if channel == self.channel_general:
+            return {
+                "attachments": [],
+                "author": {"id": user_0.partner_id.id, "type": "partner"},
+                "body": "<p>test</p>",
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "general",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "id": last_message.id,
+                "is_discussion": False,
+                "is_note": True,
+                "linkPreviews": [],
+                "message_type": "comment",
+                "model": "discuss.channel",
+                "needaction": False,
+                "notifications": [],
+                "parentMessage": False,
+                "pinned_at": False,
+                "rating_id": False,
+                "reactions": [
+                    {
+                        "content": "👍",
+                        "count": 1,
+                        "message": last_message.id,
+                        "personas": [{"id": user_2.partner_id.id, "type": "partner"}],
+                    },
+                    {
+                        "content": "😁",
+                        "count": 2,
+                        "message": last_message.id,
+                        "personas": [
+                            {"id": user_2.partner_id.id, "type": "partner"},
+                            {"id": user_1.partner_id.id, "type": "partner"},
+                        ],
+                    },
+                    {
+                        "content": "😊",
+                        "count": 3,
+                        "message": last_message.id,
+                        "personas": [
+                            {"id": user_2.partner_id.id, "type": "partner"},
+                            {"id": user_1.partner_id.id, "type": "partner"},
+                            {"id": user_0.partner_id.id, "type": "partner"},
+                        ],
+                    },
+                ],
+                "recipients": [],
+                "record_name": "general",
+                "res_id": 1,
+                "scheduledDatetime": False,
+                "starred": False,
+                "subject": False,
+                "subtype_description": False,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "trackingValues": [],
+                "write_date": write_date,
+            }
         if channel == self.channel_channel_public_1:
             return {
                 "attachments": [],
@@ -1189,7 +1279,33 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "parentMessage": False,
                 "pinned_at": False,
                 "rating_id": False,
-                "reactions": [],
+                "reactions": [
+                    {
+                        "content": "😁",
+                        "count": 1,
+                        "message": last_message.id,
+                        "personas": [{"id": user_2.partner_id.id, "type": "partner"}],
+                    },
+                    {
+                        "content": "😊",
+                        "count": 3,
+                        "message": last_message.id,
+                        "personas": [
+                            {"id": user_2.partner_id.id, "type": "partner"},
+                            {"id": user_1.partner_id.id, "type": "partner"},
+                            {"id": user_0.partner_id.id, "type": "partner"},
+                        ],
+                    },
+                    {
+                        "content": "😏",
+                        "count": 2,
+                        "message": last_message.id,
+                        "personas": [
+                            {"id": user_1.partner_id.id, "type": "partner"},
+                            {"id": user_0.partner_id.id, "type": "partner"},
+                        ],
+                    },
+                ],
                 "recipients": [{"id": self.users[0].partner_id.id, "type": "partner"}],
                 "record_name": "public channel 1",
                 "res_id": channel.id,
