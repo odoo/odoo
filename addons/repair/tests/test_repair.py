@@ -780,3 +780,27 @@ class TestRepair(common.TransactionCase):
         repair_order.move_ids[1].quantity = 4.0
         self.assertFalse(repair_order.has_uncomplete_moves)
         repair_order.action_repair_end()
+
+    def test_repair_final_product_generate_lot_and_serial(self):
+        """
+        This test checks that the product lot_id value generate on the fly.
+        """
+        self.stock_warehouse.repair_type_id.use_create_lots = True
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_storable_lot.id,
+            'product_uom': self.product_storable_lot.uom_id.id,
+            'partner_id': self.res_partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_product_5.id,
+                    'product_uom_qty': 3.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                }),
+            ],
+        })
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        self.assertFalse(repair_order.lot_id.name)
+        repair_order.action_generate_serial()
+        self.assertTrue(repair_order.lot_id.name)
