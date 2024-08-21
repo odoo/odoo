@@ -47,7 +47,7 @@
                     <div invisible="composition_mode == 'mass_mail'">
                         <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"/>
                         <group>
-                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1"/>
                         </group>
                         <group>
                             <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
@@ -59,7 +59,7 @@
                             <div>
                                 <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"/>
                                 <group>
-                                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1"/>
                                 </group>
                                 <group>
                                     <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"

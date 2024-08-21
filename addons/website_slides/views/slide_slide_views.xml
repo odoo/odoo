@@ -139,7 +139,7 @@
                             </page>
                             <page string="Additional Resources" name="external_links" >
                                 <group>
-                                    <field name="slide_resource_ids" widget="one2many" nolabel="1" colspan="2">
+                                    <field name="slide_resource_ids" widget="one2many" nolabel="1">
                                         <tree editable="top">
                                             <field name="sequence" widget="handle"/>
                                             <field name="resource_type"/>
@@ -164,7 +164,7 @@
                                         </group>
                                     </group>
                                     <group name="questions" string="Questions">
-                                        <field name="question_ids" nolabel="1" colspan="2">
+                                        <field name="question_ids" nolabel="1">
                                             <tree>
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="question" string="Question"/>
