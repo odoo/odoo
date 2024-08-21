@@ -105,7 +105,7 @@ const DEFAULT_DEFAULT_PARAMS = {
     },
     delay: 0,
     tolerance: 10,
-    touch_delay: 300,
+    touchDelay: 300,
 };
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref"];
@@ -636,7 +636,7 @@ export function makeDraggableHook(hookParams) {
             const onPointerDown = (ev) => {
                 updatePointerPosition(ev);
 
-                const initiationDelay = ev.pointerType === "touch" ? ctx.touch_delay : ctx.delay;
+                const initiationDelay = ev.pointerType === "touch" ? ctx.touchDelay : ctx.delay;
 
                 // A drag sequence can still be in progress if the pointerup occurred
                 // outside of the window.
@@ -955,7 +955,7 @@ export function makeDraggableHook(hookParams) {
 
                     // Delay & tolerance
                     ctx.delay = actualParams.delay;
-                    ctx.touch_delay = actualParams.delay || actualParams.touch_delay;
+                    ctx.touchDelay = actualParams.delay || actualParams.touchDelay;
                     ctx.tolerance = actualParams.tolerance;
 
                     callBuildHandler("onComputeParams", { params: actualParams });
