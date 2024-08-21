@@ -557,12 +557,22 @@ class MailComposer(models.TransientModel):
 
     @api.depends('composition_mode', 'model', 'res_domain', 'res_ids')
     def _compute_force_send(self):
-        """ It is set to True in mass mailing mode (send directly by default)
-        and in monorecord comment mode (send notifications right now). Batch
-        comment delays notification to use the email queue. """
+        """ When being in single record mode, we force_send (post on a record
+        or send a single email right away). In batch mode: comment always uses
+        the email queue (lot of potentially different emails to craft). Mass
+        mailing mode depends on number of recipients and is configurable using
+        'mail.mail.force.send.limit' configuration parameter (default=100).
+        Using a domain forces the email queue usage as it depends on actual
+        evaluation and is generally used for big batches anyway. """
         for composer in self:
-            composer.force_send = (composer.composition_mode == 'mass_mail' or
-                                   not composer.composition_batch)
+            if not composer.composition_batch:
+                composer.force_send = True
+            elif composer.composition_mode == 'comment' or composer.res_domain:
+                composer.force_send = False
+            else:
+                force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.force.send.limit', 100))
+                res_ids = composer._evaluate_res_ids()
+                composer.force_send = len(res_ids) <= force_send_limit
 
     @api.depends('template_id')
     def _compute_mail_server_id(self):
@@ -712,25 +722,23 @@ class MailComposer(models.TransientModel):
         sudo as it is considered as a technical model. """
         mails_sudo = self.env['mail.mail'].sudo()
 
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')) or self._batch_size
-        sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
+        batch_size = int(
+            self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
+        ) or self._batch_size  # be sure to not have 0, as otherwise no iteration is done
+        for res_ids_iter in tools.split_every(batch_size, res_ids):
+            res_ids_values = list(self._prepare_mail_values(res_ids_iter).values())
 
-        for res_ids_iter in sliced_res_ids:
-            mail_values_all = self._prepare_mail_values(res_ids_iter)
-
-            iter_mails_sudo = self.env['mail.mail'].sudo()
-            for _res_id, mail_values in mail_values_all.items():
-                iter_mails_sudo += mails_sudo.create(mail_values)
+            iter_mails_sudo = self.env['mail.mail'].sudo().create(res_ids_values)
             mails_sudo += iter_mails_sudo
 
             records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
             if records:
                 records._message_mail_after_hook(iter_mails_sudo)
 
-            # as 'send' does not filter out scheduled mails (only 'process_email_queue'
-            # does) we need to do it manually
             if not self.force_send:
                 continue
+            # as 'send' does not filter out scheduled mails (only 'process_email_queue'
+            # does) we need to do it manually
             iter_mails_sudo_tosend = iter_mails_sudo.filtered(
                 lambda mail: (
                     not mail.scheduled_date or
