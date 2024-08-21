@@ -30,7 +30,7 @@ describe("getTraversedNodes", () => {
                 .map((node) =>
                     node.nodeType === Node.TEXT_NODE ? node.textContent : node.nodeName
                 )
-        ).toEqual(["abc", "DIV", "def"]);
+        ).toEqual(["DIV", "P", "abc", "DIV", "def"]);
     });
 
     test("should return the nodes traversed in a cross-blocks selection with hybrid nesting", async () => {
@@ -43,7 +43,7 @@ describe("getTraversedNodes", () => {
                 .map((node) =>
                     node.nodeType === Node.TEXT_NODE ? node.textContent : node.nodeName
                 )
-        ).toEqual(["abc", "DIV", "def"]);
+        ).toEqual(["DIV", "SECTION", "P", "abc", "DIV", "def"]);
     });
 
     test("should return an image in a parent selection", async () => {
@@ -73,18 +73,20 @@ describe("getTraversedNodes", () => {
 
     test("should find that a the range traverses the next paragraph as well", async () => {
         const { el: editable, editor } = await setupEditor("<p>ab[cd</p><p>ef]gh</p>");
-        const abcd = editable.firstChild.firstChild;
+        const p1 = editable.firstChild;
+        const abcd = p1.firstChild;
         const p2 = editable.childNodes[1];
         const efgh = p2.firstChild;
         const result = editor.shared.getTraversedNodes();
-        expect(result).toEqual([abcd, p2, efgh]);
+        expect(result).toEqual([p1, abcd, p2, efgh]);
     });
 
     test("should find all traversed nodes in nested range", async () => {
         const { el: editable, editor } = await setupEditor(
             '<p><span class="a">ab[</span>cd</p><div><p><span class="b"><b>e</b><i>f]g</i>h</span></p></div>'
         );
-        const cd = editable.firstChild.lastChild;
+        const p1 = editable.firstChild;
+        const cd = p1.lastChild;
         const div = editable.lastChild;
         const p2 = div.firstChild;
         const span2 = p2.firstChild;
@@ -93,7 +95,7 @@ describe("getTraversedNodes", () => {
         const i = b.nextSibling;
         const fg = i.firstChild;
         const result = editor.shared.getTraversedNodes();
-        expect(result).toEqual([cd, div, p2, span2, b, e, i, fg]);
+        expect(result).toEqual([p1, cd, div, p2, span2, b, e, i, fg]);
     });
 
     test("selection does not have an edge with a br element", async () => {
@@ -101,12 +103,13 @@ describe("getTraversedNodes", () => {
             contentBefore: "[<p>ab</p><p>cd<br></p>]",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const p2 = editable.lastChild;
                 const cd = p2.firstChild;
                 const br = p2.lastChild;
-                const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab, p2, cd, br]);
+                const result = editor.shared.getTraversedNodes();
+                expect(result).toEqual([p1, ab, p2, cd, br]);
             },
         });
     });
@@ -115,9 +118,10 @@ describe("getTraversedNodes", () => {
             contentBefore: "[<p>ab</p><p>]<br>cd<br></p>",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
-                const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab]);
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
+                const result = editor.shared.getTraversedNodes();
+                expect(result).toEqual([p1, ab]);
             },
         });
     });
@@ -126,12 +130,13 @@ describe("getTraversedNodes", () => {
             contentBefore: "[<p>ab</p><p><br>cd]<br>ef<br></p>",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const p2 = editable.lastChild;
                 const firstBr = p2.firstChild;
                 const cd = firstBr.nextSibling;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab, p2, firstBr, cd]);
+                expect(result).toEqual([p1, ab, p2, firstBr, cd]);
             },
         });
     });
@@ -140,13 +145,14 @@ describe("getTraversedNodes", () => {
             contentBefore: "[<p>ab</p><p><br>cd<br>]ef<br></p>",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const p2 = editable.lastChild;
                 const br1 = p2.firstChild;
                 const cd = br1.nextSibling;
                 const br2 = cd.nextSibling;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab, p2, br1, cd, br2]);
+                expect(result).toEqual([p1, ab, p2, br1, cd, br2]);
             },
         });
     });
@@ -155,13 +161,14 @@ describe("getTraversedNodes", () => {
             contentBefore: "[<p>ab</p><p><br>cd<br>]</p>",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const p2 = editable.lastChild;
                 const br1 = p2.firstChild;
                 const cd = br1.nextSibling;
                 const br2 = cd.nextSibling;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab, p2, br1, cd, br2]);
+                expect(result).toEqual([p1, ab, p2, br1, cd, br2]);
             },
         });
     });
@@ -170,12 +177,13 @@ describe("getTraversedNodes", () => {
             contentBefore: "[<p>ab</p><p>cd<br>]<br>ef</p>",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const p2 = editable.firstChild.nextSibling;
                 const cd = p2.firstChild;
                 const br1 = cd.nextSibling;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab, p2, cd, br1]);
+                expect(result).toEqual([p1, ab, p2, cd, br1]);
             },
         });
     });
@@ -184,13 +192,14 @@ describe("getTraversedNodes", () => {
             contentBefore: "<p>ab[<br>cd</p><p>ef</p>]",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const br = ab.nextSibling;
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([br, cd, p2, ef]);
+                expect(result).toEqual([p1, br, cd, p2, ef]);
             },
         });
     });
@@ -199,13 +208,14 @@ describe("getTraversedNodes", () => {
             contentBefore: "<p>[ab<br>cd</p><p>ef</p>]",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const br = ab.nextSibling;
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([ab, br, cd, p2, ef]);
+                expect(result).toEqual([p1, ab, br, cd, p2, ef]);
             },
         });
     });
@@ -226,13 +236,14 @@ describe("getTraversedNodes", () => {
             contentBefore: "<p>ab<br>[cd</p><p>ef</p>]",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const br = ab.nextSibling;
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([cd, p2, ef]);
+                expect(result).toEqual([p1, cd, p2, ef]);
             },
         });
     });
@@ -241,14 +252,15 @@ describe("getTraversedNodes", () => {
             contentBefore: "<p>ab<br>[<br>cd</p><p>ef</p>]",
             stepFunction: (editor) => {
                 const editable = editor.editable;
-                const ab = editable.firstChild.firstChild;
+                const p1 = editable.firstChild;
+                const ab = p1.firstChild;
                 const br1 = ab.nextSibling;
                 const br2 = br1.nextSibling;
                 const cd = br2.nextSibling;
                 const p2 = editable.firstChild.nextSibling;
                 const ef = p2.firstChild;
                 const result = editor.shared.getTraversedNodes(editable);
-                expect(result).toEqual([br2, cd, p2, ef]);
+                expect(result).toEqual([p1, br2, cd, p2, ef]);
             },
         });
     });
