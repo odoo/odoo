@@ -54,6 +54,17 @@ export class CartPage extends Component {
         }
 
         if (
+            this.selfOrder.currentTable &&
+            !this.selfOrder.currentOrder.table_id &&
+            type === "mobile" &&
+            orderingMode === "table"
+        ) {
+            this.selfOrder.currentOrder.update({
+                table_id: this.selfOrder.currentTable,
+            });
+        }
+
+        if (
             type === "mobile" &&
             orderingMode === "table" &&
             !takeAway &&
@@ -96,7 +107,7 @@ export class CartPage extends Component {
 
     canChangeQuantity(line) {
         const order = this.selfOrder.currentOrder;
-        const lastChange = order.lineChanges[line.uuid];
+        const lastChange = order.uiState.lineChanges[line.uuid];
 
         if (!lastChange) {
             return true;
