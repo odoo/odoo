@@ -3099,6 +3099,7 @@ var SnippetsMenu = Widget.extend({
             return false;
         };
 
+        // GREP: SNIPPETS_DRAGGABLE
         this.$snippets = $scroll.find('.o_panel_body').children()
             .addClass('oe_snippet')
             .each((i, el) => {
@@ -3419,13 +3420,20 @@ var SnippetsMenu = Widget.extend({
         if (!$scrollingElement[0] || $scrollingElement.find('body.o_in_iframe').length) {
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
+        // GREP: SNIPPETS_DRAGGABLE
+        // This is done because the current system does not take a list of
+        // elements, and instead just a CSS selector string, while the old
+        // system did take a list. In the future, either the new system should
+        // take a list of elements, or we should better handle the snippets
+        // that are not draggable.
+        this.$snippets.addClass("o_we_draggable");
 
         const dragAndDropOptions = this.options.getDragAndDropOptions({
             el: this.$el[0],
-            elements: ".oe_snippet",
+            elements: ".oe_snippet.o_we_draggable",
             scrollingElement: $scrollingElement[0],
             handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
-            cancel: '.oe_snippet.o_disabled',
+            ignore: '.oe_snippet.o_disabled',
             dropzones: () => {
                 return $dropZones.toArray();
             },

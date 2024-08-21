@@ -629,3 +629,21 @@ class TestUi(odoo.tests.HttpCase):
             self.env['website'].with_context(website_id=website.id).viewref(key).active = active
 
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
+
+    def test_installable_snippet_not_draggable(self):
+        # Create a fake installable snippet
+        website_snippets = self.env.ref('website.snippets')
+        self.env['ir.ui.view'].create({
+            'name': 'Fake Snippet',
+            'type': 'qweb',
+            # Use a pre-compiled line, as QWeb compilation will ignore a
+            # non existent module.
+            'arch': """
+                <xpath expr="//div[@id='snippet_effect']/div[hasclass('o_panel_body')]" position="inside">
+                    <div name="Fake Snippet" data-oe-type="snippet" data-module-id="999999" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_donation.svg"><section/></div>
+                </xpath>
+            """,
+            'inherit_id': website_snippets.id,
+            'key': 'website.fake_external_snippet'
+        })
+        self.start_tour('/', 'installable_snippet_not_draggable', login='admin')
