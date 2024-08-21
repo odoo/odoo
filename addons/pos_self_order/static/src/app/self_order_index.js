@@ -14,6 +14,7 @@ import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/sta
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
 import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/loading_overlay";
 import { mountComponent } from "@web/env";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -39,11 +40,7 @@ export class selfOrderIndex extends Component {
         window.posmodel = this.selfOrder;
 
         // Disable cursor on touch devices (required on IoT Box Kiosk)
-        if (
-            "ontouchstart" in window ||
-            navigator.maxTouchPoints > 0 ||
-            navigator.msMaxTouchPoints > 0
-        ) {
+        if (hasTouch()) {
             document.body.classList.add("touch-device");
         }
     }
