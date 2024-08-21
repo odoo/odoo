@@ -33,7 +33,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     RECONNECTING: 4003,
 });
 /** @deprecated worker version is now retrieved from `session.websocket_worker_bundle` */
-export const WORKER_VERSION = "1.0.9";
+export const WORKER_VERSION = "1.0.10";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
@@ -67,6 +67,7 @@ export class WebsocketWorker {
         this.messageWaitQueue = [];
         this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
         this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
+        this._debouncedSendToServer = debounce(this._sendToServer, 300);
 
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
@@ -132,8 +133,14 @@ export class WebsocketWorker {
      */
     _onClientMessage(client, { action, data }) {
         switch (action) {
-            case "send":
-                return this._sendToServer(data);
+            case "send": {
+                if (data["event_name"] === "update_presence") {
+                    this._debouncedSendToServer(data);
+                } else {
+                    this._sendToServer(data);
+                }
+                return;
+            }
             case "start":
                 return this._start();
             case "stop":
