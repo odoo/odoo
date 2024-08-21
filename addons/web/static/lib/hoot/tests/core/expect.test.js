@@ -121,6 +121,23 @@ describe(parseUrl(import.meta.url), () => {
         expect(results.assertions[1].message).toBe("unverified steps");
     });
 
+    test("makeExpect retains current values", () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        const object = { a: 1 };
+        customExpect(object).toEqual({ b: 2 });
+        object.b = 2;
+
+        const testResult = hooks.after();
+
+        const [assertion] = testResult.assertions;
+        expect(assertion.pass).toBe(false);
+        expect(assertion.failedDetails[1][1]).toEqual({ a: 1 });
+        expect(object).toEqual({ a: 1, b: 2 });
+    });
+
     describe("standard matchers", () => {
         test("toBe", () => {
             // Boolean

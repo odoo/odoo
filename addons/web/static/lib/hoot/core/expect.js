@@ -1912,7 +1912,7 @@ export class Matcher {
         if (!pass) {
             const formattedStack = formatStack(currentStack);
             assertion.failedDetails = [
-                ...failedDetails(actual),
+                ...failedDetails(deepCopy(actual)),
                 Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
             ].filter(Boolean);
         }
