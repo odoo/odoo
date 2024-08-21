@@ -848,3 +848,44 @@ class TestCreatePicking(ProductVariantsCommon):
         # Exchange: receipt for 1 item
         self.assertEqual(po.picking_ids[2].picking_type_id, picking_type_in)
         self.assertEqual(po.picking_ids[2].move_ids.quantity, 1)
+
+    def test_move_description(self):
+        """
+        Test that the pol description is correctly propagated to the move description
+        """
+        # product with all description items: vendor product name, vendor product code, receipt description, purchase description, attribute variant value, attribute no variant value
+        product_with_description = self.env['product.template'].create({
+            'name': 'Product with description',
+            'description_pickingin': 'Receive with care',
+            'description_purchase': 'Purchase description',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_id.id,
+                'product_name': 'ABC',
+                'product_code': '123',
+                'min_qty': 1,
+                'price': 1,
+            })],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set(self.color_attribute.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': self.no_variant_attribute.id,
+                    'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
+                })
+            ]
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({
+                    'product_id': product_with_description.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids.name == 'red').id,
+                    'product_no_variant_attribute_value_ids': [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
+                    'product_qty': 1,
+                }),
+            ]
+        })
+        self.assertEqual(po.order_line.name, '[123] ABC (red)\nPurchase description\nNo variant: extra')
+        po.order_line.name += '\nRandom purchase notes'
+        po.button_confirm()
+        self.assertEqual(po.picking_ids.move_ids.description_picking, 'No variant: extra\n[123] ABC\nReceive with care')

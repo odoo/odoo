@@ -4,19 +4,14 @@ import {
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { registry } from "@web/core/registry";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
+import { patch } from "@web/core/utils/patch";
 
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
     setup() {
         super.setup();
+        this.descriptionColumn = "name";
         this.productColumns = ["product_id", "product_template_id"];
-    }
-
-    getCellTitle(column, record) {
-        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (this.productColumns.includes(column.name)) {
-            return;
-        }
-        super.getCellTitle(column, record);
     }
 
     processAllColumn(allColumns, list) {
@@ -38,30 +33,6 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         return super.processAllColumn(allColumns, list);
     }
 
-    getActiveColumns() {
-        let activeColumns = super.getActiveColumns();
-        const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
-        const labelCol = activeColumns.find((col) => col.name === "name");
-
-        if (productCol) {
-            if (labelCol) {
-                this.props.list.records.forEach(
-                    (record) => (record.columnIsProductAndLabel = true)
-                );
-            } else {
-                this.props.list.records.forEach(
-                    (record) => (record.columnIsProductAndLabel = false)
-                );
-            }
-            activeColumns = activeColumns.filter((col) => col.name !== "name");
-            this.titleField = productCol.name;
-        } else {
-            this.titleField = "name";
-        }
-
-        return activeColumns;
-    }
-
     isCellReadonly(column, record) {
         // The isCellReadonly method from the ListRenderer is used to determine the classes to apply to the cell.
         // We need this override to make sure some readonly classes are not applied to the cell if it is still editable.
@@ -73,6 +44,8 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         )
     }
 }
+
+patch(ProductLabelSectionAndNoteListRender.prototype, ProductNameAndDescriptionListRendererMixin);
 
 export class ProductLabelSectionAndNoteOne2Many extends X2ManyField {
     static components = {
