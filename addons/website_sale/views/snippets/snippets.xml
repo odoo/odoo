@@ -396,6 +396,160 @@
                          data-reload="/"/>
         </div>
     </xpath>
+    <xpath expr="//div[@data-js='MegaMenuLayout']" position="inside">
+        <we-row>
+            <we-title class="o_long_title">eCommerce Categories</we-title>
+            <div class="o_switch ms-4">
+                <we-checkbox
+                    class="o_mega_menu"
+                    data-name="fetch_ecom_categories_opt"
+                    data-select-class="fetchEcomCategories"
+                    data-refresh-mega-menu-template=""
+                    data-no-preview="true"
+                />
+            </div>
+            <we-button
+                type="button"
+                title="Reset Categories"
+                data-refresh-mega-menu-template=""
+                data-no-preview="true"
+                class="ms-4"
+            >
+                <i class="fa fa-refresh"/>
+            </we-button>
+        </we-row>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_multi_menus']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_menu_image_menu']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_odoo_menu']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_little_icons']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_big_icons_subtitles']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_images_subtitles']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_menus_logos']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_thumbnails']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']/we-button[@data-select-template='website.s_mega_menu_cards']"
+        position="attributes"
+    >
+        <attribute name="data-dependencies">!fetch_ecom_categories_opt</attribute>
+    </xpath>
+    <xpath
+        expr="//div[@data-js='MegaMenuLayout']/we-select[@data-name='mega_menu_template_opt']"
+        position="inside"
+    >
+        <t t-set="_label">Multi Menus</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_multi_menus"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Image Menu</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_menu_image_menu"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Odoo Menu</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_odoo_menu"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Little Icons</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_little_icons"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Big Icons Subtitles</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_big_icons_subtitles"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Images Subtitles</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_images_subtitles"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg"
+            t-out="_label"
+         />
+        <t t-set="_label">Logos</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_menus_logos"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Thumbnails</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_thumbnails"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg"
+            t-out="_label"
+        />
+        <t t-set="_label">Cards</t>
+        <we-button
+            t-att-data-select-label="_label"
+            data-dependencies="fetch_ecom_categories_opt"
+            data-select-template="website_sale.s_mega_menu_cards"
+            data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg"
+            t-out="_label"
+        />
+    </xpath>
 </template>
 
 <template id="snippets_options_web_editor" inherit_id="web_editor.snippet_options" name="e-commerce base snippet options">
