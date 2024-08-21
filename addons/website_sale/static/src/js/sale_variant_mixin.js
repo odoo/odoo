@@ -159,6 +159,19 @@ var VariantMixin = {
     },
 
     /**
+     * When the quantity is changed, we need to query the new price of the product.
+     * Based on the pricelist, the price might change when quantity exceeds a certain amount.
+     *
+     * @param {MouseEvent} ev
+     */
+    onChangeAddQuantity: function (ev) {
+        const $parent = $(ev.currentTarget).closest('form');
+        if ($parent.length > 0) {
+            this.triggerVariantChange($parent);
+        }
+    },
+
+    /**
      * Triggers the price computation and other variant specific changes
      *
      * @param {$.Element} $container
