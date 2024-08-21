@@ -848,12 +848,21 @@ class account_journal(models.Model):
             'context': self._get_move_action_context(),
         }
 
+    def _build_no_journal_error_msg(self, company_name, journal_types):
+        return _(
+                "No journal could be found in company %(company_name)s for any of those types: %(journal_types)s",
+                company_name=company_name,
+                journal_types=', '.join(journal_types),
+            )
+
     def action_create_vendor_bill(self):
         """ This function is called by the "try our sample" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
         """
         context = dict(self._context)
-        purchase_journal = self.browse(context.get('default_journal_id'))
+        purchase_journal = self.browse(context.get('default_journal_id')) or self.search([('type', '=', 'purchase')], limit=1)
+        if not purchase_journal:
+            raise UserError(self._build_no_journal_error_msg(self.env.company.display_name, ['purchase']))
         context['default_move_type'] = 'in_invoice'
         invoice_date = fields.Date.today() - timedelta(days=12)
         partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)

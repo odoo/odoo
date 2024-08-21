@@ -774,11 +774,7 @@ class AccountMove(models.Model):
             journal = self.env['account.journal'].search(domain, limit=1)
 
         if not journal:
-            error_msg = _(
-                "No journal could be found in company %(company_name)s for any of those types: %(journal_types)s",
-                company_name=company.display_name,
-                journal_types=', '.join(journal_types),
-            )
+            error_msg = self.env['account.journal']._build_no_journal_error_msg(company.display_name, journal_types)
             raise UserError(error_msg)
 
         return journal
