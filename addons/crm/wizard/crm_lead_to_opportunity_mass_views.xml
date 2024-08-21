@@ -18,7 +18,7 @@
                 </group>
                 <label for="duplicated_lead_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" invisible="not deduplicate"/>
                 <group invisible="not deduplicate">
-                    <field name="duplicated_lead_ids" colspan="2" nolabel="1" readonly="1">
+                    <field name="duplicated_lead_ids" nolabel="1" readonly="1">
                         <tree create="false" delete="false">
                             <field name="create_date"/>
                             <field name="name"/>

@@ -428,6 +428,10 @@
         gap: map-get($spacers, 2) $o-horizontal-padding;
         margin-bottom: map-get($spacers, 2);
 
+        .o_cell:first-child:last-child {
+            grid-column: span 2;
+        }
+
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
             &.o_field_widget {
                 width: auto;
