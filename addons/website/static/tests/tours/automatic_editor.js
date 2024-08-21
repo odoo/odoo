@@ -32,6 +32,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     },
     {
         trigger: '.modal div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
+        in_modal: false,
     },
     {
         content: "load parseltongue",
