@@ -249,6 +249,7 @@
                     <notebook>
                         <page string="Operations" name="operations">
                             <field name="move_ids_without_package" mode="list,kanban"
+                                widget="stock_move_one2many"
                                 readonly="state == 'done' and is_locked"
                                 context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
                                 add-label="Add a Product">
@@ -268,7 +269,7 @@
                                     <field name="is_locked" column_invisible="True"/>
                                     <field name="is_storable" column_invisible="True"/>
                                     <field name="has_tracking" column_invisible="True"/>
-                                    <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                                    <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1" widget="move_product_label_field"/>
                                     <field name="packaging_uom_qty" optional="hide"/>
                                     <field name="packaging_uom_id" optional="hide"/>
                                     <field name="location_final_id" optional="hide" groups="stock.group_stock_multi_locations"/>

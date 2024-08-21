@@ -81,7 +81,8 @@
                                 <td>
                                     <span t-field="move.product_id">Customizable Desk</span>
                                     <p t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
-                                        <span t-field="move.description_picking">Description on transfer</span>
+                                        <t t-set="trimmed_description" t-value="move.description_picking.split(move.product_id.display_name)[1] if move.description_picking.startswith(move.product_id.display_name) else move.description_picking.split(move.product_id.name)[1] if move.description_picking.startswith(move.product_id.name) else move.description_picking"/>
+                                        <span t-out="trimmed_description">Description on transfer</span>
                                     </p>
                                 </td>
                                 <td class="text-end">
@@ -184,7 +185,8 @@
                                     <td class="w-auto">
                                         <span t-field="bo_line.product_id">Office Chair</span>
                                         <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
-                                            <span t-field="bo_line.description_picking">Description on transfer</span>
+                                            <t t-set="trimmed_description" t-value="bo_line.description_picking.split(bo_line.product_id.display_name)[1] if bo_line.description_picking.startswith(bo_line.product_id.display_name) else bo_line.description_picking.split(bo_line.product_id.name)[1] if bo_line.description_picking.startswith(bo_line.product_id.name) else bo_line.description_picking"/>
+                                            <span t-out="trimmed_description">Description on transfer</span>
                                         </p>
                                     </td>
                                     <td/>
@@ -229,7 +231,8 @@
                      description != move_line.product_id.display_name and
                      description != move_line.product_id.name"
             >
-                <span t-out="description"/>
+                <t t-set="trimmed_description" t-value="description.split(move_line.product_id.display_name)[1] if description.startswith(move_line.product_id.display_name) else description.split(move_line.product_id.name)[1] if description.startswith(move_line.product_id.name) else description"/>
+                <span t-out="trimmed_description"/>
             </p>
         </td>
         <t t-if="has_serial_number" name="move_line_lot">

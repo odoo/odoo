@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="product.ProductLabelFieldAutocomplete" t-inherit="web.Many2XAutocomplete">
+        <xpath expr="//AutoComplete[@t-else='']" position="replace">
+            <t t-else="">
+                <AutoComplete
+                    autofocus="props.autofocus"
+                    autoSelect="props.autoSelect"
+                    dropdown="props.dropdown"
+                    id="props.id"
+                    onChange.bind="onChange"
+                    onInput.bind="onInput"
+                    onSelect.bind="onSelect"
+                    placeholder="props.placeholder"
+                    resetOnSelect="props.value === ''"
+                    sources="sources"
+                    value="props.value"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>

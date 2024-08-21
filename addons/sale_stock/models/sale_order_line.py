@@ -263,7 +263,7 @@ class SaleOrderLine(models.Model):
             'warehouse_id': self.warehouse_id,
             'partner_id': self.order_id.partner_shipping_id.id,
             'location_final_id': self._get_location_final(),
-            'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
+            'product_description_variants': self.product_id.description_pickingout or self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants().strip() or self.name,
             'company_id': self.order_id.company_id,
             'sequence': self.sequence,
             'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,

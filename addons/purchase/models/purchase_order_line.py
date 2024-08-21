@@ -73,6 +73,7 @@ class PurchaseOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
+    selected_seller_id = fields.Many2one('product.supplierinfo', string='Selected Vendor Pricelist', help='Technical field to store the vendor pricelist used to generate this line')
 
     _accountable_required_fields = models.Constraint(
         'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL AND date_planned IS NOT NULL))',
@@ -352,6 +353,7 @@ class PurchaseOrderLine(models.Model):
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 
             elif seller:
+                line.selected_seller_id = seller.id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
                 price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
@@ -561,6 +563,7 @@ class PurchaseOrderLine(models.Model):
             'tax_ids': [(6, 0, taxes.ids)],
             'order_id': po.id,
             'discount': discount,
+            'selected_seller_id': seller.id,
         }
 
     def _convert_to_middle_of_day(self, date):
