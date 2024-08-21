@@ -71,7 +71,7 @@ class AccountAccount(models.Model):
         ],
         string="Type", tracking=True,
         required=True,
-        compute='_compute_account_type', store=True, readonly=False, precompute=True, index=True,
+        index=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."
     )
     include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward",
@@ -106,7 +106,6 @@ class AccountAccount(models.Model):
     tag_ids = fields.Many2many(
         comodel_name='account.account.tag',
         relation='account_account_account_tag',
-        compute='_compute_account_tags', readonly=False, store=True, precompute=True,
         string='Tags',
         help="Optional tags you may want to assign for custom reporting",
         ondelete='restrict',
@@ -372,6 +371,12 @@ class AccountAccount(models.Model):
         }
         self.env['ir.property'].with_company(self.env.company.root_id).sudo()._set_multi('code', 'account.account', values)
 
+        if accounts_without_type := self.filtered(lambda account: account.code and not account.account_type):
+            self._get_closest_parent_account(accounts_without_type, 'account_type', default_value='asset_current')
+
+        if accounts_without_tags := self.filtered(lambda account: account.code and not account.tag_ids):
+            self._get_closest_parent_account(accounts_without_tags, 'tag_ids', default_value=[])
+
     @api.depends_context('company')
     @api.depends('code')
     def _compute_account_root(self):
@@ -559,16 +564,6 @@ class AccountAccount(models.Model):
             record.opening_debit = res['debit']
             record.opening_credit = res['credit']
             record.opening_balance = res['balance']
-
-    @api.depends('code')
-    def _compute_account_type(self):
-        accounts_to_process = self.filtered(lambda account: account.code and not account.account_type)
-        self._get_closest_parent_account(accounts_to_process, 'account_type', default_value='asset_current')
-
-    @api.depends('code')
-    def _compute_account_tags(self):
-        accounts_to_process = self.filtered(lambda account: account.code and not account.tag_ids)
-        self._get_closest_parent_account(accounts_to_process, 'tag_ids', default_value=[])
 
     def _get_closest_parent_account(self, accounts_to_process, field_name, default_value):
         """
