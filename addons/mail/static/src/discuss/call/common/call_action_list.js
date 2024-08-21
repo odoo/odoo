@@ -29,7 +29,7 @@ export class CallActionList extends Component {
             icon: "fa fa-fw fa-hand-paper-o",
             onSelect: (ev) => this.onClickRaiseHand(ev),
         });
-        if (isMobileOS) {
+        if (!isMobileOS()) {
             acts.push({
                 id: "shareScreen",
                 name: !this.rtc.state.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),

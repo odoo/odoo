@@ -13,9 +13,9 @@ import {
     step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { hover, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     mockService,
@@ -24,6 +24,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -49,6 +50,10 @@ test("basic rendering", async () => {
     await contains("[title='Raise Hand']");
     await contains("[title='Share Screen']");
     await contains("[title='Enter Full Screen']");
+    // screen sharing not available in mobile OS
+    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    expect(isMobileOS()).toBe(true);
+    await contains("[title='Share Screen']", { count: 0 });
 });
 
 test("keep the `more` popover active when hovering it", async () => {
