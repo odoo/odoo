@@ -104,6 +104,7 @@
         'views/snippets/s_website_form.xml',
         'views/snippets/s_searchbar.xml',
         'views/snippets/s_button.xml',
+        'views/snippets/s_card_offset.xml',
         'views/snippets/s_image.xml',
         'views/snippets/s_video.xml',
         'views/snippets/s_cta_badge.xml',

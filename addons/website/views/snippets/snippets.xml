@@ -62,6 +62,9 @@
                 <t t-snippet="website.s_key_benefits" string="Key benefits" group="columns">
                     <keywords>promotion, characteristic, quality, highlights, specs, advantages, functionalities, features, exhibit, details, capabilities, attributes, promotion, headline, content, overiew, spotlight</keywords>
                 </t>
+                <t t-snippet="website.s_card_offset" string="Card Offset" group="columns">
+                    <keywords>content, picture, photo, illustration, media, visual, article, story, combination, trendy, pattern, design</keywords>
+                </t>
 
                 <!-- Content group -->
                 <t t-snippet="website.s_text_image" string="Text - Image" group="content">
@@ -676,7 +679,7 @@
     <div data-js="layout_column"
         data-selector="section"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline">
+        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_card_offset">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
