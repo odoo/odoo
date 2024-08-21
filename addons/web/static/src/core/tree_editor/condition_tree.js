@@ -1,8 +1,7 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
-import { Within } from "./tree_editor_components";
-import { memoize } from "../utils/functions";
+import { deepCopy, deepEqual } from "../utils/objects";
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -84,6 +83,58 @@ const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is
 
 const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
 const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
+const DELTA_DATE_AST = parseExpr(
+    `(context_today() + relativedelta(period=amount)).strftime('%Y-%m-%d')`
+);
+const DELTA_DATETIME_AST = parseExpr(
+    `datetime.datetime.combine(context_today() + relativedelta(period=amount), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+);
+
+function replaceKwargs(ast, fieldType, kwargs = {}) {
+    const astCopy = deepCopy(ast);
+    if (fieldType === "date") {
+        astCopy.fn.obj.right.kwargs = kwargs;
+    } else {
+        astCopy.fn.obj.fn.obj.args[0].right.kwargs = kwargs;
+    }
+    return astCopy;
+}
+
+function getDelta(ast, fieldType) {
+    const kwargs =
+        (fieldType === "date"
+            ? ast.fn?.obj?.right?.kwargs
+            : ast.fn?.obj?.fn?.obj?.args?.[0]?.right?.kwargs) || {};
+    if (Object.keys(kwargs).length !== 1) {
+        return null;
+    }
+    if (
+        !deepEqual(
+            replaceKwargs(ast, fieldType),
+            replaceKwargs(fieldType === "date" ? DELTA_DATE_AST : DELTA_DATETIME_AST, fieldType)
+        )
+    ) {
+        return null;
+    }
+    const [option, amountAST] = Object.entries(kwargs)[0];
+    return [toValue(amountAST), option];
+}
+
+function getDeltaExpression(value, fieldType) {
+    const ast = replaceKwargs(
+        fieldType === "date" ? DELTA_DATE_AST : DELTA_DATETIME_AST,
+        fieldType,
+        { [value[1]]: toAST(value[0]) }
+    );
+    return expression(formatAST(ast));
+}
+
+function isTodayExpr(val, type) {
+    return (
+        val._expr ===
+        (type === "date" ? DATE_TODAY_STRING_EXPRESSION : DATETIME_TODAY_STRING_EXPRESSION)
+    );
+}
 
 export class Expression {
     constructor(ast) {
@@ -749,6 +800,7 @@ function createBetweenOperators(tree) {
 
 /**
  * @param {Tree} tree
+ * @param {Options} [options={}]
  * @returns {Tree}
  */
 function createWithinOperators(tree, options = {}) {
@@ -762,68 +814,38 @@ function createWithinOperators(tree, options = {}) {
     if (tree.operator !== "between" || !["date", "datetime"].includes(fieldType)) {
         return tree;
     }
-    const isTodayDateTimeExpr = (expression) =>
-        expression._expr === DATETIME_TODAY_STRING_EXPRESSION;
-    const isTodayDateExpr = (expression) => expression._expr === DATE_TODAY_STRING_EXPRESSION;
-    const processDeltaExpr = memoize(function processDeltaExpr(
-        expression,
-        regex,
-        periodShouldBePositive = true
-    ) {
-        const matches = regex.exec(expression._expr);
-        if (!matches || matches.length !== 3) {
-            return false;
+
+    function getProcessedDelta(val, periodShouldBePositive = true) {
+        const delta = getDelta(toAST(val), fieldType);
+        if (delta) {
+            const [amount] = delta;
+            if (
+                Number.isInteger(amount) &&
+                // @ts-ignore
+                ((amount < 0 && periodShouldBePositive) || (amount > 0 && !periodShouldBePositive))
+            ) {
+                return null;
+            }
         }
-        const [, period, amount] = matches;
-        if (!Within.options.some((o) => o[0] === period)) {
-            return false;
-        }
-        const periodAmount = parseInt(amount);
-        if (
-            (periodAmount < 0 && periodShouldBePositive) ||
-            (periodAmount > 0 && !periodShouldBePositive)
-        ) {
-            return false;
-        }
-        return [periodAmount, period];
-    });
-    const processDeltaDateExpr = (expression, periodShouldBePositive = true) => {
-        const regex =
-            /^\(context_today\(\)\s*\+\s*relativedelta\(\s*(\w+)\s*=\s*(-?\d+)\s*\)\)\.strftime\("%Y-%m-%d"\)$/;
-        return processDeltaExpr(expression, regex, periodShouldBePositive);
-    };
-    const processDeltaDateTimeExpr = (expression, periodShouldBePositive = true) => {
-        const regex =
-            /^datetime\.datetime\.combine\(context_today\(\)\s*\+\s*relativedelta\(\s*(\w+)\s*=\s*(-?\d+)\s*\),\s*datetime\.time\(0,\s*0,\s*0\)\)\.to_utc\(\)\.strftime\("%Y-%m-%d\s%H:%M:%S"\)$/;
-        return processDeltaExpr(expression, regex, periodShouldBePositive);
-    };
+        return delta;
+    }
 
     const newTree = { ...tree };
 
-    if (fieldType === "date") {
-        if (isTodayDateExpr(newTree.value[0]) && processDeltaDateExpr(newTree.value[1])) {
+    if (isTodayExpr(newTree.value[0], fieldType)) {
+        const delta = getProcessedDelta(newTree.value[1]);
+        if (delta) {
             newTree.operator = "within";
-            newTree.value = [...processDeltaDateExpr(newTree.value[1]), "date"];
-        } else if (
-            isTodayDateExpr(newTree.value[1]) &&
-            processDeltaDateExpr(newTree.value[0], false)
-        ) {
+            newTree.value = [...delta, fieldType];
+        }
+    } else if (isTodayExpr(newTree.value[1], fieldType)) {
+        const delta = getProcessedDelta(newTree.value[0], false);
+        if (delta) {
             newTree.operator = "within";
-            newTree.value = [...processDeltaDateExpr(newTree.value[0], false), "date"];
+            newTree.value = [...delta, fieldType];
         }
     }
-    if (fieldType === "datetime") {
-        if (isTodayDateTimeExpr(newTree.value[0]) && processDeltaDateTimeExpr(newTree.value[1])) {
-            newTree.operator = "within";
-            newTree.value = [...processDeltaDateTimeExpr(newTree.value[1]), "datetime"];
-        } else if (
-            isTodayDateTimeExpr(newTree.value[1]) &&
-            processDeltaDateTimeExpr(newTree.value[0], false)
-        ) {
-            newTree.operator = "within";
-            newTree.value = [...processDeltaDateTimeExpr(newTree.value[0], false), "datetime"];
-        }
-    }
+
     return newTree;
 }
 
@@ -868,23 +890,19 @@ export function removeWithinOperators(tree) {
         }
         const { negate, path, value } = tree;
         const fieldType = value[2];
-        const dateExpressions = {
-            today: expression(DATE_TODAY_STRING_EXPRESSION),
-            delta: expression(
-                `(context_today() + relativedelta(${value[1]}=${value[0]})).strftime('%Y-%m-%d')`
+        const expressions = [
+            expression(
+                fieldType === "date"
+                    ? DATE_TODAY_STRING_EXPRESSION
+                    : DATETIME_TODAY_STRING_EXPRESSION
             ),
-        };
-        const dateTimeExpressions = {
-            today: expression(DATETIME_TODAY_STRING_EXPRESSION),
-            delta: expression(
-                `datetime.datetime.combine(context_today() + relativedelta(${value[1]}=${value[0]}), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-            ),
-        };
-        const expressions = fieldType === "date" ? dateExpressions : dateTimeExpressions;
+            getDeltaExpression(value, fieldType),
+        ];
+        const reverse = Number.isInteger(value[0]) && value[0] > 0;
         return condition(
             path,
             "between",
-            value[0] > 0 ? Object.values(expressions) : Object.values(expressions).reverse(),
+            reverse ? Object.values(expressions) : Object.values(expressions).reverse(),
             negate
         );
     }

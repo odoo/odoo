@@ -2189,3 +2189,98 @@ test(`any/not any operator (readonly) for one2many`, async () => {
     const text = `Match\nall\nof the following rules:\nPlayers\nmatch\nall\nof:\nPlayer Name\nis in\n(\nKevin De Bruyne\n,\nJeremy Doku\n)`;
     expect(".o_domain_selector").toHaveText(text);
 });
+
+test(`within operator (readonly) for date`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
+        readonly: true,
+    });
+    const text = `Match\nall\nof the following rules:\nDate\nis within\n1\nweeks`;
+    expect(".o_domain_selector").toHaveText(text);
+});
+
+test(`within operator (readonly) for datetime`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(weeks=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        readonly: true,
+    });
+    const text = `Match\nall\nof the following rules:\nDatetime\nis within\n1\nweeks`;
+    expect(".o_domain_selector").toHaveText(text);
+});
+
+test(`within operator (edit) for date`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("is within");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("1%");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1%");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    expect.verifySteps([
+        `["&", ("date", ">=", (context_today() + relativedelta(weeks = "1%")).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+    ]);
+});
+
+test(`within operator (edit) for date with an expression for amount`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = a)).strftime("%Y-%m-%d"))]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("is within");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("a");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+
+    await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("ab");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("ab");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    expect.verifySteps([
+        `["&", ("date", ">=", (context_today() + relativedelta(weeks = "ab")).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+    ]);
+});
+
+test(`within operator (edit) for datetime with invalid period`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(a=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("is within");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) span`).toHaveText("a");
+    expect(isNotSupportedValue(2)).toBe(true);
+
+    await clearNotSupported();
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"days"`
+    );
+    expect.verifySteps([
+        `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+    ]);
+});

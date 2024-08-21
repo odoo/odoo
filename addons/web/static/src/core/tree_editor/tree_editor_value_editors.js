@@ -134,12 +134,13 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 extractProps: ({ value, update }) => ({
                     value,
                     update,
+                    amountEditorInfo: getValueEditorInfo({ type: "integer" }, "="),
+                    optionEditorInfo: makeSelectEditor(Within.options),
                 }),
                 isSupported: (value) =>
                     Array.isArray(value) &&
                     value.length === 3 &&
-                    Number.isInteger(value[0]) &&
-                    Within.options.some((o) => o[0] === value[1]) &&
+                    typeof value[1] === "string" &&
                     value[2] === fieldDef.type,
                 defaultValue: () => {
                     return [-1, "months", fieldDef.type];
