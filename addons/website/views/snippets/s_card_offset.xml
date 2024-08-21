@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_card_offset" name="Card Offset">
+    <section class="s_card_offset o_cc o_cc1 pt64 pb64">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="9">
+                <div class="o_grid_item o_grid_item_image g-height-8 g-col-lg-12 col-lg-12 rounded o_colored_level o_cc o_cc5 overflow-hidden" style="z-index: 1; grid-area: 2 / 1 / 10 / 13; --grid-item-padding-x: 0px; --grid-item-padding-y: 0px; border-radius: 6.4px !important;">
+                    <img src="/web/image/website.s_card_offset_default_image" class="img img-fluid mx-auto" alt=""/>
+                </div>
+                <div class="o_grid_item g-height-7 g-col-lg-5 col-lg-5 rounded o_colored_level o_cc o_cc1 justify-content-center order-lg-0 shadow" style="z-index: 2; grid-area: 1 / 7 / 8 / 12; --grid-item-padding-x: 32px; box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 10px !important;">
+                    <h3>Why Our Product is the Future of Innovation</h3>
+                    <p class="lead">Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.</p>
+                    <p class="lead">Start with the customer – find out what they want and give it to them.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_card_offset_options" inherit_id="website.snippet_options">
+    <!--  Box Vertical Alignment -->
+    <xpath expr="//div[@data-js='WebsiteAnimate']" position="after">
+        <div data-selector=".s_card_offset .o_grid_item" data-exclude=".o_grid_item_image">
+            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
+                <we-button title="Align Top"
+                        data-select-class=""
+                        data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
+                <we-button title="Align Middle"
+                        data-select-class="justify-content-center"
+                        data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
+                <we-button title="Align Bottom"
+                        data-select-class="justify-content-end"
+                        data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<record id="website.s_card_offset_000_scss" model="ir.asset">
+    <field name="name">Card Offset 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_card_offset/000.scss</field>
+</record>
+
+</odoo>
