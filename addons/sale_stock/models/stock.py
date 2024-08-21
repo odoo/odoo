@@ -35,7 +35,7 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
-                move.description_picking += sale_line_id._get_sale_order_line_multiline_description_variants()
+                move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
 
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices

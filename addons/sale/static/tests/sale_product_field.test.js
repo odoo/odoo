@@ -98,7 +98,7 @@ test("On outdated form, product name should stay hidden", async () => {
         partner_id: serverState.partnerId,
         order_line: [Command.create({
             product_id: product.id,
-            name: product.name.concat("\nA description"),
+            name: "A description",
             translated_product_name: "Produit de test",
         })],
     });
@@ -141,7 +141,7 @@ test("On updated form, should continue to hide product name", async () => {
         partner_id: serverState.partnerId,
         order_line: [Command.create({
             product_id: product.id,
-            name: product.name.concat("\nA description"),
+            name: "A description",
             translated_product_name: "Produit de test",
         })],
     });
@@ -163,7 +163,7 @@ test("On updated form and translated product name already in the SOL name, shoul
         partner_id: serverState.partnerId,
         order_line: [Command.create({
             product_id: product.id,
-            name: product.name.concat("\n", translatedProductName, "\nA description"),
+            name: translatedProductName.concat("\nA description"),
             translated_product_name: translatedProductName,
         })],
     });
@@ -187,7 +187,7 @@ test("On updated form, editing the description should work as before", async () 
         partner_id: serverState.partnerId,
         order_line: [Command.create({
             product_id: product.id,
-            name: product.name.concat("\nsomething wrong"),
+            name: "something wrong",
             translated_product_name: translatedProductName,
         })],
     });
@@ -207,7 +207,7 @@ test("On updated form, editing the description should work as before", async () 
     await clickSave();
 
     expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
-    expect(sol.name).toBe(product.name.concat("\nA description"));
+    expect(sol.name).toBe("A description");
 });
 
 test("On outdated form, editing the description shouldn't show the translated product name", async () => {
