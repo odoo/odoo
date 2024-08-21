@@ -4543,60 +4543,65 @@ class MailThread(models.AbstractModel):
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
     def _thread_to_store(self, store: Store, /, *, fields=None, request_list=None):
-        self.ensure_one()
         if fields is None:
             fields = []
-        res = self._read_format(
-            [field for field in fields if field not in ["display_name", "modelName"]], load=False
-        )[0]
-        if request_list:
-            res["hasReadAccess"] = True
-            res["hasWriteAccess"] = False
-            res["canPostOnReadonly"] = self._mail_post_access == 'read'
-        try:
-            self.check_access_rights("write")
-            self.check_access_rule("write")
+        for thread in self:
+            res = thread._read_format(
+                [field for field in fields if field not in ["display_name", "modelName"]],
+                load=False,
+            )[0]
             if request_list:
-                res["hasWriteAccess"] = True
-        except AccessError:
-            pass
-        if (
-            request_list and "activities" in request_list
-            and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])
-        ):
-            res["activities"] = Store.many(self.with_context(active_test=True).activity_ids)
-        if request_list and "attachments" in request_list:
-            res["attachments"] = Store.many(self._get_mail_thread_data_attachments())
-            res["areAttachmentsLoaded"] = True
-            res["isLoadingAttachments"] = False
-        if "display_name" in fields:
-            res["name"] = self.display_name
-        if request_list and "followers" in request_list:
-            res['followersCount'] = self.env['mail.followers'].search_count([
-                ("res_id", "=", self.id),
-                ("res_model", "=", self._name)
-            ])
-            self_follower = self.env['mail.followers'].search([
-                ("res_id", "=", self.id),
-                ("res_model", "=", self._name),
-                ['partner_id', '=', self.env.user.partner_id.id]
-            ])
-            res["selfFollower"] = Store.one(self_follower)
-            self._message_followers_to_store(store, reset=True)
-            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-            res['recipientsCount'] = self.env['mail.followers'].search_count([
-                ("res_id", "=", self.id),
-                ("res_model", "=", self._name),
-                ('partner_id', '!=', self.env.user.partner_id.id),
-                ('subtype_ids', '=', subtype_id),
-                ("partner_id.active", "=", True)
-            ])
-            self._message_followers_to_store(store, filter_recipients=True, reset=True)
-        if "modelName" in fields:
-            res["modelName"] = self.env["ir.model"]._get(self._name).display_name
-        if request_list and "suggestedRecipients" in request_list:
-            res['suggestedRecipients'] = self._message_get_suggested_recipients()
-        store.add(self, res, as_thread=True)
+                res["hasReadAccess"] = True
+                res["hasWriteAccess"] = False
+                res["canPostOnReadonly"] = self._mail_post_access == "read"
+            try:
+                thread.check_access_rights("write")
+                thread.check_access_rule("write")
+                if request_list:
+                    res["hasWriteAccess"] = True
+            except AccessError:
+                pass
+            if (
+                request_list
+                and "activities" in request_list
+                and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])
+            ):
+                res["activities"] = Store.many(thread.with_context(active_test=True).activity_ids)
+            if request_list and "attachments" in request_list:
+                res["attachments"] = Store.many(thread._get_mail_thread_data_attachments())
+                res["areAttachmentsLoaded"] = True
+                res["isLoadingAttachments"] = False
+            if "display_name" in fields:
+                res["name"] = thread.display_name
+            if request_list and "followers" in request_list:
+                res["followersCount"] = self.env["mail.followers"].search_count(
+                    [("res_id", "=", thread.id), ("res_model", "=", self._name)]
+                )
+                self_follower = self.env["mail.followers"].search(
+                    [
+                        ("res_id", "=", thread.id),
+                        ("res_model", "=", self._name),
+                        ["partner_id", "=", self.env.user.partner_id.id],
+                    ]
+                )
+                res["selfFollower"] = Store.one(self_follower)
+                thread._message_followers_to_store(store, reset=True)
+                subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+                res["recipientsCount"] = self.env["mail.followers"].search_count(
+                    [
+                        ("res_id", "=", thread.id),
+                        ("res_model", "=", self._name),
+                        ("partner_id", "!=", self.env.user.partner_id.id),
+                        ("subtype_ids", "=", subtype_id),
+                        ("partner_id.active", "=", True),
+                    ]
+                )
+                thread._message_followers_to_store(store, filter_recipients=True, reset=True)
+            if "modelName" in fields:
+                res["modelName"] = self.env["ir.model"]._get(self._name).display_name
+            if request_list and "suggestedRecipients" in request_list:
+                res["suggestedRecipients"] = thread._message_get_suggested_recipients()
+            store.add(thread, res, as_thread=True)
 
     @api.model
     def get_views(self, views, options=None):

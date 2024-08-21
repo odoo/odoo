@@ -36,14 +36,12 @@ class MailMessage(models.Model):
     def _to_store(self, store: Store, /, *, fields=None, **kwargs):
         super()._to_store(store, fields=fields, **kwargs)
         if fields is None:
-            fields = ["rating_id"]
-        for message in self:
-            if "rating_id" in fields:
+            fields = ["rating_id", "record_rating"]
+        if "rating_id" in fields:
+            for message in self:
                 # sudo: mail.message - guest and portal user can receive rating of accessible message
                 store.add(message, {"rating_id": Store.one(message.sudo().rating_id)})
-            if message.model and message.res_id and issubclass(self.pool[message.model], self.pool["rating.mixin"]):
-                store.add(
-                    self.env[message.model].browse(message.res_id),
-                    fields=["rating_avg", "rating_count"],
-                    as_thread=True,
-                )
+        if "record_rating" in fields:
+            for records in self._records_by_model_name().values():
+                if issubclass(self.pool[records._name], self.pool["rating.mixin"]):
+                    store.add(records, fields=["rating_avg", "rating_count"], as_thread=True)
