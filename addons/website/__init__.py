@@ -11,6 +11,7 @@ from .models import (
     WebsiteMultiMixin, WebsitePage, WebsitePageProperties, WebsitePagePropertiesBase,
     WebsitePublishedMixin, WebsiteRewrite, WebsiteRoute, WebsiteSearchableMixin,
     WebsiteSeoMetadata, WebsiteSnippetFilter, WebsiteTrack, WebsiteVisitor,
+    WebsitePublishedMultiMixin,
 )
 from .wizard import (
     BaseLanguageInstall, PortalWizardUser,

@@ -11,6 +11,7 @@ regex_inherit = re.compile(r'''class (.*)\(.*(?:\n[^(]*?)    _inherit *= *['"]''
 
 
 def upgrade(file_manager):
+    return
     nb = sum(1 for file in file_manager if file.path.name.endswith('.py'))
     i = 0
     file_manager.print_progress(i, nb)

@@ -14,7 +14,7 @@ from .ir_qweb import IrQweb
 from .ir_qweb_fields import IrQwebFieldContact, IrQwebFieldHtml
 from .mixins import (
     WebsiteCover_PropertiesMixin, WebsiteMultiMixin, WebsitePublishedMixin,
-    WebsiteSearchableMixin, WebsiteSeoMetadata,
+    WebsitePublishedMultiMixin, WebsiteSearchableMixin, WebsiteSeoMetadata,
 )
 from .website import Website
 from . import website_menu
