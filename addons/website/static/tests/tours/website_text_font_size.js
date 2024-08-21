@@ -1,6 +1,10 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    dragNDrop,
+    goToTheme,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import {FONT_SIZE_CLASSES} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const classNameInfo = new Map();
@@ -36,7 +40,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
 
 function getFontSizeTestSteps(fontSizeClass) {
     return [
-        ...wTourUtils.dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
+        ...dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
             trigger: ":iframe .s_text_block p",
@@ -51,7 +55,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "start"),
-        ...wTourUtils.goToTheme(),
+        ...goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable="` +
@@ -75,7 +79,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             trigger: ".o_we_add_snippet_btn.active",
             run: "click",
         },
-        ...wTourUtils.goToTheme(),
+        ...goToTheme(),
         {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
@@ -123,7 +127,7 @@ function getAllFontSizesTestSteps() {
     return steps;
 }
 
-wTourUtils.registerWebsitePreviewTour("website_text_font_size", {
+registerWebsitePreviewTour("website_text_font_size", {
     test: true,
     url: "/",
     edition: true,

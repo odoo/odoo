@@ -1,6 +1,11 @@
 /** @odoo-module */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    changeOption,
+    dragNDrop,
+    goBackToBlocks,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 
 const snippets = [
     {
@@ -32,16 +37,16 @@ const checkScrollbar = function (hasScrollbar) {
 };
 
 const toggleBackdrop = function () {
-    return wTourUtils.changeOption('SnippetPopup', 'we-button[data-name="popup_backdrop_opt"] we-checkbox', 'backdrop');
+    return changeOption('SnippetPopup', 'we-button[data-name="popup_backdrop_opt"] we-checkbox', 'backdrop');
 };
 
-wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
+registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop(snippets[1]), // Media List
-    ...wTourUtils.dragNDrop(snippets[0]), // Popup
+    ...dragNDrop(snippets[1]), // Media List
+    ...dragNDrop(snippets[0]), // Popup
     checkScrollbar(false),
     {
         content: 'Click on the s_popup snippet',
@@ -50,7 +55,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     },
     toggleBackdrop(), // hide Popup backdrop
     checkScrollbar(true),
-    wTourUtils.goBackToBlocks(),
+    goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it at the bottom of the popup.",
         trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
@@ -97,7 +102,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         run: "click",
     },
     checkScrollbar(false),
-    wTourUtils.goBackToBlocks(),
+    goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it at the bottom of the popup.",
         trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
@@ -124,7 +129,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         }
     },
     checkScrollbar(true),
-    wTourUtils.goBackToBlocks(),
+    goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it in the Cookies Bar.",
         trigger: '#oe_snippets .oe_snippet[name="Content"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',

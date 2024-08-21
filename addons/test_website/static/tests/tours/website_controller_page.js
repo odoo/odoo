@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 function assertEqual(actual, expected) {
     if (actual !== expected) {
@@ -8,7 +8,7 @@ function assertEqual(actual, expected) {
     }
 }
 
-wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', {
+registerWebsitePreviewTour('website_controller_page_listing_layout', {
     test: true,
     url: '/model/exposed-model',
     edition: true,
@@ -21,7 +21,7 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
     {
         content: "records are listed in grid mode by default",
         trigger: ':iframe .o_website_grid',
-        run: () => {
+        run() {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // grid option is selected by default in the switch
             assertEqual(iframeDocument.querySelector(".listing_layout_switcher #o_wstudio_apply_grid").checked, true);
@@ -49,23 +49,23 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
     {
         content: "records are now displayed in list mode",
         trigger: ':iframe .o_website_list',
-        run: () => {
+        run() {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // list option is now selected in the switch
             assertEqual(iframeDocument.querySelector(".listing_layout_switcher #o_wstudio_apply_list").checked, true);
         },
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
 ]);
 
-wTourUtils.registerWebsitePreviewTour('website_controller_page_default_page_check', {
+registerWebsitePreviewTour('website_controller_page_default_page_check', {
     test: true,
     url: '/model/exposed-model',
 }, () => [
     {
         content: "records are listed in list mode by default",
         trigger: ':iframe .o_website_list',
-        run: () => {
+        run() {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // list option is selected by default in the switch
             assertEqual(iframeDocument.querySelector(".listing_layout_switcher #o_wstudio_apply_list").checked, true);

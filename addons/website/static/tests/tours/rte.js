@@ -1,15 +1,21 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    dragNDrop,
+    goToTheme,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 import { whenReady } from "@odoo/owl";
 
-wTourUtils.registerWebsitePreviewTour('rte_translator', {
+registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
     edition: true,
     wait_for: whenReady(),
 }, () => [
-...wTourUtils.goToTheme(),
+...goToTheme(),
 {
     content: "click on Add a language",
     trigger: "we-button[data-add-language]",
@@ -111,25 +117,25 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 {
     trigger: "body:not(:has(.modal))",
 },
-...wTourUtils.dragNDrop({
+...dragNDrop({
     id: "s_cover",
     name: "Cover",
     groupName: "Intro",
 }), {
     content: "change content",
     trigger: ':iframe #wrap',
-    run: function () {
+    run() {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
-                <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
-                useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
-                <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
+            <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
+            useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
+            <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
     }
-}, {
+    }, {
     content: "ensure change was applied",
     trigger: ':iframe #wrap p:first b',
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 {
     content: "click language dropdown (3)",
     trigger: ':iframe .js_language_selector .dropdown-toggle',
@@ -169,23 +175,23 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 {
     content: "translate text",
     trigger: ':iframe #wrap p font:first',
-    run: function (actionHelper) {
+    run(actionHelper) {
         actionHelper.editor('translated Parseltongue text');
-        const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
+        const {Wysiwyg} = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.anchor.childNodes[0], 22);
-        this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
-        this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        this.anchor.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: "_"}));
+        this.anchor.dispatchEvent(new InputEvent("input", {bubbles: true}));
     },
 }, {
     content: "translate text with special char",
     trigger: ':iframe #wrap input + p span:first',
-    run: function (actionHelper) {
+    run(actionHelper) {
         actionHelper.click();
         this.anchor.textContent = '<{translated}>' + this.anchor.textContent;
-        const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
+        const {Wysiwyg} = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.anchor.childNodes[0], 0);
-        this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
-        this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        this.anchor.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: "_"}));
+        this.anchor.dispatchEvent(new InputEvent("input", {bubbles: true}));
     },
 },
 {
@@ -215,7 +221,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "check: input marked as translated",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 {
     content: "check: content is translated",
     trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
@@ -244,7 +250,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "Check body",
     trigger: ":iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
 },
-...wTourUtils.clickOnEditAndWaitEditMode(),
+...clickOnEditAndWaitEditMode(),
 {
     content: "select text",
     trigger: ':iframe #wrap p',
@@ -269,7 +275,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 //     content: "underline",
 //     trigger: '.oe-toolbar #underline',
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 {
     content: "click language dropdown (4)",
     trigger: ':iframe .js_language_selector .dropdown-toggle',
@@ -301,7 +307,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 }, {
     content: "Check that the editor is not showing translated content (1)",
     trigger: '.ace_text-layer .ace_line:contains("an HTML")',
-    run: function (actions) {
+    run() {
         const lineEscapedText = $(this.anchor.textContent).last().text();
         if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty") {
             console.error('The HTML editor should display the correct untranslated content');

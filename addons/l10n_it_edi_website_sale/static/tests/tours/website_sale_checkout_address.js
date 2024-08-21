@@ -1,7 +1,7 @@
 /** @odoo-module alias=l10n_it_edi_website_sale.tour **/
 
 import { registry } from "@web/core/registry";
-import tourUtils from "@website_sale/js/tours/tour_utils";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('shop_checkout_address', {
     test: true,

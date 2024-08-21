@@ -3,7 +3,7 @@
 import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import wTourUtils from "@website/js/tours/tour_utils";
+import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('configurator_translation', {
     test: true,
@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
     {
         content: "use browser's Back",
         trigger: 'a.o_change_website_type',
-        run: () => {
+        run() {
             window.history.back();
         },
     }, {
@@ -74,15 +74,15 @@ registry.category("web_tour.tours").add('configurator_translation', {
     }, {
         content: "Check if the current interface language is active and monkey patch terms",
         trigger: "body",
-        run: () => {
+        run() {
             if (localization.code !== "pa_GB") {
-                console.error("The user language is not the correct one");
+                throw new Error("The user language is not the correct one");
             } else {
                 translatedTerms["Save"] = "Save_Parseltongue";
             }
         }
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         // Check the content of the save button to make sure the website is in
         // Parseltongue. (The editor should be in the website's default language,

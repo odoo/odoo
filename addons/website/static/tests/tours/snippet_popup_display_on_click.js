@@ -1,21 +1,28 @@
 /** @odoo-module */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnElement,
+    clickOnSave,
+    changeOption,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { browser } from "@web/core/browser/browser";
 
-wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
+registerWebsitePreviewTour("snippet_popup_display_on_click", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
-    ...wTourUtils.dragNDrop({id: "s_popup", name: "Popup", groupName: "Content"}),
+    ...dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
+    ...dragNDrop({id: "s_popup", name: "Popup", groupName: "Content"}),
     {
         content: "Click inside the popup to access its options menu.",
         trigger: ":iframe .s_popup .s_banner",
         run: "click",
     },
-    wTourUtils.changeOption("SnippetPopup", 'we-select[data-attribute-name="display"] we-toggler'),
+    changeOption("SnippetPopup", 'we-select[data-attribute-name="display"] we-toggler'),
     {
         content: "Click on the display 'On Click' option",
         trigger: "#oe_snippets we-button[data-name='onclick_opt']",
@@ -39,21 +46,21 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
             }
         },
     },
-    wTourUtils.clickOnElement("button to close the popup", ":iframe .s_popup_close"),
-    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
+    clickOnElement("button to close the popup", ":iframe .s_popup_close"),
+    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Paste the popup anchor in the URL input",
         trigger: "#o_link_dialog_url_input",
         run: "edit #Win-%2420",
     },
-    ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
+    ...clickOnSave(),
+    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens after clicked the button.",
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
         run: "click",
     },
-    wTourUtils.clickOnElement("button to close the popup", ":iframe .s_popup_close"),
+    clickOnElement("button to close the popup", ":iframe .s_popup_close"),
     {
         content: "Go to the 'contactus' page.",
         trigger: ":iframe a[href='/contactus']",
@@ -64,9 +71,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         trigger: ".o_website_preview[data-view-xmlid='website.contactus']",
         run: () => null, // it"s a check
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
-    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
+    ...clickOnEditAndWaitEditMode(),
+    ...dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
+    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Add a link to the homepage in the URL input",
         trigger: "#o_link_dialog_url_input",
@@ -82,8 +89,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         trigger: ".o_link_dialog_page_anchor we-button:contains('#Win-%2420')",
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
+    ...clickOnSave(),
+    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
     },

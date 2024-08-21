@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 
 /**
@@ -10,8 +10,8 @@ import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
  * they create some lessons in it;
  * they publishe it;
  */
-wTourUtils.registerWebsitePreviewTour('course_publisher', {
-    // TODO: replace by wTourUtils.getClientActionURL when it's added
+registerWebsitePreviewTour('course_publisher', {
+    // TODO: replace by getClientActionURL when it's added
     url: '/slides',
     test: true
 }, () => [{
@@ -47,7 +47,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     trigger: ".modal button:contains(Save)",
     run: "click",
 },
-...wTourUtils.clickOnEditAndWaitEditMode(),
+...clickOnEditAndWaitEditMode(),
 {
     content: 'eLearning: double click image to edit it',
     trigger: ':iframe img.o_wslides_course_pict',
@@ -94,7 +94,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     content: 'eLearning: publish newly added course',
     trigger: ':iframe span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
     // trigger: 'span.o_wslides_js_slide_toggle_is_preview:first',
-    run: function () {
+    run() {
         document.querySelector(
             ".o_website_preview :iframe span.o_wslides_js_slide_toggle_is_preview"
         ).click();

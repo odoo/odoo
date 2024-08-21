@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {clickOnSnippet, dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 const wallRaceConditionClass = "image_wall_race_condition";
 const preventRaceConditionSteps = [{
@@ -49,17 +49,17 @@ const reselectSignImageSteps = [
     ...selectSignImageStep,
 ];
 
-wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
+registerWebsitePreviewTour("snippet_images_wall", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_images_wall",
         name: "Images Wall",
         groupName: "Images",
 }), 
-...wTourUtils.clickOnSnippet({
+...clickOnSnippet({
     id: "s_image_gallery",
     name: "Images Wall",
 }),

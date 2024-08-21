@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 
-function addMedia(position = "right") {
+export function addMedia(position = "right") {
     return {
         trigger: `.modal-content footer .btn-primary`,
         content: markup(_t("<b>Add</b> the selected image.")),
@@ -14,12 +14,12 @@ function addMedia(position = "right") {
         run: "click",
     };
 }
-function assertCssVariable(variableName, variableValue, trigger = ':iframe body') {
+export function assertCssVariable(variableName, variableValue, trigger = ':iframe body') {
     return {
         isActive: ["auto"],
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
-        run: function () {
+        run() {
             const styleValue = getComputedStyle(this.anchor).getPropertyValue(variableName);
             if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
                 throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
@@ -27,7 +27,7 @@ function assertCssVariable(variableName, variableValue, trigger = ':iframe body'
         },
     };
 }
-function assertPathName(pathName, trigger) {
+export function assertPathName(pathName, trigger) {
     return {
         content: `Check if we have been redirected to ${pathName}`,
         trigger: trigger,
@@ -39,7 +39,7 @@ function assertPathName(pathName, trigger) {
     };
 }
 
-function changeBackground(snippet, position = "bottom") {
+export function changeBackground(snippet, position = "bottom") {
     return [
         {
             trigger: ".o_we_customize_panel .o_we_bg_success",
@@ -50,7 +50,7 @@ function changeBackground(snippet, position = "bottom") {
     ];
 }
 
-function changeBackgroundColor(position = "bottom") {
+export function changeBackgroundColor(position = "bottom") {
     return {
         trigger: ".o_we_customize_panel .o_we_color_preview",
         content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background color of this block.")),
@@ -59,7 +59,7 @@ function changeBackgroundColor(position = "bottom") {
     };
 }
 
-function selectColorPalette(position = "left") {
+export function selectColorPalette(position = "left") {
     return {
         trigger:
             ".o_we_customize_panel .o_we_so_color_palette we-selection-items, .o_we_customize_panel .o_we_color_preview",
@@ -69,7 +69,7 @@ function selectColorPalette(position = "left") {
     };
 }
 
-function changeColumnSize(position = "right") {
+export function changeColumnSize(position = "right") {
     return {
         trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: markup(_t("<b>Slide</b> this button to change the column size.")),
@@ -78,7 +78,7 @@ function changeColumnSize(position = "right") {
     };
 }
 
-function changeImage(snippet, position = "bottom") {
+export function changeImage(snippet, position = "bottom") {
     return [
         {
             trigger: "body.editor_enable",
@@ -97,7 +97,7 @@ function changeImage(snippet, position = "bottom") {
     By default, prevents the step from being active if a palette is opened.
     Set allowPalette to true to select options within a palette.
 */
-function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
+export function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
     const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
@@ -108,7 +108,7 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     };
 }
 
-function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
+export function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
     const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
@@ -119,7 +119,7 @@ function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel
     };
 }
 
-function changePaddingSize(direction) {
+export function changePaddingSize(direction) {
     let paddingDirection = "n";
     let position = "top";
     if (direction === "bottom") {
@@ -141,7 +141,7 @@ function changePaddingSize(direction) {
  * @param {String} elementSelector The selector of the element to be checked.
  * @returns {Object} The steps required to check if the element is visible.
  */
-function checkIfVisibleOnScreen(elementSelector) {
+export function checkIfVisibleOnScreen(elementSelector) {
     return {
         content: "Check if the element is visible on screen",
         trigger: `${elementSelector}`,
@@ -163,7 +163,7 @@ function checkIfVisibleOnScreen(elementSelector) {
  * @param {*} elementName
  * @param {*} selector
  */
-function clickOnElement(elementName, selector) {
+export function clickOnElement(elementName, selector) {
     return {
         content: `Clicking on the ${elementName}`,
         trigger: selector,
@@ -176,7 +176,7 @@ function clickOnElement(elementName, selector) {
  *
  * @param {string} position Where the purple arrow will show up
  */
-function clickOnEditAndWaitEditMode(position = "bottom") {
+export function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_menu_systray .o_edit_website_container a",
@@ -195,7 +195,7 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
  *
  * @param {string} position Where the purple arrow will show up
  */
-function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
+export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> dropdown")),
         trigger: ".o_edit_website_container button",
@@ -218,7 +218,7 @@ function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
  * @param {*} snippet
  * @param {*} position
  */
-function clickOnSnippet(snippet, position = "bottom") {
+export function clickOnSnippet(snippet, position = "bottom") {
     const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
     return [
         {
@@ -234,7 +234,7 @@ function clickOnSnippet(snippet, position = "bottom") {
     ];
 }
 
-function clickOnSave(position = "bottom", timeout) {
+export function clickOnSave(position = "bottom", timeout) {
     return [
         {
             trigger: "#oe_snippets:not(:has(.o_we_already_dragging))",
@@ -273,7 +273,7 @@ function clickOnSave(position = "bottom", timeout) {
  * @param {*} element Target the element which should be rewrite
  * @param {*} position
  */
-function clickOnText(snippet, element, position = "bottom") {
+export function clickOnText(snippet, element, position = "bottom") {
     return [
         {
             trigger: ":iframe body.editor_enable",
@@ -294,7 +294,7 @@ function clickOnText(snippet, element, position = "bottom") {
  * dialog.
  * @param {*} position Where the purple arrow will show up
  */
-function dragNDrop(snippet, position = "bottom") {
+export function dragNDrop(snippet, position = "bottom") {
     const blockEl = snippet.groupName || snippet.name;
     let dragNDropSteps = [{
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
@@ -323,7 +323,7 @@ function dragNDrop(snippet, position = "bottom") {
     return dragNDropSteps;
 }
 
-function goBackToBlocks(position = "bottom") {
+export function goBackToBlocks(position = "bottom") {
     return {
         trigger: '.o_we_add_snippet_btn',
         content: _t("Click here to go back to block tab."),
@@ -332,7 +332,7 @@ function goBackToBlocks(position = "bottom") {
     };
 }
 
-function goToTheme(position = "bottom") {
+export function goToTheme(position = "bottom") {
     return [
         {
             trigger: "#oe_snippets.o_loaded",
@@ -346,7 +346,7 @@ function goToTheme(position = "bottom") {
     ];
 }
 
-function selectHeader(position = "bottom") {
+export function selectHeader(position = "bottom") {
     return {
         trigger: `:iframe header#top`,
         content: markup(_t(`<b>Click</b> on this header to configure it.`)),
@@ -355,7 +355,7 @@ function selectHeader(position = "bottom") {
     };
 }
 
-function selectSnippetColumn(snippet, index = 0, position = "bottom") {
+export function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      return {
         trigger: `:iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: markup(_t("<b>Click</b> on this column to access its options.")),
@@ -364,7 +364,7 @@ function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      };
 }
 
-function prepend_trigger(steps, prepend_text='') {
+export function prepend_trigger(steps, prepend_text='') {
     for (const step of steps) {
         if (!step.noPrepend && prepend_text) {
             step.trigger = prepend_text + step.trigger;
@@ -373,7 +373,7 @@ function prepend_trigger(steps, prepend_text='') {
     return steps;
 }
 
-function getClientActionUrl(path, edition) {
+export function getClientActionUrl(path, edition) {
     let url = `/odoo/action-website.website_preview`;
     if (path) {
         url += `?path=${encodeURIComponent(path)}`;
@@ -384,11 +384,11 @@ function getClientActionUrl(path, edition) {
     return url;
 }
 
-function clickOnExtraMenuItem(stepOptions, backend = false) {
+export function clickOnExtraMenuItem(stepOptions, backend = false) {
     return Object.assign({}, {
         content: "Click on the extra menu dropdown toggle if it is there",
         trigger: `${backend ? ":iframe" : ""} .top_menu`,
-        run: function () {
+        run() {
             const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
             // Don't click on the extra menu button if it's already visible.
             if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
@@ -407,7 +407,7 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
  * @param {boolean} [options.edition] If the tour starts in edit mode
  * @param {() => TourStep[]} steps The steps of the tour. Has to be a function to avoid direct interpolation of steps.
  */
-function registerWebsitePreviewTour(name, options, steps) {
+export function registerWebsitePreviewTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
@@ -439,7 +439,7 @@ function registerWebsitePreviewTour(name, options, steps) {
     });
 }
 
-function registerThemeHomepageTour(name, steps) {
+export function registerThemeHomepageTour(name, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
@@ -458,7 +458,7 @@ function registerThemeHomepageTour(name, steps) {
     ]);
 }
 
-function registerBackendAndFrontendTour(name, options, steps) {
+export function registerBackendAndFrontendTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
@@ -489,7 +489,7 @@ function registerBackendAndFrontendTour(name, options, steps) {
  * @param elementName {string} the element to search
  * @param searchNeeded {Boolean} if the widget is a m2o widget and a search is needed
  */
-function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = false) {
+export function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = false) {
     const steps = [clickOnElement(`${widgetName} toggler`, `we-select[data-name=${widgetName}] we-toggler`)];
 
     if (searchNeeded) {
@@ -512,7 +512,7 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
  * @param {string} websiteName - The name of the website to switch to.
  * @returns {Array} - The steps required to perform the website switch.
  */
-function switchWebsite(websiteId, websiteName) {
+export function switchWebsite(websiteId, websiteName) {
     return [{
         content: `Click on the website switch to switch to website '${websiteName}'`,
         trigger: '.o_website_switcher_container button',
@@ -541,7 +541,7 @@ function switchWebsite(websiteId, websiteName) {
  *     toggle it off.
  * @returns {Array}
  */
-function toggleMobilePreview(toggleOn) {
+export function toggleMobilePreview(toggleOn) {
     const onOrOff = toggleOn ? "on" : "off";
     const mobileOnSelector = ".o_is_mobile";
     const mobileOffSelector = ":not(.o_is_mobile)";
@@ -560,37 +560,3 @@ function toggleMobilePreview(toggleOn) {
         },
     ];
 }
-
-export default {
-    addMedia,
-    assertCssVariable,
-    assertPathName,
-    changeBackground,
-    changeBackgroundColor,
-    changeColumnSize,
-    changeImage,
-    changeOption,
-    changePaddingSize,
-    checkIfVisibleOnScreen,
-    clickOnEditAndWaitEditMode,
-    clickOnEditAndWaitEditModeInTranslatedPage,
-    clickOnElement,
-    clickOnExtraMenuItem,
-    clickOnSave,
-    clickOnSnippet,
-    clickOnText,
-    dragNDrop,
-    getClientActionUrl,
-    goBackToBlocks,
-    goToTheme,
-    registerBackendAndFrontendTour,
-    registerThemeHomepageTour,
-    registerWebsitePreviewTour,
-    selectColorPalette,
-    selectElementInWeSelectWidget,
-    selectHeader,
-    selectNested,
-    selectSnippetColumn,
-    switchWebsite,
-    toggleMobilePreview,
-};

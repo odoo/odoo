@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnSave,
+    clickOnEditAndWaitEditMode,
+    clickOnExtraMenuItem,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const checkNoTranslate = {
     content: "Check there is no translate button",
@@ -36,7 +41,7 @@ const switchTo = (lang) => {
     }];
 };
 const goToMenuItem = [
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    clickOnExtraMenuItem({}, true),
     {
         content: "Navigate to model item page",
         trigger: ":iframe a[href='/test_website/model_item/1']",
@@ -44,18 +49,18 @@ const goToMenuItem = [
     },
 ];
 
-wTourUtils.registerWebsitePreviewTour('test_restricted_editor_only', {
+registerWebsitePreviewTour('test_restricted_editor_only', {
     test: true,
     url: '/',
 }, () => [
     // Home
     checkNoTranslate,
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Check icons cannot be dragged",
         trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     ...switchTo('fr'),
     ...translate,
     ...closeErrorDialog,
@@ -63,7 +68,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_only', {
     // Model item
     ...goToMenuItem,
     checkNoTranslate,
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Check icons cannot be dragged",
         trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
@@ -73,18 +78,18 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_only', {
     ...closeErrorDialog,
 ]);
 
-wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
+registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     test: true,
     url: '/',
 }, () => [
     // Home
     checkNoTranslate,
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Check icons cannot be dragged",
         trigger: "#oe_snippets .oe_snippet[name='Intro'].o_disabled",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     ...switchTo('fr'),
     ...translate,
     ...closeErrorDialog,
@@ -92,7 +97,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     // Model item
     ...goToMenuItem,
     checkNoTranslate,
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Check icons can be dragged",
         trigger: "#oe_snippets .oe_snippet[name='Intro']:not(.o_disabled)",
@@ -112,7 +117,7 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
         trigger: ":iframe [data-oe-expression='record.name']",
         run: "editor New value",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     ...switchTo('fr'),
     ...translate,
     {
@@ -134,5 +139,5 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
         trigger: ":iframe [data-oe-expression='record.website_description'] strong.o_default_snippet_text",
         run: "editor potentiel.",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
 ]);

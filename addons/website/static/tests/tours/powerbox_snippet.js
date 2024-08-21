@@ -1,16 +1,16 @@
-import wTourUtils from "@website/js/tours/tour_utils";
+import {clickOnSnippet, dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-wTourUtils.registerWebsitePreviewTour("website_powerbox_snippet",{
+registerWebsitePreviewTour("website_powerbox_snippet",{
     edition: true,
     test: true,
 },
 () => [
-...wTourUtils.dragNDrop({
+...dragNDrop({
     id: "s_text_block",
     name: "Text",
     groupName: "Text",
 }),
-...wTourUtils.clickOnSnippet({
+...clickOnSnippet({
     id: "s_text_block",
     name: "Text",
 }),
@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour("website_powerbox_snippet",{
 {
     content: "Show the powerbox",
     trigger: ":iframe .s_text_block p:last-child",
-    async run(actions) {
+    run(actions) {
         actions.editor(`/`);
         const wrapwrap = this.anchor.closest("#wrapwrap");
         wrapwrap.dispatchEvent(

@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 import { waitFor } from "@odoo/hoot-dom";
@@ -25,13 +28,13 @@ const clickEditLink = [{
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
 }];
 
-wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
+registerWebsitePreviewTour('edit_link_popover_1', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
     // 1. Test links in page content (web_editor)
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -143,13 +146,13 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     }
 ]);
 
-wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
+registerWebsitePreviewTour('edit_link_popover_2', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
     // 1. Test links in page content (web_editor)
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -189,7 +192,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Double click on link",
         trigger: ':iframe footer a[href="/"]',
-        run: function (actions) {
+        run(actions) {
             // Create range to simulate real double click, see pull request
             const range = document.createRange();
             range.selectNodeContents(this.anchor);
@@ -213,15 +216,15 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Ensure that a click on the link popover link opens a new window in edit mode",
         trigger: ':iframe .o_edit_menu_popover a.o_we_url_link[target="_blank"]',
-        run: (actions) => {
+        run(actions) {
             // We do not want to open a link in a tour
             patch(browser, {
-                open: (url) => {
+                open(url) {
                     if (window.location.hostname === url.hostname && url.pathname.startsWith('/@/')) {
                         document.querySelector('body').classList.add('new_backend_window_opened');
                     }
                 }
-            }, { pure: true });
+            }, {pure: true});
             actions.click();
         },
     },

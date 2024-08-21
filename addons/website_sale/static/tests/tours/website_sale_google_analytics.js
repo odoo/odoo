@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import tourUtils from "@website_sale/js/tours/tour_utils";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 odoo.loader.bus.addEventListener("module-started", (e) => {
     if (e.detail.moduleName === "@website_sale/js/website_sale_tracking") {

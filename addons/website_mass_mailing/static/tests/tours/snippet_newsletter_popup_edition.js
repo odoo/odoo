@@ -1,14 +1,18 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import snippetNewsletterPopupUseTour from "@website_mass_mailing/../tests/tours/snippet_newsletter_popup_use";
 
-wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
+registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',
         groupName: "Contact & Forms",
@@ -17,7 +21,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
         content: "Check the modal is opened for edition",
         trigger: ':iframe .o_newsletter_popup .modal:visible',
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Check the modal has been saved, closed",
         trigger: ':iframe body:has(.o_newsletter_popup)',

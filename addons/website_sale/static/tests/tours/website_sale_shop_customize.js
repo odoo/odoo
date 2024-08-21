@@ -1,15 +1,20 @@
 /** @odoo-module **/
 
-import tourUtils from '@website_sale/js/tours/tour_utils';
-import wTourUtils from '@website/js/tours/tour_utils';
+import { goToCart } from '@website_sale/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('shop_customize', {
+
+registerWebsitePreviewTour('shop_customize', {
     url: '/shop',
     edition: true,
     test: true,
 },
     () => [
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         {
             content: "select product attribute Steel",
             trigger: ':iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
@@ -34,7 +39,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "check list view of variants is disabled initially",
             trigger: ':iframe body:not(:has(.js_product_change))',
         },
-        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
@@ -53,7 +58,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: 'we-button[data-name="variants_products_list_opt"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         {
             content: "check variant price",
             trigger: ':iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
@@ -71,7 +76,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "verify that price has changed when changing variant",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
         },
-        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
@@ -90,7 +95,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: 'we-button[data-name="variants_options_opt"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         {
             content: "check page loaded after list of variant customization disabled",
             trigger: ":iframe .js_product:not(:has(.js_product_change))",
@@ -126,7 +131,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "check quantity",
             trigger: ":iframe .my_cart_quantity:contains(/^1$/),.o_extra_menu_items .fa-plus",
         },
-        tourUtils.goToCart({backend: true}),
+        goToCart({backend: true}),
         {
             trigger: ":iframe body:not(:has(#products_grid_before .js_attributes))",
         },
@@ -135,7 +140,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: ":iframe a:contains(Continue shopping)",
             run: "click",
         },
-        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
@@ -149,7 +154,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: 'we-button[data-name="attributes_opt"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         {
             content: "wait to exit edit mode",
             trigger: '.o_website_preview:not(.editor_has_snippets)',

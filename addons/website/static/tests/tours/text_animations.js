@@ -1,13 +1,16 @@
 /** @odoo-module */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("text_animations", {
+registerWebsitePreviewTour("text_animations", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_cover",
         name: "Cover",
         groupName: "Intro",
