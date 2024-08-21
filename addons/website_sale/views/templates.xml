@@ -797,7 +797,6 @@
         <div t-if="entries" class="o_wsale_filmstip_container d-flex align-items-stretch mb-2 overflow-hidden">
             <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto">
                 <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible">
-                    <t t-foreach="entries" t-as="c" t-if="c.image_128" t-set="atLeastOneImage" t-value="True"/>
                     <t t-if="category.parent_id" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
                     <t t-else="" t-set="backUrl" t-value="'/shop'"/>
 
@@ -809,6 +808,7 @@
                         <a
                             t-att-href="keep('/shop/category/' + slug(c), category=0)"
                             class="text-decoration-none"
+                            draggable="false"
                         >
                             <input
                                 type="radio"
@@ -818,9 +818,10 @@
                                 t-att-value="c.id"
                                 t-att-checked="'true' if c.id == category.id else None"/>
                             <div
-                                t-attf-class="d-flex align-items-center fs-6 fw-normal
-                                    btn btn-{{navClass}} {{'ps-2 pe-3' if c.image_128 else 'px-4'}}
-                                    {{ 'border-primary' if c.id == category.id else '' }}"
+                                t-att-class="'d-flex align-items-center h-100 btn btn-'
+                                    + navClass
+                                    + (c.image_128 and ' ps-2 pe-3' or ' px-4')
+                                    + (c.id == category.id and ' border-primary' or '')"
                             >
                                 <div
                                     t-if="c.image_128"
