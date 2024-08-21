@@ -300,12 +300,6 @@ class AccountMoveSend(models.TransientModel):
                     'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)"))
                 }
 
-            restricted_journals = wizard.move_ids.journal_id.filtered(lambda j: j.restrict_mode_hash_table)
-            if restricted_journals and not wizard.move_ids.check_move_sequence_chain():
-                warnings['account_sequence_gap'] = {
-                    'message': _("Sending these invoices will create a gap in the sequence."),
-                }
-
             wizard.warnings = warnings
 
     @api.depends('mail_template_id')
