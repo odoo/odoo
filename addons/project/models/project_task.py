@@ -1294,7 +1294,11 @@ class Task(models.Model):
             for task in self:
                 project_link = project_link_per_task_id.get(task.id)
                 if project_link:
-                    body = _('Task Transferred from Project %s', project_link)
+                    body = _(
+                        'Task Transferred from Project %(source_project)s to %(destination_project)s',
+                        source_project=project_link,
+                        destination_project=self.project_id._get_html_link(title=self.project_id.display_name),
+                    )
                 else:
                     body = _('Task Converted from To-Do')
                 task.message_notify(
