@@ -219,7 +219,7 @@ class IrQweb(models.AbstractModel):
         }
         return (js_assets | assets, css_assets | assets)
 
-    def _pregenerate_assets_bundles(self):
+    def _xpregenerate_assets_bundles(self):
         _logger.info("_pregenerate_assets_bundles called")
         _logger.info("config['test_enable']: %s" % str(config['test_enable']))
         _logger.info("config['test_file']: %s" % str(config['test_file']))
