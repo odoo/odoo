@@ -1402,7 +1402,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             'partner_id': partner,
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,
-            'date': min(self.mapped('date')),
         }
         if self.location_dest_id.ids:
             vals['location_dest_id'] = self.location_dest_id.id
