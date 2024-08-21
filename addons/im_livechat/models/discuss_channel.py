@@ -157,14 +157,8 @@ class DiscussChannel(models.Model):
         })
         mail.send()
 
-    def _get_channel_history(self):
-        """
-        Converting message body back to plaintext for correct data formatting in HTML field.
-        """
-        return Markup('').join(
-            Markup('%s: %s<br/>') % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
-            for message in self.message_ids.sorted('id')
-        )
+    def _get_channel_history_names(self, message):
+        return super()._get_channel_history_names(message) or self.anonymous_name
 
     # =======================
     # Chatbot

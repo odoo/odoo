@@ -12,7 +12,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, get_lang, html_escape
+from odoo.tools import format_list, get_lang, html_escape, html2plaintext
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
 <circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
@@ -1127,6 +1127,18 @@ class Channel(models.Model):
             domain=[('channel_id', '=', self.id)],
         )
         return Store(unknown_members).add(self, {"memberCount": count}).get_result()
+
+    def _get_channel_history_names(self, message):
+        return message.author_id.name
+
+    def _get_channel_history(self):
+        """
+        Converting message body back to plaintext for correct data formatting in HTML field.
+        """
+        return Markup('').join(
+            Markup('%s: %s<br/>') % (self._get_channel_history_names(message), html2plaintext(message.body))
+            for message in self.message_ids.sorted('id')
+        )
 
     # ------------------------------------------------------------
     # COMMANDS
