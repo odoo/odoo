@@ -888,7 +888,7 @@ class AccountJournal(models.Model):
             raise UserError(_("No attachment was provided"))
 
         if not self:
-            raise UserError(_("No journal found"))
+            raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
         # As we are coming from the journal, we assume that each attachments
         # will create an invoice with a tentative to enhance with EDI / OCR..
