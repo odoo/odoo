@@ -912,7 +912,7 @@ class expression(object):
                     params = (model._name, left)
                     push(('id', inselect_operator, (subselect, params)), model, alias, internal=True)
                 else:
-                    _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
+                    _logger.warning("Binary field '%s' stored in attachment: ignore %s %s %s",
                                   field.string, left, operator, reprlib.repr(right))
                     push(TRUE_LEAF, model, alias)
 
