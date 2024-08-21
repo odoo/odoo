@@ -117,8 +117,8 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
     )
-    restrict_mode_hash_table = fields.Boolean(string="Lock Sent Invoices with Hash",
-        help="If ticked, when the invoice is sent, the hash chain will be computed from the last move hashed to the new move to be hashed. The hash can also be performed on demand.")
+    restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
+        help="If ticked, when an entry is posted, we retroactively hash all moves in the sequence from the entry back to the last hashed entry.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Open'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
