@@ -317,8 +317,8 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template in batch, using configuration parameter
         for batch rendering. """
         for batch_size, exp_mail_create_count in [
-            (False, 1),  # unset, default is 500
-            (0, 1),  # 0: fallbacks on default
+            (False, 2),  # unset, default is 50
+            (0, 2),  # 0: fallbacks on default
             (30, 4),  # 100 / 30 -> 4 iterations
         ]:
             with self.subTest(batch_size=batch_size):
