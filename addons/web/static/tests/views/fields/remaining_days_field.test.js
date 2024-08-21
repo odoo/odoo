@@ -382,3 +382,49 @@ test("RemainingDaysField on a datetime field in list view in UTC-8", async () =>
         "2 days ago",
     ]);
 });
+
+test("RemainingDaysField with custom decoration classes", async () => {
+    mockDate("2017-10-08 15:35:11");
+
+    Partner._records = [
+        { id: 1, date: "2017-10-08" }, // today
+        { id: 2, date: "2017-10-09" }, // tomorrow
+        { id: 3, date: "2017-10-07" }, // yesterday
+        { id: 4, date: "2017-10-10" }, // + 2 days
+        { id: 5, date: "2017-10-05" }, // - 3 days
+        { id: 6, date: "2018-02-08" }, // + 4 months (diff >= 100 days)
+        { id: 7, date: "2017-06-08" }, // - 4 months (diff >= 100 days)
+        { id: 8, date: false },
+    ];
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+                <list>
+                    <field
+                        name="date"
+                        widget="remaining_days"
+                        options="{
+                            'classes': {
+                                'muted': 'days &lt; -30',
+                                'danger': 'days &lt; 0',
+                                'success': 'days == 0',
+                                'warning': 'days &gt; 30',
+                                'info': 'days &gt;= 2'
+                            }
+                        }"
+                    />
+                </list>`,
+    });
+
+    const cells = queryAll(".o_data_cell div div");
+    expect(cells[0]).toHaveClass("text-success");
+    expect(cells[1]).not.toHaveAttribute("class");
+    expect(cells[2]).toHaveClass("text-danger");
+    expect(cells[3]).toHaveClass("text-info");
+    expect(cells[4]).toHaveClass("text-danger");
+    expect(cells[5]).toHaveClass("text-warning");
+    expect(cells[6]).toHaveClass("text-muted");
+    expect(cells[7]).not.toHaveAttribute("class");
+});
