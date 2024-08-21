@@ -235,7 +235,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
     def test_template_send_email_batch(self):
         """ Test 'send_email' on template in batch """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(18):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(25):
             template = self.test_template.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
@@ -275,7 +275,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template in batch with dynamic reports """
         self.env.invalidate_all()
 
-        with self.with_user(self.user_employee.login), self.assertQueryCount(229):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(236):
             template = self.test_template_wreports.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
@@ -312,8 +312,8 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template in batch, using configuration parameter
         for batch rendering. """
         for batch_size, exp_mail_create_count in [
-            (False, 1),  # unset, default is 500
-            (0, 1),  # 0: fallbacks on default
+            (False, 2),  # unset, default is 50
+            (0, 2),  # 0: fallbacks on default
             (30, 4),  # 100 / 30 -> 4 iterations
         ]:
             with self.subTest(batch_size=batch_size):
