@@ -335,6 +335,7 @@ class PurchaseOrderLine(models.Model):
 
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not seller:
+                line.discount = 0
                 unavailable_seller = line.product_id.seller_ids.filtered(
                     lambda s: s.partner_id == line.order_id.partner_id)
                 if not unavailable_seller and line.price_unit and line.product_uom == line._origin.product_uom:
