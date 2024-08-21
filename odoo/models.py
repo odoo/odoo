@@ -4833,7 +4833,7 @@ class BaseModel(metaclass=MetaModel):
                 # If a field is not stored, its inverse method will probably
                 # write on its dependencies, which will invalidate the field on
                 # all records. We therefore inverse the field record by record.
-                if all(field.store or field.company_dependent for field in fields):
+                if all(field.store or not field._depends for field in fields):
                     batches = [rec_vals]
                 else:
                     batches = [[rec_data] for rec_data in rec_vals]
