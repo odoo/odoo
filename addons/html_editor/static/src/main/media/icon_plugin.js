@@ -10,9 +10,10 @@ export class IconPlugin extends Plugin {
             toolbarNamespace: [
                 {
                     id: "icon",
-                    isApplied: (traversedNodes) => {
-                        return traversedNodes?.[0]?.classList?.contains("fa");
-                    },
+                    isApplied: (traversedNodes) =>
+                        // Last traversed nodes are an icon and its ZWS child.
+                        traversedNodes.at(-1)?.textContent === "\u200b" &&
+                        traversedNodes.at(-2)?.classList?.contains("fa"),
                 },
             ],
             toolbarCategory: [

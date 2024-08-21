@@ -9,7 +9,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, childNodeIndex, endPos, nodeSize } from "../utils/position";
+import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
@@ -80,29 +80,18 @@ export function isNotAllowedContent(node) {
  * @returns edges nodes if they do not have content selected
  */
 function getUnselectedEdgeNodes(selection) {
-    function getEdgeNodes(node, offset, position = "start") {
-        const result = [];
-        if (selection.commonAncestorContainer === node) {
-            return result;
-        }
-        if (position === "start") {
-            if (offset === nodeSize(node)) {
-                result.push(node);
-                return result.concat(getEdgeNodes(node.parentNode, childNodeIndex(node), "start"));
-            }
-        } else if (position === "end") {
-            if (offset === 0) {
-                result.push(node);
-                return result.concat(getEdgeNodes(node.parentNode, childNodeIndex(node), "end"));
-            }
-        }
-        return result;
-    }
-    return new Set(
-        getEdgeNodes(selection.startContainer, selection.startOffset, "start").concat(
-            getEdgeNodes(selection.endContainer, selection.endOffset, "end")
-        )
-    );
+    const startEdgeNodes = (node, offset) =>
+        node === selection.commonAncestorContainer || offset < nodeSize(node)
+            ? []
+            : [node, ...startEdgeNodes(...rightPos(node))];
+    const endEdgeNodes = (node, offset) =>
+        node === selection.commonAncestorContainer || offset > 0
+            ? []
+            : [node, ...endEdgeNodes(...leftPos(node))];
+    return new Set([
+        ...startEdgeNodes(selection.startContainer, selection.startOffset),
+        ...endEdgeNodes(selection.endContainer, selection.endOffset),
+    ]);
 }
 
 export class SelectionPlugin extends Plugin {
@@ -214,6 +203,7 @@ export class SelectionPlugin extends Plugin {
                 direction: DIRECTIONS.RIGHT,
                 textContent: () => "",
                 inEditable,
+                intersectsNode: () => false,
             };
         } else {
             range = selection.getRangeAt(0);
@@ -456,108 +446,46 @@ export class SelectionPlugin extends Plugin {
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
         range.setEnd(selection.endContainer, selection.endOffset);
-        return [
-            ...new Set(
-                this.getTraversedNodes().flatMap((node) => {
-                    const td = closestElement(node, ".o_selected_td");
-                    if (td) {
-                        return descendants(td);
-                    } else if (
-                        range.isPointInRange(node, 0) &&
-                        range.isPointInRange(node, nodeSize(node))
-                    ) {
-                        return node;
-                    } else {
-                        return [];
-                    }
-                })
-            ),
-        ];
+        const isNodeFullySelected = (node) =>
+            // Custom rules
+            this.resources.considerNodeFullySelected?.some((cb) => cb(node, selection)) ||
+            // Default rule
+            (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
+        return this.getTraversedNodes().filter(isNodeFullySelected);
     }
 
     /**
-     * Returns an array containing all the nodes traversed when walking the
-     * selection.
+     * Returns the nodes intersected by the current selection, up to the common
+     * ancestor container (inclusive).
      *
      * @returns {Node[]}
      */
     getTraversedNodes() {
         const selection = this.getEditableSelection({ deep: true });
-        const selectedTableCells = this.editable.querySelectorAll(".o_selected_td");
-        const iterator = this.document.createNodeIterator(selection.commonAncestorContainer);
-        let node;
-        do {
-            node = iterator.nextNode();
-        } while (
-            node &&
-            node !== selection.startContainer &&
-            !(selectedTableCells.length && node === selectedTableCells[0])
-        );
+        const { commonAncestorContainer: root } = selection;
 
-        let edgeNodes = new Set();
-        if (!selection.isCollapsed) {
-            edgeNodes = getUnselectedEdgeNodes(selection);
+        let traversedNodes = [
+            root,
+            ...descendants(root).filter((node) => selection.intersectsNode(node)),
+        ];
 
-            if (
-                !(selectedTableCells.length && node === selectedTableCells[0]) &&
-                node.nodeType === Node.ELEMENT_NODE &&
-                selection.startOffset > 0 &&
-                node.childNodes[selection.startOffset - 1].nodeName === "BR"
-            ) {
-                // Handle the cases:
-                // <p>ab<br>[</p><p>cd</p>] => [p2, cd]
-                // <p>ab<br>[<br>cd</p><p>ef</p>] => [br2, cd, p2, ef]
-                const targetBr = node.childNodes[selection.startOffset - 1];
-                while (node !== targetBr) {
-                    node = iterator.nextNode();
-                }
-                node = iterator.nextNode();
-            }
+        const modifiers = [
+            // Remove the editable from the list
+            (nodes) => (nodes[0] === this.editable ? nodes.slice(1) : nodes),
+            // Filter out nodes that have no content selected
+            (nodes) => {
+                const edgeNodes = getUnselectedEdgeNodes(selection);
+                return nodes.filter((node) => !edgeNodes.has(node));
+            },
+            // Custom modifiers
+            ...(this.resources.modifyTraversedNodes || []),
+        ];
+
+        for (const modifier of modifiers) {
+            traversedNodes = modifier(traversedNodes);
         }
 
-        let traversedNodes = new Set();
-        if (edgeNodes.has(node)) {
-            for (const edgeNode of descendants(node)) {
-                edgeNodes.add(edgeNode);
-            }
-        } else {
-            traversedNodes = new Set([node, ...descendants(node)]);
-        }
-        while (node && node !== selection.endContainer) {
-            node = iterator.nextNode();
-            if (node) {
-                const selectedTable = closestElement(node, ".o_selected_table");
-                if (selectedTable) {
-                    for (const selectedTd of selectedTable.querySelectorAll(".o_selected_td")) {
-                        traversedNodes.add(selectedTd);
-                        descendants(selectedTd).forEach((descendant) =>
-                            traversedNodes.add(descendant)
-                        );
-                    }
-                } else {
-                    // ignore edges nodes if they do not have content selected
-                    if (edgeNodes.has(node)) {
-                        continue;
-                    }
-                    traversedNodes.add(node);
-                }
-            }
-        }
-        if (node === selection.endContainer) {
-            // Handle the cases:
-            // [<p>ab</p><p>cd<br>]</p> => [ab, p2, cd, br]
-            // [<p>ab</p><p>cd<br>]<br>ef</p> => [ab, p2, cd, br1]
-            for (const childNode of node.childNodes) {
-                if (childNodeIndex(childNode) >= selection.endOffset) {
-                    break;
-                }
-                traversedNodes.add(childNode);
-                for (const descendant of descendants(traversedNodes)) {
-                    traversedNodes.add(descendant);
-                }
-            }
-        }
-        return [...traversedNodes];
+        return traversedNodes;
     }
 
     /**

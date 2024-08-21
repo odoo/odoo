@@ -344,3 +344,13 @@ test("Toolbar detect image namespace even if it is the only child of a p", async
     await waitFor(".o-we-toolbar");
     expect("button[name='image_delete']").toHaveCount(1);
 });
+
+test("Toolbar detects image namespace when there is text next to it", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid test-image" src="${base64Img}">abc</p>
+    `);
+    expect(".test-image").toHaveCount(1);
+    click("img");
+    await waitFor(".o-we-toolbar");
+    expect("button[name='image_delete']").toHaveCount(1);
+});

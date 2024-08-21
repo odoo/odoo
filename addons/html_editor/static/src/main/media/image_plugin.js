@@ -4,6 +4,7 @@ import { isImageUrl } from "@html_editor/utils/url";
 import { ImageDescription } from "./image_description";
 import { ImagePadding } from "./image_padding";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { boundariesOut } from "@html_editor/utils/position";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -174,14 +175,8 @@ export class ImagePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
-                const range = this.document.createRange();
-                range.selectNode(e.target);
-                this.shared.setSelection({
-                    anchorNode: range.startContainer,
-                    anchorOffset: range.startOffset,
-                    focusNode: range.endContainer,
-                    focusOffset: range.endOffset,
-                });
+                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
+                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
             }
         });
         this.fileViewer = createFileViewer();

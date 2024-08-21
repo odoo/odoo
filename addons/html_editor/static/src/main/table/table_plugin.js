@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { removeClass } from "@html_editor/utils/dom";
 import { getDeepestPosition, isProtected, isProtecting } from "@html_editor/utils/dom_info";
-import { ancestors, closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { ancestors, closestElement, descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
@@ -37,6 +37,8 @@ export class TablePlugin extends Plugin {
             element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
         onSelectionChange: p.updateSelectionTable.bind(p),
         colorApply: p.applyTableColor.bind(p),
+        modifyTraversedNodes: p.adjustTraversedNodes.bind(p),
+        considerNodeFullySelected: (node) => !!closestElement(node, ".o_selected_td"),
     });
 
     handleCommand(command, payload) {
@@ -524,5 +526,25 @@ export class TablePlugin extends Plugin {
                 this.shared.colorElement(td, color, mode);
             }
         }
+    }
+
+    adjustTraversedNodes(traversedNodes) {
+        const modifiedTraversedNodes = [];
+        const visitedTables = new Set();
+        for (const node of traversedNodes) {
+            const selectedTable = closestElement(node, ".o_selected_table");
+            if (selectedTable) {
+                if (visitedTables.has(selectedTable)) {
+                    continue;
+                }
+                visitedTables.add(selectedTable);
+                for (const selectedTd of selectedTable.querySelectorAll(".o_selected_td")) {
+                    modifiedTraversedNodes.push(selectedTd, ...descendants(selectedTd));
+                }
+            } else {
+                modifiedTraversedNodes.push(node);
+            }
+        }
+        return modifiedTraversedNodes;
     }
 }
