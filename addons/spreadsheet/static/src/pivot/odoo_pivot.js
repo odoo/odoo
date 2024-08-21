@@ -3,6 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { omit } from "@web/core/utils/objects";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
@@ -43,7 +44,12 @@ export class OdooPivot extends OdooViewsDataSource {
             },
             searchParams: {
                 domain: definition.domain,
-                context: definition.context,
+                context: omit(
+                    definition.context,
+                    "pivot_measures",
+                    "pivot_row_groupby",
+                    "pivot_column_groupby"
+                ),
             },
         };
         super(services, params);

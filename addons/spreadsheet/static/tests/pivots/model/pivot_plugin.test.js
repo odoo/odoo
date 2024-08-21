@@ -325,6 +325,53 @@ test("user context is combined with pivot context to fetch data", async function
     expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
 });
 
+test("Context is purged from PivotView related keys", async function (assert) {
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                cells: {
+                    A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                },
+            },
+        ],
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ name: "foo" }],
+                rows: [{ name: "bar" }],
+                domain: [],
+                measures: [{ name: "probability" }],
+                model: "partner",
+                context: {
+                    pivot_measures: ["__count"],
+                    // inverse row and col group bys
+                    pivot_row_groupby: ["test"],
+                    pivot_column_groupby: ["check"],
+                    dummyKey: "true",
+                },
+            },
+        },
+    };
+
+    const model = await createModelWithDataSource({
+        spreadsheetData,
+        mockRPC: function (route, { model, method, kwargs }) {
+            if (model === "partner" && method === "read_group") {
+                expect.step(`pop`);
+                const hasBadKeys = [
+                    "pivot_measures",
+                    "pivot_row_groupby",
+                    "pivot_column_groupby",
+                ].some((val) => val in (kwargs.context || {}));
+                expect(hasBadKeys).not.toBe(true);
+            }
+        },
+    });
+    await waitForDataLoaded(model);
+    expect.verifySteps(["pop", "pop", "pop", "pop"]);
+});
+
 test("fetch metadata only once per model", async function () {
     const spreadsheetData = {
         sheets: [
