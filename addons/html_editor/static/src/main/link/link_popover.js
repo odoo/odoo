@@ -14,6 +14,7 @@ export class LinkPopover extends Component {
         onClose: Function,
         getInternalMetaData: Function,
         getExternalMetaData: Function,
+        isImage: Boolean,
     };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
@@ -57,13 +58,17 @@ export class LinkPopover extends Component {
                 "",
             buttonSize: this.props.linkEl.className.match(/btn-(sm|lg)/)?.[1] || "",
             buttonStyle: this.initButtonStyle(this.props.linkEl.className),
+            isImage: this.props.isImage,
         });
         this.notificationService = useService("notification");
 
         this.http = useService("http");
 
         this.editingWrapper = useRef("editing-wrapper");
-        useAutofocus({ refName: this.state.label === "" ? "label" : "url", mobile: true });
+        useAutofocus({
+            refName: this.state.isImage || this.state.label !== "" ? "url" : "label",
+            mobile: true,
+        });
         onMounted(() => {
             if (!this.state.editing) {
                 this.loadAsyncLinkPreview();
@@ -89,6 +94,7 @@ export class LinkPopover extends Component {
         this.state.url = deducedUrl
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
+        this.loadAsyncLinkPreview();
         this.props.onApply(this.state.url, this.state.label, this.state.classes);
     }
     onClickEdit() {
@@ -108,7 +114,11 @@ export class LinkPopover extends Component {
         this.props.onRemove();
     }
     onClickAway(ev) {
-        if (this.editingWrapper?.el && !this.editingWrapper?.el.contains(ev.target)) {
+        if (
+            this.editingWrapper?.el &&
+            !this.editingWrapper?.el.contains(ev.target) &&
+            !this.props.linkEl.contains(ev.target)
+        ) {
             this.props.onClose();
         }
     }
