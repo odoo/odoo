@@ -7,7 +7,7 @@ from odoo.tools import format_list
 class FleetVehicleModelCategory(models.Model):
     _inherit = 'fleet.vehicle.model.category'
 
-    weight_capacity = fields.Float(string="Payload Capacity")
+    weight_capacity = fields.Float(string="Max Weight")
     weight_capacity_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_capacity_uom_name')
     volume_capacity = fields.Float(string="Max Volume")
     volume_capacity_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_capacity_uom_name')
@@ -17,7 +17,7 @@ class FleetVehicleModelCategory(models.Model):
         for record in self:
             additional_info = []
             if record.weight_capacity:
-                additional_info.append(_("%(weight_capacity)s %(payload_uom)s", weight_capacity=record.weight_capacity, payload_uom=record.weight_capacity_uom_name))
+                additional_info.append(_("%(weight_capacity)s %(weight_uom)s", weight_capacity=record.weight_capacity, weight_uom=record.weight_capacity_uom_name))
             if record.volume_capacity:
                 additional_info.append(_("%(volume_capacity)s %(volume_uom)s", volume_capacity=record.volume_capacity, volume_uom=record.volume_capacity_uom_name))
             if additional_info:
