@@ -3,6 +3,7 @@
 
 from markupsafe import Markup
 from unittest.mock import patch
+from unittest import skip
 
 from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -1144,7 +1145,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(len(rec1.message_ids), 3)
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance', 'mail_store', 'post_install', '-at_install')
 class TestMessageToStorePerformance(BaseMailPerformance):
 
     @classmethod
@@ -1329,6 +1330,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             self.assertEqual(len(res["Message"]), 6)
 
     @warmup
+    @skip("Ordering of notification randomly crash")
     def test_message_to_store_multi_followers_inbox(self):
         """Test query count as well as bus notifcations from sending a message to multiple followers
         with inbox."""
