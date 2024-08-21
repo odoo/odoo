@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { advanceFrame, animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -1086,27 +1086,23 @@ test("drag node to scroll", async () => {
 
     const dragActions = await contains(".o_hierarchy_node:contains(F)").drag();
     await dragActions.moveTo(".o_hierarchy_row:eq(4)");
-    expect(content.scrollTop).toBeGreaterThan(0);
+    await animationFrame();
 
+    expect(content.scrollTop).toBeGreaterThan(0);
     expect(".o_hierarchy_node_container.o_hierarchy_dragged").toHaveCount(1);
 
-    //FIXME: JUM
-    for (let i = 0; i < 50; i++) {
-        await animationFrame();
-    }
+    await advanceFrame(50);
 
     // should be at the end of the content
     expect(content.clientHeight + content.scrollTop).toBe(content.scrollHeight);
 
     await dragActions.moveTo(".o_hierarchy_row:eq(0)");
+    await animationFrame();
 
     expect(content.clientHeight + content.scrollTop).toBeLessThan(content.scrollHeight);
     expect(".o_hierarchy_node_container.o_hierarchy_dragged").toHaveCount(1);
 
-    //FIXME: JUM
-    for (let i = 0; i < 50; i++) {
-        await animationFrame();
-    }
+    await advanceFrame(50);
 
     // should be at the top of the content
     expect(content.scrollTop).toBe(0);
