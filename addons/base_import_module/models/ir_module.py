@@ -213,6 +213,14 @@ class IrModule(models.Model):
             imported_module=True,
         )
 
+        if ('knowledge.article' in self.env
+            and (article_record := self.env.ref(f"{module}.welcome_article", raise_if_not_found=False))
+            and article_record._name == 'knowledge.article'
+            and self.env.ref(f"{module}.welcome_article_body", raise_if_not_found=False)
+        ):
+            body = self.env['ir.qweb']._render(f"{module}.welcome_article_body", lang=self.env.user.lang)
+            article_record.write({'body': body})
+
         mod._update_from_terp(terp)
         _logger.info("Successfully imported module '%s'", module)
 
