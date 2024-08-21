@@ -4,7 +4,6 @@
 from contextlib import suppress
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import exceptions
@@ -116,7 +115,6 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
     @users('user_eventmanager')
     def test_event_mail_schedule(self):
         """ Test mail scheduling for events """
-        # create some registrations
         test_event = self.test_event.with_env(self.env)
         now = self.reference_now
         schedulers = self.env['event.mail'].search([('event_id', '=', test_event.id)])
@@ -125,52 +123,73 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         event_prev_scheduler = schedulers.filtered(lambda s: s.interval_type == 'before_event')
         event_next_scheduler = schedulers.filtered(lambda s: s.interval_type == 'after_event')
 
-        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
-            reg1 = self.env['event.registration'].create({
-                'event_id': test_event.id,
-                'name': 'Reg1',
-                'email': 'reg1@example.com',
-            })
-            reg2 = self.env['event.registration'].create({
-                'event_id': test_event.id,
-                'name': 'Reg2',
-                'email': 'reg2@example.com',
-            })
-            reg3_draft = self.env['event.registration'].with_user(self.user_eventuser).create({
-                'event_id': test_event.id,
-                'name': 'Reg3',
-                'email': 'reg3_draft@example.com',
-            })
-            reg4_cancel = self.env['event.registration'].with_user(self.user_eventuser).create({
-                'event_id': test_event.id,
-                'name': 'Reg4',
-                'email': 'reg4_cancel@example.com',
-            })
+        # check iterative work, update params to check call count
+        batch_size, render_limit = 2, 10
+        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
 
-        reg3_draft.action_set_draft()
-        reg4_cancel.action_cancel()
-        registrations = reg1 + reg2 + reg3_draft + reg4_cancel
+        # create some registrations
+        EventMailRegistration = type(self.env['event.mail.registration'])
+        exec_origin = EventMailRegistration._execute_on_registrations
+        with patch.object(
+                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+             ) as mock_exec, \
+             self.mock_datetime_and_now(now), self.mock_mail_gateway(), \
+             self.capture_triggers('event.event_mail_scheduler') as capture:
+            attendees = self.env['event.registration'].with_user(self.user_eventuser).create([
+                {
+                    'event_id': test_event.id,
+                    'name': f'Reg{idx}',
+                    'email': f'reg1{idx}@example.com',
+                } for idx in range(15)] + [{
+                    'event_id': test_event.id,
+                    'name': 'RegDraft',
+                    'email': 'reg_draft@example.com',
+                    'state': 'draft',
+                }, {
+                    'event_id': test_event.id,
+                    'name': 'RegCancel',
+                    'email': 'reg_cancel@example.com',
+                    'state': 'cancel',
+                }
+            ])
+
+        # iterative check
+        self.assertEqual(
+            mock_exec.call_count, 5,
+            "Should have called 5 times execution (batch of 2 until 10 registrations)"
+        )
 
         # REGISTRATIONS / PRE SCHEDULERS
         # --------------------------------------------------
 
         # check registration state
-        self.assertListEqual(registrations.mapped('state'), ['open', 'open', 'draft', 'cancel'], 'Registrations: should be auto-confirmed')
-        self.assertListEqual(registrations.mapped('create_date'), [now] * 4, 'Registrations: should have open date set to confirm date')
+        self.assertTrue(all(reg.state == 'open' for reg in attendees[:15]), 'Registrations: should be auto-confirmed')
+        self.assertListEqual(attendees[15:].mapped('state'), ['draft', 'cancel'])
+        self.assertTrue(all(reg.create_date == now for reg in attendees), 'Registrations: should have open date set to confirm date')
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / registration)')
-        for mail_registration in after_sub_scheduler.mail_registration_ids:
+        self.assertEqual(
+            len(after_sub_scheduler.mail_registration_ids), 15,
+            'Should have 15 scheduled communication (1 / registration), as we schedule more'
+            'than cron limit as create should be quick.')
+        for idx, mail_registration in enumerate(after_sub_scheduler.mail_registration_ids):
             self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0))
-            self.assertTrue(mail_registration.mail_sent, 'event: registration mail should be sent at registration creation')
-        self.assertTrue(after_sub_scheduler.mail_done, 'event: all subscription mails should have been sent')
+            if idx < 10:
+                self.assertTrue(mail_registration.mail_sent, 'event: registration mail should be sent at registration creation')
+            else:
+                self.assertFalse(mail_registration.mail_sent, 'event: registration mail should be scheduled, too much for limit')
+        self.assertFalse(after_sub_scheduler.mail_done, 'event: not all subscription mails should have been sent as too much for limit')
         self.assertEqual(after_sub_scheduler.mail_state, 'running')
-        self.assertEqual(after_sub_scheduler.mail_count_done, 4)
+        self.assertEqual(after_sub_scheduler.mail_count_done, 10)
+
+        # cron should have been triggered for the remaining registrations
+        self.assertSchedulerCronTriggers(capture, [now])
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 4, 'event: should have 4 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 10, 'event: should have 10 scheduled emails (1 / executed registration)')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
+            [formataddr((reg.name, reg.email)) for reg in attendees[:10]],
             'outgoing',
             content=None,
             fields_values={
@@ -179,37 +198,95 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             })
 
         # same for second scheduler: scheduled but not sent
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / registration)')
+        self.assertEqual(
+            len(after_sub_scheduler_2.mail_registration_ids), 15,
+            'Should have 15 scheduled communication (1 / registration)')
         for mail_registration in after_sub_scheduler_2.mail_registration_ids:
             self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0) + relativedelta(hours=1))
             self.assertFalse(mail_registration.mail_sent, 'event: registration mail should be scheduled, not sent')
         self.assertFalse(after_sub_scheduler_2.mail_done, 'event: all subscription mails should be scheduled, not sent')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 0)
 
+        # RE-RUN SCHEDULER TO COMPLETE SENDING
+        # --------------------------------------------------
+
+        with patch.object(
+                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+             ) as mock_exec, \
+             self.mock_datetime_and_now(now), self.mock_mail_gateway(), \
+             self.capture_triggers('event.event_mail_scheduler') as capture:
+            self.event_cron_id.method_direct_trigger()
+
+        # iterative check
+        self.assertEqual(
+            mock_exec.call_count, 3,
+            "Should have called 3 times execution (batch of 2 with 5 registrations left = 3 iterations)"
+        )
+
+        # verify that subscription scheduler was auto-executed after each registration
+        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 15)
+        for mail_registration in after_sub_scheduler.mail_registration_ids:
+            self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0))
+            self.assertTrue(mail_registration.mail_sent)
+        self.assertTrue(after_sub_scheduler.mail_done)
+        self.assertEqual(after_sub_scheduler.mail_state, 'running')
+        self.assertEqual(
+            after_sub_scheduler.mail_count_done, 15,
+            'Should have sent all mails, as cron limit is set to 20'
+        )
+
+        # check emails effectively sent
+        self.assertEqual(len(self._new_mails), 5, 'event: should have 5 scheduled emails (1 / executed registration)')
+        self.assertMailMailWEmails(
+            [formataddr((reg.name, reg.email)) for reg in attendees[10:15]],
+            'outgoing',
+            content=None,
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Confirmation for {test_event.name}',
+            })
+
+        # SECOND ATTENDEE-BASED SCHEDULER (LATER) - UPDATE ITERATIVE
+        # --------------------------------------------------
+
+        # check default behavior, batch of 50 to run up to 1000 attendees
+        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', False)
+        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', False)
+
         # execute event reminder scheduler explicitly, before scheduled date -> should not do anything
-        with freeze_time(now), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
             after_sub_scheduler_2.execute()
         self.assertFalse(any(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
         self.assertFalse(after_sub_scheduler_2.mail_done)
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 0)
         self.assertEqual(len(self._new_mails), 0, 'event: should not send mails before scheduled date')
 
-        # execute event reminder scheduler explicitly, right at scheduled date -> should sent mails
+        # execute event reminder scheduler, right at scheduled date -> should sent mails
         now_registration = now + relativedelta(hours=1)
-        with freeze_time(now_registration), self.mock_mail_gateway():
-            after_sub_scheduler_2.execute()
+        with patch.object(
+                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+             ) as mock_exec, \
+             self.mock_datetime_and_now(now_registration), self.mock_mail_gateway(), \
+             self.capture_triggers('event.event_mail_scheduler') as capture:
+            self.event_cron_id.method_direct_trigger()
+
+        # iterative check
+        self.assertEqual(
+            mock_exec.call_count, 1,
+            "Should have called 1 times execution (batch of 50 with 15 registrations = 1 iteration)"
+        )
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / open registration)')
-        self.assertListEqual(after_sub_scheduler_2.mail_registration_ids.mapped('mail_sent'), [True, True, False, False])
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 15, 'event: should have 15 scheduled communication (1 / registration)')
+        self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
         self.assertTrue(after_sub_scheduler_2.mail_done, 'event: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
-        self.assertEqual(after_sub_scheduler_2.mail_count_done, 2)
+        self.assertEqual(after_sub_scheduler_2.mail_count_done, 15)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / open registration)')
+        self.assertEqual(len(self._new_mails), 15, 'event: should have 15 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
+            [formataddr((reg.name, reg.email)) for reg in attendees[:15]],
             'outgoing',
             content=None,
             fields_values={
@@ -225,7 +302,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
 
         # simulate cron running before scheduled date -> should not do anything
         now_start = self.event_date_begin + relativedelta(hours=-25, microsecond=654321)
-        with freeze_time(now_start), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
             self.event_cron_id.method_direct_trigger()
 
         self.assertFalse(event_prev_scheduler.mail_done)
@@ -235,7 +312,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
 
         # execute cron to run schedulers after scheduled date
         now_start = self.event_date_begin + relativedelta(hours=-23, microsecond=654321)
-        with freeze_time(now_start), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
             self.event_cron_id.method_direct_trigger()
 
         # check that scheduler is finished
@@ -243,9 +320,9 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         self.assertEqual(event_prev_scheduler.mail_state, 'sent', 'event: reminder scheduler should have run')
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'event: should have scheduled 2 mails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 15, 'event: should have scheduled 15 mails (1 / registration)')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
+            [formataddr((reg.name, reg.email)) for reg in attendees[:15]],
             'outgoing',
             content=None,
             fields_values={
@@ -257,7 +334,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # --------------------------------------------------
 
         with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
-            reg3 = self.env['event.registration'].create({
+            new_attendee = self.env['event.registration'].create({
                 'event_id': test_event.id,
                 'name': 'Reg3',
                 'email': 'reg3@example.com',
@@ -265,7 +342,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             })
 
         # no more seats
-        self.assertEqual(reg3.state, 'draft')
+        self.assertEqual(new_attendee.state, 'draft')
 
         # schedulers state untouched
         self.assertTrue(event_prev_scheduler.mail_done)
@@ -277,22 +354,22 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # NOTE: currently all schedulers are based on create_date
         # meaning several communications may be sent in the time time
         with self.mock_datetime_and_now(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
-            reg3.action_confirm()
+            new_attendee.action_confirm()
 
         # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 5, 'event: should have 5 scheduled communication (1 / registration)')
-        new_mail_reg = after_sub_scheduler.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
+        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 16, 'event: should have 16 scheduled communication (1 / registration)')
+        new_mail_reg = after_sub_scheduler.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == new_attendee)
         self.assertEqual(new_mail_reg.scheduled_date, now_start.replace(microsecond=0))
         self.assertTrue(new_mail_reg.mail_sent, 'event: registration mail should be sent at registration creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'event: all subscription mails should have been sent')
-        self.assertEqual(after_sub_scheduler.mail_count_done, 5)
+        self.assertEqual(after_sub_scheduler.mail_count_done, 16)
         # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 5, 'event: should have 5 scheduled communication (1 / registration)')
-        new_mail_reg = after_sub_scheduler_2.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 16, 'event: should have 16 scheduled communication (1 / registration)')
+        new_mail_reg = after_sub_scheduler_2.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == new_attendee)
         self.assertEqual(new_mail_reg.scheduled_date, now_start.replace(microsecond=0) + relativedelta(hours=1))
         self.assertTrue(new_mail_reg.mail_sent, 'event: registration mail should be sent at registration creation')
         self.assertTrue(after_sub_scheduler_2.mail_done, 'event: all subscription mails should have been sent')
-        self.assertEqual(after_sub_scheduler_2.mail_count_done, 3)
+        self.assertEqual(after_sub_scheduler_2.mail_count_done, 16)
 
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have 1 scheduled emails (new registration only)')
@@ -301,7 +378,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             self.assertEqual(mail.email_from, self.user_eventmanager.company_id.email_formatted)
             self.assertEqual(mail.subject, f'Confirmation for {test_event.name}')
             self.assertEqual(mail.state, 'outgoing')
-            self.assertEqual(mail.email_to, formataddr((reg3.name, reg3.email)))
+            self.assertEqual(mail.email_to, formataddr((new_attendee.name, new_attendee.email)))
 
         # POST SCHEDULERS (MOVE FORWARD IN TIME)
         # --------------------------------------------------
@@ -311,18 +388,18 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # execute event reminder scheduler explicitly after its schedule date
         new_end = self.event_date_end + relativedelta(hours=2)
         with self.mock_datetime_and_now(new_end), self.mock_mail_gateway():
-            (reg1 + reg2 + reg3).invalidate_recordset(['event_date_range'])
+            (attendees + new_attendee).invalidate_recordset(['event_date_range'])
             self.event_cron_id.method_direct_trigger()
 
         # check that scheduler is finished
         self.assertTrue(event_next_scheduler.mail_done, 'event: reminder scheduler should should have run')
         self.assertEqual(event_next_scheduler.mail_state, 'sent', 'event: reminder scheduler should have run')
-        self.assertEqual(event_next_scheduler.mail_count_done, 3)
+        self.assertEqual(event_next_scheduler.mail_count_done, 16)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 3, 'event: should have scheduled 3 mails, one for each registration')
+        self.assertEqual(len(self._new_mails), 16, 'event: should have scheduled 3 mails, one for each registration')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email)), formataddr((reg3.name, reg3.email))],
+        [formataddr((reg.name, reg.email)) for reg in attendees[:15] + new_attendee],
             'outgoing',
             content=None,
             fields_values={
@@ -603,7 +680,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
 
         # execute cron to run schedulers
         now_start = event_date_begin + relativedelta(hours=-3)
-        with freeze_time(now_start), self.mock_mail_gateway():
+        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
             event_cron_id.method_direct_trigger()
 
         # check that scheduler is not executed

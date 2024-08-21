@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon, TestEventMailCommon
 from odoo.tests import tagged, users
@@ -191,15 +192,47 @@ class TestEventMailSchedule(TestEventMailCommon):
         self.assertEqual(sub_sms.mail_count_done, 0)
         self.assertFalse(sub_sms.mail_done)
 
+        # setup batch and cron limit sizes to check iterative behavior
+        batch_size, cron_limit = 5, 20
+        self.env["ir.config_parameter"].sudo().set_param("mail.batch_size", batch_size)
+        self.env["ir.config_parameter"].sudo().set_param("mail.render.cron.limit", cron_limit)
+
         # create registrations -> each one receives its on subscribe communication
-        with self.mock_datetime_and_now(self.reference_now + timedelta(hours=1)), \
+        EventMailRegistration = type(self.env['event.mail.registration'])
+        exec_origin = EventMailRegistration._execute_on_registrations
+        with patch.object(
+                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+             ) as mock_exec, \
+             self.mock_datetime_and_now(self.reference_now + timedelta(hours=1)), \
              self.mockSMSGateway(), \
              self.mock_mail_gateway(), \
              self.capture_triggers('event.event_mail_scheduler') as capture:
             self._create_registrations(test_event, 30)
+
+        # iterative work on registrations: only 20 (cron limit) are taken into account
+        self.assertEqual(sub_mail.mail_count_done, 20)
+        self.assertEqual(sub_sms.mail_count_done, 20)
+        self.assertEqual(mock_exec.call_count, 8, "Batch of 5 to make 20 registrations: 4 calls / scheduler")
+        # cron should have been triggered for the remaining registrations
+        self.assertSchedulerCronTriggers(capture, [self.reference_now + timedelta(hours=1)] * 2)
+
+        # iterative work on registrations, force cron to close those
+        with patch.object(
+                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+             ) as mock_exec, \
+             self.mock_datetime_and_now(self.reference_now + timedelta(hours=1)), \
+             self.mockSMSGateway(), \
+             self.mock_mail_gateway(), \
+             self.capture_triggers('event.event_mail_scheduler') as capture:
+            self.event_cron_id.method_direct_trigger()
+
+        # finished sending communications
         self.assertEqual(sub_mail.mail_count_done, 30)
+        self.assertTrue(sub_mail.mail_done)
         self.assertEqual(sub_sms.mail_count_done, 30)
+        self.assertTrue(sub_sms.mail_done)
         self.assertFalse(capture.records)
+        self.assertEqual(mock_exec.call_count, 4, "Batch of 5 to make 10 remaining registrations: 2 calls / scheduler")
 
 
 @tagged('event_mail', 'post_install', '-at_install')
