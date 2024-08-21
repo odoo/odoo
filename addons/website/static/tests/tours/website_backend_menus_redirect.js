@@ -26,7 +26,9 @@ registry.category("web_tour.tours").add('website_backend_menus_redirect', {
 }, {
     isActive: ["community"],
     content: 'Check that we landed on the apps page (Apps), and not the Home Action page (Settings)',
-    trigger: '.oe_module_vignette',
-    run: "click",
+    // It cannot be the name of the menu here, as that would still be displayed
+    // even when the default home action would be loaded. So instead, use a
+    // class used by the Apps Kanban.
+    trigger: '.oe_module_flag:not(:visible)',
 }
 ]});
