@@ -15,7 +15,6 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
         ...snippetsEditor.SnippetsMenu.props,
         linkToolProps: { type: Object, optional: true },
         toolbarInfos: { type: Object, optional: true },
-        selectedTheme: { type: Object },
         toggleCodeView: { type: Function },
     };
     static components = {
@@ -59,7 +58,6 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _computeSnippetTemplates(html) {
-        this.env.switchImages(this.props.selectedTheme, $(html));
         html.querySelectorAll("img").forEach((img) => img.setAttribute("loading", "lazy"));
         return super._computeSnippetTemplates(html);
     }

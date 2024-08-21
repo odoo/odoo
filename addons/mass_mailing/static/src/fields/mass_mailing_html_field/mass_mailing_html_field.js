@@ -4,14 +4,14 @@ import { LinkPopoverPlugin } from "@html_editor/main/link/link_popover_plugin";
 import { LinkToolsPlugin } from "@html_editor/main/link/link_tools_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { EventBus, onWillStart, reactive, useRef, useSubEnv } from "@odoo/owl";
+import { EventBus, onWillStart, reactive, useRef } from "@odoo/owl";
 import { getBundle, LazyComponent, loadBundle } from "@web/core/assets";
 import { ensureJQuery } from "@web/core/ensure_jquery";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
-import { MassMailingTemplateSelector, switchImages } from "./mass_mailing_template_selector";
+import { MassMailingTemplateSelector } from "./mass_mailing_template_selector";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { parseHTML } from "@html_editor/utils/html";
 
@@ -57,10 +57,6 @@ export class MassMailingHtmlField extends HtmlField {
 
         this.focusEditableOnLoad = false;
         this.snippetsMenuBus = new EventBus();
-        useSubEnv({
-            switchImages,
-            fieldConfig: this.fieldConfig,
-        });
 
         this.editorRef = useRef("editor");
 
@@ -272,7 +268,6 @@ export class MassMailingHtmlField extends HtmlField {
             toolbarInfos: state.toolbarInfos,
             toggleCodeView: this.toggleCodeView.bind(this),
             linkToolProps: state.linkToolState.linkToolProps,
-            selectedTheme: state.selectedTheme,
         };
     }
     async onSelectMassMailingTemplate(templateInfos, templateHTML) {
@@ -283,8 +278,6 @@ export class MassMailingHtmlField extends HtmlField {
         if (templateInfos.name === "basic") {
             this.focusEditableOnLoad = true;
         }
-
-        this.state.selectedTheme = templateInfos;
     }
 
     // -----------------------------------------------------------------------------
