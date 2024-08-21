@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 class Alert extends Component {
     static template = xml`
-        <div t-attf-class="alert fixed-top p-1 rounded-0 alert-{{props.type}} fade show d-flex align-items-center justify-content-center" role="alert" style="height:48px">
+        <div t-attf-class="alert navbar-height fixed-top p-1 rounded-0 alert-{{props.type}} fade show d-flex align-items-center justify-content-center" role="alert">
             <strong class="flex-grow-1 text-center" t-esc="props.message" />
         </div>
     `;
