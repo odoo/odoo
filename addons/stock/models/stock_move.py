@@ -562,9 +562,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                 and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
             move.show_lots_text = move.has_tracking != 'none'\
                 and move.picking_type_id.use_create_lots\
-                and not move.picking_type_id.use_existing_lots \
                 and move.state != 'done' \
-                and not move.origin_returned_move_id.id
+                and not move.origin_returned_move_id.id\
+                and move.picking_type_id.code == 'incoming'
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -856,7 +856,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             if not lot_name:
                 continue
             vals['lot_id'] = lot_id_by_name[lot_name]
-            vals['lot_name'] = False
 
     @api.model
     def split_lots(self, lots):
@@ -871,6 +870,12 @@ Please change the quantity done or the rounding precision of your unit of measur
         split_lines = lots.split(breaking_char)
         split_lines = list(filter(None, split_lines))
         move_lines_vals = []
+
+        context = self.env.context.get('lots_context', {})
+        picking_type = self.env['stock.picking.type'].browse(context.get('picking_type_id', None))
+        product = self.env['product.product'].browse(context.get('default_product_id', None))
+        company = self.env['res.company'].browse(context.get('company_id', None))
+
         for lot_text in split_lines:
             move_line_vals = {
                 'lot_name': lot_text,
@@ -894,6 +899,19 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # don't try to guess and simply use the full string as the lot name.
                     move_line_vals['lot_name'] = lot_text
                     break
+            if picking_type.use_existing_lots:
+                lot_id = self.env['stock.lot'].search([
+                    ('product_id', '=', product.id),
+                    ('name', '=', lot_text),
+                    ('company_id', '=', company.id),
+                ])
+                if not lot_id:
+                    lot_id = self.env['stock.lot'].create({
+                        'product_id': product.id,
+                        'name': lot_text,
+                        'company_id': company.id,
+                    })
+                move_line_vals['lot_id'] = lot_id.id
             move_lines_vals.append(move_line_vals)
         return move_lines_vals
 
@@ -911,17 +929,18 @@ Please change the quantity done or the rounding precision of your unit of measur
         for key in context:
             if key.startswith('default_'):
                 default_vals[remove_prefix(key, 'default_')] = context[key]
+        product = self.env['product.product'].browse(default_vals['product_id'])
 
         vals_list = []
         if mode == 'serial':
-            lot_names = self.env['stock.lot'].generate_lot_names(first_lot, count)
+            lot_vals = self.env['stock.lot'].generate_lot_names(first_lot, count)
         elif mode == 'import':
-            lot_names = self.split_lots(lot_text)
-        for lot in lot_names:
+            lot_vals = self.with_context(lots_context=context).split_lots(lot_text)
+
+        for lot in lot_vals:
             if not lot.get('quantity'):
                 lot['quantity'] = 1
             loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
-            product = self.env['product.product'].browse(default_vals['product_id'])
             loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
             vals_list.append({**default_vals,
                              **lot,

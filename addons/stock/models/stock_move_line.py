@@ -223,6 +223,11 @@ class StockMoveLine(models.Model):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
+    @api.onchange('lot_name')
+    def _onchange_lot_name(self):
+        if self.product_id.tracking == 'serial' and self.lot_id:
+            self.lot_id.name = self.lot_name
+
     @api.onchange('quantity', 'product_uom_id')
     def _onchange_quantity(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
