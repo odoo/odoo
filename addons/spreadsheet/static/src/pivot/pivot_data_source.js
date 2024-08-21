@@ -10,6 +10,7 @@ import { EvaluationError } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 import { PivotRuntimeDefinition } from "./pivot_runtime";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
+import { omit } from "@web/core/utils/objects";
 /**
  * @typedef {import("@spreadsheet").Pivot<OdooPivotRuntimeDefinition>} IPivot
  * @typedef {import("./pivot_runtime").PivotMeasure} PivotMeasure
@@ -38,7 +39,12 @@ export class OdooPivot extends OdooViewsDataSource {
             },
             searchParams: {
                 domain: definition.domain,
-                context: definition.context,
+                context: omit(
+                    definition.context,
+                    "pivot_measures",
+                    "pivot_row_groupby",
+                    "pivot_column_groupby"
+                ),
             },
         };
         super(services, params);
