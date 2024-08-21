@@ -191,6 +191,7 @@ class Groups(models.Model):
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
         'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
+    access_ids = fields.One2many('ir.access', 'group_id', string="Access Rules", copy=True)
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
     comment = fields.Text(translate=True)
@@ -574,7 +575,7 @@ class Users(models.Model):
     def _fetch_query(self, query, fields):
         records = super()._fetch_query(query, fields)
         if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
-            if self.check_access_rights('write', raise_exception=False):
+            if self.browse().has_access('write'):
                 return records
             for fname in USER_PRIVATE_FIELDS:
                 self.env.cache.update(records, self._fields[fname], repeat('********'))

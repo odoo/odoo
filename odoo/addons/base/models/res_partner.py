@@ -689,7 +689,7 @@ class Partner(models.Model):
             self.invalidate_recordset(['user_ids'])
             users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
             if users:
-                if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):
+                if self.env['res.users'].sudo(False).has_access('write'):
                     error_msg = _('You cannot archive contacts linked to an active user.\n'
                                   'You first need to archive their associated user.\n\n'
                                   'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
@@ -727,7 +727,7 @@ class Partner(models.Model):
         result = result and super(Partner, self).write(vals)
         for partner in self:
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
-                self.env['res.users'].check_access_rights('write')
+                self.env['res.users'].check_access('write')
             partner._fields_sync(vals)
         return result
 
@@ -758,7 +758,7 @@ class Partner(models.Model):
         users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
         if not users:
             return  # no linked user, operation is allowed
-        if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):
+        if self.env['res.users'].sudo(False).has_access('write'):
             error_msg = _('You cannot delete contacts linked to an active user.\n'
                           'You should rather archive them after archiving their associated user.\n\n'
                           'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))

@@ -53,8 +53,7 @@ class IrBinary(models.AbstractModel):
         if record._name == 'ir.attachment':
             return record.validate_access(access_token)
 
-        record.check_access_rights('read')
-        record.check_access_rule('read')
+        record.check_access('read')
         return record
 
     def _record_to_stream(self, record, field_name):

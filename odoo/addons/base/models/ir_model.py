@@ -1776,8 +1776,7 @@ class IrModelConstraint(models.Model):
     ]
 
     def unlink(self):
-        self.check_access_rights('unlink')
-        self.check_access_rule('unlink')
+        self.check_access('unlink')
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
             name = data.name
@@ -2623,7 +2622,7 @@ class IrModelData(models.Model):
     def toggle_noupdate(self, model, res_id):
         """ Toggle the noupdate flag on the external id of the record """
         record = self.env[model].browse(res_id)
-        if record.check_access_rights('write'):
+        if record.browse().has_access('write'):
             for xid in self.search([('model', '=', model), ('res_id', '=', res_id)]):
                 xid.noupdate = not xid.noupdate
 

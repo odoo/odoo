@@ -251,8 +251,7 @@ class TestResConfigExecute(TransactionCase):
 
         forbidden_models_fields = defaultdict(set)
         for model in models_to_check:
-            has_read_access = self.env[model].with_user(user).check_access_rights(
-                'read', raise_exception=False)
+            has_read_access = self.env[model].with_user(user).has_access('read')
             if not has_read_access:
                 forbidden_models_fields[model] = models_to_check[model]
 

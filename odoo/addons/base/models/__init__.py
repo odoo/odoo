@@ -3,6 +3,7 @@
 from . import assetsbundle
 
 from . import ir_model
+from . import ir_access
 from . import ir_sequence
 from . import ir_ui_menu
 from . import ir_ui_view

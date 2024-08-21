@@ -67,11 +67,11 @@ class TestORM(TransactionCase):
             'groups_id': [Command.set([self.ref('base.group_user')])],
         })
 
-        partner_model = self.env['ir.model'].search([('model','=','res.partner')])
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'Y is invisible',
-            'domain_force': [('id', '!=', p1.id)],
-            'model_id': partner_model.id,
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'mode': 'rwcd',
+            'domain': [('id', '!=', p1.id)],
         })
 
         # search as unprivileged user

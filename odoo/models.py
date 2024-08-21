@@ -1867,7 +1867,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         :raise AccessError: if user is not allowed to access requested information
         """
-        self.check_access_rights('read')
+        self.browse().check_access('read')
 
         if expression.is_false(self, domain):
             if not groupby:
@@ -3149,7 +3149,7 @@ class BaseModel(metaclass=MetaModel):
         :param full_name: Name of the field / property
             (e.g. "property.integer")
         """
-        self.check_access_rights("read")
+        self.browse().check_access("read")
         field_name, property_name = full_name.split(".")
         check_property_field_value_name(property_name)
         if field_name not in self._fields:
@@ -3731,9 +3731,8 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
 
-        self.check_access_rights('write')
+        self.check_access('write')
         self.check_field_access_rights('write', [field_name])
-        self.check_access_rule('write')
 
         valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         source_lang = source_lang or 'en_US'
@@ -3977,31 +3976,29 @@ class BaseModel(metaclass=MetaModel):
         if not fields_to_fetch:
             # there is nothing to fetch, but we expect an error anyway in case
             # self is not accessible
-            self.check_access_rights('read')
             try:
-                self.check_access_rule('read')
+                self.check_access('read')
             except MissingError:
                 # Method fetch() should never raise a MissingError, but method
-                # check_access_rule() can, because it must read fields on self.
+                # check_access() can, because it must read fields on self.
                 # So we restrict 'self' to existing records (to avoid an extra
                 # exists() at the end of the method).
-                self.exists().check_access_rule('read')
+                self.exists().check_access('read')
             return
 
         # first determine a query that satisfies the domain and access rules
         if any(field.column_type for field in fields_to_fetch):
             query = self.with_context(active_test=False)._search([('id', 'in', self.ids)])
         else:
-            self.check_access_rights('read')
             try:
-                self.check_access_rule('read')
+                self.check_access('read')
             except MissingError:
                 # Method fetch() should never raise a MissingError, but method
-                # check_access_rule() can, because it must read fields on self.
+                # check_access() can, because it must read fields on self.
                 # So we restrict 'self' to existing records (to avoid an extra
                 # exists() at the end of the method).
                 self = self.exists()
-                self.check_access_rule('read')
+                self.check_access('read')
             query = self._as_query(ordered=False)
 
         # fetch the fields
@@ -4011,7 +4008,7 @@ class BaseModel(metaclass=MetaModel):
         if fetched != self:
             forbidden = (self - fetched).exists()
             if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+                raise self.env['ir.access']._make_access_error(forbidden, 'read')
 
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> list[Field]:
         """
@@ -4273,6 +4270,57 @@ class BaseModel(metaclass=MetaModel):
                 })
             raise UserError("\n".join(lines))
 
+    def check_access(self, operation: str) -> None:
+        """ Verify that the current user is allowed to perform ``operation`` on
+        all the records in ``self``.  The method raises some :class:`AccessError`
+        if the operation is forbidden on any record in ``self``.
+        """
+        if self.env.su:
+            return
+
+        # check for the existence of permissions first
+        if self.env['ir.access']._get_access_domain(self._name, operation) is None:
+            raise self.env['ir.access']._make_access_error(self.browse(), operation)
+
+        if not self:
+            return
+
+        accessible = self._filter_access(operation)
+        if len(accessible) < len(self):
+            forbidden = self - accessible
+            raise self.env['ir.access']._make_access_error(forbidden, operation)
+
+    def has_access(self, operation: str) -> bool:
+        """ Return whether the current user is allowed to perform ``operation``
+        on all the records in ``self``.  In particular, when ``self`` is empty,
+        this returns whether the current user has some permission to perform
+        ``operation`` on the model in general.
+        """
+        if self.env.su:
+            return True
+        if self.env['ir.access']._get_access_domain(self._name, operation) is None:
+            return False
+        if not self:
+            return True
+        return len(self._filter_access(operation)) == len(self)
+
+    def _filter_access(self, operation):
+        """ Return the subset of ``self`` for which ``operation`` is allowed for
+        the current user.
+        """
+        if self.env.su or not any(self._ids):
+            # by convention new records are accessible
+            return self
+
+        # we don't support a mix of real records and new records
+        assert all(self._ids), "Unexpected mix of real and new records"
+
+        domain = self.env['ir.access']._get_access_domain(self._name, operation)
+        if domain is None:
+            return self.browse()
+
+        return self.sudo().filtered_domain(domain).with_env(self.env)
+
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
         """ Verify that the given operation is allowed for the current user accord to ir.model.access.
@@ -4283,7 +4331,10 @@ class BaseModel(metaclass=MetaModel):
         :rtype: bool
         :raise AccessError: if the operation is forbidden and raise_exception is True
         """
-        return self.env['ir.model.access'].check(self._name, operation, raise_exception)
+        warnings.warn("Since 18.0, check_access_rights() is deprecated; use check_access() instead.")
+        if not raise_exception:
+            return self.browse().has_access(operation)
+        self.browse().check_access(operation)
 
     def check_access_rule(self, operation):
         """ Verify that the given operation is allowed for the current user according to ir.rules.
@@ -4292,62 +4343,17 @@ class BaseModel(metaclass=MetaModel):
         :return: None if the operation is allowed
         :raise UserError: if current ``ir.rules`` do not permit this operation.
         """
-        if self.env.su:
-            return
-
-        # SQL Alternative if computing in-memory is too slow for large dataset
-        # invalid = self - self._filter_access_rules(operation)
-        invalid = self - self._filter_access_rules_python(operation)
-        if not invalid:
-            return
-
-        forbidden = invalid.exists()
-        if forbidden:
-            # the invalid records are (partially) hidden by access rules
-            raise self.env['ir.rule']._make_access_error(operation, forbidden)
-
-        # If we get here, the invalid records are not in the database.
-        if operation in ('read', 'unlink'):
-            # No need to warn about deleting an already deleted record.
-            # And no error when reading a record that was deleted, to prevent spurious
-            # errors for non-transactional search/read sequences coming from clients.
-            return
-        _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
-        raise MissingError(
-            _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
-            + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
-                _('Document type:'), self._name, _('Operation:'), operation,
-                _('Records:'), invalid.ids[:6], _('User:'), self._uid,
-            )
-        )
+        warnings.warn("Since 18.0, check_access_rule() is deprecated; use check_access() instead.")
+        self.check_access(operation)
 
     def _filter_access_rules(self, operation):
         """ Return the subset of ``self`` for which ``operation`` is allowed. """
-        if self.env.su:
-            return self
-
-        if not self._ids:
-            return self
-
-        query = Query(self.env, self._table, self._table_sql)
-        self._apply_ir_rules(query, operation)
-        if not query.where_clause:
-            return self
-
-        # determine ids in database that satisfy ir.rules
-        query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(self.ids)))
-        valid_ids = set(query)
-
-        # return new ids without origin and ids with origin in valid_ids
-        return self.browse([
-            it
-            for it in self._ids
-            if not (it or it.origin) or (it or it.origin) in valid_ids
-        ])
+        warnings.warn("Since 18.0, _filter_access_rules() is deprecated; use _filter_access() instead.")
+        return self._filter_access(operation)
 
     def _filter_access_rules_python(self, operation):
-        dom = self.env['ir.rule']._compute_domain(self._name, operation)
-        return self.sudo().filtered_domain(dom or [])
+        warnings.warn("Since 18.0, _filter_access_rules() is deprecated; use _filter_access() instead.")
+        return self._filter_access(operation)
 
     def unlink(self):
         """ unlink()
@@ -4360,8 +4366,7 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return True
 
-        self.check_access_rights('unlink')
-        self.check_access_rule('unlink')
+        self.check_access('unlink')
 
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
@@ -4496,9 +4501,8 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return True
 
-        self.check_access_rights('write')
+        self.check_access('write')
         self.check_field_access_rights('write', vals.keys())
-        self.check_access_rule('write')
         env = self.env
 
         bad_names = {'id', 'parent_path'}
@@ -4747,7 +4751,7 @@ class BaseModel(metaclass=MetaModel):
             return self.browse()
 
         self = self.browse()
-        self.check_access_rights('create')
+        self.check_access('create')
 
         new_vals_list = self._prepare_create_values(vals_list)
 
@@ -5074,7 +5078,7 @@ class BaseModel(metaclass=MetaModel):
 
         # check Python constraints for stored fields
         records._validate_fields(name for data in data_list for name in data['stored'])
-        records.check_access_rule('create')
+        records.check_access('create')
         return records
 
     def _compute_field_value(self, field):
@@ -5337,8 +5341,7 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # apply main rules on the object
-        Rule = self.env['ir.rule']
-        domain = Rule._compute_domain(self._name, mode)
+        domain = self.env['ir.access']._get_access_domain(self._name, mode)
         if domain:
             expression.expression(domain, self.sudo(), self._table, query)
 
@@ -5516,7 +5519,7 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].check_field_access_rights('read', field_names)
 
         # also take into account the fields in the record rules
-        if ir_rule_domain := self.env['ir.rule']._compute_domain(self._name, 'read'):
+        if ir_rule_domain := self.env['ir.access']._get_access_domain(self._name, 'read'):
             collect_from_domain(self, ir_rule_domain)
 
         # flush model dependencies (recursively)
@@ -5546,7 +5549,7 @@ class BaseModel(metaclass=MetaModel):
         default the returned query object is not actually executed, and it can
         be injected as a value in a domain in order to generate sub-queries.
         """
-        self.check_access_rights('read')
+        self.browse().check_access('read')
 
         if expression.is_false(self, domain):
             # optimization: no need to query, as no record satisfies the domain
@@ -5922,7 +5925,7 @@ class BaseModel(metaclass=MetaModel):
         the allowed_company_ids in the context. This method can be
         overridden, for example on the hr.leave model, where the
         most suited company is the company of the leave type, as
-        specified by the ir.rule.
+        specified by the access rules.
         """
         if 'company_id' in self:
             return self.company_id

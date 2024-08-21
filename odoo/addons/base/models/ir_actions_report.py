@@ -227,7 +227,7 @@ class IrActionsReport(models.Model):
 
     def unlink_action(self):
         """ Remove the contextual actions created for the reports. """
-        self.check_access_rights('write', raise_exception=True)
+        self.check_access('write')
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 

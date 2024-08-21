@@ -164,11 +164,7 @@ class IrActions(models.Model):
                     # the user may not perform this action
                     continue
                 res_model = action.pop('res_model', None)
-                if res_model and not self.env['ir.model.access'].check(
-                    res_model,
-                    mode='read',
-                    raise_exception=False
-                ):
+                if res_model in self.pool and not self.env[res_model].has_access('read'):
                     # the user won't be able to read records
                     continue
                 actions.append(action)
@@ -649,10 +645,13 @@ class IrActionsServer(models.Model):
 
     @api.depends('state')
     def _compute_available_model_ids(self):
-        allowed_models = self.env['ir.model'].search(
-            [('model', 'in', list(self.env['ir.model.access']._get_allowed_models()))]
-        )
-        self.available_model_ids = allowed_models.ids
+        domain = [
+            ('group_id', 'in', self.env.user._get_group_ids()),
+            ('for_read', '=', True),
+            ('active', '=', True),
+        ]
+        accesses = self.env['ir.access'].search(domain, order='id')
+        self.available_model_ids = accesses.model_id
 
     @api.depends('model_id', 'update_path', 'state')
     def _compute_crud_relations(self):
@@ -815,7 +814,7 @@ class IrActionsServer(models.Model):
 
     def unlink_action(self):
         """ Remove the contextual actions created for the server actions. """
-        self.check_access_rights('write', raise_exception=True)
+        self.browse().check_access('write')
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
@@ -965,7 +964,7 @@ class IrActionsServer(models.Model):
             else:
                 model_name = action.model_id.model
                 try:
-                    self.env[model_name].check_access_rights("write")
+                    self.env[model_name].check_access("write")
                 except AccessError:
                     _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
                         action.name, self.env.user.login, model_name,
@@ -979,7 +978,7 @@ class IrActionsServer(models.Model):
                 # check access rules on real records only; base automations of
                 # type 'onchange' can run server actions on new records
                 try:
-                    records.check_access_rule('write')
+                    records.check_access('write')
                 except AccessError:
                     _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
                         action.name, self.env.user.login, records,

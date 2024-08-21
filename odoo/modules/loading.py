@@ -252,22 +252,6 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             # update made to the schema or data so the tests can run
             # (separately in their own transaction)
             env.cr.commit()
-            concrete_models = [model for model in model_names if not registry[model]._abstract]
-            if concrete_models:
-                env.cr.execute("""
-                    SELECT model FROM ir_model 
-                    WHERE id NOT IN (SELECT DISTINCT model_id FROM ir_model_access) AND model IN %s
-                """, [tuple(concrete_models)])
-                models = [model for [model] in env.cr.fetchall()]
-                if models:
-                    lines = [
-                        f"The models {models} have no access rules in module {module_name}, consider adding some, like:",
-                        "id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink"
-                    ]
-                    for model in models:
-                        xmlid = model.replace('.', '_')
-                        lines.append(f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0")
-                    _logger.warning('\n'.join(lines))
 
         updating = tools.config.options['init'] or tools.config.options['update']
         test_time = test_queries = 0

@@ -4265,7 +4265,7 @@ class TestRenderAllViews(TransactionCaseWithUserDemo):
         count = 0
         elapsed = 0
         for model in env.values():
-            if not model._abstract and model.check_access_rights('read', False):
+            if not model._abstract and model.has_access('read'):
                 with self.subTest(model=model):
                     times = []
                     for _ in range(5):

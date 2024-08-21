@@ -209,11 +209,14 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # restrict access of user Demo to partners Top and Bottom
         accessible = top + bot
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create({
+        model_id = self.env['ir.model']._get('res.partner').id
+        self.env['ir.access'].search([('model_id', '=', model_id)]).unlink()
+        self.env['ir.access'].create({
             'name': 'partners rule',
-            'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', 'in', accessible.ids)]),
+            'model_id': model_id,
+            'group_id': self.env.ref('base.group_user').id,
+            'mode': 'rwcd',
+            'domain': str([('id', 'in', accessible.ids)]),
         })
 
         # these searches should return the subset of accessible nodes that are
@@ -845,12 +848,14 @@ class TestExpression(SavepointCaseWithUserDemo):
         other = Model.create({'name': 'other'})
         partners = parent1 + parent2 + child1 + child2 + other
 
-        # replace all ir.rules by one global rule to prevent access to parent1
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create([{
+        # replace all ir.rules by one rule to prevent access to parent1
+        self.env['ir.access'].search([]).unlink()
+        self.env['ir.access'].create([{
             'name': 'partners rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', 'not in', parent1.ids)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'mode': 'rwcd',
+            'domain': str([('id', 'not in', parent1.ids)]),
         }])
 
         # search for children, bypassing access rights
@@ -1344,15 +1349,19 @@ class TestQueries(TransactionCase):
     @mute_logger('odoo.models.unlink')
     def test_access_rules(self):
         Model = self.env['res.users'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create([{
+        self.env['ir.access'].search([]).unlink()
+        self.env['ir.access'].create([{
             'name': 'users rule',
             'model_id': self.env['ir.model']._get('res.users').id,
-            'domain_force': str([('id', '=', 1)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'mode': 'rwcd',
+            'domain': str([('id', '=', 1)]),
         }, {
             'name': 'partners rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', '=', 1)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'mode': 'rwcd',
+            'domain': str([('id', '=', 1)]),
         }])
         Model.search([])
 
@@ -1934,11 +1943,13 @@ class TestMany2many(TransactionCase):
 
     def test_regular(self):
         group = self.env.ref('base.group_user')
-        rule = group.rule_groups[0]
+        menu = self.env['ir.ui.menu'].create({'name': 'Menu'})
+        group.menu_access |= menu
+        self.env.flush_all()
 
         self.User.search([('groups_id', 'in', group.ids)], order='id')
         self.User.search([('groups_id.name', 'like', group.name)], order='id')
-        self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+        self.User.search([('groups_id.menu_access.name', 'like', menu.name)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -1990,19 +2001,19 @@ class TestMany2many(TransactionCase):
                     SELECT "res_groups"."id"
                     FROM "res_groups"
                     WHERE EXISTS (
-                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
-                        WHERE "res_groups__rule_groups"."group_id" = "res_groups"."id"
-                        AND "res_groups__rule_groups"."rule_group_id" IN (
-                            SELECT "ir_rule"."id"
-                            FROM "ir_rule"
-                            WHERE ("ir_rule"."name"::text LIKE %s)
+                        SELECT 1 FROM "ir_ui_menu_group_rel" AS "res_groups__menu_access"
+                        WHERE "res_groups__menu_access"."gid" = "res_groups"."id"
+                        AND "res_groups__menu_access"."menu_id" IN (
+                            SELECT "ir_ui_menu"."id"
+                            FROM "ir_ui_menu"
+                            WHERE ("ir_ui_menu"."name"->>%s LIKE %s)
                         )
                     )
                 )
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+            self.User.search([('groups_id.menu_access.name', 'like', menu.name)], order='id')
 
     def test_autojoin(self):
         self.patch(self.User._fields['groups_id'], 'auto_join', True)

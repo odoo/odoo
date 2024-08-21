@@ -601,7 +601,7 @@ actual arch.
         """
         if not self.ids:
             return self.browse()
-        self.check_access_rights('read')
+        self.browse().check_access('read')
         domain = self._get_inheriting_views_domain()
         e = expression(domain, self.env['ir.ui.view'])
         where_clause = e.query.where_clause
@@ -1039,14 +1039,12 @@ actual arch.
         for node in tree.xpath('//*[@model_access_rights]'):
             model = self.env[node.attrib.pop('model_access_rights')]
             if node.tag == 'field':
-                can_create = model.check_access_rights('create', raise_exception=False)
-                can_write = model.check_access_rights('write', raise_exception=False)
-                node.set('can_create', str(bool(can_create)))
-                node.set('can_write', str(bool(can_write)))
+                node.set('can_create', str(model.has_access('create')))
+                node.set('can_write', str(model.has_access('write')))
             else:
                 is_base_model = base_model == model._name
                 for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                    if not node.get(action) and not model.check_access_rights(operation, raise_exception=False):
+                    if not node.get(action) and not model.has_access(operation):
                         node.set(action, 'False')
                 if node.tag == 'kanban':
                     group_by_name = node.get('default_group_by')
@@ -1054,7 +1052,7 @@ actual arch.
                     if group_by_field and group_by_field.type == 'many2one':
                         group_by_model = model.env[group_by_field.comodel_name]
                         for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                            if not node.get(action) and not group_by_model.check_access_rights(operation, raise_exception=False):
+                            if not node.get(action) and not group_by_model.has_access(operation):
                                 node.set(action, 'False')
 
         return tree
@@ -1083,7 +1081,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self.env['ir.access']._get_access_groups(model_name)
 
         name_manager = NameManager(model, parent=parent_name_manager, model_groups=model_groups)
 
@@ -1428,7 +1426,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self.env['ir.access']._get_access_groups(model_name)
 
         # fields_get() optimization: validation does not require translations
         model = self.env[model_name].with_context(lang=None)
@@ -2753,7 +2751,7 @@ class Model(models.AbstractModel):
 
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc... defined on the structure
         """
-        self.check_access_rights('read')
+        self.browse().check_access('read')
 
         result = dict(self._get_view_cache(view_id, view_type, **options))
 
@@ -2943,8 +2941,7 @@ class NameManager:
     @lazy_property
     def field_info(self):
         field_info = self.model.fields_get(attributes=['readonly', 'required'])
-        has_access = functools.partial(self.model.check_access_rights, raise_exception=False)
-        if not (has_access('write') or has_access('create')):
+        if not (self.model.has_access('write') or self.model.has_access('create')):
             for info in field_info.values():
                 info['readonly'] = True
         return field_info

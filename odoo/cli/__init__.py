@@ -8,6 +8,7 @@ from .command import Command, main
 
 from . import cloc
 from . import deploy
+from . import makeiraccess
 from . import scaffold
 from . import server
 from . import shell

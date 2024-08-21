@@ -361,7 +361,7 @@ class IrAttachment(models.Model):
                 not mimetype.startswith('application/vnd.openxmlformats'))  # exception for Office formats
         force_text = xml_like and (
             self.env.context.get('attachments_mime_plainxml') or
-            not self.env['ir.ui.view'].sudo(False).check_access_rights('write', False))
+            not self.env['ir.ui.view'].sudo(False).has_access('write'))
         if force_text:
             values['mimetype'] = 'text/plain'
         if not self.env.context.get('image_no_postprocess'):
@@ -486,8 +486,7 @@ class IrAttachment(models.Model):
             # For related models, check if we can write to the model, as unlinking
             # and creating attachments can be seen as an update to the model
             access_mode = 'write' if mode in ('create', 'unlink') else mode
-            records.check_access_rights(access_mode)
-            records.check_access_rule(access_mode)
+            records.check_access(access_mode)
 
     @api.model
     def _filter_attachment_access(self, attachment_ids):
@@ -498,7 +497,7 @@ class IrAttachment(models.Model):
         """
         ret_attachments = self.env['ir.attachment']
         attachments = self.browse(attachment_ids)
-        if not attachments.check_access_rights('read', raise_exception=False):
+        if not attachments.browse().has_access('read'):
             return ret_attachments
 
         for attachment in attachments.sudo():
@@ -554,7 +553,7 @@ class IrAttachment(models.Model):
             if res_model not in self.env:
                 allowed_ids.update(id_ for ids in targets.values() for id_ in ids)
                 continue
-            if not self.env[res_model].check_access_rights('read', False):
+            if not self.env[res_model].has_access('read'):
                 continue
             # filter ids according to what access rules permit
             ResModel = self.env[res_model].with_context(active_test=False)
