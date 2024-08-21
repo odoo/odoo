@@ -16,6 +16,7 @@ registry.category("web_tour.tours").add("self_order_is_close", {
 registry.category("web_tour.tours").add("self_order_is_open_consultation", {
     test: true,
     steps: () => [
+        Utils.clickBtn("Order Now"),
         LandingPage.isOpened(),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Order"),
