@@ -418,7 +418,7 @@
                     <attribute name="invisible">0</attribute>
                 </group>
                 <field name="name" position="after">
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" required="id"/>
+                    <field name="product_tmpl_id" class="oe_inline" required="id"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" groups="product.group_product_variant"/>
