@@ -1,6 +1,7 @@
-import { expect, test, beforeEach, describe } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, edit, keyDown, keyUp, press, queryOne } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineWebModels,
@@ -10,16 +11,15 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { WebClient } from "@web/webclient/webclient";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { WebClient } from "@web/webclient/webclient";
 import { TourRecorder } from "@web_tour_recorder/tour_recorder/tour_recorder";
 import {
     CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY,
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
 } from "@web_tour_recorder/tour_recorder/tour_recorder_service";
-import { Component, xml } from "@odoo/owl";
-import { useAutofocus } from "@web/core/utils/hooks";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 describe.current.tags("desktop");
 
@@ -494,9 +494,6 @@ test("Run custom tour", async () => {
     expect("table tr td:contains('tour_name')").toHaveCount(1);
     click(".o_test_tour");
 
-    // FIXME JUM pls
-    await runAllTimers();
-    await runAllTimers();
     // Max timeout before triggering an error from tour compiler
     await advanceTime(9999);
     await def;

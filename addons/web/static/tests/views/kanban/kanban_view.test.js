@@ -16,8 +16,7 @@ import {
     resize,
     setInputFiles,
 } from "@odoo/hoot-dom";
-import { FileInput } from "@web/core/file_input/file_input";
-import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
+import { Deferred, advanceFrame, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -66,6 +65,7 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { FileInput } from "@web/core/file_input/file_input";
 
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
@@ -12463,10 +12463,7 @@ test.tags("desktop")("drag & drop: content scrolls when reaching the edges", asy
     expect(".o_kanban_record.o_dragged").toHaveCount(1);
 
     // wait 30 frames, should be enough (default kanban speed is 20px per tick)
-    for (let i = 0; i < 30; i++) {
-        await animationFrame();
-    }
-    // await advanceFrame(30); // FIXME JUM: would be nice if this could work
+    await advanceFrame(30);
 
     // Should be at the end of the content
     expect(content.scrollLeft + width).toBe(content.scrollWidth);
@@ -12483,10 +12480,7 @@ test.tags("desktop")("drag & drop: content scrolls when reaching the edges", asy
 
     expect(".o_kanban_record.o_dragged").toHaveCount(1);
 
-    for (let i = 0; i < 30; i++) {
-        await animationFrame();
-    }
-    // await advanceFrame(30); // FIXME JUM: would be nice if this could work
+    await advanceFrame(30);
 
     expect(content.scrollLeft).toBe(0);
 

@@ -316,12 +316,9 @@ export function mockedRequestAnimationFrame(callback) {
         return 0;
     }
 
-    /**
-     * @param {number} delta
-     */
-    const handler = (delta) => {
+    const handler = () => {
         mockedCancelAnimationFrame(handle);
-        return callback(delta ?? now() - animationValues[1]);
+        return callback(now());
     };
 
     const animationValues = [handler, now(), frameDelay];
