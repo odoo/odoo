@@ -109,6 +109,7 @@
         <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.channel_type === 'chat' and thread.correspondent" thread="thread"/>
+    <CountryFlag t-if="thread?.anonymous_country" country="thread.anonymous_country" class="'o-mail-ChatWindow-country border'"/>
     <div t-if="!state.editingName" class="text-truncate fw-bolder border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'ms-1': thread, 'ms-3': !thread, 'fs-4': ui.isSmall }"/>
 </t>
 </templates>

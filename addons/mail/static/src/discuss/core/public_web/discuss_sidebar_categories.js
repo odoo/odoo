@@ -1,3 +1,4 @@
+import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
@@ -21,7 +22,7 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
     static props = ["thread"];
-    static components = { Dropdown, ImStatus, ThreadIcon };
+    static components = { CountryFlag, Dropdown, ImStatus, ThreadIcon };
 
     setup() {
         super.setup();

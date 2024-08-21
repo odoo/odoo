@@ -4,7 +4,7 @@ declare module "models" {
         livechats: Thread,
     }
     export interface Thread {
-        anonymous_country: Object,
+        anonymous_country: Country,
         anonymous_name: String,
         appAsLivechats: DiscussApp,
     }

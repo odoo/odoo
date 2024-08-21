@@ -54,11 +54,17 @@ test("Known user with country", async () => {
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "livechat",
+        country_id: countryId,
         livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
+    await contains(".o-mail-DiscussSidebarChannel img[data-src*='country_flags/be.png']");
+    await click(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
+    await contains(".o-mail-Discuss-header img[data-src*='country_flags/be.png']");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem img[data-src*='country_flags/be.png']");
 });
 
 test("Do not show channel when visitor is typing", async () => {
