@@ -1,4 +1,5 @@
 import { useComponent, useState } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -57,7 +58,7 @@ callActionsRegistry
         sequence: 40,
     })
     .add("share-screen", {
-        condition: (component) => component.rtc,
+        condition: (component) => component.rtc && !isMobileOS(),
         name: (component) =>
             component.rtc.selfSession.isScreenSharingOn
                 ? _t("Stop Sharing Screen")
@@ -119,13 +120,15 @@ function transformAction(component, id, action) {
 
 export function useCallActions() {
     const component = useComponent();
-    const transformedActions = callActionsRegistry
+    const state = useState({ actions: [] });
+    state.actions = callActionsRegistry
         .getEntries()
         .map(([id, action]) => transformAction(component, id, action));
-    const state = useState({
-        actions: transformedActions
-            .filter((action) => action.condition)
-            .sort((a1, a2) => a1.sequence - a2.sequence),
-    });
-    return state;
+    return {
+        get actions() {
+            return state.actions
+                .filter((action) => action.condition)
+                .sort((a1, a2) => a1.sequence - a2.sequence);
+        },
+    };
 }
