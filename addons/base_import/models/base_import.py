@@ -22,6 +22,7 @@ import requests
 from PIL import Image
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
@@ -366,47 +367,47 @@ class Import(models.TransientModel):
         :param dict options: reading options (quoting, separator, ...)
         """
         self.ensure_one()
+        e = None
         # guess mimetype from file content
         mimetype = guess_mimetype(self.file or b'')
         (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
-            except ValueError as e:
-                raise e
-            except ImportValidationError as e:
-                raise e
-            except Exception:
-                _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
+            except (ImportValidationError, ValueError):
+                raise
+            except Exception as exc:  # noqa: BLE001
+                e = read_file_failed(exc, f"Unable to read file {self.file_name or '<unknown>'!r} as {file_extension!r} (guessed using mimetype {mimetype!r}).")
 
         # try reading with user-provided mimetype
-        (file_extension, handler, req) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
-        if handler:
+        (file_extension, handler2, req2) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
+        if handler2 and handler2 != handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
-            except ValueError as e:
-                raise e
-            except ImportValidationError as e:
-                raise e
-            except Exception:
-                _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
+            except (ImportValidationError, ValueError):
+                raise
+            except Exception as exc:  # noqa: BLE001
+                e = read_file_failed(exc, f"Unable to read file {self.file_name or '<unknown>'!r} as {file_extension!r} (decided from user-provided mimetype {self.file_type!r}).")
 
         # fallback on file extensions as mime types can be unreliable (e.g.
         # software setting incorrect mime types, or non-installed software
         # leading to browser not sending mime types)
         if self.file_name:
-            p, ext = os.path.splitext(self.file_name)
-            if ext in EXTENSIONS:
+            _stem, ext = os.path.splitext(self.file_name)
+            if (h := EXTENSIONS.get(ext)) and h != handler and h != handler2:
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
-                except ValueError as e:
-                    raise e
-                except Exception:
-                    _logger.warning("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
+                except (ImportValidationError, ValueError):
+                    raise
+                except Exception as exc:  # noqa: BLE001
+                    e = read_file_failed(exc, f"Unable to read file {self.file_name!r} as {file_extension!r} (decided from file extension {ext!r}).")
 
-        if req:
-            raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
-        raise ValueError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(self.file_type))
+        if e is not None:
+            raise e
+
+        if req2 or req:
+            raise UserError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req2 or req))
+        raise UserError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(self.file_type))
 
     def _read_xls(self, options):
         book = xlrd.open_workbook(file_contents=self.file or b'')
@@ -1658,3 +1659,10 @@ _P_TO_RE = {
 
     '%': '%',
 }
+
+
+def read_file_failed(exc: Exception, message: str) -> UserError:
+    _logger.warning(message, exc_info=True)
+    e = UserError(message)
+    e.__cause__ = exc
+    return e
