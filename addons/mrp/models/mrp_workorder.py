@@ -476,18 +476,13 @@ class MrpWorkorder(models.Model):
 
     @api.model_create_multi
     def create(self, values):
-        check_for_phantom = False
-        all_sequences = [val.get('sequence') for val in values]
-        if len(set(all_sequences)) < len(values):
-            check_for_phantom = True
-            for index_val, val in enumerate(values):
-                val['sequence'] = index_val + 100
         res = super().create(values)
-        # We check if any kit bom operation was added in the workorders
-        if check_for_phantom and any(bom.type == 'phantom' for bom in res.operation_id.bom_id):
-            wo_phantom_first = res.sorted(lambda wo: wo.operation_id.bom_id.type, reverse=True)
-            for index_wo, wo in enumerate(wo_phantom_first):
-                wo.sequence = index_wo + 100
+
+        # resequence the workorders if necessary
+        for mo in res.mapped('production_id'):
+            if len(set(mo.workorder_ids.mapped('sequence'))) != len(mo.workorder_ids):
+                mo._resequence_workorders()
+
         # Auto-confirm manually added workorders.
         # We need to go through `_action_confirm` for all workorders of the current productions to
         # make sure the links between them are correct.

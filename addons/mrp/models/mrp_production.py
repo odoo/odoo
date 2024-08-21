@@ -1439,8 +1439,11 @@ class MrpProduction(models.Model):
         last_workorder_per_bom = defaultdict(lambda: self.env['mrp.workorder'])
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
 
+        def workorder_order(wo):
+            return (wo.sequence, wo.id)
+
         if self.allow_workorder_dependencies:
-            for workorder in self.workorder_ids.sorted():
+            for workorder in self.workorder_ids.sorted(workorder_order):
                 workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id)
                                                       for operation_id in
                                                       workorder.operation_id.blocked_by_operation_ids
@@ -1449,7 +1452,7 @@ class MrpProduction(models.Model):
                     last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         else:
             previous_workorder = False
-            for workorder in self.workorder_ids.sorted():
+            for workorder in self.workorder_ids.sorted(workorder_order):
                 if previous_workorder:
                     workorder.blocked_by_workorder_ids = [Command.link(previous_workorder.id)]
                 previous_workorder = workorder
@@ -2884,4 +2887,17 @@ class MrpProduction(models.Model):
                     render_values={'self': production, 'origin': origin_production},
                     subtype_id=note_subtype_id,
                 )
+        return True
+
+    def _resequence_workorders(self):
+        """Re-sequence the workorders of a given production"""
+        self.ensure_one()
+        # reorganize the workorders to put the kit operations first
+        phantom_workorders = self.workorder_ids.filtered(lambda wo: wo.operation_id.bom_id.type == 'phantom')
+        for index_wo, wo in enumerate(phantom_workorders):
+            wo.sequence = index_wo
+        offset = len(phantom_workorders)
+        non_phantom_workorders = self.workorder_ids - phantom_workorders
+        for index_wo, wo in enumerate(non_phantom_workorders):
+            wo.sequence = index_wo + offset
         return True
