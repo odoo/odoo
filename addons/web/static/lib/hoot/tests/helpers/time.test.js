@@ -4,15 +4,17 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, advanceTime, runAllTimers, tick } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
-describe(parseUrl(import.meta.url), () => {
-    // timeout of 1 second to ensure timeouts are actually mocked
-    test.timeout(1_000)("advanceTime", async () => {
+// timeout of 1 second to ensure all timeouts are actually mocked
+describe.timeout(1_000)(parseUrl(import.meta.url), () => {
+    test("advanceTime", async () => {
         expect.assertions(8);
+
+        await advanceTime(5_000);
 
         const timeoutId = window.setTimeout(() => expect.step("timeout"), 2_000);
         const intervalId = window.setInterval(() => expect.step("interval"), 3_000);
         const animationHandle = window.requestAnimationFrame((delta) => {
-            expect(delta).toBeGreaterThan(0);
+            expect(delta).toBeGreaterThan(5_000);
             expect.step("animation");
         });
 
