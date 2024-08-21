@@ -156,6 +156,28 @@ class StockMoveLine(models.Model):
 
         return aggregated_move_lines
 
+    def _prepare_stock_move_vals(self):
+        move_vals = super()._prepare_stock_move_vals()
+        if self.env['product.product'].browse(move_vals['product_id']).is_kits:
+            move_vals['location_id'] = self.location_id.id
+            move_vals['location_dest_id'] = self.location_dest_id.id
+        return move_vals
+
+    def _get_linkable_moves(self):
+        """ Don't linke move lines with kit products to moves with dissimilar locations so that
+        post `action_explode()` move lines will have accurate location data.
+        """
+        self.ensure_one()
+        if self.product_id and self.product_id.is_kits:
+            moves = self.picking_id.move_ids.filtered(lambda move:
+                move.product_id == self.product_id and
+                move.location_id == self.location_id and
+                move.location_dest_id == self.location_dest_id
+            )
+            return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+        else:
+            return super()._get_linkable_moves()
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
