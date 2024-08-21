@@ -19,7 +19,7 @@ import {
     uncheck,
     waitFor,
 } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { getTag } from "@web/core/utils/xml";
 
 /**
@@ -59,11 +59,6 @@ import { getTag } from "@web/core/utils/xml";
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-const dragEffectDelay = async () => {
-    await advanceTime(20);
-    await animationFrame();
-};
 
 /**
  * @param {Node} node
@@ -158,27 +153,27 @@ export function contains(target, options) {
             /** @type {AsyncDragHelpers["cancel"]} */
             const asyncCancel = async () => {
                 cancel();
-                await dragEffectDelay();
+                await advanceFrame();
             };
 
             /** @type {AsyncDragHelpers["drop"]} */
             const asyncDrop = async () => {
                 drop();
-                await dragEffectDelay();
+                await advanceFrame();
             };
 
             /** @type {AsyncDragHelpers["moveTo"]} */
             const asyncMoveTo = async (to, options) => {
                 moveTo(to, options);
-                await dragEffectDelay();
+                await advanceFrame();
             };
 
             const node = await nodePromise;
             const { cancel, drop, moveTo } = drag(node, options);
-            await dragEffectDelay();
+            await advanceTime(500); // Go past the touch delay
 
             hover(node, DRAG_TOLERANCE_PARAMS);
-            await dragEffectDelay();
+            await advanceFrame();
 
             return {
                 cancel: asyncCancel,
@@ -193,16 +188,16 @@ export function contains(target, options) {
         dragAndDrop: async (target, options) => {
             const [from, to] = await Promise.all([nodePromise, waitFor(target)]);
             const { drop, moveTo } = drag(from);
-            await dragEffectDelay();
+            await advanceTime(500); // Go past the touch delay
 
             hover(from, DRAG_TOLERANCE_PARAMS);
-            await dragEffectDelay();
+            await advanceFrame();
 
             moveTo(to, options);
-            await dragEffectDelay();
+            await advanceFrame();
 
             drop();
-            await dragEffectDelay();
+            await advanceFrame();
         },
         /**
          * @param {InputValue} value
