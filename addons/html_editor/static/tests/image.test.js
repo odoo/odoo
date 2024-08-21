@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setContent } from "./_helpers/selection";
+import { undo } from "./_helpers/user_actions";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -103,7 +104,7 @@ test("can undo a shape", async () => {
     await animationFrame();
     expect(".o-we-toolbar button[name='shape_rounded']").toHaveClass("active");
     expect("img").toHaveClass("rounded");
-    editor.dispatch("HISTORY_UNDO");
+    undo(editor);
     await animationFrame();
     expect(".o-we-toolbar button[name='shape_rounded']").not.toHaveClass("active");
     expect("img").not.toHaveClass("rounded");
@@ -191,7 +192,7 @@ test("Can undo the image sizing", async () => {
     expect(queryOne("img").style.width).toBe("100%");
     expect(".o-we-toolbar button[name='resize_100']").toHaveClass("active");
 
-    editor.dispatch("HISTORY_UNDO");
+    undo(editor);
     expect(queryOne("img").style.width).toBe("");
 });
 
@@ -249,7 +250,7 @@ test("Can undo the image padding", async () => {
     await animationFrame();
     expect("img").toHaveClass("p-1");
 
-    editor.dispatch("HISTORY_UNDO");
+    undo(editor);
     await animationFrame();
     expect("img").not.toHaveClass("p-1");
 });
@@ -346,4 +347,67 @@ test("Toolbar should not be namespaced for image", async () => {
     `);
     await waitFor(".o-we-toolbar");
     expect("button[name='image_delete']").toHaveCount(0);
+});
+
+test("can add link on an image", async () => {
+    await setupEditor(`
+        <img src="${base64Img}">
+    `);
+    const img = queryOne("img");
+    click("img");
+    await waitFor(".o-we-toolbar");
+    click("button[name='link']");
+    await animationFrame();
+
+    await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://odoo.com/");
+    await animationFrame();
+    expect(img.parentElement.tagName).toBe("A");
+    expect(img.parentElement).toHaveAttribute("href", "http://odoo.com/");
+});
+
+test("can undo adding link to image", async () => {
+    const { editor } = await setupEditor(`
+        <img src="${base64Img}">
+    `);
+    const img = queryOne("img");
+    click("img");
+    await waitFor(".o-we-toolbar");
+    click("button[name='link']");
+    await animationFrame();
+    await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://odoo.com/");
+    await animationFrame();
+    expect(img.parentElement.tagName).toBe("A");
+
+    undo(editor);
+    await animationFrame();
+    expect(img.parentElement.tagName).toBe("P");
+});
+
+test("can remove the link of an image", async () => {
+    await setupEditor(`
+        <a href="#"><img src="${base64Img}"></a>
+    `);
+    const img = queryOne("img");
+    click("img");
+    await waitFor(".o-we-toolbar");
+    expect("button[name='unlink']").toHaveCount(1);
+    click("button[name='unlink']");
+    await animationFrame();
+    expect(img.parentElement.tagName).toBe("P");
+});
+
+test("can undo link removing of an image", async () => {
+    const { editor } = await setupEditor(`
+        <a href="#"><img src="${base64Img}"></a>
+    `);
+    const img = queryOne("img");
+    click("img");
+    await waitFor(".o-we-toolbar");
+    click("button[name='unlink']");
+    await animationFrame();
+    expect(img.parentElement.tagName).toBe("P");
+
+    undo(editor);
+    await animationFrame();
+    expect(img.parentElement.tagName).toBe("A");
 });

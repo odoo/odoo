@@ -105,63 +105,89 @@ export class LinkPlugin extends Plugin {
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     /** @type { (p: LinkPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 10 },
-        toolbarCategory: {
+    static resources = (p) => {
+        const linkItem = {
             id: "link",
-            sequence: 40,
-        },
-        toolbarItems: [
-            {
-                id: "link",
-                title: _t("Link"),
-                category: "link",
-                action(dispatch) {
-                    dispatch("CREATE_LINK_ON_SELECTION");
-                },
-                icon: "fa-link",
-                isFormatApplied: isLinkActive,
+            title: _t("Link"),
+            action(dispatch) {
+                dispatch("CREATE_LINK_ON_SELECTION");
             },
-            {
-                id: "unlink",
-                category: "link",
-                title: _t("Remove Link"),
+            icon: "fa-link",
+            isFormatApplied: isLinkActive,
+        };
+        const unlinkItem = {
+            id: "unlink",
+            title: _t("Remove Link"),
 
-                action(dispatch) {
-                    dispatch("REMOVE_LINK_FROM_SELECTION");
-                },
-                icon: "fa-unlink",
-                isAvailable: isSelectionHasLink,
+            action(dispatch) {
+                dispatch("REMOVE_LINK_FROM_SELECTION");
             },
-        ],
+            icon: "fa-unlink",
+            isAvailable: isSelectionHasLink,
+        };
 
-        powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
-        powerboxItems: [
-            {
-                name: _t("Link"),
-                description: _t("Add a link"),
-                category: "navigation",
-                fontawesome: "fa-link",
-                action(dispatch) {
-                    dispatch("TOGGLE_LINK");
+        return {
+            onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 10 },
+            toolbarCategory: [
+                {
+                    id: "link",
+                    sequence: 40,
                 },
-            },
-            {
-                name: _t("Button"),
-                description: _t("Add a button"),
-                category: "navigation",
-                fontawesome: "fa-link",
-                action(dispatch) {
-                    dispatch("TOGGLE_LINK");
+                {
+                    id: "image_link",
+                    sequence: 30,
+                    namespace: "image",
                 },
-            },
-        ],
-        onSelectionChange: p.handleSelectionChange.bind(p),
-        split_element_block: { callback: p.handleSplitBlock.bind(p) },
-        handle_insert_line_break_element: { callback: p.handleInsertLineBreak.bind(p) },
-    });
+            ],
+            toolbarItems: [
+                {
+                    ...linkItem,
+                    category: "link",
+                },
+                {
+                    ...unlinkItem,
+                    category: "link",
+                },
+                {
+                    ...linkItem,
+                    category: "image_link",
+                },
+                {
+                    ...unlinkItem,
+                    category: "image_link",
+                },
+            ],
+
+            powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
+            powerboxItems: [
+                {
+                    name: _t("Link"),
+                    description: _t("Add a link"),
+                    category: "navigation",
+                    fontawesome: "fa-link",
+                    action(dispatch) {
+                        dispatch("TOGGLE_LINK");
+                    },
+                },
+                {
+                    name: _t("Button"),
+                    description: _t("Add a button"),
+                    category: "navigation",
+                    fontawesome: "fa-link",
+                    action(dispatch) {
+                        dispatch("TOGGLE_LINK");
+                    },
+                },
+            ],
+            onSelectionChange: p.handleSelectionChange.bind(p),
+            split_element_block: { callback: p.handleSplitBlock.bind(p) },
+            handle_insert_line_break_element: { callback: p.handleInsertLineBreak.bind(p) },
+        };
+    };
     setup() {
-        this.overlay = this.shared.createOverlay(LinkPopover);
+        this.overlay = this.shared.createOverlay(LinkPopover, {
+            sequence: 40,
+        });
         this.addDomListener(this.editable, "click", (ev) => {
             if (ev.target.tagName === "A" && ev.target.isContentEditable) {
                 ev.preventDefault();
@@ -293,9 +319,22 @@ export class LinkPlugin extends Plugin {
 
     handleSelectionChange(selectionData) {
         const selection = selectionData.editableSelection;
-        if (!selection.isCollapsed) {
-            this.overlay.close();
-        } else if (!selectionData.documentSelectionIsInEditable) {
+        const props = {
+            onRemove: () => {
+                this.removeLink();
+                this.overlay.close();
+                this.dispatch("ADD_STEP");
+            },
+            onCopy: () => {
+                this.overlay.close();
+            },
+            onClose: () => {
+                this.overlay.close();
+            },
+            getInternalMetaData: this.getInternalMetaData,
+            getExternalMetaData: this.getExternalMetaData,
+        };
+        if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
             // and color picker don't open at the same time so it's ok to query like this
             const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
@@ -303,6 +342,36 @@ export class LinkPlugin extends Plugin {
                 return;
             }
             this.overlay.close();
+        } else if (!selection.isCollapsed) {
+            const selectedNodes = this.shared.getSelectedNodes();
+            const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
+            if (imageNode && imageNode.parentNode.tagName === "A") {
+                if (this.linkElement !== imageNode.parentElement) {
+                    this.overlay.close();
+                    this.removeCurrentLinkIfEmtpy();
+                }
+                this.linkElement = imageNode.parentElement;
+
+                const imageLinkProps = {
+                    ...props,
+                    isImage: true,
+                    linkEl: this.linkElement,
+                    onApply: (url, _) => {
+                        this.linkElement.href = url;
+                        this.shared.setCursorEnd(this.linkElement);
+                        this.removeCurrentLinkIfEmtpy();
+                        this.dispatch("ADD_STEP");
+                    },
+                };
+
+                // close the overlay to always position the popover to the bottom of selected image
+                if (this.overlay.isOpen) {
+                    this.overlay.close();
+                }
+                this.overlay.open({ target: imageNode, props: imageLinkProps });
+            } else {
+                this.overlay.close();
+            }
         } else {
             const linkEl = closestElement(selection.anchorNode, "A");
             if (!linkEl) {
@@ -316,8 +385,17 @@ export class LinkPlugin extends Plugin {
                 this.linkElement = linkEl;
             }
 
-            const props = {
-                linkEl,
+            // if the link includes an inline image, we close the previous opened popover to reposition it
+            const imageNode = linkEl.querySelector("img");
+            if (imageNode) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+            }
+
+            const linkProps = {
+                ...props,
+                isImage: false,
+                linkEl: this.linkElement,
                 onApply: (url, label, classes) => {
                     this.linkElement.href = url;
                     if (cleanZWChars(this.linkElement.innerText) === label) {
@@ -335,25 +413,15 @@ export class LinkPlugin extends Plugin {
                     } else {
                         this.linkElement.removeAttribute("class");
                     }
-                    this.dispatch("ADD_STEP");
                     this.removeCurrentLinkIfEmtpy();
-                },
-                onRemove: () => {
-                    this.removeLink();
-                    this.overlay.close();
                     this.dispatch("ADD_STEP");
                 },
-                onCopy: () => {
-                    this.overlay.close();
-                },
-                onClose: () => {
-                    this.overlay.close();
-                },
-                getInternalMetaData: this.getInternalMetaData,
-                getExternalMetaData: this.getExternalMetaData,
             };
-            // pass the link element to overlay to prevent position change
-            this.overlay.open({ target: this.linkElement, props });
+
+            if (linkEl.isConnected) {
+                // pass the link element to overlay to prevent position change
+                this.overlay.open({ target: this.linkElement, props: linkProps });
+            }
         }
     }
 
@@ -388,19 +456,36 @@ export class LinkPlugin extends Plugin {
             return linkElement;
         } else {
             // create a new link element
+            const selectedNodes = this.shared.getSelectedNodes();
+            const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
+
             const link = this.document.createElement("a");
             if (!selection.isCollapsed) {
                 const content = this.shared.extractContent(selection);
                 link.append(content);
+                link.normalize();
             }
             this.shared.domInsert(link);
-            this.shared.setCursorEnd(link);
+            if (!imageNode) {
+                this.shared.setCursorEnd(link);
+            } else {
+                this.shared.setSelection({
+                    anchorNode: link,
+                    anchorOffset: 0,
+                    focusNode: link,
+                    focusOffset: nodeSize(link),
+                });
+            }
             return link;
         }
     }
 
     removeCurrentLinkIfEmtpy() {
-        if (this.linkElement && cleanZWChars(this.linkElement.innerText) === "") {
+        if (
+            this.linkElement &&
+            cleanZWChars(this.linkElement.innerText) === "" &&
+            !this.linkElement.querySelector("img")
+        ) {
             this.linkElement.remove();
         }
         if (
@@ -441,7 +526,7 @@ export class LinkPlugin extends Plugin {
             closestElement(anchorNode, "a"),
             closestElement(focusNode, "a"),
         ];
-        if (startLink) {
+        if (startLink && startLink.isConnected) {
             anchorNode = this.shared.splitAroundUntil(anchorNode, startLink);
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
             this.shared.setSelection(

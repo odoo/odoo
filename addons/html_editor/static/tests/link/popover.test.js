@@ -158,17 +158,12 @@ describe("popover should edit,copy,remove the link", () => {
         await expect(navigator.clipboard.readText()).resolves.toBe("http://test.com/");
     });
     test("when edit a link's label and URL to '', the link should be removed", async () => {
-        const { editor, el } = await setupEditor(
-            '<p>this is a <a href="http://test.com/">li[]nk</a></p>'
-        );
+        const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
         click(".o_we_edit_link");
 
         await contains(".o-we-linkpopover input.o_we_label_link").clear();
         await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
-        // ZWNBSPs make space at the end of the paragraph to be visible
-        expect(getContent(el)).toBe("<p>this is a \ufeff[]\ufeff</p>");
-        editor.dispatch("CLEAN_FOR_SAVE", { root: el });
         expect(getContent(el)).toBe("<p>this is a&nbsp;[]</p>");
     });
 });
