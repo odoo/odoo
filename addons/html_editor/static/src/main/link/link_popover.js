@@ -3,8 +3,6 @@ import { Component, useState, onMounted, useExternalListener, useRef } from "@od
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { rpc } from "@web/core/network/rpc";
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -14,6 +12,8 @@ export class LinkPopover extends Component {
         onRemove: Function,
         onCopy: Function,
         onClose: Function,
+        getInternalMetaData: Function,
+        getExternalMetaData: Function,
     };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
@@ -60,7 +60,6 @@ export class LinkPopover extends Component {
         });
         this.notificationService = useService("notification");
 
-        this.keepLastPromise = new KeepLast();
         this.http = useService("http");
 
         this.editingWrapper = useRef("editing-wrapper");
@@ -197,83 +196,59 @@ export class LinkPopover extends Component {
             )}`;
             this.state.previewIcon = true;
 
-            let metadata = {};
-            // Fetch the metadata
-            try {
-                metadata = await rpc("/html_editor/link_preview_external", {
-                    preview_url: url,
-                });
-            } catch {
-                // when it's not possible to fetch the metadata we don't want to block the ui
-                return;
-            }
+            const externalMetadata = await this.props.getExternalMetaData(this.state.url);
 
-            this.state.urlTitle = metadata?.og_title || this.state.url;
-            this.state.urlDescription = metadata?.og_description || "";
-            this.state.imgSrc = metadata?.og_image || "";
-            if (metadata?.og_image && this.state.label && this.state.urlTitle === this.state.url) {
+            this.state.urlTitle = externalMetadata?.og_title || this.state.url;
+            this.state.urlDescription = externalMetadata?.og_description || "";
+            this.state.imgSrc = externalMetadata?.og_image || "";
+            if (
+                externalMetadata?.og_image &&
+                this.state.label &&
+                this.state.urlTitle === this.state.url
+            ) {
                 this.state.urlTitle = this.state.label;
             }
         } else {
-            await this.keepLastPromise
-                .add(fetch(this.state.url))
-                .then((response) => response.text())
-                .then(async (content) => {
-                    const html_parser = new window.DOMParser();
-                    const doc = html_parser.parseFromString(content, "text/html");
-
-                    // Get
-                    const favicon = doc.querySelector("link[rel~='icon']");
-                    const ogTitle = doc.querySelector("[property='og:title']");
-                    const title = doc.querySelector("title");
-                    // Get the metadata internally
-                    const internalUrlData = await rpc("/html_editor/link_preview_internal", {
-                        preview_url: url.pathname,
-                    });
-
-                    // Set
-                    // for record missing errors, we push a warning that the url is likely invalid
-                    // for other errors, we log them to not block the ui
-                    if (favicon) {
-                        this.state.iconSrc = favicon.href;
-                        this.state.previewIcon = true;
-                    }
-                    if (internalUrlData.error_msg) {
-                        this.notificationService.add(internalUrlData.error_msg, {
-                            type: "warning",
-                        });
-                    } else if (internalUrlData.other_error_msg) {
-                        console.error(
-                            "Internal meta data retrieve error for link preview: " +
-                                internalUrlData.other_error_msg
-                        );
-                    } else {
-                        this.state.linkPreviewName =
-                            internalUrlData.link_preview_name ||
-                            internalUrlData.display_name ||
-                            internalUrlData.name;
-                        this.state.urlDescription = internalUrlData.description
-                            ? html_parser.parseFromString(internalUrlData.description, "text/html")
-                                  .body.textContent
-                            : "";
-                        this.state.urlTitle = this.state.linkPreviewName
-                            ? this.state.linkPreviewName
-                            : this.state.url;
-                    }
-
-                    if ((ogTitle || title) && !this.state.linkPreviewName) {
-                        this.state.urlTitle = ogTitle
-                            ? ogTitle.getAttribute("content")
-                            : title.text.trim();
-                    }
-                })
-                .catch((error) => {
-                    // HTTP error codes should not prevent to edit the links, so we
-                    // only check for proper instances of Error.
-                    if (error instanceof Error) {
-                        return Promise.reject(error);
-                    }
+            const html_parser = new window.DOMParser();
+            // Set state based on cached link meta data
+            // for record missing errors, we push a warning that the url is likely invalid
+            // for other errors, we log them to not block the ui
+            const internalMetadata = await this.props.getInternalMetaData(this.state.url);
+            if (internalMetadata.favicon) {
+                this.state.iconSrc = internalMetadata.favicon.href;
+                this.state.previewIcon = true;
+            }
+            if (internalMetadata.error_msg) {
+                this.notificationService.add(internalMetadata.error_msg, {
+                    type: "warning",
                 });
+            } else if (internalMetadata.other_error_msg) {
+                console.error(
+                    "Internal meta data retrieve error for link preview: " +
+                        internalMetadata.other_error_msg
+                );
+            } else {
+                this.state.linkPreviewName =
+                    internalMetadata.link_preview_name ||
+                    internalMetadata.display_name ||
+                    internalMetadata.name;
+                this.state.urlDescription = internalMetadata.description
+                    ? html_parser.parseFromString(internalMetadata.description, "text/html").body
+                          .textContent
+                    : "";
+                this.state.urlTitle = this.state.linkPreviewName
+                    ? this.state.linkPreviewName
+                    : this.state.url;
+            }
+
+            if (
+                (internalMetadata.ogTitle || internalMetadata.title) &&
+                !this.state.linkPreviewName
+            ) {
+                this.state.urlTitle = internalMetadata.ogTitle
+                    ? internalMetadata.ogTitle.getAttribute("content")
+                    : internalMetadata.title.text.trim();
+            }
         }
     }
 

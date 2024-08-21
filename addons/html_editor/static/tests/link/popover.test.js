@@ -628,4 +628,84 @@ describe("link preview", () => {
             "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business."
         );
     });
+    test("test internal metadata cached correctly", async () => {
+        onRpc("/html_editor/link_preview_internal", () => {
+            expect.step("/html_editor/link_preview_internal");
+            return {
+                description: markup("<p>Test description</p>"),
+                link_preview_name: "Task name | Project name",
+            };
+        });
+        onRpc("/odoo/cachetest/8", () => new Response("", { status: 200 }));
+        const { editor } = await setupEditor(`<p>abc[]</p>`);
+        insertText(editor, "/link");
+        await animationFrame();
+        click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill(
+            window.location.origin + "/odoo/cachetest/8"
+        );
+        await animationFrame();
+        expect.verifySteps(["/html_editor/link_preview_internal"]);
+        expect(".o_we_url_link").toHaveText("Task name | Project name");
+
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 1,
+            focusNode: pNode,
+            focusOffset: 1,
+        });
+        await waitUntil(() => !document.querySelector(".o-we-linkpopover"));
+
+        const linkNode = queryOne("a");
+        setSelection({
+            anchorNode: linkNode,
+            anchorOffset: 1,
+            focusNode: linkNode,
+            focusOffset: 1,
+        });
+        await waitFor(".o-we-linkpopover");
+        expect.verifySteps([]);
+    });
+    test("test external metadata cached correctly", async () => {
+        onRpc("/html_editor/link_preview_external", () => {
+            expect.step("/html_editor/link_preview_external");
+            return {
+                og_description:
+                    "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+                og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+                og_title: "Open Source ERP and CRM | Odoo",
+                og_type: "website",
+                og_site_name: "Odoo",
+                source_url: "http://odoo.com/",
+            };
+        });
+        const { editor } = await setupEditor(`<p>[]</p>`);
+        insertText(editor, "/link");
+        await animationFrame();
+        click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://odoo.com/");
+        await animationFrame();
+        expect.verifySteps(["/html_editor/link_preview_external"]);
+        expect(".o_we_url_link").toHaveText("Open Source ERP and CRM | Odoo");
+
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 1,
+            focusNode: pNode,
+            focusOffset: 1,
+        });
+        await waitUntil(() => !document.querySelector(".o-we-linkpopover"));
+
+        const linkNode = queryOne("a");
+        setSelection({
+            anchorNode: linkNode,
+            anchorOffset: 1,
+            focusNode: linkNode,
+            focusOffset: 1,
+        });
+        await waitFor(".o-we-linkpopover");
+        expect.verifySteps([]);
+    });
 });
