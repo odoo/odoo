@@ -80,6 +80,7 @@ export class ListRenderer extends Component {
         this.state = useState({
             columns: this.getActiveColumns(this.props.list),
         });
+        this.originalList = new Set(this.props.list.records.map(rec => rec.resId || rec.virtualId));
         this.withHandleColumn = this.state.columns.some((col) => col.widget === "handle");
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
@@ -201,6 +202,10 @@ export class ListRenderer extends Component {
             this.lastEditedCell = null;
         });
         this.isRTL = localization.direction === "rtl";
+    }
+
+    newInList(record) {
+        return !this.originalList.has(record.resId || record.vitualId);
     }
 
     displaySaveNotification() {
@@ -1234,7 +1239,7 @@ export class ListRenderer extends Component {
         const { cycleOnTab, list } = this.props;
         const row = cell.parentElement;
         const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
-        const topReCreate = this.props.editable === "top" && record.isNew;
+        const topReCreate = this.props.editable === "top" && record.isNew && this.newInList(record);
 
         if (
             applyMultiEditBehavior &&
