@@ -274,7 +274,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                 'tax_category_vals': [{
                     'id': tax['id'],
                     'percent': tax['percent'],
-                    'tax_scheme_id': 'VAT',
+                    'tax_scheme_vals': {'id': 'VAT'},
                 } for tax in self._get_tax_category_list(line.move_id, taxes)],
             })
         return res
