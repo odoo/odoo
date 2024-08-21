@@ -881,7 +881,7 @@ export class Thread extends Record {
      * @param {boolean} [options.sync] Whether to sync the unread message
      * state with the server values.
      */
-    markAsRead({ sync } = {}) {
+    markAsRead({ sync, syncCounterOnly } = {}) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
             this.isLoadedDeferred.then(() => new Promise(setTimeout)).then(() => this.markAsRead());
@@ -889,6 +889,7 @@ export class Thread extends Record {
         const alreadyReadBySelf = newestPersistentMessage?.isReadBySelf;
         if (this.selfMember) {
             this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
+            this.selfMember.syncCounterOnly = syncCounterOnly ?? this.selfMember.syncCounterOnly;
             this.selfMember.seen_message_id = newestPersistentMessage;
         }
         if (newestPersistentMessage && this.selfMember && !alreadyReadBySelf) {

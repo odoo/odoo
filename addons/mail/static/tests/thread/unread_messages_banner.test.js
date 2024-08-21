@@ -37,10 +37,11 @@ test("show unread messages banner when there are unread messages", async () => {
     }
     await start();
     await openDiscuss(channelId);
+    // discuss.channel composer is already focused on open, triggering mark_as_read
+    await contains("span", { text: "30 new messagesMark as Read" });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
         text: "message 0",
     });
-    await contains("span", { text: "30 new messagesMark as Read" });
 });
 
 test("mark thread as read from unread messages banner", async () => {
@@ -56,12 +57,13 @@ test("mark thread as read from unread messages banner", async () => {
     }
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
-        text: "message 0",
-    });
-    await click("span", {
+    // discuss.channel composer is already focused on open, triggering mark_as_read
+    await contains("span", {
         text: "Mark as Read",
         parent: ["span", { text: "30 new messagesMark as Read" }],
+    });
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
+        text: "message 0",
     });
     await contains(".o-mail-Thread-jumpToUnread", { count: 0 });
 });
@@ -102,15 +104,11 @@ test("scroll to the first unread message (slow ref registration)", async () => {
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     slowRegisterMessageRef = true;
-    await click("span", {
-        text: "101 new messages",
-        parent: ["span", { text: "101 new messagesMark as Read" }],
-    });
     document.addEventListener("scrollend", () => step("scrollend"), { capture: true });
-    // 1. scroll top, 2. scroll to the unread message 3. slight scroll when highlight ends.
-    await assertSteps(["scrollend", "scrollend", "scrollend"]);
+    // 1. scroll top, 2. scroll to the unread message
+    await assertSteps(["scrollend", "scrollend"]);
     const thread = document.querySelector(".o-mail-Thread");
-    const message = queryFirst(".o-mail-Message:contains(message 100)");
+    const message = queryFirst(".o-mail-Message:contains(message 200)");
     expect(isInViewportOf(thread, message)).toBe(true);
 });
 
@@ -152,10 +150,6 @@ test("scroll to unread notification", async () => {
     const thread = document.querySelector(".o-mail-Thread");
     const message = queryFirst(".o-mail-NotificationMessage:contains(Bob joined the channel)");
     expect(isInViewportOf(thread, message)).toBe(false);
-    await click("span", {
-        text: "1 new message",
-        parent: ["span", { text: "1 new messageMark as Read" }],
-    });
-    await assertSteps(["scrollend"]);
+    await scroll(".o-mail-Thread", "bottom");
     expect(isInViewportOf(thread, message)).toBe(true);
 });
