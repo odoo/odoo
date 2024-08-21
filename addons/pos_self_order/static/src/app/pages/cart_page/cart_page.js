@@ -54,6 +54,17 @@ export class CartPage extends Component {
         }
 
         if (
+            this.selfOrder.currentTable &&
+            !this.selfOrder.currentOrder.table_id &&
+            type === "mobile" &&
+            orderingMode === "table"
+        ) {
+            this.selfOrder.currentOrder.update({
+                table_id: this.selfOrder.currentTable,
+            });
+        }
+
+        if (
             type === "mobile" &&
             orderingMode === "table" &&
             !takeAway &&
@@ -96,7 +107,7 @@ export class CartPage extends Component {
 
     canChangeQuantity(line) {
         const order = this.selfOrder.currentOrder;
-        const lastChange = order.lineChanges[line.uuid];
+        const lastChange = order.uiState.lineChanges[line.uuid];
 
         if (!lastChange) {
             return true;
@@ -119,6 +130,7 @@ export class CartPage extends Component {
 
         if (lastChange) {
             line.qty = lastChange.qty;
+            line.setDirty();
         } else {
             this.selfOrder.removeLine(line);
         }
@@ -137,8 +149,11 @@ export class CartPage extends Component {
         for (const cline of this.selfOrder.currentOrder.lines) {
             if (cline.combo_parent_uuid === line.uuid) {
                 this._changeQuantity(cline, increase);
+                cline.setDirty();
             }
         }
+
+        line.setDirty();
     }
 
     async changeQuantity(line, increase) {

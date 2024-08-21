@@ -871,8 +871,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
      */
     function loadData(rawData, load = [], fromSerialized = false) {
         const results = {};
+        const oldStates = {};
 
         for (const model in rawData) {
+            if (!oldStates[model]) {
+                oldStates[model] = {};
+            }
+
             if (!load.includes(model) && load.length !== 0) {
                 continue;
             } else if (!results[model]) {
@@ -896,6 +901,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 }
 
                 baseData[model][record.id] = record;
+
+                if (records[model][record.id]) {
+                    oldStates[model][record.id] = records[model][record.id].serializeState();
+                }
+
                 const result = create(model, record, true, false, true);
 
                 if (!(model in results)) {
@@ -963,6 +973,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         // Setup all records when relations are linked
         for (const { raw, record } of modelToSetup) {
             record.setup(raw);
+
+            if (oldStates[record.model.modelName][record.id]) {
+                record.setupState(oldStates[record.model.modelName][record.id]);
+            }
         }
 
         makeRecordsAvailable(results, rawData);

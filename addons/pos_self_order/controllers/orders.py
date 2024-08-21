@@ -33,7 +33,7 @@ class PosSelfOrderController(http.Controller):
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
 
-        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
+        results = pos_config.env['pos.order'].sudo().with_context(from_self=True).with_company(pos_config.company_id.id).sync_from_ui([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 
@@ -77,7 +77,7 @@ class PosSelfOrderController(http.Controller):
             if len(line.combo_line_ids) > 0:
                 original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
                 remaining_total = lst_price
-                factor = lst_price / original_total
+                factor = lst_price / original_total if original_total > 0 else 1
 
                 for i, pos_order_line in enumerate(line.combo_line_ids):
                     child_product = pos_order_line.product_id
