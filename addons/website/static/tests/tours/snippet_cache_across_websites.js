@@ -1,8 +1,13 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+    switchWebsite,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
+registerWebsitePreviewTour('snippet_cache_across_websites', {
     edition: true,
     test: true,
     url: '/@/'
@@ -22,9 +27,9 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
         run: "click",
     },
     // There's no need to save, but canceling might or might not show a popup...
-    ...wTourUtils.clickOnSave(),
-    ...wTourUtils.switchWebsite(2, 'My Website 2'),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnSave(),
+    ...switchWebsite(2, 'My Website 2'),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Check that the custom snippet category is not here",
         trigger: "#oe_snippets:not(:has(.oe_snippet[name='Custom']))",

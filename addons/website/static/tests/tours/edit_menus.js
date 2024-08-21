@@ -1,8 +1,14 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnExtraMenuItem,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('edit_menus', {
+registerWebsitePreviewTour('edit_menus', {
     test: true,
     url: '/',
 }, () => [
@@ -49,13 +55,13 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         trigger: "body:not(:has(.oe_menu_editor))",
     },
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    clickOnExtraMenuItem({}, true),
     {
         content: "There should be a new megamenu item.",
         trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
     },
     // Add a menu item in edit mode.
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Click on a menu item",
         trigger: ":iframe .top_menu .nav-item a",
@@ -120,7 +126,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: "#oe_snippets.o_loaded",
     },
     // Edit the new menu item from the "edit link" popover button
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    clickOnExtraMenuItem({}, true),
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     },
@@ -149,15 +155,15 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: '.modal-footer .btn-primary',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
     {
         content: "Label should have changed",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
     },
     // Edit the menu item from the "edit menu" popover button
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    ...clickOnEditAndWaitEditMode(),
+    clickOnExtraMenuItem({}, true),
     {
         content: "Click on the 'Modnar' link",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
@@ -171,7 +177,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Click on the dialog Edit Menu button",
         trigger: '.oe_menu_editor .js_menu_label:contains("Modnar")',
-        run: function () {
+        run() {
             const liEl = this.anchor.closest('[data-menu-id]');
             liEl.querySelector('button.js_edit_menu').click();
         },
@@ -195,9 +201,9 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     // Drag a block to be able to scroll later.
-    ...wTourUtils.dragNDrop({id: "s_media_list", name: "Media List", groupName: "Content"}),
-    ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    ...dragNDrop({id: "s_media_list", name: "Media List", groupName: "Content"}),
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
     {
         content: "Label should have changed",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar !!")',
@@ -216,8 +222,8 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: `Drag "Contact Us" menu below "Home" menu`,
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        async run(helpers) {
-            await helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
+        run(helpers) {
+            return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
                 position: {
                     top: 57,
                     left:5,
@@ -239,8 +245,8 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Megaaaaa!") .fa-bars',
-        async run(helpers) {
-            await helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
+        run(helpers) {
+            return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
                 position: {
                     y: 27,
                     left: 5,
@@ -268,7 +274,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "When menu item is opened, child item must appear in the shown menu",
         trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
-        run: function () {
+        run() {
             // Scroll down.
             this.anchor.closest("body").querySelector(".o_footer_copyright_name")
                 .scrollIntoView(true);
@@ -305,7 +311,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "When the mega menu is opened, scroll up",
         trigger: ":iframe .top_menu .o_mega_menu_toggle.show",
-        run: function () {
+        run() {
             const marginTopOfMegaMenu = getComputedStyle(
                 this.anchor.closest(".dropdown").querySelector(".o_mega_menu"))["margin-top"];
             if (marginTopOfMegaMenu !== '0px') {
@@ -330,7 +336,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: ':iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
                  '.s_mega_menu_odoo_menu',
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Open nested menu item",
         trigger: ':iframe .top_menu .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',

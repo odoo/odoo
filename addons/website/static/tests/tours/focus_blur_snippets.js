@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 const blockIDToData = {
     parent: {
@@ -32,13 +32,13 @@ function clickAndCheck(blockID, expected) {
         trigger: blockID
             ? `:iframe .oe_overlay.o_draggable:eq(${blockData.overlayIndex}).oe_active`
             : `:iframe #oe_manipulators:not(:has(.oe_active)):not(:visible)`,
-        run: function (actions) {
+        run() {
             const result = window.focusBlurSnippetsResult;
             window.focusBlurSnippetsResult = [];
 
             if (expected.length !== result.length
-                    || !expected.every((item, i) => item === result[i])) {
-                console.error(`
+                || !expected.every((item, i) => item === result[i])) {
+                throw new Error(`
                     Expected: ${expected.toString()}
                     Result: ${result.toString()}
                 `);
@@ -49,12 +49,12 @@ function clickAndCheck(blockID, expected) {
 
 window.focusBlurSnippetsResult = [];
 
-wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
+registerWebsitePreviewTour("focus_blur_snippets", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_focusblur",
         name: "s_focusblur",
         groupName: "Content",

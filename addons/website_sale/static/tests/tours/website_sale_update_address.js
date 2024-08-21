@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import tourUtils from "@website_sale/js/tours/tour_utils";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('update_billing_shipping_address', {
     test: true,

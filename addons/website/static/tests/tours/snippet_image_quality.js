@@ -1,13 +1,13 @@
 /** @odoo-module */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-wTourUtils.registerWebsitePreviewTour('website_image_quality', {
+registerWebsitePreviewTour('website_image_quality', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -34,7 +34,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
         run() {
             // Make sure the reached size is smaller than the original one.
             if (parseFloat(this.anchor.innerText) >= 42.9) {
-                console.error("Image size should be smaller than original");
+                throw new Error("Image size should be smaller than original");
             }
         },
     },

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { switchWebsite, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { registry } from "@web/core/registry";
 
 // TODO: This part should be moved in a QUnit test
@@ -96,9 +96,7 @@ const homePage = 'tr:contains("Home")';
 const refreshPage = [
     {
         trigger: "body",
-        run: () => {
-            window.location.reload();
-        },
+        run() {window.location.reload();},
     },
 ];
 const duplicateSinglePage = [
@@ -167,7 +165,7 @@ const duplicateMultiplePage = [
     ...refreshPage,
 ];
 
-wTourUtils.registerWebsitePreviewTour('website_page_manager', {
+registerWebsitePreviewTour('website_page_manager', {
     test: true,
     url: '/',
 }, () => [
@@ -205,10 +203,10 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
     },
 ]);
 
-wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
+registerWebsitePreviewTour('website_page_manager_session_forced', {
     test: true,
     url: '/',
-}, () => [...wTourUtils.switchWebsite(2, 'My Website 2'), {
+}, () => [...switchWebsite(2, 'My Website 2'), {
     content: "Click on Site",
     trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
     run:" click",
@@ -245,7 +243,7 @@ registry.category("web_tour.tours").add('website_page_manager_direct_access', {
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
 }]});
 
-wTourUtils.registerWebsitePreviewTour(
+registerWebsitePreviewTour(
     "website_clone_pages",
     {
         test: true,

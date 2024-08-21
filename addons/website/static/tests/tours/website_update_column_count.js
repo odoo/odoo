@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnSnippet,
+    dragNDrop,
+    registerWebsitePreviewTour,
+    toggleMobilePreview,
+} from '@website/js/tours/tour_utils';
 
 const columnCountOptSelector = ".snippet-option-layout_column we-select[data-name='column_count_opt']";
 const columnsSnippetRow = ":iframe .s_three_columns .row";
@@ -33,17 +38,17 @@ const checkIfNoMobileOrder = (snippetRowSelector) => {
     };
 };
 
-wTourUtils.registerWebsitePreviewTour("website_update_column_count", {
+registerWebsitePreviewTour("website_update_column_count", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-...wTourUtils.dragNDrop({
+...dragNDrop({
     id: "s_three_columns",
     name: "Columns",
     groupName: "Columns",
 }),
-...wTourUtils.clickOnSnippet({
+...clickOnSnippet({
     id: "s_three_columns",
     name: "Columns",
 }), {
@@ -156,14 +161,14 @@ wTourUtils.registerWebsitePreviewTour("website_update_column_count", {
 },
 ]);
 
-wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
+registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
-    ...wTourUtils.dragNDrop({id: "s_text_image", name: "Text - Image", groupName: "Content"}),
-    ...wTourUtils.toggleMobilePreview(true),
+    ...dragNDrop({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
+    ...dragNDrop({id: "s_text_image", name: "Text - Image", groupName: "Content"}),
+    ...toggleMobilePreview(true),
     // Add a mobile order to the "Columns" snippet columns.
     ...changeFirstAndSecondColumnsMobileOrder(columnsSnippetRow, "Columns"),
     {
@@ -175,7 +180,7 @@ wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop",
     // Add a mobile order to the "Text-Image" snippet columns.
     ...addMobileOrderToTextImageSnippet,
     // Test the drag and drop in the same snippet.
-    ...wTourUtils.toggleMobilePreview(false),
+    ...toggleMobilePreview(false),
     {
         content: "Drag a 'Text-Image' column and drop it in the same snippet",
         trigger: ":iframe .o_overlay_move_options .o_move_handle",
@@ -183,10 +188,10 @@ wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop",
     },
     checkIfNoMobileOrder(textImageSnippetRow),
     // Add again a mobile order to the "Text-Image" snippet columns.
-    ...wTourUtils.toggleMobilePreview(true),
+    ...toggleMobilePreview(true),
     ...addMobileOrderToTextImageSnippet,
     // Test the drag and drop from "Columns" to "Text-Image".
-    ...wTourUtils.toggleMobilePreview(false),
+    ...toggleMobilePreview(false),
     {
         content: "Click on the second column of the 'Columns' snippet",
         trigger: `${columnsSnippetRow} > div:nth-child(2)`,

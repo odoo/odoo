@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import tourUtils from "@website_sale/js/tours/tour_utils";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 import { redirect } from "@web/core/utils/urls";
 
 registry.category("web_tour.tours").add('shop_mail', {

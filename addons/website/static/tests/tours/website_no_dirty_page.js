@@ -1,10 +1,15 @@
 /** @odoo-module **/
 
 import { browser } from '@web/core/browser/browser';
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const makeSteps = (steps = []) => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
         groupName: "Content",
@@ -17,8 +22,8 @@ const makeSteps = (steps = []) => [
         trigger: ".modal-footer .btn-secondary",
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditMode(),
     {
         // This makes sure the last step about leaving edit mode at the end of
         // this tour makes sense.
@@ -57,13 +62,13 @@ const makeSteps = (steps = []) => [
     },
 ];
 
-wTourUtils.registerWebsitePreviewTour('website_no_action_no_dirty_page', {
+registerWebsitePreviewTour('website_no_action_no_dirty_page', {
     test: true,
     url: '/',
     edition: true,
 }, () => makeSteps());
 
-wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
+registerWebsitePreviewTour('website_no_dirty_page', {
     test: true,
     url: '/',
     edition: true,
@@ -98,12 +103,12 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
     },
 ]));
 
-wTourUtils.registerWebsitePreviewTour('website_no_dirty_lazy_image', {
+registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

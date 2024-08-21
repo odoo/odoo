@@ -1,13 +1,18 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    clickOnSnippet,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 
 /**
  * Makes sure that blog tags can be created and removed.
  */
-wTourUtils.registerWebsitePreviewTour('blog_tags', {
+registerWebsitePreviewTour('blog_tags', {
     test: true,
     url: '/blog',
 }, () => [
@@ -17,8 +22,8 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         trigger: ":iframe article[name=blog_post] a:contains('Post Test')",
         run: "click",
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
     {
         content: "Open tag dropdown",
         trigger: "we-customizeblock-option:contains(Tags) .o_we_m2m we-toggler",
@@ -35,13 +40,13 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         content: "Verify tag appears in options",
         trigger: "we-customizeblock-option:contains(Tags) we-list input[data-name=testtag]",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Verify tag appears in blog post",
         trigger: ":iframe #o_wblog_post_content .badge:contains(testtag)",
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
     {
         content: "Remove tag",
         trigger: "we-customizeblock-option:contains(Tags) we-list tr:has(input[data-name=testtag]) we-button.fa-minus",
@@ -50,7 +55,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         content: "Verify tag does not appear in options anymore",
         trigger: "we-customizeblock-option:contains(Tags) we-list:not(:has(input[data-name=testtag]))",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Verify tag does not appear in blog post anymore",
         trigger: ":iframe #o_wblog_post_content div:has(.badge):not(:contains(testtag))",

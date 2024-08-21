@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { dragNDrop, goBackToBlocks, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
+registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_company_team",
         name: "Team",
         groupName: "People",
@@ -21,7 +21,7 @@ wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
         content: "Verify that the Replace options is in the editor.",
         trigger: "we-button[data-replace-media]",
     },
-    wTourUtils.goBackToBlocks(),
+    goBackToBlocks(),
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },

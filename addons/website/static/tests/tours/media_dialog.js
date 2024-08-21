@@ -1,13 +1,18 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    changeOption,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
+registerWebsitePreviewTour("website_media_dialog_undraw", {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-...wTourUtils.dragNDrop({
+...dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
     groupName: "Content",
@@ -26,12 +31,12 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
 },
 ]);
 
-wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
+registerWebsitePreviewTour("website_media_dialog_external_library", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
         groupName: "Content",
@@ -49,7 +54,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
         trigger: ".o_select_media_dialog .o_we_search_select",
         // This is a standard <select>: we can't simulate a click on the option
         // directly.
-        run: function (actions) {
+        run(actions) {
             actions.click();
             actions.text("Illustrations");
             this.$anchor.trigger($.Event("keydown", {key: 'Enter', keyCode: 13}));
@@ -65,23 +70,23 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
     }, {
         content: "Check that the image was created only once",
         trigger: ".o_select_media_dialog .o_we_existing_attachments",
-        run: function () {
+        run() {
             const selector = ".o_existing_attachment_cell img[src^='/web_editor/shape/illustration/']";
-            const imgName = this.$anchor[0].querySelector(selector).title;
-            const uploadedImgs = this.$anchor[0].querySelectorAll(`${selector}[title='${imgName}']`);
+            const imgName = this.anchor.querySelector(selector).title;
+            const uploadedImgs = this.anchor.querySelectorAll(`${selector}[title='${imgName}']`);
             if (uploadedImgs.length !== 1) {
-                console.error(`${uploadedImgs.length} attachment(s) were found. Exactly 1 should have been created.`);
+                throw new Error(`${uploadedImgs.length} attachment(s) were found. Exactly 1 should have been created.`);
             }
         },
     },
 ]);
 
-wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
+registerWebsitePreviewTour('website_media_dialog_icons', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_social_media',
         name: 'Social Media',
     }),
@@ -98,7 +103,6 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     {
         content: "Check if the icon remains the same",
         trigger: ':iframe .s_social_media .fa-instagram',
-        run: () => null, // it's a check
     },
     {
         content: "Open MediaDialog again",
@@ -113,17 +117,16 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     {
         content: "Check if the icon remains the same",
         trigger: ':iframe .s_social_media .fa-instagram',
-        run: () => null, // it's a check
     },
-    ...wTourUtils.clickOnSave()
+    ...clickOnSave()
 ]);
 
-wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
+registerWebsitePreviewTour("website_media_dialog_image_shape", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
         groupName: "Content",
@@ -133,8 +136,8 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
         trigger: ":iframe .s_text_image img",
         run: "click",
     },
-    wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
-    wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
+    changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
+    changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "Open MediaDialog from an image",
         trigger: ":iframe .s_text_image img[data-shape]",

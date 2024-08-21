@@ -1,7 +1,7 @@
 /** @odoo-module **/
 /* global ace */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 var BROKEN_STEP = {
     // because saving a broken template opens a recovery page with no assets
@@ -11,7 +11,7 @@ var BROKEN_STEP = {
     // exception of somehow telling the harness / browser to do it)
     trigger: "body",
 };
-wTourUtils.registerWebsitePreviewTour(
+registerWebsitePreviewTour(
     "test_reset_page_view_complete_flow_part1",
     {
         test: true,
@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour(
             trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_cover"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         // 2. Edit that COW'd view in the HTML editor to break it.
         {
             content: "open site menu",
@@ -46,10 +46,10 @@ wTourUtils.registerWebsitePreviewTour(
         {
             content: "add a broken t-field in page DOM",
             trigger: 'div.ace_line .ace_xml:contains("placeholder")',
-            run: function () {
+            run() {
                 ace.edit(document.querySelector("#resource-editor div"))
                     .getSession()
-                    .insert({ row: 4, column: 1 }, '<t t-field="not.exist"/>\n');
+                    .insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
             },
         },
         {
@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour(
     ]
 );
 
-wTourUtils.registerWebsitePreviewTour(
+registerWebsitePreviewTour(
     "test_reset_page_view_complete_flow_part2",
     {
         test: true,
@@ -103,10 +103,10 @@ wTourUtils.registerWebsitePreviewTour(
         {
             content: "add a broken t-field in page DOM",
             trigger: 'div.ace_line .ace_xml:contains("oe_structure_test_website_page")',
-            run: function () {
+            run() {
                 ace.edit(document.querySelector("#resource-editor div"))
                     .getSession()
-                    .insert({ row: 4, column: 1 }, '<t t-field="not.exist"/>\n');
+                    .insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
             },
         },
         {

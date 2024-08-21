@@ -1,8 +1,12 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
+registerWebsitePreviewTour('shop_wishlist_admin', {
     url: '/shop?search=Rock',
     test: true,
 },
@@ -20,7 +24,7 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             trigger: ':iframe body:not(:has(.js_product_change))',
             run: "click",
         },
-        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
@@ -39,7 +43,7 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             trigger: 'we-button[data-name="variants_products_list_opt"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         {
             content: "check page loaded after list of variant customization enabled",
             trigger: ':iframe .js_product_change',
@@ -53,14 +57,14 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         {
             content: "Check that wishlist contains 1 items",
             trigger: ':iframe .my_wish_quantity:contains(1)',
-            run: function () {
+            run() {
                 window.location.href = '/@/shop/wishlist';
             }
         },
         {
             content: "Check wishlist contains first variant",
             trigger: ':iframe #o_comparelist_table tr:contains("red")',
-            run: function () {
+            run() {
                 window.location.href = '/@/shop?search=Rock';
             }
         },
@@ -82,7 +86,7 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         {
             content: "Check that black product was added",
             trigger: ':iframe .my_wish_quantity:contains(2)',
-            run: function () {
+            run() {
                 window.location.href = '/@/shop/wishlist';
             }
         },

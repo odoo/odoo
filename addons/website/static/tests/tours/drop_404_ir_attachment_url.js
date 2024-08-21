@@ -1,13 +1,17 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    changeOption,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
+registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_404_snippet',
         name: '404 Snippet',
         groupName: "Images",
@@ -23,26 +27,26 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     {
         content: 'Once the image UI appears, check the image has no size (404)',
         trigger: ':iframe .s_404_snippet img',
-        run: function () {
+        run() {
             const imgEl = this.anchor;
             if (!imgEl.complete
-                    || imgEl.naturalWidth !== 0
-                    || imgEl.naturalHeight !== 0) {
-                console.error('This is supposed to be a 404 image');
+                || imgEl.naturalWidth !== 0
+                || imgEl.naturalHeight !== 0) {
+                throw new Error('This is supposed to be a 404 image');
             }
         },
     },
-    wTourUtils.changeOption('ImageTools', 'we-select[data-name="shape_img_opt"] we-toggler'),
-    wTourUtils.changeOption('ImageTools', 'we-button[data-set-img-shape]'),
+    changeOption('ImageTools', 'we-select[data-name="shape_img_opt"] we-toggler'),
+    changeOption('ImageTools', 'we-button[data-set-img-shape]'),
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: ':iframe .s_404_snippet img[src^="data:"]',
-        run: function () {
+        run() {
             const imgEl = this.anchor;
             if (!imgEl.complete
-                    || imgEl.naturalWidth === 0
-                    || imgEl.naturalHeight === 0) {
-                console.error('Even though the original image was a 404, the option should have been applied on the placeholder image');
+                || imgEl.naturalWidth === 0
+                || imgEl.naturalHeight === 0) {
+                throw new Error('Even though the original image was a 404, the option should have been applied on the placeholder image');
             }
         },
     },

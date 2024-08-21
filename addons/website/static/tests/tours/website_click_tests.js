@@ -1,6 +1,13 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    clickOnSnippet,
+    dragNDrop,
+    goBackToBlocks,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const cover = {
@@ -9,7 +16,7 @@ const cover = {
     groupName: "Intro",
 };
 
-wTourUtils.registerWebsitePreviewTour('website_click_tour', {
+registerWebsitePreviewTour('website_click_tour', {
     test: true,
     url: '/',
 }, () => [
@@ -23,14 +30,14 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
         content: "wait for the page to be loaded",
         trigger: '.o_website_preview[data-view-xmlid="website.contactus"]',
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "click on a link that would trigger navigation",
         trigger: ':iframe a[href="/"]',
         run: "click",
     },
-    wTourUtils.goBackToBlocks(),
-    ...wTourUtils.dragNDrop(cover),
-    ...wTourUtils.clickOnSnippet(cover),
-    ...wTourUtils.clickOnSave(),
+    goBackToBlocks(),
+    ...dragNDrop(cover),
+    ...clickOnSnippet(cover),
+    ...clickOnSave(),
 ]);

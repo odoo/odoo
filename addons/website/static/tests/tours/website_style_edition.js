@@ -1,7 +1,12 @@
 /** @odoo-module **/
 
 import weUtils from "@web_editor/js/common/utils";
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    goToTheme,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const TARGET_FONT_SIZE = 20; // The max to not be impacted by the responsive font size system
 const TARGET_BODY_BG_COLOR = '#00FF00';
@@ -42,12 +47,12 @@ const checkBodyColor = function () {
     }
 };
 
-wTourUtils.registerWebsitePreviewTour("website_style_edition", {
+registerWebsitePreviewTour("website_style_edition", {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-...wTourUtils.goToTheme(),
+...goToTheme(),
 {
     content: "Change font size",
     trigger: '[data-variable="font-size-base"] input',
@@ -109,7 +114,7 @@ wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     trigger: ':iframe body',
     run: checkBodyColor,
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 {
     content: "Check the font size is still ok outside of edit mode",
     trigger: ':iframe body #wrapwrap',
@@ -123,8 +128,8 @@ wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     trigger: ':iframe body',
     run: checkBodyColor,
 },
-...wTourUtils.clickOnEditAndWaitEditMode(),
-...wTourUtils.goToTheme(),
+...clickOnEditAndWaitEditMode(),
+...goToTheme(),
 {
     trigger: '[data-customize-body-bg-type="NONE"].active',
 },

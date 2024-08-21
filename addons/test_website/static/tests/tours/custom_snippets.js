@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 /**
  * The purpose of this tour is to check the custom snippets flow:
@@ -21,12 +21,12 @@ import wTourUtils from "@website/js/tours/tour_utils";
  * -> ensure it was deleted
  */
 
-wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
+registerWebsitePreviewTour('test_custom_snippet', {
     url: '/',
     edition: true,
     test: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_banner',
         name: 'Banner',
         groupName: "Intro",

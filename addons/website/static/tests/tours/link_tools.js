@@ -1,6 +1,13 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    changeOption,
+    clickOnEditAndWaitEditMode,
+    clickOnElement,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
@@ -9,13 +16,13 @@ const clickOnImgStep = {
     run: "click",
 };
 
-wTourUtils.registerWebsitePreviewTour('link_tools', {
+registerWebsitePreviewTour('link_tools', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
     // 1. Create a new link from scratch.
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -105,9 +112,9 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         run: "edit odoo.be && click body",
     },
 
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     // 3. Edit a link after saving the page.
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "The new link content should be odoo website and url odoo.be",
         trigger: ':iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
@@ -123,14 +130,14 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: '#toolbar:not(.oe-floating) we-button[data-value="secondary"]',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "The link should have the secondary button style.",
         trigger: ':iframe .s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
     },
     // 4. Add link on image.
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.dragNDrop({
+    ...clickOnEditAndWaitEditMode(),
+    ...dragNDrop({
         id: 's_three_columns',
         name: 'Columns',
         groupName: "Columns",
@@ -169,7 +176,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Check that link tools appear.",
         trigger: ':iframe .popover div a:contains("http://odoo.com")',
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Check that the first image was saved.",
         trigger: ':iframe .s_three_columns .row > :nth-child(1) div > a > img',
@@ -179,7 +186,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: ':iframe .s_three_columns .row > :nth-child(2) div > img',
     },
     // 5. Remove link from image.
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Reselect the first image.",
         trigger: ':iframe .s_three_columns .row > :nth-child(1) div > a > img',
@@ -199,8 +206,8 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: ':iframe .s_three_columns .row > :nth-child(1) div > img',
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
-    wTourUtils.clickOnElement("menu link", ":iframe header .nav-item a"),
-    wTourUtils.clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .fa-sitemap"),
+    clickOnElement("menu link", ":iframe header .nav-item a"),
+    clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .fa-sitemap"),
     {
         trigger: ".o_website_dialog:visible",
     },
@@ -222,8 +229,8 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Mega") .fa-bars',
-        async run(helpers) {
-            await helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
+        run(helpers) {
+            return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
                 position : {
                     top: 20,
                 }, 
@@ -240,10 +247,10 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: ".modal button:contains(Save)",
         run: "click",
     },
-    wTourUtils.clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),
-    wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
-    wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
-    wTourUtils.clickOnElement("card's text", ":iframe header .s_mega_menu_cards p"),
+    clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),
+    changeOption("MegaMenuLayout", "we-toggler"),
+    changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
+    clickOnElement("card's text", ":iframe header .s_mega_menu_cards p"),
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",
@@ -298,7 +305,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change URL to https",
         trigger: "#o_link_dialog_url_input",
-        run(helpers) {
+        run() {
             // TODO: update the tour to use helpers.edit("https://odoo.com")
             // To see what happens with edit, add `pause:true` to the previous step 
             // and type yourself https://odoo.com in #o_link_dialog_url_input  
@@ -317,7 +324,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change it back http",
         trigger: "#o_link_dialog_url_input",
-        run(helpers) {
+        run() {
             // TODO: update the tour to use helpers.edit("http://odoo.com")
             this.anchor.value = "http://odoo.com";
             this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
@@ -370,7 +377,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Edit link label",
         trigger: ":iframe .s_text_image p a",
-        run(actions) {
+        run() {
             // TODO: use run: "click", instead
             this.anchor.click();
             // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
@@ -483,5 +490,5 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "#o_link_dialog_label_input:value('Contact Us')",
     },
     // TODO: understand why tour need big timeout to passed and remove it
-    ...wTourUtils.clickOnSave("bottom", 20000),
+    ...clickOnSave("bottom", 20000),
 ]);

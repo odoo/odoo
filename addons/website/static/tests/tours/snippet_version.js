@@ -1,18 +1,22 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("snippet_version_1", {
+registerWebsitePreviewTour("snippet_version_1", {
     edition: true,
     url: "/",
     test: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_test_snip',
         name: 'Test snip',
         groupName: "Content",
     }),
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -31,9 +35,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_version_1", {
         }
     },
 },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
 ]);
-wTourUtils.registerWebsitePreviewTour("snippet_version_2", {
+registerWebsitePreviewTour("snippet_version_2", {
     edition: true,
     url: "/",
     test: true,
