@@ -470,6 +470,10 @@ class TestMrpByProduct(common.TransactionCase):
         mo.move_byproduct_ids.lot_ids = [(4, self.sn_1.id)]
         mo.move_byproduct_ids.lot_ids = [(4, self.sn_2.id)]
 
+        self.assertFalse(mo.move_byproduct_ids.show_lots_text)
+        self.assertTrue(mo.move_byproduct_ids.show_lots_m2o)
+        self.assertFalse(mo.move_byproduct_ids.show_quant)
+
         mo.button_mark_done()
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)
         self.assertEqual(mo.move_byproduct_ids.product_id, mo.move_byproduct_ids.move_line_ids.product_id)
