@@ -124,7 +124,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch im_livechat_channel
     #       - fetch country (anonymous_country)
     #   - _get_last_messages
-    #   18: message _to_store:
+    #   13: message _to_store:
     #       - search mail_message_schedule
     #       - fetch mail_message
     #       - search mail_message_reaction
@@ -137,8 +137,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_tracking_value
     #       - search mail_message_res_partner_starred_rel
     #       - search rating_rating
-    #       6: _compute_rating_stats
-    _query_count_discuss_channels = 56
+    #       - _compute_rating_stats
+    _query_count_discuss_channels = 51
 
     def setUp(self):
         super().setUp()
