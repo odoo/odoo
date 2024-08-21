@@ -4268,6 +4268,38 @@ class TestMrpOrder(TestMrpCommon):
         self.assertTrue(all(sml.lot_id == producing_lot for sml in mo.move_finished_ids.move_line_ids))
         self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 3.0)
 
+    def test_mrp_link_new_operations(self):
+        """
+        Checks that newly created operations are linked with the correct dependencies.
+            - Create and confirm an MO with 2 operations: op1 > op2
+            - Start op2 and create a new operation op3
+            > The new dependency should be op1 > op2 > op3
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'product_qty': 1.0,
+        })
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.new() as line_op_1:
+                line_op_1.name = "op1"
+                line_op_1.workcenter_id = self.workcenter_1
+            with mo_form.workorder_ids.new() as line_op_2:
+                line_op_2.name = "op2"
+                line_op_2.workcenter_id = self.workcenter_1
+        op_1, op_2 = mo.workorder_ids
+        mo.action_confirm()
+        self.assertFalse(op_1.blocked_by_workorder_ids)
+        self.assertEqual(op_2.blocked_by_workorder_ids, op_1)
+        op_2.button_start()
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.new() as line_op_3:
+                line_op_3.name = "op3"
+                line_op_3.workcenter_id = self.workcenter_1
+        op_3 = mo.workorder_ids - (op_1 | op_2)
+        self.assertFalse(op_1.blocked_by_workorder_ids)
+        self.assertEqual(op_2.blocked_by_workorder_ids, op_1)
+        self.assertEqual(op_3.blocked_by_workorder_ids, op_2)
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
