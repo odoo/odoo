@@ -47,10 +47,10 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             "combo_id": self.desk_accessories_combo.id,
         })
 
-        self_route = self.pos_config._get_self_order_route()
-
         for mode in ("mobile", "consultation", "kiosk"):
             self.pos_config.write({"self_ordering_mode": mode})
+            # The returned route depend of the pos_config mode
+            self_route = self.pos_config._get_self_order_route()
             self.start_tour(self_route, "self_order_pos_closed")
 
     def test_self_order_config_default_user(self):
