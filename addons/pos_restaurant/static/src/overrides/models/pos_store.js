@@ -38,7 +38,7 @@ patch(PosStore.prototype, {
     afterOrderDeletion() {
         if (
             this.config.module_pos_restaurant &&
-            !this.mainScreen.component.name === "TicketScreen"
+            this.mainScreen.component.name !== "TicketScreen"
         ) {
             return this.showScreen("FloorScreen");
         }
