@@ -3220,7 +3220,7 @@ class MailThread(models.AbstractModel):
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
         gen_batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
-        ) or 500  # be sure to not have 0, as otherwise no iteration is done
+        ) or 50  # be sure to not have 0, as otherwise no iteration is done
         notif_create_values = []
         for _lang, render_values, recipients_group in self._notify_get_classified_recipients_iterator(
             message,

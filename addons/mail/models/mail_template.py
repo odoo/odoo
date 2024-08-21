@@ -617,7 +617,7 @@ class MailTemplate(models.Model):
         mails_sudo = self.env['mail.mail'].sudo()
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
-        ) or 500  # be sure to not have 0, as otherwise no iteration is done
+        ) or 50  # be sure to not have 0, as otherwise no iteration is done
         RecordModel = self.env[self.model].with_prefetch(res_ids)
         record_ir_model = self.env['ir.model']._get(self.model)
 
