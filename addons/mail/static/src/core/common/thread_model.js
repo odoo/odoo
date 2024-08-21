@@ -353,6 +353,10 @@ export class Thread extends Record {
         return this.selfMember?.message_unread_counter > 0 || this.needactionMessages.length > 0;
     }
 
+    get isMuted() {
+        return this.mute_until_dt || this.store.settings.mute_until_dt;
+    }
+
     get typesAllowingCalls() {
         return ["chat", "channel", "group"];
     }
