@@ -60,6 +60,7 @@
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
         'views/snippets/s_popup.xml',
+        'views/snippets/s_mega_menu_ecommerce_categories.xml',
     ],
     'demo': [
         'data/demo.xml',
@@ -147,6 +148,7 @@
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
             'website_sale/static/src/js/website_sale.editor.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
+            'website_sale/static/src/js/editor/snippets.options.js',
         ],
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',

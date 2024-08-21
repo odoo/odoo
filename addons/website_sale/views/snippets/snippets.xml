@@ -389,6 +389,15 @@
                          data-reload="/"/>
         </div>
     </xpath>
+    <xpath expr="//div[@data-selector='.o_mega_menu']" position="inside">
+        <we-row string="eCommerce">
+            <div>
+                <we-button class="fetch_ecom_categories" title="Fetch Ecommerce Categories">
+                    Load Categories
+                </we-button>
+            </div>
+        </we-row>
+    </xpath>
 </template>
 
 <template id="snippets_options_web_editor" inherit_id="web_editor.snippet_options" name="e-commerce base snippet options">
