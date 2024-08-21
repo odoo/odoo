@@ -139,7 +139,9 @@
             '|',
                 ('employee_id', '=', False),
                 ('employee_id.company_id', 'in', company_ids),
-            ('holiday_status_id.company_id', 'in', company_ids + [False])
+            '|',
+                ('holiday_status_id', '=', False),
+                ('holiday_status_id.company_id', 'in', company_ids + [False]),
         ]</field>
     </record>
 
