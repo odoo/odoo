@@ -2,6 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 
 import { Component, useState } from "@odoo/owl";
 import { Thread } from "./thread_model";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} Props
@@ -29,5 +30,12 @@ export class ThreadIcon extends Component {
 
     get correspondent() {
         return this.props.thread.correspondent;
+    }
+
+    get defaultChatIcon() {
+        return {
+            class: "fa fa-question-circle",
+            title: _t("No IM status available"),
+        };
     }
 }

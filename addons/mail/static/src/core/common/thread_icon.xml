@@ -8,14 +8,14 @@
                 <div t-if="props.thread.authorizedGroupFullName" class="fa fa-fw fa-hashtag" t-att-class="largeClass" t-att-title="props.thread.accessRestrictedToGroupText"/>
                 <div t-if="!props.thread.authorizedGroupFullName" class="fa fa-fw fa-globe" t-att-class="largeClass" title="Public Channel"/>
             </t>
-            <t t-elif="props.thread.channel_type === 'chat' and correspondent">
+            <t t-elif="props.thread.channel_type?.includes('chat') and correspondent">
                 <t name="chat">
                     <t name="chat_static">
                         <div t-if="correspondent.persona.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online"/>
                         <div t-elif="correspondent.persona.im_status === 'offline'" class="fa fa-fw fa-circle-o" title="Offline"/>
                         <div t-elif="correspondent.persona.im_status === 'away'" class="fa fa-fw fa-circle o-yellow" title="Away"/>
                         <div t-elif="correspondent.persona.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot"/>
-                        <div t-else="" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+                        <div t-else="" class="fa-fw" t-att-class="largeClass" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
                     </t>
                 </t>
             </t>

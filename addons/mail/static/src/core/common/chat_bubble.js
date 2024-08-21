@@ -6,13 +6,14 @@ import { useService } from "@web/core/utils/hooks";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { CountryFlag } from "@mail/core/common/country_flag";
 
 /**
  * @typedef {Object} Props
  * @extends {Component<Props, Env>}
  */
 export class ChatBubble extends Component {
-    static components = { ImStatus, Dropdown };
+    static components = { CountryFlag, ImStatus, Dropdown };
     static props = ["chatWindow"];
     static template = "mail.ChatBubble";
 
