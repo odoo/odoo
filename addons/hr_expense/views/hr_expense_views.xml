@@ -199,7 +199,7 @@
                             </div>
 
                             <!-- CASE: converter when currency is different than the company one -->
-                            <label for="total_amount" string="" invisible="not is_multiple_currency and not product_has_cost"/>
+                            <label for="total_amount" invisible="not is_multiple_currency and not product_has_cost"/>
                             <div class="o_row" invisible="not is_multiple_currency and not product_has_cost">
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'company_currency_id'}"
                                        force_save="1" readonly="not is_editable or product_has_cost" class="oe_inline"/>
