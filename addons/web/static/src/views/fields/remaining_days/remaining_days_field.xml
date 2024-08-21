@@ -2,21 +2,15 @@
 <templates xml:space="preserve">
     <t t-name="web.RemainingDaysField">
         <t t-if="props.readonly">
-            <t t-set="days" t-value="diffDays" />
-            <t t-set="formatted" t-value="formattedValue" />
             <div
-                t-att-class="{
-                    'fw-bold': days !== null and days lte 0 and props.record.isActive,
-                    'text-danger': days !== null and days lt 0 and props.record.isActive,
-                    'text-warning': days !== null and days === 0 and props.record.isActive,
-                }"
-                t-att-title="formatted"
+                t-att-class="classNames"
+                t-att-title="formattedValue"
             >
                 <t t-esc="diffString"/>
             </div>
         </t>
         <t t-else="">
-            <DateTimeField t-props="props" />
+            <DateTimeField t-props="dateTimeFieldProps" />
         </t>
     </t>
 </templates>
