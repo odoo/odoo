@@ -70,7 +70,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     },
     {
         content: "validate the website creation modal",
-        trigger: 'button.btn-primary',
+        trigger: '.modal button.btn-primary',
         run: "click",
     },
     {
