@@ -151,9 +151,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_means_vals_list(self, invoice):
+        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
+        # as we cannot deduce this information from the invoice
+        payment_means_code, payment_means_name = 30, 'credit transfer'
+        if invoice.partner_id.country_code == 'DK':
+            payment_means_code, payment_means_name = 1, 'unknown'
+
         vals = {
-            'payment_means_code': 30,
-            'payment_means_code_attrs': {'name': 'credit transfer'},
+            'payment_means_code': payment_means_code,
+            'payment_means_code_attrs': {'name': payment_means_name},
             'payment_due_date': invoice.invoice_date_due or invoice.invoice_date,
             'instruction_id': invoice.payment_reference,
             'payment_id_vals': [invoice.payment_reference or invoice.name],
