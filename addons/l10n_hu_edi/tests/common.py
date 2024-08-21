@@ -124,14 +124,13 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
     @classmethod
     def write_edi_credentials(cls):
         # Set up test EDI user
-        with mock.patch.object(type(cls.env['res.company']), '_l10n_hu_edi_test_credentials', autospec=True):
-            return cls.company_data['company'].write({
-                'l10n_hu_edi_server_mode': 'test',
-                'l10n_hu_edi_username': 'this',
-                'l10n_hu_edi_password': 'that',
-                'l10n_hu_edi_signature_key': 'some_key',
-                'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
-            })
+        return cls.company_data['company'].write({
+            'l10n_hu_edi_server_mode': 'test',
+            'l10n_hu_edi_username': 'this',
+            'l10n_hu_edi_password': 'that',
+            'l10n_hu_edi_signature_key': 'some_key',
+            'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
+        })
 
     def create_invoice_simple(self):
         """ Create a really basic invoice - just one line. """
