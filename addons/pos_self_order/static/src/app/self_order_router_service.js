@@ -26,6 +26,11 @@ export class SelfOrderRouter extends Reactive {
         history.replaceState({}, "", url);
     }
 
+    getTableIdentifier() {
+        const url = new URL(browser.location.href);
+        return url.searchParams.get("table_identifier");
+    }
+
     back() {
         if (!this.historyPage.length) {
             // We use the browser history, so if the user arrives on a page with a back button from a link,
