@@ -133,8 +133,8 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
 
 class CustomerPortal(Controller):
 
-    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
-    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
+    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]   # TODO master: delete
+    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]    # TODO master: delete
 
     _items_per_page = 80
 
@@ -425,11 +425,11 @@ class CustomerPortal(Controller):
 
     def _get_mandatory_fields(self):
         """ This method is there so that we can override the mandatory fields """
-        return self.MANDATORY_BILLING_FIELDS
+        return list(self.MANDATORY_BILLING_FIELDS)
 
     def _get_optional_fields(self):
         """ This method is there so that we can override the optional fields """
-        return self.OPTIONAL_BILLING_FIELDS
+        return list(self.OPTIONAL_BILLING_FIELDS)
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         """Check if current user is allowed to access the specified record.
