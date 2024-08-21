@@ -1,3 +1,4 @@
+import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
@@ -13,7 +14,7 @@ import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 export class MessagingMenu extends Component {
-    static components = { Dropdown, NotificationItem, ImStatus };
+    static components = { CountryFlag, Dropdown, NotificationItem, ImStatus };
     static props = [];
     static template = "mail.MessagingMenu";
 

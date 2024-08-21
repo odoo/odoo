@@ -12,6 +12,7 @@ patch(Thread.prototype, {
             },
         });
         this.livechatChannel = Record.one("im_livechat.channel", { inverse: "threads" });
+        this.anonymous_country = Record.one("Country");
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {
