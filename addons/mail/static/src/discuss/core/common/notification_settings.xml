@@ -4,6 +4,9 @@
     <t t-name="discuss.NotificationSettings">
         <ActionPanel title.translate="Notification Settings">
             <div class="o-discuss-NotificationSettings">
+                <div t-if="store.settings.mute_until_dt" class="d-flex flex-column alert alert-warning">
+                    <span><i class="fa fa-exclamation-triangle"/> <a href="#" t-on-click="onClickServerMuted">Server is muted</a></span>
+                </div>
                 <t t-if="props.thread.mute_until_dt">
                     <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" t-on-click="()=>this.setMute(false)">
                         <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
