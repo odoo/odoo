@@ -39,6 +39,8 @@ class StockWarehouse(models.Model):
                 'sequence': next_sequence + 1,
                 'sequence_code': 'RO',
                 'company_id': self.company_id.id,
+                'use_create_lots': True,
+                'use_existing_lots': True,
             },
         })
         return data, max_sequence + 2
