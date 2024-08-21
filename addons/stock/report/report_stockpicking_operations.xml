@@ -136,8 +136,9 @@
                                         <tr>
                                             <td class="text-start">
                                                 <span t-field="move.product_id.display_name">Customizable Desk</span><br/>
-                                                <span t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name"
-                                                t-field="move.description_picking">Description on transfer</span>
+                                                <span t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                                                    <span t-out="move.description_picking" t-options="{'widget': 'text'}">Description on transfer</span>
+                                                </span>
                                             </td>
                                             <td class="text-end">
                                                 <span t-out="format_number(move.quantity)">3.00</span>

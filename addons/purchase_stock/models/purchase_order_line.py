@@ -327,7 +327,7 @@ class PurchaseOrderLine(models.Model):
         # in the line name, we add the line_description only if different from the product name.
         # This way, we shoud not lose any valuable information.
         if line_description and product_id.name != line_description:
-            res['name'] += '\n' + line_description
+            res['name'] = (res['name'] + '\n' + line_description).strip()
         res['date_planned'] = values.get('date_planned')
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['location_final_id'] = location_dest_id.id

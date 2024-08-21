@@ -21,22 +21,23 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'is_storable': True,
         })
 
-    def _get_new_sale_order(self, amount=10.0, product=False):
+    def _get_new_sale_order(self, amount=10.0, product=False, sol_vals=False):
         """ Creates and returns a sale order with one default order line.
 
         :param float amount: quantity of product for the order line (10 by default)
         """
+        sol_vals = sol_vals or {}
         product = product or self.company_data['product_delivery_no']
         sale_order_vals = {
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
-                'name': product.name,
+            'order_line': [Command.create({
                 'product_id': product.id,
                 'product_uom_qty': amount,
-                'price_unit': product.list_price})
-            ],
+                'price_unit': product.list_price,
+                **sol_vals
+            })]
         }
         return self.env['sale.order'].create(sale_order_vals)
 
@@ -2132,3 +2133,35 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         return_pick.button_validate()
         self.assertEqual(sale_order.order_line.mapped('sequence'), [42, 43, 44])
+
+    def test_move_description(self):
+        """
+        Test that the move description is correctly propagated to the move description
+        """
+        # product with all description items: delivery description, attribute variant value, attribute no variant value
+        product_with_description = self.env['product.template'].create({
+            'name': 'Product with description',
+            'description_pickingout': 'Deliver with care',
+            'description_sale': 'Sale description',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set(self.color_attribute.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': self.no_variant_attribute.id,
+                    'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
+                })
+            ]
+        })
+        so = self._get_new_sale_order(
+            product=product_with_description.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids.name == 'red'),
+            amount=1,
+            sol_vals={
+                'product_no_variant_attribute_value_ids': [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
+            }
+        )
+        self.assertEqual(so.order_line.name, 'Product with description (red)\nSale description\nNo variant: extra')
+        so.order_line.name += '\nRandom sale notes'
+        so.action_confirm()
+        self.assertEqual(so.picking_ids.move_ids.description_picking, 'No variant: extra\nDeliver with care')
