@@ -477,7 +477,7 @@ class ResPartner(models.Model):
         }
         for partner in self:
             oldest_invoice_date, total_invoiced_tax_included = commercial_partners.get(partner, (fields.Date.context_today(self), 0))
-            days_since_oldest_invoice = (fields.Date.context_today(self) - oldest_invoice_date).days
+            days_since_oldest_invoice = (fields.Date.context_today(self) - oldest_invoice_date).days if oldest_invoice_date else 0
             partner.days_sales_outstanding = ((partner.credit / total_invoiced_tax_included) * days_since_oldest_invoice) if total_invoiced_tax_included else 0
 
     def _compute_journal_item_count(self):
