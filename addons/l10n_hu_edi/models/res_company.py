@@ -101,13 +101,12 @@ class ResCompany(models.Model):
             for company in self:
                 if not company.vat:
                     raise UserError(_('NAV Credentials: Please set the hungarian vat number on the company first!'))
-                if self.l10n_hu_edi_server_mode != 'demo':
-                    try:
-                        connection.do_token_exchange(company._l10n_hu_edi_get_credentials_dict())
-                    except L10nHuEdiConnectionError as e:
-                        raise UserError(
-                            _('Incorrect NAV Credentials! Check that your company VAT number is set correctly. \nError details: %s', e)
-                        ) from e
+                try:
+                    connection.do_token_exchange(company._l10n_hu_edi_get_credentials_dict())
+                except L10nHuEdiConnectionError as e:
+                    raise UserError(
+                        _('Incorrect NAV Credentials! Check that your company VAT number is set correctly. \nError details: %s', e)
+                    ) from e
 
     def _l10n_hu_edi_recover_transactions(self, connection):
         """ Recover transactions that are in force but for some reason are not matched to the company's
