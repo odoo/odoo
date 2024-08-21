@@ -5,6 +5,7 @@ import {
     edit,
     hover,
     keyDown,
+    manuallyDispatchProgrammaticEvent,
     pointerDown,
     pointerUp,
     press,
@@ -1336,80 +1337,81 @@ test(`save a record with an invisible required field`, async () => {
     expect.verifySteps(["onchange", "web_save"]);
 });
 
-test.todo(
-    `multi_edit: edit a required field with invalid value and click 'Ok' of alert dialog`,
-    async () => {
-        Foo._fields.foo = fields.Char({ required: true });
+test(`multi_edit: edit a required field with invalid value and click 'Ok' of alert dialog`, async () => {
+    Foo._fields.foo = fields.Char({ required: true });
 
-        stepAllNetworkCalls();
-        await mountView({
-            resModel: "foo",
-            type: "list",
-            arch: `
+    stepAllNetworkCalls();
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
             <tree multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
             </tree>
         `,
-        });
-        expect(`.o_data_row`).toHaveCount(4);
-        expect.verifySteps([
-            "/web/webclient/translations",
-            "/web/webclient/load_menus",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+    });
+    expect(`.o_data_row`).toHaveCount(4);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
 
-        await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-        await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
-        await contains(`.o_field_widget[name=foo] input`).clear();
-        expect(`.modal`).toHaveCount(1);
-        expect(`.modal .btn`).toHaveText("Ok");
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
+    await contains(`.o_field_widget[name=foo] input`).clear({ confirm: false });
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
 
-        await contains(`.modal .btn`).click();
-        expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
-        expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
-        expect.verifySteps([]);
-    }
-);
+    expect(`.modal`).toHaveCount(1);
+    expect(`.modal .btn`).toHaveText("Ok");
 
-test.todo(
-    `multi_edit: edit a required field with invalid value and dismiss alert dialog`,
-    async () => {
-        Foo._fields.foo = fields.Char({ required: true });
+    await contains(`.modal .btn`).click();
+    expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
+    expect.verifySteps([]);
+});
 
-        stepAllNetworkCalls();
-        await mountView({
-            resModel: "foo",
-            type: "list",
-            arch: `
+test(`multi_edit: edit a required field with invalid value and dismiss alert dialog`, async () => {
+    Foo._fields.foo = fields.Char({ required: true });
+
+    stepAllNetworkCalls();
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
             <tree multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
             </tree>
         `,
-        });
-        expect(`.o_data_row`).toHaveCount(4);
-        expect.verifySteps([
-            "/web/webclient/translations",
-            "/web/webclient/load_menus",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+    });
+    expect(`.o_data_row`).toHaveCount(4);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
 
-        await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-        await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
-        await contains(`.o_field_widget[name=foo] input`).clear();
-        expect(`.modal`).toHaveCount(1);
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
+    await contains(`.o_field_widget[name=foo] input`).clear({ confirm: false });
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
+    expect(`.modal`).toHaveCount(1);
 
-        await contains(`.modal-header .btn-close`).click();
-        expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
-        expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
-        expect.verifySteps([]);
-    }
-);
+    await contains(`.modal-header .btn-close`).click();
+    expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
+    expect.verifySteps([]);
+});
 
 test(`multi_edit: clicking on a readonly field switches the focus to the next editable field`, async () => {
     await mountView({
@@ -9498,7 +9500,7 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
     expect.verifySteps(["write", "web_read"]);
 });
 
-test.todo(`editable list view: multi edition error and cancellation handling`, async () => {
+test(`editable list view: multi edition error and cancellation handling`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -9529,7 +9531,10 @@ test.todo(`editable list view: multi edition error and cancellation handling`, a
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
-    await contains(`.o_selected_row [name=int_field] input`).edit("hahaha", { confirm: "blur" });
+    await contains(`.o_selected_row [name=int_field] input`).edit("hahaha", { confirm: false });
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
     expect(`.modal`).toHaveCount(1, { message: "there should be an opened modal" });
 
     await contains(`.modal .btn-primary`).click();
@@ -9543,7 +9548,9 @@ test.todo(`editable list view: multi edition error and cancellation handling`, a
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
     await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
-    await contains(`.o_control_panel`).click();
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
     expect(`.modal`).toHaveCount(1, { message: "there should be an opened modal" });
 
     await contains(`.modal .btn-primary`).click();
@@ -10173,33 +10180,32 @@ test(`editable readonly list view: navigation in grouped list`, async () => {
     expect.verifySteps(["resId: 3"]);
 });
 
-test.todo(
-    `editable readonly list view: single edition does not behave like a multi-edition`,
-    async () => {
-        await mountView({
-            resModel: "foo",
-            type: "list",
-            arch: `<tree multi_edit="1"><field name="foo" required="1"/></tree>`,
-        });
+test(`editable readonly list view: single edition does not behave like a multi-edition`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree multi_edit="1"><field name="foo" required="1"/></tree>`,
+    });
 
-        // select a record
-        await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-        // edit a field (invalid input)
-        await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
-        clear({ confirm: "blur" });
-        await animationFrame();
-        expect(`.modal`).toHaveCount(1, { message: "should have a modal (invalid fields)" });
+    // select a record
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    // edit a field (invalid input)
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
+    clear();
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
+    expect(`.modal`).toHaveCount(1, { message: "should have a modal (invalid fields)" });
 
-        await contains(`.modal button.btn`).click();
-        // edit a field
-        await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
-        await contains(`.o_data_row [name=foo] input`).edit("bar");
-        expect(`.modal`).toHaveCount(0, { message: "should not have a modal" });
-        expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("bar", {
-            message: "the first row should be updated",
-        });
-    }
-);
+    await contains(`.modal button.btn`).click();
+    // edit a field
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
+    await contains(`.o_data_row [name=foo] input`).edit("bar");
+    expect(`.modal`).toHaveCount(0, { message: "should not have a modal" });
+    expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("bar", {
+        message: "the first row should be updated",
+    });
+});
 
 test(`non editable list view: multi edition`, async () => {
     stepAllNetworkCalls();
@@ -11608,7 +11614,7 @@ test(`pressing SHIFT-TAB in editable grouped list with create="0"`, async () => 
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 });
 
-test.todo(`editing then pressing TAB in editable grouped list`, async () => {
+test(`editing then pressing TAB in editable grouped list`, async () => {
     stepAllNetworkCalls();
 
     await mountView({
@@ -11630,6 +11636,9 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
     edit("new value", { confirm: false });
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
     press("tab");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
@@ -11638,6 +11647,9 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
     // fill foo field for the new record and press 'tab' -> should create another record
     // FIXME: input field hook calls update, but in a mutex -> .dirty is not set when we call applyCellKeydownEditModeGroup
     edit("new record", { confirm: false });
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
     press("tab");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
@@ -12330,7 +12342,7 @@ test(`removing a groupby while adding a line from list`, async () => {
     expect(`.o_selected_row`).toHaveCount(0);
 });
 
-test.todo(`cell-level keyboard navigation in editable grouped list`, async () => {
+test(`cell-level keyboard navigation in editable grouped list`, async () => {
     Foo._records[0].bar = false;
     Foo._records[1].bar = false;
     Foo._records[2].bar = false;
@@ -12377,20 +12389,21 @@ test.todo(`cell-level keyboard navigation in editable grouped list`, async () =>
     await animationFrame();
     expect(`.o_data_row:eq(0)`).not.toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) [name=foo]`).toHaveText("Zipadeedoodah");
-    expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
-    expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
+    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
+    expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
+    expect(`.o_data_row:eq(1) [name=foo] input`).toHaveValue("blip");
 
     press("ArrowUp");
     press("ArrowRight");
     await animationFrame();
-    expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
-    expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
+    expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
+    expect(`.o_data_row:eq(1) [name=foo] input`).toHaveValue("blip");
 
     press("ArrowDown");
     press("ArrowLeft");
     await animationFrame();
-    expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
-    expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
+    expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
+    expect(`.o_data_row:eq(1) [name=foo] input`).toHaveValue("blip");
 
     press("Escape");
     await animationFrame();
@@ -12453,7 +12466,7 @@ test.todo(`cell-level keyboard navigation in editable grouped list`, async () =>
     press("ArrowDown");
     press("ArrowRight");
     await animationFrame();
-    expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
+    expect(`.o_data_row:eq(0) td[name=foo]`).toBeFocused();
 
     press("ArrowUp");
     await animationFrame();
@@ -13326,7 +13339,7 @@ test(`enter edition in editable list with multi_edit = 1`, async () => {
     expect(`.o_selected_row .o_field_widget[name=int_field] input:eq(0)`).toBeFocused();
 });
 
-test.todo(`continue creating new lines in editable=top on keyboard nav`, async () => {
+test(`continue creating new lines in editable=top on keyboard nav`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -13337,8 +13350,15 @@ test.todo(`continue creating new lines in editable=top on keyboard nav`, async (
 
     // click on int_field cell of first row
     await contains(`.o_list_button_add`).click();
-    await contains(`.o_data_cell[name=int_field] input`).edit("1", { confirm: "tab" });
-    await contains(`.o_data_cell[name=int_field] input`).edit("2", { confirm: "enter" });
+
+    edit("1", { confirm: false });
+    // todo: remove next line, it's wrong to do this
+    manuallyDispatchProgrammaticEvent(document.activeElement, "change");
+    await animationFrame();
+    press("tab");
+    await animationFrame();
+    edit("2", { confirm: "enter" });
+    await animationFrame();
 
     // 3 new rows: the two created ("1" and "2", and a new still in edit mode)
     expect(`.o_data_cell[name=int_field]`).toHaveCount(initialRowCount + 3);

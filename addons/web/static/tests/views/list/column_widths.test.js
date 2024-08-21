@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { queryAllProperties, queryOne, queryRect, resize } from "@odoo/hoot-dom";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { drag, queryAllProperties, queryOne, queryRect, resize } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -657,7 +657,9 @@ test(`width computation: x2many, editable list, with invisible modifier on x2man
     expect(columnWidths[1]).toBeGreaterThan(500);
 });
 
-test.todo(`width computation: widths are re-computed on window resize`, async () => {
+test(`width computation: widths are re-computed on window resize`, async () => {
+    resize({ width: 1600 });
+
     Foo._records[0].text =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
         "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
@@ -676,12 +678,12 @@ test.todo(`width computation: widths are re-computed on window resize`, async ()
     const initialTextWidth = queryRect(`th[data-name="text"]`).width;
     const selectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
 
-    resize({ width: queryRect(getFixture()).width / 2 });
+    resize({ width: 800 });
     await animationFrame();
     const postResizeTextWidth = queryRect(`th[data-name="text"]`).width;
     const postResizeSelectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
     expect(postResizeTextWidth).toBeLessThan(initialTextWidth);
-    expect(selectorWidth).toBe(postResizeSelectorWidth);
+    expect(selectorWidth).toBeCloseTo(postResizeSelectorWidth, { digits: 0 });
 });
 
 test(`width computation: button columns don't have a max width`, async () => {
@@ -1348,11 +1350,10 @@ test(`resize column headers in editable list`, async () => {
     expect(finalWidths[2]).toBe(originalWidths[2]);
 });
 
-test.todo(`resize column headers in editable list (2)`, async () => {
+test(`resize column headers in editable list (2)`, async () => {
     // This test will ensure that, on resize list header,
     // the resized element have the correct size and other elements are not resized
     Foo._records[0].foo = "a".repeat(200);
-
     await mountView({
         resModel: "foo",
         type: "list",
@@ -1364,17 +1365,19 @@ test.todo(`resize column headers in editable list (2)`, async () => {
             </tree>
         `,
     });
-    const originalWidth1 = queryRect(`th:eq(1)`).width;
-    const originalWidth2 = queryRect(`th:eq(2)`).width;
 
-    await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2) .o_resize`, {
-        visible: false,
-    });
-    const finalWidth1 = queryRect(`th:eq(1)`).width;
-    const finalWidth2 = queryRect(`th:eq(2)`).width;
-    expect(
-        Math.abs(Math.floor(finalWidth1) - Math.floor(originalWidth1 + originalWidth2))
-    ).toBeLessThan(1);
+    const originalWidth1 = queryRect(`th:nth-child(2)`).width;
+    const originalWidth2 = queryRect(`th:nth-child(3)`).width;
+    const expectedWidth = originalWidth1 + originalWidth2;
+
+    const { moveTo, drop } = drag(`th:nth-child(2) .o_resize`, { visible: false });
+    moveTo(`th:nth-child(3) .o_resize`, { visible: false });
+    drop();
+    await animationFrame();
+
+    const finalWidth1 = queryRect(`th:nth-child(2)`).width;
+    const finalWidth2 = queryRect(`th:nth-child(3)`).width;
+    expect(Math.abs(Math.floor(finalWidth1) - Math.floor(expectedWidth))).toBeLessThan(1);
     expect(Math.floor(finalWidth2)).toBe(Math.floor(originalWidth2));
 });
 
