@@ -1,6 +1,7 @@
 /** @ts-check */
 
 /**
+ * @typedef {import("@odoo/o-spreadsheet").UID} UID
  * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  * @typedef {import("@spreadsheet").DateGlobalFilter} DateGlobalFilter
@@ -68,8 +69,13 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
          * the list of display names.
          */
         this.recordsDisplayName = {};
-        /** @type {Object.<string, string|Array<string>|Object>} */
-        this.values = {};
+        /**
+         * Values set by the user for each filter. Different from the default
+         * value.
+         *
+         * @type {Object.<UID, string|Array<string>|Object>}
+         */
+        this.userSetValues = {};
     }
 
     /**
@@ -111,12 +117,12 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 const id = filter.id;
                 if (
                     filter.type === "date" &&
-                    this.values[id] &&
-                    this.values[id].rangeType !== filter.rangeType
+                    this.userSetValues[id] &&
+                    this.userSetValues[id].rangeType !== filter.rangeType
                 ) {
-                    delete this.values[id];
-                } else if (!checkFilterValueIsValid(filter, this.values[id]?.value)) {
-                    delete this.values[id];
+                    delete this.userSetValues[id];
+                } else if (!checkFilterValueIsValid(filter, this.userSetValues[id]?.value)) {
+                    delete this.userSetValues[id];
                 }
                 this.recordsDisplayName[id] =
                     filter.type === "relation" ? filter.defaultValueDisplayNames : undefined;
@@ -144,7 +150,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 break;
             case "REMOVE_GLOBAL_FILTER":
                 delete this.recordsDisplayName[cmd.id];
-                delete this.values[cmd.id];
+                delete this.userSetValues[cmd.id];
                 break;
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this.recordsDisplayName[cmd.id] = [];
@@ -189,8 +195,9 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
     getGlobalFilterValue(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
 
-        const value = filterId in this.values ? this.values[filterId].value : undefined;
-        const preventAutomaticValue = this.values[filterId]?.value?.preventAutomaticValue;
+        const value =
+            filterId in this.userSetValues ? this.userSetValues[filterId].value : undefined;
+        const preventAutomaticValue = this.userSetValues[filterId]?.value?.preventAutomaticValue;
         if (filter.type === "date" && filter.rangeType === "from_to") {
             return value || { from: undefined, to: undefined };
         }
@@ -381,7 +388,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      */
     _setGlobalFilterValue(id, value) {
         const filter = this.getters.getGlobalFilter(id);
-        this.values[id] = {
+        this.userSetValues[id] = {
             value: value,
             rangeType: filter.type === "date" ? filter.rangeType : undefined,
         };
@@ -432,7 +439,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 value = { preventAutomaticValue: true };
                 break;
         }
-        this.values[id] = {
+        this.userSetValues[id] = {
             value,
             rangeType: filter.type === "date" ? filter.rangeType : undefined,
         };
