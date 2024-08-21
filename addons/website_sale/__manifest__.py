@@ -60,6 +60,15 @@
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
         'views/snippets/s_popup.xml',
+        'views/snippets/s_mega_menu/big_icons_subtitles.xml',
+        'views/snippets/s_mega_menu/cards.xml',
+        'views/snippets/s_mega_menu/image_menu.xml',
+        'views/snippets/s_mega_menu/images_subtitles.xml',
+        'views/snippets/s_mega_menu/little_icons.xml',
+        'views/snippets/s_mega_menu/logos.xml',
+        'views/snippets/s_mega_menu/multi_menus.xml',
+        'views/snippets/s_mega_menu/odoo_menu.xml',
+        'views/snippets/s_mega_menu/thumbnails.xml',
     ],
     'demo': [
         'data/demo.xml',
@@ -147,6 +156,7 @@
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
             'website_sale/static/src/js/website_sale.editor.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
+            'website_sale/static/src/js/editor/snippets.options.js',
         ],
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
