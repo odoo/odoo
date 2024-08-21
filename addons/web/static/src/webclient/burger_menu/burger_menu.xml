@@ -12,7 +12,7 @@
     </button>
 
     <t t-portal="'body'">
-      <Transition name="'burgerslide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
+      <Transition name="'o-burger-slide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
         <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
           <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
               <small class="d-flex align-items-center justify-content-between ms-2">

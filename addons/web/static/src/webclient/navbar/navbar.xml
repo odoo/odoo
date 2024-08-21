@@ -104,7 +104,7 @@
   <t t-name="web.NavBar.AppsMenu.Sidebar">
     <i class="fa fa-bars" aria-hidden="true"/>
     <t t-portal="'body'">
-      <Transition name="'AppMenuSidebar'" visible="state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
+      <Transition name="'o-app-menu-sidebar'" visible="state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
         <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
           <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
               <small class="d-flex align-items-center justify-content-between ms-2">
