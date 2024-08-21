@@ -31,7 +31,7 @@
                     <field name="dock_id" invisible="picking_type_code == 'outgoing' and not dock_id" readonly="picking_type_code == 'outgoing'" groups="stock.group_stock_multi_locations"/>
                     <field name="vehicle_id" placeholder="Third Party Provider"/>
                     <field name="vehicle_category_id" placeholder="semi-truck"/>
-                    <label for='used_weight_percentage' invisible="not vehicle_category_id or not vehicle_weight_capacity"/>
+                    <label for='used_weight_percentage' string="Weight" invisible="not vehicle_category_id or not vehicle_weight_capacity"/>
                         <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id or not vehicle_weight_capacity">
                             <div class='d-flex flex-row gap-1'>
                                 <field name='estimated_shipping_weight'/>
@@ -40,7 +40,7 @@
                             <field name='used_weight_percentage' widget='progressbar'/>
                         </div>
 
-                    <label for='used_volume_percentage' invisible="not vehicle_category_id or not vehicle_volume_capacity"/>
+                    <label for='used_volume_percentage' string="Volume" invisible="not vehicle_category_id or not vehicle_volume_capacity"/>
                         <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id or not vehicle_volume_capacity">
                             <div class='d-flex flex-row gap-1'>
                                 <field name='estimated_shipping_volume'/>
@@ -66,8 +66,8 @@
                     <field name="vehicle_category_id" optional="hide"/>
                     <field name="vehicle_id" optional="hide"/>
                     <field name="dock_id" optional="hide" groups="stock.group_stock_multi_locations"/>
-                    <field name="used_volume_percentage" string="Volume %" optional="hide"/>
-                    <field name="used_weight_percentage" string="Weight %" optional="hide"/>
+                    <field name="used_volume_percentage" optional="hide"/>
+                    <field name="used_weight_percentage" optional="hide"/>
                 </field>
             </data>
         </field>
