@@ -23,6 +23,78 @@ export class CallActionList extends Component {
         return _t("More");
     }
 
+<<<<<<< master
+||||||| 125ad36dda97a89500e289d1f555c2f8e18faf83
+    get moreActions() {
+        const acts = [];
+        acts.push({
+            id: "raiseHand",
+            name: !this.rtc.state?.selfSession.raisingHand ? _t("Raise Hand") : _t("Lower Hand"),
+            icon: "fa fa-fw fa-hand-paper-o",
+            onSelect: (ev) => this.onClickRaiseHand(ev),
+        });
+        if (isMobileOS) {
+            acts.push({
+                id: "shareScreen",
+                name: !this.rtc.state.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),
+                icon: "fa fa-fw fa-desktop",
+                onSelect: () => this.rtc.toggleVideo("screen"),
+            });
+        }
+        if (!this.props.fullscreen.isActive) {
+            acts.push({
+                id: "fullScreen",
+                name: _t("Enter Full Screen"),
+                icon: "fa fa-fw fa-arrows-alt",
+                onSelect: () => this.props.fullscreen.enter(),
+            });
+        } else {
+            acts.push({
+                id: "exitFullScreen",
+                name: _t("Exit Full Screen"),
+                icon: "fa fa-fw fa-compress",
+                onSelect: () => this.props.fullscreen.exit(),
+            });
+        }
+        return acts;
+    }
+
+=======
+    get moreActions() {
+        const acts = [];
+        acts.push({
+            id: "raiseHand",
+            name: !this.rtc.state?.selfSession.raisingHand ? _t("Raise Hand") : _t("Lower Hand"),
+            icon: "fa fa-fw fa-hand-paper-o",
+            onSelect: (ev) => this.onClickRaiseHand(ev),
+        });
+        if (!isMobileOS()) {
+            acts.push({
+                id: "shareScreen",
+                name: !this.rtc.state.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),
+                icon: "fa fa-fw fa-desktop",
+                onSelect: () => this.rtc.toggleVideo("screen"),
+            });
+        }
+        if (!this.props.fullscreen.isActive) {
+            acts.push({
+                id: "fullScreen",
+                name: _t("Enter Full Screen"),
+                icon: "fa fa-fw fa-arrows-alt",
+                onSelect: () => this.props.fullscreen.enter(),
+            });
+        } else {
+            acts.push({
+                id: "exitFullScreen",
+                name: _t("Exit Full Screen"),
+                icon: "fa fa-fw fa-compress",
+                onSelect: () => this.props.fullscreen.exit(),
+            });
+        }
+        return acts;
+    }
+
+>>>>>>> 1472097cb92096919c2a54a9aa2700ec7392c03b
     get isOfActiveCall() {
         return Boolean(this.props.thread.eq(this.rtc.state?.channel));
     }
