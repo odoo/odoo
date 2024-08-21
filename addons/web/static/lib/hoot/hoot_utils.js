@@ -1073,7 +1073,7 @@ export class Markup {
     constructor(params) {
         this.className = params.className || "";
         this.tagName = params.tagName || "div";
-        this.content = deepCopy(params.content) || "";
+        this.content = params.content || "";
         this.technical = params.technical;
     }
 
