@@ -16,6 +16,7 @@ import { Component } from "@odoo/owl";
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
+        'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',
         'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity',
@@ -443,6 +444,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _onClickAddCartJSON: function (ev) {
         this.onClickAddCartJSON(ev);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeAddQuantity: function (ev) {
+        this.onChangeAddQuantity(ev);
     },
     /**
      * @private
