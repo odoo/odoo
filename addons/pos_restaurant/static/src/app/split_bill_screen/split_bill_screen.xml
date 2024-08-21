@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
     <t t-name="pos_restaurant.SplitBillScreen">
         <div class="splitbill-screen screen h-100 bg-200">
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
-                    <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
-                        <i class="oi oi-chevron-left fa-fw"/>
-                    </button>
+                    <t t-if="!ui.isSmall">
+                        <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
+                            <i class="oi oi-chevron-left fa-fw"/>
+                        </button>
+                    </t>
                     <div class="top-content-center flex-grow-1 pe-5">
                         <h4 class="mb-0">Bill Splitting</h4>
                     </div>
                 </div>
-
                 <div class="main d-flex flex-column flex-lg-row flex-grow-1 gap-2 p-2 overflow-hidden">
                     <div class="flex-grow-1 w-100 w-lg-50 me-0 me-lg-2 rounded-3 bg-view overflow-auto">
                         <OrderWidget lines="orderlines" t-slot-scope="scope">
@@ -27,16 +27,44 @@
                             <span class="subtotal text-success">
                                 <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
                             </span>
+                             <span class="total">
+                                / <t t-esc="env.utils.formatCurrency(currentOrder.amount_total)" />
+                            </span>
                         </div>
-                        <div class="pay-button">
-                            <div class="button btn btn-lg btn-primary py-3 py-lg-5 w-100" t-on-click="createSplittedOrder">
-                                <span>Split Order</span>
+                        <t t-if="!ui.isSmall">
+                            <div class="pay-button">
+                                <t t-set="nbrProduct" t-value="getProductSelectedQuantity() " />
+                                <div class="button btn btn-lg py-3 w-100"
+                                     t-on-click="createSplittedOrder"
+                                     t-att-class="nbrProduct gt 0 ? 'btn-primary' : 'btn-disabled'">
+                                    <i class="oi oi-chevron-right me-2" />
+                                    <span>Split Order</span>
+                                    <br/>
+                                    <span class="fs-6">
+                                        <t t-esc="nbrProduct" /> product<span t-if="nbrProduct gt 1">s</span> selected
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        </t>
+                        <t t-if="ui.isSmall">
+                            <div class="pay-button d-flex gap-2">
+                                <div class="btn-switchpane back-button validation-button btn btn-light btn-lg lh-lg d-flex align-items-center" t-on-click="back">
+                                    <i class="oi oi-chevron-left fa-fw" role="img" aria-label="Go Back" title="Go Back" />
+                                </div>
+                                <t t-set="nbrProduct" t-value="getProductSelectedQuantity() " />
+                                <div class="btn-switchpane validation-button btn btn-secondary flex-fill py-2 gap-0 rounded-0 fs-6 w-50 d-flex flex-column justify-content-center"
+                                     t-on-click="createSplittedOrder"
+                                     t-att-class="nbrProduct gt 0 ? 'btn-primary' : 'btn-secondary'">
+                                    <span class="fw-bolder ">Split</span>
+                                    <small class="m-0">
+                                        <t t-esc="nbrProduct" /> product<span t-if="nbrProduct gt 1">s</span> selected
+                                    </small>
+                                </div>
+                            </div>
+                        </t>
                     </div>
                 </div>
             </div>
         </div>
     </t>
-
 </templates>
