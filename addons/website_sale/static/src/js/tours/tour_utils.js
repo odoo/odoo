@@ -1,22 +1,22 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import wTourUtils from "@website/js/tours/tour_utils";
+import { clickOnElement } from '@website/js/tours/tour_utils';
 
-function addToCart({productName, search = true, productHasVariants = false}) {
+export function addToCart({productName, search = true, productHasVariants = false}) {
     const steps = [];
     if (search) {
         steps.push(...searchProduct(productName));
     }
-    steps.push(wTourUtils.clickOnElement(productName, `a:contains(${productName})`));
-    steps.push(wTourUtils.clickOnElement('Add to cart', '#add_to_cart'));
+    steps.push(clickOnElement(productName, `a:contains(${productName})`));
+    steps.push(clickOnElement('Add to cart', '#add_to_cart'));
     if (productHasVariants) {
-        steps.push(wTourUtils.clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'));
+        steps.push(clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'));
     }
     return steps;
 }
 
-function assertCartAmounts({taxes = false, untaxed = false, total = false, delivery = false}) {
+export function assertCartAmounts({taxes = false, untaxed = false, total = false, delivery = false}) {
     let steps = [];
     if (taxes) {
         steps.push({
@@ -45,7 +45,7 @@ function assertCartAmounts({taxes = false, untaxed = false, total = false, deliv
     return steps
 }
 
-function assertCartContains({productName, backend, notContains = false} = {}) {
+export function assertCartContains({productName, backend, notContains = false} = {}) {
     let trigger = `a:contains(${productName})`;
 
     if (notContains) {
@@ -60,14 +60,14 @@ function assertCartContains({productName, backend, notContains = false} = {}) {
 /**
  * Used to assert if the price attribute of a given product is correct on the /shop view
  */
-function assertProductPrice(attribute, value, productName) {
+export function assertProductPrice(attribute, value, productName) {
     return {
         content: `The ${attribute} of the ${productName} is ${value}`,
         trigger: `div:contains("${productName}") [data-oe-expression="template_price_vals['${attribute}']"] .oe_currency_value:contains("${value}")`,
     };
 }
 
-function fillAdressForm(adressParams = {
+export function fillAdressForm(adressParams = {
     name: "John Doe",
     phone: "123456789",
     email: "johndoe@gmail.com",
@@ -79,7 +79,7 @@ function fillAdressForm(adressParams = {
     steps.push({
         content: "Address filling",
         trigger: 'form.checkout_autoformat',
-        run: () => {
+        run() {
             document.querySelector('input[name="name"]').value = adressParams.name;
             document.querySelector('input[name="phone"]').value = adressParams.phone;
             document.querySelector('input[name="email"]').value = adressParams.email;
@@ -97,7 +97,7 @@ function fillAdressForm(adressParams = {
     return steps;
 }
 
-function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
+export function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
     return {
         content: _t("Go to cart"),
         trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
@@ -106,7 +106,7 @@ function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
     };
 }
 
-function goToCheckout() {
+export function goToCheckout() {
     return {
         content: 'Checkout your order',
         trigger: 'a[href^="/shop/checkout"]',
@@ -114,7 +114,7 @@ function goToCheckout() {
     };
 }
 
-function confirmOrder() {
+export function confirmOrder() {
     return {
         content: 'Confirm',
         trigger: 'a[href^="/shop/confirm_order"]',
@@ -122,7 +122,7 @@ function confirmOrder() {
     };
 }
 
-function pay() {
+export function pay() {
     return {
         content: 'Pay',
         //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
@@ -131,7 +131,7 @@ function pay() {
     };
 }
 
-function payWithDemo() {
+export function payWithDemo() {
     return [{
         content: 'eCommerce: select Test payment provider',
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="demo"]',
@@ -148,7 +148,7 @@ function payWithDemo() {
     }]
 }
 
-function payWithTransfer(redirect=false) {
+export function payWithTransfer(redirect=false) {
     const first_step = {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
@@ -171,7 +171,7 @@ function payWithTransfer(redirect=false) {
                 content: "Last step",
                 trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
                 timeout: 30000,
-                run: () => {
+                run() {
                     window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)
                 },
             }, {
@@ -182,22 +182,22 @@ function payWithTransfer(redirect=false) {
     }
 }
 
-function searchProduct(productName) {
+export function searchProduct(productName) {
     return [
-        wTourUtils.clickOnElement('Shop', 'a:contains("Shop")'),
+        clickOnElement('Shop', 'a:contains("Shop")'),
         {
             content: "Search for the product",
             trigger: 'form input[name="search"]',
             run: `edit ${productName}`,
         },
-        wTourUtils.clickOnElement('Search', 'form:has(input[name="search"]) .oe_search_button'),
+        clickOnElement('Search', 'form:has(input[name="search"]) .oe_search_button'),
     ];
 }
 
 /**
  * Used to select a pricelist on the /shop view
  */
-function selectPriceList(pricelist) {
+export function selectPriceList(pricelist) {
     return [
         {
             content: "Click on pricelist dropdown",
@@ -211,19 +211,3 @@ function selectPriceList(pricelist) {
         },
     ];
 }
-
-export default {
-    addToCart,
-    assertCartAmounts,
-    assertCartContains,
-    assertProductPrice,
-    fillAdressForm,
-    goToCart,
-    goToCheckout,
-    confirmOrder,
-    pay,
-    payWithDemo,
-    payWithTransfer,
-    selectPriceList,
-    searchProduct,
-};

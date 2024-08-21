@@ -1,6 +1,10 @@
 /** @odoo-module **/
 
-import websiteTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    dragNDrop,
+    goBackToBlocks,
+} from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
 
 const patchWysiwygAdapter = () => {
@@ -115,7 +119,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
     // tour here. There is currently an issue with tours which don't have an URL
     // url: '/?enable_editor=1&snippets_names=s_process_steps:columns,s_website_form:,s_...',
     steps: () => [
-    ...websiteTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Ensure snippets are actually passed at the test.",
         trigger: "body",
@@ -132,7 +136,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
     // This first step is needed as it will be used later for inner snippets
     // Without this, it will dropped inside the footer and will need an extra
     // selector.
-    ...websiteTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
         groupName: "Content"
@@ -147,7 +151,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
         trigger: ".o_we_customize_panel",
         run: "click",
     },
-    websiteTourUtils.goBackToBlocks(),
+    goBackToBlocks(),
 ].concat(steps).concat([
     {
         content: "Remove wysiwyg patch",

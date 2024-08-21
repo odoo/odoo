@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnSave, dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
+registerWebsitePreviewTour('website_multi_edition', {
     test: true,
     url: '/',
     edition: true,
@@ -12,7 +12,7 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
         trigger: ':iframe body:not(:has(.s_text_image)):not(:has(.s_hr))',
     },
     // Edit the main element of the page
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -26,7 +26,7 @@ wTourUtils.registerWebsitePreviewTour('website_multi_edition', {
         content: "Drag the Separator building block and drop it at the bottom of the page.",
         run: "drag_and_drop :iframe .oe_drop_zone:last",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: 'Check that the main element of the page was properly saved',
         trigger: ':iframe main .s_text_image',

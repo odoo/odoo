@@ -1,13 +1,16 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
+registerWebsitePreviewTour('snippet_popup_add_remove', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         name: "Popup",
         id: "s_popup",
         groupName: "Content",
@@ -27,7 +30,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     trigger: ':iframe #wrap.o_editable:not(:has([data-snippet="s_popup"]))',
 },
 // Test that undoing dropping the snippet removes the invisible elements panel.
-...wTourUtils.dragNDrop({
+...dragNDrop({
     name: "Popup",
     id: "s_popup",
     groupName: "Content",

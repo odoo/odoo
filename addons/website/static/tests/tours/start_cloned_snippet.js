@@ -1,8 +1,11 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnSnippet,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
+registerWebsitePreviewTour('website_start_cloned_snippet', {
     edition: true,
     test: true,
     url: '/',
@@ -19,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
             trigger: `#oe_snippets .oe_snippet[name="${countdownSnippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
             run: "drag_and_drop :iframe #wrapwrap #wrap",
         },
-        ...wTourUtils.clickOnSnippet(countdownSnippet),
+        ...clickOnSnippet(countdownSnippet),
         {
             content: 'Click on clone snippet',
             trigger: '.oe_snippet_clone',

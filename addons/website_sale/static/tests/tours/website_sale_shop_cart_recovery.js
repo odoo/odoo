@@ -3,7 +3,7 @@
 import { queryOne } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import tourUtils from "@website_sale/js/tours/tour_utils";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';

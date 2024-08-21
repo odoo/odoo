@@ -1,13 +1,17 @@
 /** @odoo-module */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    dragNDrop,
+    registerWebsitePreviewTour,
+    selectElementInWeSelectWidget,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("text_highlights", {
+registerWebsitePreviewTour("text_highlights", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_cover",
         name: "Cover",
         groupName: "Intro",
@@ -68,7 +72,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
         content: "Check if the text was correctly updated",
         trigger: ":iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",
     },
-    ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
+    ...selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
     {
         trigger: ":iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(3)",
     },

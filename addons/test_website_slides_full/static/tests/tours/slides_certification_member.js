@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import tourUtils from '@website_sale/js/tours/tour_utils';
-import wTourUtils from "@website/js/tours/tour_utils";
+import * as tourUtils from '@website_sale/js/tours/tour_utils';
+import { clickOnExtraMenuItem } from "@website/js/tours/tour_utils";
 
 /**
  * The purpose of this tour is to check the whole certification flow:
@@ -27,7 +27,7 @@ var initTourSteps = [{
 }, {
     content: 'eLearning: does not have access to certification',
     trigger: '.o_wslides_course_main',
-    run: function () {
+    run() {
         // check that user doesn't have access to course content
         if (
             document.querySelectorAll(
@@ -52,7 +52,7 @@ var buyCertificationSteps = [{
     tourUtils.goToCart(),
     tourUtils.goToCheckout(),
     ...tourUtils.payWithDemo(),
-    wTourUtils.clickOnExtraMenuItem({}),
+    clickOnExtraMenuItem({}),
 {
     content: 'eCommerce: go back to e-learning home page',
     trigger: '.nav-item a:contains("Courses")',
@@ -146,7 +146,7 @@ var certificationCompletionSteps = [{
     trigger: 'a:contains("Go back to course")',
     run: "click",
 },
-    wTourUtils.clickOnExtraMenuItem({}),
+    clickOnExtraMenuItem({}),
 {
     content: 'eLearning: back to e-learning home page',
     trigger: '.nav-item a:contains("Courses")',

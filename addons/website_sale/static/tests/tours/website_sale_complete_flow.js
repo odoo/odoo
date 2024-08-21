@@ -2,7 +2,7 @@
 
     import { rpc } from "@web/core/network/rpc";
     import { registry } from "@web/core/registry";
-    import tourUtils from "@website_sale/js/tours/tour_utils";
+    import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
         test: true,

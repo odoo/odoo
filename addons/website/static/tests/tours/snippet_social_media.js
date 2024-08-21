@@ -1,6 +1,12 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    clickOnSnippet,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 // TODO: Remove following steps once fix of task-3212519 is done.
 // Those steps are preventing a race condition to happen in the meantime: when
@@ -78,13 +84,13 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     ];
 };
 
-wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
+registerWebsitePreviewTour('snippet_social_media', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: 's_social_media', name: 'Social Media'}),
-    ...wTourUtils.clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
+    ...dragNDrop({id: 's_social_media', name: 'Social Media'}),
+    ...clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
     ...addNewSocialNetwork(7, 7, 'https://www.youtu.be/y7TlnAv6cto'),
     {
         content: 'Click on the toggle to hide Facebook',
@@ -168,9 +174,9 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         run: "edit https://instagram.com/odoo.official/ && click body",
     },
     ...preventRaceConditionStep,
-    ...wTourUtils.clickOnSave(),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.clickOnSnippet({
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditMode(),
+    ...clickOnSnippet({
         id: 's_social_media',
         name: 'Social Media',
     }),
@@ -210,5 +216,5 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(9)[href='https://google.com']:has(img))" +
                  ":has(a:eq(10)[href='https://facebook.com']:has(img))",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
 ]);

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import wTourUtils from "@website/js/tours/tour_utils";
+import { clickOnEditAndWaitEditModeInTranslatedPage } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('edit_translated_page_redirect', {
     test: true,
@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('edit_translated_page_redirect', {
         content: "Check the data-for attribute",
         trigger: ':iframe main:has([data-for="contactus_form"])',
     },
-    ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
+    ...clickOnEditAndWaitEditModeInTranslatedPage(),
     {
         content: "Go to /nl",
         trigger: "body",
@@ -32,5 +32,5 @@ registry.category("web_tour.tours").add('edit_translated_page_redirect', {
         trigger: 'a.o_frontend_to_backend_edit_btn',
         run: "click",
     },
-    ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
+    ...clickOnEditAndWaitEditModeInTranslatedPage(),
 ]});

@@ -1,9 +1,9 @@
 /** @odoo-modules */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
+registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     test: true,
     url: `/shop`,
 }, () => [

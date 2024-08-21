@@ -1,14 +1,21 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    addMedia,
+    changeOption,
+    clickOnSave,
+    clickOnSnippet,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
+registerWebsitePreviewTour('snippet_image_gallery', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: 's_images_wall', name: 'Images Wall', groupName: "Images"}),
-    ...wTourUtils.clickOnSave(),
+    ...dragNDrop({id: 's_images_wall', name: 'Images Wall', groupName: "Images"}),
+    ...clickOnSave(),
     {
         content: 'Click on an image of the Image Wall',
         trigger: ':iframe .s_image_gallery img',
@@ -20,17 +27,17 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     },
 ]);
 
-wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
+registerWebsitePreviewTour("snippet_image_gallery_remove", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
         groupName: "Images",
 }), 
-...wTourUtils.clickOnSnippet({
+...clickOnSnippet({
     id: 's_image_gallery',
     name: 'Image Gallery',
 }), {
@@ -50,7 +57,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: ".o_select_media_dialog img[title='s_default_image2.jpg']",
     run: "click",
 },
-    wTourUtils.addMedia(),
+    addMedia(),
    {
     content: "Click on the image of the Image Gallery snippet",
     trigger: ":iframe .s_image_gallery .carousel-item.active  img",
@@ -67,12 +74,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     trigger: ":iframe #wrap:not(:has(.s_image_gallery))",
 }]);
 
-wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
+registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
         groupName: "Images",
@@ -82,8 +89,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     trigger: ":iframe .s_image_gallery .carousel-item.active img",
     run: "click",
 },
-    wTourUtils.changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
-    wTourUtils.changeOption('ImageTools', '[data-gl-filter="blur"]'),
+    changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
+    changeOption('ImageTools', '[data-gl-filter="blur"]'),
 {
     content: "Check that the image has the correct filter",
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
@@ -124,27 +131,27 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
 }]);
 
-wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
+registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",
         groupName: "Images",
     }),
-    ...wTourUtils.clickOnSnippet({
+    ...clickOnSnippet({
         id: "s_image_gallery",
         name: "Image Gallery",
     }),
-    wTourUtils.changeOption("GalleryImageList", "we-button[data-add-images]"),
+    changeOption("GalleryImageList", "we-button[data-add-images]"),
 {
     content: "Click on the default image",
     trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
     run: "click",
 },
-    wTourUtils.addMedia(),
+    addMedia(),
 {
     content: "Check that the new image has been added",
     trigger: ":iframe .s_image_gallery:has(img[data-index='3'])",

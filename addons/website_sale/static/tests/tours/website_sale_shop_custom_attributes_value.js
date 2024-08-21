@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
-import tourUtils from '@website_sale/js/tours/tour_utils';
+import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 let optionVariantImage;
 

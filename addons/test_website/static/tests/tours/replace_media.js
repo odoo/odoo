@@ -2,14 +2,18 @@
 
 import { patch } from "@web/core/utils/patch";
 import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    changeOption,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
 
 /**
  * The purpose of this tour is to check the media replacement flow.
  */
-wTourUtils.registerWebsitePreviewTour('test_replace_media', {
+registerWebsitePreviewTour('test_replace_media', {
     url: '/',
     test: true,
     edition: true,
@@ -33,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
             });
         },
     },
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         name: 'Title - Image',
         id: 's_picture',
         groupName: "Images",
@@ -47,8 +51,8 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         content: "ensure image size is displayed",
         trigger: "#oe_snippets we-title:contains('Image') .o_we_image_weight:contains('kb')",
     },
-    wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
-    wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
+    changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
+    changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "replace image",
         trigger: "#oe_snippets we-button[data-replace-media]",

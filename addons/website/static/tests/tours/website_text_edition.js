@@ -1,15 +1,20 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    dragNDrop,
+    goBackToBlocks,
+    goToTheme,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const WEBSITE_MAIN_COLOR = '#ABCDEF';
 
-wTourUtils.registerWebsitePreviewTour('website_text_edition', {
+registerWebsitePreviewTour('website_text_edition', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.goToTheme(),
+    ...goToTheme(),
     {
         content: "Open colorpicker to change website main color",
         trigger: 'we-select[data-color="o-color-1"] .o_we_color_preview',
@@ -20,8 +25,8 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
         trigger: '.o_hex_input',
         run: `edit ${WEBSITE_MAIN_COLOR} && click body`,
     },
-    wTourUtils.goBackToBlocks(),
-    ...wTourUtils.dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
+    goBackToBlocks(),
+    ...dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
     {
         content: "Click on the text block first paragraph (to auto select)",
         trigger: ':iframe .s_text_block p',

@@ -1,6 +1,10 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const clickOnImgAndWaitForLoad = [
@@ -22,7 +26,7 @@ const enterEditModeOfTestProduct = () => [
         trigger: ":iframe a:contains('Test Remove Image')",
         run: "click",
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
 ];
 
 const removeImg = [
@@ -40,7 +44,7 @@ const removeImg = [
     },
 ];
 
-wTourUtils.registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
+registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
     url: "/shop?search=Test Remove Image",
     test: true,
 }, () => [
@@ -62,14 +66,14 @@ wTourUtils.registerWebsitePreviewTour("add_and_remove_main_product_image_no_vari
     },
     ...removeImg,
 ]);
-wTourUtils.registerWebsitePreviewTour("remove_main_product_image_with_variant", {
+registerWebsitePreviewTour("remove_main_product_image_with_variant", {
     url: "/shop?search=Test Remove Image",
     test: true,
 }, () => [
     ...enterEditModeOfTestProduct(),
     ...clickOnImgAndWaitForLoad,
-    ...wTourUtils.clickOnSave(),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditMode(),
     ...clickOnImgAndWaitForLoad,
     ...removeImg,
 ]);

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
+registerWebsitePreviewTour('website_sale_tour_backend', {
     test: true,
     url: '/shop/cart',
     edition: true,
@@ -20,6 +20,6 @@ wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
             trigger: '[data-customize-website-views="website_sale.extra_info"] we-checkbox',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
     ],
 );

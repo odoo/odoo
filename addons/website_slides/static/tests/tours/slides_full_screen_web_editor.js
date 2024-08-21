@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 /**
@@ -13,7 +13,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
  * See "Fullscreen#_onWebEditorClick" for more information.
  *
  */
- wTourUtils.registerWebsitePreviewTour('full_screen_web_editor', {
+registerWebsitePreviewTour('full_screen_web_editor', {
     url: '/slides',
     test: true,
 }, () => [
@@ -30,7 +30,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
     // check we land on the fullscreen view
     trigger: ':iframe .o_wslides_fs_main',
 },
-...wTourUtils.clickOnEditAndWaitEditMode()
+...clickOnEditAndWaitEditMode()
 , {
     // check we are redirected on the detailed view
     trigger: ':iframe .o_wslides_lesson_main',

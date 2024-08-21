@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("shop_editor", {
+registerWebsitePreviewTour("shop_editor", {
     test: true,
     url: "/shop",
     edition: true,
@@ -31,7 +31,7 @@ wTourUtils.registerWebsitePreviewTour("shop_editor", {
     content: "Check pricelist dropdown opened",
 }]);
 
-wTourUtils.registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
+registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     test: true,
     url: "/shop",
     edition: true,
@@ -48,7 +48,7 @@ wTourUtils.registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     trigger: '.o_wsale_ribbon_select we-button:contains("Sale")',
     run: "click",
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 {
     content: "Check that the ribbon was properly saved",
     trigger: ':iframe .oe_product:first .o_ribbon:contains("Sale")',

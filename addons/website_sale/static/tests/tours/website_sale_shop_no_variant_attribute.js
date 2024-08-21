@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import tourUtils from "@website_sale/js/tours/tour_utils";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {

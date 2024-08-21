@@ -1,13 +1,16 @@
 /** @odoo-module **/
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    goToTheme,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
+registerWebsitePreviewTour("website_snippets_menu_tabs", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.goToTheme(),
+    ...goToTheme(),
     {
         trigger: "we-customizeblock-option.snippet-option-ThemeColors",
     },
@@ -16,7 +19,7 @@ wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
         trigger: ':iframe main > .oe_structure.oe_empty',
         run: 'click',
     },
-    ...wTourUtils.goToTheme(),
+    ...goToTheme(),
     {
         content: "Verify that the customize panel is not empty.",
         trigger: '.o_we_customize_panel > we-customizeblock-options',
@@ -26,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
         trigger: '#snippets_menu .o_we_customize_snippet_btn',
         run: "click",
     },
-    ...wTourUtils.goToTheme(),
+    ...goToTheme(),
     {
         content: "Verify that the customize panel is not empty.",
         trigger: '.o_we_customize_panel > we-customizeblock-options',

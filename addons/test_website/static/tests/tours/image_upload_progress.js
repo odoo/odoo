@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
 import { patch } from "@web/core/utils/patch";
@@ -43,16 +43,16 @@ const setupSteps = function () {
         {
             content: "reload to load patch",
             trigger: ".o_website_preview",
-            run: () => {
+            run() {
                 unpatchMediaDialog = patchMediaDialog();
             },
         },
-        ...wTourUtils.dragNDrop({
+        ...dragNDrop({
             id: "s_text_image",
             name: "Text - Image",
             groupName: "Content",
         }),
-        ...wTourUtils.dragNDrop({
+        ...dragNDrop({
             id: "s_image_gallery",
             name: "Image Gallery",
             groupName: "Images",
@@ -62,7 +62,7 @@ const setupSteps = function () {
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg, .webp";
 
-wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
+registerWebsitePreviewTour('test_image_upload_progress', {
     url: '/test_image_progress',
     test: true,
     edition: true,
@@ -80,7 +80,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
-        run: () => {
+        run() {
             // This will trigger upload of dummy files for test purpose, as a
             // test can't select local files to upload into the input.
             document.body.querySelector('.o_select_media_dialog .o_file_input').dispatchEvent(new Event('change'));
@@ -100,10 +100,10 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
-        run: () => {
+        run() {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
-                console.error("There should be one noficiation toaster opened, and only one.");
+                throw new Error(`There should be one notification toaster opened, and only one, found ${notificationCount}.`);
             }
         }
     }, {
@@ -127,7 +127,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
-        run: () => {
+        run() {
             // This will trigger upload of dummy files for test purpose, as a
             // test can't select local files to upload into the input.
             document.body.querySelector('.o_select_media_dialog .o_file_input').dispatchEvent(new Event('change'));
@@ -138,10 +138,10 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
-        run: () => {
+        run() {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
-                console.error("There should be one noficiation toaster opened, and only one.");
+                throw new Error(`There should be one notification toaster opened, and only one, found ${notificationCount}.`);
             }
         }
     }, {
@@ -166,7 +166,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
-        run: () => {
+        run() {
             patchWithError = true;
             // This will trigger upload of dummy files for test purpose, as a
             // test can't select local files to upload into the input.
@@ -176,16 +176,16 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "check upload progress bar is correctly shown",
         trigger: `.o_we_progressbar:contains('icon.ico'):contains('${formatErrorMsg}')`,
-        run: function () {
+        run() {
             patchWithError = false;
         },
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
-        run: () => {
+        run() {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
-                console.error("There should be one noficiation toaster opened, and only one.");
+                throw new Error(`There should be one noficiation toaster opened, and only one, found ${notificationCount}.`);
             }
             unpatchMediaDialog();
         }
@@ -193,7 +193,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
 ]);
 
 
-wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
+registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     url: '/test_image_progress',
     test: true,
     edition: true,
@@ -231,7 +231,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     }, {
         content: "unsplash image (mocked to logo) should have been used",
         trigger: ":iframe #wrap .s_image_gallery .img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
-        run: () => {
+        run() {
             unpatchMediaDialog();
         },
     },

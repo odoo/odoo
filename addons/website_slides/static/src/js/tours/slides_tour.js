@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import wTourUtils from "@website/js/tours/tour_utils";
+import { registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 import { markup } from "@odoo/owl";
 
-wTourUtils.registerWebsitePreviewTour('slides_tour', {
+registerWebsitePreviewTour('slides_tour', {
     url: '/slides',
 }, () => [{
     trigger: "body:not(.editor_has_snippets) .o_new_content_container > a",

@@ -1,11 +1,11 @@
 /** @odoo-modules */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { registry } from "@web/core/registry";
 
 const PRODUCT_CATEGORY_ID = 2;
 
-wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
+registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     test: true,
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
     edition: true,
@@ -39,7 +39,7 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
         trigger: 'we-button[data-select-data-attribute="current"]',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
 ]);
 
 registry.category("web_tour.tours").add('category_page_and_products_snippet_use', {
@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('category_page_and_products_snippet_use'
         content: "Check that the snippet displays the right products",
         // Wait for at least one shown product
         trigger: '#category_header .s_dynamic_snippet_products:has(.o_carousel_product_img_link)',
-        run: function (actions) {
+        run() {
             // Note: this could be more robust to not rely on demo data and
             // make sure that the newest products are not by chance all of
             // the second category (used for the test) and ... but should be ok.

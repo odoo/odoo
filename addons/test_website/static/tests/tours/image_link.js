@@ -1,4 +1,4 @@
-import wTourUtils from '@website/js/tours/tour_utils';
+import { dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 /**
  * The purpose of this tour is to check the link on image flow.
@@ -17,12 +17,12 @@ const selectImageSteps = [{
     run: "click",
 }];
 
-wTourUtils.registerWebsitePreviewTour('test_image_link', {
+registerWebsitePreviewTour('test_image_link', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

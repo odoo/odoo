@@ -1,6 +1,13 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    changeBackgroundColor,
+    clickOnSnippet,
+    clickOnText,
+    dragNDrop,
+    goBackToBlocks,
+    registerThemeHomepageTour,
+} from "@website/js/tours/tour_utils";
 
 const snippets = [
     {
@@ -45,18 +52,18 @@ const snippets = [
     },
 ];
 
-wTourUtils.registerThemeHomepageTour('homepage', () => [
-    ...wTourUtils.dragNDrop(snippets[0], "top"),
-    ...wTourUtils.clickOnText(snippets[0], "h1"),
-    wTourUtils.goBackToBlocks(),
-    ...wTourUtils.dragNDrop(snippets[1]),
-    ...wTourUtils.dragNDrop(snippets[2]),
-    ...wTourUtils.clickOnSnippet(snippets[2], "top"),
-    wTourUtils.changeBackgroundColor(),
-    wTourUtils.goBackToBlocks(),
-    ...wTourUtils.dragNDrop(snippets[3]),
-    ...wTourUtils.dragNDrop(snippets[4], "top"),
-    ...wTourUtils.dragNDrop(snippets[5]),
-    ...wTourUtils.dragNDrop(snippets[6]),
-    ...wTourUtils.dragNDrop(snippets[7]),
+registerThemeHomepageTour('homepage', () => [
+    ...dragNDrop(snippets[0], "top"),
+    ...clickOnText(snippets[0], "h1"),
+    goBackToBlocks(),
+    ...dragNDrop(snippets[1]),
+    ...dragNDrop(snippets[2]),
+    ...clickOnSnippet(snippets[2], "top"),
+    changeBackgroundColor(),
+    goBackToBlocks(),
+    ...dragNDrop(snippets[3]),
+    ...dragNDrop(snippets[4], "top"),
+    ...dragNDrop(snippets[5]),
+    ...dragNDrop(snippets[6]),
+    ...dragNDrop(snippets[7]),
 ]);

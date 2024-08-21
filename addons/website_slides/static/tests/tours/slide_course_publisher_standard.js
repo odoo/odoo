@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
-import wTourUtils from '@website/js/tours/tour_utils';
+import { clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 /**
  * Global use case:
@@ -10,7 +10,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
  * they create some lessons in it;
  * they publish it;
  */
-wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
+registerWebsitePreviewTour('course_publisher_standard', {
     url: '/slides',
     test: true,
 }, () => [{
@@ -49,7 +49,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 {
     trigger: "body:not(:has(.modal))",
 },
-...wTourUtils.clickOnEditAndWaitEditMode(),
+...clickOnEditAndWaitEditMode(),
 {
     content: 'eLearning: double click image to edit it',
     trigger: ':iframe img.o_wslides_course_pict',

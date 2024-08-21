@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
 import { redirect } from "@web/core/utils/urls";
-import wTourUtils from "@website/js/tours/tour_utils";
+import { goToTheme, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
+registerWebsitePreviewTour('automatic_editor_on_new_website', {
     test: true,
     edition: true,
     url: '/',
 },
 () => [
-    ...wTourUtils.goToTheme(),
+    ...goToTheme(),
     {
         content: "click on Add a language",
         trigger: "we-button[data-add-language]",
@@ -51,7 +51,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     {
         content: "Check that we're on parseltongue and then go to settings",
         trigger: ':iframe html[lang=pa-GB]',
-        run: () => {
+        run() {
             // Now go through the settings for a new website. A frontend_lang
             // cookie was set during previous steps. It should not be used when
             // redirecting to the frontend in the following steps.
@@ -83,7 +83,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     {
         content: "make hover button appear",
         trigger: '.o_theme_preview',
-        run: () => {
+        run() {
             const el = document.querySelector(".o_theme_preview .o_button_area");
             el.style.visibility = "visible";
             el.style.opacity = 1;

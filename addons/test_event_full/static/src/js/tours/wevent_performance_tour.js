@@ -2,7 +2,7 @@
 
 import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
-import wsTourUtils from '@website_sale/js/tours/tour_utils';
+import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 var registerSteps = [{
     content: "Open ticket modal",

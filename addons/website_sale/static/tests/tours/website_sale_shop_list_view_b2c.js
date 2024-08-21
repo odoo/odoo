@@ -1,10 +1,14 @@
 /** @odoo-module **/
 
-import tourUtils from '@website_sale/js/tours/tour_utils';
-import wTourUtils from '@website/js/tours/tour_utils';
+import { goToCart } from '@website_sale/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
+registerWebsitePreviewTour('shop_list_view_b2c', {
     test: true,
     url: '/shop?search=Test Product',
 },
@@ -26,7 +30,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             content: "check products list is disabled initially (when on /product page)",
             trigger: ':iframe body:not(:has(.js_product_change))',
         },
-        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
@@ -45,7 +49,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             trigger: 'we-button[data-name="variants_products_list_opt"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         {
             content: "check page loaded after 'Products List' enabled",
             trigger: ':iframe .js_product_change',
@@ -72,7 +76,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             trigger: ':iframe a:contains(Add to cart)',
             run: "click",
         },
-        tourUtils.goToCart({backend: true}),
+        goToCart({backend: true}),
         {
             content: "check price on /cart",
             trigger: ":iframe #cart_products .oe_currency_value:contains(/^880.44$/)",

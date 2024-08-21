@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    changeOption,
+    clickOnExtraMenuItem,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     content: "Toggles the mega menu.",
@@ -14,7 +19,7 @@ const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     },
 }, stepOptions);
 
-wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
+registerWebsitePreviewTour('edit_megamenu', {
     test: true,
     url: '/',
     edition: true,
@@ -66,7 +71,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
     },
     // Edit a menu item
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    clickOnExtraMenuItem({}, true),
     toggleMegaMenu({}),
     {
         content: "Select the last menu link of the first column",
@@ -90,9 +95,9 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Press enter.",
         trigger: ':iframe .o_mega_menu h4',
-        run: function (actions) {
+        run() {
             this.anchor.dispatchEvent(
-                new window.InputEvent("input", { bubbles: true, inputType: "insertParagraph" })
+                new window.InputEvent("input", {bubbles: true, inputType: "insertParagraph"})
             );
         },
     },
@@ -106,21 +111,21 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         // If this step fails, it means that a patch inside bootstrap was lost.
         content: "Press the 'down arrow' key.",
         trigger: ':iframe .o_mega_menu h4',
-        run: function (actions) {
+        run() {
             this.anchor.dispatchEvent(
-                new window.KeyboardEvent("keydown", { key: "ArrowDown" })
+                new window.KeyboardEvent("keydown", {key: "ArrowDown"})
             );
         },
     },
-    ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
     toggleMegaMenu(),
     {
         content: "The menu item should have been renamed.",
         trigger: ':iframe .o_mega_menu h4:contains("New Menu Item")',
     },
 ]);
-wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
+registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     test: true,
     url: '/',
     edition: true,
@@ -173,14 +178,14 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
     },
     // Edit a menu item
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    clickOnExtraMenuItem({}, true),
     toggleMegaMenu({}),
     {
         content: "Select the first menu link of the first column",
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
         run: "click",
     },
-    wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
+    changeOption("MegaMenuLayout", "we-toggler"),
     {
         content: "Select Big Icons Subtitles mega menu",
         trigger: '[data-select-label="Big Icons Subtitles"]',
@@ -189,7 +194,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Select the h4 of first menu link of the first column",
         trigger: ':iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4',
-        run: function (actions) {
+        run(actions) {
             // Clicking on the h4 element first time leads to the selection of
             // the entire a.nav-link, due to presence of `o_default_snippet_text` class
             // hence, specify the selection on the h4 element
@@ -207,8 +212,8 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: '#oe_snippets #toolbar #bold',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({}, true),
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
     toggleMegaMenu(),
     {
         content: "The menu item should only convert selected text to Bold.",

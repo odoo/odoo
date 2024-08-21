@@ -1,14 +1,19 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
+registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
     // Put a Newsletter block.
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_newsletter_block',
         name: 'Newsletter Block',
         groupName: "Contact & Forms",
@@ -17,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         content: 'Wait for the list id to be set.',
         trigger: ':iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     // Subscribe to the newsletter.
     {
         trigger: ':iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
@@ -28,7 +33,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         run: "click",
     },
     // Change the link style.
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: 'Click on the Subscribe form',
         trigger: ':iframe .s_newsletter_block .s_newsletter_subscribe_form',
@@ -44,5 +49,5 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         trigger: ':iframe .s_newsletter_block .js_subscribed_wrap',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
 ]);

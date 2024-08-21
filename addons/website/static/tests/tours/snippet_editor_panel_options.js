@@ -1,14 +1,20 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    changeOption,
+    clickOnSave,
+    dragNDrop,
+    goBackToBlocks,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 import { browser } from '@web/core/browser/browser';
 
-wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
+registerWebsitePreviewTour('snippet_editor_panel_options', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-...wTourUtils.dragNDrop({
+...dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',
     groupName: "Content",
@@ -79,8 +85,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
     },
 },
 // Test keeping the text selection when adding columns to a snippet with none.
-wTourUtils.goBackToBlocks(),
-...wTourUtils.dragNDrop({
+goBackToBlocks(),
+...dragNDrop({
     id: 's_text_block',
     name: 'Text',
     groupName: "Text",
@@ -156,7 +162,7 @@ wTourUtils.goBackToBlocks(),
     },
 },
 // Test keeping the text selection when toggling the grid mode.
-wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
+changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
 {
     content: "The snippet row should have the grid mode class.",
     trigger: ":iframe .s_text_block .row.o_grid_mode",
@@ -173,7 +179,7 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
     },
 },
 // Test keeping the text selection when toggling back the normal mode.
-wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
+changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 {
     content: "The snippet row should not have the grid mode class anymore.",
     trigger: ":iframe .s_text_block .row:not(.o_grid_mode)",
@@ -205,5 +211,5 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
     content: "Check if dropdown closed correctly.",
     trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=false]",
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 ]);

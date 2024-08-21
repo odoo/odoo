@@ -2,9 +2,15 @@
 
 import { localization } from '@web/core/l10n/localization';
 import { translatedTerms } from '@web/core/l10n/translation';
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnEditAndWaitEditModeInTranslatedPage,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('snippet_translation', {
+registerWebsitePreviewTour('snippet_translation', {
     url: '/',
     test: true,
 }, () => [
@@ -19,8 +25,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
             }
         }
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    ...wTourUtils.dragNDrop({id: "s_cover", name: "Cover", groupName: "Intro"}),
+    ...clickOnEditAndWaitEditMode(),
+    ...dragNDrop({id: "s_cover", name: "Cover", groupName: "Intro"}),
     {
         content: "Check that contact us contain Parseltongue",
         trigger: ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
@@ -30,7 +36,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
         trigger: '.btn[data-action="save"]:contains("Save in fu_GB")',
     },
 ]);
-wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
+registerWebsitePreviewTour('snippet_translation_changing_lang', {
     url: '/',
     test: true,
 }, () => [
@@ -59,9 +65,9 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
         trigger: '.modal-footer .btn-primary',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
-    ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
-    ...wTourUtils.dragNDrop({name: "Cover", id: "s_cover", groupName: "Intro"}),
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditModeInTranslatedPage(),
+    ...dragNDrop({name: "Cover", id: "s_cover", groupName: "Intro"}),
     {
         content: "Check that contact us contain Parseltongue",
         trigger: ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',

@@ -1,7 +1,13 @@
 /** @odoo-module */
 
 import { isVisible } from '@odoo/hoot-dom';
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    dragNDrop,
+    goBackToBlocks,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const scrollToHeading = function (position) {
     return {
@@ -19,12 +25,12 @@ const checkTOCNavBar = function (tocPosition, activeHeaderPosition) {
     };
 };
 
-wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
+registerWebsitePreviewTour('snippet_table_of_content', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
+    ...dragNDrop({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
     // We don't use the dragNDrop function here to avoid snippets being dropped inside the toc's.
     {
         content: "Drag the Text snippet group and drop it.",
@@ -37,7 +43,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         run: "click",
     },
     // To make sure that the public widgets of the two previous ones started.
-    ...wTourUtils.dragNDrop({id: "s_banner", name: "Banner", groupName: "Intro"}),
+    ...dragNDrop({id: "s_banner", name: "Banner", groupName: "Intro"}),
     {
         content: "Drag the Intro snippet group and drop it.",
         trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
@@ -48,7 +54,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_banner"]',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     checkTOCNavBar(0, 0),
     checkTOCNavBar(1, 0),
     scrollToHeading(1),
@@ -58,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     checkTOCNavBar(1, 0),
     scrollToHeading(3),
     checkTOCNavBar(1, 1),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...clickOnEditAndWaitEditMode(),
     {
         content: "Click on the first TOC's title",
         trigger: ':iframe .s_table_of_content:eq(0) h2',
@@ -70,7 +76,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         run: "click",
     },
     // Go back to blocks tabs to avoid changing the first ToC options
-    wTourUtils.goBackToBlocks(),
+    goBackToBlocks(),
     {
         content: "Click on the second TOC's title",
         trigger: ':iframe .s_table_of_content:eq(1) h2',
@@ -81,7 +87,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         trigger: '[data-toggle-device-visibility="no_desktop"]',
         run: "click",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Check that we have the good TOC on desktop",
         trigger: ':iframe .s_table_of_content.o_snippet_mobile_invisible',

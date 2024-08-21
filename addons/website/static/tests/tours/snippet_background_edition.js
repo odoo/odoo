@@ -1,7 +1,15 @@
 /** @odoo-module */
 
 import weUtils from '@web_editor/js/common/utils';
-import wTourUtils from '@website/js/tours/tour_utils';
+import {
+    changeBackgroundColor,
+    changeOption,
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    clickOnSnippet,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from '@website/js/tours/tour_utils';
 
 const snippets = [
     {
@@ -62,7 +70,7 @@ function checkAndUpdateBackgroundColor({
     finalSelector, finalRun
 }) {
     const steps = [
-        wTourUtils.changeBackgroundColor(),
+        changeBackgroundColor(),
         {
             content: "Switch back to theme tab from custom tab",
             trigger: ".colorpicker button[data-target='color-combinations']", // Switch back to theme tab
@@ -76,7 +84,7 @@ function checkAndUpdateBackgroundColor({
 
     if (changeType) {
         steps.push(switchTo(changeType));
-        steps.push(wTourUtils.changeOption('ColoredLevelBackground', `.o_we_color_btn[data-color="${change}"]`, 'background color', 'top', true));
+        steps.push(changeOption('ColoredLevelBackground', `.o_we_color_btn[data-color="${change}"]`, 'background color', 'top', true));
         steps.push({
             trigger: finalSelector,
             content: "The selected colors have been applied (CC AND (BG or GRADIENT))",
@@ -92,20 +100,19 @@ function updateAndCheckCustomGradient({updateStep, checkGradient}) {
     const steps = [updateStep, {
         trigger: `:iframe #wrapwrap section.${snippets[0].id}.o_cc1`,
         content: 'Color combination 1 still selected',
-        run: () => null,
     }];
     addCheck(steps, checkGradient, checkGradient !== gradients[0] && gradients[0], 'gradient', true);
     return steps;
 }
 
-wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
+registerWebsitePreviewTour('snippet_background_edition', {
     url: '/',
     edition: true,
     test: true,
 },
 () => [
-...wTourUtils.dragNDrop(snippets[0]),
-...wTourUtils.clickOnSnippet(snippets[0]),
+...dragNDrop(snippets[0]),
+...clickOnSnippet(snippets[0]),
 
 // Set background image and save.
 {
@@ -118,13 +125,13 @@ wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
     trigger: ".o_select_media_dialog img[title='test.png']",
     run: "click",
 },
-...wTourUtils.clickOnSave(),
+...clickOnSave(),
 {
     content: "Check that the image is set",
     trigger: `:iframe section.${snippets[0].id} img[data-original-id]`,
 },
-...wTourUtils.clickOnEditAndWaitEditMode(),
-...wTourUtils.clickOnSnippet(snippets[0]),
+...clickOnEditAndWaitEditMode(),
+...clickOnSnippet(snippets[0]),
 // Remove background image.
 {
     content: "Click on camera icon",
@@ -221,7 +228,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
     content: 'Close palette',
     run: "click",
 },
-wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_opt"]'),
+changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_opt"]'),
 {
     trigger: '.o_existing_attachment_cell img',
     content: "Select an image in the media dialog",
@@ -234,10 +241,10 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
             getComputedStyle(this.anchor)["background-image"]
         );
         if (!parts.url || !parts.url.startsWith('url(')) {
-            console.error('An image should have been added as background.');
+            throw new Error('An image should have been added as background.');
         }
         if (parts.gradient !== gradients[1]) {
-            console.error('The gradient should have been kept when adding the background image');
+            throw new Error('The gradient should have been kept when adding the background image');
         }
     },
 },
@@ -254,16 +261,16 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
             getComputedStyle(this.anchor)["background-image"]
         );
         if (!parts.url || !parts.url.startsWith('url(')) {
-            console.error('The image should have been kept when changing the gradient');
+            throw new Error('The image should have been kept when changing the gradient');
         }
         if (parts.gradient !== gradients[0]) {
-            console.error('The gradient should have been changed');
+            throw new Error('The gradient should have been changed');
         }
     },
 }),
 
 // Customize gradient
-wTourUtils.changeBackgroundColor(),
+changeBackgroundColor(),
 switchTo('gradient'),
 // Avoid navigating across tabs to maintain current editor state
 // Step colors
@@ -373,15 +380,15 @@ switchTo('gradient'),
     changeType: 'gradient',
     change: gradients[1],
     finalSelector: `:iframe .${snippets[0].id}.o_cc.o_cc1:not(.bg-black-75)`,
-    finalRun: function () {
+    finalRun() {
         const parts = weUtils.backgroundImageCssToParts(
             getComputedStyle(this.anchor)["background-image"]
         );
         if (!parts.url || !parts.url.startsWith('url(')) {
-            console.error('The image should have been kept when re-adding the gradient');
+            throw new Error('The image should have been kept when re-adding the gradient');
         }
         if (parts.gradient !== gradients[1]) {
-            console.error('The gradient should have been re-added');
+            throw new Error('The gradient should have been re-added');
         }
     },
 }),
@@ -392,10 +399,9 @@ switchTo('gradient'),
     checkNoBg: 'black-75',
     checkGradient: gradients[1],
 }),
-wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_opt"]', 'image toggle', 'top', true),
+changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_opt"]', 'image toggle', 'top', true),
 {
     trigger: `:iframe .${snippets[0].id}.o_cc.o_cc1[style*="background-image: ${gradients[1]}"]`,
-    run: () => null,
 },
 
 // Now removing all colors via the 'None' button (note: colorpicker still opened)
@@ -407,6 +413,5 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
 {
     trigger: `:iframe .${snippets[0].id}:not(.o_cc):not(.o_cc1):not([style*="background-image"])`,
     content: "All color classes and properties should have been removed",
-    run: () => null,
 }
 ]);

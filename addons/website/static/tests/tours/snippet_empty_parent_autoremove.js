@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    changeOption,
+    clickOnSnippet,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 
 function removeSelectedBlock() {
     return {
@@ -10,13 +15,13 @@ function removeSelectedBlock() {
     };
 }
 
-wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
+registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
     // Base case: remove both columns from text - image
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -39,17 +44,17 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     },
 
     // Cover: test that parallax, bg-filter and shape are not treated as content
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_cover',
         name: 'Cover',
         groupName: "Intro",
     }),
-    ...wTourUtils.clickOnSnippet({
+    ...clickOnSnippet({
         id: 's_cover',
         name: 'Cover',
     }),
     // Add a shape
-    wTourUtils.changeOption('ColoredLevelBackground', 'Shape'),
+    changeOption('ColoredLevelBackground', 'Shape'),
     {
         content: "Check that the parallax element is present",
         trigger: ':iframe #wrap .s_cover .s_parallax_bg',
@@ -63,8 +68,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
         trigger: ':iframe #wrap .s_cover .o_we_shape',
     },
     // Add a column
-    wTourUtils.changeOption('layout_column', 'we-toggler'),
-    wTourUtils.changeOption('layout_column', '[data-select-count="1"]'),
+    changeOption('layout_column', 'we-toggler'),
+    changeOption('layout_column', '[data-select-count="1"]'),
     {
         content: "Click on the created column",
         trigger: ':iframe #wrap .s_cover .row > :first-child',

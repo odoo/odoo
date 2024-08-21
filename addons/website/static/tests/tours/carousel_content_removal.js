@@ -1,13 +1,13 @@
 /** @odoo-module */
 
-import wTourUtils from '@website/js/tours/tour_utils';
+import { dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
+registerWebsitePreviewTour("carousel_content_removal", {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop({
+    ...dragNDrop({
         id: 's_carousel',
         name: 'Carousel',
         groupName: "Intro",

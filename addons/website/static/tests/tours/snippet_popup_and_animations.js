@@ -1,6 +1,13 @@
 /** @odoo-module */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {
+    changeOption,
+    clickOnEditAndWaitEditMode,
+    clickOnElement,
+    clickOnSave,
+    dragNDrop,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 
 const snippets = [
     {
@@ -22,22 +29,22 @@ const snippets = [
 
 const setOnScrollAnim = function () {
     return [
-        wTourUtils.changeOption("WebsiteAnimate", 'we-select[data-is-animation-type-selection="true"] we-toggler'),
-        wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onScroll"]'),
-        wTourUtils.changeOption("WebsiteAnimate", 'we-select[data-name="animation_effect_opt"] we-toggler'),
-        wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-name="o_anim_slide_in_opt"]'),
+        changeOption("WebsiteAnimate", 'we-select[data-is-animation-type-selection="true"] we-toggler'),
+        changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onScroll"]'),
+        changeOption("WebsiteAnimate", 'we-select[data-name="animation_effect_opt"] we-toggler'),
+        changeOption("WebsiteAnimate", 'we-button[data-name="o_anim_slide_in_opt"]'),
     ];
 };
 
-wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
+registerWebsitePreviewTour("snippet_popup_and_animations", {
     test: true,
     url: "/",
     edition: true,
 }, () => [
-    ...wTourUtils.dragNDrop(snippets[1]), // Media List
-    ...wTourUtils.dragNDrop(snippets[1]), // Media List
-    ...wTourUtils.dragNDrop(snippets[2]), // Columns
-    wTourUtils.clickOnElement("3rd columns", ":iframe .s_three_columns .row > :last-child"),
+    ...dragNDrop(snippets[1]), // Media List
+    ...dragNDrop(snippets[1]), // Media List
+    ...dragNDrop(snippets[2]), // Columns
+    clickOnElement("3rd columns", ":iframe .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
     {
         content: "Open the Cookies Bar.",
@@ -50,12 +57,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Scroll to top",
         trigger: ":iframe #wrapwrap",
-        run: function () {
+        run() {
             const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
             // should be rounded to -1 in the following condition.
             if (Math.round(parseFloat(animatedColumnEl.style.animationDelay)) !== -1) {
-                console.error("The scroll animation in the page did not start properly with the cookies bar open.");
+                throw new Error("The scroll animation in the page did not start properly with the cookies bar open.");
             }
             this.anchor.scrollTo({
                 top: 0,
@@ -70,13 +77,13 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Wait for the page to be scrolled to the top.",
         trigger: ":iframe .s_three_columns .row > :last-child:not(.o_animating)",
-        run: function () {
+        run() {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
             // The main goal of the following condition is to verify if the
             // animation delay is being updated as expected.
             if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
-                console.error("The scroll animation in the page did not end properly with the cookies bar open.");
+                throw new Error("The scroll animation in the page did not end properly with the cookies bar open.");
             }
         },
     },
@@ -85,8 +92,8 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
         run: "click",
     },
-    ...wTourUtils.dragNDrop(snippets[0]), // Popup
-    ...wTourUtils.dragNDrop(snippets[1]), // Media List
+    ...dragNDrop(snippets[0]), // Popup
+    ...dragNDrop(snippets[1]), // Media List
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
@@ -100,17 +107,17 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_three_columns"]',
         run: "click",
     },
-    wTourUtils.clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
+    clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
     {
         content: "Verify the animation delay of the animated element in the popup at the beginning",
         trigger: ":iframe .s_popup .modal",
-        run: function () {
+        run() {
             const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
             // should be rounded to -1 in the following condition.
             if (Math.round(parseFloat(animatedColumnEl.style.animationDelay)) !== -1) {
-                console.error("The scroll animation in the modal did not start properly.");
+                throw new Error("The scroll animation in the modal did not start properly.");
             }
             this.anchor.closest(".modal").scrollTo({
                 top: 0,
@@ -128,7 +135,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
             if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
-                console.error("The scroll animation in the modal did not end properly.");
+                throw new Error("The scroll animation in the modal did not end properly.");
             }
         },
     },
@@ -141,9 +148,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the popup has been closed",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
     },
-    wTourUtils.clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll img"),
-    wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
-    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onHover"]'),
+    clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll img"),
+    changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
+    changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onHover"]'),
     {
         trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
     },
@@ -151,11 +158,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the hover effect animation has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']",
     },
-    ...wTourUtils.clickOnSave(),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
-    wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
-    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditMode(),
+    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
+    changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
+    changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
     {
         trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
     },
@@ -163,22 +170,22 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the outline effect has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Check that the image src is not the raw data",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
-        run: () => {
+        run() {
             const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
             const src = imgEl.getAttribute("src");
             if (src.startsWith("data:image")) {
-                console.error("The image source should not be raw data after the editor save");
+                throw new Error("The image source should not be raw data after the editor save");
             }
         },
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']"),
-    wTourUtils.changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
-    wTourUtils.changeOption("ImageTools", 'we-button:contains("Blur")'),
+    ...clickOnEditAndWaitEditMode(),
+    clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']"),
+    changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
+    changeOption("ImageTools", 'we-button:contains("Blur")'),
     {
         trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     },
@@ -195,15 +202,15 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the Blur filter has been removed from the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur'])",
     },
-    ...wTourUtils.clickOnSave(),
+    ...clickOnSave(),
     {
         content: "Check that the image src is not the raw data",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
-        run: () => {
+        run() {
             const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
             const src = imgEl.getAttribute("src");
             if (src.startsWith("data:image")) {
-                console.error("The image source should not be raw data after the editor save");
+                throw new Error("The image source should not be raw data after the editor save");
             }
         },
     },

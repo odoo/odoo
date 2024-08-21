@@ -1,12 +1,12 @@
 /** @odoo-module**/
 /* global ace */
 
-import wTourUtils from "@website/js/tours/tour_utils";
+import {clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';
 
-wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
+registerWebsitePreviewTour('html_editor_multiple_templates', {
     url: '/generic',
     edition: true,
     test: true,
@@ -23,7 +23,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
             trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_cover"]',
             run: "click",
         },
-        ...wTourUtils.clickOnSave(),
+        ...clickOnSave(),
         // 2. Edit generic view
         {
             content: "open site menu",
@@ -38,7 +38,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         {
             content: "add something in the generic view",
             trigger: 'div.ace_line .ace_xml:contains("Generic")',
-            run: function () {
+            run() {
                 ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 3, column: 1}, '<p>somenewcontent</p>\n');
             },
         },
@@ -63,7 +63,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         {
             content: "add something in the oe_structure specific view",
             trigger: 'div.ace_line .ace_xml:contains("s_cover")',
-            run: function () {
+            run() {
                 ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 2, column: 1}, '<p>anothernewcontent</p>\n');
             },
         },
@@ -85,7 +85,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
     ]
 );
 
-wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
+registerWebsitePreviewTour('test_html_editor_scss', {
     url: '/contactus',
     test: true,
 },
@@ -122,7 +122,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "add some scss content in the file",
             trigger: 'div.ace_line .ace_comment:contains("footer {")',
-            run: function () {
+            run() {
                 ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 2, column: 0}, `${adminCssModif}\n`);
             },
         },
@@ -159,7 +159,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "add some scss content in the file",
             trigger: 'div.ace_line .ace_comment:contains("footer {")',
-            run: function () {
+            run() {
                 ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 2, column: 0}, `${adminCssModif}\n`);
             },
         },
@@ -178,7 +178,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
     ]
 );
 
-wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
+registerWebsitePreviewTour('test_html_editor_scss_2', {
     url: '/',
     test: true,
 },
@@ -214,8 +214,9 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         // 5. Edit that file and ensure it was saved then reset it
         {
             content: "add some scss content in the file",
-            trigger: `div.ace_line:contains("${adminCssModif}")`, // ensure the admin modification is here
-            run: function () {
+            trigger: `div.ace_line:contains("${adminCssModif}")`,
+            // ensure the admin modification is here
+            run() {
                 ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 2, column: 0}, `${demoCssModif}\n`);
             },
         },
@@ -249,7 +250,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
     ]
 );
 
-wTourUtils.registerWebsitePreviewTour(
+registerWebsitePreviewTour(
     "website_code_editor_usable",
     {
         // TODO: enable debug mode when failing tests have been fixed (props validation)
