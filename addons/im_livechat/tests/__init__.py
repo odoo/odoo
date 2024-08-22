@@ -14,3 +14,4 @@ from . import test_js
 from . import test_message
 from . import test_upload_attachment
 from . import test_session_history
+from . import test_session_history_open

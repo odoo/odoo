@@ -51,12 +51,12 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
+        this.threadActions = useThreadActions();
         useChildSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
         });
         this.notification = useService("notification");
-        this.threadActions = useThreadActions();
         useExternalListener(
             window,
             "keydown",

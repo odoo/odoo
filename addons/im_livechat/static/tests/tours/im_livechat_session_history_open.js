@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour", {
+registry.category("web_tour.tours").add("im_livechat_session_history_open", {
     test: true,
     steps: () => [
         {
@@ -20,33 +20,26 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "click",
         },
         {
-            trigger: "button.o_switch_view.o_list",
+            trigger: ".o_switch_view[data-tooltip='List']",
             run: "click",
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".d-block:contains('Participants')",
             run: "click",
         },
         {
-            trigger: ".text-truncate:contains(Visitor)",
-            run() {
-                history.back();
-            },
+            trigger: ".o_data_cell:contains('test 1')",
+            run: "click",
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
-            run() {
-                history.forward();
-            },
+            trigger: ".o-mail-Message-content:contains('Test Channel 1 Msg')",
         },
         {
-            trigger: ".text-truncate:contains(Visitor)",
-            run() {
-                history.back();
-            },
+            trigger: ".oi-chevron-right",
+            run: "click",
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o-mail-Message-content:contains('Test Channel 2 Msg')",
         },
     ],
 });
