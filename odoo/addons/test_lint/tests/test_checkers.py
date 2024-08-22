@@ -40,29 +40,39 @@ class UnittestLinter(PyLinter):
 
 
 HERE = os.path.dirname(os.path.realpath(__file__))
-@unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
-class TestSqlLint(TransactionCase):
-    def check(self, testtext):
-        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False) as f:
-            self.addCleanup(os.remove, f.name)
-            f.write(dedent(testtext).strip())
 
-        result = run(
-            [pylint_bin,
-             f'--rcfile={os.devnull}',
-             '--load-plugins=_odoo_checker_sql_injection',
-             '--disable=all',
-             '--enable=sql-injection',
-             '--output-format=json',
-             f.name,
+
+class TestPylintChecks(TransactionCase):
+    def check(self, test_content, plugins, rules):
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as f:
+            self.addCleanup(os.remove, f.name)
+            f.write(dedent(test_content).strip())
+        res = run(
+            [
+                pylint_bin,
+                f"--rcfile={os.devnull}",
+                f"--load-plugins={plugins}",
+                "--disable=all",
+                f"--enable={rules}",
+                "--output-format=json",
+                f.name,
             ],
-            stdout=PIPE, encoding='utf-8',
+            stdout=PIPE,
+            encoding="utf-8",
             env={
                 **os.environ,
-                'PYTHONPATH': HERE+os.pathsep+os.environ.get('PYTHONPATH', ''),
-            }
+                "PYTHONPATH": HERE + os.pathsep + os.environ.get("PYTHONPATH", ""),
+            },
+            check=False,
+            shell=False,  # keep False to avoid shell injection
         )
-        return result.returncode, json.loads(result.stdout)
+        return res.returncode, json.loads(res.stdout)
+
+
+@unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+class TestSqlLint(TestPylintChecks):
+    def check(self, testtext):
+        return super().check(testtext, "_odoo_checker_sql_injection", "sql-injection")
 
     def test_printf(self):
         r, [err] = self.check("""
@@ -458,3 +468,57 @@ class TestSqlLint(TransactionCase):
         """)
         with self.assertMessages("sql-injection"):
             checker.visit_call(list(node.get_children())[1])
+
+
+@unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+class TestI18nChecks(TestPylintChecks):
+    def check(self, test_content):
+        return super().check(
+            test_content, "_odoo_checker_gettext", "gettext-variable,gettext-placeholders,gettext-repr"
+        )
+
+    def test_gettext_variable(self):
+        exit_code, errors = self.check(
+            """
+            some_variable = "Roblox Mini Golf! [ACTUALLY FIXED]"
+            _(some_variable)
+            _lt(513)
+            _lt("string but" + "not static")
+            _(f"formatted string")
+            """
+        )
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 4)
+        for error in errors:
+            self.assertEqual(error["symbol"], "gettext-variable")
+
+    def test_gettext_placeholders(self):
+        exit_code, errors = self.check(
+            """
+            _("shouldn't match escaped %%s %%s")
+            """
+        )
+        self.assertEqual(exit_code, os.EX_OK)
+        self.assertFalse(errors)
+        exit_code, errors = self.check(
+            """
+            _("more than one unnamed placeholder: %s %s")
+            _lt("with fancy placeholders: %03.14d %-xL")
+            """
+        )
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 2)
+        for error in errors:
+            self.assertEqual(error["symbol"], "gettext-placeholders")
+
+    def test_gettext_repr(self):
+        exit_code, errors = self.check(
+            """
+            _("%r shouldn't be part of translated strings")
+            _lt("%(with_placeholders_in_between)r")
+            """
+        )
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 2)
+        for error in errors:
+            self.assertEqual(error["symbol"], "gettext-repr")
