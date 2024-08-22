@@ -442,7 +442,7 @@ test("leave command on channel", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Inbox" });
     await contains(".o_notification", { text: "You unsubscribed from general." });
 });
 
@@ -486,7 +486,7 @@ test("leave command on chat", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Chuck Norris" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Inbox" });
     await contains(".o_notification", { text: "You unpinned your conversation with Chuck Norris" });
 });
 

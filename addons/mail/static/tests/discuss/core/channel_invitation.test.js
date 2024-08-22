@@ -30,7 +30,7 @@ test("should display the channel invitation form after clicking on the invite bu
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click(".o-mail-DiscussHeader button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
 });
 
@@ -82,7 +82,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click(".o-mail-DiscussHeader button[title='Invite People']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
 });
@@ -105,7 +105,7 @@ test("Invitation form should display channel group restriction", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click(".o-mail-DiscussHeader button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation div", {
         text: 'Access restricted to group "testGroup"',
         after: ["button .fa.fa-copy"],
@@ -134,7 +134,7 @@ test("should be able to create a new group chat from an existing chat", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click(".o-mail-DiscussHeader button[title='Invite People']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
     await click("button[title='Create Group Chat']:enabled");

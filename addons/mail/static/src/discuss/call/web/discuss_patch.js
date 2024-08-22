@@ -1,7 +1,7 @@
 import { Discuss } from "@mail/core/public_web/discuss";
 
 import { patch } from "@web/core/utils/patch";
-
+import { browser } from "@web/core/browser/browser";
 import { useEffect } from "@odoo/owl";
 
 patch(Discuss.prototype, {
@@ -10,10 +10,12 @@ patch(Discuss.prototype, {
         useEffect(
             () => {
                 if (this.thread && this.thread === this.store.openInviteThread) {
-                    this.threadActions.actions
-                        .find((action) => action.id === "invite-people")
-                        ?.onSelect();
-                    this.store.openInviteThread = null;
+                    browser.requestAnimationFrame(() => {
+                        this.threadActions.actions
+                            .find((action) => action.id === "invite-people")
+                            ?.onSelect();
+                        this.store.openInviteThread = null;
+                    });
                 }
             },
             () => [this.store.openInviteThread]

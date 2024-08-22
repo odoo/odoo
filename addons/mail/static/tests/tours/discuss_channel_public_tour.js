@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                 }
                 document.body.classList.add("o_discuss_channel_public_modules_loaded");
                 if (
-                    document.title !== document.querySelector(".o-mail-Discuss-threadName")?.value
+                    document.title !== document.querySelector(".o-mail-DiscussHeader-threadName")?.value
                 ) {
                     console.error("Tab title should match conversation name.");
                 }

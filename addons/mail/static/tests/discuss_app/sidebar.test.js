@@ -264,7 +264,7 @@ test("sidebar quick search takes DM custom name into account", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { count: 21 });
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     // set custom name
-    await insertText("input.o-mail-Discuss-threadName:enabled", "Marc", {
+    await insertText("input.o-mail-DiscussHeader-threadName:enabled", "Marc", {
         replace: true,
     });
     triggerHotkey("Enter");
@@ -311,7 +311,7 @@ test("sidebar: open pinned channel", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "General" });
 });
 
 test("sidebar: open channel and leave it", async () => {
@@ -332,14 +332,14 @@ test("sidebar: open channel and leave it", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "General" });
     await assertSteps([]);
     await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
     });
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Inbox" });
     await assertSteps(["action_unfollow"]);
 });
 
@@ -358,13 +358,13 @@ test("sidebar: unpin chat from bus", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-Composer-input[placeholder='Message Demo…']");
-    await contains(".o-mail-Discuss-threadName", { value: "Demo" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Demo" });
     // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "discuss.channel/unpin", { id: channelId });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-    await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
+    await contains(".o-mail-DiscussHeader-threadName", { count: 0, value: "Demo" });
 });
 
 test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
@@ -1275,7 +1275,7 @@ test("Update channel data via bus notification [REQUIRE FOCUS]", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: env1 });
-    await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
+    await insertText(".o-mail-DiscussHeader-threadName", "test", { target: env1 });
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
 });

@@ -85,7 +85,7 @@ test("no call with odoobot", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header");
+    await contains(".o-mail-DiscussHeader");
     await contains("[title='Start a Call']", { count: 0 });
 });
 
