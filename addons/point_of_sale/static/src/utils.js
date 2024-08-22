@@ -1,4 +1,4 @@
-import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime, parseDateTime } from "@web/core/l10n/dates";
 
 /*
  * comes from o_spreadsheet.js
@@ -122,10 +122,7 @@ export function loadAllImages(el) {
 }
 
 export function getUTCString(datetimeObj) {
-    return formatDateTime(datetimeObj, {
-        format: "yyyy-MM-dd HH:mm:ss",
-        tz: "utc",
-    });
+    return serializeDateTime(datetimeObj);
 }
 
 export function parseUTCString(utcStr) {
