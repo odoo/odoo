@@ -15,15 +15,14 @@ export class SelfOrderRouter extends Reactive {
         this.registeredRoutes = {};
         this.historyPage = "";
         this.activeSlot = null;
+        this.urlOption = {
+            config_id: null,
+            table_identifier: null,
+            access_token: null,
+        };
         window.addEventListener("popstate", (event) => {
             this.path = window.location.pathname;
         });
-    }
-
-    addTableIdentifier(table) {
-        const url = new URL(browser.location.href);
-        url.searchParams.set("table_identifier", table.identifier);
-        history.replaceState({}, "", url);
     }
 
     back() {
@@ -49,13 +48,29 @@ export class SelfOrderRouter extends Reactive {
         const { route } = this.registeredRoutes[routeName];
         const url = new URL(browser.location.href);
 
-        url.pathname = route.replace(/\{\w+:(\w+)\}/g, (match, paramName) => {
-            return routeParams[paramName];
-        });
+        url.pathname =
+            this.basePath +
+            route.replace(/\{\w+:(\w+)\}/g, (match, paramName) => {
+                return routeParams[paramName];
+            });
 
         history.pushState({}, "", url);
         this.path = window.location.pathname;
         this.historyPage = this.path;
+    }
+
+    get basePath() {
+        let url = `/pos-self/${this.urlOption.config_id}`;
+
+        if (this.urlOption.access_token) {
+            url += "/" + this.urlOption.access_token;
+        }
+
+        if (this.urlOption.table_identifier) {
+            url += "/" + this.urlOption.table_identifier;
+        }
+
+        return url;
     }
 
     registerRoutes(routes) {

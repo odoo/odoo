@@ -94,7 +94,7 @@ class ResConfigSettings(models.TransientModel):
         )
         qr.add_data(url)
         qr.make(fit=True)
-        return qr.make_image(fill_color="black", back_color="white")
+        return qr.make_image(fill_color="black", back_color="transparent")
 
     def generate_qr_codes_zip(self):
         if not self.pos_self_ordering_mode in ['mobile', 'consultation']:

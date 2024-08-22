@@ -74,7 +74,7 @@ export class CartPage extends Component {
             this.selfOrder.currentOrder.update({
                 table_id: table,
             });
-            this.router.addTableIdentifier(table);
+            this.selfOrder.setTableIdentifier(table.identifier);
             this.pay();
         }
 

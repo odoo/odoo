@@ -6,9 +6,21 @@ from odoo.http import request
 
 
 class PosSelfKiosk(http.Controller):
-    @http.route(["/pos-self/<config_id>", "/pos-self/<config_id>/<path:subpath>"], auth="public", website=True, sitemap=True)
-    def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None):
-        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
+    @http.route(["/pos-self/<config_id>",
+                 "/pos-self/<config_id>/<path:subpath>",
+                 ],
+                auth="public", website=True, sitemap=True)
+    def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, subpath=None):
+        path_array = subpath.split("/") if subpath else []
+
+        # This endpoint can works with GET args and path args
+        # GET args will be removed in future versions
+        if not access_token and len(path_array) > 0:
+            access_token = path_array[0]
+
+        if not table_identifier and len(path_array) > 1:
+            table_identifier = path_array[1]
+        pos_config, table, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
         return request.render(
                 'pos_self_order.index',
                 {
@@ -18,6 +30,7 @@ class PosSelfKiosk(http.Controller):
                         'data': {
                             'config_id': pos_config.id,
                             'access_token': config_access_token,
+                            'table_identifier': table.identifier if table else None,
                             'self_ordering_mode': pos_config.self_ordering_mode,
                         },
                         "base_url": request.env['pos.session'].get_base_url(),
@@ -33,6 +46,7 @@ class PosSelfKiosk(http.Controller):
 
     def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None):
         table_sudo = False
+        pos_config_sudo = False
 
         if not config_id or not config_id.isnumeric():
             raise werkzeug.exceptions.NotFound()
@@ -41,13 +55,10 @@ class PosSelfKiosk(http.Controller):
             config_access_token = True
             pos_config_sudo = request.env["pos.config"].sudo().search([
                 ("id", "=", config_id), ('access_token', '=', access_token)], limit=1)
-        else:
+        if not pos_config_sudo or pos_config_sudo.self_ordering_mode == 'nothing':
             config_access_token = False
             pos_config_sudo = request.env["pos.config"].sudo().search([
                 ("id", "=", config_id)], limit=1)
-
-        if not pos_config_sudo or pos_config_sudo.self_ordering_mode == 'nothing':
-            raise werkzeug.exceptions.NotFound()
 
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
