@@ -244,9 +244,30 @@
         <DescriptionScreen t-if="state.currentStep === 2" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
         <PaletteSelectionScreen t-elif="state.currentStep === 3" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
         <FeaturesSelectionScreen t-elif="state.currentStep === 4" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator" clearStorage.bind="clearStorage"/>
-        <ThemeSelectionScreen t-elif="state.currentStep === 5" navigate="(screen) => this.navigate(screen)" clearStorage.bind="clearStorage"/>
+        <ThemeSelectionScreen t-elif="state.currentStep === 5" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator" clearStorage.bind="clearStorage"/>
         <WelcomeScreen t-else="" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
     </div>
+</t>
+
+<t t-name="website.Configurator.RetryOrSkipDialog">
+    <Dialog>
+        <t t-set-slot="header">
+            <h4 class="modal-title text-break">Oops! Something went wrong.</h4>
+        </t>
+        <t t-set-slot="default">
+            <p>
+                It looks like the AI building your website is overwhelmed! You can skip the AI Configuration and
+                manually pick a theme, or you can try again in a few minutes.
+            </p>
+            <p t-if="env.debug">
+                <button class="btn btn-link" t-on-click="triggerTraceback">Click here to show the original error</button>
+            </p>
+        </t>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="this.props.retry" t-att-disabled="this.state.secondsLeft lt 1 ? '' : 'true'"><t t-out="retryText"/></button>
+            <button class="btn btn-secondary" t-on-click="this.props.skip">Skip and start from scratch</button>
+        </t>
+    </Dialog>
 </t>
 
 </templates>
