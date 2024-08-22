@@ -549,7 +549,7 @@ class HrEmployee(models.Model):
                                 'leave_id': leave.id,
                             }
                     else:
-                        if leave_unit == 'hour':
+                        if leave_unit == 'hours':
                             allocated_time = leave.number_of_hours_display
                         else:
                             allocated_time = leave.number_of_days_display
