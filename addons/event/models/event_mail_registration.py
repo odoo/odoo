@@ -49,19 +49,10 @@ class EventMailRegistration(models.Model):
             elif self.env.user.email:
                 author = self.env.user.partner_id
 
+            template = reg_mail.scheduler_id.template_ref
             email_values = {
                 'author_id': author.id,
             }
-            template = None
-            try:
-                template = reg_mail.scheduler_id.template_ref.exists()
-            except MissingError:
-                pass
-
-            if not template:
-                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
-                continue
-
             if not template.email_from:
                 email_values['email_from'] = author.email_formatted
             template.send_mail(reg_mail.registration_id.id, email_values=email_values)

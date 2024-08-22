@@ -128,7 +128,7 @@ class EventMailScheduler(models.Model):
 
     def execute(self):
         now = fields.Datetime.now()
-        for scheduler in self:
+        for scheduler in self._filter_template_ref():
             if scheduler.interval_type == 'after_sub':
                 scheduler._execute_attendee_based()
             else:
@@ -213,6 +213,42 @@ class EventMailScheduler(models.Model):
         if new:
             return self.env['event.mail.registration'].create(new)
         return self.env['event.mail.registration']
+
+    def _filter_template_ref(self):
+        """ Check for valid template reference: existing, working template """
+        type_info = self._template_model_by_notification_type()
+
+        if not self:
+            return self.browse()
+
+        invalid = self.browse()
+        missing = self.browse()
+        for scheduler in self:
+            tpl_model = type_info[scheduler.notification_type]
+            if scheduler.template_ref._name != tpl_model:
+                invalid += scheduler
+            else:
+                template = self.env[tpl_model].browse(scheduler.template_ref.id).exists()
+                if not template:
+                    missing += scheduler
+        for scheduler in missing:
+            _logger.warning(
+                "Cannot process scheduler %s (event %s - ID %s) as it refers to non-existent %s (ID %s)",
+                scheduler.id, scheduler.event_id.name, scheduler.event_id.id,
+                tpl_model, scheduler.template_ref.id
+            )
+        for scheduler in invalid:
+            _logger.warning(
+                "Cannot process scheduler %s (event %s - ID %s) as it refers to invalid template %s (ID %s) (%s instead of %s)",
+                scheduler.id, scheduler.event_id.name, scheduler.event_id.id,
+                scheduler.template_ref.name, scheduler.template_ref.id,
+                scheduler.template_ref._name, tpl_model)
+        return self - missing - invalid
+
+    def _template_model_by_notification_type(self):
+        return {
+            "mail": "mail.template",
+        }
 
     def _prepare_event_mail_values(self):
         self.ensure_one()

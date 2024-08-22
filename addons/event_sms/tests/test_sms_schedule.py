@@ -105,3 +105,10 @@ class TestSMSSchedule(EventCase, SMSCase):
                 content='%s reminder' % test_event.organizer_id.name)
         self.assertTrue(before_scheduler.mail_done)
         self.assertEqual(before_scheduler.mail_count_done, 3)
+
+    @users('user_eventmanager')
+    def test_sms_schedule_fail_registration_template_removed(self):
+        """ Test flow where scheduler fails due to template being removed. """
+        self.sms_template_sub.sudo().unlink()
+        after_sub_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == 'after_sub')
+        self.assertFalse(after_sub_scheduler, "When removing template, scheduler should be removed")

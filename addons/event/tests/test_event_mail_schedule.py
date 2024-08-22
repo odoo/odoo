@@ -328,6 +328,14 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'subject': f"Reminder for {test_event.name}: today",
             })
 
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_registration_template_removed(self):
+        """ Test flow where scheduler fails due to template being removed. """
+        after_sub_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == 'after_sub')
+        self.assertTrue(after_sub_scheduler)
+        self.template_subscription.sudo().unlink()
+        self.assertFalse(after_sub_scheduler.exists(), "When removing template, scheduler should be removed")
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
     @warmup
