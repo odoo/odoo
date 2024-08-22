@@ -584,10 +584,11 @@ export class Rtc extends Record {
 
     /**
      * @param {import("models").Thread} channel
-     * @param {Object} [param1={}]
-     * @param {boolean} [param1.video]
+     * @param {Object} [initialState={}]
+     * @param {boolean} [initialState.audio]
+     * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { video } = {}) {
+    async toggleCall(channel, { audio = true, camera } = {}) {
         if (this.state.hasPendingRequest) {
             return;
         }
@@ -596,7 +597,7 @@ export class Rtc extends Record {
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
-            await this.joinCall(channel, { video });
+            await this.joinCall(channel, { audio, camera });
         }
     }
 
@@ -936,9 +937,12 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread}
+     * @param {import("models").Thread} channel
+     * @param {object} [initialState]
+     * @param {boolean} [initialState.audio] whether to request and use the user audio input (microphone) at start
+     * @param {boolean} [initialState.camera] whether to request and use the user video input (camera) at start
      */
-    async joinCall(channel, { video = false } = {}) {
+    async joinCall(channel, { audio = true, camera = false } = {}) {
         if (!IS_CLIENT_RTC_COMPATIBLE) {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
@@ -1012,11 +1016,11 @@ export class Rtc extends Record {
             return;
         }
         this.soundEffectsService.play("channel-join");
-        await this.resetAudioTrack({ force: true });
+        await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
         }
-        if (video) {
+        if (camera) {
             await this.toggleVideo("camera");
         }
         this.state.hasPendingRequest = false;
@@ -1577,6 +1581,9 @@ export class Rtc extends Record {
         if (!this.state.channel) {
             return;
         }
+        if (this.selfSession) {
+            this.setMute(true);
+        }
         if (force) {
             let audioTrack;
             try {
@@ -1584,6 +1591,9 @@ export class Rtc extends Record {
                     audio: this.store.settings.audioConstraints,
                 });
                 audioTrack = audioStream.getAudioTracks()[0];
+                if (this.selfSession) {
+                    this.setMute(false);
+                }
             } catch {
                 this.notification.add(
                     _t('"%(hostname)s" requires microphone access', {
@@ -1591,9 +1601,6 @@ export class Rtc extends Record {
                     }),
                     { type: "warning" }
                 );
-                if (this.selfSession) {
-                    this.updateAndBroadcast({ isSelfMuted: true });
-                }
                 return;
             }
             if (!this.selfSession) {
@@ -1605,10 +1612,8 @@ export class Rtc extends Record {
             audioTrack.addEventListener("ended", async () => {
                 // this mostly happens when the user retracts microphone permission.
                 await this.resetAudioTrack({ force: false });
-                this.updateAndBroadcast({ isSelfMuted: true });
-                await this.refreshAudioStatus();
+                this.setMute(true);
             });
-            this.updateAndBroadcast({ isSelfMuted: false });
             audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
             this.state.audioTrack = audioTrack;
             this.linkVoiceActivationDebounce();

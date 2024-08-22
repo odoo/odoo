@@ -381,7 +381,7 @@ export class Store extends BaseStore {
             partners_to: [this.self.id],
         });
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
-        this.env.services["discuss.rtc"].toggleCall(thread, { video: true });
+        this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
         this.openInviteThread = thread;
     }
 
