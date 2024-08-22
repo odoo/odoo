@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_recruitment_post_job_form" model="ir.ui.view">
+        <field name="name">hr.recruitment.post.job.form</field>
+        <field name="model">hr.recruitment.post.job</field>
+        <field name="arch" type="xml">
+            <form string="Post Job">
+                <sheet>
+                    <group name="base_parameters">
+                        <field name="job_id" readonly="1"/>
+                        <field name="job_title"/>
+                        <field name="job_apply_mail"/>
+                        <field name="is_test"/>
+                    </group>
+                    <group string="Providers" name="provider_group">
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_post_job" string="Post" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_job_post_job_action" model="ir.actions.act_window">
+        <field name="name">Post Job</field>
+        <field name="res_model">hr.recruitment.post.job</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_recruitment_post_job_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
