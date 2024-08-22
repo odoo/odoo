@@ -16,6 +16,9 @@
                     </group>
                 </xpath>
                 <!-- Rules table -->
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-muted">type == 'skip'</attribute>
+                </xpath>
                 <xpath expr="//field[@name='rule_ids']" position="attributes">
                     <attribute name="context">{'is_gs1': is_gs1_nomenclature}</attribute>
                 </xpath>
