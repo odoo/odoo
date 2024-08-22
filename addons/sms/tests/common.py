@@ -30,6 +30,10 @@ class MockSMS(common.TransactionCase):
              patch.object(self.env.cr, 'now', lambda: mock_dt):
             yield
 
+    # ------------------------------------------------------------
+    # GATEWAY MOCK
+    # ------------------------------------------------------------
+
     @contextmanager
     def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None, moderated=False, force_delivered=False):
         self._clear_sms_sent()

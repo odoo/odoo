@@ -34,3 +34,8 @@ class EventMailScheduler(models.Model):
                 mass_keep_log=True
             )
         return super()._execute_event_based_for_registrations(registrations)
+
+    def _template_model_by_notification_type(self):
+        info = super()._template_model_by_notification_type()
+        info["sms"] = "sms.template"
+        return info
