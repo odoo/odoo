@@ -179,9 +179,6 @@ export class PaymentScreen extends Component {
         } else {
             this.selectedPaymentLine.set_amount(amount);
         }
-        if (!this.pos.get_order().check_paymentlines_rounding()) {
-            this._display_popup_error_paymentlines_rounding();
-        }
     }
     toggleIsToInvoice() {
         this.currentOrder.set_to_invoice(!this.currentOrder.is_to_invoice());
