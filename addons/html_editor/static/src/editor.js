@@ -29,6 +29,7 @@ import { initElementForEdition } from "./utils/sanitize";
  * @property { Object } [resources]
  * @property { string } [direction="ltr"]
  * @property { Function } [onChange]
+ * @property { Function } [onEditorReady]
  * @property { boolean } [dropImageAsAttachment]
  * @property { CollaborationConfig } [collaboration]
  * @property { Function } getRecordInfo
@@ -113,6 +114,7 @@ export class Editor {
             editable.style.height = this.config.height;
         }
         this.startPlugins();
+        this.config.onEditorReady?.();
     }
 
     preparePlugins() {
