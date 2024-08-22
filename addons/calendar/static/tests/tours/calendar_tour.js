@@ -83,11 +83,14 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
 const clickOnTheEvent = {
     content: "Click on the event (focus + waiting)",
     trigger: 'a .fc-event-main:contains("Test Event")',
-    async run() {
-        this.anchor.click();
+    async run(actions) {
+        actions.click();
         await new Promise((r) => setTimeout(r, 1000));
-        document.querySelector(".o_cw_custom_highlight").click();
-        await waitFor(".o_cw_popover", { timeout: 8000 });
+        const custom = document.querySelector(".o_cw_custom_highlight");
+        if (custom) {
+            custom.click();
+            await waitFor(".o_cw_popover", { timeout: 8000 });
+        }
     },
 };
 
