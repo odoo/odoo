@@ -37,6 +37,7 @@ export class HrPresenceStatus extends Component {
             case "presence_absent":
                 return "text-muted";
             case "presence_to_define":
+            case "presence_not_working":
                 return "text-warning";
             default:
                 return "";
@@ -44,7 +45,9 @@ export class HrPresenceStatus extends Component {
     }
 
     get icon() {
-        return `fa-circle${this.value.startsWith("presence_absent") ? "-o" : ""}`;
+        return this.value.startsWith("presence_not_working")
+            ? `fa-plane`
+            : `fa-circle${this.value.startsWith("presence_absent") ? "-o" : ""}`;
     }
 
     get label() {
