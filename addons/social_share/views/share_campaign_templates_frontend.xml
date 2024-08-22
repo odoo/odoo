@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="share_campaign_visitor" name="Share campaign">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <t t-call-assets="social_share.assets_share_campaign" lazy_load="True"/>
+            </t>
+            <t t-set="title" t-value="target_name"/>
+            <t t-set="body_classname" t-value="'o_share_campaign_visitor_frontend'"/>
+            <t t-set="no_header" t-value="1"/>
+            <t t-set="no_footer" t-value="1"/>
+            <div class="d-flex flex-column align-items-center mb-5">
+                <h1>Share this design with your community!</h1>
+                <a t-att-href="redirect_url" style="max-width: 70%; height: auto; max-height: 80%">
+                    <img t-att-src="image_url"/>
+                </a>
+            </div>
+            <owl-component name="social_share_campaign" t-att-props="json.dumps({
+                'linkSharedMessage': link_shared_message,
+                'linkSharedRewardUrl': link_shared_reward_url,
+                'postText': post_text,
+                'shareUrl': share_url,
+                'uuid': uuid,
+            })"/>
+            <footer class="d-flex flex-column align-items-center fixed-bottom">
+                <span>Powered By <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo</a></span>
+            </footer>
+        </t>
+    </template>
+
+    <template id="share_campaign_crawler" name="Share campaign Crawler View">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta property="og:image" t-att-content="image_url"/>
+                <meta property="og:image:alt" t-attf-content="{{ target_name }}"/>
+                <meta property="og:title" t-att-content="target_name"/>
+                <meta property="og:type" content="website"/>
+                <meta property="og:description" t-att-content="post_suggestion"/>
+            </t>
+            <t t-set="title" t-value="target_name"/>
+            <t t-set="no_header" t-value="1"/>
+            <t t-set="no_footer" t-value="1"/>
+        </t>
+    </template>
+
+</odoo>

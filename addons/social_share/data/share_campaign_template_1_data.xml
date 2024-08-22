@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <!--For the purposes of data generation, make sure to use unique sequence numbers-->
+    <record id="social_share_template_element_t1_background_black" model="social.share.template.render.element">
+        <field name="role">background</field>
+        <field name="render_type">shape</field>
+        <field name="shape">rect</field>
+        <field name="color">161315</field>
+        <field name="x_size">1200</field>
+        <field name="y_size">1200</field>
+        <field name="sequence">0</field>
+    </record>
+    <record id="social_share_template_element_t1_button" model="social.share.template.render.element">
+        <field name="role">button</field>
+        <field name="render_type">text</field>
+        <field name="text">Register now</field>
+        <field name="text_align">center</field>
+        <field name="text_align_vert">center</field>
+        <field name="text_color">000000</field>
+        <field name="text_font_size">32</field>
+        <field name="x_pos">450</field>
+        <field name="y_pos">350</field>
+        <field name="x_size">300</field>
+        <field name="y_size">70</field>
+        <field name="sequence">6</field>
+    </record>
+    <record id="social_share_template_element_t1_button_shape" model="social.share.template.render.element">
+        <field name="render_type">shape</field>
+        <field name="color">f0f0f0</field>
+        <field name="shape">roundrect</field>
+        <field name="x_pos">407</field>
+        <field name="y_pos">330</field>
+        <field name="x_size">386</field>
+        <field name="y_size">86</field>
+        <field name="sequence">1</field>
+        <field name="required_element_ids" eval="[Command.link(ref('social_share.social_share_template_element_t1_button'))]"></field>
+    </record>
+    <record id="social_share_template_element_t1_header" model="social.share.template.render.element">
+        <field name="role">header</field>
+        <field name="render_type">text</field>
+        <field name="text">Header</field>
+        <field name="text_align">center</field>
+        <field name="text_font_size">64</field>
+        <field name="color">161315</field>
+        <field name="x_pos">80</field>
+        <field name="y_pos">80</field>
+        <field name="x_size">1040</field>
+        <field name="y_size">150</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="social_share_template_element_t1_subheader" model="social.share.template.render.element">
+        <field name="role">subheader</field>
+        <field name="render_type">text</field>
+        <field name="text_align">center</field>
+        <field name="text_font_size">32</field>
+        <field name="color">161315</field>
+        <field name="x_pos">80</field>
+        <field name="y_pos">230</field>
+        <field name="x_size">1040</field>
+        <field name="y_size">100</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="social_share_template_element_t1_profile_picture" model="social.share.template.render.element">
+        <field name="role">image-1</field>
+        <field name="render_type">image</field>
+        <field name="shape">circ</field>
+        <field name="x_pos">56</field>
+        <field name="y_pos">446</field>
+        <field name="x_size">128</field>
+        <field name="y_size">128</field>
+        <field name="sequence">8</field>
+    </record>
+    <record id="social_share_template_element_t1_profile_name" model="social.share.template.render.element">
+        <field name="role">section-1</field>
+        <field name="render_type">text</field>
+        <field name="text_font_size">32</field>
+        <field name="x_pos">190</field>
+        <field name="y_pos">470</field>
+        <field name="sequence">4</field>
+        <field name="required_element_ids" eval="[Command.link(ref('social_share.social_share_template_element_t1_profile_picture'))]"></field>
+    </record>
+    <record id="social_share_template_element_t1_profile_title" model="social.share.template.render.element">
+        <field name="role">subsection-1</field>
+        <field name="render_type">text</field>
+        <field name="text_font_size">32</field>
+        <field name="x_pos">190</field>
+        <field name="y_pos">510</field>
+        <field name="sequence">5</field>
+        <field name="required_element_ids" eval="[Command.link(ref('social_share.social_share_template_element_t1_profile_name'))]"></field>
+    </record>
+    <record id="social_share_template_element_t1_odoo_logo" model="social.share.template.render.element">
+        <field name="role">image-2</field>
+        <field name="render_type">image</field>
+        <field name="x_pos">980</field>
+        <field name="y_pos">472</field>
+        <field name="x_size">140</field>
+        <field name="y_size">78</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="social_share_template_card_1" model="social.share.campaign.template">
+        <field name="name">Card Template</field>
+        <field name="layers" eval="[
+        Command.link(ref('social_share.social_share_template_element_t1_background_black')),
+        Command.link(ref('social_share.social_share_template_element_t1_header')),
+        Command.link(ref('social_share.social_share_template_element_t1_subheader')),
+        Command.link(ref('social_share.social_share_template_element_t1_button')),
+        Command.link(ref('social_share.social_share_template_element_t1_button_shape')),
+        Command.link(ref('social_share.social_share_template_element_t1_profile_name')),
+        Command.link(ref('social_share.social_share_template_element_t1_profile_title')),
+        Command.link(ref('social_share.social_share_template_element_t1_odoo_logo')),
+        Command.link(ref('social_share.social_share_template_element_t1_profile_picture')),]"/>
+    </record>
+
+</data></odoo>

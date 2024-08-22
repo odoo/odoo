@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_social_share_field_text_font_form" model="ir.ui.view">
+        <field name="name">social.share.text.font.form</field>
+        <field name="model">social.share.text.font</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="datas" string="File"/>
+                        <field name="is_fallback" widget="boolean_toggle"/>
+                    </group>
+                    <group>
+                        <field name="excluded_character_ranges"/>
+                        <field name="character_ranges"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_social_share_field_text_font_list" model="ir.ui.view">
+        <field name="name">social.share.text.font.list</field>
+        <field name="model">social.share.text.font</field>
+        <field name="arch" type="xml">
+            <tree create="1" delete="1" edit="1">
+                <field name="name"/>
+                <field name="datas" string="File"/>
+                <field name="is_fallback" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_social_share_text_font">
+        <field name="name">Share Campaign Text Font</field>
+        <field name="res_model">social.share.text.font</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

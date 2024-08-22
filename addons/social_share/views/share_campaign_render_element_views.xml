@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_social_share_campaign_element_form">
+        <field name="name">social.share.campaign.render.element.form</field>
+        <field name="model">social.share.campaign.render.element</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign Render Element">
+                <sheet>
+                    <group>
+                        <group>
+                        <field name="role" readonly="1"/>
+                        <field name="render_type" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="value_type" invisible="not model or role == 'background'"/>
+                        </group>
+                        <group>
+                        <field name="shape" invisible="render_type != 'image'"/>
+                        <field name="image" invisible="render_type != 'image' or value_type != 'static'" widget="image"/>
+                        <field name="text" invisible="render_type != 'text' or value_type != 'static'" widget="text_emojis"/>
+                        <field name="field_path" invisible="value_type != 'field'" widget="DynamicModelFieldSelectorChar" options="{'model': 'model', 'follow_relations': False}"/>
+                        <field name="text_color" widget="color" invisible="render_type != 'text'"/>
+                    </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_social_share_campaign_template_element">
+        <field name="name">Share Campaign Element</field>
+        <field name="res_model">social.share.campaign.render.element</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+        <field name="view_mode">form</field>
+    </record>
+
+</data></odoo>
