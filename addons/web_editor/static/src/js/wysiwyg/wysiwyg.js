@@ -2831,9 +2831,7 @@ export class Wysiwyg extends Component {
         ], {
             context: {
                 ...context,
-                // TODO: Restore the delay translation feature once it's fixed,
-                //       see commit msg for more info.
-                delay_translations: false,
+                delay_translations: true,
             },
         });
         return result;

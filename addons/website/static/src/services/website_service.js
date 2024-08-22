@@ -121,7 +121,7 @@ export const websiteService = {
                 if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canOptimizeSeo, canPublish, editableInBackend, translatable, viewXmlid, defaultLangName, langName } = dataset;
+                    const { mainObject, seoObject, isPublished, canOptimizeSeo, canPublish, editableInBackend, translatable, viewXmlid, defaultLangName, langName, defaultLang } = dataset;
                     // We ignore multiple menus with the same `content_menu_id`
                     // in the DOM, since it's possible to have different
                     // templates for the same content menu (E.g. used for a
@@ -156,6 +156,7 @@ export const websiteService = {
                         lang: document.documentElement.getAttribute('lang').replace('-', '_'),
                         defaultLangName: defaultLangName,
                         langName: langName,
+                        defaultLang: defaultLang,
                         direction: document.documentElement.querySelector('#wrapwrap.o_rtl') ? 'rtl' : 'ltr',
                     };
                 }
