@@ -21,8 +21,9 @@ export class DiscussSidebar extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.compactHover = useHover(["compact-btn", "compact-floating*"], () => {
-            this.compactFloating.isOpen = this.compactHover.isHover;
+        this.compactHover = useHover(["compact-btn", "compact-floating*"], {
+            onHover: () => (this.compactFloating.isOpen = true),
+            onAway: () => (this.compactFloating.isOpen = false),
         });
         this.compactFloating = useDropdownState();
     }

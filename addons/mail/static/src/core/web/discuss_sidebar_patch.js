@@ -10,8 +10,9 @@ patch(DiscussSidebar.prototype, {
     setup() {
         super.setup();
         this.ui = useState(useService("ui"));
-        this.meetingHover = useHover(["meeting-btn", "meeting-floating*"], () => {
-            this.meetingFloating.isOpen = this.meetingHover.isHover;
+        this.meetingHover = useHover(["meeting-btn", "meeting-floating*"], {
+            onHover: () => (this.meetingFloating.isOpen = true),
+            onAway: () => (this.meetingFloating.isOpen = false),
         });
         this.meetingFloating = useDropdownState();
     },

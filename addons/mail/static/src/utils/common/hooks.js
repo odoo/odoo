@@ -71,20 +71,27 @@ export function onExternalClick(refName, cb) {
 }
 
 /**
- * @param {string | string[]} refNames
- * @param {(boolean) => void} callback
+ * @param {string | string[]} refNames name of refs that determine whether this is in state "hovering".
+ *   ref name that end with "*" means it takes parented HTML node into account too. Useful for floating
+ *   menu where dropdown menu container is not accessible.
+ * @param {Object} param1
+ * @param {() => void} [param1.onHover] callback when hovering the ref names.
+ * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
+ * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
+ *   and function to be executed at this delay duration after hovering is kept true.
  * @returns {({ isHover: boolean })}
  */
-export function useHover(refNames, callback = () => {}) {
+export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
     const targets = [];
+    let wasHovering = false;
+    let hoveringTimeout;
+    let awayTimeout;
     for (const refName of refNames) {
-        const withDirectParent = refName.endsWith("*");
         targets.push({
             ref: refName.endsWith("*")
                 ? useRef(refName.substring(0, refName.length - 1))
                 : useRef(refName),
-            withDirectParent,
         });
     }
     const state = useState({
@@ -101,60 +108,72 @@ export function useHover(refNames, callback = () => {}) {
         _count: 0,
         _isHover: false,
     });
-    function onHover(hovered) {
-        state.isHover = hovered;
-        callback(hovered);
+    function setHover(hovering) {
+        if (hovering && !wasHovering) {
+            state.isHover = true;
+            clearTimeout(awayTimeout);
+            clearTimeout(hoveringTimeout);
+            if (typeof onHover === "function") {
+                onHover();
+            }
+            if (Array.isArray(onHovering)) {
+                const [delay, cb] = onHovering;
+                hoveringTimeout = setTimeout(() => {
+                    cb();
+                }, delay);
+            }
+        } else if (!hovering) {
+            state.isHover = false;
+            clearTimeout(awayTimeout);
+            if (typeof onAway === "function") {
+                awayTimeout = setTimeout(() => {
+                    clearTimeout(hoveringTimeout);
+                    onAway();
+                }, 200);
+            }
+        }
+        wasHovering = hovering;
     }
+    function onmouseenter(ev) {
+        if (state.isHover) {
+            return;
+        }
+        for (const target of targets) {
+            if (!target.ref.el) {
+                continue;
+            }
+            if (target.ref.el.contains(ev.target)) {
+                setHover(true);
+                return;
+            }
+        }
+    }
+    function onmouseleave(ev) {
+        if (!state.isHover) {
+            return;
+        }
+        for (const target of targets) {
+            if (!target.ref.el) {
+                continue;
+            }
+            if (target.ref.el.contains(ev.relatedTarget)) {
+                return;
+            }
+        }
+        setHover(false);
+    }
+
     for (const target of targets) {
         useLazyExternalListener(
             () => target.ref.el,
             "mouseenter",
-            (ev) => {
-                if (state.isHover) {
-                    return;
-                }
-                for (const target of targets) {
-                    if (!target.ref.el) {
-                        continue;
-                    }
-                    if (target.ref.el.contains(ev.target)) {
-                        onHover(true);
-                        return;
-                    }
-                    if (
-                        target.withDirectParent &&
-                        target.ref.el.parentElement.contains(ev.target)
-                    ) {
-                        onHover(true);
-                        return;
-                    }
-                }
-            },
+            (ev) => onmouseenter(ev),
             true
         );
         useLazyExternalListener(
             () => target.ref.el,
             "mouseleave",
-            (ev) => {
-                if (!state.isHover) {
-                    return;
-                }
-                for (const target of targets) {
-                    if (!target.ref.el) {
-                        continue;
-                    }
-                    if (target.ref.el.contains(ev.relatedTarget)) {
-                        return;
-                    }
-                    if (
-                        target.withDirectParent &&
-                        target.ref.el.parentElement.contains(ev.relatedTarget)
-                    ) {
-                        return;
-                    }
-                }
-                onHover(false);
-            },
+            (ev) => onmouseleave(ev),
             true
         );
     }
