@@ -38,6 +38,39 @@ class TestStockPickingTour(HttpCase):
         self.assertEqual(len(lot), 1)
         self.assertEqual(lot.product_qty, 4)
 
+    def test_pick_from_after_unlink(self):
+        """ test removing a move line will make the relative quant available again"""
+        product_lot = self.env['product.product'].create({
+            'name': 'Product Lot',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        lot1, lot2 = self.env['stock.lot'].create([{
+            'name': name,
+            'product_id': product_lot.id,
+            'company_id': self.env.company.id,
+        } for name in ['lot1', 'lot2']])
+        delivery = self.env['stock.picking'].create({
+            'name': 'New',
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'move_ids': [Command.create({
+                'name': 'delivery',
+                'product_id': product_lot.id,
+                'product_uom_qty': 90,
+                'product_uom': product_lot.uom_id.id,
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        self.env['stock.quant']._update_available_quantity(product_lot, delivery.location_id, 50, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(product_lot, delivery.location_id, 40, lot_id=lot2)
+        delivery.action_confirm()
+        url = self._get_picking_url(delivery.id)
+
+        self.start_tour(url, 'test_pick_from_after_unlink', login='admin', timeout=60)
+
     def test_generate_serial_1(self):
         """generate some serial numbers in the detailed operation modal"""
         product_serial = self.env['product.product'].create({
