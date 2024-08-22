@@ -172,3 +172,4 @@ export function checkPrimaryTemplateParents(namesToCheck) {
         console.error(`Missing (primary) parent templates: ${[...missing].join(", ")}`);
     }
 }
+export const __test__allTemplates = templates;

@@ -8,8 +8,8 @@ from urllib3.util import parse_url
 
 from odoo import models
 from odoo.http import request
-from odoo.tools import lazy
-from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.tools import config, lazy
+from odoo.addons.base.models.assetsbundle import JavascriptAsset
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 from odoo.exceptions import AccessError
@@ -206,3 +206,22 @@ class IrQWeb(models.AbstractModel):
             'website.assets_all_wysiwyg',
         }
         return (js_assets | assets, css_assets | assets)
+
+    def _xpregenerate_assets_bundles(self):
+        _logger.info("_pregenerate_assets_bundles called")
+        _logger.info("config['test_enable']: %s" % str(config['test_enable']))
+        _logger.info("config['test_file']: %s" % str(config['test_file']))
+        _logger.info("config['test_tags']: %s" % str(config['test_tags']))
+        if config['test_enable'] or config['test_file'] or config['test_tags']:
+            # Expose templates in templates.js
+            _fetch_content = JavascriptAsset._fetch_content
+
+            def _fetch_content_mocked(self):
+                raw = _fetch_content(self)
+                if raw and self._filename and self._filename.endswith('/web/static/src/core/templates.js'):
+                    raw = raw + 'export const __test__allTemplates = templates;'
+                    _logger.info("Prepared templates.js for tests")
+                return raw
+
+            JavascriptAsset._fetch_content = _fetch_content_mocked
+        return super()._pregenerate_assets_bundles()

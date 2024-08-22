@@ -652,3 +652,7 @@ class TestUi(odoo.tests.HttpCase):
             self.env['website'].with_context(website_id=website.id).viewref(key).active = active
 
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
+
+    def test_compile_owl_templates(self):
+        # This test should prevent accidental sabotage of website Owl templates.
+        self.start_tour('/', 'website_compile_owl_templates', login='admin')
