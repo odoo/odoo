@@ -639,7 +639,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             const domain = this._computeSyncedOrdersDomain();
             const limit = this._state.syncedOrders.nPerPage;
             const offset = (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
-            const { ids, totalCount } = await this.rpc({
+            let { ids, totalCount } = await this.rpc({
                 model: 'pos.order',
                 method: 'search_paid_order_ids',
                 kwargs: { config_id: this.env.pos.config.id, domain, limit, offset },
@@ -653,6 +653,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     args: [idsNotInCache],
                     context: this.env.session.user_context,
                 });
+                // Remove not loaded Order IDs
+                const fetchedOrderIdsSet = new Set(fetchedOrders.map(order => order.id));
+                const notLoadedIds = idsNotInCache.filter(id => !fetchedOrderIdsSet.has(id));
+                ids = ids.filter(id => !notLoadedIds.includes(id));
+
                 // Check for missing products and partners and load them in the PoS
                 await this.env.pos._loadMissingProducts(fetchedOrders);
                 await this.env.pos._loadMissingPartners(fetchedOrders);
