@@ -1547,8 +1547,8 @@ class MailCommon(common.TransactionCase, MailCase):
         """ Remove store thread data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
-        if "rating.rating" not in self.env:
-            for data in threads_data:
+        for data in threads_data:
+            if not issubclass(self.env.registry[data["model"]], self.env.registry["rating.mixin"]):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
         return list(threads_data)
