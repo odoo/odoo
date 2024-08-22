@@ -21,15 +21,59 @@ def _auto_install_l10n(env):
     country_code = country.code
     if country_code:
         module_list = []
+<<<<<<< 17.0
         if not env.company.chart_template:
             template_code = env['account.chart.template']._guess_chart_template(country)
             module_list.append(env['account.chart.template']._get_chart_template_mapping()[template_code]['module'])
         if country_code in ['US', 'CA']:
             module_list.append('account_check_printing')
         if country_code in SYSCOHADA_LIST + VAT_LIST:
+||||||| 8346b2a7561c178fd7e9f9d1fbd7dac3e3843fd1
+        if to_install_l10n:
+            # We don't install a CoA if one was passed in the command line
+            # or has been selected to install
+            pass
+        elif country_code in SYSCOHADA_LIST:
+            #countries using OHADA Chart of Accounts
+            module_list.append('l10n_syscohada')
+        elif country_code == 'GB':
+            module_list.append('l10n_uk')
+        elif country_code == 'DE':
+            module_list.append('l10n_de_skr03')
+            module_list.append('l10n_de_skr04')
+        else:
+            if env['ir.module.module'].search([('name', '=', 'l10n_' + country_code.lower())]):
+                module_list.append('l10n_' + country_code.lower())
+            else:
+                module_list.append('l10n_generic_coa')
+        if country_code in SYSCOHADA_LIST + [
+            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO',
+            'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN'
+            ]:
+=======
+        if to_install_l10n:
+            # We don't install a CoA if one was passed in the command line
+            # or has been selected to install
+            pass
+        elif country_code in SYSCOHADA_LIST:
+            #countries using OHADA Chart of Accounts
+            module_list.append('l10n_syscohada')
+        elif country_code == 'GB':
+            module_list.extend(('l10n_uk', 'account_bacs'))
+        elif country_code == 'DE':
+            module_list.append('l10n_de_skr03')
+            module_list.append('l10n_de_skr04')
+        else:
+            if env['ir.module.module'].search([('name', '=', 'l10n_' + country_code.lower())]):
+                module_list.append('l10n_' + country_code.lower())
+            else:
+                module_list.append('l10n_generic_coa')
+        if country_code in SYSCOHADA_LIST + [
+            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO',
+            'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN'
+            ]:
+>>>>>>> d18a338c8d1a82079ee19e81b975fde6c5c083f1
             module_list.append('base_vat')
-        if country_code == 'uk':
-            module_list.append('account_bacs')
 
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         if module_ids:
