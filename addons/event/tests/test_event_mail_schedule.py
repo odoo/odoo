@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import suppress
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
-from odoo import Command
+from odoo import exceptions
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
@@ -328,6 +330,67 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'subject': f"Reminder for {test_event.name}: today",
             })
 
+    @mute_logger('odoo.addons.event.models.event_mail')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_global_composer(self):
+        """ Simulate a fail during composer usage e.g. invalid field path, template
+        / model change, ... to check defensive behavior """
+        cron = self.env.ref("event.event_mail_scheduler").sudo()
+        before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
+        self.assertTrue(before_scheduler)
+        self._create_registrations(self.test_event, 2)
+
+        def _patched_send_mail_batch(self, *args, **kwargs):
+            raise exceptions.ValidationError('Some error')
+
+        with patch.object(type(self.env["mail.template"]), "send_mail_batch", _patched_send_mail_batch), \
+             self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
+             self.mock_mail_gateway():
+            cron.method_direct_trigger()
+        self.assertFalse(before_scheduler.mail_done)
+
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_global_no_registrations(self):
+        """ Be sure no registrations = no crash in composer """
+        cron = self.env.ref("event.event_mail_scheduler").sudo()
+        before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
+
+        self.test_event.registration_ids.unlink()
+        with self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
+             self.mock_mail_gateway():
+            cron.method_direct_trigger()
+        self.assertTrue(before_scheduler.mail_done)
+
+    @mute_logger(
+        'odoo.addons.event.models.event_mail',
+        'odoo.addons.event.models.event_mail_registration',
+        'odoo.addons.event.models.event_registration'
+    )
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_registration_composer(self):
+        """ Simulate a fail during composer usage e.g. invalid field path, template
+        / model change, ... to check defensive behavior """
+        onsub_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "after_sub" and s.interval_unit == "now")
+        self.assertTrue(onsub_scheduler)
+        self.assertEqual(onsub_scheduler.mail_count_done, 0)
+
+        def _patched_send_mail_batch(self, *args, **kwargs):
+            raise exceptions.ValidationError('Some error')
+
+        with suppress(exceptions.ValidationError), \
+             patch.object(type(self.env["mail.template"]), "send_mail_batch", _patched_send_mail_batch), \
+             self.mock_mail_gateway():
+            registration = self.env['event.registration'].create({
+                "email": "test@email.com",
+                "event_id": self.test_event.id,
+                "name": "Mitchell Admin",
+                "phone": "(255)-595-8393",
+            })
+        self.assertTrue(registration.exists(), "Registration record should exist after creation.")
+        self.assertEqual(onsub_scheduler.mail_count_done, 0)
+        self.assertFalse(onsub_scheduler.mail_done)
+
+    @mute_logger('odoo.addons.event.models.event_mail')
     @users('user_eventmanager')
     def test_event_mail_schedule_fail_registration_template_removed(self):
         """ Test flow where scheduler fails due to template being removed. """
@@ -452,16 +515,17 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         event_type = self.env['event.type'].create({
             'name': "Go Sports",
             'event_type_mail_ids': [
-                Command.create({
+                (0, 0, {
                     'interval_nbr': 0,
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
-                Command.create({
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')
+                }), (0, 0, {
                     'interval_nbr': 5,
                     'interval_unit': 'hours',
                     'interval_type': 'before_event',
-                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')
+                }),
             ]
         })
         test_event.event_type_id = event_type
