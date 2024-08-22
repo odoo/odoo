@@ -241,5 +241,12 @@ export function getAdjacentCharacter(selection, side, editable) {
             adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
         }
     }
-    return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
+    if (
+        !focusNode ||
+        !closestElement(focusNode).isContentEditable ||
+        closestBlock(focusNode) !== originalBlock
+    ) {
+        return undefined;
+    }
+    return adjacentCharacter;
 }

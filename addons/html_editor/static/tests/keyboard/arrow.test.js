@@ -350,6 +350,27 @@ describe("Around links", () => {
     });
 });
 
+describe("Around icons", () => {
+    test("should move past the icon (ArrowRight)", async () => {
+        await testEditor({
+            contentBefore: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
+            contentBeforeEdit: `<p>abc[]<span class="fa fa-music" contenteditable="false">\u200b</span>def</p>`,
+            stepFunction: keyPress("ArrowRight"),
+            contentAfterEdit: `<p>abc<span class="fa fa-music" contenteditable="false">\u200b</span>[]def</p>`,
+            contentAfter: `<p>abc<span class="fa fa-music"></span>[]def</p>`,
+        });
+    });
+    test("should move past the icon (ArrowLeft)", async () => {
+        await testEditor({
+            contentBefore: `<p>abc<span class="fa fa-music"></span>[]def</p>`,
+            contentBeforeEdit: `<p>abc<span class="fa fa-music" contenteditable="false">\u200b</span>[]def</p>`,
+            stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: `<p>abc[]<span class="fa fa-music" contenteditable="false">\u200b</span>def</p>`,
+            contentAfter: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
+        });
+    });
+});
+
 describe("Selection correction when it lands at the editable root", () => {
     test("should place cursor in the table below", async () => {
         await testEditor({
