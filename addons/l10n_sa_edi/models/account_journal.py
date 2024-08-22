@@ -91,6 +91,10 @@ class AccountJournal(models.Model):
     l10n_sa_latest_submission_hash = fields.Char("Latest Submission Hash", copy=False,
                                                  help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)")
 
+    l10n_sa_branch_id = fields.Char("Branch ID", copy=False,
+                                    help="Can be used in the case where the company has multiple branches that share"
+                                         " the same VAT number, but have different registry numbers.")
+
     # ====== Utility Functions =======
 
     def _l10n_sa_ready_to_submit_einvoices(self):
