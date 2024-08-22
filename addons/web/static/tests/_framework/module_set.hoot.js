@@ -415,6 +415,24 @@ class ModuleSetLoader extends loader.constructor {
         return this.modules.get("@web/core/templates");
     }
 
+    /**
+     * @override
+     * @type {typeof loader["addJob"]}
+     */
+    addJob(name) {
+        if (this.canAddModule(name)) {
+            super.addJob(...arguments);
+        }
+    }
+
+    /**
+     * @param {string} name
+     */
+    canAddModule(name) {
+        const { filter } = this.moduleSet;
+        return !filter || filter(name) || R_DEFAULT_MODULE.test(name);
+    }
+
     cleanup() {
         if (this.templateModule) {
             this.templateModule.setUrlFilters([]);
@@ -483,9 +501,10 @@ class ModuleSetLoader extends loader.constructor {
      * @type {typeof loader["startModule"]}
      */
     startModule(name) {
-        const { filter } = this.moduleSet;
-        if (!filter || filter(name) || R_DEFAULT_MODULE.test(name)) {
-            super.startModule(name);
+        if (this.canAddModule(name)) {
+            super.startModule(...arguments);
+        } else {
+            this.jobs.delete(name);
         }
     }
 }
