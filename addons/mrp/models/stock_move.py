@@ -224,14 +224,13 @@ class StockMove(models.Model):
         for bom in self.bom_line_id.bom_id:
             if bom.type != 'phantom':
                 continue
-            line_ids = bom.bom_line_ids.ids
+            line_ids = self.bom_line_id.filtered(lambda line: line.bom_id == bom).mapped('id')
             total = len(line_ids)
-            name = bom.display_name
             for i, line_id in enumerate(line_ids):
-                bom_line_description[line_id] = '%s - %d/%d' % (name, i+1, total)
+                bom_line_description[line_id] = '%s - %d/%d' % (bom.display_name, i + 1, total)
 
         for move in self:
-            move.description_bom_line = bom_line_description.get(move.bom_line_id.id)
+            move.description_bom_line = bom_line_description.get(move.bom_line_id.id, move.description_bom_line)
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
