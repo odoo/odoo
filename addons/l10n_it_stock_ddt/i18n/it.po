@@ -4,21 +4,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 15:18+0000\n"
+"POT-Creation-Date: 2024-08-22 15:53+0000\n"
 "PO-Revision-Date: 2022-01-11 14:02+0000\n"
-"Last-Translator: \n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: \n"
-"Language: \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: l10n_it_stock_ddt
+#. odoo-python
+#: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
+msgid "%(warehouse)s Sequence %(code)s"
+msgstr "%(warehouse)s Sequenza %(code)s"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.actions.report,print_report_name:l10n_it_stock_ddt.action_report_ddt
-msgid "'DDT - %s - %s' % (object.partner_id.name or '', object.l10n_it_ddt_number)"
+msgid ""
+"'DDT - %s - %s' % (object.partner_id.name or '', object.l10n_it_ddt_number)"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
@@ -38,28 +45,28 @@ msgstr "<b>Dettagli metodo di trasporto</b>"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
-msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>Indirizzo Cliente:</strong></span>"
-
-#. module: l10n_it_stock_ddt
-#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
-msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>Indirizzo Magazzino:</strong></span>"
-
-#. module: l10n_it_stock_ddt
-#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Carrier Signature</strong>"
-msgstr "<strong>Firma Corriere</strong>"
+msgstr "<strong>Firma corriere</strong>"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Company Signature</strong>"
-msgstr "<strong>Firma Azienda</strong>"
+msgstr "<strong>Firma azienda</strong>"
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Customer Address</strong>"
+msgstr "<strong>Indirizzo cliente</strong>"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Customer Signature</strong>"
-msgstr "<strong>Firma Cliente</strong>"
+msgstr "<strong>Firma cliente</strong>"
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Disc.%</strong>"
+msgstr "<strong>Sconto%</strong>"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
@@ -74,12 +81,17 @@ msgstr "<strong>Quantità</strong>"
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Total Value</strong>"
-msgstr "<strong>Valore Totale</strong>"
+msgstr "<strong>Valore totale</strong>"
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Warehouse Address</strong>"
+msgstr "<strong>Indirizzo magazzino</strong>"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__attemped_sale
 msgid "Attempted Sale"
-msgstr "Tentata Vendita"
+msgstr "Tentata vendita"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
@@ -89,17 +101,12 @@ msgstr "Corriere"
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Carrier Condition"
-msgstr "Termini di Resa"
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__l10n_it_country_code
-msgid "Country Code"
-msgstr "Codice Nazione"
+msgstr "Termini di resa"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_method__courier
 msgid "Courier service"
-msgstr "Servizio Corriere"
+msgstr "Servizio corriere"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.view_picking_form_inherit_l10n_it_ddt
@@ -122,21 +129,14 @@ msgid "DDTs"
 msgstr "DDT"
 
 #. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type__display_name
-msgid "Display Name"
-msgstr "Nome visualizzato"
-
-#. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Documento di Trasporto"
-msgstr ""
+msgstr "Documento di trasporto"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__evaluation
 msgid "Evaluation"
-msgstr "Conto Visione"
+msgstr "Conto visione"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__gift
@@ -149,13 +149,6 @@ msgid "Gross Weight (kg)"
 msgstr "Peso lordo (kg)"
 
 #. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__id
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type__id
-msgid "ID"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
 #: model:ir.model,name:l10n_it_stock_ddt.model_account_move
 msgid "Journal Entry"
 msgstr "Registrazione contabile"
@@ -165,28 +158,27 @@ msgstr "Registrazione contabile"
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move__l10n_it_ddt_ids
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_payment__l10n_it_ddt_ids
 msgid "L10N It Ddt"
-msgstr ""
+msgstr "L10N It DDT"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_bank_statement_line__l10n_it_ddt_count
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move__l10n_it_ddt_count
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_payment__l10n_it_ddt_count
 msgid "L10N It Ddt Count"
-msgstr ""
+msgstr "Numero L10N It DDT"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type__l10n_it_ddt_sequence_id
 msgid "L10N It Ddt Sequence"
-msgstr ""
+msgstr "Sequenza L10N It DDT"
 
 #. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
+#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__l10n_it_show_print_ddt_button
+msgid "L10N It Show Print Ddt Button"
+msgstr "Mostra pulsante Stampa DDT L10N It"
 
 #. module: l10n_it_stock_ddt
+#. odoo-python
 #: code:addons/l10n_it_stock_ddt/models/account_invoice.py:0
 msgid "Linked deliveries"
 msgstr "Spedizioni associate"
@@ -204,7 +196,7 @@ msgstr "Ordine"
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__outsourcing
 msgid "Outsourcing"
-msgstr "Conto Lavorazione"
+msgstr "Conto lavorazione"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__l10n_it_parcels
@@ -235,7 +227,12 @@ msgstr "Destinatario"
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__repair
 msgid "Repair"
-msgstr "Conto Riparazione"
+msgstr "Conto riparazione"
+
+#. module: l10n_it_stock_ddt
+#: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__substitution
+msgid "Returned goods"
+msgstr "Reso"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__sale
@@ -248,28 +245,15 @@ msgid "Sender"
 msgstr "Mittente"
 
 #. module: l10n_it_stock_ddt
+#. odoo-python
 #: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
-msgid "Sequence"
-msgstr "Sequenza"
+msgid "Sequence %(code)s"
+msgstr "Sequenza %(code)s"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Shipping Date"
-msgstr "Data transporto"
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__substitution
-msgid "Returned goods"
-msgstr "Reso"
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields,help:l10n_it_stock_ddt.field_stock_picking__l10n_it_country_code
-msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
-msgstr ""
-"Il codice ISO nazionale in 2 caratteri. \n"
-"Puoi usare questo campo per la ricerca veloce."
+msgstr "Data trasporto"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model,name:l10n_it_stock_ddt.model_stock_picking
@@ -304,10 +288,5 @@ msgstr "Ragione trasporto"
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
-msgid "VAT"
-msgstr "Pta IVA"
-
-#. module: l10n_it_stock_ddt
-#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "VAT:"
-msgstr "Pta IVA:"
+msgstr "Part. IVA:"
