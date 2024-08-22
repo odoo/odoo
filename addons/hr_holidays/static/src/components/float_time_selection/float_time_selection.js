@@ -1,15 +1,14 @@
 import { onWillStart, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { FolatTimeSelectionPopover } from "./float_time_selection_popover";
+import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
 
 import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 function floatToHoursMinutes(floatValue) {
     const hours = Math.floor(floatValue);
     const minutes = Math.round((floatValue - hours) * 60);
-    return { hours: String(hours).padStart(2, '0'), minutes: String(minutes).padStart(2, '0') };
+    return { hours: String(hours).padStart(2, "0"), minutes: String(minutes).padStart(2, "0") };
 }
 
 function hoursMinutesToFloat(hours, minutes) {
@@ -19,17 +18,17 @@ function hoursMinutesToFloat(hours, minutes) {
 export class FloatTimeSelectionField extends FloatTimeField {
     static template = "hr_holidays.FloatTimeSelectionField";
     static props = {
-        ...standardFieldProps,
+        ...FloatTimeField.props,
     };
 
     setup() {
         super.setup();
-        this.popover = usePopover(FolatTimeSelectionPopover, {
+        this.popover = usePopover(FloatTimeSelectionPopover, {
             onClose: this.onClose.bind(this),
         });
         this.timeValues = useState({
-            hours: '00',
-            minutes: '00',
+            hours: "00",
+            minutes: "00",
             floatValue: 0,
         });
 
@@ -62,10 +61,10 @@ export class FloatTimeSelectionField extends FloatTimeField {
     handleInputChange() {
         this.popover.close();
         const inputValue = this.inputFloatTimeRef.el.value;
-        const [hours, minutes] = inputValue.split(':').map(Number);
+        const [hours, minutes] = inputValue.split(":").map(Number);
         if (!isNaN(hours) && !isNaN(minutes)) {
-            this.timeValues.hours = String(hours).padStart(2, '0');
-            this.timeValues.minutes = String(minutes).padStart(2, '0');
+            this.timeValues.hours = String(hours).padStart(2, "0");
+            this.timeValues.minutes = String(minutes).padStart(2, "0");
             this.timeValues.floatValue = hoursMinutesToFloat(hours, minutes);
         } else {
             const { hours, minutes } = floatToHoursMinutes(parseFloat(inputValue));
@@ -85,4 +84,4 @@ export const charHours = {
     component: FloatTimeSelectionField,
 };
 
-registry.category("fields").add('float_time_selection', charHours);
+registry.category("fields").add("float_time_selection", charHours);
