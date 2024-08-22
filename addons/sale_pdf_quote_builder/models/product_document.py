@@ -18,10 +18,10 @@ class ProductDocument(models.Model):
              "On quote: the document will be sent to and accessible by customers at any time.\n"
              "e.g. this option can be useful to share Product description files.\n"
              "On order confirmation: the document will be sent to and accessible by customers.\n"
-             "e.g. this option can be useful to share User Manual or digital content bought on"
-             " ecommerce. \n"
-             "Inside quote pdf: The document will be included in the pdf of the quotation between"
-             " the header pages and the quote table. ",
+             "e.g. this option can be useful to share User Manual or digital content bought"
+             " on ecommerce. \n"
+             "Inside quote: The document will be included in the pdf of the quotation \n"
+             "and sale order between the header pages and the quote table. ",
         ondelete={'inside': 'set default'},
     )
 
