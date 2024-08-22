@@ -62,6 +62,7 @@ _CACHES_BY_KEY = {
     'groups': ('groups', 'templates', 'templates.cached_values'),  # The processing of groups is saved in the view
 }
 
+
 def _unaccent(x):
     if isinstance(x, SQL):
         return SQL("unaccent(%s)", x)
@@ -154,7 +155,11 @@ class Registry(Mapping):
         self._sql_constraints = set()
         self._init = True
         self._database_translated_fields = ()  # names of translated fields in database
-        self._assertion_report = odoo.tests.result.OdooTestResult()
+        if config['test_enable'] or config['test_file']:
+            from odoo.tests.result import OdooTestResult  # noqa: PLC0415
+            self._assertion_report = OdooTestResult()
+        else:
+            self._assertion_report = None
         self._fields_by_model = None
         self._ordinary_tables = None
         self._constraint_queue = deque()

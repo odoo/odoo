@@ -20,7 +20,6 @@ from .. import SUPERUSER_ID, api, tools
 from .module import adapt_version, initialize_sys_path, load_openerp_module
 
 _logger = logging.getLogger(__name__)
-_test_logger = logging.getLogger('odoo.tests')
 
 
 def load_data(env, idref, mode, kind, package):
@@ -273,7 +272,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
         test_time = test_queries = 0
         test_results = None
         if tools.config.options['test_enable'] and (needs_update or not updating):
-            loader = odoo.tests.loader
+            from odoo.tests import loader  # noqa: PLC0415
             suite = loader.make_suite([module_name], 'at_install')
             if suite.countTestCases():
                 if not needs_update:
@@ -588,7 +587,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 except Exception as e:
                     _logger.warning('invalid custom view(s) for model %s: %s', model, e)
 
-        if report.wasSuccessful():
+        if not registry._assertion_report or registry._assertion_report.wasSuccessful():
             _logger.info('Modules loaded.')
         else:
             _logger.error('At least one test failed when loading the modules.')

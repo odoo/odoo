@@ -20,8 +20,6 @@ from io import BytesIO
 import psutil
 import werkzeug.serving
 
-from ..tests import loader
-
 if os.name == 'posix':
     # Unix only for workers
     import fcntl
@@ -580,7 +578,7 @@ class ThreadedServer(CommonServer):
 
         if stop:
             if config['test_enable']:
-                logger = odoo.tests.result._logger
+                from odoo.tests.result import _logger as logger  # noqa: PLC0415
                 with Registry.registries._lock:
                     for db, registry in Registry.registries.d.items():
                         report = registry._assertion_report
@@ -1273,9 +1271,11 @@ def _reexec(updated_modules=None):
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
+
 def load_test_file_py(registry, test_file):
     # pylint: disable=import-outside-toplevel
-    from odoo.tests.suite import OdooSuite
+    from odoo.tests import loader  # noqa: PLC0415
+    from odoo.tests.suite import OdooSuite  # noqa: PLC0415
     threading.current_thread().testing = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
@@ -1292,6 +1292,7 @@ def load_test_file_py(registry, test_file):
                     return
     finally:
         threading.current_thread().testing = False
+
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
@@ -1316,6 +1317,7 @@ def preload_registries(dbnames):
 
             # run post-install tests
             if config['test_enable']:
+                from odoo.tests import loader  # noqa: PLC0415
                 t0 = time.time()
                 t0_sql = odoo.sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
@@ -1335,7 +1337,7 @@ def preload_registries(dbnames):
                              odoo.sql_db.sql_counter - t0_sql)
 
                 registry._assertion_report.log_stats()
-            if not registry._assertion_report.wasSuccessful():
+            if registry._assertion_report and not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)
