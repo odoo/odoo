@@ -1,20 +1,23 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
-import { mountView, onRpc } from "@web/../tests/web_test_helpers";
+class LunchProduct extends models.Model {
+    _name = "lunch.product";
 
-import { defineLunchProduct, LunchProduct } from "./lunch_models";
+    name = fields.Char();
+    is_favorite = fields.Boolean();
 
-defineLunchProduct();
-beforeEach(() => {
-    LunchProduct._records = [
+    _records = [
         {
             id: 1,
             name: "Product A",
         },
     ];
-    LunchProduct._views = {
+
+    _views = {
         "kanban,false": `
             <kanban class="o_kanban_test" edit="0">
                 <template>
@@ -28,7 +31,10 @@ beforeEach(() => {
             </kanban>
         `,
     };
-});
+}
+
+defineMailModels();
+defineModels([LunchProduct]);
 
 test("Check is_favorite field is still editable even if the record/view is in readonly.", async () => {
     onRpc("lunch.product", "web_save", ({ args }) => {

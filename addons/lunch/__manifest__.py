@@ -50,11 +50,7 @@ If you want to save your employees' time and avoid them to always have coins in 
             'lunch/static/tests/tours/*.js',
         ],
         'web.assets_unit_tests': [
-            'lunch/static/tests/lunch_models.js',
-            'lunch/static/tests/lunch_is_favorite_field.test.js',
-        ],
-        'web.qunit_suite_tests': [
-            'lunch/static/tests/lunch_kanban_tests.js',
+            'lunch/static/tests/**/*.test.js',
         ],
     },
     'license': 'LGPL-3',
