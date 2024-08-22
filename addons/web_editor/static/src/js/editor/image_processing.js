@@ -24,6 +24,12 @@ const modifierFields = [
 ];
 export const isGif = (mimetype) => mimetype === 'image/gif';
 
+/**
+ * applyModifications cache
+ * @type {Object.<string, ApplyModificationsReturnType>}
+ */
+const applyModificationsCache = {};
+
 // webgl color filters
 const _applyAll = (result, filter, filters) => {
     filters.forEach(f => {
@@ -199,14 +205,19 @@ const glFilters = {
         applyAll(filter, filters);
     },
 };
+
+/**
+ * @typedef {{dataURL: string, mimetype: string}} ApplyModificationsReturnType
+ */
 /**
  * Applies data-attributes modifications to an img tag and returns a dataURL
  * containing the result. This function does not modify the original image.
+ * Caches results in memory for better performance.
  *
  * @param {HTMLImageElement} img the image to which modifications are applied
  * @param {boolean} returnResultWithMimetype false by default to not break
  * compatibility, *must* be set to true. TODO: remove in master
- * @returns {Promise<{dataURL: string, mimetype: string}>} dataURL of the image
+ * @returns {Promise<ApplyModificationsReturnType>} dataURL of the image
  * with the applied modifications and the actual output mimetype.
  */
 export async function applyModifications(img, dataOptions = {}, returnResultWithMimetype = false) {
@@ -216,6 +227,19 @@ export async function applyModifications(img, dataOptions = {}, returnResultWith
         quality: '75',
         forceModification: false,
     }, img.dataset, dataOptions);
+
+    const cacheKey = JSON.stringify(data);
+    const cachedResult = applyModificationsCache[cacheKey];
+    if (cachedResult) {
+
+        // TODO: remove in master, see jsdoc for returnResultWithMimetype parameter
+        if (!returnResultWithMimetype) {
+            return cachedResult.dataURL;
+        }
+
+        return cachedResult;
+    }
+
     let {
         width,
         height,
@@ -359,18 +383,20 @@ export async function applyModifications(img, dataOptions = {}, returnResultWith
             : await _loadImageDataURL(originalSrc);
     }
 
+    let returnValue;
     if (isChanged || originalSize >= newSize) {
-        return {
+        returnValue = {
             dataURL: imageData.dataURL,
             mimetype: imageData.mimetype,
         };
     } else {
         const originalDataURL = await _loadImageDataURL(originalSrc);
-        return {
+        returnValue = {
             dataURL: originalDataURL,
             mimetype: extractMimetypeFromDataURL(originalDataURL),
         };
     }
+    return (applyModificationsCache[cacheKey] = returnValue);
 }
 
 /**
