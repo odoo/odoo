@@ -215,6 +215,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
             ('include', 'web._assets_core'),
             'web/static/src/libs/pdfjs.js',
             'web/static/src/views/fields/formatters.js',
