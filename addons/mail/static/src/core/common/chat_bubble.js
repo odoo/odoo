@@ -21,16 +21,13 @@ export class ChatBubble extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.wasHover = false;
-        this.hover = useHover(["root", "preview*"], () => {
-            this.preview.isOpen = this.hover.isHover;
-            if (this.hover.isHover && !this.wasHover) {
-                clearTimeout(this.showCloseTimeout);
-                this.showCloseTimeout = setTimeout(() => (this.state.showClose = true), 100);
-            } else if (!this.hover.isHover) {
-                clearTimeout(this.showCloseTimeout);
+        this.hover = useHover(["root", "preview*"], {
+            onHover: () => (this.preview.isOpen = true),
+            onHovering: [100, () => (this.state.showClose = true)],
+            onAway: () => {
                 this.state.showClose = false;
-            }
-            this.wasHover = this.hover.isHover;
+                this.preview.isOpen = false;
+            },
         });
         this.preview = useDropdownState();
         this.rootRef = useRef("root");

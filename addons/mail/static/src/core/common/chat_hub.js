@@ -24,8 +24,9 @@ export class ChatHub extends Component {
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         this.bubblesHover = useHover("bubbles");
-        this.moreHover = useHover(["more-button", "more-menu*"], () => {
-            this.more.isOpen = this.moreHover.isHover;
+        this.moreHover = useHover(["more-button", "more-menu*"], {
+            onHover: () => (this.more.isOpen = true),
+            onAway: () => (this.more.isOpen = false),
         });
         this.options = useDropdownState();
         this.more = useDropdownState();

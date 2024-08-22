@@ -17,8 +17,9 @@ export class Mailbox extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.hover = useHover(["root", "floating*"], () => {
-            this.floating.isOpen = this.hover.isHover;
+        this.hover = useHover(["root", "floating*"], {
+            onHover: () => (this.floating.isOpen = true),
+            onAway: () => (this.floating.isOpen = false),
         });
         this.floating = useDropdownState();
         this.rootRef = useRef("root");

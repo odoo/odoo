@@ -77,11 +77,11 @@ const DiscussSidebarCategoryPatch = {
             });
         }
     },
-    onUseHoverCb() {
+    onHover() {
         if (this.state.editing && this.store.discuss.isSidebarCompact) {
             return;
         }
-        super.onUseHoverCb();
+        super.onHover(...arguments);
         if (this.store.discuss.isSidebarCompact && !this.floating.isOpen) {
             this.state.editing = false;
         }
