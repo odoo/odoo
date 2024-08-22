@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
-"PO-Revision-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2024-08-22 15:24+0000\n"
+"PO-Revision-Date: 2024-08-22 15:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,8 +20,8 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/res_config_settings.py:0
 msgid ""
 "\n"
-"Building Number: %s, Plot Identification: %s\n"
-"Neighborhood: %s"
+"Building Number: %(building_number)s, Plot Identification: %(plot_identification)s\n"
+"Neighborhood: %(neighborhood)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -58,7 +58,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- Please, make sure both the Reversed Entry and the Reversal Reason are "
+"- Please, make sure either the Reversed Entry or the Reversal Reason are "
 "specified when confirming a Credit/Debit note"
 msgstr ""
 
@@ -73,7 +73,13 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Please, set the following fields on the %s: %s"
+msgid "- Please, set the following fields on the Customer: %(missing_fields)s"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid "- Please, set the following fields on the Supplier: %(missing_fields)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -196,7 +202,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid "Building Number for the Buyer is required on Standard Invoices"
 msgstr ""
 
@@ -282,7 +287,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Could not complete Compliance Checks for the following file:"
 msgstr ""
 
@@ -295,13 +299,17 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Could not generate PCSID values: \n"
+msgid ""
+"Could not generate PCSID values:\n"
+"%(error)s"
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Could not generate signed XML values: \n"
+msgid ""
+"Could not generate signed XML values:\n"
+"%(error)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -329,12 +337,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Customer"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -676,7 +678,7 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid ""
 "Please, make sure all the following fields have been correctly set on the "
-"Company: \n"
+"Company:%(fields)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -737,6 +739,11 @@ msgid "Re-Onboard"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_move_reversal_inherit_l10n_sa_edi
+msgid "Reason"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "Renew Production CSID"
 msgstr ""
@@ -760,14 +767,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Request a Compliance Certificate (CCSID)\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_csid_json\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_csid_json\" groups=\"base.group_system\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Request a Production Certificate (PCSID)\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_production_csid_json\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_production_csid_json\" groups=\"base.group_system\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -788,7 +795,7 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Server returned an unexpected error: "
+msgid "Server returned an unexpected error: %(error)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -838,12 +845,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "Street"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Supplier"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -942,7 +943,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
 "VAT is required when Identification Scheme is set to Tax Identification "
 "Number"
@@ -1025,6 +1025,11 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-hea
 msgid "VATEX-SA-HEA Private healthcare to citizen."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-oos
+msgid "VATEX-SA-OOS Not subject to VAT."
 msgstr ""
 
 #. module: l10n_sa_edi

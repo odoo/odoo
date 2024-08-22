@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
-"PO-Revision-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2024-08-22 15:53+0000\n"
+"PO-Revision-Date: 2024-08-22 15:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_it_stock_ddt
+#. odoo-python
+#: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
+msgid "%(warehouse)s Sequence %(code)s"
+msgstr ""
 
 #. module: l10n_it_stock_ddt
 #: model:ir.actions.report,print_report_name:l10n_it_stock_ddt.action_report_ddt
@@ -38,16 +44,6 @@ msgstr ""
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
-msgid "<span><strong>Customer Address:</strong></span>"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
-msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Carrier Signature</strong>"
 msgstr ""
 
@@ -58,7 +54,17 @@ msgstr ""
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Customer Address</strong>"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Customer Signature</strong>"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Disc.%</strong>"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
@@ -74,6 +80,11 @@ msgstr ""
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Total Value</strong>"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Warehouse Address</strong>"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
@@ -218,6 +229,11 @@ msgid "Repair"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
+#: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__substitution
+msgid "Returned goods"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__sale
 msgid "Sale"
 msgstr ""
@@ -230,18 +246,12 @@ msgstr ""
 #. module: l10n_it_stock_ddt
 #. odoo-python
 #: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
-#: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
-msgid "Sequence"
+msgid "Sequence %(code)s"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Shipping Date"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__substitution
-msgid "Returned goods"
 msgstr ""
 
 #. module: l10n_it_stock_ddt

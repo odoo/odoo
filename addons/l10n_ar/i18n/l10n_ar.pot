@@ -4,16 +4,37 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
+"Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-07 06:57+0000\n"
-"PO-Revision-Date: 2023-09-07 06:57+0000\n"
+"POT-Creation-Date: 2024-08-22 15:36+0000\n"
+"PO-Revision-Date: 2024-08-22 15:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
+msgid ""
+"%(value)s is not a valid value for %(field)s.\n"
+"The document number must be entered with a dash (-) and a maximum of 5 "
+"characters for the first part and 8 for the second. The following are "
+"examples of valid numbers:\n"
+"* 1-1\n"
+"* 0001-00000001\n"
+"* 00001-00000001"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
+msgid ""
+"%(value)s is not a valid value for %(field)s.\n"
+"The number of import Dispatch must be 16 characters."
+msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.custom_header
@@ -109,11 +130,6 @@ msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "<br/><strong>Exchange rate: </strong>"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<br/><strong>Payment Terms: </strong>"
 msgstr ""
 
@@ -172,8 +188,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_concept
 #: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_concept
 msgid ""
-"A concept is suggested regarding the type of the products on the invoice but"
-" it is allowed to force a different type if required."
+"A concept is suggested regarding the type of the products on the invoice but "
+"it is allowed to force a different type if required."
 msgstr ""
 
 #. module: l10n_ar
@@ -311,11 +327,6 @@ msgid "Accounting Date: This Year"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.view_partner_property_form
-msgid "Accounting Documents"
-msgstr ""
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__active
 msgid "Active"
 msgstr ""
@@ -326,21 +337,39 @@ msgid "Activities Start"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_is_pos
+msgid ""
+"Argentina: Specify if this Journal will be used to send electronic invoices "
+"to AFIP."
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
+msgid ""
+"Argentina: Specify which type of system will be used to create the "
+"electronic invoice. This will depend on the type of invoice to be created."
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_uom_uom__l10n_ar_afip_code
-msgid "Argentina: This code will be used on electronic invoice"
+msgid "Argentina: This code will be used on electronic invoice."
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_gross_income_type
+#: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_gross_income_type
+msgid "Argentina: Type of gross income: exempt, local, multilateral."
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/template_ar_ex.py:0
-#, python-format
 msgid "Argentine Generic Chart of Accounts for Exempt Individuals"
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/template_ar_ri.py:0
-#, python-format
 msgid "Argentine Generic Chart of Accounts for Registered Accountants"
 msgstr ""
 
@@ -776,6 +805,12 @@ msgid "CUIT"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner.py:0
+msgid "CUIT number must be prefixed with one of the following: %s"
+msgstr ""
+
+#. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_aduana
 msgid "CUSTOMS DOCUMENT"
 msgstr ""
@@ -861,13 +896,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_currency
 msgid "Currency"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_currency_rate
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_currency_rate
-#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_currency_rate
-msgid "Currency Rate"
 msgstr ""
 
 #. module: l10n_ar
@@ -1187,7 +1215,6 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/template_ar_base.py:0
-#, python-format
 msgid "Generic Chart of Accounts Argentina Single Taxpayer / Basis"
 msgstr ""
 
@@ -1334,21 +1361,12 @@ msgid "Identification Types"
 msgstr ""
 
 #. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/account_fiscal_position.py:0
-msgid ""
-"If use AFIP Responsibility then the country / zip codes will be not take "
-"into account"
-msgstr ""
-
-#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_quote_despacho_product_template
 msgid "Import Clearance"
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
 #: code:addons/l10n_ar/models/res_partner_bank.py:0
 msgid "Invalid Checksum"
 msgstr ""
@@ -1680,15 +1698,14 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-msgid "On invoice id \"%s\" you must use VAT Not Applicable on every line."
+msgid "On invoice id “%s” you must use VAT Not Applicable on every line."
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 msgid ""
-"On invoice id \"%s\" you must use VAT taxes different than VAT Not "
-"Applicable."
+"On invoice id “%s” you must use a VAT tax that is not VAT Not Applicable"
 msgstr ""
 
 #. module: l10n_ar
@@ -1786,7 +1803,8 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
+msgid ""
+"Please configure the AFIP Responsibility for \"%s\" in order to continue"
 msgstr ""
 
 #. module: l10n_ar
@@ -1865,8 +1883,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
 msgid ""
 "Raise an error if a vendor bill is miss encoded. \"Not Zero\" means the VAT "
-"taxes are required for the invoices related to this document type, and those"
-" with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
+"taxes are required for the invoices related to this document type, and those "
+"with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
 msgstr ""
 
 #. module: l10n_ar
@@ -1936,19 +1954,6 @@ msgid "Sigd"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_is_pos
-msgid ""
-"Specify if this Journal will be used to send electronic invoices to AFIP"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
-msgid ""
-"Specify which type of system will be used to create the electronic invoice. "
-"This will depend on the type of invoice to be created"
-msgstr ""
-
-#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "State"
 msgstr ""
@@ -2008,30 +2013,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 msgid ""
-"The document number can not be changed for this journal, you can only modify"
-" the POS number if there is not posted (or posted before) invoices"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
-msgid ""
-"The document number must be entered with a dash (-) and a maximum of 5 characters for the first partand 8 for the second. The following are examples of valid numbers:\n"
-"* 1-1\n"
-"* 0001-00000001\n"
-"* 00001-00000001"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
-msgid "The number of import Dispatch must be 16 characters"
+"The document number can not be changed for this journal, you can only modify "
+"the POS number if there is not posted (or posted before) invoices"
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
-msgid "The pos system %s can not be used on a purchase journal (id %s)"
+msgid ""
+"The pos system %(system)s can not be used on a purchase journal (id %(id)s)"
 msgstr ""
 
 #. module: l10n_ar
@@ -2060,9 +2050,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 msgid ""
-"There should be a single tax from the \"VAT\" tax group per line, add it to "
-"\"%s\". If you already have it, please check the tax configuration, in "
-"advanced options, in the corresponding field \"Tax Group\"."
+"There should be a single tax from the “VAT“ tax group per line, but this is "
+"not the case for line “%s”. Please add a tax to this line or check the tax "
+"configuration's advanced options for the corresponding field “Tax Group”."
 msgstr ""
 
 #. module: l10n_ar
@@ -2092,12 +2082,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_tribute_afip_code
 msgid "Tribute AFIP Code"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_gross_income_type
-#: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_gross_income_type
-msgid "Type of gross income: exempt, local, multilateral"
 msgstr ""
 
 #. module: l10n_ar
@@ -2187,12 +2171,6 @@ msgid "WAYBILL FOR RAIL TRANSPORT FOR GRAINS"
 msgstr ""
 
 #. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/account_fiscal_position.py:0
-msgid "Warning"
-msgstr ""
-
-#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "With Document"
 msgstr ""
@@ -2222,14 +2200,13 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields.selection,name:l10n_ar.selection__l10n_latam_document_type__purchase_aliquots__zero
-msgid "Zero"
+#: model:l10n_latam.document.type,report_name:l10n_ar.dc_zeta
+msgid "ZETA"
 msgstr ""
 
 #. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
-msgid "is not a valid value for"
+#: model:ir.model.fields.selection,name:l10n_ar.selection__l10n_latam_document_type__purchase_aliquots__zero
+msgid "Zero"
 msgstr ""
 
 #. module: l10n_ar
