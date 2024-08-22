@@ -765,7 +765,7 @@ class ReportMoOverview(models.AbstractModel):
                     line['quantity'] -= used_quantity
 
                     move_out_qty -= used_quantity
-                    if float_compare(move_out_qty, 0, line['move_out'].product_uom.rounding) <= 0:
+                    if float_compare(move_out_qty, 0, precision_rounding=line['move_out'].product_uom.rounding) <= 0:
                         break
         return new_lines + forecast_lines
 
