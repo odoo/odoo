@@ -249,7 +249,7 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "Crème brûlée Fan Club");
     await click("a", { text: "Create Channel" });
-    await contains(".o-mail-Discuss-threadName", { value: "Crème brûlée Fan Club" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Crème brûlée Fan Club" });
 });
 
 test("Create channel must have a name", async () => {

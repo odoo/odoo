@@ -72,12 +72,12 @@ test.tags("focus required")("Thread rename", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await insertText(".o-mail-Discuss-threadName:enabled", "Sales", {
+    await insertText(".o-mail-DiscussHeader-threadName:enabled", "Sales", {
         replace: true,
         target: env1,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadName[title='Sales']", { target: env2 });
+    await contains(".o-mail-DiscussHeader-threadName[title='Sales']", { target: env2 });
     await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Sales" });
 });
 
@@ -91,12 +91,12 @@ test.tags("focus required")("Thread description update", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await insertText(".o-mail-Discuss-threadDescription", "The very best channel", {
+    await insertText(".o-mail-DiscussHeader-threadDescription", "The very best channel", {
         replace: true,
         target: env1,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadDescription[title='The very best channel']", {
+    await contains(".o-mail-DiscussHeader-threadDescription[title='The very best channel']", {
         target: env2,
     });
 });

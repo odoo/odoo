@@ -23,7 +23,7 @@ test("Public website visitor is typing", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header .o-mail-ThreadIcon .fa.fa-comments");
+    await contains(".o-mail-DiscussHeader .o-mail-ThreadIcon .fa.fa-comments");
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     withGuest(guestId, () =>
@@ -32,8 +32,6 @@ test("Public website visitor is typing", async () => {
             channel_id: channel.id,
         })
     );
-    await contains(".o-mail-Discuss-header .o-discuss-Typing-icon");
-    await contains(
-        ".o-mail-Discuss-header .o-discuss-Typing-icon[title='Visitor 20 is typing...']"
-    );
+    await contains(".o-mail-DiscussHeader .o-discuss-Typing-icon");
+    await contains(".o-mail-DiscussHeader .o-discuss-Typing-icon[title='Visitor 20 is typing...']");
 });
