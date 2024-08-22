@@ -2,7 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <t t-if="message.isNotification">
+            <t t-set="prevMsg" t-value="props.previousMessage"/>
+            <t t-set="msg" t-value="message"/>
+            <t t-set="onClickNotification" t-value="env.onClickNotification"/>
+            <t t-call="mail.NotificationMessage"/>
+        </t>
+        <ActionSwiper t-else="" onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative pt-1"
                 t-att-class="attClass"
                 role="group"
