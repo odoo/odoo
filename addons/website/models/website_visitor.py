@@ -218,7 +218,7 @@ class WebsiteVisitor(models.Model):
             # used instead as the token.
             'partner_id': None if len(str(access_token)) == 32 else access_token,
         }
-        query = """
+        query = sql.SQL("""
             INSERT INTO website_visitor (
                 partner_id, access_token, last_connection_datetime, visit_count, lang_id,
                 website_id, timezone, write_uid, create_uid, write_date, create_date, country_id)
@@ -237,20 +237,33 @@ class WebsiteVisitor(models.Model):
                                     ELSE website_visitor.visit_count
                                 END
             RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
-        """
+        """)
 
-        if force_track_values:
-            create_values['url'] = force_track_values['url']
-            create_values['page_id'] = force_track_values.get('page_id')
+        if force_track_values is not None:
+            track_fields = [sql.Identifier('visitor_id'), sql.Identifier('visit_datetime')]
+            track_select = [sql.Identifier('id'), sql.SQL("now() at time zone 'UTC'")]
+            for k, v in force_track_values.items():
+                if k in ('visitor_id', 'visit_datetime') or k not in self.env['website.track']._fields:
+                    continue
+
+                track_fields.append(sql.Identifier(k))
+                k = f'!{k}!'
+                track_select.append(sql.Placeholder(k))
+                create_values[k] = v
+
             query = sql.SQL("""
-                WITH visitor AS (
-                    {query}, %(url)s AS url, %(page_id)s AS page_id
-                ), track AS (
-                    INSERT INTO website_track (visitor_id, url, page_id, visit_datetime)
-                    SELECT id, url, page_id::integer, now() at time zone 'UTC' FROM visitor
-                )
+                WITH
+                    visitor AS ({query}),
+                    track AS (
+                        INSERT INTO website_track ({track_fields})
+                        SELECT {track_select} FROM visitor
+                    )
                 SELECT id, upsert from visitor;
-            """).format(query=sql.SQL(query))
+            """).format(
+                query=query,
+                track_fields=sql.SQL(', ').join(track_fields),
+                track_select=sql.SQL(', ').join(track_select)
+            )
 
         self.env.cr.execute(query, create_values)
         return self.env.cr.fetchone()
