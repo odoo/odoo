@@ -5,7 +5,7 @@ import { Notebook } from '@web/core/notebook/notebook';
 import { formatDateTime } from '@web/core/l10n/dates';
 import { useService } from '@web/core/utils/hooks';
 import { memoize } from '@web/core/utils/functions';
-import { Component, onMounted, useState, markup } from '@odoo/owl';
+import { Component, onMounted, useRef, useState, markup } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 import { user } from "@web/core/user";
 
@@ -41,8 +41,8 @@ class HistoryDialog extends Component {
         this.size = 'xl';
         this.title = this.props.title;
         this.orm = useService('orm');
+        this.historyContainer = useRef("history-container");
         this.notebookTabs = [_t("Content"), _t("Comparison")];
-
         onMounted(() => this.init());
     }
 
@@ -52,16 +52,18 @@ class HistoryDialog extends Component {
     }
 
     async updateCurrentRevision(revisionId) {
+        const pane = this.historyContainer?.el.querySelector(".o_notebook_content");
+        if (pane) {
+            pane.scrollTop = 0;
+        }
         if (this.state.revisionId === revisionId) {
             return;
         }
-        this.env.services.ui.block();
         this.state.revisionId = revisionId;
         this.state.revisionContent = await this.getRevisionContent(revisionId);
         this.state.revisionComparison = await this.getRevisionComparison(
             revisionId
         );
-        this.env.services.ui.unblock();
     }
 
     getRevisionComparison = memoize(
@@ -87,12 +89,10 @@ class HistoryDialog extends Component {
     );
 
     async _onRestoreRevisionClick() {
-        this.env.services.ui.block();
         const restoredContent = await this.getRevisionContent(
             this.state.revisionId
         );
         this.props.restoreRequested(restoredContent, this.props.close);
-        this.env.services.ui.unblock();
     }
 
     /**

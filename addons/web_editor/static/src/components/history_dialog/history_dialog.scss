@@ -1,16 +1,5 @@
 .html-history-dialog {
     .history-container {
-        --border-color: #ddd;
-        margin-left: 240px;
-        .o_notebook_content {
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-top: 0;
-        }
-        .nav {
-            padding-left: 24px;
-        }
-
         removed {
             display: inline;
             background-color: #f1afaf;
@@ -21,23 +10,9 @@
             display: inline;
             background-color: #c8f1af;
         }
-        p {
-            margin-bottom: 0.6rem;
-        }
     }
     .revision-list {
-        margin: 38px 0 0 8px;
-        overflow: auto;
-        max-height: 100%;
-        width: 220px;
-        float : left;
-
         .btn {
-            border-radius: 0;
-            display: block;
-            text-align: left;
-            width: 220px;
-            margin-bottom: 8px;
             position: relative;
             &:before {
                 content: '\f105';
@@ -46,6 +21,39 @@
                 right : 8px;
                 top: 0;
                 font-size: 34px;
+            }
+        }
+    }
+    .o_notebook {
+        .o_notebook_content {
+            border: 1px solid $o-border-color;
+            border-top-width: 0;
+            padding: map-get($spacers, 3);
+        }
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .html-history-dialog {
+        height: 750px;
+        & > div {
+            height: 100%;
+        }
+        .revision-list,
+        .history-container {
+            overflow-y: auto;
+        }
+        .revision-list {
+            width: 25%;
+        }
+        .o_notebook {
+            .o_notebook_headers {
+                flex-shrink: 0;
+            }
+            .o_notebook_content {
+                flex-grow: 1;
+                flex-basis: 0;
+                overflow-y: auto;
             }
         }
     }
