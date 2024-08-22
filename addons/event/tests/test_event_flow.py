@@ -7,10 +7,11 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo.addons.event.tests.common import EventCase
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
+@tagged("event_mail")
 class TestEventFlow(EventCase):
 
     @users('user_eventmanager')
@@ -39,7 +40,7 @@ class TestEventFlow(EventCase):
         self.assertEqual(event.date_begin, specific_datetimes['date_begin'])
         self.assertEqual(event.date_end, specific_datetimes['date_end'])
 
-    @mute_logger('odoo.addons.event.models.event_mail_registration')
+    @mute_logger('odoo.addons.event.models.event_mail')
     def test_event_missed_mail_template(self):
         """ Check that error on mail sending is ignored if corresponding mail template was deleted """
         test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
