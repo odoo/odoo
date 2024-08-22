@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-
-from odoo import tools
 from odoo.http import request, route
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
@@ -78,14 +76,6 @@ class WebsiteEventSaleController(WebsiteEventController):
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
             if order_sudo.amount_total:
-                if order_sudo.partner_id.is_public:
-                    first_registration = registrations[0]
-                    if first_registration.get('name') and first_registration.get('email'):
-                        formatted_address = tools.formataddr((first_registration['name'], first_registration['email']))
-                        partner = request.env['res.partner'].sudo().find_or_create(formatted_address)
-                        if not partner.phone and first_registration.get('phone'):
-                            partner.phone = first_registration['phone']
-                        order_sudo.partner_id = partner
                 request.session['sale_last_order_id'] = order_sudo.id
                 return request.redirect("/shop/checkout")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
