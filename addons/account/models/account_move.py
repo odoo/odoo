@@ -1069,7 +1069,7 @@ class AccountMove(models.Model):
                     JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
                     LEFT JOIN account_payment pay ON pay.id = counterpart_move.payment_id
                     WHERE source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id
-                    GROUP BY source_line_id, source_move_id, source_line_account_type
+                    GROUP BY source_line.id, source_line.move_id, account.account_type
                 ''', SQL.identifier(source_field), SQL.identifier(counterpart_field), stored_ids))
 
             payment_data = defaultdict(list)
