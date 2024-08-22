@@ -873,6 +873,42 @@ if env.context.get('old_values', None):  # on write
         self.env["base.automation"]._check(False)
         self.assertTrue(automation.last_run)
 
+    def test_005_check_model_with_different_rec_name_char(self):
+        model = self.env["ir.model"]._get("base.automation.model.with.recname.char")
+
+        create_automation(
+            self,
+            model_id=self.project_model.id,
+            trigger='on_create_or_write',
+            _actions={
+                'state': 'object_create',
+                'crud_model_id': model.id,
+                'value': "Test _rec_name Automation",
+            },
+        )
+
+        self.create_project()
+        record_count = self.env[model.model].search_count([('description', '=', 'Test _rec_name Automation')])
+        self.assertEqual(record_count, 1, "Only one record should have been created")
+
+    def test_006_check_model_with_different_m2o_name_create(self):
+        model = self.env["ir.model"]._get("base.automation.model.with.recname.m2o")
+
+        create_automation(
+            self,
+            model_id=self.project_model.id,
+            trigger='on_create_or_write',
+            _actions={
+                'state': 'object_create',
+                'crud_model_id': model.id,
+                'value': "Test _rec_name Automation",
+            },
+        )
+
+        self.create_project()
+        record_count = self.env[model.model].search_count([('user_id', '=', 'Test _rec_name Automation')])
+        self.assertEqual(record_count, 1, "Only one record should have been created")
+
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
