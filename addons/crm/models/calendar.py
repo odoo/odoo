@@ -25,7 +25,7 @@ class CalendarEvent(models.Model):
 
     opportunity_id = fields.Many2one(
         'crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]",
-        index=True, ondelete='set null')
+        index='btree_not_null', ondelete='set null')
 
     def _compute_is_highlighted(self):
         super(CalendarEvent, self)._compute_is_highlighted()

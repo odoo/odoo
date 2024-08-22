@@ -277,13 +277,13 @@ class AccountMove(models.Model):
     # === Date fields === #
     invoice_date = fields.Date(
         string='Invoice/Bill Date',
-        index=True,
+        index='btree_not_null',
         copy=False,
     )
     invoice_date_due = fields.Date(
         string='Due Date',
         compute='_compute_invoice_date_due', store=True, readonly=False,
-        index=True,
+        index='btree_not_null',
         copy=False,
     )
     delivery_date = fields.Date(
