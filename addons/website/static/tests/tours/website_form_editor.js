@@ -858,13 +858,15 @@
         },
         {
             content: "Click on the text inside the dropped form column",
+            extra_trigger: "iframe section.s_website_form .col-lg-4[contenteditable=true]",
             trigger: "iframe section.s_website_form h3.card-title",
             run: "dblclick",
         },
-        {   // Simulate a user interaction with the editable content.
+        {
+            // Simulate a user interaction with the editable content.
             content: "Update the text inside the form column",
             trigger: "iframe section.s_website_form h3.card-title",
-            run: "keydown 65 66 67",
+            run: "text ABC",
         },
         {
             content: "Check that the new text value was correctly set",
