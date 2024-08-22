@@ -4,12 +4,6 @@
     <div class="o_we_file_selector_control_panel sticky-top d-flex flex-wrap gap-2 mb-1 p-3 align-items-end">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
         <div class="d-flex gap-3 justify-content-start align-items-center">
-            <div t-if="props.showOptimizedOption" class="flex-shrink-0 form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
-                <input class="o_we_show_optimized form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
-                <label class="form-check-label" for="o_we_show_optimized_switch">
-                    Show optimized images
-                </label>
-            </div>
             <select t-if="showSearchServiceSelect" class="o_input o_we_search_select form-select" t-on-change="ev => props.changeSearchService(ev.target.value)">
                 <option t-att-selected="props.searchService === 'all'" value="all">All</option>
                 <option t-att-selected="props.searchService === 'database'" value="database">My Images</option>
@@ -47,9 +41,6 @@
             urlWarningTitle="urlWarningTitle"
             uploadUrl="(url) => this.uploadUrl(url)"
             uploadFiles="(files) => this.uploadFiles(files)"
-            showOptimizedOption="showOptimizedOption"
-            showOptimized="state.showOptimized"
-            changeShowOptimized="showOptimized => this.state.showOptimized = !this.state.showOptimized"
             changeSearchService="service => this.state.searchService = service"
             searchService="state.searchService"
             needle="state.needle"
