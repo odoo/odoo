@@ -6,22 +6,16 @@ from odoo import http
 from odoo.tests import common, tagged
 from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.export import ExportXlsxWriter, Export
-from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class XlsxCreatorCase(common.HttpCase):
-    model_name = False
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.model = None
 
     def setUp(self):
         super().setUp()
+        self.model_name = 'export.aggregator'
         self.model = self.env[self.model_name]
 
-        mail_new_test_user(self.env, login='fof', password='123456789', groups='base.group_user,base.group_allow_export')
-        self.session = self.authenticate('fof', '123456789')
+        self.session = self.authenticate('admin', 'admin')
 
         self.worksheet = {}  # mock worksheet
 
@@ -31,7 +25,7 @@ class XlsxCreatorCase(common.HttpCase):
             'groupby': [],
             'ids': False,
             'import_compat': False,
-            'model': self.model._name,
+            'model': self.model_name,
         }
 
     def _mock_write(self, row, column, value, style=None):
@@ -78,10 +72,57 @@ class XlsxCreatorCase(common.HttpCase):
         self.assertFalse(value, "There are unexpected cells in the export")
 
 
+@tagged('post_install', '-at_install')
+class TestExport(XlsxCreatorCase):
+    def test_properties_type_fields_not_selectable_with_import_compat(self):
+        with patch.object(Export, 'fields_get', return_value={
+            'id': {'string': 'ID', 'type': 'integer'},
+            'name': {'string': 'Name', 'type': 'char'},
+            'properties': {'string': 'Properties', 'type': 'properties'},
+            'properties_definition': {'string': 'Properties Definition', 'type': 'properties_definition'}
+        }):
+            # TODO: change the test to handle because fields_get handle properties
+            fields = Export().get_fields("mock_model", import_compat=True)
+            field_names = [field['id'] for field in fields]
+            self.assertNotIn('properties', field_names)
+            self.assertNotIn('properties_definition', field_names)
+
+    def test_int_monetary_float(self):
+        # FIXME the currency is actually not used but still change the behavior of the export (see ExportXlsxWriter.__init__)
+        self.env['res.currency'].create(
+            {
+                'name': "bottlecap",
+                'symbol': "b",
+                'rounding': 0.001,
+                'decimal_places': 3,
+            }
+        )
+
+        values = [
+            {'int_sum': 1, 'float_monetary': 60739.2000000004, 'bool_and': True, 'float_min': 60739.2000000004},
+            {'int_sum': 2, 'float_monetary': 999.9995999, 'bool_and': True, 'float_min': 999.9995999},
+            {'int_sum': 0, 'float_monetary': 0.0, 'bool_and': False, 'float_min': 0.0},
+            {},
+        ]
+        export = self.export(
+            values,
+            fields=['int_sum', 'float_monetary', 'bool_and', 'float_min'],
+        )
+        # FIXME assertExportEqual doesn't test the real information show in the export file
+        self.assertExportEqual(
+            export,
+            [
+                ['Int Sum', 'Float Monetary', 'Bool And', 'Float Min'],
+                ['1', '60739.200', 'True', '60739.20'],
+                ['2', '1000.000', 'True', '1000.00'],
+                ['0', '0.000', 'False', '0.00'],
+                ['0', '0.000', 'False', '0.00'],
+            ],
+        )
+
+
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
-    model_name = 'export.aggregator'
-    # pylint: disable=bad-whitespace
 
     def test_archived_groupped(self):
         values = [
@@ -428,22 +469,28 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 1, 'currency_id': currency.id, 'float_monetary': 60739.2000000004},
             {'int_sum': 2, 'currency_id': currency.id, 'float_monetary': 2.0},
             {'int_sum': 3, 'currency_id': currency.id, 'float_monetary': 999.9995999},
+            {'int_sum': 3, 'currency_id': currency.id, 'float_monetary': 0.0},
+            {'currency_id': currency.id},
         ]
         export = self.export(values, fields=['int_sum', 'float_monetary'], params={'groupby': ['int_sum', 'float_monetary']})
-
         self.assertExportEqual(
             export,
             [
                 ['Int Sum', 'Float Monetary'],
                 ['1 (1)', '60739.200'],
                 ['    60739.2 (1)', '60739.200'],
-                ['1', '60739.20'],
+                ['1', '60739.200'],
                 ['2 (1)', '2.000'],
                 ['    2.0 (1)', '2.000'],
-                ['2', '2.00'],
-                ['3 (1)', '1000.000'],
+                ['2', '2.000'],
+                ['3 (2)', '1000.000'],
+                ['    Undefined (1)', '0.000'],
+                ['3', '0.000'],
                 ['    1000.0 (1)', '1000.000'],
-                ['3', '1000.00'],
+                ['3', '1000.000'],
+                ['Undefined (1)', '0.000'],
+                ['    Undefined (1)', '0.000'],
+                ['0', '0.000'],
             ],
         )
 
@@ -468,20 +515,3 @@ class TestGroupedExport(XlsxCreatorCase):
                 ['1', '86420.86'],
             ],
         )
-
-
-@tagged('-at_install', 'post_install')
-class TestExport(common.HttpCase):
-
-    def test_properties_type_fields_not_selectable_with_import_compat(self):
-        with patch.object(Export, 'fields_get', return_value={
-            'id': {'string': 'ID', 'type': 'integer'},
-            'name': {'string': 'Name', 'type': 'char'},
-            'properties': {'string': 'Properties', 'type': 'properties'},
-            'properties_definition': {'string': 'Properties Definition', 'type': 'properties_definition'}
-        }):
-            # TODO: change the test to handle because fields_get handle properties
-            fields = Export().get_fields("mock_model", import_compat=True)
-            field_names = [field['id'] for field in fields]
-            self.assertNotIn('properties', field_names)
-            self.assertNotIn('properties_definition', field_names)

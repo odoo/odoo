@@ -172,21 +172,29 @@ class GroupsTreeNode:
 
 class ExportXlsxWriter:
 
-    def __init__(self, field_names, row_count=0):
-        self.field_names = field_names
+    def __init__(self, fields, columns_headers, row_count):
+        self.fields = fields
+        self.columns_headers = columns_headers
         self.output = io.BytesIO()
         self.workbook = xlsxwriter.Workbook(self.output, {'in_memory': True})
-        self.base_style = self.workbook.add_format({'text_wrap': True})
         self.header_style = self.workbook.add_format({'bold': True})
-        self.header_bold_style = self.workbook.add_format({'text_wrap': True, 'bold': True, 'bg_color': '#e9ecef'})
         self.date_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd'})
         self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
+        self.base_style = self.workbook.add_format({'text_wrap': True})
+        # FIXME: Should depends of the field digits
+        self.float_style = self.workbook.add_format({'text_wrap': True, 'num_format': '#,##0.00'})
+
+        # FIXME: Should depends of the currency field for each row (also maybe add the currency symbol)
+        decimal_places = request.env['res.currency']._read_group([], aggregates=['decimal_places:max'])[0][0]
+        self.monetary_style = self.workbook.add_format({'text_wrap': True, 'num_format': f'#,##0.{(decimal_places or 2) * "0"}'})
+
+        header_bold_props = {'text_wrap': True, 'bold': True, 'bg_color': '#e9ecef'}
+        self.header_bold_style = self.workbook.add_format(header_bold_props)
+        self.header_bold_style_float = self.workbook.add_format(dict(**header_bold_props, num_format='#,##0.00'))
+        self.header_bold_style_monetary = self.workbook.add_format(dict(**header_bold_props, num_format=f'#,##0.{(decimal_places or 2) * "0"}'))
+
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
-        self.float_format = '#,##0.00'
-        decimal_places = [res['decimal_places'] for res in
-                          request.env['res.currency'].search_read([], ['decimal_places'])]
-        self.monetary_format = f'#,##0.{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
             raise UserError(_('There are too many rows (%(count)s rows, limit: %(limit)s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.', count=row_count, limit=self.worksheet.xls_rowmax))
@@ -200,9 +208,9 @@ class ExportXlsxWriter:
 
     def write_header(self):
         # Write main header
-        for i, fieldname in enumerate(self.field_names):
-            self.write(0, i, fieldname, self.header_style)
-        self.worksheet.set_column(0, max(0, len(self.field_names) - 1), 30) # around 220 pixels
+        for i, column_header in enumerate(self.columns_headers):
+            self.write(0, i, column_header, self.header_style)
+        self.worksheet.set_column(0, max(0, len(self.columns_headers) - 1), 30)  # around 220 pixels
 
     def close(self):
         self.workbook.close()
@@ -237,15 +245,12 @@ class ExportXlsxWriter:
         elif isinstance(cell_value, datetime.date):
             cell_style = self.date_style
         elif isinstance(cell_value, float):
-            cell_style.set_num_format(self.float_format)
+            field = self.fields[column]
+            cell_style = self.monetary_style if field['type'] == 'monetary' else self.float_style
         self.write(row, column, cell_value, cell_style)
 
 
 class GroupExportXlsxWriter(ExportXlsxWriter):
-
-    def __init__(self, fields, row_count=0):
-        super().__init__([f['label'].strip() for f in fields], row_count)
-        self.fields = fields
 
     def write_group(self, row, column, group_name, group, group_depth=0):
         group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name
@@ -275,13 +280,14 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
+            header_style = self.header_bold_style
             if field.get('type') == 'monetary':
-                self.header_bold_style.set_num_format(self.monetary_format)
+                header_style = self.header_bold_style_monetary
             elif field.get('type') == 'float':
-                self.header_bold_style.set_num_format(self.float_format)
+                header_style = self.header_bold_style_float
             else:
                 aggregated_value = str(aggregated_value if aggregated_value is not None else '')
-            self.write(row, column, aggregated_value, self.header_bold_style)
+            self.write(row, column, aggregated_value, header_style)
         return row + 1, 0
 
 
@@ -451,7 +457,7 @@ class ExportFormat(object):
         model_description = request.env['ir.model']._get(base).name
         return f"{model_description} ({base})"
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, columns_headers, rows):
         """ Conversion method from Odoo's export data to whatever the
         current export class outputs
 
@@ -462,7 +468,7 @@ class ExportFormat(object):
         """
         raise NotImplementedError()
 
-    def from_group_data(self, fields, groups):
+    def from_group_data(self, fields, columns_headers, groups):
         raise NotImplementedError()
 
     def base(self, data):
@@ -492,12 +498,12 @@ class ExportFormat(object):
             for leaf in groups_data:
                 tree.insert_leaf(leaf)
 
-            response_data = self.from_group_data(fields, tree)
+            response_data = self.from_group_data(fields, columns_headers, tree)
         else:
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
             export_data = records.export_data(field_names).get('datas', [])
-            response_data = self.from_data(columns_headers, export_data)
+            response_data = self.from_data(fields, columns_headers, export_data)
 
         # TODO: call `clean_filename` directly in `content_disposition`?
         return request.make_response(response_data,
@@ -530,14 +536,14 @@ class CSVExport(ExportFormat, http.Controller):
     def extension(self):
         return '.csv'
 
-    def from_group_data(self, fields, groups):
+    def from_group_data(self, fields, columns_headers, groups):
         raise UserError(_("Exporting grouped data to csv is not supported."))
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, columns_headers, rows):
         fp = io.StringIO()
         writer = csv.writer(fp, quoting=1)
 
-        writer.writerow(fields)
+        writer.writerow(columns_headers)
 
         for data in rows:
             row = []
@@ -578,16 +584,16 @@ class ExcelExport(ExportFormat, http.Controller):
     def extension(self):
         return '.xlsx'
 
-    def from_group_data(self, fields, groups):
-        with GroupExportXlsxWriter(fields, groups.count) as xlsx_writer:
+    def from_group_data(self, fields, columns_headers, groups):
+        with GroupExportXlsxWriter(fields, columns_headers, groups.count) as xlsx_writer:
             x, y = 1, 0
             for group_name, group in groups.children.items():
                 x, y = xlsx_writer.write_group(x, y, group_name, group)
 
         return xlsx_writer.value
 
-    def from_data(self, fields, rows):
-        with ExportXlsxWriter(fields, len(rows)) as xlsx_writer:
+    def from_data(self, fields, columns_headers, rows):
+        with ExportXlsxWriter(fields, columns_headers, len(rows)) as xlsx_writer:
             for row_index, row in enumerate(rows):
                 for cell_index, cell_value in enumerate(row):
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
