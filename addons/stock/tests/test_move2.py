@@ -3,6 +3,8 @@
 
 from datetime import timedelta
 
+from odoo import Command
+
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 
@@ -2454,6 +2456,36 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(picking.move_line_ids), 1, "Picking should have a single move line")
         picking.button_validate()
         self.assertEqual(len(picking.move_line_ids), 1, "Picking should have a single move line")
+
+    def test_picking_reservation_at_confirm(self):
+        """
+        Check that picking with reservation method at_confirm
+        are reserved by the scheduler
+        """
+        product = self.productA
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out)
+        picking_type_out.reservation_method = 'at_confirm'
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'product_uom': product.uom_id.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        picking.action_confirm()
+        self.assertFalse(picking.move_line_ids)
+        self.env['stock.quant']._update_available_quantity(product, self.env['stock.location'].browse(self.stock_location), 5)
+        self.env['procurement.group'].run_scheduler()
+        self.assertRecordValues(picking.move_line_ids, [{'state': 'partially_available', 'quantity': 5.0}])
+        self.env['stock.quant']._update_available_quantity(product, self.env['stock.location'].browse(self.stock_location), 10)
+        self.env['procurement.group'].run_scheduler()
+        self.assertRecordValues(picking.move_line_ids, [{'state': 'assigned', 'quantity': 10.0}])
 
 class TestStockUOM(TestStockCommon):
     @classmethod
