@@ -433,3 +433,10 @@ class AccountAnalyticLine(models.Model):
                 'res_id': uom_hours.id,
                 'noupdate': True,
             })
+
+    @api.model
+    def _show_portal_timesheets(self):
+        """
+        Determine if we show timesheet information in the portal. Meant to be overriden in website_timesheet.
+        """
+        return True
