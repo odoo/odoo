@@ -890,6 +890,7 @@ class PosOrderLine(models.Model):
     _name = "pos.order.line"
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
+    _order = 'id'
 
     def _order_line_fields(self, line, session_id=None):
         if line and 'name' not in line[2]:

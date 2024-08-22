@@ -399,8 +399,10 @@ class MergePartnerAutomatic(models.TransientModel):
             :param aggr_ids : stringified list of partner ids separated with a comma (sql array_agg)
             :param models : dict mapping a model name with its foreign key with res_partner table
         """
+        if not models:
+            return False
         return any(
-            self.env[model].search_count([(field, 'in', aggr_ids)])
+            self.env[model].sudo().search_count([(field, 'in', aggr_ids)])
             for model, field in models.items()
         )
 
@@ -485,7 +487,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 continue
 
             # exclude partner according to options
-            if model_mapping and self._partner_use_in(partners.ids, model_mapping):
+            if self._partner_use_in(partners.ids, model_mapping):
                 continue
 
             self.env['base.partner.merge.line'].create({
