@@ -399,9 +399,14 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
 
     def _inverse_type(self):
-        if not self._context.get('account_journal_skip_alias_sync'):
-            for record in self:
-                record._update_mail_alias()
+        update_alias = not self._context.get('account_journal_skip_alias_sync')
+        for journal in self:
+            if update_alias:
+                journal._update_mail_alias()
+            # Since 'default_account_id' is not visible on MISC ('general') journals,
+            # any existing value should be cleared to avoid undesired side effects.
+            if journal.type == 'general':
+                journal.default_account_id = False
 
     @api.depends('name')
     def _compute_alias_domain(self):
