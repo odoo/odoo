@@ -21,7 +21,7 @@ class Digest(models.Model):
                 ('date_order', '<', end),
                 ('state', 'not in', ['draft', 'cancel', 'invoiced']),
                 ('company_id', '=', company.id)
-            ]).mapped('amount_total'))
+            ]).mapped(lambda r: r.currency_id._convert(r.amount_total, self.env.company.currency_id, self.env.company, fields.Date.today())))
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)
