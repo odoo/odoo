@@ -43,7 +43,7 @@ Unicode True
 !define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '15'
+    !define MAJOR_VERSION '16'
 !endif
 
 !ifndef MINOR_VERSION
