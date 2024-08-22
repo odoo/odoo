@@ -16,8 +16,8 @@ import {
     Component,
     markup,
     onMounted,
+    onPatched,
     onWillDestroy,
-    onWillStart,
     onWillUpdateProps,
     toRaw,
     useChildSubEnv,
@@ -38,6 +38,7 @@ import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
+import { escape } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} Props
@@ -84,6 +85,7 @@ export class Message extends Component {
         "message",
         "messageEdition?",
         "messageToReplyTo?",
+        "previousMessage?",
         "squashed?",
         "thread?",
         "messageSearch?",
@@ -95,6 +97,7 @@ export class Message extends Component {
 
     setup() {
         super.setup();
+        this.escape = escape;
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,
@@ -107,11 +110,11 @@ export class Message extends Component {
         /** @type {ShadowRoot} */
         this.shadowRoot;
         this.root = useRef("root");
-        onWillStart(() => this.props.registerMessageRef?.(this.props.message, this.root));
         onWillUpdateProps((nextProps) => {
             this.props.registerMessageRef?.(this.props.message, null);
-            this.props.registerMessageRef?.(nextProps.message, this.root);
         });
+        onMounted(() => this.props.registerMessageRef?.(this.props.message, this.root));
+        onPatched(() => this.props.registerMessageRef?.(this.props.message, this.root));
         onWillDestroy(() => this.props.registerMessageRef?.(this.props.message, null));
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");

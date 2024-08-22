@@ -9,6 +9,7 @@ import {
 } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -259,16 +260,20 @@ export function useMessageHighlight(duration = 2000) {
          * @param {Element} el
          */
         scrollTo(el) {
+            state.scrollPromise?.resolve();
+            const scrollPromise = new Deferred();
+            state.scrollPromise = scrollPromise;
+            if ("onscrollend" in window) {
+                document.addEventListener("scrollend", scrollPromise.resolve, {
+                    capture: true,
+                    once: true,
+                });
+            } else {
+                // To remove when safari will support the "scrollend" event.
+                setTimeout(scrollPromise.resolve, 250);
+            }
             el.scrollIntoView({ behavior: "smooth", block: "center" });
-            state.scrollPromise = new Promise((resolve) => {
-                if ("scrollend" in window) {
-                    document.addEventListener("scrollend", resolve, { once: true, capture: true });
-                } else {
-                    // To remove when safari will support the "scrollend" event.
-                    setTimeout(resolve, 250);
-                }
-            });
-            return state.scrollPromise;
+            return scrollPromise;
         },
         highlightedMessageId: null,
     });
