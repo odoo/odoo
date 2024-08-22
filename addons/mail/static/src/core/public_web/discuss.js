@@ -1,9 +1,6 @@
-import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { Composer } from "@mail/core/common/composer";
-import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import {
     useMessageEdition,
@@ -25,19 +22,16 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { DiscussHeader } from "@mail/core/common/discuss_header";
 
 export class Discuss extends Component {
     static components = {
-        AutoresizeInput,
         DiscussSidebar,
         Thread,
-        ThreadIcon,
         Composer,
-        FileUploader,
-        ImStatus,
         MessagingMenu,
+        DiscussHeader,
     };
     static props = {
         hasSidebar: { type: Boolean, optional: true },
