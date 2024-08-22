@@ -318,9 +318,14 @@ class EventRegistration(models.Model):
             # we could simply call _create_missing_mail_registrations and let cron do their job
             # but it currently leads to several delays. We therefore call execute until
             # cron triggers are correctly used
-            onsubscribe_schedulers.with_context(
-                event_mail_registration_ids=open_registrations.ids
-            ).with_user(SUPERUSER_ID).execute()
+            for scheduler in onsubscribe_schedulers:
+                try:
+                    scheduler.with_context(
+                        event_mail_registration_ids=open_registrations.ids
+                    ).with_user(SUPERUSER_ID).execute()
+                except Exception as e:
+                    _logger.exception("Failed to run scheduler %s", scheduler.id)
+                    self.env["event.mail"]._warn_template_error(scheduler, e)
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
