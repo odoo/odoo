@@ -59,23 +59,6 @@ export class DiscussCoreCommon {
         this.busService.subscribe("discuss.channel/new_message", (payload, metadata) =>
             this._handleNotificationNewMessage(payload, metadata)
         );
-        this.busService.subscribe("discuss.channel/transient_message", (payload) => {
-            const { body, thread } = payload;
-            const lastMessageId = this.store.getLastMessageId();
-            const message = this.store.Message.insert(
-                {
-                    author: this.store.odoobot,
-                    body,
-                    id: lastMessageId + 0.01,
-                    is_note: true,
-                    is_transient: true,
-                    thread,
-                },
-                { html: true }
-            );
-            message.thread.messages.push(message);
-            message.thread.transientMessages.push(message);
-        });
         this.busService.subscribe("discuss.channel/unpin", (payload) => {
             const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
             if (thread) {

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
 from datetime import timedelta
 from freezegun import freeze_time
 from unittest.mock import patch, PropertyMock
@@ -12,18 +13,20 @@ from odoo.tests import new_test_user, tagged
 
 @tagged("post_install", "-at_install")
 class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
+    def setUp(self):
+        super().setUp()
+        self.maxDiff = None
+
     def test_get_discuss_channel(self):
         """For a livechat with 5 available operators, we open 5 channels 5 times (25 channels total).
         For every 5 channels opening, we check that all operators were assigned.
         """
-
         for i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
             channel_operator_ids = [channel_info['operator']['id'] for channel_info in discuss_channels]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
     def test_channel_get_livechat_visitor_info(self):
-        self.maxDiff = None
         belgium = self.env.ref('base.be')
         test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'password': self.password, 'country_id': belgium.id})
 
@@ -323,25 +326,44 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         )
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         self._reset_bus()
-        with self.assertBus(
+        with patch.object(
+            uuid,
+            "uuid4",
+            side_effect=lambda: "cb3ae120-55b7-4e9a-a96e-60d19b4f05d6",
+        ), self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
             [
                 {
-                    "type": "discuss.channel/transient_message",
+                    "type": "mail.record/insert",
                     "payload": {
-                        "body":
-                            "<span class='o_mail_notification'>You are in a private conversation with "
-                            f"<a href=# data-oe-model='res.partner' data-oe-id='{self.operators[1].partner_id.id}'>@Paul</a> "
-                            "and <strong>Visitor</strong>."
-                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
-                            "<br>Type <b>#channel</b> to mention a channel."
-                            "<br>Type <b>/command</b> to execute a command."
-                            "<br>Type <b>:shortcut</b> to insert a canned response in your message."
-                            "</span>",
-                            "thread": {
+                        "mail.message": self._filter_messages_fields(
+                            {
+                                "author": {
+                                    "id": self.env.ref("base.partner_root").id,
+                                    "type": "partner",
+                                },
+                                "body": "<span class='o_mail_notification'>You are in a private conversation with "
+                                f"<a href=# data-oe-model='res.partner' data-oe-id='{self.operators[1].partner_id.id}'>@Paul</a> "
+                                "and <strong>Visitor</strong>."
+                                "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
+                                "<br>Type <b>#channel</b> to mention a channel."
+                                "<br>Type <b>/command</b> to execute a command."
+                                "<br>Type <b>:shortcut</b> to insert a canned response in your message."
+                                "</span>",
+                                "id": "cb3ae120-55b7-4e9a-a96e-60d19b4f05d6",
+                                "is_note": True,
+                                "is_transient": True,
+                                "thread": {"id": channel.id, "model": "discuss.channel"},
+                            }
+                        ),
+                        "mail.thread": self._filter_threads_fields(
+                            {
                                 "id": channel.id,
+                                "messages": [["ADD", ["cb3ae120-55b7-4e9a-a96e-60d19b4f05d6"]]],
                                 "model": "discuss.channel",
-                            },
+                                "transientMessages": [["ADD", ["cb3ae120-55b7-4e9a-a96e-60d19b4f05d6"]]]
+                            }
+                        ),
                     },
                 },
             ],
