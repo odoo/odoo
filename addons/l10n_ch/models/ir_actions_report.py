@@ -74,11 +74,11 @@ class IrActionsReport(models.Model):
                         qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
                         header_pdf = OdooPdfFileReader(header_res[invoice_id]['stream'], strict=False)
 
-                        page = header_pdf.getPage(0)
-                        page.mergePage(qr_pdf.getPage(0))
+                        page = header_pdf.pages[0]
+                        page.merge_page(qr_pdf.pages[0])
 
                         output_pdf = OdooPdfFileWriter()
-                        output_pdf.addPage(page)
+                        output_pdf.add_page(page)
                         new_pdf_stream = io.BytesIO()
                         output_pdf.write(new_pdf_stream)
                         streams_to_append[invoice_id] = {'stream': new_pdf_stream}
@@ -95,8 +95,8 @@ class IrActionsReport(models.Model):
             for invoice_id, additional_stream in streams_to_append.items():
                 invoice_stream = res[invoice_id]['stream']
                 writer = OdooPdfFileWriter()
-                writer.appendPagesFromReader(OdooPdfFileReader(invoice_stream, strict=False))
-                writer.appendPagesFromReader(OdooPdfFileReader(additional_stream['stream'], strict=False))
+                writer.append_pages_from_reader(OdooPdfFileReader(invoice_stream, strict=False))
+                writer.append_pages_from_reader(OdooPdfFileReader(additional_stream['stream'], strict=False))
                 new_pdf_stream = io.BytesIO()
                 writer.write(new_pdf_stream)
                 res[invoice_id]['stream'] = new_pdf_stream
