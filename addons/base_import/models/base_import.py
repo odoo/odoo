@@ -450,6 +450,8 @@ class Import(models.TransientModel):
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
         sheet = book[sheet_name]
+        if sheet.max_row is None:
+            sheet.calculate_dimension(True)
         rows = []
         for rowx, row in enumerate(sheet.rows, 1):
             values = []
