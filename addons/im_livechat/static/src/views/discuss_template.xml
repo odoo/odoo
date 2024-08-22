@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.LivechatDiscuss">
+     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
+        <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+        <div t-if="store.inPublicPage or !(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
+            <DiscussHeader threadActions="threadActions" activeAction="threadActions.activeAction"/>
+            <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
+                <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1" t-ref="core">
+                    <t t-if="thread">
+                        <div class="d-flex flex-column flex-grow-1">
+                            <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
+                            <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                        </div>
+                        <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start o-mail-Discuss-inspector">
+                            <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                        </div>
+                    </t>
+                    <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+                        <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </t>
+</templates>
