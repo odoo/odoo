@@ -1818,7 +1818,7 @@ class AccountMoveLine(models.Model):
             return {}
 
         # Override in order to not read the complete move line table and use the index instead
-        query_account = self.env['account.account']._search([('company_ids', '=', self.env.companies.ids)])
+        query_account = self.env['account.account']._search([('company_ids', 'in', self.env.companies.ids)])
         account_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
 
         query_line = self._search(domain, limit=1)
