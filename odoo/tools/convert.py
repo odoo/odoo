@@ -693,11 +693,12 @@ form: module.record_id""" % (xml_id,)
                 _logger.debug(msg, exc_info=True)
                 raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
             except Exception as e:
-                raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
+                message = 'while parsing %s:%s, somewhere inside\n%s' % (
                     rec.getroottree().docinfo.URL,
                     rec.sourceline,
                     etree.tostring(rec, encoding='unicode').rstrip()
-                )) from e
+                )
+                raise type(e)(message) from e
             finally:
                 self._noupdate.pop()
                 self.envs.pop()
