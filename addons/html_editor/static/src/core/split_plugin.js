@@ -1,10 +1,10 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty } from "../utils/dom";
-import { isVisible } from "../utils/dom_info";
+import { isTextNode, isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
-import { DIRECTIONS, childNodeIndex } from "../utils/position";
+import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 
 export class SplitPlugin extends Plugin {
     static dependencies = ["selection"];
@@ -277,11 +277,7 @@ export class SplitPlugin extends Plugin {
         let { startContainer, startOffset, endContainer, endOffset, direction } =
             this.shared.getEditableSelection();
         const isInSingleContainer = startContainer === endContainer;
-        if (
-            endContainer.nodeType === Node.TEXT_NODE &&
-            endOffset !== 0 &&
-            endOffset !== endContainer.textContent.length
-        ) {
+        if (isTextNode(endContainer) && endOffset > 0 && endOffset < nodeSize(endContainer)) {
             const endParent = endContainer.parentNode;
             const splitOffset = this.splitTextNode(endContainer, endOffset);
             endContainer = endParent.childNodes[splitOffset - 1] || endParent.firstChild;
@@ -291,9 +287,9 @@ export class SplitPlugin extends Plugin {
             endOffset = endContainer.textContent.length;
         }
         if (
-            startContainer.nodeType === Node.TEXT_NODE &&
-            startOffset !== 0 &&
-            startOffset !== startContainer.textContent.length
+            isTextNode(startContainer) &&
+            startOffset > 0 &&
+            startOffset < nodeSize(startContainer)
         ) {
             this.splitTextNode(startContainer, startOffset);
             startOffset = 0;

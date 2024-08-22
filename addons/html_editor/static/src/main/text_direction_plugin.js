@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";
+import { isTextNode } from "@html_editor/utils/dom_info";
 
 export class TextDirectionPlugin extends Plugin {
     static name = "text_direction";
@@ -39,10 +40,7 @@ export class TextDirectionPlugin extends Plugin {
     switchDirection() {
         const selection = this.shared.splitSelection();
         const selectedTextNodes = [selection.anchorNode, ...this.shared.getSelectedNodes()].filter(
-            (n) =>
-                n.nodeType === Node.TEXT_NODE &&
-                closestElement(n).isContentEditable &&
-                n.nodeValue.trim().length
+            (n) => isTextNode(n) && closestElement(n).isContentEditable && n.nodeValue.trim().length
         );
         const blocks = new Set(
             selectedTextNodes.map(

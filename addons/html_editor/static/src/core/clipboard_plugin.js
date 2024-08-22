@@ -1,4 +1,4 @@
-import { paragraphRelatedElements } from "../utils/dom_info";
+import { isTextNode, paragraphRelatedElements } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
@@ -506,10 +506,7 @@ export class ClipboardPlugin extends Plugin {
                 okClass instanceof RegExp ? okClass.test(item) : okClass === item
             );
         } else {
-            return (
-                item.nodeType === Node.TEXT_NODE ||
-                (item.matches && item.matches(CLIPBOARD_WHITELISTS.nodes))
-            );
+            return isTextNode(item) || item.matches?.(CLIPBOARD_WHITELISTS.nodes);
         }
     }
     /**
@@ -522,7 +519,7 @@ export class ClipboardPlugin extends Plugin {
      */
     isBlacklisted(node) {
         return (
-            node.nodeType !== Node.TEXT_NODE &&
+            !isTextNode(node) &&
             node.matches([].concat(...Object.values(CLIPBOARD_BLACKLISTS)).join(","))
         );
     }

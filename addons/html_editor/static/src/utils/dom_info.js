@@ -641,3 +641,7 @@ export function areSimilarElements(node, node2) {
         !+node2Style.margin.replace(NOT_A_NUMBER, "")
     );
 }
+
+export function isTextNode(node) {
+    return node.nodeType === Node.TEXT_NODE;
+}
