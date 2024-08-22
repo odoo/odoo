@@ -734,7 +734,7 @@ export class TicketScreen extends Component {
         const domain = this._computeSyncedOrdersDomain();
         const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
         const config_id = this.pos.config.id;
-        const { ordersInfo, totalCount } = await this.pos.data.call(
+        let { ordersInfo, totalCount } = await this.pos.data.call(
             "pos.order",
             "search_paid_order_ids",
             [],
@@ -746,8 +746,72 @@ export class TicketScreen extends Component {
             }
         );
 
+<<<<<<< saas-17.4
         if (!screenState.offsetByDomain[JSON.stringify(domain)]) {
             screenState.offsetByDomain[JSON.stringify(domain)] = 0;
+||||||| 91d62b2beac1034ab7ce40b6e9e1487ba5b730f1
+        const idsNotInCache = ordersInfo.filter(
+            (orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache)
+        );
+        // If no cacheDate, then assume reasonable earlier date.
+        const cacheDate = this._state.syncedOrders.cacheDate || DateTime.fromMillis(0);
+        const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
+            return deserializeDateTime(orderInfo[1]) > cacheDate;
+        });
+
+        const idsToLoad = [...new Set(idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]))];
+        if (idsToLoad.length > 0) {
+            const fetchedOrders = await this.pos.data.call("pos.order", "export_for_ui", [
+                idsToLoad,
+            ]);
+            // Check for missing products and partners and load them in the PoS
+            await this.pos._loadMissingProducts(fetchedOrders);
+            await this.pos._loadMissingPartners(fetchedOrders);
+            // Cache these fetched orders so that next time, no need to fetch
+            // them again, unless invalidated. See `_onInvoiceOrder`.
+            fetchedOrders.forEach((order) => {
+                this._state.syncedOrders.cache[order.id] = new Order(
+                    { env: this.env },
+                    { pos: this.pos, json: order }
+                );
+            });
+            //Update the datetime indicator of the cache refresh
+            this._state.syncedOrders.cacheDate = DateTime.local();
+=======
+        const idsNotInCache = ordersInfo.filter(
+            (orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache)
+        );
+        // If no cacheDate, then assume reasonable earlier date.
+        const cacheDate = this._state.syncedOrders.cacheDate || DateTime.fromMillis(0);
+        const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
+            return deserializeDateTime(orderInfo[1]) > cacheDate;
+        });
+
+        const idsToLoad = [...new Set(idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]))];
+        if (idsToLoad.length > 0) {
+            const fetchedOrders = await this.pos.data.call("pos.order", "export_for_ui", [
+                idsToLoad,
+            ]);
+            // Remove not loaded Order IDs
+            const fetchedOrderIds = new Set(fetchedOrders.map((order) => order.id));
+            const notLoadedIds = idsNotInCache.filter(
+                (orderInfo) => !fetchedOrderIds.has(orderInfo[0])
+            );
+            ordersInfo = ordersInfo.filter((orderInfo) => !notLoadedIds.includes(orderInfo[0]));
+            // Check for missing products and partners and load them in the PoS
+            await this.pos._loadMissingProducts(fetchedOrders);
+            await this.pos._loadMissingPartners(fetchedOrders);
+            // Cache these fetched orders so that next time, no need to fetch
+            // them again, unless invalidated. See `_onInvoiceOrder`.
+            fetchedOrders.forEach((order) => {
+                this._state.syncedOrders.cache[order.id] = new Order(
+                    { env: this.env },
+                    { pos: this.pos, json: order }
+                );
+            });
+            //Update the datetime indicator of the cache refresh
+            this._state.syncedOrders.cacheDate = DateTime.local();
+>>>>>>> 9aac5b9cb1f641fc52672b103bbecd41163de310
         }
         screenState.offsetByDomain[JSON.stringify(domain)] += ordersInfo.length;
         screenState.totalCount = totalCount;

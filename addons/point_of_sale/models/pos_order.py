@@ -13,7 +13,7 @@ import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.osv.expression import AND
 import base64
 
@@ -1198,6 +1198,113 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
+<<<<<<< saas-17.4
+||||||| 91d62b2beac1034ab7ce40b6e9e1487ba5b730f1
+    def _export_for_ui(self, order):
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        return {
+            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'name': order.pos_reference,
+            'uid': re.search('([0-9-]){14,}', order.pos_reference).group(0),
+            'amount_paid': order.amount_paid,
+            'amount_total': order.amount_total,
+            'amount_tax': order.amount_tax,
+            'amount_return': order.amount_return,
+            'pos_session_id': order.session_id.id,
+            'pricelist_id': order.pricelist_id.id,
+            'partner_id': order.partner_id.id,
+            'user_id': order.user_id.id,
+            'sequence_number': order.sequence_number,
+            'date_order': str(order.date_order.astimezone(timezone)),
+            'fiscal_position_id': order.fiscal_position_id.id,
+            'to_invoice': order.to_invoice,
+            'shipping_date': order.shipping_date,
+            'state': order.state,
+            'account_move': order.account_move.id,
+            'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
+            'access_token': order.access_token,
+            'ticket_code': order.ticket_code,
+            'last_order_preparation_change': order.last_order_preparation_change,
+        }
+
+    @api.model
+    def export_for_ui_shared_order(self, config_id):
+        orders = self._get_shared_orders(config_id)
+        return orders.export_for_ui()
+
+    @api.model
+    def _get_shared_orders(self, config_id):
+        config = self.env['pos.config'].browse(config_id)
+        orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', config_id), ('config_id', 'in', config.trusted_config_ids.ids)])
+        return orders
+
+    def export_for_ui(self):
+        """ Returns a list of dict with each item having similar signature as the return of
+            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
+            between the pos frontend and backend.
+        """
+        return self.mapped(self._export_for_ui) if self else []
+
+=======
+    def _export_for_ui(self, order):
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        return {
+            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'name': order.pos_reference,
+            'uid': re.search('([0-9-]){14,}', order.pos_reference).group(0),
+            'amount_paid': order.amount_paid,
+            'amount_total': order.amount_total,
+            'amount_tax': order.amount_tax,
+            'amount_return': order.amount_return,
+            'pos_session_id': order.session_id.id,
+            'pricelist_id': order.pricelist_id.id,
+            'partner_id': order.partner_id.id,
+            'user_id': order.user_id.id,
+            'sequence_number': order.sequence_number,
+            'date_order': str(order.date_order.astimezone(timezone)),
+            'fiscal_position_id': order.fiscal_position_id.id,
+            'to_invoice': order.to_invoice,
+            'shipping_date': order.shipping_date,
+            'state': order.state,
+            'account_move': order.account_move.id,
+            'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
+            'access_token': order.access_token,
+            'ticket_code': order.ticket_code,
+            'last_order_preparation_change': order.last_order_preparation_change,
+        }
+
+    @api.model
+    def export_for_ui_shared_order(self, config_id):
+        orders = self._get_shared_orders(config_id)
+        return orders.export_for_ui()
+
+    @api.model
+    def _get_shared_orders(self, config_id):
+        config = self.env['pos.config'].browse(config_id)
+        orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', config_id), ('config_id', 'in', config.trusted_config_ids.ids)])
+        return orders
+
+    def export_for_ui(self):
+        """ Returns a list of dict with each item having similar signature as the return of
+            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
+            between the pos frontend and backend.
+        """
+        results = []
+        for order in self:
+            try:
+                results.append(self._export_for_ui(order))
+            except AccessError:
+                # Skip the order in case of AccessError
+                continue
+        return results
+
+>>>>>>> 9aac5b9cb1f641fc52672b103bbecd41163de310
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
