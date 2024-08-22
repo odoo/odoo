@@ -144,7 +144,8 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:
+            failure_reason = notification_data.get('failure_reason')
             self._set_error(_(
                 "An error occurred during the processing of your payment (status %s). Please try "
-                "again."
+                "again.", failure_reason
             ))
