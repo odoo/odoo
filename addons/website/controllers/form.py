@@ -47,7 +47,7 @@ class WebsiteForm(http.Controller):
                     kwargs.pop('model_name')
                     return self._handle_website_form(model_name, **kwargs)
             error = _("Suspicious activity detected by Google reCaptcha.")
-        except (ValidationError, UserError) as e:
+        except (ValidationError, UserError, ValueError) as e:
             error = e.args[0]
         return json.dumps({
             'error': error,
