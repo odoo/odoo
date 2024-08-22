@@ -58,7 +58,7 @@ from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
-from odoo.tools import mute_logger, profiler, SQL, DotDict, float_compare
+from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
@@ -89,6 +89,15 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
+if config['test_enable'] or config['test_file']:
+    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
+else:
+    _logger.error(
+        "Importing test framework"
+        ", avoid importing from business modules and when not running in test mode",
+        stack_info=True,
+    )
+
 
 # backward compatibility: Form was defined in this file
 def __getattr__(name):
