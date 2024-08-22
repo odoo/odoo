@@ -213,9 +213,9 @@ class PosConfig(models.Model):
             )
 
             if table:
-                table_route = f"&table_identifier={table.identifier}"
+                table_route = f"&t={table.identifier}"
 
-        return f"{base_route}?access_token={self.access_token}{table_route}"
+        return f"{base_route}?a={self.access_token}{table_route}"
 
     def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
