@@ -965,7 +965,6 @@ class Picking(models.Model):
         for picking in self:
             if not picking.move_lines and not picking.move_line_ids:
                 pickings_without_moves |= picking
-
             picking.message_subscribe([self.env.user.partner_id.id])
             picking_type = picking.picking_type_id
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
