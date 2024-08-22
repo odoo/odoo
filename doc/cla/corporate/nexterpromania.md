@@ -13,6 +13,5 @@ Fekete Mihai-Adrian feketemihai@nexterp.ro https://github.com/feketemihai
 List of contributors:
 
 Fekete Mihai-Adrian feketemihai@nexterp.ro https://github.com/feketemihai
-Horja Robert horjarobert@nexterp.ro https://github.com/horjarobert
-Cojocaru Marcel cojocarumarcel@nexterp.ro https://github.com/mcojocaru
-Teodor Alexandru teodoralexandru@nexterp.ro https://github.com/alexteodor
+Sima Elisabeta elisabeta.sima@nexterp.ro https://github.com/SimaElisabeta
+Musat Natanaela musatnatanaela@nexterp.ro https://github.com/stananatanaela
