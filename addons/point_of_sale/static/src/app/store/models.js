@@ -2476,7 +2476,7 @@ export class Order extends PosModel {
                 ) || this.pos.config.pricelist_id;
         } else {
             newPartnerFiscalPositionId = defaultFiscalPositionId;
-            newPartnerPricelist = this.pos.default_pricelist;
+            newPartnerPricelist = this.pos.config.pricelist_id;
         }
         const fiscalPosition = this.pos.models["account.fiscal.position"].find(
             (fp) => fp.id === newPartnerFiscalPositionId
