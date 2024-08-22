@@ -1307,6 +1307,7 @@ class MailCommon(common.TransactionCase, MailCase):
             cls.user_admin.write({
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'test.admin@test.example.com',
+                "name": "Mitchell Admin",
                 'notification_type': 'inbox',
             })
         # have root available at hand, just in case
