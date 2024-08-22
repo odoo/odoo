@@ -53,20 +53,7 @@ export class Wysiwyg extends Component {
         });
         const contentRef = useRef("content");
         this.editor = this.props.editor;
-        const config = {
-            ...this.props.config,
-            // TODO ABD TODO @phoenix: check if there is too much info in the wysiwyg env.
-            // i.e.: env has X because of parent component,
-            // embedded component descendant sometimes uses X from env which is set conditionally:
-            // -> it will override the one one from the parent => OK.
-            // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
-            embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
-            localOverlayContainers: {
-                key: this.env.localOverlayContainerKey,
-                ref: this.overlayRef,
-            },
-            disableFloatingToolbar: this.props.toolbar,
-        };
+        const config = this.getEditorConfig();
         this.editor = new Editor(config, this.env.services);
         this.props.onLoad(this.editor);
 
@@ -112,5 +99,22 @@ export class Wysiwyg extends Component {
             }
         });
         onWillDestroy(() => this.editor.destroy(true));
+    }
+
+    getEditorConfig() {
+        return {
+            ...this.props.config,
+            // TODO ABD TODO @phoenix: check if there is too much info in the wysiwyg env.
+            // i.e.: env has X because of parent component,
+            // embedded component descendant sometimes uses X from env which is set conditionally:
+            // -> it will override the one one from the parent => OK.
+            // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
+            embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
+            localOverlayContainers: {
+                key: this.env.localOverlayContainerKey,
+                ref: this.overlayRef,
+            },
+            disableFloatingToolbar: this.props.toolbar,
+        };
     }
 }
