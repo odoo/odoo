@@ -125,7 +125,7 @@ export class LivechatService {
         if (temporaryThread) {
             const chatWindow = this.store.ChatWindow.get({ thread: temporaryThread });
             temporaryThread.delete();
-            chatWindow.close();
+            await chatWindow.close();
         }
         if (!this.thread) {
             return;
