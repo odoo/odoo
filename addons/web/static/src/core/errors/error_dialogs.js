@@ -57,13 +57,16 @@ export class ErrorDialog extends Component {
         });
         this.copyButtonRef = useRef("copyButton");
         this.popover = usePopover(Tooltip);
-        this.contextDetails = `Occured ${
-            this.props.serverHost ? `on ${this.props.serverHost} ` : ""
-        }${
-            this.props.model && this.props.id
-                ? `on model ${this.props.model} and id ${this.props.id} `
-                : ""
-        }on ${DateTime.now().setZone("UTC").toFormat("yyyy-MM-dd HH:mm:ss")} GMT`;
+        this.contextDetails = "Occured ";
+        if (this.props.serverHost) {
+            this.contextDetails += `on ${this.props.serverHost} `;
+        }
+        if (this.props.model && this.props.id) {
+            this.contextDetails += `on model ${this.props.model} and id ${this.props.id} `;
+        }
+        this.contextDetails += `on ${DateTime.now()
+            .setZone("UTC")
+            .toFormat("yyyy-MM-dd HH:mm:ss")} GMT`;
     }
 
     showTooltip() {
