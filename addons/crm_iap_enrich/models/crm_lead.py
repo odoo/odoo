@@ -27,16 +27,19 @@ class Lead(models.Model):
                 lead.show_enrich_button = True
 
     @api.model
-    def _iap_enrich_leads_cron(self, enrich_hours_delay=1, leads_batch_size=1000):
+    def _iap_enrich_leads_cron(self, enrich_hours_delay=1, batch_size=1000):
         timeDelta = self.env.cr.now() - datetime.timedelta(hours=enrich_hours_delay)
         # Get all leads not lost nor won (lost: active = False)
-        leads = self.search([
+        domain = [
             ('iap_enrich_done', '=', False),
             ('reveal_id', '=', False),
             '|', ('probability', '<', 100), ('probability', '=', False),
             ('create_date', '>', timeDelta)
-        ], limit=leads_batch_size)
+        ]
+        leads = self.search(domain, limit=batch_size)
         leads.iap_enrich(from_cron=True)
+        remaining_leads = 0 if len(leads) < batch_size else self.search_count(domain)
+        self.env['ir.cron']._notify_progress(done=len(leads), remaining=remaining_leads)
 
     @api.model_create_multi
     def create(self, vals_list):
