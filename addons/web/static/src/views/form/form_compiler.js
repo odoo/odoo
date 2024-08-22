@@ -442,7 +442,7 @@ export class FormCompiler extends ViewCompiler {
             if (!compiled || isTextNode(compiled)) {
                 continue;
             }
-            if (getTag(child, true) === "field") {
+            if (getTag(child, true) === "field" && !child.classList.contains("btn"))  {
                 compiled.setAttribute("showTooltip", true);
                 others.push(compiled);
             } else {
