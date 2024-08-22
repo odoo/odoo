@@ -19,7 +19,7 @@
                 </p>
                 <div class="position-absolute bottom-0">
                     <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.audioStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickMic">
-                        <i class="fa fa-stack" t-attf-class="{{ state.audioStream ? 'fa-microphone-slash' : 'fa-microphone' }}"/>
+                        <i class="fa fa-stack" t-attf-class="{{ state.audioStream ? 'fa-microphone' : 'fa-microphone-slash' }}"/>
                     </button>
                     <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.videoStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickVideo">
                         <i class="fa fa-camera fa-stack"/>
