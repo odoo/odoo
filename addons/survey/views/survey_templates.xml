@@ -80,23 +80,34 @@
     </template>
 
     <template id="survey_fill_header" name="Survey: main page header">
-        <div class="o_survey_nav pt16 mb-2">
-            <div class="container m-0 p-0">
-                <div class="row">
-                    <div  class="col-lg-10">
-                        <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
-                            t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
-                    </div>
-                    <div class="o_survey_timer col-lg-2 pt-4">
-                        <h1 class="o_survey_timer_container timer text-end">
-                        </h1>
+        <t t-set="lang_selector_enabled" t-value="bool(languages)"/>
+        <div class="d-flex flex-wrap flex-md-nowrap justify-content-between pt16 mb-2">
+            <div t-attf-class="o_survey_nav flex-grow-1 #{'order-2 order-md-1' if lang_selector_enabled else None}">
+                <div class="container m-0 p-0">
+                    <div class="row">
+                        <div  class="col-lg-10">
+                            <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
+                                t-esc="survey.title" class="o_survey_main_title pt-4"/>
+                        </div>
+                        <div class="o_survey_timer col-lg-2 pt-4">
+                            <h1 class="o_survey_timer_container timer text-end"/>
+                        </div>
                     </div>
                 </div>
+                <div t-att-class="'o_survey_breadcrumb_container mt8' + (' d-none ' if answer.state != 'in_progress' else '')"
+                     t-if="not survey.has_conditional_questions and survey.questions_layout == 'page_per_section' and answer.state != 'done'"
+                     t-att-data-can-go-back="survey.users_can_go_back"
+                     t-att-data-pages="json.dumps(breadcrumb_pages)" />
             </div>
-            <div t-att-class="'o_survey_breadcrumb_container mt8' + (' d-none ' if answer.state != 'in_progress' else '')"
-                 t-if="not survey.has_conditional_questions and survey.questions_layout == 'page_per_section' and answer.state != 'done'"
-                t-att-data-can-go-back="survey.users_can_go_back"
-                t-att-data-pages="json.dumps(breadcrumb_pages)" />
+            <form t-if="lang_selector_enabled" method="post" class="order-1 order-md-2 o_lang_selector">
+                <select name="lang_code"
+                        onchange="this.form.submit()"
+                        class="form-select" aria-label="Select a language">
+                    <option t-foreach="languages" t-as="language" t-att-value="language[0]" t-out="language[1]"
+                            t-att-selected="language[0] == lang_code and 'selected' or None"/>
+                </select>
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            </form>
         </div>
     </template>
 
@@ -108,7 +119,7 @@
                     if page else survey.background_image_url
                     if survey.background_image_url else False"/>
         <form role="form" method="post" t-att-name="survey.id"
-                class="d-flex flex-grow-1 align-items-center"
+                class="o_survey-fill-form d-flex flex-grow-1 align-items-center"
                 t-att-data-scoring-type="survey.scoring_type"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
