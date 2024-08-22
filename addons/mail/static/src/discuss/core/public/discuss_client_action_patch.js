@@ -35,4 +35,7 @@ patch(DiscussClientAction.prototype, {
         this.publicState.welcome ||=
             this.store.discuss.thread?.defaultDisplayMode === "video_full_screen";
     },
+    closeWelcomePage() {
+        this.publicState.welcome = false;
+    },
 });

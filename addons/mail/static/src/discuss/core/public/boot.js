@@ -17,5 +17,10 @@ import { makeEnv, startServices } from "@web/env";
     await startServices(env);
     env.services["mail.store"].insert(odoo.discuss_data);
     odoo.isReady = true;
-    await mount(MainComponentsContainer, document.body, { env, getTemplate, dev: env.debug });
+    const root = await mount(MainComponentsContainer, document.body, {
+        env,
+        getTemplate,
+        dev: env.debug,
+    });
+    odoo.__WOWL_DEBUG__ = { root };
 })();
