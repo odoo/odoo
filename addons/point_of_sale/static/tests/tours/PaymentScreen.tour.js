@@ -308,11 +308,28 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             PaymentScreen.totalIs("1.90"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.pressNumpad("1 ."),
+<<<<<<< saas-17.1
             PaymentScreen.pressNumpad("2 4"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.24"),
             Dialog.is({ title: "Rounding error in payment lines" }),
             Dialog.bodyIs(
                 "The rounding precision is 0.10 so you should set 1.20 or 1.30 as payment amount instead of 1.24."
             ),
+||||||| 1a58156cdd0cc9beefc472d1d2e481668d694f1e
+            PaymentScreen.pressNumpad("2 4"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.24"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "1.24"),
+            ErrorPopup.isShown(),
+            ErrorPopup.messageBodyContains(
+                // Verify the value displayed are as expected
+                "The rounding precision is 0.10 so you should set 1.20 or 1.30 as payment amount instead of 1.24."
+            ),
+=======
+            PaymentScreen.pressNumpad("9 4"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.94"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "1.94"),
+            PaymentScreen.clickValidate(),
+            ErrorPopup.isShown(),
+>>>>>>> 2865aa7e6fb3e0f39513aec2ba57bc48379ee3db
         ].flat(),
 });
