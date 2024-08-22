@@ -10,6 +10,7 @@
                 <field name="create_calendar_meeting"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Country" name="country" context="{'group_by': 'country_id'}"/>
             </search>
         </field>
     </record>
@@ -72,18 +73,21 @@
                     </group>
                     <group>
                         <group name="configuration" id="configuration" string="Configuration">
-                            <field name="responsible_ids"
-                                widget="many2many_tags"
-                                placeholder="Nobody will be notified"
-                                invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type not in ['hr', 'both'])"/>
-                            <field name="request_unit"/>
-                            <field name="include_public_holidays_in_duration"/>
-                            <field name="show_on_dashboard"/>
-                            <field name="support_document" string="Allow To Attach Supporting Document" />
-                            <field name="time_type" required="1"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="country_id" invisible="1"/>
-                            <field name="country_code" invisible="1"/>
+                            <group>
+                                <field name="responsible_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Nobody will be notified"
+                                    invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type not in ['hr', 'both'])"/>
+                                <field name="request_unit"/>
+                                <field name="include_public_holidays_in_duration"/>
+                                <field name="show_on_dashboard"/>
+                                <field name="support_document" string="Allow To Attach Supporting Document" />
+                                <field name="time_type" required="1"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="is_used"/>
+                                <field name="country_id" groups="base.group_multi_company" readonly="company_id or is_used"/>
+                                <field name="country_id" invisible="1"/>
+                                <field name="country_code" invisible="1"/>
+                            </group>
                         </group>
                         <group name="negative_cap" id="negative_cap"
                             string="Negative Cap"
@@ -136,7 +140,8 @@
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>
                 <field name="color" widget="color_picker" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="is_used"/>
+                <field name="country_id" groups="base.group_multi_company" optional="show" readonly="company_id or is_used"/>
             </list>
         </field>
     </record>
