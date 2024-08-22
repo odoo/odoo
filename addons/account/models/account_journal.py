@@ -641,6 +641,9 @@ class AccountJournal(models.Model):
                         'company_id': company.id,
                         'partner_id': company.partner_id.id,
                     })
+            # Since 'default_account_id' isn't visible on MISC (general) journals, any existing value should be cleared to prevent side effects.
+            if vals.get('type') == 'general':
+                vals['default_account_id'] = False
             if 'currency_id' in vals:
                 if journal.bank_account_id:
                     journal.bank_account_id.currency_id = vals['currency_id']
