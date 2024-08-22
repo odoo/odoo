@@ -75,19 +75,3 @@ class Channel(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("website_sale_slides.sale_report_action_slides")
         action['domain'] = [('product_id', 'in', self.product_id.ids)]
         return action
-
-    def _filter_add_members(self, target_partners, raise_on_access=False):
-        """ Overridden to add 'payment' channels to the filtered channels. People
-        that can write on payment-based channels can add members. """
-        result = super(Channel, self)._filter_add_members(target_partners, raise_on_access=raise_on_access)
-        on_payment = self.filtered(lambda channel: channel.enroll == 'payment')
-        if on_payment:
-            try:
-                on_payment.check_access_rights('write')
-                on_payment.check_access_rule('write')
-            except AccessError:
-                if raise_on_access:
-                    raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
-            else:
-                result |= on_payment
-        return result

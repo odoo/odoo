@@ -18,6 +18,7 @@ This module add completed courses to resume for employees.
         'views/hr_employee_views.xml',
         'views/hr_templates.xml',
         'data/hr_resume_data.xml',
+        'data/mail_templates_chatter.xml',
     ],
     'auto_install': True,
     'assets': {

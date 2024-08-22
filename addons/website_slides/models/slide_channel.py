@@ -917,7 +917,7 @@ class Channel(models.Model):
                 :return: returns the union of new records and the ones unarchived.
         """
         SlideChannelPartnerSudo = self.env['slide.channel.partner'].sudo()
-        allowed_channels = self._filter_add_members(target_partners, raise_on_access=raise_on_access)
+        allowed_channels = self._filter_add_members(raise_on_access=raise_on_access)
         if not allowed_channels or not target_partners:
             return SlideChannelPartnerSudo
 
@@ -971,18 +971,20 @@ class Channel(models.Model):
                 )
         return result_channel_partners
 
-    def _filter_add_members(self, target_partners, raise_on_access=False):
+    def _filter_add_members(self, raise_on_access=False):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
-        on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
-        if on_invite:
-            try:
-                on_invite.check_access_rights('write')
-                on_invite.check_access_rule('write')
-            except AccessError:
-                if raise_on_access:
-                    raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
-            else:
-                allowed |= on_invite
+        if controlled_access := self - allowed:
+            # If not raise, check each type independently as they may have different rules.
+            batches = [controlled_access] if raise_on_access else controlled_access.grouped('enroll').values()
+            for controlled_access_with_enroll in batches:
+                try:
+                    controlled_access_with_enroll.check_access_rights('write')
+                    controlled_access_with_enroll.check_access_rule('write')
+                except AccessError:
+                    if raise_on_access:
+                        raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
+                else:
+                    allowed |= controlled_access_with_enroll
         return allowed
 
     def _add_groups_members(self):
