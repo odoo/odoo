@@ -13,10 +13,4 @@ class TestAutomaticEditor(TestConfiguratorCommon):
         group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
         if group_order_template:
             self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
-        self.env['res.lang'].create({
-            'name': 'Parseltongue',
-            'code': 'pa_GB',
-            'iso_code': 'pa_GB',
-            'url_code': 'pa_GB',
-        })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'automatic_editor_on_new_website', login='admin')
+        self.start_tour('/web#action=website.action_website_configuration', 'automatic_editor_on_new_website', login='admin')
