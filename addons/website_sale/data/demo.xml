@@ -124,51 +124,266 @@
         </record>
         <record id="public_category_furnitures" model="product.public.category">
           <field name="name">Furnitures</field>
-          <field name="sequence">17</field>
+          <field name="sequence">22</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/furnitures.jpg"/>
         </record>
         <record id="public_category_boxes" model="product.public.category">
             <field name="name">Boxes</field>
-            <field name="sequence">20</field>
+            <field name="sequence">29</field>
             <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/boxes.jpg"/>
         </record>
         <record id="public_category_drawers" model="product.public.category">
           <field name="name">Drawers</field>
-          <field name="sequence">21</field>
+          <field name="sequence">35</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/drawers.jpg"/>
         </record>
         <record id="public_category_cabinets" model="product.public.category">
           <field name="name">Cabinets</field>
-          <field name="sequence">22</field>
+          <field name="sequence">40</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/cabinets.jpg"/>
         </record>
         <record id="public_category_bins" model="product.public.category">
           <field name="name">Bins</field>
-          <field name="sequence">23</field>
+          <field name="sequence">45</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/bins.jpg"/>
         </record>
         <record id="public_category_lamps" model="product.public.category">
           <field name="name">Lamps</field>
-          <field name="sequence">24</field>
+          <field name="sequence">49</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/lamps.jpg"/>
         </record>
-        <record id="services" model="product.public.category">
+        <record id="public_category_services" model="product.public.category">
           <field name="name">Services</field>
-          <field name="sequence">25</field>
+          <field name="sequence">55</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
-          <field name="sequence">26</field>
+          <field name="sequence">59</field>
           <field name="image_1920" type="base64" file="product/static/img/product_product_43-image.jpg"/>
         </record>
 
         <!-- subcategories -->
+
+        <!-- subcategories for desks -->
         <record id="public_category_desks_components" model="product.public.category">
           <field name="parent_id" eval="ref('public_category_desks')"/>
           <field name="name">Components</field>
           <field name="sequence">16</field>
           <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desk_components.jpg"/>
+        </record>
+        <record id="public_category_desks_office" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Office Desks</field>
+          <field name="sequence">17</field>
+        </record>
+        <record id="public_category_desks_gaming" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Gaming Desks</field>
+          <field name="sequence">18</field>
+        </record>
+        <record id="public_category_desks_glass" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Glass Desks</field>
+          <field name="sequence">19</field>
+        </record>
+        <record id="public_category_desks_standing" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Standing Desks</field>
+          <field name="sequence">20</field>
+        </record>
+        <record id="public_category_desks_foldable" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Foldable Desks</field>
+          <field name="sequence">21</field>
+        </record>
+
+        <!-- subcategories for furnitures -->
+        <record id="public_category_furnitures_sofas" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Sofas</field>
+          <field name="sequence">23</field>
+        </record>
+        <record id="public_category_furnitures_chairs" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Chairs</field>
+          <field name="sequence">24</field>
+        </record>
+        <record id="public_category_furnitures_couches" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Couches</field>
+          <field name="sequence">25</field>
+        </record>
+        <record id="public_category_furnitures_recliners" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Recliners</field>
+          <field name="sequence">26</field>
+        </record>
+        <record id="public_category_furnitures_beds" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Beds</field>
+          <field name="sequence">27</field>
+        </record>
+        <record id="public_category_furnitures_wardrobes" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Wardrobes</field>
+          <field name="sequence">28</field>
+        </record>
+
+        <!-- subcategories for boxes -->
+        <record id="public_category_boxes_vintage" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_boxes')"/>
+          <field name="name">Vintage Boxes</field>
+          <field name="sequence">30</field>
+        </record>
+        <record id="public_category_boxes_rustic" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_boxes')"/>
+          <field name="name">Rustic Boxes</field>
+          <field name="sequence">31</field>
+        </record>
+        <record id="public_category_boxes_luxury" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_boxes')"/>
+          <field name="name">Luxury Boxes</field>
+          <field name="sequence">32</field>
+        </record>
+        <record id="public_category_boxes_stackable" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_boxes')"/>
+          <field name="name">Stackable Boxes</field>
+          <field name="sequence">33</field>
+        </record>
+        <record id="public_category_boxes_collapsible" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_boxes')"/>
+          <field name="name">Collapsible Boxes</field>
+          <field name="sequence">34</field>
+        </record>
+
+        <!-- subcategories for drawers -->
+        <record id="public_category_drawers_nightstand" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_drawers')"/>
+          <field name="name">Nightstand Drawers</field>
+          <field name="sequence">36</field>
+        </record>
+        <record id="public_category_drawers_underbed" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_drawers')"/>
+          <field name="name">Under-bed Drawers</field>
+          <field name="sequence">37</field>
+        </record>
+        <record id="public_category_drawers_file" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_drawers')"/>
+          <field name="name">File Drawers</field>
+          <field name="sequence">38</field>
+        </record>
+        <record id="public_category_drawers_kitchen" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_drawers')"/>
+          <field name="name">Kitchen Drawer Units</field>
+          <field name="sequence">39</field>
+        </record>
+
+        <!-- subcategories for cabinets -->
+        <record id="public_category_cabinets_kitchen" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_cabinets')"/>
+          <field name="name">Kitchen Cabinets</field>
+          <field name="sequence">41</field>
+        </record>
+        <record id="public_category_cabinets_bathroom" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_cabinets')"/>
+          <field name="name">Bathroom Cabinets</field>
+          <field name="sequence">42</field>
+        </record>
+        <record id="public_category_cabinets_storage" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_cabinets')"/>
+          <field name="name">Storage Cabinets</field>
+          <field name="sequence">43</field>
+        </record>
+        <record id="public_category_cabinets_medicine" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_cabinets')"/>
+          <field name="name">Medicine Cabinets</field>
+          <field name="sequence">44</field>
+        </record>
+
+        <!-- subcategories for bins -->
+        <record id="public_category_bins_laundry" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_bins')"/>
+          <field name="name">Laundry Bins</field>
+          <field name="sequence">46</field>
+        </record>
+        <record id="public_category_bins_toy" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_bins')"/>
+          <field name="name">Toy Bins</field>
+          <field name="sequence">47</field>
+        </record>
+        <record id="public_category_bins_storage" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_bins')"/>
+          <field name="name">Food Storage Bins</field>
+          <field name="sequence">48</field>
+        </record>
+
+        <!-- subcategories for lamps -->
+        <record id="public_category_lamps_desk" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_lamps')"/>
+          <field name="name">Desk Lamps</field>
+          <field name="sequence">50</field>
+        </record>
+        <record id="public_category_lamps_ceiling" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_lamps')"/>
+          <field name="name">Ceiling Lamps</field>
+          <field name="sequence">51</field>
+        </record>
+        <record id="public_category_lamps_chandelier" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_lamps')"/>
+          <field name="name">Chandeliers</field>
+          <field name="sequence">52</field>
+        </record>
+        <record id="public_category_lamps_touch" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_lamps')"/>
+          <field name="name">Touch Lamps</field>
+          <field name="sequence">53</field>
+        </record>
+
+        <!-- subcategories for services -->
+        <record id="public_category_services_design_and_planning" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_services')"/>
+          <field name="name">Design and Planning</field>
+          <field name="sequence">55</field>
+        </record>
+        <record id="public_category_services_delivery_and_installation" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_services')"/>
+          <field name="name">Delivery and Installation</field>
+          <field name="sequence">56</field>
+        </record>
+        <record id="public_category_services_repair_and_maintenance" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_services')"/>
+          <field name="name">Repair and Maintenance</field>
+          <field name="sequence">57</field>
+        </record>
+        <record id="public_category_services_relocation_and_moving" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_services')"/>
+          <field name="name">Relocation and Moving</field>
+          <field name="sequence">58</field>
+        </record>
+
+        <!-- subcategories for lamps -->
+        <record id="public_category_multimedia_virtual_design" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_multimedia')"/>
+          <field name="name">Virtual Design Tools</field>
+          <field name="sequence">60</field>
+        </record>
+        <record id="public_category_multimedia_augmented_reality" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_multimedia')"/>
+          <field name="name">Augmented Reality Tools</field>
+          <field name="sequence">61</field>
+        </record>
+        <record id="public_category_multimedia_education" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_multimedia')"/>
+          <field name="name">Education Tools</field>
+          <field name="sequence">62</field>
+        </record>
+
+        <record id="product.product_product_1_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_services')])]"/>
+        </record>
+        <record id="product.product_product_2_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_services')])]"/>
         </record>
         <record id="public_category_furnitures_chairs" model="product.public.category">
           <field name="parent_id" eval="ref('public_category_furnitures')"/>
@@ -182,10 +397,10 @@
         </record>
 
         <record id="product.product_product_1_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_services')])]"/>
         </record>
         <record id="product.product_product_2_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_services')])]"/>
         </record>
         <record id="product.product_product_3_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
@@ -624,7 +839,7 @@
             <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="invoice_policy">delivery</field>
-            <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.public_category_services')])]"/>
             <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>
 
