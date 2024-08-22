@@ -354,3 +354,11 @@ test("Toolbar detects image namespace when there is text next to it", async () =
     await waitFor(".o-we-toolbar");
     expect("button[name='image_delete']").toHaveCount(1);
 });
+
+test("Toolbar should not be namespaced for image", async () => {
+    await setupEditor(`
+        <p>a[bc<img class="img-fluid test-image" src="${base64Img}">]def</p>
+    `);
+    await waitFor(".o-we-toolbar");
+    expect("button[name='image_delete']").toHaveCount(0);
+});

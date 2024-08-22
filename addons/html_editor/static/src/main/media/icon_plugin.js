@@ -11,9 +11,13 @@ export class IconPlugin extends Plugin {
                 {
                     id: "icon",
                     isApplied: (traversedNodes) =>
-                        // Last traversed nodes are an icon and its ZWS child.
-                        traversedNodes.at(-1)?.textContent === "\u200b" &&
-                        traversedNodes.at(-2)?.classList?.contains("fa"),
+                        traversedNodes.every(
+                            (node) =>
+                                // All nodes should be icons, its ZWS child or its ancestors
+                                node.classList?.contains("fa") ||
+                                node.parentElement.classList.contains("fa") ||
+                                node.querySelector?.(".fa")
+                        ),
                 },
             ],
             toolbarCategory: [
