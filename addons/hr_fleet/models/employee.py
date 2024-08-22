@@ -17,17 +17,26 @@ class Employee(models.Model):
 
     def action_open_employee_cars(self):
         self.ensure_one()
-        cars = self.env['fleet.vehicle.assignation.log'].search([
-            ('driver_id', 'in', (self.user_id.partner_id | self.sudo().address_home_id).ids)]).mapped('vehicle_id')
-
-        return {
+        cars = self.env['fleet.vehicle.assignation.log'].sudo().search([
+            ('driver_id', 'in', (self.user_id.partner_id | self.sudo().address_home_id).ids)
+        ]).mapped('vehicle_id').sudo(False)
+        response = {
             "type": "ir.actions.act_window",
             "res_model": "fleet.vehicle",
-            "views": [[False, "kanban"], [False, "form"], [False, "tree"]],
-            "domain": [("id", "in", cars.ids)],
             "context": dict(self._context, create=False),
             "name": "History Employee Cars",
         }
+        if len(cars) > 1:
+            response.update({
+                'views': [[False, 'kanban'], [False, 'form'], [False, 'tree']],
+                'domain': [("id", "in", cars.ids)],
+            })
+        else:
+            response.update({
+                'views': [[False, 'form']],
+                'res_id': cars.id,
+            })
+        return response
 
     def _compute_employee_cars_count(self):
         for employee in self:
