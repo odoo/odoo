@@ -15,7 +15,7 @@ import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.osv.expression import AND
 
 _logger = logging.getLogger(__name__)
@@ -1227,7 +1227,14 @@ class PosOrder(models.Model):
             `export_as_JSON` of models.Order. This is useful for back-and-forth communication
             between the pos frontend and backend.
         """
-        return self.mapped(self._export_for_ui) if self else []
+        results = []
+        for order in self:
+            try:
+                results.append(self._export_for_ui(order))
+            except AccessError:
+                # Skip the order in case of AccessError
+                continue
+        return results
 
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
