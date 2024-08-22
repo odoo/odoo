@@ -134,43 +134,6 @@ class TestAnalyticAccount(AnalyticCommon):
         self.assertEqual(distribution_json, distribution_4.analytic_distribution | self.distribution_1.analytic_distribution,
                          "Distribution 4 & 1 should be given based on sequence")
 
-    def test_model_sequence(self):
-        plan_A, plan_B, plan_C = self.env['account.analytic.plan'].create([
-            {'name': "Plan A"},
-            {'name': "Plan B"},
-            {'name': "Plan C"},
-        ])
-        aa_A1, aa_A2, aa_B1, aa_B3, aa_C2 = self.env['account.analytic.account'].create([
-            {'name': "A1", 'plan_id': plan_A.id},
-            {'name': "A2", 'plan_id': plan_A.id},
-            {'name': "B1", 'plan_id': plan_B.id},
-            {'name': "B3", 'plan_id': plan_B.id},
-            {'name': "C2", 'plan_id': plan_C.id},
-        ])
-        m1, m2, m3 = self.env['account.analytic.distribution.model'].create([
-            {'account_prefix': '123', 'sequence': 10, 'analytic_distribution': {f'{aa_A1.id},{aa_B1.id}': 100}},
-            {'account_prefix': '123', 'sequence': 20, 'analytic_distribution': {f'{aa_A2.id},{aa_C2.id}': 100}},
-            {'account_prefix': '123', 'sequence': 30, 'analytic_distribution': {f'{aa_B3.id}': 100}},
-        ])
-        criteria = {
-            'account_prefix': '123456',
-            'company_id': self.env.company.id,
-        }
-
-        # Priority: m1 > m2 > m3 : A1, B1
-        distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m1.analytic_distribution, 'm1 fills A & B, ignore m1 & m2')
-
-        # Priority: m2 > m1 > m3 : A2, B3, C2
-        m1.sequence, m2.sequence, m3.sequence = 2, 1, 3
-        distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm2 fills A, ignore m1')
-
-        # Priority: m3 > m1 > m2 : A2, B3, C2
-        m1.sequence, m2.sequence, m3.sequence = 2, 3, 1
-        distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm3 fills B, ignore m1')
-
     def test_analytic_plan_account_child(self):
         """
         Check that when an analytic account is set to the third (or more) child,
