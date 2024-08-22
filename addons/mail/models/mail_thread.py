@@ -3169,7 +3169,9 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries;
         """
         bus_notifications = []
-        inbox_pids_uids = [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+        inbox_pids_uids = sorted(
+            [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+        )
         if inbox_pids_uids:
             notif_create_values = [
                 {
