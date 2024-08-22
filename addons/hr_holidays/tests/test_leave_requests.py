@@ -1084,7 +1084,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
 
         self.assertEqual(sick_leave.duration_display, '3 days')
-        self.assertEqual(comp_leave.duration_display, '4 hours')
+        self.assertEqual(comp_leave.duration_display, '4:00 hours')
 
         calendar.global_leave_ids = [(0, 0, {
             'name': 'Winter Holidays',
@@ -1095,7 +1095,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         msg = "hr_holidays: duration_display should update after adding an overlapping holiday"
         self.assertEqual(sick_leave.duration_display, '2 days', msg)
-        self.assertEqual(comp_leave.duration_display, '0 hours', msg)
+        self.assertEqual(comp_leave.duration_display, '0:00 hours', msg)
 
     def test_duration_display_public_leave_include(self):
         """

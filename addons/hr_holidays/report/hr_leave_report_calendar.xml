@@ -69,6 +69,7 @@
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
                 <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
+                <filter name="groupby_time_off_type" string="Time Off Type" context="{'group_by': 'holiday_status_id'}"/>
                 <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 <filter name="groupby_department_id" context="{'group_by': 'department_id'}"/>
             </search>

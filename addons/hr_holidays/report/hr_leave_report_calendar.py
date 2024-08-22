@@ -28,6 +28,7 @@ class LeaveReportCalendar(models.Model):
         ('validate', 'Approved')
     ], readonly=True)
     description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
+    holiday_status_id = fields.Many2one('hr.leave.type', readonly=True, string="Time Off Type")
 
     is_hatched = fields.Boolean('Hatched', readonly=True)
     is_striked = fields.Boolean('Striked', readonly=True)
@@ -51,6 +52,7 @@ class LeaveReportCalendar(models.Model):
             hl.department_id AS department_id,
             hl.number_of_days as duration,
             hl.private_name AS description,
+            hl.holiday_status_id AS holiday_status_id,
             em.company_id AS company_id,
             em.job_id AS job_id,
             COALESCE(
