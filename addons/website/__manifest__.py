@@ -103,6 +103,7 @@
         'views/snippets/s_striped.xml',
         'views/snippets/s_intro_pill.xml',
         'views/snippets/s_big_number.xml',
+        'views/snippets/s_wavy_grid.xml',
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_pricelist_cafe.xml',
         'views/snippets/s_progress_bar.xml',
