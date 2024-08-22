@@ -21,7 +21,7 @@ regular Odoo interface anymore.
 """,
     'assets': {
         'web.assets_backend': [
-            'hw_posbox_homepage/static/img/*',
+            'hw_posbox_homepage/static/*/**',
         ],
     },
     'installable': False,
