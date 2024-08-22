@@ -17,3 +17,4 @@ from . import test_upload_attachment
 from . import test_res_users
 from . import test_session_history
 from . import test_user_livechat_username
+from . import test_session_history_open
