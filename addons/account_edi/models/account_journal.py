@@ -7,6 +7,15 @@ from odoo.exceptions import UserError
 from collections import defaultdict
 
 
+def batched(iterable, chunk_size):
+    chunk = iterable[:chunk_size]
+    pos = chunk_size
+    while chunk:
+        yield chunk
+        chunk = iterable[pos:pos + chunk_size]
+        pos += chunk_size
+
+
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
@@ -71,7 +80,8 @@ class AccountJournal(models.Model):
         else:
             protected_edi_formats_per_journal = defaultdict(set)
 
-        for journal in self:
+        for batch in batched(self, 10000):
+          for journal in batch.with_context(tracking_disable=True):
             enabled_edi_formats = edi_formats.filtered(lambda e: e._is_compatible_with_journal(journal) and
                                                                  (e._is_enabled_by_default_on_journal(journal)
                                                                   or (e in journal.edi_format_ids)))
@@ -81,3 +91,6 @@ class AccountJournal(models.Model):
             protected_edi_formats = journal.edi_format_ids.filtered(lambda e: e.id in protected_edi_format_ids)
 
             journal.edi_format_ids = enabled_edi_formats + protected_edi_formats
+          batch.flush_recordset()
+          batch.invalidate_recordset()
+
