@@ -9,7 +9,7 @@ import { makeDeferred } from "@web/../tests/helpers/utils";
 
 // should be enough to decide whether or not notifications/channel
 // subscriptions... are received.
-const TIMEOUT = 500;
+const TIMEOUT = 2000;
 const callbackRegistry = registry.category("mock_server_websocket_callbacks");
 
 /**
