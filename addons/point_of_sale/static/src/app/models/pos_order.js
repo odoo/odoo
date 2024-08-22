@@ -867,7 +867,7 @@ export class PosOrder extends Base {
     }
 
     is_paid() {
-        return this.get_due() <= 0 && this.check_paymentlines_rounding();
+        return this.get_due() <= 0;
     }
 
     is_paid_with_cash() {
