@@ -32,6 +32,10 @@ export class ImportDataSidepanel extends Component {
     }
 
     setOptionValue(name, value) {
+        if(name === "limit"){
+            this.props.onOptionChanged("limit", !isNaN(parseFloat(value)) ? Number(value) : 1);
+            return
+        }
         this.props.onOptionChanged(name, isNaN(parseFloat(value)) ? value : Number(value));
     }
 
