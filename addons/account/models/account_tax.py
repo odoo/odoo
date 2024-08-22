@@ -1362,7 +1362,7 @@ class AccountTax(models.Model):
         if not self:
             company = self.env.company
         else:
-            company = self[0].company_id._accessible_branches()[:1]
+            company = self[0].company_id._accessible_branches()[:1] or self[0].company_id
 
         # Compute tax details for a single line.
         currency = currency or company.currency_id
