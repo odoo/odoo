@@ -5,13 +5,14 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 export class PaymentMercadoPago extends PaymentInterface {
     async create_payment_intent() {
-        const line = this.pos.get_order().selected_paymentline;
+        const order = this.pos.get_order();
+        const line = order.selected_paymentline;
         // Build informations for creating a payment intend on Mercado Pago.
         // Data in "external_reference" are send back with the webhook notification
         const infos = {
             amount: parseInt(line.amount * 100, 10),
             additional_info: {
-                external_reference: `${this.pos.pos_session.id}_${line.payment_method.id}`,
+                external_reference: `${this.pos.pos_session.id}_${line.payment_method.id}_${order.uid}`,
                 print_on_terminal: true,
             },
         };
