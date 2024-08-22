@@ -249,10 +249,8 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             // Check the popup error is shown when selecting another payment method
             PaymentScreen.totalIs("1.90"),
             PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.enterPaymentLineAmount("Cash", "1.24"),
-            Dialog.is({ title: "Rounding error in payment lines" }),
-            Dialog.bodyIs(
-                "The rounding precision is 0.10 so you should set 1.20 or 1.30 as payment amount instead of 1.24."
-            ),
+            PaymentScreen.enterPaymentLineAmount("Cash", "1.94"),
+            PaymentScreen.clickValidate(),
+            Dialog.is(),
         ].flat(),
 });
