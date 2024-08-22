@@ -240,7 +240,14 @@
     <record id="hr_holidays_status_rule_multi_company" model="ir.rule">
         <field name="name">Time Off multi company rule</field>
         <field name="model_id" ref="model_hr_leave_type"/>
-        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <field name="domain_force">[
+            '|', 
+                ('company_id', 'in', company_ids),
+                '&amp;',
+                    ('company_id', '=', False),
+                    ('country_id', 'in', user.env.companies.country_id.ids + [False])
+        ]
+        </field>
     </record>
 
     <record id="hr_leave_accrual_plan_rule_multi_company" model="ir.rule">
