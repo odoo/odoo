@@ -3,9 +3,10 @@
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from odoo import api, Command, fields, models
+from odoo import _, api, Command, fields, models
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
+from odoo.exceptions import ValidationError
 
 
 class StockMoveLine(models.Model):
@@ -342,6 +343,12 @@ class StockMove(models.Model):
         if self.raw_material_production_id and not self.manual_consumption and self.picked and self.product_uom and \
            float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
             self.manual_consumption = True
+
+    @api.constrains('quantity', 'raw_material_production_id')
+    def _check_negative_quantity(self):
+        for move in self:
+            if move.raw_material_production_id and float_compare(move.quantity, 0, precision_rounding=move.product_uom.rounding) < 0:
+                raise ValidationError(_("Please enter a positive quantity."))
 
     @api.model
     def default_get(self, fields_list):
