@@ -21,9 +21,11 @@ export class ImagePlugin extends Plugin {
             toolbarNamespace: [
                 {
                     id: "image",
-                    isApplied: (traversedNodes) => {
-                        return traversedNodes.at(-1)?.tagName === "IMG";
-                    },
+                    isApplied: (traversedNodes) =>
+                        traversedNodes.every(
+                            // All nodes should be images or its ancestors
+                            (node) => node.nodeName === "IMG" || node.querySelector?.("img")
+                        ),
                 },
             ],
             toolbarCategory: [

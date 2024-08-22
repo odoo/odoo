@@ -15,6 +15,24 @@ test("icon toolbar is displayed (2)", async () => {
     expect(".btn-group[name='icon_size']").toHaveCount(1);
 });
 
+test("icon toolbar is displayed (3)", async () => {
+    await setupEditor(`<p>abc[<span class="fa fa-glass"></span>]def</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='icon_size']").toHaveCount(1);
+});
+
+test("toolbar should not be namespaced for icon", async () => {
+    await setupEditor(`<p>a[bc<span class="fa fa-glass"></span>]def</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='icon_size']").toHaveCount(0);
+});
+
+test("toolbar should not be namespaced for icon (2)", async () => {
+    await setupEditor(`<p>abc[<span class="fa fa-glass"></span>de]f</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='icon_size']").toHaveCount(0);
+});
+
 test("Can resize an icon", async () => {
     await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
     await waitFor(".o-we-toolbar");
