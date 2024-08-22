@@ -521,10 +521,16 @@ class Website(models.Model):
         company = website.company_id
         if logo_attachment_id:
             attachment = self.env['ir.attachment'].browse(logo_attachment_id)
+            media = self.env['html_editor.media'].browse(attachment.res_id)
             attachment.write({
                 'res_model': 'website',
                 'res_field': 'logo',
                 'res_id': website.id,
+                'public': True,
+            })
+            media.write({
+                'res_model': None,
+                'res_id': None,
             })
         elif not logo_attachment_id and not company.uses_default_logo:
             website.logo = company.logo.decode('utf-8')

@@ -24,14 +24,22 @@ DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
 
-def get_existing_attachment(IrAttachment, vals):
+def get_existing_attachment(IrAttachment, vals, Media=None):
     """
     Check if an attachment already exists for the same vals. Return it if
     so, None otherwise.
     """
     fields = dict(vals)
-    # Falsy res_id defaults to 0 on attachment creation.
-    fields['res_id'] = fields.get('res_id') or 0
+    if Media is not None:
+        # For a media attachment, the res_id is the media's id, which (if it
+        # exists) we don't know at this point. We do the comparison on the rest.
+        res_model, res_id = fields.pop('res_model'), fields.pop('res_id')
+        fields.pop('media_type', None)
+        fields['res_model'] = 'html_editor.media'
+        fields['res_field'] = 'media_content'
+    else:
+        # Falsy res_id defaults to 0 on attachment creation.
+        fields['res_id'] = fields.get('res_id') or 0
     raw, datas = fields.pop('raw', None), fields.pop('datas', None)
     domain = [(field, '=', value) for field, value in fields.items()]
     if fields.get('type') == 'url':
@@ -42,7 +50,18 @@ def get_existing_attachment(IrAttachment, vals):
         if not (raw or datas):
             return None
         domain.append(('checksum', '=', IrAttachment._compute_checksum(raw or b64decode(datas))))
-    return IrAttachment.search(domain, limit=1) or None
+    attachment = IrAttachment.search(domain, limit=1) or None
+
+    # The attachment already exists, but maybe its media is on another record.
+    if attachment and Media is not None:
+        media = Media.search([
+            ('id', '=', attachment.res_id),
+            ('res_id', '=', res_id or 0),
+            ('res_model', '=', res_model),
+        ])
+        if not media:
+            attachment = None
+    return attachment
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -235,6 +254,7 @@ class Web_Editor(http.Controller):
         """
         self._clean_context()
         Attachment = attachments_to_remove = request.env['ir.attachment']
+        Media = media = media_to_remove = request.env['html_editor.media']
         Views = request.env['ir.ui.view']
 
         # views blocking removal of the attachment
@@ -252,12 +272,22 @@ class Web_Editor(http.Controller):
 
             if views:
                 removal_blocked_by[attachment.id] = views.read(['name'])
+                continue
+
+            # For original attachments: find the media that generated it.
+            if attachment.res_model == 'html_editor.media':
+                media = Media.search([('id', '=', attachment.res_id)])
+            if media:
+                # The media will automatically delete its attachment.
+                media_to_remove += media
             else:
                 attachments_to_remove += attachment
+
+        if media_to_remove:
+            media_to_remove.unlink()
         if attachments_to_remove:
             attachments_to_remove.unlink()
         return removal_blocked_by
-
 
     def _clean_context(self):
         # avoid allowed_company_ids which may erroneously restrict based on website

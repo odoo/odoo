@@ -34,23 +34,30 @@ class TestAttachmentController(HttpCase):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         payload = self._build_payload({'name': 'pixel', 'data': self.pixel, 'is_image': True, 'res_model': 'forum.post', 'res_id': post.id})
         self.portal_user.karma = 30
-        response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers, timeout=60000)
+        response = self.url_open('/html_editor/media/add_data', data=json.dumps(payload), headers=self.headers, timeout=60000)
         self.assertEqual(200, response.status_code)
-        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel')])
+        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel'), ('res_field', '=', 'media_content')])
         self.assertTrue(attachment)
 
     def test_02_admin_attachment(self):
         self.authenticate(self.admin_user.login, self.admin_user.login)
         payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True, "res_model": "forum.post"})
-        response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
+        response = self.url_open('/html_editor/media/add_data', data=json.dumps(payload), headers=self.headers)
         self.assertEqual(200, response.status_code)
-        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel')])
+        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel'), ('res_field', '=', 'media_content')])
         self.assertTrue(attachment)
 
-        attachment = self.env['ir.attachment'].create([{'name': 'test_pixel', 'public': True, 'res_id': False,
-                                                        'mimetype': 'text/plain', 'res_model': 'forum.post',
-                                                        'raw': self.pixel, 'website_id': self.env.ref('website.default_website').id}])
-        domain = [('name', '=', 'test_pixel')]
-        result = attachment.search(domain, limit=1)
+        attachment = self.env['html_editor.media'].create([{
+            'name': 'test_pixel',
+            'public': True,
+            'res_id': False,
+            'mimetype': 'text/plain',
+            'media_type': 'document',
+            'res_model': 'forum.post',
+            'datas': self.pixel,
+            'website_id': self.env.ref('website.default_website').id
+        }]).attachment_id
+        domain = [('name', '=', 'test_pixel'), ('res_field', '=', 'media_content')]
+        result = self.env['ir.attachment'].search(domain, limit=1)
         self.assertTrue(result, "No attachment fetched")
         self.assertEqual(result.id, attachment.id)

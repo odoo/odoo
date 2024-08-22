@@ -118,22 +118,12 @@ export class ImageSelector extends FileSelector {
         return [...super.allAttachments, ...this.state.libraryMedia];
     }
 
-    get attachmentsDomain() {
-        const domain = super.attachmentsDomain;
-        domain.push(['mimetype', 'in', IMAGE_MIMETYPES]);
+    get mediaDomain() {
+        const domain = super.mediaDomain;
+        domain.push(["media_type", "=", "image"]);
         if (!this.props.useMediaLibrary) {
             domain.push('|', ['url', '=', false], '!', ['url', '=ilike', '/web_editor/shape/%']);
         }
-        domain.push('!', ['name', '=like', '%.crop']);
-        domain.push('|', ['type', '=', 'binary'], '!', ['url', '=like', '/%/static/%']);
-
-        // There is no point to fetch optimized images (meaning they are related
-        // to an `original_id`) as those are not shown. Worst, it leads to bugs:
-        // it might fetch only optimized images when clicking on "load more"
-        // which will look like it's bugged as no images will appear on screen
-        // (they all will be hidden).
-        domain.push(['original_id', '=', false]);
-
         return domain;
     }
 
@@ -330,7 +320,7 @@ export class ImageSelector extends FileSelector {
                     [accessToken] = await orm.call(
                         'ir.attachment',
                         'generate_access_token',
-                        [attachment.id],
+                        [attachment.attacmhent_id],
                     );
                 }
                 src += `?access_token=${encodeURIComponent(accessToken)}`;

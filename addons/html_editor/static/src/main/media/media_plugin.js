@@ -221,7 +221,7 @@ export class MediaPlugin extends Plugin {
     }
 
     createAttachment({ el, imageData, resModel, resId }) {
-        return rpc("/html_editor/attachment/add_data", {
+        return rpc("/html_editor/media/add_data", {
             name: el.dataset.fileName || "",
             data: imageData,
             is_image: true,
@@ -259,7 +259,7 @@ export class MediaPlugin extends Plugin {
         }
         if (attachment.mimetype === "image/webp") {
             el.classList.add("o_modified_image_to_save");
-            el.dataset.originalId = attachment.id;
+            el.dataset.originalId = attachment.attachment_id;
             el.dataset.mimetype = attachment.mimetype;
             el.dataset.fileName = attachment.name;
             return this.saveModifiedImage(el, resModel, resId);
@@ -271,7 +271,7 @@ export class MediaPlugin extends Plugin {
                     [accessToken] = await this.services.orm.call(
                         "ir.attachment",
                         "generate_access_token",
-                        [attachment.id]
+                        [attachment.attachment_id]
                     );
                 }
                 src += `?access_token=${encodeURIComponent(accessToken)}`;

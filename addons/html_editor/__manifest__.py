@@ -15,6 +15,10 @@ This addon provides an extensible, maintainable editor.
     'category': 'Hidden',
     'depends': ['base', 'bus', 'web'],
     'auto_install': True,
+    'data': [
+        'security/ir.model.access.csv',
+        'views/ir_attachment_views.xml',
+    ],
     'assets': {
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog')

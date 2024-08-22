@@ -3498,7 +3498,7 @@ export class Wysiwyg extends Component {
             return;
         }
         const attachment = await this._serviceRpc(
-            '/web_editor/attachment/add_data',
+            "/web_editor/media/add_data",
             {
                 name: el.dataset.fileName || '',
                 data: imageData,
@@ -3521,7 +3521,7 @@ export class Wysiwyg extends Component {
                     [accessToken] = await this.orm.call(
                         'ir.attachment',
                         'generate_access_token',
-                        [attachment.id],
+                        [attachment.attachment_id],
                     );
                 }
                 src += `?access_token=${encodeURIComponent(accessToken)}`;

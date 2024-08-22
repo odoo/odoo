@@ -238,12 +238,13 @@ def create_image_attachment(env, image_path, image_name):
     :param image_name: the name to give to the image (e.g. 's_banner_default_image.jpg')
     :return: the image attachment
     """
-    IrAttachment = env['ir.attachment']
+    Media = env['html_editor.media']
     base = 'http://%s:%s' % (HOST, config['http_port'])
-    img = IrAttachment.create({
+    img = Media.create({
         'public': True,
         'name': image_name,
-        'type': 'url',
+        'res_model': 'ir.ui.view',
         'url': base + image_path,
+        'media_type': 'image',
     })
-    return img
+    return img.attachment_id

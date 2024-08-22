@@ -670,7 +670,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         });
 
         const mockRPC = async function (route, args) {
-            if (route === '/web_editor/attachment/add_data') {
+            if (route === "/web_editor/media/add_data") {
                 // Check that the correct record model and id were sent.
                 assert.equal(args.res_model, 'partner');
                 assert.equal(args.res_id, 1);
@@ -1208,12 +1208,14 @@ export const uploadTestModule = QUnit.module(
                     assert.equal(createVals.attachment_ids[0][1], 5); // on attachment id "5"
                     webSaveTriggered.resolve();
                 }
-                if (route === "/web_editor/attachment/add_data") {
+                if (route === "/web_editor/media/add_data") {
                     const attachment = {
-                        id: 5,
+                        id: 2,
+                        attachment_id: 5,
                         name: "test.jpg",
                         description: false,
                         mimetype: "image/jpeg",
+                        media_type: "image",
                         checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
                         url: false,
                         type: "binary",
@@ -1226,6 +1228,7 @@ export const uploadTestModule = QUnit.module(
                         image_height: 1,
                         original_id: false,
                     };
+                    // TODO @media-model: what's the right way to deal with next line?
                     serverData.models["ir.attachment"].records.push({ ...attachment });
                     return Promise.resolve(attachment);
                 } else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {

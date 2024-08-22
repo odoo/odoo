@@ -38,7 +38,7 @@ class TestController(HttpCase):
         self.authenticate('admin', 'admin')
         # Upload document.
         response = self.url_open(
-            '/html_editor/attachment/add_data',
+            '/html_editor/media/add_data',
             headers={'Content-Type': 'application/json'},
             data=json_safe.dumps({'params': {
                 'name': 'test.txt',
@@ -47,7 +47,7 @@ class TestController(HttpCase):
             }})
         ).json()
         self.assertFalse('error' in response, 'Upload failed: %s' % response.get('error', {}).get('message'))
-        attachment_id = response['result']['id']
+        attachment_id = response['result']['attachment_id']
         checksum = response['result']['checksum']
         # Download document and check content.
         response = self.url_open(
@@ -111,7 +111,7 @@ class TestController(HttpCase):
         self.authenticate('admin', 'admin')
         # Upload document.
         response = self.url_open(
-            '/html_editor/attachment/add_data',
+            '/html_editor/media/add_data',
             headers={'Content-Type': 'application/json'},
             data=json_safe.dumps({'params': {
                 'name': 'test.gif',
@@ -121,7 +121,7 @@ class TestController(HttpCase):
         )
         response = response.json()
         self.assertFalse('error' in response, 'Upload failed: %s' % response.get('error', {}).get('message'))
-        attachment_id = response['result']['id']
+        attachment_id = response['result']['attachment_id']
         image_src = response['result']['image_src']
         mimetype = response['result']['mimetype']
         self.assertEqual('image/gif', mimetype, "Wrong mimetype")
@@ -142,12 +142,12 @@ class TestController(HttpCase):
     def test_04_admin_attachment(self):
         self.authenticate(self.admin, self.admin)
         payload = self._build_payload({"name": "pixel", "data": self.pixel, "is_image": True})
-        response = self.url_open('/html_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers)
+        response = self.url_open('/html_editor/media/add_data', data=json.dumps(payload), headers=self.headers)
         self.assertEqual(200, response.status_code)
-        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel')])
+        attachment = self.env['ir.attachment'].search([('name', '=', 'pixel'), ('res_field', '=', 'media_content')])
         self.assertTrue(attachment)
 
-        domain = [('name', '=', 'pixel')]
+        domain = [('name', '=', 'pixel'), ('res_field', '=', 'media_content')]
         result = attachment.search(domain)
         self.assertTrue(len(result), "No attachment fetched")
         self.assertEqual(result, attachment)

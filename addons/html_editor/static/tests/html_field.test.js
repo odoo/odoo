@@ -1745,7 +1745,7 @@ describe("save image", () => {
                 txt: "<p class='test_target'><br></p>",
             },
         ];
-        onRpc("/html_editor/attachment/add_data", async (request) => {
+        onRpc("/html_editor/media/add_data", async (request) => {
             const { params } = await request.json();
             const { res_id, res_model } = params;
             expect.step(`add_data: ${res_model} ${res_id}`);
@@ -1795,7 +1795,7 @@ describe("save image", () => {
         ];
 
         const def = new Deferred();
-        onRpc("/html_editor/attachment/add_data", async (request) => {
+        onRpc("/html_editor/media/add_data", async (request) => {
             const { params } = await request.json();
             const { res_id, res_model } = params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
@@ -1864,7 +1864,7 @@ describe("save image", () => {
         ];
 
         const def = new Deferred();
-        onRpc("/html_editor/attachment/add_data", async (request) => {
+        onRpc("/html_editor/media/add_data", async (request) => {
             const { params } = await request.json();
             const { res_id, res_model } = params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
@@ -1928,7 +1928,7 @@ describe("save image", () => {
                 txt: "<p class='test_target'><br></p>",
             },
         ];
-        onRpc("/html_editor/attachment/add_data", async (request) => {
+        onRpc("/html_editor/media/add_data", async (request) => {
             const { params } = await request.json();
             const { res_id, res_model } = params;
             expect.step(`add_data: ${res_model} ${res_id}`);

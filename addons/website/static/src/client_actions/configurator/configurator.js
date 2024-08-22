@@ -280,7 +280,7 @@ class PaletteSelectionScreen extends Component {
             const previousLogoAttachmentId = this.state.logoAttachmentId;
             const file = logoSelectInput.files[0];
             const data = await getDataURLFromFile(file);
-            const attachment = await rpc('/web_editor/attachment/add_data', {
+            const attachment = await rpc("/html_editor/media/add_data", {
                 'name': 'logo',
                 'data': data.split(',')[1],
                 'is_image': true,
@@ -289,7 +289,7 @@ class PaletteSelectionScreen extends Component {
                 if (previousLogoAttachmentId) {
                     await this._removeAttachments([previousLogoAttachmentId]);
                 }
-                this.state.changeLogo(data, attachment.id);
+                this.state.changeLogo(data, attachment.attachment_id);
                 this.updatePalettes();
             } else {
                 this.notification.add(

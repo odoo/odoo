@@ -233,15 +233,23 @@ export class FileSelector extends Component {
         return this.props.selectedMedia[this.props.id].filter(media => media.mediaType === 'attachment').map(({ id }) => id);
     }
 
-    get attachmentsDomain() {
-        const domain = [
-            '&',
-            ['res_model', '=', this.props.resModel],
-            ['res_id', '=', this.props.resId || 0]
+    get mediaDomain() {
+        return [
+            "|", ["public", "=", true],
+                 "&", ["res_model", "in", [false, this.props.resModel]],
+                      ["res_id", "in", [0, this.props.resId]],
+            ["name", "ilike", this.state.needle],
         ];
-        domain.unshift('|', ['public', '=', true]);
-        domain.push(['name', 'ilike', this.state.needle]);
-        return domain;
+    }
+
+    get attachmentsDomain() {
+        return [
+            // We check more than just res_field == "media_content" because the
+            // link to the media may have been removed while the m2o
+            // relationship still exists (e.g.: website logo). The mediaDomain
+            // already ensures that attachments are related to a media anyway.
+            ["res_field", "!=", false],
+        ];
     }
 
     get allAttachments() {
@@ -259,20 +267,46 @@ export class FileSelector extends Component {
         this.state.isFetchingAttachments = true;
         let attachments = [];
         try {
-            attachments = await this.orm.call(
-                'ir.attachment',
-                'search_read',
-                [],
+            attachments = (await this.orm.webSearchRead(
+                "html_editor.media",
+                [
+                    ...this.mediaDomain,
+                    ["attachment_id", "any", this.attachmentsDomain],
+                ],
                 {
-                    domain: this.attachmentsDomain,
-                    fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
-                    order: 'id desc',
-                    // Try to fetch first record of next page just to know whether there is a next page.
-                    limit,
+                    specification: {
+                        id: {},
+                        name: {},
+                        res_model: {},
+                        res_id: {},
+                        url: {},
+                        public: {},
+                        attachment_id: {
+                            fields: {
+                                description: {},
+                                mimetype: {},
+                                checksum: {},
+                                type: {},
+                                access_token: {},
+                                original_id: {},
+                                image_src: {},
+                                image_width: {},
+                                image_height: {},
+                            },
+                        },
+                    },
+                    order: "id desc",
                     offset,
+                    limit,
                 }
-            );
-            attachments.forEach(attachment => attachment.mediaType = 'attachment');
+            )).records;
+            attachments.forEach(attachment => {
+                const attachmentId = attachment.attachment_id.id;
+                delete attachment.attachment_id.id;
+                Object.assign(attachment, attachment.attachment_id);
+                attachment.attachment_id = attachmentId;
+                attachment.mediaType = "attachment";
+            });
         } catch (e) {
             // Reading attachments as a portal user is not permitted and will raise
             // an access error so we catch the error silently and don't return any

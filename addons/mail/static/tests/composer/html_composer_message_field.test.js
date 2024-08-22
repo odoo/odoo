@@ -64,7 +64,7 @@ test("media dialog: upload", async function () {
         expect(createVals.attachment_ids[0][0]).toBe(4); // link command
         expect(createVals.attachment_ids[0][1]).toBe(newAttachmentId); // on attachment id "5"
     });
-    onRpc("/html_editor/attachment/add_data", () => {
+    onRpc("/html_editor/media/add_data", () => {
         const attachment = {
             name: "test.jpg",
             description: false,

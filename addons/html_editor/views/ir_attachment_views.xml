@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_attachment_search_inherit_html_editor" model="ir.ui.view">
+        <field name="name">ir.attachment.search.inherit.html_editor</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="arch" type="xml">
+            <filter name="my_documents_filter" position="after">
+                <filter name="include_media"
+                    string="Uploaded media"
+                    domain="[('res_field', 'in', (None, 'media_content')), ('res_model', '=', 'html_editor.media')]"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>

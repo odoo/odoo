@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Attachment, FileSelector, IMAGE_MIMETYPES } from './file_selector';
+import { Attachment, FileSelector } from "./file_selector";
 
 export class DocumentAttachment extends Attachment {
     static template = "web_editor.DocumentAttachment";
@@ -28,12 +28,9 @@ export class DocumentSelector extends FileSelector {
         this.allLoadedText = _t("All documents have been loaded");
     }
 
-    get attachmentsDomain() {
-        const domain = super.attachmentsDomain;
-        domain.push(['mimetype', 'not in', IMAGE_MIMETYPES]);
-        // The assets should not be part of the documents.
-        // All assets begin with '/web/assets/', see _get_asset_template_url().
-        domain.unshift('&', '|', ['url', '=', null], '!', ['url', '=like', '/web/assets/%']);
+    get mediaDomain() {
+        const domain = super.mediaDomain;
+        domain.push(["media_type", "=", "document"]);
         return domain;
     }
 
@@ -47,7 +44,7 @@ export class DocumentSelector extends FileSelector {
 
         if (this.selectInitialMedia()) {
             for (const attachment of attachments) {
-                if (`/web/content/${attachment.id}` === this.props.media.getAttribute('href').replace(/[?].*/, '')) {
+                if (`/web/content/${attachment.attachment_id}` === this.props.media.getAttribute('href').replace(/[?].*/, '')) {
                     this.selectAttachment(attachment);
                 }
             }
@@ -61,14 +58,14 @@ export class DocumentSelector extends FileSelector {
     static async createElements(selectedMedia, { orm }) {
         return Promise.all(selectedMedia.map(async attachment => {
             const linkEl = document.createElement('a');
-            let href = `/web/content/${encodeURIComponent(attachment.id)}?unique=${encodeURIComponent(attachment.checksum)}&download=true`;
+            let href = `/web/content/${encodeURIComponent(attachment.attachment_id)}?unique=${encodeURIComponent(attachment.checksum)}&download=true`;
             if (!attachment.public) {
                 let accessToken = attachment.access_token;
                 if (!accessToken) {
                     [accessToken] = await orm.call(
                         'ir.attachment',
                         'generate_access_token',
-                        [attachment.id],
+                        [attachment.attachment_id],
                     );
                 }
                 href += `&access_token=${encodeURIComponent(accessToken)}`;

@@ -54,7 +54,7 @@ export const uploadService = {
                 fileId++;
             },
             uploadUrl: async (url, { resModel, resId }, onUploaded) => {
-                const attachment = await rpc('/web_editor/attachment/add_url', {
+                const attachment = await rpc("/web_editor/media/add_url", {
                     url,
                     'res_model': resModel,
                     'res_id': resId,
@@ -122,7 +122,7 @@ export const uploadService = {
                             // Don't show yet success as backend code only starts now
                             file.progress = 100;
                         });
-                        const attachment = await rpc('/web_editor/attachment/add_data', {
+                        const attachment = await rpc("/web_editor/media/add_data", {
                             'name': file.name,
                             'data': dataURL.split(',')[1],
                             'res_id': resId,
@@ -148,7 +148,7 @@ export const uploadService = {
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                                 ctx.drawImage(image, 0, 0);
                                 const altDataURL = canvas.toDataURL('image/jpeg', 0.75);
-                                await rpc('/web_editor/attachment/add_data', {
+                                await rpc("/web_editor/media/add_data", {
                                     'name': file.name.replace(/\.webp$/, '.jpg'),
                                     'data': altDataURL.split(',')[1],
                                     'res_id': attachment.id,
