@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Plugin } from "../src/plugin";
@@ -141,4 +141,20 @@ test("setSelection should not set the selection outside the editable", async () 
     await tick();
     const selection = editor.shared.setSelection(editor.shared.getEditableSelection());
     expect(el.contains(selection.anchorNode)).toBe(true);
+});
+
+test("press 'ctrl+a' in 'oe_structure' child should only select his content", async () => {
+    const { el } = await setupEditor(`<div class="oe_structure"><p>a[]b</p><p>cd</p></div>`);
+    press(["ctrl", "a"]);
+    expect(getContent(el)).toBe(`<div class="oe_structure"><p>[ab]</p><p>cd</p></div>`);
+});
+
+test("press 'ctrl+a' in 'contenteditable' should only select his content", async () => {
+    const { el } = await setupEditor(
+        `<div contenteditable="false"><p contenteditable="true">a[]b</p><p contenteditable="true">cd</p></div>`
+    );
+    press(["ctrl", "a"]);
+    expect(getContent(el)).toBe(
+        `<div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div>`
+    );
 });

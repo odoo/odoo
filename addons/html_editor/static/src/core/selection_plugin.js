@@ -8,15 +8,15 @@ import {
     previousLeaf,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
+import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 /**
  * @typedef { Object } EditorSelection
@@ -111,6 +111,9 @@ export class SelectionPlugin extends Plugin {
         "rectifySelection",
         // "collapseIfZWS",
     ];
+    static resources = (p) => ({
+        shortcuts: [{ hotkey: "control+a", command: "SELECT_ALL" }],
+    });
 
     setup() {
         this.resetSelection();
@@ -134,6 +137,22 @@ export class SelectionPlugin extends Plugin {
             this.isPointerDown = false;
             this.preventNextMousedownFix = false;
         });
+    }
+
+    handleCommand(command, payload) {
+        switch (command) {
+            case "SELECT_ALL":
+                {
+                    const selection = this.getEditableSelection();
+                    const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
+                    const container =
+                        selection && closestElement(selection.anchorNode, containerSelector);
+                    const [anchorNode, anchorOffset, focusNode, focusOffset] =
+                        boundariesIn(container);
+                    this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                }
+                break;
+        }
     }
 
     resetSelection() {
