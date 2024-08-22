@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { isEditorTab, isZWS } from "@html_editor/utils/dom_info";
+import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
@@ -17,8 +17,7 @@ const GRID_COLUMN_WIDTH = 40; //@todo Configurable?
  */
 function isIndentationTab(tab) {
     return !getAdjacentPreviousSiblings(tab).some(
-        (sibling) =>
-            sibling.nodeType === Node.TEXT_NODE && !/^[\u200B\s]*$/.test(sibling.textContent)
+        (sibling) => isTextNode(sibling) && !/^[\u200B\s]*$/.test(sibling.textContent)
     );
 }
 

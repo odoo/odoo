@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
 import { cleanTextNode, unwrapContents } from "../utils/dom";
-import { isVisibleTextNode, isZWS } from "../utils/dom_info";
+import { isTextNode, isVisibleTextNode, isZWS } from "../utils/dom_info";
 import { closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
@@ -159,9 +159,7 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     hasSelectionFormat(format) {
-        const selectedNodes = this.shared
-            .getTraversedNodes()
-            .filter((n) => n.nodeType === Node.TEXT_NODE);
+        const selectedNodes = this.shared.getTraversedNodes().filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.some((n) => isFormatted(n, this.editable));
     }
@@ -176,7 +174,7 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, traversedNodes = this.shared.getTraversedNodes()) {
-        const selectedNodes = traversedNodes.filter((n) => n.nodeType === Node.TEXT_NODE);
+        const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
     }
@@ -197,10 +195,7 @@ export class FormatPlugin extends Plugin {
 
         let zws;
         if (selection.isCollapsed) {
-            if (
-                selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                selection.anchorNode.textContent === "\u200b"
-            ) {
+            if (isTextNode(selection.anchorNode) && selection.anchorNode.textContent === "\u200b") {
                 zws = selection.anchorNode;
                 this.shared.setSelection({
                     anchorNode: zws,
@@ -400,7 +395,7 @@ export class FormatPlugin extends Plugin {
     }
 
     cleanZWS(element) {
-        const textNodes = descendants(element).filter((node) => node.nodeType === Node.TEXT_NODE);
+        const textNodes = descendants(element).filter(isTextNode);
         const cursors = this.shared.preserveSelection();
         for (const node of textNodes) {
             cleanTextNode(node, "\u200B", cursors);

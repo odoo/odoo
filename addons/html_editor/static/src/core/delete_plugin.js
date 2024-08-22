@@ -9,6 +9,7 @@ import {
     isSelfClosingElement,
     isShrunkBlock,
     isTangible,
+    isTextNode,
     isWhitespace,
     isZWS,
     nextLeaf,
@@ -875,10 +876,7 @@ export class DeletePlugin extends Plugin {
      */
     includeNextZWS(range) {
         const { endContainer, endOffset } = range;
-        if (
-            endContainer.nodeType === Node.TEXT_NODE &&
-            endContainer.textContent[endOffset] === "\u200B"
-        ) {
+        if (isTextNode(endContainer) && endContainer.textContent[endOffset] === "\u200B") {
             range.setEnd(endContainer, endOffset + 1);
         }
         return range;
@@ -891,7 +889,7 @@ export class DeletePlugin extends Plugin {
     includePreviousZWS(range) {
         const { startContainer, startOffset } = range;
         if (
-            startContainer.nodeType === Node.TEXT_NODE &&
+            isTextNode(startContainer) &&
             startContainer.textContent[startOffset - 1] === "\u200B"
         ) {
             range.setStart(startContainer, startOffset - 1);
