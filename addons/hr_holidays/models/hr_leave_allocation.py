@@ -36,9 +36,12 @@ class HolidaysAllocation(models.Model):
         return [('employee_requests', '=', 'yes')]
 
     def _domain_employee_id(self):
-        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            return []
-        return [('leave_manager_id', '=', self.env.user.id)]
+        domain = [('company_id', 'in', self.env.companies.ids)]
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            domain += [
+                ('leave_manager_id', '=', self.env.user.id)
+            ]
+        return domain
 
     name = fields.Char(
         string='Description',

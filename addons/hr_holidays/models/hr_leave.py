@@ -480,10 +480,17 @@ class HolidaysRequest(models.Model):
         for leave in self:
             duration = leave.number_of_days
             unit = _('days')
-            if leave.leave_type_request_unit == 'hour':
-                duration = leave.number_of_hours
-                unit = _('hours')
-            leave.duration_display = '%g %s' % (float_round(duration, precision_digits=2), unit)
+            display = "%g %s" % (float_round(duration, precision_digits=2), unit)
+            if leave.leave_type_request_unit == "hour":
+                hours, minutes = divmod(abs(leave.number_of_hours) * 60, 60)
+                minutes = round(minutes)
+                if minutes == 60:
+                    minutes = 0
+                    hours += 1
+                duration = '%d:%02d' % (hours, minutes)
+                unit = _("hours")
+                display = f"{duration} {unit}"
+            leave.duration_display = display
 
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_reset(self):
