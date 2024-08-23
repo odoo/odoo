@@ -221,7 +221,7 @@ class Survey(http.Controller):
         # Get the current answer token from cookie
         answer_from_cookie = False
         if not answer_token:
-            answer_token = request.httprequest.cookies.get('survey_%s' % survey_token)
+            answer_token = request.cookies.get('survey_%s' % survey_token)
             answer_from_cookie = bool(answer_token)
 
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)

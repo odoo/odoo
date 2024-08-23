@@ -24,7 +24,7 @@ def add_guest_to_context(func):
     def wrapper(self, *args, **kwargs):
         req = request or wsrequest
         token = (
-            req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name, "")
+            req.cookies.get(req.env["mail.guest"]._cookie_name, "")
         )
         guest = req.env["mail.guest"]._get_guest_from_token(token)
         if guest and not guest.timezone and not req.env.cr.readonly:
@@ -87,7 +87,7 @@ class MailGuest(models.Model):
         return self.env['mail.guest']
 
     def _get_timezone_from_request(self, request):
-        timezone = request.httprequest.cookies.get('tz')
+        timezone = request.cookies.get('tz')
         return timezone if timezone in pytz.all_timezones else False
 
     def _update_name(self, name):
