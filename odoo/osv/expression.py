@@ -303,6 +303,10 @@ def distribute_not(domain):
     stack = [False]
 
     for token in domain:
+
+        if is_field(token):
+            token = (token, '=', True)
+
         negate = stack.pop()
         # negate tells whether the subdomain starting with token must be negated
         if is_leaf(token):
@@ -345,6 +349,10 @@ def normalize_leaf(element):
         processing. """
     if not is_leaf(element):
         return element
+
+    if is_field(element):
+        element = (element, '=', True)
+
     left, operator, right = element
     original = operator
     operator = operator.lower()
@@ -390,9 +398,11 @@ def is_leaf(element, internal=False):
 def is_boolean(element):
     return element == TRUE_LEAF or element == FALSE_LEAF
 
+def is_field(element):
+    return isinstance(element, str) and element not in DOMAIN_OPERATORS
 
 def check_leaf(element, internal=False):
-    if not is_operator(element) and not is_leaf(element, internal):
+    if not is_operator(element) and not is_leaf(element, internal) and not is_field(element):
         raise ValueError("Invalid leaf %s" % str(element))
 
 
@@ -651,6 +661,9 @@ class expression(object):
                 expr, params = self.__leaf_to_sql(leaf, model, alias)
                 push_result(expr, params)
                 continue
+
+            if is_field(leaf):
+                leaf = (leaf, '=', True)
 
             # Get working variables
             left, operator, right = leaf
@@ -1036,6 +1049,10 @@ class expression(object):
         self.query.add_where(where_clause, where_params)
 
     def __leaf_to_sql(self, leaf, model, alias):
+
+        if is_field(leaf):
+            leaf = (leaf, '=', True)
+
         left, operator, right = leaf
 
         # final sanity checks - should never fail
