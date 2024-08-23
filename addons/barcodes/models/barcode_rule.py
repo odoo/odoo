@@ -33,7 +33,9 @@ class BarcodeRule(models.Model):
             p = rule.pattern.replace('\\\\', 'X').replace('\\{', 'X').replace('\\}', 'X')
             findall = re.findall("[{]|[}]", p)  # p does not contain escaped { or }
             if len(findall) == 2:
-                if not re.search("[{][N]*[D]*[}]", p):
+                if re.search("[{][0-9]*,[0-9]*[}]", p):
+                    pass
+                elif not re.search("[{][N]*[D]*[}]", p):
                     raise ValidationError(_("There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's.", pattern=rule.pattern))
                 elif re.search("[{][}]", p):
                     raise ValidationError(_("There is a syntax error in the barcode pattern %(pattern)s: empty braces.", pattern=rule.pattern))
