@@ -316,23 +316,32 @@ class EventMailScheduler(models.Model):
 
     def _send_mail(self, registrations):
         """ Mail action: send mail to attendees """
-        organizer = self.event_id.organizer_id
-        company = self.env.company
-        author = self.env.ref('base.user_root').partner_id
-        if organizer.email:
-            author = organizer
-        elif company.email:
-            author = company.partner_id
+        if self.event_id.organizer_id.email:
+            author = self.event_id.organizer_id
+        elif self.env.company.email:
+            author = self.env.company.partner_id
         elif self.env.user.email:
             author = self.env.user.partner_id
+        else:
+            author = self.env.ref('base.user_root').partner_id
 
-        template = self.template_ref
-        email_values = {
-            'author_id': author.id,
+        composer_values = {
+            'composition_mode': 'mass_mail',
+            'force_send': False,
+            'model': registrations._name,
+            'record_name': False,
+            'res_ids': registrations.ids,
+            'template_id': self.template_ref.id,
         }
-        if not template.email_from:
-            email_values['email_from'] = author.email_formatted
-        template.send_mail_batch(registrations.ids, email_values=email_values)
+        # force author, as mailing mode does not try to find the author matching
+        # email_from (done only when posting on chatter); give email_from if not
+        # configured on template
+        composer_values['author_id'] = author.id
+        composer_values['email_from'] = self.template_ref.email_from or author.email_formatted
+        composer = self.env['mail.compose.message'].create(composer_values)
+        # backward compatible behavior: event mail scheduler does not force partner
+        # creation, email_cc / email_to is kept on outgoing emails
+        composer.with_context(mail_composer_force_partners=False)._action_send_mail()
 
     def _template_model_by_notification_type(self):
         return {
