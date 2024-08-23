@@ -76,7 +76,7 @@ class IrActions(models.Model):
     def _check_path(self):
         for action in self:
             if action.path:
-                if not re.fullmatch(r'[a-z][a-z0-9_-]*', action.path):
+                if not re.fullmatch(r'[a-z][a-z0-9-]*', action.path):
                     raise ValidationError(_('The path should contain only lowercase alphanumeric characters, underscore, and dash, and it should start with a letter.'))
                 if action.path.startswith("m-"):
                     raise ValidationError(_("'m-' is a reserved prefix."))
