@@ -1,12 +1,23 @@
 
 .s_mega_menu_images_subtitles:not([data-vcss]) {
     .d-flex img {
-        max-width: 64px;
+        max-height: 64px;
     }
 
     .nav-link {
         &:hover, &:focus {
             background: rgba(0, 0, 0, .05);
+        }
+    }
+}
+
+.o_mega_menu_is_offcanvas {
+    .s_mega_menu_images_subtitles:not([data-vcss]) {
+        .s_mega_menu_images_subtitles_highlight {
+            padding-top: map-get($spacers, 3);
+        }
+        a[data-name="Menu Item"]{
+            margin: 0 -#{map-get($spacers, 2)};
         }
     }
 }
