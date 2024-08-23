@@ -239,6 +239,10 @@ class IrHttp(models.AbstractModel):
         return request._geoip_resolve()
 
     @classmethod
+    def _sanitize_cookies(cls, cookies):
+        pass
+
+    @classmethod
     def _pre_dispatch(cls, rule, args):
         ICP = request.env['ir.config_parameter'].with_user(SUPERUSER_ID)
 

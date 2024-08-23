@@ -40,6 +40,12 @@ class Http(models.AbstractModel):
         return any(bot in user_agent for bot in cls.bots)
 
     @classmethod
+    def _sanitize_cookies(cls, cookies):
+        super()._sanitize_cookies(cookies)
+        if cids := cookies.get('cids'):
+            cookies['cids'] = '-'.join(cids.split(','))
+
+    @classmethod
     def _handle_debug(cls):
         debug = request.httprequest.args.get('debug')
         if debug is not None:
