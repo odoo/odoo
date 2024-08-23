@@ -1,11 +1,11 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-from abc import ABC, abstractmethod
 
 import ast
+from abc import ABC, abstractmethod
+import typing
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection, Iterable
 
 
 class SetDefinitions:
@@ -14,6 +14,8 @@ class SetDefinitions:
     is used as a factory to create set expressions, which are combinations of
     named sets with union, intersection and complement.
     """
+    __slots__ = ('__leaves',)
+
     def __init__(self, definitions: dict[int, dict]):
         """ Initialize the object with ``definitions``, a dict which maps each
         set id to a dict with optional keys ``"ref"`` (value is the set's name),
@@ -33,7 +35,7 @@ class SetDefinitions:
                 6: {"ref": "C"},
             }
         """
-        self.__leaves = {}
+        self.__leaves: dict[int | str, Leaf] = {}
 
         for leaf_id, info in definitions.items():
             ref = info['ref']
@@ -75,7 +77,7 @@ class SetDefinitions:
     def universe(self) -> SetExpression:
         return UNIVERSAL_UNION
 
-    def parse(self, refs: str, raise_if_not_found=True) -> SetExpression:
+    def parse(self, refs: str, raise_if_not_found: bool = True) -> SetExpression:
         """ Return the set expression corresponding to ``refs``
 
         :param str refs: comma-separated list of set references
@@ -84,8 +86,8 @@ class SetDefinitions:
             group.
             (e.g. ``base.group_user,base.group_portal,!base.group_system``)
         """
-        positives = []
-        negatives = []
+        positives: list[Leaf] = []
+        negatives: list[Leaf] = []
         for xmlid in refs.split(','):
             if xmlid.startswith('!'):
                 negatives.append(~self.__get_leaf(xmlid[1:], raise_if_not_found))
@@ -97,7 +99,7 @@ class SetDefinitions:
         else:
             return Union([Inter(negatives)])
 
-    def from_ids(self, ids, keep_subsets=False) -> SetExpression:
+    def from_ids(self, ids: Iterable[int], keep_subsets: bool = False) -> SetExpression:
         """ Return the set expression corresponding to given set ids. """
         if keep_subsets:
             ids = set(ids)
@@ -117,14 +119,14 @@ class SetDefinitions:
             for inter_tuple in union_tuple
         ], optimal=True)
 
-    def get_id(self, ref):
+    def get_id(self, ref: LeafIdType) -> LeafIdType | None:
         """ Return a set id from its reference, or ``None`` if it does not exist. """
         if ref == '*':
-            return UNIVERSAL_LEAF
+            return UNIVERSAL_LEAF.id
         leaf = self.__leaves.get(ref)
         return None if leaf is None else leaf.id
 
-    def __get_leaf(self, ref, raise_if_not_found=True):
+    def __get_leaf(self, ref: str | int, raise_if_not_found: bool = True) -> Leaf:
         """ Return the group object from the string.
 
         :param str ref: the ref of a leaf
@@ -151,7 +153,7 @@ class SetExpression(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def invert_intersect(self, factor: SetExpression) -> SetExpression:
+    def invert_intersect(self, factor: SetExpression) -> SetExpression | None:
         """ Performs the inverse operation of intersection (a sort of factorization)
         such that: ``self == result & factor``.
         """
@@ -181,7 +183,7 @@ class SetExpression(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def __eq__(self, other: SetExpression) -> bool:
+    def __eq__(self, other) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
@@ -244,7 +246,7 @@ class Union(SetExpression):
         """ Returns whether ``self`` is the universal set, that contains all possible elements. """
         return any(item.is_universal() for item in self.__inters)
 
-    def invert_intersect(self, factor: Union) -> SetExpression:
+    def invert_intersect(self, factor: SetExpression) -> Union | None:
         """ Performs the inverse operation of intersection (a sort of factorization)
         such that: ``self == result & factor``.
         """
@@ -256,6 +258,7 @@ class Union(SetExpression):
             return None
         rself = ~self
 
+        assert isinstance(rfactor, Union)
         inters = [inter for inter in rself.__inters if inter not in rfactor.__inters]
         if len(rself.__inters) - len(inters) != len(rfactor.__inters):
             # not possible to invert the intersection
@@ -264,7 +267,8 @@ class Union(SetExpression):
         rself_value = Union(inters)
         return ~rself_value
 
-    def __and__(self, other: Union) -> SetExpression:
+    def __and__(self, other: SetExpression) -> Union:
+        assert isinstance(other, Union)
         if self.is_universal():
             return other
         if other.is_universal():
@@ -279,7 +283,8 @@ class Union(SetExpression):
             for other_inter in other.__inters
         )
 
-    def __or__(self, other: Union) -> SetExpression:
+    def __or__(self, other: SetExpression) -> Union:
+        assert isinstance(other, Union)
         if self.is_empty():
             return other
         if other.is_empty():
@@ -321,10 +326,12 @@ class Union(SetExpression):
     def __bool__(self):
         raise NotImplementedError()
 
-    def __eq__(self, other: Union) -> bool:
-        return self.__key == other.__key
+    def __eq__(self, other) -> bool:
+        return isinstance(other, Union) and self.__key == other.__key
 
-    def __le__(self, other: Union) -> bool:
+    def __le__(self, other: SetExpression) -> bool:
+        if not isinstance(other, Union):
+            return False
         if self.__key == other.__key:
             return True
         if self.is_universal() or other.is_empty():
@@ -336,7 +343,7 @@ class Union(SetExpression):
             for self_inter in self.__inters
         )
 
-    def __lt__(self, other: Union) -> bool:
+    def __lt__(self, other: SetExpression) -> bool:
         return self != other and self.__le__(other)
 
     def __str__(self):
@@ -368,11 +375,13 @@ class Inter:
     """ Part of the implementation of a set expression, that represents an
     intersection of named sets or their complement.
     """
+    __slots__ = ('key', 'leaves')
+
     def __init__(self, leaves: Iterable[Leaf] = (), optimal=False):
         if leaves and not optimal:
             leaves = self.__combine((), leaves)
-        self.leaves = sorted(leaves, key=lambda leaf: leaf.key)
-        self.key = tuple(leaf.key for leaf in self.leaves)
+        self.leaves: list[Leaf] = sorted(leaves, key=lambda leaf: leaf.key)
+        self.key: tuple[tuple[LeafIdType, bool], ...] = tuple(leaf.key for leaf in self.leaves)
 
     @staticmethod
     def __combine(leaves: Iterable[Leaf], leaves_to_add: Iterable[Leaf]) -> list[Leaf]:
@@ -418,15 +427,16 @@ class Inter:
             # we use the property that __leaves are ordered
             for index, self_leaf, other_leaf in zip(range(len(self.leaves)), self.leaves, other.leaves):
                 if self_leaf.id != other_leaf.id:
-                    return
+                    return None
                 if self_leaf.negative != other_leaf.negative:
                     if opposite_index is not None:
-                        return  # we already have two opposite leaves
+                        return None  # we already have two opposite leaves
                     opposite_index = index
             if opposite_index is not None:
                 leaves = list(self.leaves)
                 leaves.pop(opposite_index)
                 return Inter(leaves, optimal=True)
+        return None
 
     def __and__(self, other: Inter) -> Inter:
         if self.is_empty() or other.is_empty():
@@ -438,8 +448,8 @@ class Inter:
         leaves = self.__combine(self.leaves, other.leaves)
         return Inter(leaves, optimal=True)
 
-    def __eq__(self, other: Inter) -> bool:
-        return self.key == other.key
+    def __eq__(self, other) -> bool:
+        return isinstance(other, Inter) and self.key == other.key
 
     def __le__(self, other: Inter) -> bool:
         return self.key == other.key or all(
@@ -458,18 +468,20 @@ class Leaf:
     """ Part of the implementation of a set expression, that represents a named
     set or its complement.
     """
-    def __init__(self, leaf_id, ref=None, negative=False):
+    __slots__ = ('disjoints', 'id', 'inverse', 'key', 'negative', 'ref', 'subsets', 'supersets')
+
+    def __init__(self, leaf_id: LeafIdType, ref: str | int | None = None, negative: bool = False):
         self.id = leaf_id
         self.ref = ref or str(leaf_id)
         self.negative = bool(negative)
-        self.key = (leaf_id, self.negative)
+        self.key: tuple[LeafIdType, bool] = (leaf_id, self.negative)
 
-        self.subsets = {leaf_id}       # all the leaf ids that are <= self
-        self.supersets = {leaf_id}     # all the leaf ids that are >= self
-        self.disjoints = set()         # all the leaf ids disjoint from self
-        self.inverse = None
+        self.subsets: set[LeafIdType] = {leaf_id}       # all the leaf ids that are <= self
+        self.supersets: set[LeafIdType] = {leaf_id}     # all the leaf ids that are >= self
+        self.disjoints: set[LeafIdType] = set()         # all the leaf ids disjoint from self
+        self.inverse: Leaf | None = None
 
-    def __invert__(self):
+    def __invert__(self) -> Leaf:
         if self.inverse is None:
             self.inverse = Leaf(self.id, self.ref, negative=not self.negative)
             self.inverse.inverse = self
@@ -492,11 +504,11 @@ class Leaf:
         else:
             return self.id in other.disjoints
 
-    def matches(self, user_group_ids):
+    def matches(self, user_group_ids: Collection[int]) -> bool:
         return (self.id not in user_group_ids) if self.negative else (self.id in user_group_ids)
 
-    def __eq__(self, other: Leaf) -> bool:
-        return self.key == other.key
+    def __eq__(self, other) -> bool:
+        return isinstance(other, Leaf) and self.key == other.key
 
     def __le__(self, other: Leaf) -> bool:
         if self.is_empty() or other.is_universal():
@@ -533,6 +545,8 @@ class UnknownId(str):
             return super().__gt__(other)
         return True
 
+
+LeafIdType = int | typing.Literal["*"] | UnknownId
 
 # constants
 UNIVERSAL_LEAF = Leaf('*')
