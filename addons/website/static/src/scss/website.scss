@@ -795,9 +795,9 @@ table.table_desc tr td {
 // Snippets
 //
 
-// Carousel -> TODO: should be versioned in 000.scss file but how ?
-.s_carousel,
-.s_quotes_carousel {
+// This style is shared by old versions of carousels
+// 000 for s_carousel & 000 and 001 for s_quotes_carousel
+%old_s_carousel_variants {
 
     // Controls
     .carousel-control-prev,
@@ -951,6 +951,128 @@ table.table_desc tr td {
             &:hover:not(.active) {
                 background-color: rgba(255,255,255,.8);
             }
+        }
+    }
+}
+
+// This style is shared by the new versions of carousels
+// 001 for s_carousel & 002 for s_quotes_carousel
+%s_carousel_variants {
+
+    --o-carousel-indicators-dots-size: .75rem;
+    --o-carousel-controllers-size: #{map-get($spacers, 5)};
+
+    // Controls
+    @include media-breakpoint-down(md) {
+        .carousel-control-prev,
+        .carousel-control-next {
+            display: none; // remove arrows on mobile
+        }
+    }
+
+    &.carousel-dark {
+        --o-carousel-indicator-dots-bg-color: #{to-rgb(#fff)};
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        position: absolute;
+        width: 10%;
+    }
+
+    &.s_carousel_default {
+        .carousel-control-prev, .carousel-control-next {
+            &:hover {
+                background: rgba($carousel-dark-indicator-active-bg, .2);
+            }
+        }
+
+        &.carousel-dark {
+            .carousel-control-prev, .carousel-control-next {
+                &:hover {
+                    background: rgba($carousel-indicator-active-bg, .2);
+                }
+            }
+        }
+    }
+
+    &.s_carousel_boxed, &.s_carousel_rounded {
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            width: var(--o-carousel-controllers-size);
+            height: var(--o-carousel-controllers-size);
+            border-radius: $border-radius;
+            border: $border-width solid $border-color;
+            background-size: 50%;
+            background-color: $carousel-dark-indicator-active-bg;
+        }
+    }
+
+    &.s_carousel_rounded {
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            border-radius: $border-radius-pill;
+        }
+    }
+
+    // Content
+    .carousel-inner {
+        // Create a new stacking context to ensure that elements like indicators
+        // and arrows will always appear on top of the carousel content.
+        isolation: isolate;
+        overflow: hidden;
+        height: 100%;
+
+        .carousel-item {
+            height: 100%;
+            padding: 0 map-get($spacers, 3);
+
+            @include media-breakpoint-up(md) {
+                padding: 0 $carousel-control-width;
+            }
+        }
+    }
+
+    // Indicators
+    .carousel-indicators {
+        &.s_carousel_indicators_dots > button {
+            --o-carousel-indicators-spacer: #{$carousel-indicator-spacer * -4};
+            width: var(--o-carousel-indicators-dots-size);
+            height: var(--o-carousel-indicators-dots-size);
+            border: 0;
+            border-radius: $border-radius-pill;
+            transform: scale(.5);
+            transition: opacity .6s ease, transform .6s ease; // Mirror '$carousel-indicator-transition' duration
+
+            // Increases the click area for easier navigation.
+            &:before {
+                position: absolute;
+                inset: var(--o-carousel-indicators-spacer);
+                display: block;
+                content: '';
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &.active {
+                --o-carousel-indicators-spacer: #{$carousel-indicator-spacer * -1};
+
+                transform: scale(1);
+            }
+        }
+
+        &.s_carousel_indicators_hidden {
+            display: none;
+        }
+    }
+
+    // Style - Indicators outside
+    &.s_carousel_controllers_indicators_outside .carousel-indicators {
+        position: relative;
+
+        button {
+            background-color: currentColor;
+            color: inherit;
         }
     }
 }
