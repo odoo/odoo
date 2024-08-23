@@ -227,8 +227,8 @@ export class KanbanRecord extends Component {
 
     getFormattedValue(fieldId) {
         const { archInfo, record } = this.props;
-        const { attrs, name } = archInfo.fieldNodes[fieldId];
-        return getFormattedValue(record, name, attrs);
+        const { name } = archInfo.fieldNodes[fieldId];
+        return getFormattedValue(record, name, archInfo.fieldNodes[fieldId]);
     }
 
     /**

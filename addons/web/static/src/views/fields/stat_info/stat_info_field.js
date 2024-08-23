@@ -16,13 +16,13 @@ export class StatInfoField extends Component {
         string: { type: String, optional: true },
     };
 
-    get digits() {
-        const fieldDigits = this.props.record.fields[this.props.name].digits;
-        return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
-    }
     get formattedValue() {
-        const formatter = formatters.get(this.props.record.fields[this.props.name].type);
-        return formatter(this.props.record.data[this.props.name] || 0, { digits: this.digits });
+        const field = this.props.record.fields[this.props.name];
+        const formatter = formatters.get(field.type);
+        return formatter(this.props.record.data[this.props.name] || 0, {
+            digits: this.props.digits,
+            field,
+        });
     }
     get label() {
         return this.props.labelField
