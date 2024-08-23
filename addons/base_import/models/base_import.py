@@ -469,6 +469,8 @@ class Import(models.TransientModel):
                     values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
                 elif isinstance(cell.value, datetime.date):
                     values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                elif cell.value is None:
+                    values.append('')
                 else:
                     values.append(str(cell.value))
 
