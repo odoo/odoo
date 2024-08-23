@@ -65,6 +65,7 @@ export class WebsocketWorker {
         this.messageWaitQueue = [];
         this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
         this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
+        this._debouncedSendToServer = debounce(this._sendToServer, 300);
 
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
@@ -130,8 +131,14 @@ export class WebsocketWorker {
      */
     _onClientMessage(client, { action, data }) {
         switch (action) {
-            case "send":
-                return this._sendToServer(data);
+            case "send": {
+                if (data["event_name"] === "update_presence") {
+                    this._debouncedSendToServer(data);
+                } else {
+                    this._sendToServer(data);
+                }
+                return;
+            }
             case "start":
                 return this._start();
             case "stop":
