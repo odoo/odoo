@@ -3166,7 +3166,9 @@ class MailThread(models.AbstractModel):
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries;
         """
-        inbox_pids_uids = [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+        inbox_pids_uids = sorted(
+            [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+        )
         if inbox_pids_uids:
             notif_create_values = [
                 {

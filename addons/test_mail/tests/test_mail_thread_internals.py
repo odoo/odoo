@@ -381,8 +381,8 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertFalse(msg.starred)
         self.assertBusNotifications(
             [
-                (self.cr.dbname, "res.partner", self.partner_employee.id),
                 (self.cr.dbname, "res.partner", self.partner_admin.id),
+                (self.cr.dbname, "res.partner", self.partner_employee.id),
             ],
             [
                 {
