@@ -77,7 +77,8 @@
                 <field name="name" string="Operation"/>
                 <field name="workcenter_id"/>
                 <field name="product_id" optional="show"/>
-                <field name="qty_remaining" optional="show" string="Quantity"/>
+                <field name="qty_remaining" optional="show" string="Remaining Quantity " attrs="{'column_invisible': [('parent.state', '=', 'done')]}"/>
+                <field name="qty_produced" optional="show" string="Produced Quantity" attrs="{'column_invisible': [('parent.state', '!=', 'done')]}"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
                 <field name="date_planned_start" optional="show"/>
                 <field name="date_planned_finished" optional="hide"/>
