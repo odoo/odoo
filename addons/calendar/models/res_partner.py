@@ -28,14 +28,13 @@ class Partner(models.Model):
 
             event_id = self.env['calendar.event']._search([])  # ir.rules will be applied
             subquery_string, subquery_params = event_id.select()
-            subquery = self.env.cr.mogrify(subquery_string, subquery_params).decode()
 
             self.env.cr.execute("""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
                  WHERE res_partner_id IN %s AND calendar_event_id IN ({})
               GROUP BY res_partner_id, calendar_event_id
-            """.format(subquery), [tuple(p["id"] for p in all_partners)])
+            """.format(subquery_string), [tuple(p["id"] for p in all_partners)]  + subquery_params)
 
             meeting_data = self.env.cr.fetchall()
 
