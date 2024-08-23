@@ -21,6 +21,54 @@ class IrWebsocket(models.AbstractModel):
             )]
         return im_status
 
+    def _get_missed_presences_identity_domains(self, presence_channels):
+        identity_domain = super()._get_missed_presences_identity_domains(presence_channels)
+        if guest_ids := [
+            g.id for g, _ in presence_channels if isinstance(g, self.pool["mail.guest"])
+        ]:
+            identity_domain.append([("guest_id", "in", guest_ids)])
+        return identity_domain
+
+    def _get_missed_presences_bus_target(self):
+        if self.env.user and not self.env.user._is_public():
+            return super()._get_missed_presences_bus_target()
+        if guest := self.env["mail.guest"]._get_guest_from_context():
+            return guest
+        return None
+
+    @add_guest_to_context
+    def _build_presence_channel_list(self, presences):
+        channels = super()._build_presence_channel_list(presences)
+        guest_ids = [int(p[1]) for p in presences if p[0] == "mail.guest"]
+        if self.env.user and self.env.user._is_internal():
+            channels.extend(
+                (guest, "presence")
+                for guest in self.env["mail.guest"].search([("id", "in", guest_ids)])
+            )
+            # Partners already handled in super call (bus)
+            return channels
+        self_discuss_channels = self.env["discuss.channel"]
+        if self.env.user and not self.env.user._is_public():
+            self_discuss_channels = self.env.user.partner_id.channel_ids
+        elif guest := self.env["mail.guest"]._get_guest_from_context():
+            # sudo - mail.guest: guest can access their own channels.
+            self_discuss_channels = guest.sudo().channel_ids
+        partner_domain = [
+            ("id", "in", [int(p[1]) for p in presences if p[0] == "res.partner"]),
+            ("channel_ids", "in", self_discuss_channels.ids),
+        ]
+        # sudo - res.partner: allow access when sharing a common channel.
+        channels.extend(
+            (partner, "presence")
+            for partner in self.env["res.partner"].sudo().search(partner_domain)
+        )
+        guest_domain = [("id", "in", guest_ids), ("channel_ids", "in", self_discuss_channels.ids)]
+        # sudo - mail.guest: allow access when sharing a common channel.
+        channels.extend(
+            (guest, "presence") for guest in self.env["mail.guest"].sudo().search(guest_domain)
+        )
+        return channels
+
     @add_guest_to_context
     def _build_bus_channel_list(self, channels):
         channels = list(channels)  # do not alter original list
@@ -58,3 +106,12 @@ class IrWebsocket(models.AbstractModel):
                 identity_field="guest_id",
                 identity_value=guest.id,
             )
+
+    def _on_websocket_closed(self, cookies):
+        super()._on_websocket_closed(cookies)
+        if self.env.user and not self.env.user._is_public():
+            return
+        token = cookies.get(self.env["mail.guest"]._cookie_name, "")
+        if guest := self.env["mail.guest"]._get_guest_from_token(token):
+            # sudo - bus.presence: guests can write their own presence
+            self.env["bus.presence"].sudo().search([("guest_id", "=", guest.id)]).status = "offline"

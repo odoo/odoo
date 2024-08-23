@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
@@ -19,6 +20,7 @@ QUnit.test("Only two quick actions are shown", async () => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
+    await waitUntilSubscribe("mail.guest_null");
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
     await contains(".o-mail-Message-actions i", { count: 3 });

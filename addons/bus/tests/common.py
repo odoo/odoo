@@ -104,7 +104,7 @@ class WebsocketCase(HttpCase):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
             }}
-            if last:
+            if last is not None:
                 sub['data']['last'] = last
             websocket.send(json.dumps(sub))
             if wait_for_dispatch:

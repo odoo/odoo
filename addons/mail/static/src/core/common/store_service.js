@@ -75,9 +75,6 @@ export class Store extends BaseStore {
     internalUserGroupId = null;
     imStatusTrackedPersonas = Record.many("Persona", {
         inverse: "storeAsTrackedImStatus",
-        onUpdate() {
-            this.updateImStatusRegistration();
-        },
     });
     hasLinkPreviewFeature = true;
     // messaging menu
