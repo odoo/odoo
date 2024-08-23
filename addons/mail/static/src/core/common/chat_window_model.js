@@ -23,37 +23,45 @@ export class ChatWindow extends Record {
     hidden = false;
     /** Whether the chat window was created from the messaging menu */
     fromMessagingMenu = false;
-    hubAsActuallyOpened = Record.one("ChatHub", {
+    hubAsOpened = Record.one("ChatHub", {
+        /** @this {import("models").ChatWindow} */
+        onAdd() {
+            this.hubAsFolded = undefined;
+        },
         /** @this {import("models").ChatWindow} */
         onDelete() {
-            if (!this.thread && !this.hubAsActuallyOpened) {
+            if (!this.thread && !this.hubAsOpened) {
                 this.delete();
             }
         },
     });
-    hubAsOpened = Record.one("ChatHub");
-    hubAsFolded = Record.one("ChatHub");
+    hubAsFolded = Record.one("ChatHub", {
+        /** @this {import("models").ChatWindow} */
+        onAdd() {
+            this.hubAsOpened = undefined;
+        },
+    });
 
     get displayName() {
         return this.thread?.displayName ?? _t("New message");
     }
 
     get isOpen() {
-        return Boolean(this.hubAsActuallyOpened);
+        return Boolean(this.hubAsOpened);
     }
 
     async close(options = {}) {
         const { escape = false } = options;
         const chatHub = this.store.chatHub;
-        const indexAsOpened = chatHub.actuallyOpened.findIndex((w) => w.eq(this));
+        const indexAsOpened = chatHub.opened.findIndex((w) => w.eq(this));
         const thread = this.thread;
         if (thread) {
             thread.state = "closed";
         }
         await this._onClose(options);
         this.delete();
-        if (escape && indexAsOpened !== -1 && chatHub.actuallyOpened.length > 0) {
-            chatHub.actuallyOpened[indexAsOpened === 0 ? 0 : indexAsOpened - 1].focus();
+        if (escape && indexAsOpened !== -1 && chatHub.opened.length > 0) {
+            chatHub.opened[indexAsOpened === 0 ? 0 : indexAsOpened - 1].focus();
         }
     }
 
