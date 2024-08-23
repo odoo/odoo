@@ -1557,6 +1557,13 @@ class Request:
         except (ValueError, KeyError):
             return None
 
+    @lazy_property
+    def cookies(self):
+        cookies = werkzeug.datastructures.MultiDict(self.httprequest.cookies)
+        if self.registry:
+            self.registry['ir.http']._sanitize_cookies(cookies)
+        return werkzeug.datastructures.ImmutableMultiDict(cookies)
+
     # =====================================================
     # Helpers
     # =====================================================

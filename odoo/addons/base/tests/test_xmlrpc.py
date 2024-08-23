@@ -171,6 +171,7 @@ class TestAPIKeys(common.HttpCase):
                 'environ': {'REMOTE_ADDR': 'localhost'},
                 'cookies': {},
             }),
+            'cookies': {},
             # bypass check_identity flow
             'session': {'identity-check-last': time.time()},
             'geoip': {},
