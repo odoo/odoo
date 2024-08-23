@@ -20,52 +20,77 @@ def templ(env, code, name=None, country='', **kwargs):
         **kwargs,
     }
 
-template_module = lambda m: ismodule(m) and m.__name__.split('.')[-1].startswith('template_')
-template_class = isclass
-template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template') and f._l10n_template[1] == 'template_data'
+template_module = lambda m: ismodule(m) and (
+    m.__name__.split('.')[-1].startswith('template_')
+    or m.__name__.split('.')[-1].endswith('chart_template')
+)
+template_class = lambda c: isclass(c) and hasattr(c, '_inherit') and 'account.chart.template' in c._inherit
+template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template')
 
 class IrModule(models.Model):
     _inherit = "ir.module.module"
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
+    account_template_functions = fields.Binary(compute='_compute_account_templates', exportable=False)
 
     @api.depends('state')
     def _compute_account_templates(self):
         chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
         ChartTemplate = self.env['account.chart.template']
         for module in self:
-            templates = {}
-            if module.category_id == chart_category or module.name == 'account':
+            template_functions = []
+            if module.category_id == chart_category or module.name == 'account' or module.state == 'installed':
                 try:
                     python_module = import_module(f"odoo.addons.{module.name}.models")
                 except ModuleNotFoundError:
-                    templates = {}
+                    pass
                 else:
-                    templates = {
-                        fct._l10n_template[0]: {
-                            'name': fct(ChartTemplate).get('name'),
-                            'parent': fct(ChartTemplate).get('parent'),
-                            'sequence': fct(ChartTemplate).get('sequence', 1),
-                            'country': fct(ChartTemplate).get('country', ''),
-                            'visible': fct(ChartTemplate).get('visible', True),
-                            'installed': module.state == "installed",
-                            'module': module.name,
-                        }
+                    template_functions = [
+                        fct
                         for _name, mdl in getmembers(python_module, template_module)
                         for _name, cls in getmembers(mdl, template_class)
                         for _name, fct in getmembers(cls, template_function)
-                    }
+                    ]
 
+            module.account_template_functions = template_functions
             module.account_templates = {
-                code: templ(self.env, code, **vals)
-                for code, vals in sorted(templates.items(), key=lambda kv: kv[1]['sequence'])
+                fct._l10n_template[0]: templ(
+                    env=self.env,
+                    code=fct._l10n_template[0],
+                    name=fct(ChartTemplate).get('name'),
+                    parent=fct(ChartTemplate).get('parent'),
+                    sequence=fct(ChartTemplate).get('sequence', 1),
+                    country=fct(ChartTemplate).get('country', ''),
+                    visible=fct(ChartTemplate).get('visible', True),
+                    installed=module.state == 'installed',
+                    module=module.name,
+                )
+                for fct in template_functions
+                if fct._l10n_template[0] and fct._l10n_template[1] == 'template_data'
             }
 
     def write(self, vals):
-        # Instanciate the first template of the module on the current company upon installing the module
         was_installed = len(self) == 1 and self.state in ('installed', 'to upgrade', 'to remove')
         super().write(vals)
         is_installed = len(self) == 1 and self.state == 'installed'
+        self.search([]).mapped('account_template_functions')  # make sure that all the templates are in the cache
+
+        # Update existing companies with values brought by a newly installed module
+        if not was_installed and is_installed and self.account_template_functions:
+            for company in self.env['res.company'].search([('chart_template', '!=', False)]):
+                ChartTemplate = self.env['account.chart.template'].with_company(company)
+                company_template = tuple(self.env['account.chart.template']._get_parent_template(company.chart_template))
+                additional_data = {
+                    fct._l10n_template[1]: fct(ChartTemplate, company.chart_template)
+                    for fct in self.account_template_functions
+                    if fct._l10n_template[0] in (None,) + company_template
+                }
+                template_data = additional_data.pop('template_data', None)
+                ChartTemplate._load_data(additional_data)
+                if template_data:
+                    ChartTemplate._post_load_data(company.chart_template, company, template_data)
+
+        # Instanciate the first template of the module on the current company upon installing the module
         if not was_installed and is_installed and not self.env.company.chart_template and self.account_templates:
             self.env.registry._auto_install_template = next(iter(self.account_templates))
 

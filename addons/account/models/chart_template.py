@@ -46,7 +46,7 @@ def template(template=None, model='template_data'):
             if template is not None:
                 # remove the template code argument as we already know it from the decorator
                 args, kwargs = args[:1], {}
-            return func(*args, **kwargs)
+            return func(*args, **kwargs) or {}
         return api.attrsetter('_l10n_template', (template, model))(wrapper)
     return decorator
 
