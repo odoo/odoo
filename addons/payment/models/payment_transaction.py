@@ -7,6 +7,7 @@ import unicodedata
 from datetime import datetime
 
 import psycopg2
+from psycopg2 import errorcodes
 from dateutil import relativedelta
 
 from odoo import _, api, fields, models
@@ -15,6 +16,8 @@ from odoo.tools import consteq, format_amount, ustr
 from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment import utils as payment_utils
+
+from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
 _logger = logging.getLogger(__name__)
 
@@ -627,7 +630,29 @@ class PaymentTransaction(models.Model):
         """
         tx = self._get_tx_from_feedback_data(provider, data)
         tx._process_feedback_data(data)
-        tx._execute_callback()
+
+        cr = self.env.cr
+        cr.execute("SAVEPOINT tx_updated")
+
+        # if errors that are known to NOT affect the db state or tx state are
+        # encountered then we rollback to the point where the tx was updated
+        # and commit the changes done
+        try:
+            tx._execute_callback()
+        except psycopg2.Error as e:
+            if e.pgcode in PG_CONCURRENCY_ERRORS_TO_RETRY:
+                cr.execute("ROLLBACK TO SAVEPOINT tx_updated")
+                cr.commit()
+            elif e.pgcode in [
+                errorcodes.STATEMENT_TOO_COMPLEX,
+                errorcodes.NOT_NULL_VIOLATION,
+                errorcodes.FOREIGN_KEY_VIOLATION,
+                errorcodes.OBJECT_IN_USE,
+            ]: # another group of not problematic errors
+                cr.execute("ROLLBACK TO SAVEPOINT tx_updated")
+                cr.commit()
+            else:
+                raise
         return tx
 
     @api.model
