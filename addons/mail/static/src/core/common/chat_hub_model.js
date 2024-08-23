@@ -41,7 +41,6 @@ export class ChatHub extends Record {
         inverse: "hubAsOpened",
         /** @this {import("models").ChatHub} */
         onAdd(r) {
-            this.folded.delete(r);
             this.onRecompute();
         },
         /** @this {import("models").ChatHub} */
@@ -54,7 +53,6 @@ export class ChatHub extends Record {
         inverse: "hubAsFolded",
         /** @this {import("models").ChatHub} */
         onAdd(r) {
-            this.opened.delete(r);
             this.onRecompute();
         },
         /** @this {import("models").ChatHub} */
@@ -62,9 +60,6 @@ export class ChatHub extends Record {
             this.onRecompute();
         },
     });
-    actuallyOpened = Record.many("ChatWindow", { inverse: "hubAsActuallyOpened" });
-    actuallyFolded = Record.many("ChatWindow");
-    actuallyHidden = Record.many("ChatWindow");
 
     closeAll() {
         [...this.opened, ...this.folded].forEach((cw) => cw.close());
@@ -74,13 +69,6 @@ export class ChatHub extends Record {
         while (this.opened.length > this.maxOpened) {
             const cw = this.opened.pop();
             this.folded.unshift(cw);
-        }
-        this.actuallyOpened = this.opened;
-        this.actuallyFolded = this.folded;
-        this.actuallyHidden.clear();
-        while (this.actuallyFolded.length > this.maxFolded) {
-            const cw = this.actuallyFolded.pop();
-            this.actuallyHidden.unshift(cw);
         }
     }
 
