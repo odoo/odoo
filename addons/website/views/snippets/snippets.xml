@@ -585,6 +585,7 @@
         <t t-set="with_shapes" t-value="True"/>
         <t t-set="css_compatible" t-value="True"/>
         <t t-set="with_gradients" t-value="True"/>
+        <t t-set="with_color_combinations" t-value="True"/>
     </t>
     <div data-js="Carousel"
          data-selector="section"
@@ -593,10 +594,19 @@
             <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
         </we-row>
         <we-select string="Style">
+            <we-button data-select-class="">Classic</we-button>
+            <we-button data-select-class="s_carousel_controllers_indicators_outside">Indicators outside</we-button>
+        </we-select>
+        <we-checkbox string="Invert colors" class="o_we_sublevel_1" data-select-class="carousel-dark"/>
+        <we-select string="Arrows" class="o_we_sublevel_1">
             <we-button data-select-class="s_carousel_default">Default</we-button>
-            <we-button data-select-class="s_carousel_bordered">Bordered</we-button>
             <we-button data-select-class="s_carousel_boxed">Boxed</we-button>
             <we-button data-select-class="s_carousel_rounded">Rounded</we-button>
+        </we-select>
+        <we-select string="Indicators" data-apply-to=".carousel-indicators" class="o_we_sublevel_1">
+            <we-button data-select-class="">Bars</we-button>
+            <we-button data-select-class="s_carousel_indicators_dots">Dots</we-button>
+            <we-button data-select-class="s_carousel_indicators_hidden">Hidden</we-button>
         </we-select>
         <we-select string="Transition">
             <we-button data-select-class="slide">Slide</we-button>
@@ -664,7 +674,7 @@
 
     <!-- Grid and columns -->
     <div data-js="layout_column"
-        data-selector="section, section.s_carousel_wrapper .carousel-item"
+        data-selector="section"
         data-target="> *:has(> .row), > .s_allow_columns"
         data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline">
         <we-row>
@@ -1420,7 +1430,7 @@
     </div>
 
     <!-- Stretch section -->
-    <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item"
+    <div data-js="ContainerWidth" data-selector="section"
         data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]" data-target="> .container, > .container-fluid, > .o_container_small">
         <we-button-group string="Content Width">
             <we-button data-select-class="o_container_small"
