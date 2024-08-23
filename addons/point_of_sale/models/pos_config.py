@@ -13,36 +13,6 @@ class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
 
-    def _default_warehouse_id(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).id
-
-    def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
-
-    def _default_sale_journal(self):
-        return self.env['account.journal'].search([('type', 'in', ('sale', 'general')), ('company_id', '=', self.env.company.id), ('code', '=', 'POSS')], limit=1)
-
-    def _default_invoice_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
-
-    def _default_payment_methods(self):
-        """ Should only default to payment methods that are compatible to this config's company and currency.
-        """
-        domain = [
-            ('split_transactions', '=', False),
-            ('company_id', '=', self.env.company.id),
-            '|',
-                ('journal_id', '=', False),
-                ('journal_id.currency_id', 'in', (False, self.env.company.currency_id.id)),
-        ]
-        non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
-        available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
-                                                                            ('config_ids', '=', False)], limit=1)
-        return non_cash_pm | available_cash_pm
-
-    def _default_pricelist(self):
-        return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
-
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
 
@@ -55,7 +25,7 @@ class PosConfig(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type',
         string='Operation Type',
-        default=_default_picking_type_id,
+        compute='_compute_picking_type_id', store=True, readonly=False, precompute=True,
         required=True,
         domain="[('code', '=', 'outgoing'), ('warehouse_id.company_id', '=', company_id)]",
         ondelete='restrict')
@@ -63,13 +33,13 @@ class PosConfig(models.Model):
         'account.journal', string='Point of Sale Journal',
         domain=[('type', 'in', ('general', 'sale'))],
         help="Accounting journal used to post POS session journal entries and POS invoice payments.",
-        default=_default_sale_journal,
+        compute='_compute_journal_id', store=True, readonly=False,
         ondelete='restrict')
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
-        default=_default_invoice_journal)
+        compute='_compute_invoice_journal_id', store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
@@ -116,9 +86,11 @@ class PosConfig(models.Model):
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
-    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
+    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True,
+        compute='_compute_pricelist_id', store=True, readonly=False, precompute=True,
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
-    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
+    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists',
+        compute='_compute_available_pricelist_ids', store=True, readonly=False,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
@@ -145,7 +117,11 @@ class PosConfig(models.Model):
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
              "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
              "the closing of his session saying that he needs to contact his manager.")
-    payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
+    payment_method_ids = fields.Many2many(
+        'pos.payment.method',
+        string='Payment Methods',
+        compute='_compute_payment_method_ids', store=True, readonly=False,
+    )
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
@@ -155,7 +131,11 @@ class PosConfig(models.Model):
     has_active_session = fields.Boolean(compute='_compute_current_session')
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
     ship_later = fields.Boolean(string="Ship Later")
-    warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
+    warehouse_id = fields.Many2one(
+        'stock.warehouse',
+        compute='_compute_warehouse_id', readonly=False, store=True,
+        ondelete='restrict',
+    )
     route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
@@ -177,6 +157,54 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=10000)
     partner_load_background = fields.Boolean(default=False)
+
+
+    @api.depends('company_id')
+    def _compute_warehouse_id(self):
+        for config in self:
+            config.warehouse_id = self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)], limit=1)
+
+    @api.depends('company_id')
+    def _compute_picking_type_id(self):
+        for config in self:
+            config.picking_type_id = self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)], limit=1).pos_type_id
+
+    @api.depends('company_id')
+    def _compute_journal_id(self):
+        for config in self:
+            config.journal_id = self.env['account.journal'].search([('type', 'in', ('sale', 'general')), ('company_id', '=', config.company_id.id), ('code', '=', 'POSS')], limit=1)
+
+    @api.depends('company_id')
+    def _compute_invoice_journal_id(self):
+        for config in self:
+            config.invoice_journal_id = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', config.company_id.id)], limit=1)
+
+    @api.depends('company_id')
+    def _compute_pricelist_id(self):
+        for config in self:
+            config.pricelist_id = self.env['product.pricelist'].search([('company_id', 'in', (False, config.company_id.id)), ('currency_id', '=', config.company_id.currency_id.id)], limit=1)
+
+    @api.depends('company_id')
+    def _compute_available_pricelist_ids(self):
+        for config in self:
+            config.available_pricelist_ids = self.env['product.pricelist'].search([('company_id', 'in', (False, config.company_id.id)), ('currency_id', '=', config.company_id.currency_id.id)], limit=1)
+
+    @api.depends('company_id')
+    def _compute_payment_method_ids(self):
+        """ Should only default to payment methods that are compatible to this config's company and currency.
+        """
+        for config in self:
+            domain = [
+                ('split_transactions', '=', False),
+                ('company_id', '=', config.company_id.id),
+                '|',
+                    ('journal_id', '=', False),
+                    ('journal_id.currency_id', 'in', (False, config.company_id.currency_id.id)),
+            ]
+            non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
+            available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
+                                                                                ('config_ids', '=', False)], limit=1)
+            config.payment_method_ids = non_cash_pm | available_cash_pm
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
