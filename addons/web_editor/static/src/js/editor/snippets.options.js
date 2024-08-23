@@ -6177,6 +6177,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         // This does not update the target.
         await this._applyOptions(false);
     },
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        const img = this._getImg();
+        delete img.dataset.width;
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -6413,6 +6420,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
 
         if (update) {
             img.classList.add('o_modified_image_to_save');
+            if (!img.dataset.width) {
+                // Save image original width.
+                img.dataset.width = await this._getOriginalSize();
+            }
             this._setImageMimetype(img, mimetype);
             const loadedImg = await loadImage(dataURL, img);
             this._applyImage(loadedImg);
@@ -6556,8 +6567,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _getOriginalSize() {
         const image = this._getImg();
-        const originalImage = await loadImage(this.originalSrc);
-        return Math.round(image.dataset.width) || originalImage.naturalWidth;
+        const storedOriginalWidth = Math.round(image.dataset.width);
+        if (storedOriginalWidth) {
+            return storedOriginalWidth;
+        } else {
+            const originalImage = await loadImage(this.originalSrc);
+            return originalImage.naturalWidth;
+        }
     },
     /**
      * @param {HTMLImageElement} img
