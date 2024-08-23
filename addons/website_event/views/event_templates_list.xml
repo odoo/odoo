@@ -92,7 +92,7 @@
                                         type="button"
                                         data-bs-toggle="collapse"
                                         t-attf-aria-controls="o_wevent_offcanvas_cat_#{category.id}"
-                                        t-att-data-bs-target="'.o_wevent_offcanvas_cat_%s' % category.id"
+                                        t-attf-data-bs-target=".o_wevent_offcanvas_cat_#{category.id}"
                                         aria-expanded="false">
                                         <t t-out="category.name"/>
                                     </button>
