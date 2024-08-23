@@ -1402,6 +1402,9 @@ class StockMove(models.Model):
                 package_id=package.id or False,
                 owner_id =reserved_quant.owner_id.id or False,
             )
+        if self.product_id.detailed_type == "consu" and self.location_id.usage == "internal":
+            putaway_loc = self.location_id._get_putaway_strategy(self.product_id)
+            vals["location_id"] = putaway_loc.id
         return vals
 
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
