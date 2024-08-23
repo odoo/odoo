@@ -255,7 +255,10 @@ class OdooTestResult(object):
         if isinstance(test, case.TestCase):
             # since we have the module name in the logger, this will avoid to duplicate module info in log line
             # we only apply this for TestCase since we can receive error handler or other special case
-            return "%s.%s" % (test.__class__.__qualname__, test._testMethodName)
+            description = f"{test.__class__.__qualname__}.{test._testMethodName}"
+            if hasattr(getattr(test, test._testMethodName), 'cross_module'):
+                return f"{description} ({test.test_module})"
+            return description
         return str(test)
 
     @contextlib.contextmanager
