@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_ewaybill_extend_validity" model="ir.actions.act_window">
+        <field name="name">Extend Validity</field>
+        <field name="res_model">ewaybill.extend.validity</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_ewaybill_extend_validity" model="ir.ui.view">
+        <field name="name">Extend Validity</field>
+        <field name="model">ewaybill.extend.validity</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="ewaybill_id" invisible="1"/>
+                        <field name="extend_reason_code"/>
+                        <field name="extend_reason_remarks"/>
+                        <field name="current_place"/>
+                        <field name="current_pincode"/>
+                        <field name="current_state_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                        <label for="rem_distance"/>
+                        <div class="o_row" name="distance">
+                            <field name="rem_distance"/>
+                            <span>km</span>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="consignment_status" widget="radio"/>
+                        <field name="transit_type" attrs="{'invisible': [('consignment_status','!=','T')]}"/>
+                        <field name="mode" attrs="{'invisible': [('consignment_status','!=','M')]}"/>
+                        <field name="vehicle_type" attrs="{'invisible': ['|',('mode','!=','1'),('consignment_status','!=','M')], 'required': [('mode','=','1')]}"/>
+                        <field name="vehicle_no" attrs="{'invisible': ['|',('mode','!=','1'),('consignment_status','!=','M')], 'required': [('mode','=','1')]}"/>
+                        <field name="transportation_doc_no" attrs="{'required': [('mode','in',('2','3','4'))]}"/>
+                        <field name="transportation_doc_date" attrs="{'required': [('mode','in',('2','3','4'))]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="extend_validity" string="Extend" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
