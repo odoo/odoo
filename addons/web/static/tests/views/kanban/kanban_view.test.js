@@ -388,6 +388,25 @@ test("field with widget and attributes in kanban", async () => {
     });
 });
 
+test("kanban with integer field with human_readable option", async () => {
+    Partner._records[0].int_field = 5 * 1000 * 1000;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="int_field" options="{'human_readable': true}"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual(["5M", "9", "17", "-4"]);
+    expect(".o_field_widget").toHaveCount(0);
+});
+
 test.tags("desktop")("Hide tooltip when user click inside a kanban headers item", async () => {
     await mountView({
         type: "kanban",

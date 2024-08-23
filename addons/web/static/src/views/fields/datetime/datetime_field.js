@@ -190,11 +190,11 @@ export class DateTimeField extends Component {
      */
     getFormattedValue(valueIndex) {
         const value = this.values[valueIndex];
-        const { condensed, showSeconds } = this.props;
+        const { condensed, showSeconds, showTime } = this.props;
         return value
-            ? this.field.type === "date" || !this.props.showTime
+            ? this.field.type === "date"
                 ? formatDate(value, { condensed })
-                : formatDateTime(value, { showSeconds, condensed })
+                : formatDateTime(value, { condensed, showSeconds, showTime })
             : "";
     }
 
