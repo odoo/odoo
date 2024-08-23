@@ -34,10 +34,7 @@ export class ChatHub extends Component {
         this.onResize();
         useExternalListener(browser, "resize", this.onResize);
         useEffect(() => {
-            if (
-                this.chatHub.actuallyFolded.length &&
-                this.store.channels?.status === "not_fetched"
-            ) {
+            if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
                 this.store.channels.fetch();
             }
         });
@@ -73,7 +70,7 @@ export class ChatHub extends Component {
 
     get hiddenCounter() {
         let counter = 0;
-        for (const chatWindow of this.chatHub.actuallyHidden) {
+        for (const chatWindow of this.chatHub.folded.slice(this.chatHub.maxFolded)) {
             counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
         }
         return counter;
@@ -86,7 +83,7 @@ export class ChatHub extends Component {
     expand() {
         this.chatHub.compact = false;
         Object.assign(this.compactPosition, { left: "auto", top: "auto" });
-        this.more.isOpen = this.chatHub.actuallyHidden.length !== 0;
+        this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
     }
 }
 
