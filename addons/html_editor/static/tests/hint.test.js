@@ -8,6 +8,7 @@ import {
     setContent,
     setSelection,
 } from "./_helpers/selection";
+import { insertText } from "./_helpers/user_actions";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
@@ -103,4 +104,14 @@ test("temporary hint should not be displayed where there's a permanent one", asy
             <p><br></p>
         `)
     );
+});
+
+test("hint for code section should have the same padding as its text content", async () => {
+    const { el, editor } = await setupEditor("<pre>[]</pre>", {});
+    expect(getContent(el)).toBe(`<pre placeholder="Code" class="o-we-hint">[]</pre>`);
+    const pre = el.firstElementChild;
+    const paddingHint = getComputedStyle(pre, "::before").padding;
+    insertText(editor, "abc");
+    const paddingContent = getComputedStyle(pre).padding;
+    expect(paddingHint).toBe(paddingContent);
 });
