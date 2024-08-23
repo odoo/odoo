@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
-import { queryRect } from "@odoo/hoot-dom";
+import { queryRect, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useRef, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -76,4 +77,27 @@ test(`call onResize callback`, async () => {
 
     await contains(`.resizable-input`).edit("new value", { instantly: true });
     expect.verifySteps(["onResize"]);
+});
+
+test(`call onResize callback after resizing text area`, async () => {
+    class ResizableTextArea extends Component {
+        static template = xml`<textarea class="resizable-textarea" t-ref="textarea"/>`;
+        static props = ["*"];
+
+        setup() {
+            const textareaRef = useRef("textarea");
+            useAutoresize(textareaRef, {
+                onResize(el, options) {
+                    expect.step("onResizeTextArea");
+                },
+            });
+        }
+    }
+    await mountWithCleanup(ResizableTextArea);
+    expect.verifySteps(["onResizeTextArea"]);
+
+    const target = queryOne(".resizable-textarea");
+    target.style.width = `500px`;
+    await animationFrame();
+    expect.verifySteps(["onResizeTextArea"]);
 });
