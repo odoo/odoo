@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from contextlib import suppress
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
@@ -417,10 +416,10 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         self.assertTrue(before_scheduler)
         self._create_registrations(self.test_event, 2)
 
-        def _patched_send_mail_batch(self, *args, **kwargs):
+        def _patched_send_mail(self, *args, **kwargs):
             raise exceptions.ValidationError('Some error')
 
-        with patch.object(type(self.env["mail.template"]), "send_mail_batch", _patched_send_mail_batch), \
+        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
              self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
              self.mock_mail_gateway():
             cron.method_direct_trigger()
@@ -441,9 +440,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
     @mute_logger(
         'odoo.addons.event.models.event_mail',
         'odoo.addons.event.models.event_mail_registration',
-        'odoo.addons.event.models.event_registration'
+        'odoo.addons.event.models.event_registration',
     )
-    @users('user_eventmanager')
     def test_event_mail_schedule_fail_registration_composer(self):
         """ Simulate a fail during composer usage e.g. invalid field path, template
         / model change, ... to check defensive behavior """
@@ -451,13 +449,12 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         self.assertTrue(onsub_scheduler)
         self.assertEqual(onsub_scheduler.mail_count_done, 0)
 
-        def _patched_send_mail_batch(self, *args, **kwargs):
+        def _patched_send_mail(self, *args, **kwargs):
             raise exceptions.ValidationError('Some error')
 
-        with suppress(exceptions.ValidationError), \
-             patch.object(type(self.env["mail.template"]), "send_mail_batch", _patched_send_mail_batch), \
+        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
              self.mock_mail_gateway():
-            registration = self.env['event.registration'].create({
+            registration = self.env['event.registration'].with_user(self.user_eventmanager).create({
                 "email": "test@email.com",
                 "event_id": self.test_event.id,
                 "name": "Mitchell Admin",
