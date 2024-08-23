@@ -1567,7 +1567,7 @@ class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra){
+    get_price(pricelist, quantity, price_extra, get_pricelist_rule=false){
         var self = this;
         var date = moment();
 
@@ -1591,7 +1591,7 @@ class Product extends PosModel {
         if (price_extra){
             price += price_extra;
         }
-        _.find(pricelist_items, function (rule) {
+        const applied_item = _.find(pricelist_items, function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
             }
@@ -1637,7 +1637,7 @@ class Product extends PosModel {
         // being used further. Note that this cannot happen here,
         // because it would cause inconsistencies with the backend for
         // pricelist that have base == 'pricelist'.
-        return price;
+        return get_pricelist_rule ? {price: price, pricelist_item: applied_item}: price;
     }
     get_display_price(pricelist, quantity) {
         const order = this.pos.get_order();
@@ -1687,11 +1687,14 @@ class Orderline extends PosModel {
         this.full_product_name = options.description || '';
         this.id = orderline_id++;
         this.customerNote = this.customerNote || '';
+        this.pricelist_item = null;
 
         if (options.price) {
             this.set_unit_price(options.price);
         } else {
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+            const {price, pricelist_item} = this.product.get_price(this.order.pricelist, this.get_quantity(), null, true)
+            this.set_unit_price(price);
+            this.set_pricelist_item(pricelist_item);
         }
     }
     init_from_JSON(json) {
@@ -1877,7 +1880,9 @@ class Orderline extends PosModel {
 
         // just like in sale.order changing the quantity will recompute the unit price
         if(! keep_price && ! (this.price_manually_set || this.price_automatically_set)){
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity(), this.get_price_extra()));
+            const {price, pricelist_item} = this.product.get_price(this.order.pricelist, this.get_quantity(), this.get_price_extra(), true)
+            this.set_unit_price(price);
+            this.set_pricelist_item(pricelist_item);
             this.order.fix_tax_included_price(this);
         }
         return true;
@@ -2079,6 +2084,10 @@ class Orderline extends PosModel {
 
         return wrapped;
     }
+    set_pricelist_item(rule){
+        this.order.assert_editable();
+        this.pricelist_item = rule;
+    }
     // changes the base price of the product for this orderline
     set_unit_price(price){
         this.order.assert_editable();
@@ -2091,6 +2100,9 @@ class Orderline extends PosModel {
         var digits = this.pos.dp['Product Price'];
         // round and truncate to mimic _symbol_set behavior
         return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
+    }
+    get_pricelist_item(){
+        return this.pricelist_item;
     }
     get_unit_display_price(){
         if (this.pos.config.iface_tax_included === 'total') {
@@ -2919,7 +2931,9 @@ class Order extends PosModel {
             return ! (line.price_manually_set || line.price_automatically_set);
         });
         _.each(lines_to_recompute, function (line) {
-            line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra()));
+            const { price, pricelist_item } = line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra(), true)
+            line.set_unit_price(price);
+            line.set_pricelist_item(pricelist_item);
             self.fix_tax_included_price(line);
         });
     }
@@ -2987,7 +3001,9 @@ class Order extends PosModel {
 
         if (options.price_extra !== undefined){
             orderline.price_extra = options.price_extra;
-            orderline.set_unit_price(orderline.product.get_price(this.pricelist, orderline.get_quantity(), options.price_extra));
+            const {price, pricelist_item} = orderline.product.get_price(this.pricelist, orderline.get_quantity(), options.price_extra, true)
+            orderline.set_unit_price(price);
+            orderline.set_pricelist_item(pricelist_item);
             this.fix_tax_included_price(orderline);
         }
 
