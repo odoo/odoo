@@ -9,8 +9,6 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.company)
     is_root_company = fields.Boolean(compute='_compute_is_root_company')
     user_default_rights = fields.Boolean(
         "Default Access Rights",
