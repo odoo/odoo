@@ -26,7 +26,7 @@
                     <t t-set="_text">Find out how we were able helping them and set in place solutions adapted to their needs.</t>
                 </t>
 
-                <div class="w-100 d-none d-md-block"/>
+                <div class="w-100 d-none d-lg-block"/>
 
                 <t t-call="website.s_mega_menu_cards_item">
                     <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_5"/>
@@ -54,7 +54,7 @@
 </template>
 
 <template id="s_mega_menu_cards_item">
-    <div class="col-12 col-sm-6 col-md" data-name="Menu Item">
+    <div class="col-12 col-lg-3" data-name="Menu Item">
         <a href="#" class="nav-link o_default_snippet_text rounded text-wrap text-center p-3">
             <img t-att-src="_img_src" class="mb-3 rounded shadow img-fluid" alt=""/>
             <h4 t-esc="_title"/>

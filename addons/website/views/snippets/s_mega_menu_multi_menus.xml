@@ -10,7 +10,7 @@
                 <t t-set="menu3_title">Third Menu</t>
                 <t t-set="menu4_title">Last Menu</t>
                 <t t-foreach="[menu1_title, menu2_title, menu3_title, menu4_title]" t-as="menu_title">
-                    <div class="col-12 col-sm py-2 text-center">
+                    <div class="col-12 col-lg-3 py-2 text-center">
                         <h4 class="o_default_snippet_text" t-esc="menu_title"/>
                         <nav class="nav flex-column">
                             <t t-foreach="3" t-as="i">
