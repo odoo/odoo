@@ -170,6 +170,7 @@ class PosOrderLine(models.Model):
         compute="_compute_qty_delivered",
         store=True, readonly=False, copy=False)
 
+<<<<<<< saas-17.4
     @api.depends('order_id.state', 'order_id.picking_ids', 'order_id.picking_ids.state', 'order_id.picking_ids.move_ids.quantity')
     def _compute_qty_delivered(self):
         for order_line in self:
@@ -177,6 +178,21 @@ class PosOrderLine(models.Model):
                 outgoing_pickings = order_line.order_id.picking_ids.filtered(
                     lambda pick: pick.state == 'done' and pick.picking_type_code == 'outgoing'
                 )
+||||||| 8f583f01eea9034d6291c95df7e31f4cc1ff07b8
+    def _export_for_ui(self, orderline):
+        result = super()._export_for_ui(orderline)
+        # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
+        result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
+        result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        return result
+=======
+    def _export_for_ui(self, orderline):
+        result = super()._export_for_ui(orderline)
+        result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
+        result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        result['sale_order_line_id'] = bool(orderline.sale_order_line_id) and orderline.sale_order_line_id.read(fields=['name'])[0]
+        return result
+>>>>>>> a6cfe29980433029d6d275313521288a3c9ab6e1
 
                 if outgoing_pickings:
                     moves = outgoing_pickings.move_ids.filtered(
