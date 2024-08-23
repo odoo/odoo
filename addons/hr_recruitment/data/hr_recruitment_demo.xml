@@ -307,23 +307,123 @@
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
     </record>
 
+    <record id="hr_case_dev2_cv" model="ir.attachment">
+        <field name="name">Cecile_Donth_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Cecile_Donth_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_dev2"/>
+    </record>
+
+    <record id="hr_case_financejob0_cv" model="ir.attachment">
+        <field name="name">David_Armstrong_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/David_Armstrong_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_financejob0"/>
+    </record>
+
+    <record id="hr_case_advertisement_cv" model="ir.attachment">
+        <field name="name">David_Billy_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/David_Billy_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_advertisement"/>
+    </record>
+
     <record id="hr_case_salesman0_cv" model="ir.attachment">
-        <field name="name">Jones_CV.pdf</field>
-        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jones_cv.pdf"></field>
+        <field name="name">Enrique_Jones_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Enrique_Jones_CV.pdf"></field>
         <field name="res_model">hr.applicant</field>
         <field name="res_id" ref="hr_recruitment.hr_case_salesman0"/>
     </record>
+
+    <record id="hr_case_mkt1_cv" model="ir.attachment">
+        <field name="name">Hubert_Blank_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Hubert_Blank_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_mkt1"/>
+    </record>
+
+    <record id="hr_case_dev0_cv" model="ir.attachment">
+        <field name="name">Johan_Duck_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Johan_Duck_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_dev0"/>
+    </record>
+
+    <record id="hr_case_yrsexperienceinphp0_cv" model="ir.attachment">
+        <field name="name">John_Bruno_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/John_Bruno_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0"/>
+    </record>
+
+    <record id="hr_case_financejob1_cv" model="ir.attachment">
+        <field name="name">Joren_Jacob_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Joren_Jacob_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_financejob1"/>
+    </record>
+
     <record id="hr_case_fresher0_cv" model="ir.attachment">
-        <field name="name">Jose_CV.txt</field>
-        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jose_cv.txt"></field>
+        <field name="name">Jose_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Jose_CV.pdf"></field>
         <field name="res_model">hr.applicant</field>
         <field name="res_id" ref="hr_recruitment.hr_case_fresher0"/>
     </record>
+
+    <record id="hr_case_dev1_cv" model="ir.attachment">
+        <field name="name">Kelly_Wallant_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Kelly_Wallant_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_dev1"/>
+    </record>
+
+    <record id="hr_case_traineemca0_cv" model="ir.attachment">
+        <field name="name">Marie_Justine_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Marie_Justine_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0"/>
+    </record>
+
+    <record id="hr_case_salesman1_cv" model="ir.attachment">
+        <field name="name">Meldona_Thang_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Meldona_Thang_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman1"/>
+    </record>
+
+    <record id="hr_case_dev3_cv" model="ir.attachment">
+        <field name="name">Ohen_Rizome_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Ohen_Rizome_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_dev3"/>
+    </record>
+
+    <record id="hr_case_marketingjob0_cv" model="ir.attachment">
+        <field name="name">Sandra_Elvis_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Sandra_Elvis_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+    </record>
+
     <record id="hr_case_programmer_cv" model="ir.attachment">
-        <field name="name">Williams_CV.doc</field>
-        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_williams_cv.doc"></field>
+        <field name="name">Shane_Williams_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Shane_Williams_CV.pdf"></field>
         <field name="res_model">hr.applicant</field>
         <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>
+    </record>
+
+    <record id="hr_case_traineemca1_cv" model="ir.attachment">
+        <field name="name">Tina_Augustie_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Tina_Augustie_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca1"/>
+    </record>
+
+    <record id="hr_case_mkt0_cv" model="ir.attachment">
+        <field name="name">Yin_Lee_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/static/applicant_cvs/Yin_Lee_CV.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_mkt0"/>
     </record>
 
     <record id="message_application_demo" model="mail.message">
