@@ -19,3 +19,4 @@ Dinar Gabbasov gabbasov@it-projects.info https://github.com/GabbasovDinar
 Artyom Losev losev@it-projects.info https://github.com/ArtyomLosev
 Alexandr Kolushov kolushov@it-projects.info https://github.com/KolushovAlexandr
 Rafis Bikbov bikbov@it-projects.info https://github.com/RafiZz
+Eugene Molotov molotov@it-projects.info https://github.com/em230418
