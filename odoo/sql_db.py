@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -7,12 +6,14 @@ The PostgreSQL connector is a connectivity layer between the OpenERP code and
 the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
+from __future__ import annotations
 
 import logging
 import os
 import re
 import threading
 import time
+import typing
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -31,6 +32,12 @@ from . import tools
 from .tools import SQL
 from .tools.func import frame_codeinfo, locked
 from .tools.misc import Callbacks
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+
+    T = typing.TypeVar('T')
+
 
 def undecimalize(value, cr):
     if value is None:
@@ -392,7 +399,7 @@ class Cursor(BaseCursor):
             query = query.as_string(self._obj)
         return psycopg2.extras.execute_values(self, query, argslist, template=template, page_size=page_size, fetch=fetch)
 
-    def split_for_in_conditions(self, ids, size=None):
+    def split_for_in_conditions(self, ids: Iterable[T], size: int = 0) -> Iterator[tuple[T, ...]]:
         """Split a list of identifiers into one or more smaller tuples
            safe for IN conditions, after uniquifying them."""
         return tools.misc.split_every(size or self.IN_MAX, ids)
