@@ -78,7 +78,14 @@ class Survey(http.Controller):
         if not survey_sudo.active and (not answer_sudo or not answer_sudo.test_entry):
             return 'survey_closed'
 
-        if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
+        if survey_sudo.questions_selection == 'random':
+            visible_pages_and_questions = survey_sudo._get_visible_pages_and_questions()
+            visible_pages = visible_pages_and_questions.filtered(lambda page_or_question: page_or_question.is_page)
+            visible_questions = visible_pages_and_questions.filtered(lambda page_or_question: not page_or_question.is_page)
+            if (not visible_pages and survey_sudo.questions_layout == 'page_per_section') or not visible_questions:
+                return 'survey_void'
+
+        if survey_sudo.questions_selection == 'all' and (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
         if answer_sudo and check_partner:
@@ -261,13 +268,19 @@ class Survey(http.Controller):
             'is_html_empty': is_html_empty,
             'survey': survey_sudo,
             'answer': answer_sudo,
-            'breadcrumb_pages': [{
-                'id': page.id,
-                'title': page.title,
-            } for page in survey_sudo.page_ids],
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        if survey_sudo.questions_selection == 'random':
+            pages = survey_sudo._get_visible_pages_and_questions().filtered(lambda page_or_question: page_or_question.is_page)
+        else:
+            pages = survey_sudo.page_ids
+        data.update({
+            'breadcrumb_pages': [{
+                'id': page.id,
+                'title': page.title,
+            } for page in pages],
+        })
         if survey_sudo.questions_layout != 'page_per_question':
             triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({

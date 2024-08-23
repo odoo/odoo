@@ -168,7 +168,13 @@
             t-att-data-timer="timer_start"
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
-            <t t-foreach='survey.question_and_page_ids' t-as='question'>
+            <t t-if="survey.questions_selection == 'random'">
+                <t t-set="questions_and_pages" t-value="survey._get_visible_pages_and_questions()"/>
+            </t>
+            <t t-else="">
+                <t t-set="questions_and_pages" t-value="survey.question_and_page_ids"/>
+            </t>
+            <t t-foreach='questions_and_pages' t-as='question'>
                 <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break" />
                 <div t-if="question.is_page" t-field='question.description' class="text-break"/>
                 <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
