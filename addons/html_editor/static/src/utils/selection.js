@@ -1,5 +1,11 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isNotEditableNode, isSelfClosingElement, nextLeaf, previousLeaf } from "./dom_info";
+import {
+    isContentEditable,
+    isNotEditableNode,
+    isSelfClosingElement,
+    nextLeaf,
+    previousLeaf,
+} from "./dom_info";
 import { isFakeLineBreak } from "./dom_state";
 import { closestElement, createDOMPathGenerator } from "./dom_traversal";
 import {
@@ -138,8 +144,7 @@ export function normalizeDeepCursorPosition(node, offset) {
         let leftVisibleEmpty = false;
         if (leftInlineNode) {
             leftVisibleEmpty =
-                isSelfClosingElement(leftInlineNode) ||
-                !closestElement(leftInlineNode).isContentEditable;
+                isSelfClosingElement(leftInlineNode) || !isContentEditable(leftInlineNode);
             [node, offset] = leftVisibleEmpty ? rightPos(leftInlineNode) : endPos(leftInlineNode);
         }
         if (!leftInlineNode || leftVisibleEmpty) {
@@ -241,11 +246,7 @@ export function getAdjacentCharacter(selection, side, editable) {
             adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
         }
     }
-    if (
-        !focusNode ||
-        !closestElement(focusNode).isContentEditable ||
-        closestBlock(focusNode) !== originalBlock
-    ) {
+    if (!focusNode || !isContentEditable(focusNode) || closestBlock(focusNode) !== originalBlock) {
         return undefined;
     }
     return adjacentCharacter;

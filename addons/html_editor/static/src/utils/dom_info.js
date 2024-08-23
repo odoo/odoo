@@ -536,7 +536,7 @@ export function getDeepestPosition(node, offset) {
     let direction = DIRECTIONS.RIGHT;
     let next = node;
     while (next) {
-        if (isTangible(next) || (isZWS(next) && closestElement(next).isContentEditable)) {
+        if (isTangible(next) || (isZWS(next) && isContentEditable(next))) {
             // Valid node: update position then try to go deeper.
             if (next !== node) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
@@ -644,4 +644,9 @@ export function areSimilarElements(node, node2) {
 
 export function isTextNode(node) {
     return node.nodeType === Node.TEXT_NODE;
+}
+
+export function isContentEditable(node) {
+    const element = isTextNode(node) ? node.parentElement : node;
+    return element.isContentEditable;
 }
