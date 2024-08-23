@@ -828,7 +828,7 @@ export class ListRenderer extends Component {
         if (column.options.enable_formatting === false) {
             return record.data[fieldName];
         }
-        return getFormattedValue(record, fieldName, column.attrs);
+        return getFormattedValue(record, fieldName, column);
     }
 
     evalInvisible(invisible, record) {

@@ -40,14 +40,11 @@ export class FloatToggleField extends Component {
         return this.props.factor;
     }
 
-    get digits() {
-        const fieldDigits = this.props.record.fields[this.props.name].digits;
-        return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
-    }
     get formattedValue() {
         return formatFloatFactor(this.props.record.data[this.props.name], {
-            digits: this.digits,
+            digits: this.props.digits,
             factor: this.factor,
+            field: this.props.record.fields[this.props.name],
         });
     }
 }

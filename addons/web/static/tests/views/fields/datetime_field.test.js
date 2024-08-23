@@ -556,8 +556,8 @@ test("datetime field in list with show_time option", async () => {
         resModel: "partner",
         arch: `
             <tree editable="bottom">
-                <field name="datetime" widget="datetime" options="{'show_time': false}"/>
-                <field name="datetime" widget="datetime" />
+                <field name="datetime" options="{'show_time': false}"/>
+                <field name="datetime" />
             </tree>
         `,
     });
@@ -606,12 +606,12 @@ test("datetime field in kanban view with condensed option", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-card">
-                        <field name="datetime" options="{'condensed': true}" widget="datetime"/>
+                        <field name="datetime" options="{'condensed': true}"/>
                     </t>
                 </templates>
             </kanban>`,
     });
 
     const expectedDateString = "2/8/2017 8:00:00"; // 10:00:00 without timezone
-    expect(".o_field_datetime:first").toHaveText(expectedDateString);
+    expect(".o_kanban_record:first").toHaveText(expectedDateString);
 });
