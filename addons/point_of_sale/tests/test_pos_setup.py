@@ -4,6 +4,7 @@
 from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.exceptions import ValidationError
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSetup(TestPoSCommon):
@@ -74,3 +75,8 @@ class TestPoSSetup(TestPoSCommon):
         self.assertEqual(tax_group_7_10.name, 'Tax 7+10%')
         self.assertEqual(tax_group_7_10.amount_type, 'group')
         self.assertEqual(sorted(tax_group_7_10.children_tax_ids.ids), sorted((tax7 | tax10).ids))
+
+    def test_archive_used_journal(self):
+        journal = self.cash_pm1.journal_id
+        with self.assertRaises(ValidationError):
+            journal.action_archive()
