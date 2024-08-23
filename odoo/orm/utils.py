@@ -96,7 +96,7 @@ def check_pg_name(name):
         raise ValidationError("Table name %r is too long" % name)
 
 
-def parse_field_expr(field_expr: str) -> tuple[str, str]:
+def parse_field_expr(field_expr: str) -> tuple[str, str | None]:
     if (property_index := field_expr.find(".")) >= 0:
         property_name = field_expr[property_index + 1:]
         field_expr = field_expr[:property_index]
