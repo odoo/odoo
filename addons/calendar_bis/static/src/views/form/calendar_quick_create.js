@@ -49,7 +49,7 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     }
 }
 
-registry.category("views").add("calendar_quick_create_form_view", {
+registry.category("views").add("calendar_bis_quick_create_form_view", {
     ...CalendarFormView,
     Controller: CalendarQuickCreateFormController,
 });
