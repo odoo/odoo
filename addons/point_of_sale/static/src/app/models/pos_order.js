@@ -1,15 +1,9 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
-import {
-    getUTCString,
-    parseUTCString,
-    qrCodeSrc,
-    random5Chars,
-    uuidv4,
-} from "@point_of_sale/utils";
+import { parseUTCString, qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
@@ -29,7 +23,7 @@ export class PosOrder extends Base {
         }
 
         // Data present in python model
-        this.date_order = vals.date_order || getUTCString(luxon.DateTime.now());
+        this.date_order = vals.date_order || serializeDateTime(luxon.DateTime.now());
         this.to_invoice = vals.to_invoice || false;
         this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
