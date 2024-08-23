@@ -10,6 +10,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 
 @tagged('post_install', '-at_install')
+<<<<<<< master
 class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: internalUserGroupId: ref exists
@@ -140,6 +141,47 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search rating_rating
     #       - _compute_rating_stats
     _query_count_discuss_channels = 52
+||||||| bb70ec7c45dc2c596b60956d00010b2d6ef6c5b9
+class TestDiscussFullPerformance(HttpCase):
+    # Queries for _query_count_init_store:
+    #     1: action_discuss_id
+    #     1: hasGifPickerFeature
+    #     1: hasLinkPreviewFeature
+    #     1: hasMessageTranslationFeature
+    #     1: internalUserGroupId
+    #     1: mt_comment_id
+    #     6: odoobot format
+    #     4: settings
+    #     1: has_access_livechat
+    _query_count_init_store = 17
+    # Queries for _query_count:
+    #     3: _compute_is_editable
+    _query_count = 54 + 1  # +1 is necessary to fix nondeterministic issue on runbot
+    # Queries for _query_count_discuss_channels:
+    #     1: bus last id
+    #     3: _compute_is_editable
+    _query_count_discuss_channels = 73
+=======
+class TestDiscussFullPerformance(HttpCase):
+    # Queries for _query_count_init_store:
+    #     1: action_discuss_id
+    #     1: hasGifPickerFeature
+    #     1: hasLinkPreviewFeature
+    #     1: hasMessageTranslationFeature
+    #     1: internalUserGroupId
+    #     1: mt_comment_id
+    #     6: odoobot format
+    #     4: settings
+    #     1: has_access_livechat
+    _query_count_init_store = 17
+    # Queries for _query_count:
+    #     3: _compute_is_editable
+    _query_count = 54 + 2  # +2 is necessary to fix nondeterministic issue on runbot
+    # Queries for _query_count_discuss_channels:
+    #     1: bus last id
+    #     3: _compute_is_editable
+    _query_count_discuss_channels = 73
+>>>>>>> 868ab80d0ff77c7579f459c6038158dfd359eb36
 
     def setUp(self):
         super().setUp()
