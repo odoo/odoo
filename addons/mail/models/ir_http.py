@@ -14,7 +14,7 @@ class IrHttp(models.AbstractModel):
         result = super().session_info()
         store = Store()
         ResUsers = self.env["res.users"]
-        if cids := request.httprequest.cookies.get("cids", False):
+        if cids := request.cookies.get("cids", False):
             allowed_company_ids = []
             for company_id in [int(cid) for cid in cids.split("-")]:
                 if company_id in self.env.user.company_ids.ids:

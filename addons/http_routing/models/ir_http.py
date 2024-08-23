@@ -406,7 +406,7 @@ class IrHttp(models.AbstractModel):
         try:
             request.registry['ir.http']._auth_method_public()  # it calls update_env
             nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._get_data(url_code=url_lang_str).code or url_lang_str)
-            cookie_lang = request.env['ir.http'].get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
+            cookie_lang = request.env['ir.http'].get_nearest_lang(request.cookies.get('frontend_lang'))
             context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
             default_lang = cls._get_default_lang()
             request.lang = request.env['res.lang']._get_data(code=(
@@ -521,7 +521,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _frontend_pre_dispatch(cls):
         request.update_context(lang=request.lang.code)
-        if request.httprequest.cookies.get('frontend_lang') != request.lang.code:
+        if request.cookies.get('frontend_lang') != request.lang.code:
             request.future_response.set_cookie('frontend_lang', request.lang.code)
 
     # ------------------------------------------------------------

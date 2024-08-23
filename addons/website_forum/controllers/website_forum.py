@@ -25,7 +25,7 @@ class WebsiteForum(WebsiteProfile):
 
     def _prepare_user_values(self, **kwargs):
         values = super(WebsiteForum, self)._prepare_user_values(**kwargs)
-        values['forum_welcome_message'] = request.httprequest.cookies.get('forum_welcome_message', False)
+        values['forum_welcome_message'] = request.cookies.get('forum_welcome_message', False)
         values.update({
             'header': kwargs.get('header', dict()),
             'searches': kwargs.get('searches', dict()),

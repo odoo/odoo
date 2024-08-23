@@ -297,7 +297,7 @@
                 </script>
                 <t t-call-assets="web.assets_web_print" media="print" t-js="false"/>
 
-                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                <t t-if="request.cookies.get('color_scheme') == 'dark'">
                     <t t-call-assets="web.assets_web_dark" media="screen"/>
                 </t>
                 <t t-else="">
