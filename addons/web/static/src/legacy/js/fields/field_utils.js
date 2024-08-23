@@ -582,7 +582,25 @@ function parseNumber(value) {
  * @returns {float}
  * @throws {Error} if no float is found respecting the language configuration
  */
+function checkNumber(x) {
+    if(typeof x == 'number' && !isNaN(x)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function ConvertHexToString(str) {
+    let txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value;
+}
+
 function parseFloat(value) {
+    if(!checkNumber(value))
+    {
+        value = ConvertHexToString(value);
+    }
     var parsed = parseNumber(value);
     if (isNaN(parsed)) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
