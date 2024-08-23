@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Python: Remote Attach",
+            // type: "python" will be soon deprecated from vscode. Install "Python Debugger" extension by MS and use type: "debugpy"
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "."
+                }
+            ]
+        }
+    ]
+}
