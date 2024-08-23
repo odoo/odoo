@@ -519,7 +519,8 @@ class Survey(http.Controller):
             if question in inactive_questions:  # if question is inactive, skip validation and save
                 continue
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
-            errors.update(question.validate_question(answer, comment))
+            if 'previous_page_id' not in post:
+                errors.update(question.validate_question(answer, comment))
             if not errors.get(question.id):
                 answer_sudo.save_lines(question, answer, comment)
 
