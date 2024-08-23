@@ -1,20 +1,10 @@
-import { toRaw } from "@odoo/owl";
-import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { describe, expect, test } from "@odoo/hoot";
+import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 
-const raw = (records) => {
-    if (records instanceof Base) {
-        return toRaw(records);
-    }
-
-    return records.map((record) => toRaw(record));
-};
-
-QUnit.module("models with backlinks", () => {
-    QUnit.module("many2one/one2many field relations to other models", (hooks) => {
-        let models;
-
-        hooks.beforeEach(() => {
-            models = createRelatedModels({
+describe("models with backlinks", () => {
+    describe("many2one and one2many field relations to other models", () => {
+        const getModels = () =>
+            createRelatedModels({
                 "product.product": {
                     category_id: { type: "many2one", relation: "product.category" },
                 },
@@ -26,20 +16,16 @@ QUnit.module("models with backlinks", () => {
                     },
                 },
             }).models;
-        });
 
-        QUnit.test("create operation", (assert) => {
+        test("create operation", () => {
+            const models = getModels();
             const category = models["product.category"].create({});
             const product = models["product.product"].create({ category_id: category });
-            assert.ok(product, "Product should be created");
-            assert.equal(product.category_id, category, "Product should belong to the category");
-            assert.ok(
-                category.product_ids.includes(product),
-                "Product should be linked to the category"
-            );
+            expect(product.category_id).toBe(category);
+            expect(category.product_ids.includes(product)).toBe(true);
         });
-
-        QUnit.test("read operation", (assert) => {
+        test("read operation", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({});
             const p1 = models["product.product"].create({ category_id: c1 });
@@ -48,159 +34,130 @@ QUnit.module("models with backlinks", () => {
 
             // Test reading back the categories directly
             const readC1 = models["product.category"].read(c1.id);
-            assert.deepEqual(
-                raw(readC1),
-                raw(c1),
-                "Category 1 should be found and match the created category"
-            );
+            expect(readC1).toEqual(c1);
+
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(
-                raw(readP1),
-                raw(p1),
-                "Product 1 should be found and match the created product"
-            );
+            expect(readP1).toEqual(p1);
 
             // Test the one2many relationship from category to products
-            assert.ok(
-                raw(readC1.product_ids).includes(raw(p1)) &&
-                    raw(readC1.product_ids).includes(raw(p2)),
-                "Category 1 should include Product 1 and Product 2"
-            );
+            expect(readC1.product_ids.includes(p1)).toBe(true);
+            expect(readC1.product_ids.includes(p2)).toBe(true);
 
             // Test the many2one relationship from products to category
-            assert.equal(raw(readP1.category_id), raw(c1), "Product 3 should belong to Category 2");
+            expect(readP1.category_id).toEqual(c1);
 
             // Additional checks for completeness
-            //todo: make readAll/getAll available
-
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            assert.deepEqual(raw(readMany), raw([p2, p3]), "Multiple products should be found");
+            expect(readMany).toEqual([p2, p3]);
 
             const readNonExistent = models["product.product"].read(9999);
-            assert.equal(
-                readNonExistent,
-                undefined,
-                "Non-existent product read attempt should return undefined"
-            );
+            expect(readNonExistent).toBe(undefined);
 
             const readNonExistentC = models["product.category"].read(9999);
-            assert.equal(
-                readNonExistentC,
-                undefined,
-                "Non-existent category read attempt should return undefined"
-            );
+            expect(readNonExistentC).toBe(undefined);
         });
 
-        QUnit.test("update operation, many2one", (assert) => {
+        test("update operation, many2one", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
+
             p1.update({ category_id: c1 });
-            assert.equal(p1.category_id, c1, "Product should be updated with new category");
-            assert.ok(c1.product_ids.includes(p1), "Product should be linked to the new category");
-            assert.notOk(
-                c1.product_ids.includes(p2),
-                "Product should be unlinked from the old category"
-            );
+            expect(p1.category_id).toBe(c1);
+            expect(c1.product_ids.includes(p1)).toBe(true);
+            expect(c1.product_ids.includes(p2)).toBe(false);
         });
 
-        QUnit.test("update operation, one2many", (assert) => {
+        test("update operation, one2many", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
+
             c1.update({ product_ids: [["link", p1, p2]] });
-            assert.ok(c1.product_ids.includes(p1), "Product should be linked to the category");
-            assert.ok(c1.product_ids.includes(p2), "Product should be linked to the category");
-            assert.equal(p1.category_id, c1, "Product should be updated with new category");
+            expect(c1.product_ids.includes(p1)).toBe(true);
+            expect(c1.product_ids.includes(p2)).toBe(true);
+            expect(p1.category_id).toBe(c1);
         });
 
-        QUnit.test("update operation, unlink many2one", (assert) => {
+        test("update operation, unlink many2one", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({ category_id: {} });
             const c1 = p1.category_id;
-            assert.ok(c1, "Product should be linked to the category");
-            assert.deepEqual(c1.product_ids, [p1], "Category should be linked to the product");
+
+            expect(c1.product_ids).toEqual([p1]);
 
             p1.update({ category_id: undefined });
-            assert.equal(p1.category_id, undefined, "Product should be unlinked from the category");
-            assert.notOk(
-                c1.product_ids.includes(p1),
-                "Product should be unlinked from the category"
-            );
+            expect(p1.category_id).toBe(undefined);
+            expect(c1.product_ids.includes(p1)).toBe(false);
         });
 
-        QUnit.test("update operation, unlink one2many", (assert) => {
+        test("update operation, unlink one2many", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
+
             c1.update({ product_ids: [["link", p1]] });
-            assert.ok(c1.product_ids.includes(p1), "Product should be linked to the category");
-            assert.equal(p1.category_id, c1, "Product should be linked to the category");
+            expect(c1.product_ids.includes(p1)).toBe(true);
+            expect(p1.category_id).toBe(c1);
 
             c1.update({ product_ids: [["unlink", p1]] });
-            assert.notOk(
-                c1.product_ids.includes(p1),
-                "Product should be unlinked from the category"
-            );
-            assert.equal(p1.category_id, undefined, "Product should be unlinked from the category");
+            expect(c1.product_ids.includes(p1)).toBe(false);
+            expect(p1.category_id).toBe(undefined);
         });
 
-        QUnit.test("update operation, Clear one2many", (assert) => {
+        test("update operation, Clear one2many", () => {
+            const models = getModels();
             const category = models["product.category"].create({});
             models["product.product"].create({ name: "Product 1", category_id: category });
             models["product.product"].create({ name: "Product 2", category_id: category });
+
             models["product.category"].update(category, { product_ids: [["clear"]] });
             const updatedCategory = models["product.category"].read(category.id);
-            assert.equal(
-                updatedCategory.product_ids.length,
-                0,
-                "All products should be unlinked from the category"
-            );
+            expect(updatedCategory.product_ids.length).toBe(0);
         });
 
-        QUnit.test("update operation, Clear many2one", (assert) => {
+        test("update operation, Clear many2one", () => {
+            const models = getModels();
             const category = models["product.category"].create({});
             const product = models["product.product"].create({ category_id: category });
+
             models["product.product"].update(product, { category_id: undefined });
             const updatedCategory = models["product.category"].read(category.id);
-            assert.equal(
-                updatedCategory.product_ids.length,
-                0,
-                "All products should be unlinked from the category"
-            );
+            expect(updatedCategory.product_ids.length).toBe(0);
         });
 
-        QUnit.test("delete operation, one2many item", (assert) => {
+        test("delete operation, one2many item", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
-            c1.update({ product_ids: [["link", p1, p2]] });
 
-            assert.ok(c1.product_ids.includes(p1), "Product should be linked to the category");
+            c1.update({ product_ids: [["link", p1, p2]] });
+            expect(c1.product_ids.includes(p1)).toBe(true);
 
             p1.delete();
-            assert.notOk(models["product.product"].read(p1.id), "Product should be deleted");
-            assert.notOk(
-                c1.product_ids.includes(p1),
-                "Product should be unlinked from the category"
-            );
+            expect(models["product.product"].read(p1.id)).toBe(undefined);
+            expect(c1.product_ids.includes(p1)).toBe(false);
         });
 
-        QUnit.test("delete operation, many2one item", (assert) => {
+        test("delete operation, many2one item", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
-            p1.update({ category_id: c1 });
 
-            assert.ok(c1.product_ids.includes(p1), "Product should be linked to the category");
+            p1.update({ category_id: c1 });
+            expect(c1.product_ids.includes(p1)).toBe(true);
 
             c1.delete();
-            assert.notOk(models["product.category"].read(c1.id), "Category should be deleted");
-            assert.equal(p1.category_id, undefined, "Product should be unlinked from the category");
+            expect(models["product.category"].read(c1.id)).toBe(undefined);
+            expect(p1.category_id).toBe(undefined);
         });
     });
-
-    QUnit.module("many2one/one2many field relations to own model", (hooks) => {
-        let models;
-        hooks.beforeEach(() => {
-            models = createRelatedModels({
+    describe("many2one/one2many field relations to own model", () => {
+        const getModels = () =>
+            createRelatedModels({
                 "product.category": {
                     parent_id: { type: "many2one", relation: "product.category" },
                     child_ids: {
@@ -210,128 +167,128 @@ QUnit.module("models with backlinks", () => {
                     },
                 },
             }).models;
-        });
 
-        QUnit.test("create operation", (assert) => {
+        test("create operation", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({ parent_id: c1 });
 
-            assert.ok(c1, "Category should be created");
-            assert.equal(c2.parent_id, c1, "Category should have a parent");
-            assert.ok(c1.child_ids.includes(c2), "Product should be linked to the category");
+            expect(c2.parent_id).toBe(c1);
+            expect(c1.child_ids.includes(c2)).toBe(true);
         });
 
-        QUnit.test("read operation", (assert) => {
+        test("read operation", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({ parent_id: c1 });
 
             const readC1 = models["product.category"].read(c1.id);
-            assert.deepEqual(raw(readC1.child_ids), raw([c2]), "Child category should be found");
+            expect(readC1.child_ids).toEqual([c2]);
 
             const readC2 = models["product.category"].read(c2.id);
-            assert.deepEqual(raw(readC2.parent_id), raw(c1), "Parent category should be found");
+            expect(readC2.parent_id).toEqual(c1);
 
             const readMany = models["product.category"].readMany([c1.id, c2.id]);
-            assert.deepEqual(raw(readMany), raw([c1, c2]), "Multiple categories should be found");
+            expect(readMany).toEqual([c1, c2]);
         });
 
-        QUnit.test("update operation, many2one", (assert) => {
+        test("update operation, many2one", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({});
             const c3 = models["product.category"].create({ parent_id: c1 });
-            assert.equal(c3.parent_id, c1, "c3's parent should be c1");
+
+            expect(c3.parent_id).toBe(c1);
             c3.update({ parent_id: c2 });
-            assert.equal(c3.parent_id, c2, "Category should be updated with new parent");
-            assert.ok(c2.child_ids.includes(c3), "Category should be linked to the new parent");
-            assert.notOk(
-                c1.child_ids.includes(c3),
-                "Category should be unlinked from the old parent"
-            );
+            expect(c3.parent_id).toBe(c2);
+            expect(c2.child_ids.includes(c3)).toBe(true);
+            expect(c1.child_ids.includes(c3)).toBe(false);
         });
 
-        QUnit.test("update operation, one2many", (assert) => {
+        test("update operation, one2many", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({});
-            assert.notOk(c1.parent_id, "categories are not yet linked");
+
+            expect(c1.parent_id).toBe(undefined);
             c1.update({ child_ids: [["link", c2]] });
-            assert.ok(c1.child_ids.includes(c2), "Category should be linked to the parent");
-            assert.equal(c2.parent_id, c1, "Category should be linked to the parent");
+            expect(c1.child_ids.includes(c2)).toBe(true);
+            expect(c2.parent_id).toBe(c1);
         });
 
-        QUnit.test("update operation, unlink many2one", (assert) => {
+        test("update operation, unlink many2one", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({});
+
             c2.update({ parent_id: c1 });
-            assert.ok(c2.parent_id, "Category should be linked to the parent");
+            expect(c2.parent_id).toBe(c1);
 
             c2.update({ parent_id: undefined });
-            assert.notOk(c2.parent_id, "Category should be unlinked from the parent");
-            assert.notOk(c1.child_ids.includes(c2), "Category should be unlinked from the parent");
+            expect(c2.parent_id).toBe(undefined);
+            expect(c1.child_ids.includes(c2)).toBe(false);
         });
 
-        QUnit.test("update operation, unlink one2many", (assert) => {
+        test("update operation, unlink one2many", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({ parent_id: c1 });
-            assert.ok(c1.child_ids.includes(c2), "Category should be linked to the parent");
+
+            expect(c1.child_ids.includes(c2)).toBe(true);
 
             c1.update({ child_ids: [["unlink", c2]] });
-            assert.notOk(c1.child_ids.includes(c2), "Category should be unlinked from the parent");
-            assert.notOk(c2.parent_id, "Category should be unlinked from the parent");
+            expect(c1.child_ids.includes(c2)).toBe(false);
+            expect(c2.parent_id).toBe(undefined);
         });
 
-        QUnit.test("update operation, Clear one2many", (assert) => {
+        test("update operation, Clear one2many", () => {
+            const models = getModels();
             const category = models["product.category"].create({});
             models["product.category"].create({ parent_id: category });
             models["product.category"].create({ parent_id: category });
-            assert.ok(category.child_ids.length === 2, "category should have 2 children");
+
+            expect(category.child_ids.length).toBe(2);
             models["product.category"].update(category, { child_ids: [["clear"]] });
-            assert.equal(
-                category.child_ids.length,
-                0,
-                "All child categories should be unlinked from the category"
-            );
+            expect(category.child_ids.length).toBe(0);
         });
 
-        QUnit.test("update operation, Clear many2one", (assert) => {
+        test("update operation, Clear many2one", () => {
+            const models = getModels();
             const category = models["product.category"].create({});
-            const category1 = models["product.category"].create({
-                parent_id: category,
-            });
-            assert.ok(category.child_ids.includes(category1), "categories should be linked");
+            const category1 = models["product.category"].create({ parent_id: category });
+
+            expect(category.child_ids.includes(category1)).toBe(true);
             models["product.category"].update(category1, { parent_id: undefined });
-            assert.notOk(
-                category.child_ids.includes(category1),
-                "All child categories should be unlinked from the category"
-            );
+            expect(category.child_ids.includes(category1)).toBe(false);
         });
 
-        QUnit.test("delete operation, one2many item", (assert) => {
+        test("delete operation, one2many item", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({ parent_id: c1 });
 
-            assert.ok(c1.child_ids.includes(c2), "Category should be linked to the parent");
+            expect(c1.child_ids.includes(c2)).toBe(true);
 
             c2.delete();
-            assert.notOk(models["product.category"].read(c2.id), "Category should be deleted");
-            assert.notOk(c1.child_ids.includes(c2), "Category should be unlinked from the parent");
+            expect(models["product.category"].read(c2.id)).toBe(undefined);
+            expect(c1.child_ids.includes(c2)).toBe(false);
         });
 
-        QUnit.test("delete operation, many2one item", (assert) => {
+        test("delete operation, many2one item", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({ parent_id: c1 });
 
-            assert.ok(c1.child_ids.includes(c2), "Category should be linked to the parent");
+            expect(c1.child_ids.includes(c2)).toBe(true);
 
             c1.delete();
-            assert.notOk(models["product.category"].read(c1.id), "Category should be deleted");
-            assert.equal(c2.parent_id, undefined, "Category should be unlinked from the parent");
+            expect(models["product.category"].read(c1.id)).toBe(undefined);
+            expect(c2.parent_id).toBe(undefined);
         });
     });
-
-    QUnit.module("many2many field relations to other models", (hooks) => {
-        let models;
-        hooks.beforeEach(() => {
-            models = createRelatedModels({
+    describe("many2many field relations to other models", () => {
+        const getModels = () =>
+            createRelatedModels({
                 "product.product": {
                     name: { type: "char" },
                     tag_ids: {
@@ -349,342 +306,296 @@ QUnit.module("models with backlinks", () => {
                     },
                 },
             }).models;
-        });
-
-        QUnit.test("create operation, create", (assert) => {
+        test("create operation, create", () => {
+            const models = getModels();
             const tag1 = { name: "Electronics" };
             const tag2 = { name: "New" };
             const product = models["product.product"].create({
                 name: "Smartphone",
                 tag_ids: [["create", tag1, tag2]],
             });
-            assert.ok(product.tag_ids[0].name, tag1.name, "tag1 should be linked with product");
+            expect(product.tag_ids[0].name).toBe(tag1.name);
         });
 
-        QUnit.test("create operation, link", (assert) => {
+        test("create operation, link", () => {
+            const models = getModels();
             const tag1 = models["product.tag"].create({ name: "Electronics" });
             const tag2 = models["product.tag"].create({ name: "New" });
             const product = models["product.product"].create({
                 name: "Smartphone",
                 tag_ids: [["link", tag1, tag2]],
             });
-            assert.ok(product.tag_ids.includes(tag1), "tag1 should be linked with product");
-            assert.ok(
-                tag1.product_ids.includes(product),
-                "Product should be linked with both tags"
-            );
+            expect(product.tag_ids.includes(tag1)).toBe(true);
+            expect(tag1.product_ids.includes(product)).toBe(true);
         });
 
-        QUnit.test("read operation", (assert) => {
+        test("read operation", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const p3 = models["product.product"].create({});
             const t1 = models["product.tag"].create({ product_ids: [["link", p1, p2, p3]] });
             const t2 = models["product.tag"].create({ product_ids: [["link", p1, p2]] });
-            // Test reading back the tags directly
+
             const readT1 = models["product.tag"].read(t1.id);
-            assert.deepEqual(
-                raw(readT1),
-                raw(t1),
-                "Tag 1 should be found and match the created tag"
-            );
+            expect(readT1).toEqual(t1);
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(raw(readP1), raw(p1), "Product should be found");
-            // Test the many2many relationship
-            assert.ok(
-                raw(readT1.product_ids).includes(raw(p1)),
-                "Product 1 should belong to Tag 1"
-            );
-            assert.ok(
-                raw(readT1.product_ids).includes(raw(p2)),
-                "Product 2 should belong to Tag 1"
-            );
-            assert.ok(
-                raw(readT1.product_ids).includes(raw(p3)),
-                "Product 3 should belong to Tag 1"
-            );
-            assert.ok(
-                raw(readP1.tag_ids).includes(raw(t1), raw(t2)),
-                "Product 1 should belong to Tag 1 and 2"
-            );
+            expect(readP1).toEqual(p1);
+
+            expect(readT1.product_ids.includes(p1)).toBe(true);
+            expect(readT1.product_ids.includes(p2)).toBe(true);
+            expect(readT1.product_ids.includes(p3)).toBe(true);
+            expect(readP1.tag_ids.includes(t1)).toBe(true);
+            expect(readP1.tag_ids.includes(t2)).toBe(true);
+
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            assert.deepEqual(raw(readMany), raw([p2, p3]), "Multiple products should be found");
+            expect(readMany).toEqual([p2, p3]);
         });
 
-        QUnit.test("update operation, many2many", (assert) => {
+        test("update operation, many2many", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const t1 = models["product.tag"].create({});
-            assert.notOk(p1.tag_ids.includes(t1), "product and tag not yet linked");
+            expect(p1.tag_ids.includes(t1)).toBe(false);
+
             p1.update({ tag_ids: [["link", t1]] });
-            assert.ok(p1.tag_ids.includes(t1), "Product should be updated with new tag");
-            assert.ok(t1.product_ids.includes(p1), "Product should be linked to the new tag");
-            assert.notOk(t1.product_ids.includes(p2), "t1 shouldn't be linked to p2");
+            expect(p1.tag_ids.includes(t1)).toBe(true);
+            expect(t1.product_ids.includes(p1)).toBe(true);
+            expect(t1.product_ids.includes(p2)).toBe(false);
+
             t1.update({ product_ids: [["link", p2]] });
-            assert.ok(t1.product_ids.includes(p2), "Product should be linked to the tag");
+            expect(t1.product_ids.includes(p2)).toBe(true);
         });
 
-        QUnit.test("update operation, unlink many2many", (assert) => {
+        test("update operation, unlink many2many", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const t1 = models["product.tag"].create({});
 
             t1.update({ product_ids: [["link", p1]] });
-            assert.ok(t1.product_ids.includes(p1), "Product should be linked to the tag");
-            assert.ok(p1.tag_ids.includes(t1), "Product should be linked to the tag");
+            expect(t1.product_ids.includes(p1)).toBe(true);
+            expect(p1.tag_ids.includes(t1)).toBe(true);
 
             t1.update({ product_ids: [["unlink", p1]] });
-            assert.notOk(t1.product_ids.includes(p1), "Product should be unlinked from the tag");
-            assert.notOk(p1.tag_ids.length > 0, "Product should be unlinked from the tag");
+            expect(t1.product_ids.includes(p1)).toBe(false);
+            expect(p1.tag_ids.length).toBe(0);
         });
 
-        QUnit.test("update operation, Clear many2many", (assert) => {
+        test("update operation, Clear many2many", () => {
+            const models = getModels();
             const tag1 = models["product.tag"].create({});
             const tag2 = models["product.tag"].create({});
             const product = models["product.product"].create({ tag_ids: [["link", tag1, tag2]] });
-            assert.ok(product.tag_ids.length === 2, "tags are linked to the product");
+
+            expect(product.tag_ids.length).toBe(2);
+
             product.update({ tag_ids: [["clear"]] });
-            assert.equal(product.tag_ids.length, 0, "All tags should be unlinked from the product");
+            expect(product.tag_ids.length).toBe(0);
         });
 
-        QUnit.test("delete operation, many2many item", (assert) => {
+        test("delete operation, many2many item", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const t1 = models["product.tag"].create({});
             t1.update({ product_ids: [["link", p1, p2]] });
 
-            assert.ok(t1.product_ids.includes(p1), "Product should be linked to the tag");
+            expect(t1.product_ids.includes(p1)).toBe(true);
 
             p1.delete();
-            assert.notOk(models["product.product"].read(p1.id), "Product should be deleted");
-            assert.notOk(t1.product_ids.includes(p1), "Product should be unlinked from the tag");
-        });
-    });
-
-    QUnit.module("many2many field relations to own model", (hooks) => {
-        let models;
-        hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "note.note": {
-                    name: { type: "char" },
-                    parent_ids: {
-                        type: "many2many",
-                        relation: "note.note",
-                        relation_table: "note_note_rel",
-                    },
-                    child_ids: {
-                        type: "many2many",
-                        relation: "note.note",
-                        relation_table: "note_note_rel",
-                    },
-                },
-            }).models;
+            expect(models["product.product"].read(p1.id)).toBe(undefined);
+            expect(t1.product_ids.includes(p1)).toBe(false);
         });
 
-        QUnit.test("create operation, link", (assert) => {
-            const note1 = models["note.note"].create({ name: "Emergency" });
-            const note2 = models["note.note"].create({ name: "New" });
-            const note = models["note.note"].create({
-                name: "To Serve",
-                child_ids: [["link", note1, note2]],
+        describe("many2many field relations to own model", () => {
+            const getModels = () =>
+                createRelatedModels({
+                    "note.note": {
+                        name: { type: "char" },
+                        parent_ids: {
+                            type: "many2many",
+                            relation: "note.note",
+                            relation_table: "note_note_rel",
+                        },
+                        child_ids: {
+                            type: "many2many",
+                            relation: "note.note",
+                            relation_table: "note_note_rel",
+                        },
+                    },
+                }).models;
+
+            test("create operation, link", () => {
+                const models = getModels();
+                const note1 = models["note.note"].create({ name: "Emergency" });
+                const note2 = models["note.note"].create({ name: "New" });
+                const note = models["note.note"].create({
+                    name: "To Serve",
+                    child_ids: [["link", note1, note2]],
+                });
+                expect(note.child_ids.includes(note1)).toBe(true);
+                expect(note1.parent_ids.includes(note)).toBe(true);
             });
-            assert.ok(note.child_ids.includes(note1), "note1 should be linked with note");
-            assert.ok(note1.parent_ids.includes(note), "note should be linked with note1");
-        });
 
-        QUnit.test("read operation", (assert) => {
-            const n1 = models["note.note"].create({});
-            const n2 = models["note.note"].create({});
-            const n3 = models["note.note"].create({});
-            const n4 = models["note.note"].create({ parent_ids: [["link", n1, n2, n3]] });
-            const n5 = models["note.note"].create({ parent_ids: [["link", n1, n2]] });
-            // Test reading back the tags directly
-            const readN1 = models["note.note"].read(n1.id);
-            assert.deepEqual(
-                raw(readN1),
-                raw(n1),
-                "Note 1 should be found and match the created note"
-            );
-            const readN4 = models["note.note"].read(n4.id);
-            assert.deepEqual(raw(readN4), raw(n4), "Note should be found");
-            // Test the many2many relationship
-            assert.ok(
-                [n1, n2, n3].every((n) => raw(readN4.parent_ids).includes(raw(n))),
-                "Note 1 should include Note 1, 2 and 3"
-            );
-            assert.ok(
-                [n4, n5].every((n) => raw(readN1.child_ids).includes(raw(n))),
-                "Note 1 should belong to Note 1 and 2"
-            );
-            const readMany = models["note.note"].readMany([n2.id, n3.id]);
-            assert.deepEqual(raw(readMany), raw([n2, n3]), "Multiple notes should be found");
-        });
+            test("read operation", () => {
+                const models = getModels();
+                const n1 = models["note.note"].create({});
+                const n2 = models["note.note"].create({});
+                const n3 = models["note.note"].create({});
+                const n4 = models["note.note"].create({ parent_ids: [["link", n1, n2, n3]] });
+                const n5 = models["note.note"].create({ parent_ids: [["link", n1, n2]] });
 
-        QUnit.test("update operation, many2many", (assert) => {
-            const n1 = models["note.note"].create({});
-            const n2 = models["note.note"].create({});
-            const n3 = models["note.note"].create({});
-            n1.update({ parent_ids: [["link", n3]] });
-            assert.ok(n1.parent_ids.includes(n3), "Note should be updated with new parent");
-            assert.ok(n3.child_ids.includes(n1), "Note should be linked to the new child");
-            n3.update({ parent_ids: [["link", n2]] });
-            assert.ok(n3.parent_ids.includes(n2), "Note should be linked to the new parent");
-            n3.update({ parent_ids: [["unlink", n2]] });
-            assert.notOk(n3.parent_ids.includes(n2), "Note should be unlinked from the old parent");
-            assert.notOk(n2.child_ids.includes(n3), "Note should be unlinked from the old child");
-        });
+                const readN1 = models["note.note"].read(n1.id);
+                expect(readN1).toEqual(n1);
 
-        QUnit.test("update operation, unlink many2many", (assert) => {
-            const n1 = models["note.note"].create({});
-            const n2 = models["note.note"].create({});
+                const readN4 = models["note.note"].read(n4.id);
+                expect(readN4).toEqual(n4);
 
-            n2.update({ parent_ids: [["link", n1]] });
-            assert.ok(n2.parent_ids.includes(n1), "Note should be linked to the tag");
-            assert.ok(n1.child_ids.includes(n2), "Note should be linked to the tag");
+                expect([n1, n2, n3].every((n) => readN4.parent_ids.includes(n))).toBe(true);
+                expect([n4, n5].every((n) => readN1.child_ids.includes(n))).toBe(true);
 
-            n2.update({ parent_ids: [["unlink", n1]] });
-            assert.notOk(n2.parent_ids.includes(n1), "Note should be unlinked from the tag");
-            assert.notOk(n1.child_ids.length > 0, "Note should be unlinked from the tag");
-            assert.ok(n2, "Note should be linked to the tag");
-        });
+                const readMany = models["note.note"].readMany([n2.id, n3.id]);
+                expect(readMany).toEqual([n2, n3]);
+            });
 
-        QUnit.test("update operation, Clear many2many", (assert) => {
-            const note = models["note.note"].create({});
-            const note2 = models["note.note"].create({});
-            const note3 = models["note.note"].create({ parent_ids: [["link", note, note2]] });
-            assert.equal(note3.parent_ids.length, 2, "note 3 should have parent notes");
-            models["note.note"].update(note3, { parent_ids: [["clear"]] });
-            assert.equal(
-                note3.parent_ids.length,
-                0,
-                "All parent notes should be unlinked from the note"
-            );
-            assert.equal(
-                note.child_ids.length,
-                0,
-                "All child notes should be unlinked from the note"
-            );
-        });
+            test("update operation, many2many", () => {
+                const models = getModels();
+                const n1 = models["note.note"].create({});
+                const n2 = models["note.note"].create({});
+                const n3 = models["note.note"].create({});
+                n1.update({ parent_ids: [["link", n3]] });
+                expect(n1.parent_ids.includes(n3)).toBe(true);
+                expect(n3.child_ids.includes(n1)).toBe(true);
 
-        QUnit.test("delete operation, many2many item", (assert) => {
-            const n1 = models["note.note"].create({});
-            const n2 = models["note.note"].create({});
-            const n3 = models["note.note"].create({});
-            n3.update({ parent_ids: [["link", n1, n2]] });
+                n3.update({ parent_ids: [["link", n2]] });
+                expect(n3.parent_ids.includes(n2)).toBe(true);
 
-            assert.ok(
-                [n1, n2].every((n) => n3.parent_ids.includes(n)),
-                "Note should be linked to the parent nodes 1 and 2"
-            );
+                n3.update({ parent_ids: [["unlink", n2]] });
+                expect(n3.parent_ids.includes(n2)).toBe(false);
+                expect(n2.child_ids.includes(n3)).toBe(false);
+            });
 
-            n1.delete();
-            assert.notOk(models["note.note"].read(n1.id), "Note should be deleted");
-            assert.notOk(n3.parent_ids.includes(n1), "Note 1 should be unlinked from note 3");
+            test("update operation, unlink many2many", () => {
+                const models = getModels();
+                const n1 = models["note.note"].create({});
+                const n2 = models["note.note"].create({});
+
+                n2.update({ parent_ids: [["link", n1]] });
+                expect(n2.parent_ids.includes(n1)).toBe(true);
+                expect(n1.child_ids.includes(n2)).toBe(true);
+
+                n2.update({ parent_ids: [["unlink", n1]] });
+                expect(n2.parent_ids.includes(n1)).toBe(false);
+                expect(n1.child_ids.length).toBe(0);
+            });
+
+            test("update operation, Clear many2many", () => {
+                const models = getModels();
+                const note = models["note.note"].create({});
+                const note2 = models["note.note"].create({});
+                const note3 = models["note.note"].create({ parent_ids: [["link", note, note2]] });
+
+                expect(note3.parent_ids.length).toBe(2);
+
+                models["note.note"].update(note3, { parent_ids: [["clear"]] });
+
+                expect(note3.parent_ids.length).toBe(0);
+                expect(note.child_ids.length).toBe(0);
+            });
+
+            test("delete operation, many2many item", () => {
+                const models = getModels();
+                const n1 = models["note.note"].create({});
+                const n2 = models["note.note"].create({});
+                const n3 = models["note.note"].create({});
+                n3.update({ parent_ids: [["link", n1, n2]] });
+
+                expect([n1, n2].every((n) => n3.parent_ids.includes(n))).toBe(true);
+
+                n1.delete();
+                expect(models["note.note"].read(n1.id)).toBe(undefined);
+                expect(n3.parent_ids.includes(n1)).toBe(false);
+            });
         });
     });
 });
 
-QUnit.module("models without backlinks", () => {
-    QUnit.module("many2one/one2many field relations to other models", (hooks) => {
-        let models;
-
-        hooks.beforeEach(() => {
-            models = createRelatedModels({
+describe("models without backlinks", () => {
+    describe("many2one and one2many field relations to other models", () => {
+        const getModels = () =>
+            createRelatedModels({
                 "product.product": {
                     category_id: { type: "many2one", relation: "product.category" },
                 },
                 "product.category": {},
             }).models;
-        });
 
-        QUnit.test("create operation", (assert) => {
+        test("create operation", () => {
+            const models = getModels();
             const category = models["product.category"].create({});
             const product = models["product.product"].create({ category_id: category });
-            assert.equal(product.category_id, category, "Product should belong to the category");
-            assert.deepEqual(
-                category["<-product.product.category_id"],
-                [product],
-                "Backlink should be updated"
-            );
+            expect(product.category_id).toBe(category);
+            expect(category["<-product.product.category_id"]).toEqual([product]);
         });
 
-        QUnit.test("read operation", (assert) => {
+        test("read operation", () => {
+            const models = getModels();
             const c1 = models["product.category"].create({});
             const p1 = models["product.product"].create({ category_id: c1 });
             const p2 = models["product.product"].create({ category_id: c1 });
 
-            // Test reading back the categories directly
             const readC1 = models["product.category"].read(c1.id);
-            assert.deepEqual(
-                raw(readC1),
-                raw(c1),
-                "Category 1 should be found and match the created category"
-            );
+            expect(readC1).toEqual(c1);
+
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(raw(readP1), raw(p1), "Product should be found");
+            expect(readP1).toEqual(p1);
 
-            // Test the one2many relationship from category to products
-            assert.deepEqual(
-                raw(readC1["<-product.product.category_id"]),
-                raw([p1, p2]),
-                "Category 1 should have a backlink to Product 1 and Product 2"
-            );
+            expect(readC1["<-product.product.category_id"]).toEqual([p1, p2]);
 
-            // Test the many2one relationship from products to category
-            assert.equal(raw(readP1.category_id), raw(c1), "Product 3 should belong to Category 2");
+            expect(readP1.category_id).toEqual(c1);
         });
 
-        QUnit.test("update operation, many2one", (assert) => {
+        test("update operation, many2one", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
-            assert.notOk(p1.category_id, "product and category is not linked");
+
+            expect(p1.category_id).toBe(undefined);
             p1.update({ category_id: c1 });
-            assert.equal(p1.category_id, c1, "Product should be updated with new category");
-            assert.deepEqual(
-                c1["<-product.product.category_id"],
-                [p1],
-                "Product should be backlinked to the new category"
-            );
+            expect(p1.category_id).toBe(c1);
+            expect(c1["<-product.product.category_id"]).toEqual([p1]);
         });
 
-        QUnit.test("update operation, unlink many2one", (assert) => {
+        test("update operation, unlink many2one", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({ category_id: {} });
             const c1 = p1.category_id;
-            assert.ok(c1, "Product should be linked to the category");
-            assert.deepEqual(
-                c1["<-product.product.category_id"],
-                [p1],
-                "Category should be linked to the product"
-            );
+
+            expect(c1["<-product.product.category_id"]).toEqual([p1]);
 
             p1.update({ category_id: undefined });
-            assert.equal(p1.category_id, undefined, "Product should be unlinked from the category");
-            assert.notOk(
-                c1["<-product.product.category_id"].length > 0,
-                "Product should be unlinked from the category"
-            );
+            expect(p1.category_id).toBe(undefined);
+            expect(c1["<-product.product.category_id"].length).toBe(0);
         });
 
-        QUnit.test("delete operation, many2one item", (assert) => {
+        test("delete operation, many2one item", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const c1 = models["product.category"].create({});
-            p1.update({ category_id: c1 });
 
-            assert.deepEqual(
-                c1["<-product.product.category_id"],
-                [p1],
-                "Product should be linked to the category"
-            );
+            p1.update({ category_id: c1 });
+            expect(c1["<-product.product.category_id"]).toEqual([p1]);
 
             c1.delete();
-            assert.notOk(models["product.category"].read(c1.id), "Category should be deleted");
-            assert.equal(p1.category_id, undefined, "Product should be unlinked from the category");
+            expect(models["product.category"].read(c1.id)).toBe(undefined);
+            expect(p1.category_id).toBe(undefined);
         });
     });
 
-    QUnit.module("many2many relations", (hooks) => {
-        let models;
-        hooks.beforeEach(() => {
-            models = createRelatedModels({
+    describe("many2many relations", () => {
+        const getModels = () =>
+            createRelatedModels({
                 "product.product": {
                     tag_ids: {
                         type: "many2many",
@@ -694,134 +605,107 @@ QUnit.module("models without backlinks", () => {
                 },
                 "product.tag": {},
             }).models;
-        });
 
-        QUnit.test("create operation, link", (assert) => {
+        test("create operation, link", () => {
+            const models = getModels();
             const tag1 = models["product.tag"].create({ name: "Electronics" });
             const tag2 = models["product.tag"].create({ name: "New" });
             const product = models["product.product"].create({
                 name: "Smartphone",
                 tag_ids: [["link", tag1, tag2]],
             });
-            assert.ok(product.tag_ids.includes(tag1), "tag1 should be linked with product");
-            assert.ok(
-                tag1["<-product.product.tag_ids"].includes(product),
-                "Product should be linked with both tags"
-            );
+
+            expect(product.tag_ids.includes(tag1)).toBe(true);
+            expect(tag1["<-product.product.tag_ids"].includes(product)).toBe(true);
         });
 
-        QUnit.test("read operation", (assert) => {
+        test("read operation", () => {
+            const models = getModels();
             const t1 = models["product.tag"].create({});
             const t2 = models["product.tag"].create({});
             const p1 = models["product.product"].create({ tag_ids: [["link", t1, t2]] });
             const p2 = models["product.product"].create({ tag_ids: [["link", t1, t2]] });
             const p3 = models["product.product"].create({ tag_ids: [["link", t1]] });
-            // Test reading back the tags directly
+
             const readT1 = models["product.tag"].read(t1.id);
-            assert.deepEqual(
-                raw(readT1),
-                raw(t1),
-                "Tag 1 should be found and match the created tag"
-            );
+            expect(readT1).toEqual(t1);
+
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(raw(readP1), raw(p1), "Product should be found");
-            // Test the many2many relationship
-            assert.ok(
-                [p1, p2, p3].every((p) => raw(t1["<-product.product.tag_ids"]).includes(raw(p))),
-                "Tag 1 should include Product 1, 2 and 3"
+            expect(readP1).toEqual(p1);
+
+            expect([p1, p2, p3].every((p) => t1["<-product.product.tag_ids"].includes(p))).toBe(
+                true
             );
-            assert.ok(
-                [t1, t2].every((t) => raw(p1.tag_ids).includes(raw(t))),
-                "Product 1 should belong to Tag 1 and 2"
-            );
+            expect([t1, t2].every((t) => p1.tag_ids.includes(t))).toBe(true);
+
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            assert.deepEqual(raw(readMany), raw([p2, p3]), "Multiple products should be found");
+            expect(readMany).toEqual([p2, p3]);
         });
 
-        QUnit.test("update operation, link", (assert) => {
+        test("update operation, link", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const t1 = models["product.tag"].create({});
+
             p1.update({ tag_ids: [["link", t1]] });
-            assert.ok(p1.tag_ids.includes(t1), "Product should be updated with new tag");
-            assert.ok(
-                t1["<-product.product.tag_ids"].includes(p1),
-                "Product should be linked to the new tag"
-            );
-            assert.notOk(
-                t1["<-product.product.tag_ids"].includes(p2),
-                "Product should be unlinked from the old tag"
-            );
+            expect(p1.tag_ids.includes(t1)).toBe(true);
+            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(true);
+            expect(t1["<-product.product.tag_ids"].includes(p2)).toBe(false);
+
             p2.update({ tag_ids: [["link", t1]] });
-            assert.ok(
-                t1["<-product.product.tag_ids"].includes(p2),
-                "Product should be linked to the tag"
-            );
+            expect(t1["<-product.product.tag_ids"].includes(p2)).toBe(true);
         });
 
-        QUnit.test("update operation, unlink", (assert) => {
+        test("update operation, unlink", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const t1 = models["product.tag"].create({});
 
             p1.update({ tag_ids: [["link", t1]] });
-            assert.ok(
-                t1["<-product.product.tag_ids"].includes(p1),
-                "Product should be linked to the tag"
-            );
-            assert.ok(p1.tag_ids.includes(t1), "Product should be linked to the tag");
+            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(true);
+            expect(p1.tag_ids.includes(t1)).toBe(true);
 
             p1.update({ tag_ids: [["unlink", t1]] });
-            assert.notOk(
-                [t1["<-product.product.tag_ids"]].includes(p1),
-                "Product should be unlinked from the tag"
-            );
-            assert.notOk(p1.tag_ids.length > 0, "Product should be unlinked from the tag");
+            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(false);
+            expect(p1.tag_ids.length).toBe(0);
         });
 
-        QUnit.test("update operation, Clear", (assert) => {
+        test("update operation, Clear", () => {
+            const models = getModels();
             const tag1 = models["product.tag"].create({});
             const tag2 = models["product.tag"].create({});
             const product = models["product.product"].create({ tag_ids: [[tag1, tag2]] });
+
             models["product.product"].update(product, { tag_ids: [["clear"]] });
-            const updatedproduct = models["product.product"].read(product.id);
-            assert.equal(
-                updatedproduct.tag_ids.length,
-                0,
-                "All tags should be unlinked from the product"
-            );
+            const updatedProduct = models["product.product"].read(product.id);
+            expect(updatedProduct.tag_ids.length).toBe(0);
+
             models["product.product"].update(product, { tag_ids: [["link", tag1, tag2]] });
-            assert.ok(
-                [tag1, tag2].every((t) => product.tag_ids.includes(t)),
-                "Product should be linked to the tags"
-            );
+            expect([tag1, tag2].every((t) => product.tag_ids.includes(t))).toBe(true);
+
             models["product.product"].update(product, { tag_ids: [["clear"]] });
-            assert.notOk(
-                [tag1["<-product.product.tag_ids"]].includes(product),
-                "All tags should be unlinked from the product"
-            );
+            expect(tag1["<-product.product.tag_ids"].includes(product)).toBe(false);
         });
 
-        QUnit.test("delete operation", (assert) => {
+        test("delete operation", () => {
+            const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
             const t1 = models["product.tag"].create({});
+
             p1.update({ tag_ids: [["link", t1]] });
             p2.update({ tag_ids: [["link", t1]] });
 
-            assert.ok(
-                t1["<-product.product.tag_ids"].includes(p1),
-                "Product should be linked to the tag"
-            );
+            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(true);
 
             p1.delete();
-            assert.notOk(models["product.product"].read(p1.id), "Product should be deleted");
-            assert.notOk(
-                t1["<-product.product.tag_ids"].includes(p1),
-                "Product should be unlinked from the tag"
-            );
+            expect(models["product.product"].read(p1.id)).toBe(undefined);
+            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(false);
+
             t1.delete();
-            assert.notOk(models["product.tag"].read(t1.id), "Tag should be deleted");
-            assert.notOk(p1.tag_ids.length > 0, "Product should be unlinked from the tag");
+            expect(models["product.tag"].read(t1.id)).toBe(undefined);
+            expect(p1.tag_ids.length).toBe(0);
         });
     });
 });

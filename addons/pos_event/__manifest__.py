@@ -22,9 +22,6 @@
         'point_of_sale._assets_pos': [
             'pos_event/static/src/**/*',
         ],
-        'point_of_sale.assets_qunit_tests': [
-            'pos_event/static/tests/unit/**/*',
-        ],
           'web.assets_tests': [
             'pos_event/static/tests/tours/**/*',
         ],
