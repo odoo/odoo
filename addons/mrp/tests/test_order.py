@@ -2744,17 +2744,15 @@ class TestMrpOrder(TestMrpCommon):
         wo_1.button_finish()
         self.assertEqual(duration_expected, wo_1.duration_expected)
 
-        duration_expected = wo_2.duration_expected
         wo_2.button_start()
         wo_2.qty_producing = 10
         wo_2.button_finish()
-        self.assertEqual(duration_expected, wo_2.duration_expected)
+        self.assertEqual(wo_2.duration_expected, 12 + 10 * 60)
 
-        duration_expected = wo_3.duration_expected
         wo_3.button_start()
         wo_3.qty_producing = 5
         wo_3.button_finish()
-        self.assertEqual(duration_expected, wo_3.duration_expected)
+        self.assertEqual(wo_3.duration_expected, 13 + 5 * 60)
 
         self.assertEqual(mo.state, 'to_close')
         mo.button_mark_done()
@@ -3905,16 +3903,40 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.product_5
         production_form.bom_id = self.bom_2
-        production_form.product_qty = 1.0
+        production_form.product_qty = 5
         production = production_form.save()
         production.action_confirm()
+
+        init_duration_expected = production.workorder_ids.duration_expected
+        production.workorder_ids.duration_expected = init_duration_expected + 15
+
+        # changing the qty producing should recompute the expected duration
+        production_form = Form(production)
+        production_form.qty_producing = 3.0
+        production = production_form.save()
+
+        current_duration_expected = production.workorder_ids.duration_expected
+        self.assertNotEqual(current_duration_expected, init_duration_expected + 15)
+        self.assertNotEqual(current_duration_expected, init_duration_expected)
+
+        # one should not recompute the expected duration if the expected duration is changed
+        # after the qty_producing is set
+        production.workorder_ids.duration_expected = current_duration_expected + 10
+
+        backorder_wizard_dict = production.button_mark_done()
+        Form(self.env[(backorder_wizard_dict.get('res_model'))].with_context(backorder_wizard_dict['context'])).save().action_backorder()
+
+        self.assertEqual(production.workorder_ids.duration_expected, current_duration_expected + 10)
+
+        # One should not recompute the expected duration of a full production
+        production = production.procurement_group_id.mrp_production_ids[-1]
 
         init_duration_expected = production.workorder_ids.duration_expected
 
         production.workorder_ids.duration_expected = init_duration_expected + 5
 
         production_form = Form(production)
-        production_form.qty_producing = 1.0
+        production_form.qty_producing = 2.0
         production = production_form.save()
 
         production.button_mark_done()
@@ -4183,6 +4205,83 @@ class TestMrpOrder(TestMrpCommon):
         mo_2.button_plan()
         self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_1.id)
         self.assertEqual(mo_2.workorder_ids[0].duration_expected, 70)
+
+    def test_duration_expected_when_done(self):
+        """
+        Checks that the expected durations of workorders are updated depending on the produced quantity.
+        """
+        bom = self.bom_2
+        bom.type = 'normal'
+        bom.operation_ids.time_mode = 'manual'
+        bom.operation_ids.time_cycle_manual = 60.0
+        product = bom.product_id
+        component_1, component_2 = bom.bom_line_ids.mapped('product_id')
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(component_1, stock_location, 50.0)
+        self.env['stock.quant']._update_available_quantity(component_2, stock_location, 50.0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 10.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertRecordValues(mo.workorder_ids, [
+            {'qty_produced': 0.0, 'qty_remaining': 10.0, 'duration_expected': 390.0, 'duration': 0.0}
+        ])
+
+        # Dont set any duration and validate the mo for 3 units
+        mo_form = Form(mo)
+        mo_form.qty_producing = 3.0
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+        self.assertRecordValues(mo.workorder_ids, [
+            {'qty_produced': 3.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 165.0, 'state': 'done'}
+        ])
+
+        bo = self.env['mrp.production'].search([('product_id', '=', product.id)]) - mo
+        self.assertRecordValues(bo, [{'product_id': product.id, 'product_uom_qty': 7.0}])
+        self.assertRecordValues(bo.workorder_ids, [
+            {'qty_produced': 0.0, 'qty_remaining': 7.0, 'duration_expected': 315.0, 'duration': 0.0}
+        ])
+
+        # check that the duration expected is correctly updated when the
+        # qty_producing is updated both to partial and full qty_production
+        bo_form = Form(bo)
+        bo_form.qty_producing = 3.0
+        bo = bo_form.save()
+        self.assertEqual(bo.workorder_ids.duration_expected, 165.0)
+        bo_form.qty_producing = 7.0
+        bo = bo_form.save()
+        self.assertEqual(bo.workorder_ids.duration_expected, 315.0)
+        bo_form.qty_producing = 3.0
+        bo = bo_form.save()
+        self.assertEqual(bo.workorder_ids.duration_expected, 165.0)
+        # Set a different expected duration and validate the bo for 3 units
+        bo.workorder_ids.duration_expected = 120.0
+        action = bo.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+        self.assertRecordValues(bo.workorder_ids, [
+            {'qty_produced': 3.0, 'qty_remaining': 0.0, 'duration_expected': 120.0, 'duration': 120.0, 'state': 'done'}
+        ])
+
+        bo_2 = self.env['mrp.production'].search([('product_id', '=', product.id)]) - mo - bo
+        self.assertRecordValues(bo_2, [{'product_id': product.id, 'product_uom_qty': 4.0}])
+        self.assertRecordValues(bo_2.workorder_ids, [
+            {'qty_produced': 0.0, 'qty_remaining': 4.0, 'duration_expected': 165.0, 'duration': 0.0}
+        ])
+
+        # Set a different duration, finish the wo and validate the second bo
+        bo_2.workorder_ids.button_start()
+        bo_2.workorder_ids.duration = 100
+        bo_2.workorder_ids.button_finish()
+        self.assertRecordValues(bo_2.workorder_ids, [
+            {'qty_produced': 4.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 100.0, 'state': 'done'}
+        ])
+        bo_2.button_mark_done()
+        self.assertRecordValues(bo_2, [{'qty_produced': 4.0, 'state': 'done'}])
 
     def test_update_workcenter_adapt_finish_date(self):
         """
