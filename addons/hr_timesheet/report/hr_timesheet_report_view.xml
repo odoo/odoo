@@ -5,7 +5,7 @@
             <field name="name">timesheets.analysis.report.list</field>
             <field name="model">timesheets.analysis.report</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" edit="1">
+                <tree>
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="project_id"/>
@@ -17,6 +17,31 @@
                         decoration-muted="unit_amount == 0"
                     />
                 </tree>
+            </field>
+        </record>
+
+        <record id="timesheets_analysis_report_form" model="ir.ui.view">
+            <field name="name">timesheets.analysis.report.form</field>
+            <field name="model">timesheets.analysis.report</field>
+            <field name="arch" type="xml">
+                <form string="Timesheets Analysis">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="task_id"/>
+                            </group>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="date"/>
+                                <field name="amount" invisible="1"/>
+                                <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"
+                                    decoration-muted="unit_amount == 0"/>
+                            </group>
+                        </group>
+                        <field name="name" widget="text" nolabel="1"/>
+                    </sheet>
+                </form>
             </field>
         </record>
 
