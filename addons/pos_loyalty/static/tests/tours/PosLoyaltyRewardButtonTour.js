@@ -166,7 +166,14 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
             ProductScreen.controlButton("Reward"),
             SelectionPopup.has("$ 10 on specific products", { run: "click" }),
             PosLoyalty.hasRewardLine("$ 10 on specific products", "-10.00", "1.00"),
+            PosLoyalty.orderTotalIs("70.00"),
+            ProductScreen.controlButton("Reward"),
+            SelectionPopup.has("$ 10 on specific products", { run: "click" }),
             PosLoyalty.orderTotalIs("60.00"),
+            ProductScreen.controlButton("Reward"),
+            SelectionPopup.has("$ 30 on specific products", { run: "click" }),
+            PosLoyalty.hasRewardLine("$ 30 on specific products", "-30.00", "1.00"),
+            PosLoyalty.orderTotalIs("30.00"),
         ].flat(),
 });
 
