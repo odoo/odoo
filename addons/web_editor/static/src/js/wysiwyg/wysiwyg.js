@@ -1454,6 +1454,7 @@ export class Wysiwyg extends Component {
                 this._onClick = ev => {
                     if (
                         !ev.target.closest('#create-link') &&
+                        !ev.target.closest(".o_technical_modal") &&
                         (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
                         !ev.target.closest('.ui-autocomplete') &&
                         (!this.state.linkToolProps || ![ev.target, ...wysiwygUtils.ancestors(ev.target)].includes(this.linkToolsInfos.link))

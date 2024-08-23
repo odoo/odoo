@@ -49,6 +49,8 @@ export class LinkTools extends Link {
         showLinkSizeRow: true,
         showLinkCustomColor: true,
         showLinkShapeRow: true,
+        isDocument: false,
+        directDownload: true,
     });
 
     setup() {
@@ -119,6 +121,7 @@ export class LinkTools extends Link {
             // Link URL was deduced from label. Apply changes to DOM.
             this.__onURLInput();
         }
+        this._checkDocumentState();
 
         return ret;
     }
@@ -143,6 +146,20 @@ export class LinkTools extends Link {
         super.focusUrl(...arguments);
     }
 
+    openDocumentDialog() {
+        this.props.wysiwyg.openMediaDialog({
+            resModel: "ir.ui.view",
+            useMediaLibrary: true,
+            noImages: true,
+            noIcons: true,
+            noVideos: true,
+            save: (link) => {
+                const relativeUrl = link.href.substr(window.location.origin.length);
+                this.$el[0].querySelector("#o_link_dialog_url_input").value = relativeUrl;
+                this.__onURLInput();
+            },
+        });
+    }
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -425,6 +442,20 @@ export class LinkTools extends Link {
     _onClickCheckbox(ev) {
         const $target = $(ev.target);
         $target.closest('we-button.o_we_checkbox_wrapper').toggleClass('active');
+        if (ev.target.getAttribute("name") === "direct_download") {
+            const el = ev.target.closest("we-button.o_we_checkbox_wrapper");
+            const urlInputEl = this.$el[0].querySelector("#o_link_dialog_url_input");
+            let href = urlInputEl.value.replace("&download=true", "");
+            if (el.classList.contains("active")) {
+                href += "&download=true";
+                this.state.directDownload = true;
+            }
+            else {
+                this.state.directDownload = false;
+            }
+            urlInputEl.value = href;
+            this.state.url = href;
+        } 
         this._adaptPreview();
     }
     _onPickSelectOption(ev) {
@@ -481,12 +512,22 @@ export class LinkTools extends Link {
             this.props.wysiwyg.odooEditor.historyStep();
         }
     }
+    _checkDocumentState() {
+        this.state.isDocument = false;
+        this.state.directDownload = true;
+        const url = this.state.url;
+        if (url && url.startsWith("/web/content/")) {
+            this.state.isDocument = true;
+            this.state.directDownload = url.includes("&download=true");
+        } 
+    }
     /**
      * @override
      */
     __onURLInput() {
         super.__onURLInput(...arguments);
         this.props.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._checkDocumentState();
         this._syncContent();
         this._adaptPreview();
         this.props.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
