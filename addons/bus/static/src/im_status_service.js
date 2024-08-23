@@ -14,18 +14,15 @@ export const UPDATE_BUS_PRESENCE_DELAY = 60000;
  * im_status to be up to date.
  */
 export const imStatusService = {
-    dependencies: ["bus_service", "multi_tab", "presence"],
+    dependencies: ["bus_service", "presence"],
 
-    start(env, { bus_service, multi_tab, presence }) {
+    start(env, { bus_service, presence }) {
         let lastSentInactivity;
         let becomeAwayTimeout;
 
         const updateBusPresence = () => {
             lastSentInactivity = presence.getInactivityPeriod();
             startAwayTimeout();
-            if (!multi_tab.isOnMainTab()) {
-                return;
-            }
             bus_service.send("update_presence", {
                 inactivity_period: lastSentInactivity,
                 im_status_ids_by_model: {},
