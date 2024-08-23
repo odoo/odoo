@@ -998,7 +998,7 @@ class PosGlobalState extends PosModel {
                 return server_ids;
             }).catch(function (error){
                 console.warn('Failed to send orders:', orders);
-                if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                if(error.message.code === 200 ){    // Business Logic Error, not a connection problem
                     // Hide error if already shown before ...
                     if ((!self.failed || options.show_error) && !options.to_invoice) {
                         self.failed = error;
