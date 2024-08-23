@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from '@web/core/utils/hooks';
 import { Mutex } from "@web/core/utils/concurrency";
 import { Dialog } from '@web/core/dialog/dialog';
@@ -12,22 +13,22 @@ import { Component, useState, useRef, useEffect } from "@odoo/owl";
 export const TABS = {
     IMAGES: {
         id: 'IMAGES',
-        title: "Images",
+        title: _t("Images"),
         Component: ImageSelector,
     },
     DOCUMENTS: {
         id: 'DOCUMENTS',
-        title: "Documents",
+        title: _t("Documents"),
         Component: DocumentSelector,
     },
     ICONS: {
         id: 'ICONS',
-        title: "Icons",
+        title: _t("Icons"),
         Component: IconSelector,
     },
     VIDEOS: {
         id: 'VIDEOS',
-        title: "Videos",
+        title: _t("Videos"),
         Component: VideoSelector,
     },
 };
