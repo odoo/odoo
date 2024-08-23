@@ -31,10 +31,13 @@ class MrpProductionBackorder(models.TransientModel):
             wizard.show_backorder_lines = len(wizard.mrp_production_backorder_line_ids) > 1
 
     def action_close_mo(self):
-        return self.mrp_production_ids.with_context(skip_backorder=True, no_procurement=True).button_mark_done()
+        ctx = dict(self.env.context)
+        always_backorder_mo_ids = ctx.pop('always_backorder_mo_ids', [])
+        return self.mrp_production_ids.with_context(ctx, skip_backorder=True, mo_ids_to_backorder=always_backorder_mo_ids).button_mark_done()
 
     def action_backorder(self):
         ctx = dict(self.env.context)
         ctx.pop('default_mrp_production_ids', None)
-        mo_ids_to_backorder = self.mrp_production_backorder_line_ids.filtered(lambda l: l.to_backorder).mrp_production_id.ids
+        always_backorder_mo_ids = ctx.pop('always_backorder_mo_ids', [])
+        mo_ids_to_backorder = self.mrp_production_backorder_line_ids.filtered(lambda l: l.to_backorder).mrp_production_id.ids + always_backorder_mo_ids
         return self.mrp_production_ids.with_context(ctx, skip_backorder=True, mo_ids_to_backorder=mo_ids_to_backorder).button_mark_done()
