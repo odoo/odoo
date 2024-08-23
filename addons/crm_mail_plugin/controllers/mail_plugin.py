@@ -35,14 +35,14 @@ class MailPluginController(mail_plugin.MailPluginController):
             lead_values = {
                 'lead_id': lead.id,
                 'name': lead.name,
-                'expected_revenue': formatLang(request.env, lead.expected_revenue, monetary=True,
+                'expected_revenue': formatLang(request.env, lead.expected_revenue,
                                                currency_obj=lead.company_currency),
                 'probability': lead.probability,
             }
 
             if recurring_revenues:
                 lead_values.update({
-                    'recurring_revenue': formatLang(request.env, lead.recurring_revenue, monetary=True,
+                    'recurring_revenue': formatLang(request.env, lead.recurring_revenue,
                                                     currency_obj=lead.company_currency),
                     'recurring_plan': lead.recurring_plan.name,
                 })

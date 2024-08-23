@@ -36,7 +36,6 @@ class PaymentLinkWizard(models.TransientModel):
                     amount=formatLang(
                         self.env,
                         installment['amount'],
-                        monetary=True,
                         currency_obj=wizard.currency_id,
                     ),
                     date=installment['date_maturity'],

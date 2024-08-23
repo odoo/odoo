@@ -1270,7 +1270,7 @@ def babel_locale_parse(lang_code):
         except:
             return babel.Locale.parse("en_US")
 
-def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, currency_obj=None, rounding_method='HALF-EVEN', rounding_unit='decimals'):
+def formatLang(env, value, digits=2, grouping=True, monetary=SENTINEL, dp=None, currency_obj=None, rounding_method='HALF-EVEN', rounding_unit='decimals'):
     """
     This function will format a number `value` to the appropriate format of the language used.
 
@@ -1300,6 +1300,8 @@ def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, cur
     :returns: The value formatted.
     :rtype: str
     """
+    if monetary is not SENTINEL:
+        warnings.warn("monetary argument deprecated since 13.0", DeprecationWarning, 2)
     # We don't want to return 0
     if value == '':
         return ''

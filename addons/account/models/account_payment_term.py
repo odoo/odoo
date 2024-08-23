@@ -96,7 +96,7 @@ class AccountPaymentTerm(models.Model):
                 discount_amount = record._get_amount_due_after_discount(record.example_amount, 0.0)
                 record.example_preview_discount = _(
                     "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>",
-                    amount=formatLang(self.env, discount_amount, monetary=True, currency_obj=currency),
+                    amount=formatLang(self.env, discount_amount, currency_obj=currency),
                     date=date,
                 )
 
@@ -117,7 +117,7 @@ class AccountPaymentTerm(models.Model):
                     example_preview += _(
                         "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: #704A66;'>%(date)s</b>",
                         count=i+1,
-                        amount=formatLang(self.env, amount, monetary=True, currency_obj=currency),
+                        amount=formatLang(self.env, amount, currency_obj=currency),
                         date=date,
                     )
                     example_preview += "</div>"
