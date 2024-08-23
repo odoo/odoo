@@ -475,7 +475,9 @@ class Import(models.TransientModel):
                         _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s", row=rowx, col=colx, cell_value=cell.value)
                     )
 
-                if isinstance(cell.value, float):
+                if cell.value is None:
+                    values.append('')
+                elif isinstance(cell.value, float):
                     if cell.value % 1 == 0:
                         values.append(str(int(cell.value)))
                     else:
