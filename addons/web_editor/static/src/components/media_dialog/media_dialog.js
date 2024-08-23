@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import {_lt} from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { Mutex } from "@web/core/utils/concurrency";
 import { useWowlService } from '@web/legacy/utils';
@@ -15,22 +16,22 @@ import { Component, useState, onRendered, xml } from "@odoo/owl";
 export const TABS = {
     IMAGES: {
         id: 'IMAGES',
-        title: "Images",
+        title: _lt("Images"),
         Component: ImageSelector,
     },
     DOCUMENTS: {
         id: 'DOCUMENTS',
-        title: "Documents",
+        title: _lt("Documents"),
         Component: DocumentSelector,
     },
     ICONS: {
         id: 'ICONS',
-        title: "Icons",
+        title: _lt("Icons"),
         Component: IconSelector,
     },
     VIDEOS: {
         id: 'VIDEOS',
-        title: "Videos",
+        title: _lt("Videos"),
         Component: VideoSelector,
     },
 };
