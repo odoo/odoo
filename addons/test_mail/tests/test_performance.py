@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
 from unittest.mock import patch
-from unittest import skip
 
 from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -1330,7 +1328,6 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             self.assertEqual(len(res["mail.message"]), 6)
 
     @warmup
-    @skip("Ordering of notification randomly crash")
     def test_message_to_store_multi_followers_inbox(self):
         """Test query count as well as bus notifcations from sending a message to multiple followers
         with inbox."""

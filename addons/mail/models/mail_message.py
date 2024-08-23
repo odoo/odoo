@@ -1195,7 +1195,7 @@ class Message(models.Model):
     def _cleanup_side_records(self):
         """ Clean related data: notifications, stars, ... to avoid lingering
         notifications / unreachable counters with void messages notably. """
-        outdated_starred_partners = self.starred_partner_ids
+        outdated_starred_partners = self.starred_partner_ids.sorted("id")
         self.write({
             'starred_partner_ids': [(5, 0, 0)],
             'notification_ids': [(5, 0, 0)],

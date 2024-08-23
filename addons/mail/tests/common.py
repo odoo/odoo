@@ -1197,8 +1197,8 @@ class MailCase(MockEmail):
             return f"{notif.channel}  # {message.get('type')} - {payload[0:120]}{'…' if len(payload) > 120 else ''}"
 
         self.assertEqual(
-            sorted(bus_notifs.mapped("channel")),
-            sorted([json_dump(channel) for channel in channels]),
+            bus_notifs.mapped("channel"),
+            [json_dump(channel) for channel in channels],
             f"\nExpected:\n{new_line.join([json_dump(channel) for channel in channels])}"
             f"\nReturned:\n{new_line.join([notif_to_string(notif) for notif in bus_notifs])}",
         )
