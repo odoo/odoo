@@ -16,13 +16,22 @@ export class StockPickingFormController extends FormController {
     async _actionOpenShowDetails(ev) {
         let id = ev.detail.id;
         let record;
+        let relModel;
+
+        if (this.model.root.resModel == 'stock.picking.batch') {
+            relModel = this.model.root.data.move_ids
+        }
+        else {
+            relModel = this.model.root.data.move_ids_without_package
+        }
+
         if (id) {
-            record = this.model.root.data.move_ids_without_package.records.find(
+            record = relModel.records.find(
                 (e) => e.data.id == id
             );
         } else {
             const moveByIdsDesc = sortBy(
-                this.model.root.data.move_ids_without_package.records,
+                relModel.records,
                 "id",
                 "desc"
             );
