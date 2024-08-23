@@ -489,7 +489,7 @@ class Lead(models.Model):
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
 
-    @api.depends(lambda self: ['stage_id', 'team_id'] + self._pls_get_safe_fields())
+    @api.depends(lambda self: ['team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
@@ -770,17 +770,16 @@ class Lead(models.Model):
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
 
-        if not stage_is_won:
-            return super(Lead, self).write(vals)
-
-        # stage change between two won stages: does not change the date_closed
-        leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
+        leads_already_won = self.filtered(lambda r: r.stage_id.is_won)
         remaining = self - leads_already_won
-        if remaining:
-            result = super(Lead, remaining).write(vals)
-        if leads_already_won:
-            vals.pop('date_closed', False)
-            result = super(Lead, leads_already_won).write(vals)
+
+        result = super(Lead, remaining).write(vals)
+        vals.pop('date_closed', False)
+        result &= super(Lead, leads_already_won).write(vals)
+
+        if vals.get('stage_id'):
+            self._compute_probabilities()
+
         return result
 
     @api.model
