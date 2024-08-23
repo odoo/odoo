@@ -104,7 +104,7 @@ export function useEmojiPicker(ref, props, options = {}) {
             ref.el.addEventListener("mouseenter", loadEmoji);
         }
     });
-    Object.assign(state, { add });
+    Object.assign(state, { add, toggle });
     return state;
 }
 

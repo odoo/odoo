@@ -1,4 +1,4 @@
-import { Component, useState, onWillUnmount } from "@odoo/owl";
+import { Component, useState, onWillUnmount, onMounted } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -13,7 +13,7 @@ import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_ser
  * @extends {Component<Props, Env>}
  */
 export class VoiceRecorder extends Component {
-    static props = ["composer", "attachmentUploader", "onchangeRecording?"];
+    static props = ["composer", "attachmentUploader", "onchangeRecording?", "initialRecording?"];
     static template = "mail.VoiceRecorder";
 
     /** @type {MediaStream} */
@@ -52,6 +52,11 @@ export class VoiceRecorder extends Component {
             // 128 or 160 kbit/s – mid-range bitrate quality
             bitRate: 128,
         };
+        onMounted(() => {
+            if (this.props.initialRecording) {
+                this.startRecording();
+            }
+        });
         onWillUnmount(() => {
             if (this.state.recording) {
                 this.notification.add(_t("Voice recording stopped"), { type: "warning" });
@@ -94,7 +99,7 @@ export class VoiceRecorder extends Component {
             }
         }
         this.state.elapsed = "00 : 00";
-        this.props.onchangeRecording?.();
+        this.props.onchangeRecording?.(true);
         this.state.recording = true;
         this.audioContext = new browser.AudioContext();
 
@@ -181,7 +186,7 @@ export class VoiceRecorder extends Component {
         this.state.recording = false;
         this.state.limitWarning = false;
         if (!unmounting) {
-            this.props.onchangeRecording?.();
+            this.props.onchangeRecording?.(false);
         }
     }
 

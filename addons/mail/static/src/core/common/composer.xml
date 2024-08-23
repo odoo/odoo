@@ -11,14 +11,15 @@
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'p-3': normal,
+                    'p-2 pb-3 mx-1': normal,
+                    'o-compact': compact,
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
                 }" t-attf-class="{{ props.className }}">
-            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
+            <!-- <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
-            </div>
+            </div> -->
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread?.eq(props.composer.thread)">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message, props.composer.thread)">
                     Replying to <b t-esc="props.messageToReplyTo.message.author?.name ?? props.messageToReplyTo.message.email_from"/>
@@ -31,13 +32,26 @@
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended }">
                 <div class="d-flex bg-view flex-grow-1 border"
                     t-att-class="{
-                        'o-mail-Composer-compactContainer m-1 shadow-sm border-secondary': compact and !props.composer.message,
+                        'o-mail-Composer-compactContainer m-1 shadow-sm border-secondary rounded': compact and !props.composer.message,
                         'o-mobile rounded-3': isMobileOS,
-                        'rounded-3' : normal,
+                        'rounded' : normal,
                         'rounded-3 align-self-stretch' : extended,
                         'flex-column': extended or props.composer.message,
                     }"
                 >
+                    <div t-if="!extended" class="o-mail-Composer-moreActions o-mail-Composer-actions ms-1">
+                        <div class="d-flex align-items-baseline" style="margin-top: 3px;">
+                            <Dropdown position="'top-start'" menuClass="'p-0 ms-n1 mb-1 rounded-0 d-flex flex-column gap-1'">
+                                <button class="btn border-0 p-1 rounded-pill" title="More actions"><i class="fa fa-lg fa-fw fa-plus-circle"/></button>
+                                <t t-set-slot="content">
+                                    <t t-foreach="actions.all.slice(quickActionLimit)" t-as="action" t-key="action.id">
+                                        <DropdownItem t-if="action.componentCondition"><t t-component="action.component" t-props="action.componentProps"/></DropdownItem>
+                                        <DropdownItem t-else="" class="'d-flex align-items-center px-2 py-1'" onSelected="action.select.bind(action)"><i class="fa-fw" t-att-class="action.icon" t-att-data-sequence="action.sequence"/><span class="mx-2" t-esc="action.label"/></DropdownItem>
+                                    </t>
+                                </t>
+                            </Dropdown>
+                        </div>
+                    </div>
                     <div class="position-relative flex-grow-1">
                         <textarea class="o-mail-Composer-input o-mail-Composer-inputStyle form-control bg-view border-0 rounded-3 shadow-none overflow-auto"
                             t-ref="textarea"
@@ -53,7 +67,7 @@
                         />
                         <!--
                              This is an invisible textarea used to compute the composer
-                             height based on the text content. We need it to downsize
+                             height based on the text content. We neefd it to downsize
                              the textarea properly without flicker.
                         -->
                         <textarea
@@ -65,24 +79,27 @@
                     </div>
                     <div class="o-mail-Composer-actions d-flex bg-view"
                         t-att-class="{
-                            'ms-1': compact and ui.isSmall,
-                            'mx-1': compact and !ui.isSmall,
-                            'ms-3': normal,
+                            'me-1': compact,
+                            'ms-2 me-1': normal,
                             'mx-3 border-top p-1': extended,
                             'border-top': extended or props.composer.message,
                             'rounded': !props.composer.message,
                         }"
                     >
-                        <div class="d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'mt-1': !props.composer.message }" t-ref="main-actions">
-                            <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
+                        <div class="d-flex flex-grow-1 align-items-baseline" style="margin-top: 3px;" t-ref="quick-actions">
+                            <t t-foreach="actions.all.slice(0, quickActionLimit)" t-as="action" t-key="action.id">
+                                <t t-if="action.componentCondition" t-component="action.component" t-props="action.componentProps"/>
+                                <button t-else="" class="btn border-0 p-1 rounded-pill" t-att-title="action.label" t-on-click="action.select.bind(action)"><i class="fa-lg fa-fw" t-att-class="action.icon" t-att-data-sequence="action.sequence"/></button>
+                            </t>
+                            <!-- <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button> -->
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
-                                    <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-pill p-1" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-paperclip"/></button>
+                                    <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles d-none" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment" t-ref="upload-file"><i class="fa fa-fw fa-paperclip"/></button>
                                 </t>
                             </FileUploader>
-                            <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
+                            <!-- <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
                             <t t-if="!extended" t-call="mail.Composer.fullComposer"/>
-                            <t t-if="hasSendButtonNonEditing" t-call="mail.Composer.sendButton"/>
+                            <t t-if="hasSendButtonNonEditing" t-call="mail.Composer.sendButton"/> -->
                         </div>
                         <t t-if="extended" t-call="mail.Composer.fullComposer"/>
                     </div>

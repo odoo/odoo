@@ -30,6 +30,9 @@ import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useComposerActions } from "./composer_actions";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -54,6 +57,8 @@ const EDIT_CLICK_TYPE = {
 export class Composer extends Component {
     static components = {
         AttachmentList,
+        Dropdown,
+        DropdownItem,
         Picker,
         FileUploader,
         NavigableList,
@@ -95,7 +100,8 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.ui = useState(useService("ui"));
-        this.mainActionsRef = useRef("main-actions");
+        this.actions = useComposerActions();
+        this.quickActionsRef = useRef("quick-actions");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.emojiButton = useRef("emoji-button");
@@ -182,9 +188,13 @@ export class Composer extends Component {
         });
     }
 
+    get quickActionLimit() {
+        return this.env.inDiscussApp ? 2 : 1;
+    }
+
     get pickerSettings() {
         return {
-            anchor: this.props.mode === "extended" ? undefined : this.mainActionsRef,
+            anchor: this.props.mode === "extended" ? undefined : this.quickActionsRef,
             buttons: [this.emojiButton],
             close: () => {
                 if (!this.ui.isSmall) {
@@ -563,10 +573,6 @@ export class Composer extends Component {
         this.env.services.notification.add(_t('Message posted on "%s"', this.thread.displayName), {
             type: "info",
         });
-    }
-
-    onClickAddEmoji(ev) {
-        markEventHandled(ev, "Composer.onClickAddEmoji");
     }
 
     isEventTrusted(ev) {
