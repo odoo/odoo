@@ -62,6 +62,7 @@ def MockRequest(
         cr=env.cr,
         uid=env.uid,
         context=env.context,
+        cookies=cookies,
         lang=env['res.lang']._get_data(code=lang_code),
         website=website,
         render=lambda *a, **kw: '<MockResponse>',
