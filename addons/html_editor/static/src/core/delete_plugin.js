@@ -2,6 +2,7 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     isAllowedContent,
+    isContentEditable,
     isEditorTab,
     isEmpty,
     isInPre,
@@ -904,7 +905,7 @@ export class DeletePlugin extends Plugin {
      */
     expandRangeToIncludeNonEditables(range) {
         const { startContainer, endContainer, commonAncestorContainer: commonAncestor } = range;
-        const isNonEditable = (node) => !closestElement(node).isContentEditable;
+        const isNonEditable = (node) => !isContentEditable(node);
         const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
             // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
@@ -1133,7 +1134,7 @@ export class DeletePlugin extends Plugin {
     // If leaf is part of a contenteditable=false tree, consider its root as the
     // leaf instead.
     adjustedLeaf(leaf, refEditableRoot) {
-        const isNonEditable = (node) => !closestElement(node).isContentEditable;
+        const isNonEditable = (node) => !isContentEditable(node);
         const nonEditableRoot = leaf && findFurthest(leaf, refEditableRoot, isNonEditable);
         return nonEditableRoot || leaf;
     }

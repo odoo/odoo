@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
 import { cleanTextNode, unwrapContents } from "../utils/dom";
-import { isTextNode, isVisibleTextNode, isZWS } from "../utils/dom_info";
+import { isContentEditable, isTextNode, isVisibleTextNode, isZWS } from "../utils/dom_info";
 import { closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
@@ -218,9 +218,7 @@ export class FormatPlugin extends Plugin {
                 .getSelectedNodes()
                 .filter(
                     (n) =>
-                        n.nodeType === Node.TEXT_NODE &&
-                        closestElement(n).isContentEditable &&
-                        (isVisibleTextNode(n) || isZWS(n))
+                        isTextNode(n) && isContentEditable(n) && (isVisibleTextNode(n) || isZWS(n))
                 )
         );
         const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
