@@ -20,6 +20,7 @@ from urllib.parse import urlparse
 from weakref import WeakSet
 
 from werkzeug.local import LocalStack
+from werkzeug.datastructures import ImmutableMultiDict, MultiDict
 from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
@@ -30,7 +31,7 @@ from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
 from odoo.service.security import check_session
-from odoo.tools import config
+from odoo.tools import config, lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -867,6 +868,13 @@ class WebsocketRequest:
         use :meth:`~update_env` instead.
         """
         self.update_env(context=dict(self.env.context, **overrides))
+
+    @lazy_property
+    def cookies(self):
+        cookies = MultiDict(self.httprequest.cookies)
+        if self.registry:
+            self.registry['ir.http']._sanitize_cookies(cookies)
+        return ImmutableMultiDict(cookies)
 
 
 class WebsocketConnectionHandler:
