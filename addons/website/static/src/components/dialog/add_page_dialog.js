@@ -160,6 +160,7 @@ export class AddPageTemplatePreview extends Component {
                     overflow: hidden;
                     padding-right: 0px;
                     padding-left: 0px;
+                    --snippet-preview-height: 340px;
                 }
                 section {
                     /* Avoid the zoom's missing pixel. */
