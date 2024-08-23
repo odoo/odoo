@@ -49,7 +49,7 @@ class Users(models.Model):
         To be overriden if needs to be disabled for other 2FA providers
         """
         if request and self._mfa_type():
-            key = request.httprequest.cookies.get('td_id')
+            key = request.cookies.get('td_id')
             if key:
                 if request.env['auth_totp.device']._check_credentials_for_uid(
                     scope="browser", key=key, uid=self.id):

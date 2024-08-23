@@ -8,7 +8,7 @@ def downgrade_to_public_user():
     in order to ensure that the no user-specific data is kept in the request."""
     public_user = request.env.ref("base.public_user")
     request.update_env(user=public_user)
-    request.httprequest.cookies = {}
+    request.cookies = {}
 
 
 def force_guest_env(guest_token, raise_if_not_found=True):

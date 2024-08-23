@@ -14,7 +14,7 @@ class IrHttp(models.AbstractModel):
         result = super().session_info()
         store = Store()
         ResUsers = self.env["res.users"]
-        if cids := request.httprequest.cookies.get("cids", False):
+        if cids := request.cookies.get("cids", False):
             ResUsers = self.with_context(allowed_company_ids=[int(cid) for cid in cids.split("-")]).env["res.users"]
         ResUsers._init_store_data(store)
         result["storeData"] = store.get_result()

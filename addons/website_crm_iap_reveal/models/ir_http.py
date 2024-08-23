@@ -29,7 +29,7 @@ class IrHttp(models.AbstractModel):
                         if not ip_address:
                             return response
                         website_id = request.website.id
-                        rules_excluded = (request.httprequest.cookies.get('rule_ids') or '').split(',')
+                        rules_excluded = (request.cookies.get('rule_ids') or '').split(',')
                         before = time.time()
                         new_rules_excluded = request.env['crm.reveal.view'].sudo()._create_reveal_view(website_id, url, ip_address, country_code, state_code, rules_excluded)
                         # even when we match, no view may have been created if this is a duplicate

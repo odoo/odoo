@@ -51,7 +51,7 @@ class WebsocketController(Controller):
 
     @route("/websocket/on_closed", type="json", auth="public", cors="*")
     def on_websocket_closed(self):
-        request.env["ir.websocket"]._on_websocket_closed(request.httprequest.cookies)
+        request.env["ir.websocket"]._on_websocket_closed(request.cookies)
 
     @route('/bus/websocket_worker_bundle', type='http', auth='public', cors='*')
     def get_websocket_worker_bundle(self, v=None):  # pylint: disable=unused-argument

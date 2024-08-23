@@ -139,7 +139,7 @@ class LivechatController(http.Controller):
             chatbot_script=chatbot_script,
             user_id=user_id,
             country_id=country_id,
-            lang=request.httprequest.cookies.get('frontend_lang')
+            lang=request.cookies.get('frontend_lang')
         )
         if not channel_vals:
             return False

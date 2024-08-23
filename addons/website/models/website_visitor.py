@@ -392,7 +392,7 @@ class WebsiteVisitor(models.Model):
         self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
 
     def _get_visitor_timezone(self):
-        tz = request.httprequest.cookies.get('tz') if request else None
+        tz = request.cookies.get('tz') if request else None
         if tz in pytz.all_timezones:
             return tz
         elif not self.env.user._is_public():
