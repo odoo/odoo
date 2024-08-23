@@ -292,12 +292,23 @@ export class Link extends Component {
             (type && size ? (' btn-' + size) : '');
         var isNewWindow = this._isNewWindow(url);
         var doStripDomain = this._doStripDomain();
-        if (this.state.url.indexOf(location.origin) === 0 && doStripDomain) {
-            this.state.url = this.state.url.slice(location.origin.length);
+        let urlWithoutDomain = this.state.url;
+        if (this.state.url.indexOf(location.origin) === 0) {
+            urlWithoutDomain = this.state.url.slice(location.origin.length);
+            if (doStripDomain) {
+                this.state.url = urlWithoutDomain;
+            }
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
         const isImage = this.props.link && this.props.link.querySelector('img');
+        let isDocument = false;
+        let directDownload = true;
+        if (urlWithoutDomain && urlWithoutDomain.startsWith("/web/content/")) {
+            isDocument = true;
+            directDownload = urlWithoutDomain.includes("&download=true");
+        } 
+        
         return {
             content: content,
             url: this._correctLink(this.state.url),
@@ -311,6 +322,8 @@ export class Link extends Component {
             isNewWindow: isNewWindow,
             doStripDomain: doStripDomain,
             isImage,
+            isDocument,
+            directDownload,
         };
     }
     /**

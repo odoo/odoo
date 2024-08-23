@@ -41,3 +41,13 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
 
     def test_02_image_quality(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_image_quality', login="admin")
+
+    def test_03_link_to_document(self):
+        text = b'Lorem Ipsum'
+        self.env['ir.attachment'].create({
+            'name': 'sample.txt',
+            'public': True,
+            'mimetype': 'text/plain',
+            'raw': text,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_link_to_document', login="admin")

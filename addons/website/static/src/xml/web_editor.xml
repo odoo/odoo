@@ -14,7 +14,7 @@
                     '<span class="highlighted-text">#</span>' to link to an anchor.
                 </small>
             </div>
-            <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{state.isButton ? ' d-none' : ''}">
+            <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{state.isButton || state.isDocument ? ' d-none' : ''}">
                 <we-select class="o_we_user_value_widget o_we_sublevel_1">
                     <we-title>Page Anchor</we-title>
                     <div>
