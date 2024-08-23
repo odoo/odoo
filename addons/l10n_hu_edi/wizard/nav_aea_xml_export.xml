@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="../../odoo_160_xml.rng"?>
+<odoo>
+
+    <record id="l10n_hu_edi_nav_aea_wiz_p1" model="ir.ui.view">
+        <field name="name">l10n_hu.nav_aea_wiz.p1</field>
+        <field name="model">l10n_hu.nav_aea_wiz</field>
+        <field name="arch" type="xml">
+            <form string="Adohatosag Ellenorzes Export">
+                <field name="state" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <h2>Tax authority audit data reporting</h2>
+                <h3>Adóhatósági ellenőrzési adatszolgáltatás</h3>
+                <group states="draft">
+                    <group string="Search by invoice number">
+                        <field name="name_from" string="From"/>
+                        <field name="name_to" string="To"/>
+                    </group>
+                    <group string="Search by date">
+                        <field name="date_field" string="Field"/>
+                        <field name="date_from" string="From"/>
+                        <field name="date_to" string="To"/>
+                    </group>
+                </group>
+                <group states="draft" string="Other settings">
+                    <field name="company_ids" widget="many2many_tags" domain="[('partner_id.country_id.code','=','HU')]"/>
+                    <field name="use_cdata"/>
+                </group>
+                <div states="done">
+                    <h2>Export successful</h2>
+                    <p>
+                        Here is the export XML file:
+                        <field name="data" readonly="1" filename="name"/>
+                    </p>
+                </div>
+                <footer states="draft">
+                    <button string="Export" name="do_generate" type="object" default_focus="1" class="btn-primary"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+                <footer states="done">
+                    <button string="Close" special="cancel" default_focus="1" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_hu_edi_nav_aea_wiz" model="ir.actions.act_window">
+        <field name="name">Tax authority audit data reporting</field>
+        <field name="res_model">l10n_hu.nav_aea_wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_hu_edi.l10n_hu_edi_nav_aea_wiz_p1"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_l10n_hu_edi_nav_aea_wiz" action="action_l10n_hu_edi_nav_aea_wiz" parent="account.menu_finance_reports" sequence="999" name="Adóhatósági ellenőrzési adatszolgáltatás"/>
+
+</odoo>

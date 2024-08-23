@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="nav_RequestHeader" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common">
+        <common:header>
+            <common:requestId t-esc="request_id"/>
+            <common:timestamp t-esc="format_datetime(query_date)"/>
+            <common:requestVersion t-translation="off">3.0</common:requestVersion>
+            <common:headerVersion t-translation="off">1.0</common:headerVersion>
+        </common:header>
+        <common:user>
+            <common:login t-esc="nav_username"/>
+            <common:passwordHash cryptoType="SHA-512" t-esc="password_hash(nav_password)"/>
+            <common:taxNumber t-esc="nav_vat[:8]"/>
+            <common:requestSignature cryptoType="SHA3-512" t-esc="request_signature"/>
+        </common:user>
+        <software>
+            <softwareId t-esc="softwareId" t-translation="off">ODOO-ENTERPRISE---</softwareId>
+            <softwareName t-esc="softwareName" t-translation="off">Odoo Enterprise</softwareName>
+            <softwareOperation t-esc="softwareOperation" t-translation="off">LOCAL_SOFTWARE</softwareOperation>
+            <softwareMainVersion t-esc="softwareMainVersion" t-translation="off">16.0</softwareMainVersion>
+            <softwareDevName t-esc="softwareDevName" t-translation="off">OdooTech Zrt.</softwareDevName>
+            <softwareDevContact t-esc="softwareDevContact" t-translation="off">info@odootech.hu</softwareDevContact>
+            <softwareDevCountryCode t-esc="softwareDevCountryCode" t-translation="off">HU</softwareDevCountryCode>
+            <softwareDevTaxNumber t-esc="softwareDevTaxNumber" t-translation="off">32226375</softwareDevTaxNumber>
+        </software>
+    </template>
+
+    <template id="nav_ManageInvoiceRequest">
+        <ManageInvoiceRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+            <t t-call="l10n_hu_edi.nav_RequestHeader"/>
+            <exchangeToken t-esc="exchangeToken"/>
+            <invoiceOperations>
+                <compressedContent t-esc="format_bool(compressed)"/>
+                <invoiceOperation t-foreach="invoices" t-as="invoice_data">
+                    <index t-esc="invoice_data['index']"/>
+                    <invoiceOperation t-esc="invoice_data['operation']"/>
+                    <invoiceData t-esc="invoice_data['invoice_base64']"/>
+                </invoiceOperation>
+            </invoiceOperations>
+        </ManageInvoiceRequest>
+    </template>
+
+    <template id="nav_QueryTaxpayerRequest">
+        <QueryTaxpayerRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+            <t t-call="l10n_hu_edi.nav_RequestHeader"/>
+            <taxNumber t-esc="vatnumber[:8]"/>
+        </QueryTaxpayerRequest>
+    </template>
+
+    <template id="nav_QueryTransactionStatusRequest">
+        <QueryTransactionStatusRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+            <t t-call="l10n_hu_edi.nav_RequestHeader"/>
+            <transactionId t-esc="transactionId"/>
+            <returnOriginalRequest t-if="returnOriginalRequest" t-esc="format_bool(returnOriginalRequest)"/>
+        </QueryTransactionStatusRequest>
+    </template>
+
+    <template id="nav_TokenExchangeRequest">
+        <TokenExchangeRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+            <t t-call="l10n_hu_edi.nav_RequestHeader"/>
+        </TokenExchangeRequest>
+    </template>
+
+</odoo>

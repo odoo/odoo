@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="l10n_hu_upload_transaction_form" model="ir.ui.view">
+        <field name="name">l10n_hu.upload_transaction.form</field>
+        <field name="model">l10n_hu.upload_transaction</field>
+        <field name="arch" type="xml">
+            <form string="NAV Transaction">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="transaction_code"/>
+                        <h1>
+                            <field name="transaction_code"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="invoice_id"/>
+                            <field name="request_code"/>
+                            <field name="user"/>
+                            <field name="version"/>
+                            <field name="production_mode"/>
+                            <field name="query_time"/>
+                        </group>
+                        <group>
+                            <field name="reply_status"/>
+                            <field name="reply_time"/>
+                            <field name="reply_message"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

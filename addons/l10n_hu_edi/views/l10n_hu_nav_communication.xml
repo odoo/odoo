@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="l10n_hu_nav_communication_tree" model="ir.ui.view">
+        <field name="name">l10n_hu.nav_communication.tree</field>
+        <field name="model">l10n_hu.nav_communication</field>
+        <field name="arch" type="xml">
+            <tree string="NAV Credentials" decoration-danger="state=='draft'">
+                <field name="sequence" widget="handle"/>
+                <field name="username"/>
+                <field name="state" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_hu_nav_communication_form" model="ir.ui.view">
+        <field name="name">l10n_hu.nav_communication.form</field>
+        <field name="model">l10n_hu.nav_communication</field>
+        <field name="arch" type="xml">
+            <form string="NAV Credential">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="state"/>
+                        <h1>
+                            <field name="state" readonly="1"/>
+                        </h1>
+                        <button name="force_retest" type="object" string="Retest" attrs="{'invisible':[('state','=','draft')]}"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="username"/>
+                            <field name="password" password="True"/>
+                            <field name="sign_key"/>
+                            <field name="back_key"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

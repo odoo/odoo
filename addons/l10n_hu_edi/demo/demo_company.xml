@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_hu.partner_demo_company_hu" model="res.partner">
+        <field name="vat">12345676-2-12</field>
+    </record>
+
+    <data noupdate="1">
+        <function model="res.company" name="_prepare_hu_demo_objects">
+            <value eval="[ref('l10n_hu.demo_company_hu')]"/>
+        </function>
+    </data>
+
+</odoo>
