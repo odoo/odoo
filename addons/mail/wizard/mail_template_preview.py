@@ -34,7 +34,7 @@ class MailTemplatePreview(models.TransientModel):
     mail_template_id = fields.Many2one('mail.template', string='Related Mail Template', required=True)
     model_id = fields.Many2one('ir.model', string='Targeted model', related="mail_template_id.model_id")
     resource_ref = fields.Reference(string='Record', selection='_selection_target_model')
-    lang = fields.Selection(_selection_languages, string='Template Preview Language')
+    lang = fields.Selection(_selection_languages, string='Template Preview Language', default=lambda self: self.env.user.lang)
     no_record = fields.Boolean('No Record', compute='_compute_no_record')
     error_msg = fields.Char('Error Message', readonly=True)
     # Fields same than the mail.template model, computed with resource_ref and lang
