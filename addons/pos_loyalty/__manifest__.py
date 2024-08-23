@@ -31,9 +31,6 @@
         'web.assets_tests': [
             'pos_loyalty/static/tests/tours/**/*',
         ],
-        'point_of_sale.assets_qunit_tests': [
-            'pos_loyalty/static/tests/unit/**/*',
-        ],
     },
     'license': 'LGPL-3',
 }
