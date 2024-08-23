@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
+import { getFirstListFunction } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
@@ -61,16 +61,6 @@ export class ListUIPlugin extends OdooUIPlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "START":
-                for (const sheetId of this.getters.getSheetIds()) {
-                    const cells = this.getters.getCells(sheetId);
-                    for (const cell of Object.values(cells)) {
-                        if (cell.isFormula) {
-                            this._addListPositionToDataSource(cell);
-                        }
-                    }
-                }
-                break;
             case "INSERT_ODOO_LIST": {
                 const { id, linesNumber } = cmd;
                 this._setupListDataSource(id, linesNumber);
@@ -102,13 +92,6 @@ export class ListUIPlugin extends OdooUIPlugin {
                 break;
             case "UPDATE_CELL":
                 this.unusedLists = undefined;
-                if (cmd.content) {
-                    const position = { sheetId: cmd.sheetId, col: cmd.col, row: cmd.row };
-                    const cell = this.getters.getCell(position);
-                    if (cell && cell.isFormula) {
-                        this._addListPositionToDataSource(cell);
-                    }
-                }
                 break;
             case "UNDO":
             case "REDO": {
@@ -207,36 +190,6 @@ export class ListUIPlugin extends OdooUIPlugin {
 
     _getListDataSourceId(listId) {
         return `list-${listId}`;
-    }
-
-    /**
-     * Extract the position of the records asked in the given formula and
-     * increase the max position of the corresponding data source.
-     *
-     * @param {object} cell Odoo list cell
-     */
-    _addListPositionToDataSource(cell) {
-        if (getNumberOfListFormulas(cell.compiledFormula.tokens) !== 1) {
-            return;
-        }
-        const { functionName, args } = getFirstListFunction(cell.compiledFormula.tokens);
-        if (functionName !== "ODOO.LIST") {
-            return;
-        }
-        const [listId, positionArg] = args.map((arg) => arg.value.toString());
-
-        if (!this.getters.getListIds().includes(listId)) {
-            return;
-        }
-        const position = parseInt(positionArg, 10);
-        if (isNaN(position)) {
-            return;
-        }
-        const dataSourceId = this._getListDataSourceId(listId);
-        if (!this.lists[dataSourceId]) {
-            this._setupListDataSource(listId, 0);
-        }
-        this.lists[dataSourceId].increaseMaxPosition(position);
     }
 
     _getUnusedLists() {
