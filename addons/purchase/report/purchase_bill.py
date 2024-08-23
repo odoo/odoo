@@ -51,5 +51,5 @@ class PurchaseBillUnion(models.Model):
             amount = doc.amount
             if doc.purchase_order_id and doc.purchase_order_id.invoice_status == 'no':
                 amount = 0.0
-            name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
+            name += ': ' + formatLang(self.env, amount, currency_obj=doc.currency_id)
             doc.display_name = name
