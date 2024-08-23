@@ -66,9 +66,15 @@ class NotifyTests(TransactionCase):
                 cr.commit()
                 conn = cr._cnx
                 sel.register(conn, selectors.EVENT_READ)
-                if sel.select(5):
+                while sel.select(timeout=5):
                     conn.poll()
-                    channels.extend(json.loads(conn.notifies.pop().payload))
+                    if notify_channels := [
+                        c
+                        for c in json.loads(conn.notifies.pop().payload)
+                        if c[0] == self.env.cr.dbname
+                    ]:
+                        channels = notify_channels
+                        break
 
         thread = threading.Thread(target=single_listen)
         thread.start()
@@ -87,4 +93,4 @@ class NotifyTests(TransactionCase):
         self.assertEqual(
             channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
         )
-        thread.join()
+        thread.join(timeout=5)
