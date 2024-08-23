@@ -170,6 +170,7 @@ class EventRegistration(models.Model):
 
         :return dict lead_values: values used for create / write on a lead
         """
+        sorted_self = self.sorted("id")
         lead_values = {
             # from rule
             'type': rule.lead_type,
@@ -181,12 +182,12 @@ class EventRegistration(models.Model):
             'event_id': self.event_id.id,
             'referred': self.event_id.name,
             'registration_ids': self.ids,
-            'campaign_id': self._find_first_notnull('utm_campaign_id'),
-            'source_id': self._find_first_notnull('utm_source_id'),
-            'medium_id': self._find_first_notnull('utm_medium_id'),
+            'campaign_id': sorted_self._find_first_notnull('utm_campaign_id'),
+            'source_id': sorted_self._find_first_notnull('utm_source_id'),
+            'medium_id': sorted_self._find_first_notnull('utm_medium_id'),
         }
-        lead_values.update(self._get_lead_contact_values())
-        lead_values['description'] = self._get_lead_description(_("Participants"), line_counter=True)
+        lead_values.update(sorted_self._get_lead_contact_values())
+        lead_values['description'] = sorted_self._get_lead_description(_("Participants"), line_counter=True)
         return lead_values
 
     def _get_lead_contact_values(self):
@@ -201,8 +202,9 @@ class EventRegistration(models.Model):
 
         :return dict: values used for create / write on a lead
         """
+        sorted_self = self.sorted("id")
         valid_partner = next(
-            (reg.partner_id for reg in self if reg.partner_id != self.env.ref('base.public_partner')),
+            (reg.partner_id for reg in sorted_self if reg.partner_id != self.env.ref('base.public_partner')),
             self.env['res.partner']
         )  # CHECKME: broader than just public partner
 
@@ -226,24 +228,24 @@ class EventRegistration(models.Model):
                 if (not phone_formatted or not partner_phone_formatted) and self.phone != valid_partner.phone:
                     valid_partner = self.env['res.partner']
 
-        registration_phone = self._find_first_notnull('phone')
+        registration_phone = sorted_self._find_first_notnull('phone')
         if valid_partner:
             contact_vals = self.env['crm.lead']._prepare_values_from_partner(valid_partner)
             # force email_from / phone only if not set on partner because those fields are now synchronized automatically
             if not valid_partner.email:
-                contact_vals['email_from'] = self._find_first_notnull('email')
+                contact_vals['email_from'] = sorted_self._find_first_notnull('email')
             if not valid_partner.phone:
                 contact_vals['phone'] = registration_phone
         else:
             # don't force email_from + partner_id because those fields are now synchronized automatically
             contact_vals = {
-                'contact_name': self._find_first_notnull('name'),
-                'email_from': self._find_first_notnull('email'),
+                'contact_name': sorted_self._find_first_notnull('name'),
+                'email_from': sorted_self._find_first_notnull('email'),
                 'phone': registration_phone,
                 'lang_id': False,
             }
         contact_vals.update({
-            'name': "%s - %s" % (self.event_id.name, valid_partner.name or self._find_first_notnull('name') or self._find_first_notnull('email')),
+            'name': "%s - %s" % (self.event_id.name, valid_partner.name or sorted_self._find_first_notnull('name') or sorted_self._find_first_notnull('email')),
             'partner_id': valid_partner.id,
         })
         # try to avoid copying registration_phone on both phone and mobile fields

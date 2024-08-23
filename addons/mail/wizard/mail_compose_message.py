@@ -1031,7 +1031,8 @@ class MailComposer(models.TransientModel):
                  'partner_ids',
                  'report_template_ids',
                  'scheduled_date',
-                ]
+                ],
+                find_or_create_partners=self.env.context.get("mail_composer_force_partners", True),
             )
             for res_id in res_ids:
                 # remove attachments from template values as they should not be rendered

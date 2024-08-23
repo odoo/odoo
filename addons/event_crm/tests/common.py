@@ -102,7 +102,11 @@ class EventCrmCase(TestCrmCommon, EventCase):
         self.assertEqual(lead.partner_name, expected_partner_name)
         self.assertEqual(lead.email_from, partner.email if partner and partner.email else registrations._find_first_notnull('email'))
         self.assertEqual(lead.phone, partner.phone if partner and partner.phone else registration_phone)
-        self.assertEqual(lead.mobile, partner.mobile if partner and partner.mobile else ((registration_phone != lead.phone) and registration_phone))
+        exp_mobile = partner.mobile if partner and partner.mobile else ((registration_phone != lead.phone) and registration_phone)
+        self.assertEqual(
+            lead.mobile, exp_mobile,
+            f"Expected {exp_mobile} (partner {partner.id} / {partner.mobile}) (registration phone {registration_phone} / lead phone {lead.phone})",
+        )
 
         # description: to improve
         self.assertNotIn('False', lead.description)  # avoid a "Dear False" like construct ^^ (this assert is serious and intended)
