@@ -12,11 +12,13 @@ import { browser } from "../browser/browser";
  * @param {Ref} ref
  */
 export function useAutoresize(ref, options = {}) {
+    let wasProgrammaticallyResized = false;
     let resize = null;
     useEffect(
         (el) => {
             if (el) {
-                resize = () => {
+                resize = (programmaticResize = false) => {
+                    wasProgrammaticallyResized = programmaticResize;
                     if (el instanceof HTMLInputElement) {
                         resizeInput(el, options);
                     } else {
@@ -24,9 +26,20 @@ export function useAutoresize(ref, options = {}) {
                     }
                     options.onResize?.(el, options);
                 };
-                el.addEventListener("input", resize);
+                el.addEventListener("input", () => resize(true));
+                const resizeObserver = new ResizeObserver(() => {
+                    // This ensures that the resize function is not called twice on input or page load
+                    if (wasProgrammaticallyResized) {
+                        wasProgrammaticallyResized = false;
+                        return;
+                    }
+                    resize();
+                });
+                resizeObserver.observe(el);
                 return () => {
                     el.removeEventListener("input", resize);
+                    resizeObserver.unobserve(el);
+                    resizeObserver.disconnect();
                     resize = null;
                 };
             }
@@ -35,7 +48,7 @@ export function useAutoresize(ref, options = {}) {
     );
     useEffect(() => {
         if (resize) {
-            resize();
+            resize(true);
         }
     });
 }
