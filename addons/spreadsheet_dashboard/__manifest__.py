@@ -31,5 +31,9 @@
         'web.assets_unit_tests': [
             "spreadsheet_dashboard/static/tests/**/*",
         ],
+        'web.assets_tests': [
+            'spreadsheet_dashboard/static/tests/tours/*',
+        ],
+
     },
 }

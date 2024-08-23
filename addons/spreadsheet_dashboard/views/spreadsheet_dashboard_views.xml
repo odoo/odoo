@@ -1,18 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="spreadsheet_dashboard_view_search" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.view.search</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <search>
+                <group >
+                    <filter string="Published" name="is_published" domain="[('is_published','=','true')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="spreadsheet_dashboard_view_list" model="ir.ui.view">
         <field name="name">spreadsheet.dashboard.view.list</field>
         <field name="model">spreadsheet.dashboard</field>
         <field name="arch" type="xml">
-            <tree create="false" editable="bottom">
-                <field name="sequence" widget="handle" groups="base.group_system"/>
+            <tree create="false" editable="bottom" default_group_by="dashboard_group_id">
                 <field name="name"/>
                 <field name="group_ids" widget="many2many_tags" required="1"/>
                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 <field name="is_published" widget="boolean_toggle"/>
                 <field name="dashboard_group_id" optional="hidden"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_view_kanban" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.view.kanban</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile"
+                default_group_by="dashboard_group_id"
+                action="action_open_spreadsheet_dashboard"
+                type="object"
+                create="false"
+                >
+                <field name="name"/>
+                <field name="is_published"/>
+                <field name="dashboard_group_id"/>
+                <field name="id"/>
+                <field name="thumbnail"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" class="dropdown-item" type="object" name="action_edit_dashboard">Edit</a>
+                        <a role="menuitem" type="object" name="toggle_published" class="dropdown-item">
+                            <t t-if="record.is_published.raw_value">Unpublish</t>
+                            <t t-else="">Publish</t>
+                        </a>
+                        <a role="menuitem" class="dropdown-item" type="delete">Delete</a>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_content oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div t-if="record.thumbnail.value" class="o_field_widget o_readonly_modifier o_field_background_image o_kanban_image_fill_left d-block">
+                                <img t-att-src="kanban_image('spreadsheet.dashboard', 'thumbnail', record.id.raw_value)" t-att-alt="record.name.value"/>
+                            </div>
+                            <div t-else="" class="o_kanban_image_fill_left d-flex h-100 text-muted justify-content-center align-items-center">
+                                No preview
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -27,39 +82,30 @@
         </field>
     </record>
 
-    <record id="spreadsheet_dashboard_container_view_form" model="ir.ui.view">
-        <field name="name">spreadsheet.dashboard.group.view.form</field>
-        <field name="model">spreadsheet.dashboard.group</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                    </div>
-                    <notebook>
-                        <page string="Spreadsheets" name="spreadsheets">
-                            <field name="dashboard_ids" context="{'tree_view_ref': 'spreadsheet_dashboard.spreadsheet_dashboard_view_list'}"/>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
     <record id="spreadsheet_dashboard_view_form" model="ir.ui.view">
         <field name="name">spreadsheet.dashboard.view.form</field>
         <field name="model">spreadsheet.dashboard</field>
         <field name="arch" type="xml">
             <form>
-                <group>
-                    <field name="name"/>
-                    <field name="dashboard_group_id"/>
-                    <field name="spreadsheet_binary_data"/>
-                    <field name="thumbnail"/>
-                    <field name="group_ids" widget="many2many_tags"/>
-                </group>
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <div>
+                            <label for="name"/>
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="e.g. My Dashboard" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="dashboard_group_id"/>
+                            <field name="group_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="is_published" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>

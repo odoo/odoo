@@ -10,7 +10,7 @@ class SpreadsheetDashboard(models.Model):
     _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
-    dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True)
+    dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, group_expand='_read_group_expand_full')
     sequence = fields.Integer()
     is_published = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company')
@@ -36,3 +36,18 @@ class SpreadsheetDashboard(models.Model):
             for dashboard, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", dashboard.name)
         return vals_list
+
+    def toggle_published(self):
+        for dashboard in self:
+            dashboard.is_published = not dashboard.is_published
+
+    def action_open_spreadsheet_dashboard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'action_spreadsheet_dashboard',
+            'name': self.name,
+            'params': {
+                'dashboard_id': self.id,
+            },
+        }
