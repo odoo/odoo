@@ -433,7 +433,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
         pdf_report = self.env['ir.actions.report'].browse(invoice_data['pdf_report_id'])
-        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render(pdf_report.report_name, invoice.ids, data={'proforma': True})
+        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
             'raw': content[invoice.id],
