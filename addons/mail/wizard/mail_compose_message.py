@@ -1254,7 +1254,7 @@ class MailComposer(models.TransientModel):
         template_values = self.template_id._generate_template(
             res_ids,
             template_fields,
-            find_or_create_partners=True
+            find_or_create_partners=find_or_create_partners,
         )
 
         exclusion_list = ('email_cc', 'email_to') if find_or_create_partners else ()
