@@ -1381,12 +1381,12 @@
                                         <field name="incoterm_location"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
                                         <field name="preferred_payment_method_line_id"
-                                               string="Payment Method Line"
+                                               string="Payment Method"
                                                domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]"
                                                invisible="move_type in ('in_invoice', 'in_refund')"
                                         />
                                         <field name="preferred_payment_method_line_id"
-                                               string="Payment Method Line"
+                                               string="Payment Method"
                                                domain="[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]"
                                                invisible="move_type in ('out_invoice', 'out_refund')"
                                         />
@@ -1494,7 +1494,7 @@
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
-                        <filter string="Partner Payment Method"
+                        <filter string="Payment Method"
                                 name="preferred_payment_method"
                                 context="{'group_by': 'preferred_payment_method_line_id'}"
                                 groups="account.group_account_invoice,account.group_account_readonly"
@@ -1570,7 +1570,7 @@
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
                         <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
-                        <filter string="Partner Payment Method"
+                        <filter string="Payment Method"
                                 name="preferred_payment_method_line"
                                 context="{'group_by': 'preferred_payment_method_line_id'}"
                                 groups="account.group_account_invoice,account.group_account_readonly"
