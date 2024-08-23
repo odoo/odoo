@@ -158,3 +158,30 @@ class StockMoveLine(TestStockCommon):
         })
         with self.assertRaises(UserError):
             (move_line1 | move_line2).action_put_in_pack()
+
+    def test_multi_edit_quant_and_lot(self):
+        """
+        Ensure that the quant_id and lot_id cannot be updated in multi-edit mode when the move lines use different products.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, 20, lot_id=self.lot, owner_id=self.partner)
+        quant_productA = self.env['stock.quant']._update_available_quantity(self.productA, self.shelf1, 20, owner_id=self.partner)
+        picking1 = self.env['stock.picking'].create({
+            'name': 'Picking 1',
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move_line1 = self.env['stock.move.line'].create({
+            'picking_id': picking1.id,
+            'product_id': self.product.id,
+            'quantity': 1,
+        })
+        move_line2 = self.env['stock.move.line'].create({
+            'picking_id': picking1.id,
+            'product_id': self.productA.id,
+            'quantity': 1,
+        })
+        with self.assertRaises(UserError):
+            (move_line1 | move_line2).lot_id = self.lot
+        with self.assertRaises(UserError):
+            (move_line1 | move_line2).quant_id = quant_productA
