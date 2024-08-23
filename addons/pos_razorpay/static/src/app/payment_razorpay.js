@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { getUTCString } from "@point_of_sale/utils";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 const REQUEST_TIMEOUT = 10000;
 const { DateTime } = luxon;
@@ -187,7 +187,7 @@ export class PaymentRazorpay extends PaymentInterface {
         const utcDate = timeMillis
             ? DateTime.fromMillis(timeMillis, { zone: "utc" })
             : DateTime.now();
-        return getUTCString(utcDate);
+        return serializeDateTime(utcDate);
     }
 
     _stop_pending_payment() {
