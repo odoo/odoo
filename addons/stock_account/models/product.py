@@ -183,7 +183,7 @@ class ProductProduct(models.Model):
             'remaining_value': value,
         }
 
-    def _prepare_out_svl_vals(self, quantity, company):
+    def _prepare_out_svl_vals(self, quantity):
         """Prepare the values for a stock valuation layer created by a delivery.
 
         :param quantity: the quantity to value, expressed in `self.uom_id`
@@ -586,7 +586,7 @@ class ProductProduct(models.Model):
                 # FIXME: create an empty layer to track the change?
                 continue
             if float_compare(product.quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
-                svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
+                svsl_vals = product._prepare_out_svl_vals(product.quantity_svl)
             else:
                 svsl_vals = product._prepare_in_svl_vals(abs(product.quantity_svl), product.value_svl / product.quantity_svl)
             svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
@@ -602,7 +602,7 @@ class ProductProduct(models.Model):
                 if float_compare(quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
                     svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
                 else:
-                    svl_vals = product._prepare_out_svl_vals(abs(quantity_svl), self.env.company)
+                    svl_vals = product._prepare_out_svl_vals(abs(quantity_svl))
                 svl_vals['description'] = description
                 svl_vals['company_id'] = self.env.company.id
                 refill_stock_svl_list.append(svl_vals)
