@@ -132,10 +132,10 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
             } else if ($buttons.length) {
                 amount = parseFloat(this.$('#s_donation_amount_input').val());
                 let errorMessage = '';
-                const minAmount = this.el.dataset.minimumAmount;
+                const minAmount = parseFloat(this.el.dataset.minimumAmount);
                 if (!amount) {
                     errorMessage = _t("Please select or enter an amount");
-                } else if (amount < parseFloat(minAmount)) {
+                } else if (amount < minAmount) {
                     errorMessage = _t(
                         "The minimum donation amount is %(amount)s",
                         {
