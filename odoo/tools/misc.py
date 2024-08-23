@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """
-Miscellaneous tools used by OpenERP.
+Miscellaneous tools used by Odoo.
 """
 from __future__ import annotations
 
@@ -22,16 +21,16 @@ import tempfile
 import threading
 import time
 import traceback
+import typing
 import unicodedata
 import warnings
-from collections import OrderedDict
-from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
+from collections import defaultdict
+from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
-from typing import TYPE_CHECKING
 
 import babel
 import babel.dates
@@ -48,6 +47,15 @@ from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F4
 from .config import config
 from .float_utils import float_round
 from .which import which
+
+K = typing.TypeVar('K')
+T = typing.TypeVar('T')
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable, Collection, Sequence
+    from odoo.api import Environment
+    from odoo.addons.base.models.res_lang import LangData
+
+    P = typing.TypeVar('P')
 
 __all__ = [
     'DEFAULT_SERVER_DATETIME_FORMAT',
@@ -100,10 +108,6 @@ __all__ = [
     'unique',
     'ustr',
 ]
-
-
-if TYPE_CHECKING:
-    from odoo.addons.base.models.res_lang import LangData
 
 _logger = logging.getLogger(__name__)
 
@@ -316,7 +320,8 @@ def flatten(list):
             r.extend(flatten(e))
     return r
 
-def reverse_enumerate(l):
+
+def reverse_enumerate(lst: Sequence[T]) -> Iterator[tuple[int, T]]:
     """Like enumerate but in the other direction
 
     Usage::
@@ -334,17 +339,20 @@ def reverse_enumerate(l):
           File "<stdin>", line 1, in <module>
         StopIteration
     """
-    return zip(range(len(l)-1, -1, -1), reversed(l))
+    return zip(range(len(lst) - 1, -1, -1), reversed(lst))
 
-def partition(pred, elems):
+
+def partition(pred: Callable[[T], bool], elems: Iterable[T]) -> tuple[list[T], list[T]]:
     """ Return a pair equivalent to:
     ``filter(pred, elems), filter(lambda x: not pred(x), elems)`` """
-    yes, nos = [], []
+    yes: list[T] = []
+    nos: list[T] = []
     for elem in elems:
         (yes if pred(elem) else nos).append(elem)
     return yes, nos
 
-def topological_sort(elems):
+
+def topological_sort(elems: Mapping[T, Collection[T]]) -> list[T]:
     """ Return a list of elements sorted so that their dependencies are listed
     before them in the result.
 
@@ -377,7 +385,7 @@ def topological_sort(elems):
     return result
 
 
-def merge_sequences(*iterables):
+def merge_sequences(*iterables: Iterable[T]) -> list[T]:
     """ Merge several iterables into a list. The result is the union of the
         iterables, ordered following the partial order given by the iterables,
         with a bias towards the end for the last iterable::
@@ -393,15 +401,15 @@ def merge_sequences(*iterables):
             )
             assert seq == ['A', 'B', 'X', 'Y', 'C', 'Z']
     """
-    # we use an OrderedDict to keep elements in order by default
-    deps = OrderedDict()                # {item: elems_before_item}
+    # dict is ordered
+    deps: defaultdict[T, list[T]] = defaultdict(list)  # {item: elems_before_item}
     for iterable in iterables:
-        prev = None
-        for index, item in enumerate(iterable):
-            if not index:
-                deps.setdefault(item, [])
+        prev: T | Sentinel = SENTINEL
+        for item in iterable:
+            if prev is SENTINEL:
+                deps[item]  # just set the default
             else:
-                deps.setdefault(item, []).append(prev)
+                deps[item].append(prev)
             prev = item
     return topological_sort(deps)
 
@@ -448,13 +456,14 @@ except ImportError:
     xlsxwriter = None
 
 
-def get_iso_codes(lang):
+def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
             lang = lang.split('_')[0]
     return lang
 
-def scan_languages():
+
+def scan_languages() -> list[tuple[str, str]]:
     """ Returns all languages supported by OpenERP for translation
 
     :returns: a list of (lang_code, lang_name) pairs
@@ -477,7 +486,8 @@ def scan_languages():
 
     return sorted(result or [('en_US', u'English')], key=itemgetter(1))
 
-def mod10r(number):
+
+def mod10r(number: str) -> str:
     """
     Input number : account or invoice number
     Output return: the same number completed with the recursive mod10
@@ -496,7 +506,7 @@ def mod10r(number):
 def str2bool(s: str, default: bool | None = None) -> bool:
     # allow this (for now?) because it's used for get_param
     if type(s) is bool:
-        return s
+        return s  # type: ignore
 
     if not isinstance(s, str):
         warnings.warn(
@@ -518,7 +528,8 @@ def str2bool(s: str, default: bool | None = None) -> bool:
         raise ValueError('Use 0/1/yes/no/true/false/on/off')
     return bool(default)
 
-def human_size(sz):
+
+def human_size(sz: float | str) -> str | typing.Literal[False]:
     """
     Return the size in a human readable format
     """
@@ -532,6 +543,7 @@ def human_size(sz):
         s /= 1024
         i += 1
     return "%0.2f %s" % (s, units[i])
+
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
@@ -611,7 +623,8 @@ POSIX_TO_LDML = {
     #'Z': 'z',
 }
 
-def posix_to_ldml(fmt, locale):
+
+def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
     """ Converts a posix/strftime pattern into an LDML date format pattern.
 
     :param fmt: non-extended C89/C90 strftime pattern
@@ -656,7 +669,23 @@ def posix_to_ldml(fmt, locale):
 
     return ''.join(buf)
 
-def split_every(n, iterable, piece_maker=tuple):
+
+@typing.overload
+def split_every(n: int, iterable: Iterable[T]) -> Iterator[tuple[T, ...]]:
+    ...
+
+
+@typing.overload
+def split_every(n: int, iterable: Iterable[T], piece_maker: type[Collection[T]]) -> Iterator[Collection[T]]:
+    ...
+
+
+@typing.overload
+def split_every(n: int, iterable: Iterable[T], piece_maker: Callable[[Iterable[T]], P]) -> Iterator[P]:
+    ...
+
+
+def split_every(n: int, iterable: Iterable[T], piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
 
@@ -671,7 +700,8 @@ def split_every(n, iterable, piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-def discardattr(obj, key):
+
+def discardattr(obj: object, key: str) -> None:
     """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
     try:
         delattr(obj, key)
@@ -682,8 +712,9 @@ def discardattr(obj, key):
 # String management
 # ---------------------------------------------
 
+
 # Inspired by http://stackoverflow.com/questions/517923
-def remove_accents(input_str):
+def remove_accents(input_str: str) -> str:
     """Suboptimal-but-better-than-nothing way to replace accented
     latin letters by an ASCII equivalent. Will obviously change the
     meaning of input_str and work only for some cases"""
@@ -691,6 +722,7 @@ def remove_accents(input_str):
         return input_str
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     return ''.join(c for c in nkfd_form if not unicodedata.combining(c))
+
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks
@@ -709,6 +741,8 @@ class unquote(str):
        >>> print d
        {'test': active_id}
     """
+    __slots__ = ()
+
     def __repr__(self):
         return self
 
@@ -809,14 +843,16 @@ def stripped_sys_argv(*strip_args):
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
-class ConstantMapping(Mapping):
+
+class ConstantMapping(Mapping[typing.Any, T], typing.Generic[T]):
     """
     An immutable mapping returning the provided value for every single key.
 
     Useful for default value to methods
     """
     __slots__ = ['_value']
-    def __init__(self, val):
+
+    def __init__(self, val: T):
         self._value = val
 
     def __len__(self):
@@ -833,7 +869,7 @@ class ConstantMapping(Mapping):
         """
         return iter([])
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> T:
         return self._value
 
 
@@ -893,7 +929,8 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
 
     _logger.log(log_level, "\n".join(code))
 
-def freehash(arg):
+
+def freehash(arg: typing.Any) -> int:
     try:
         return hash(arg)
     except Exception:
@@ -904,14 +941,15 @@ def freehash(arg):
         else:
             return id(arg)
 
-def clean_context(context):
+
+def clean_context(context: dict[str, typing.Any]) -> dict[str, typing.Any]:
     """ This function take a dictionary and remove each entry with its key
     starting with ``default_``
     """
     return {k: v for k, v in context.items() if not k.startswith('default_')}
 
 
-class frozendict(dict):
+class frozendict(dict[K, T], typing.Generic[K, T]):
     """ An implementation of an immutable dictionary. """
     __slots__ = ()
 
@@ -936,39 +974,39 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
 
-    def __hash__(self):
+    def __hash__(self) -> int:  # type: ignore
         return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 
-class Collector(dict):
+class Collector(dict[K, tuple[T, ...]], typing.Generic[K, T]):
     """ A mapping from keys to tuples.  This implements a relation, and can be
         seen as a space optimization for ``defaultdict(tuple)``.
     """
     __slots__ = ()
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: K) -> tuple[T, ...]:
         return self.get(key, ())
 
-    def __setitem__(self, key, val):
+    def __setitem__(self, key: K, val: Iterable[T]):
         val = tuple(val)
         if val:
             super().__setitem__(key, val)
         else:
             super().pop(key, None)
 
-    def add(self, key, val):
+    def add(self, key: K, val: T):
         vals = self[key]
         if val not in vals:
             self[key] = vals + (val,)
 
-    def discard_keys_and_values(self, excludes):
+    def discard_keys_and_values(self, excludes: Collection[K | T]) -> None:
         for key in excludes:
-            self.pop(key, None)
+            self.pop(key, None)  # type: ignore
         for key, vals in list(self.items()):
-            self[key] = tuple(val for val in vals if val not in excludes)
+            self[key] = tuple(val for val in vals if val not in excludes)  # type: ignore
 
 
-class StackMap(MutableMapping):
+class StackMap(MutableMapping[K, T], typing.Generic[K, T]):
     """ A stack of mappings behaving as a single mapping, and used to implement
         nested scopes. The lookups search the stack from top to bottom, and
         returns the first value found. Mutable operations modify the topmost
@@ -976,10 +1014,10 @@ class StackMap(MutableMapping):
     """
     __slots__ = ['_maps']
 
-    def __init__(self, m=None):
+    def __init__(self, m: MutableMapping[K, T] | None = None):
         self._maps = [] if m is None else [m]
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: K) -> T:
         for mapping in reversed(self._maps):
             try:
                 return mapping[key]
@@ -987,34 +1025,34 @@ class StackMap(MutableMapping):
                 pass
         raise KeyError(key)
 
-    def __setitem__(self, key, val):
+    def __setitem__(self, key: K, val: T):
         self._maps[-1][key] = val
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: K):
         del self._maps[-1][key]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[K]:
         return iter({key for mapping in self._maps for key in mapping})
 
-    def __len__(self):
+    def __len__(self) -> int:
         return sum(1 for key in self)
 
-    def __str__(self):
-        return u"<StackMap %s>" % self._maps
+    def __str__(self) -> str:
+        return f"<StackMap {self._maps}>"
 
-    def pushmap(self, m=None):
+    def pushmap(self, m: MutableMapping[K, T] | None = None):
         self._maps.append({} if m is None else m)
 
-    def popmap(self):
+    def popmap(self) -> MutableMapping[K, T]:
         return self._maps.pop()
 
 
-class OrderedSet(MutableSet):
+class OrderedSet(MutableSet[T], typing.Generic[T]):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
 
     def __init__(self, elems=()):
-        self._map = dict.fromkeys(elems)
+        self._map: dict[T, None] = dict.fromkeys(elems)
 
     def __contains__(self, elem):
         return elem in self._map
@@ -1042,11 +1080,11 @@ class OrderedSet(MutableSet):
         return f'{type(self).__name__}({list(self)!r})'
 
 
-class LastOrderedSet(OrderedSet):
+class LastOrderedSet(OrderedSet[T], typing.Generic[T]):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
-        OrderedSet.discard(self, elem)
-        OrderedSet.add(self, elem)
+        self.discard(elem)
+        super().add(elem)
 
 
 class Callbacks:
@@ -1102,14 +1140,14 @@ class Callbacks:
     __slots__ = ['_funcs', 'data']
 
     def __init__(self):
-        self._funcs = collections.deque()
+        self._funcs: collections.deque[Callable] = collections.deque()
         self.data = {}
 
-    def add(self, func):
+    def add(self, func: Callable) -> None:
         """ Add the given function. """
         self._funcs.append(func)
 
-    def run(self):
+    def run(self) -> None:
         """ Call all the functions (in addition order), then clear associated data.
         """
         while self._funcs:
@@ -1117,17 +1155,17 @@ class Callbacks:
             func()
         self.clear()
 
-    def clear(self):
+    def clear(self) -> None:
         """ Remove all callbacks and data from self. """
         self._funcs.clear()
         self.data.clear()
 
 
-class ReversedIterable:
+class ReversedIterable(Reversible[T], typing.Generic[T]):
     """ An iterable implementing the reversal of another iterable. """
     __slots__ = ['iterable']
 
-    def __init__(self, iterable):
+    def __init__(self, iterable: Reversible[T]):
         self.iterable = iterable
 
     def __iter__(self):
@@ -1137,20 +1175,19 @@ class ReversedIterable:
         return iter(self.iterable)
 
 
-def groupby(iterable, key=None):
+def groupby(iterable: Iterable[T], key: Callable[[T], K] = lambda arg: arg) -> Iterable[tuple[K, list[T]]]:
     """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
         ``key`` is a function computing a key value for each element. This
         function is similar to ``itertools.groupby``, but aggregates all
         elements under the same key, not only consecutive elements.
     """
-    if key is None:
-        key = lambda arg: arg
-    groups = collections.defaultdict(list)
+    groups = defaultdict(list)
     for elem in iterable:
         groups[key(elem)].append(elem)
     return groups.items()
 
-def unique(it):
+
+def unique(it: Iterable[T]) -> Iterator[T]:
     """ "Uniquifier" for the provided iterable: will output each element of
     the iterable once.
 
@@ -1165,7 +1202,8 @@ def unique(it):
             seen.add(e)
             yield e
 
-def submap(mapping, keys):
+
+def submap(mapping: Mapping[K, T], keys: Iterable[K]) -> Mapping[K, T]:
     """
     Get a filtered copy of the mapping where only some keys are present.
 
@@ -1175,6 +1213,7 @@ def submap(mapping, keys):
     """
     keys = frozenset(keys)
     return {key: mapping[key] for key in mapping if key in keys}
+
 
 class Reverse(object):
     """ Wraps a value and reverses its ordering, useful in key functions when
@@ -1239,9 +1278,11 @@ class replace_exceptions(ContextDecorator):
             else:
                 raise self.by from exc_value
 
+
 html_escape = markupsafe.escape
 
-def get_lang(env, lang_code=False) -> LangData:
+
+def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
     """
     Retrieve the first lang object installed, by checking the parameter lang_code,
     the context and then the company. If no lang is installed from those variables,
@@ -1261,16 +1302,30 @@ def get_lang(env, lang_code=False) -> LangData:
         lang = company_lang
     return env['res.lang']._get_data(code=lang)
 
-def babel_locale_parse(lang_code):
-    try:
-        return babel.Locale.parse(lang_code)
-    except:
-        try:
-            return babel.Locale.default()
-        except:
-            return babel.Locale.parse("en_US")
 
-def formatLang(env, value, digits=2, grouping=True, monetary=SENTINEL, dp=None, currency_obj=None, rounding_method='HALF-EVEN', rounding_unit='decimals'):
+def babel_locale_parse(lang_code: str | None) -> babel.Locale:
+    if lang_code:
+        try:
+            return babel.Locale.parse(lang_code)
+        except Exception:  # noqa: BLE001
+            pass
+    try:
+        return babel.Locale.default()
+    except Exception:  # noqa: BLE001
+        return babel.Locale.parse("en_US")
+
+
+def formatLang(
+    env: Environment,
+    value: float | typing.Literal[''],
+    digits: int = 2,
+    grouping: bool = True,
+    monetary: bool | Sentinel = SENTINEL,
+    dp: str | None = None,
+    currency_obj=None,
+    rounding_method: typing.Literal['HALF-UP', 'HALF-DOWN', 'HALF-EVEN', "UP", "DOWN"] = 'HALF-EVEN',
+    rounding_unit: typing.Literal['decimals', 'units', 'thousands', 'lakhs', 'millions'] = 'decimals',
+) -> str:
     """
     This function will format a number `value` to the appropriate format of the language used.
 
@@ -1319,9 +1374,10 @@ def formatLang(env, value, digits=2, grouping=True, monetary=SENTINEL, dp=None, 
         'thousands': 10**3,
         'lakhs': 10**5,
         'millions': 10**6,
+        'units': 1,
     }
 
-    value /= rounding_unit_mapping.get(rounding_unit, 1)
+    value /= rounding_unit_mapping[rounding_unit]
 
     rounded_value = float_round(value, precision_digits=digits, rounding_method=rounding_method)
     lang = env['res.lang'].browse(get_lang(env).id)
@@ -1335,7 +1391,12 @@ def formatLang(env, value, digits=2, grouping=True, monetary=SENTINEL, dp=None, 
     return formatted_value
 
 
-def format_date(env, value, lang_code=False, date_format=False):
+def format_date(
+    env: Environment,
+    value: datetime.datetime | datetime.date | str,
+    lang_code: str | None = None,
+    date_format: str | typing.Literal[False] = False,
+) -> str:
     """
         Formats the date in a given format.
 
@@ -1368,9 +1429,11 @@ def format_date(env, value, lang_code=False, date_format=False):
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
+    assert isinstance(value, datetime.date)  # datetime is a subclass of date
     return babel.dates.format_date(value, format=date_format, locale=locale)
 
-def parse_date(env, value, lang_code=False):
+
+def parse_date(env: Environment, value: str, lang_code: str | None = None) -> datetime.date | str:
     """
         Parse the date from a given format. If it is not a valid format for the
         localization, return the original string.
@@ -1390,7 +1453,13 @@ def parse_date(env, value, lang_code=False):
         return value
 
 
-def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
+def format_datetime(
+    env: Environment,
+    value: datetime.datetime | str,
+    tz: str | typing.Literal[False] = False,
+    dt_format: str = 'medium',
+    lang_code: str | None = None,
+) -> str:
     """ Formats the datetime in a given format.
 
     :param env:
@@ -1432,7 +1501,13 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     return babel.dates.format_datetime(localized_datetime, dt_format, locale=locale)
 
 
-def format_time(env, value, tz=False, time_format='medium', lang_code=None):
+def format_time(
+    env: Environment,
+    value: datetime.time | datetime.datetime | str,
+    tz: str | typing.Literal[False] = False,
+    time_format: str = 'medium',
+    lang_code: str | None = None,
+) -> str:
     """ Format the given time (hour, minute and second) with the current user preference (language, format, ...)
 
         :param env:
@@ -1448,35 +1523,45 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=None):
         return ''
 
     if isinstance(value, datetime.time):
-        localized_datetime = value
+        localized_time = value
     else:
         if isinstance(value, str):
             value = odoo.fields.Datetime.from_string(value)
+        assert isinstance(value, datetime.datetime)
         tz_name = tz or env.user.tz or 'UTC'
         utc_datetime = pytz.utc.localize(value, is_dst=False)
         try:
             context_tz = pytz.timezone(tz_name)
-            localized_datetime = utc_datetime.astimezone(context_tz)
+            localized_time = utc_datetime.astimezone(context_tz).timetz()
         except Exception:
-            localized_datetime = utc_datetime
+            localized_time = utc_datetime.timetz()
 
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
 
-    return babel.dates.format_time(localized_datetime, format=time_format, locale=locale)
+    return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 
 
-def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
+def _format_time_ago(
+    env: Environment,
+    time_delta: datetime.timedelta,
+    lang_code: str | None = None,
+    add_direction: bool = True,
+) -> str:
     if not lang_code:
-        langs = [code for code, _ in env['res.lang'].get_installed()]
-        lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
+        langs: list[str] = [code for code, _ in env['res.lang'].get_installed()]
+        if (ctx_lang := env.context.get('lang')) in langs:
+            lang_code = ctx_lang
+        else:
+            lang_code = env.user.company_id.partner_id.lang or langs[0]
+        assert isinstance(lang_code, str)
     locale = babel_locale_parse(lang_code)
     return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
 
 
-def format_decimalized_number(number, decimal=1):
+def format_decimalized_number(number: float, decimal: int = 1) -> str:
     """Format a number to display to nearest metrics unit next to it.
 
     Do not display digits if all visible digits are null.
@@ -1501,7 +1586,7 @@ def format_decimalized_number(number, decimal=1):
     return "%g%s" % (round(number, decimal), 'T')
 
 
-def format_decimalized_amount(amount, currency=None):
+def format_decimalized_amount(amount: float, currency=None) -> str:
     """Format an amount to display the currency and also display the metric unit
     of the amount.
 
@@ -1521,7 +1606,7 @@ def format_decimalized_amount(amount, currency=None):
     return "%s %s" % (formated_amount, currency.symbol or '')
 
 
-def format_amount(env, amount, currency, lang_code=False):
+def format_amount(env: Environment, amount: float, currency, lang_code: str | None = None) -> str:
     fmt = "%.{0}f".format(currency.decimal_places)
     lang = env['res.lang'].browse(get_lang(env, lang_code).id)
 
@@ -1537,7 +1622,7 @@ def format_amount(env, amount, currency, lang_code=False):
     return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
 
 
-def format_duration(value):
+def format_duration(value: float) -> str:
     """ Format a float: used to display integral or fractional values as
         human-readable time spans (e.g. 1.5 as "01:30").
     """
@@ -1550,10 +1635,11 @@ def format_duration(value):
         return '-%02d:%02d' % (hours, minutes)
     return '%02d:%02d' % (hours, minutes)
 
+
 consteq = hmac_lib.compare_digest
 
 
-class ReadonlyDict(Mapping):
+class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
     """Helper for an unmodifiable dictionary, not even updatable using `dict.update`.
 
     This is similar to a `frozendict`, with one drawback and one advantage:
@@ -1577,7 +1663,7 @@ class ReadonlyDict(Mapping):
     def __init__(self, data):
         self.__data = dict(data)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: K) -> T:
         return self.__data[key]
 
     def __len__(self):
@@ -1697,7 +1783,7 @@ def hash_sign(env, scope, message_values, expiration=None, expiration_hours=None
         expiration = datetime.datetime.now() + datetime.timedelta(hours=expiration_hours)
     else:
         if isinstance(expiration, datetime.timedelta):
-            expiration = datetime.now() + expiration
+            expiration = datetime.datetime.now() + expiration
     expiration_timestamp = 0 if not expiration else int(expiration.timestamp())
     message_strings = json.dumps(message_values)
     hash_value = hmac(env, scope, f'1:{message_strings}:{expiration_timestamp}', hash_function=hashlib.sha256)
@@ -1741,7 +1827,7 @@ def street_split(street):
     }
 
 
-def is_list_of(values, type_):
+def is_list_of(values, type_: type) -> bool:
     """Return True if the given values is a list / tuple of the given type.
 
     :param values: The values to check
@@ -1750,7 +1836,7 @@ def is_list_of(values, type_):
     return isinstance(values, (list, tuple)) and all(isinstance(item, type_) for item in values)
 
 
-def has_list_types(values, types):
+def has_list_types(values, types: tuple[type, ...]) -> bool:
     """Return True if the given values have the same types as
     the one given in argument, in the same order.
 
@@ -1759,8 +1845,9 @@ def has_list_types(values, types):
     """
     return (
         isinstance(values, (list, tuple)) and len(values) == len(types)
-        and all(isinstance(item, type_) for item, type_ in zip(values, types))
+        and all(itertools.starmap(isinstance, zip(values, types)))
     )
+
 
 def get_flag(country_code: str) -> str:
     """Get the emoji representing the flag linked to the country code.
@@ -1770,7 +1857,7 @@ def get_flag(country_code: str) -> str:
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
 
 
-def format_frame(frame):
+def format_frame(frame) -> str:
     code = frame.f_code
     return f'{code.co_name} {code.co_filename}:{frame.f_lineno}'
 
@@ -1782,8 +1869,8 @@ def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:
     """
     if '%%' in string:
         raise ValueError(f"Unsupported escaped '%' in format string {string!r}")
-    args = _PrintfArgs(args)
-    return string % args, tuple(args.values)
+    pargs = _PrintfArgs(args)
+    return string % pargs, tuple(pargs.values)
 
 
 class _PrintfArgs:
@@ -1791,8 +1878,8 @@ class _PrintfArgs:
     __slots__ = ('mapping', 'values')
 
     def __init__(self, mapping):
-        self.mapping = mapping
-        self.values = []
+        self.mapping: Mapping = mapping
+        self.values: list = []
 
     def __getitem__(self, key):
         self.values.append(self.mapping[key])

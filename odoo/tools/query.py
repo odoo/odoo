@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import itertools
+from collections.abc import Iterable, Iterator
 
-from .sql import make_identifier, SQL
+from .sql import SQL, make_identifier
 
 
 def _sql_from_table(alias: str, table: SQL) -> SQL:
@@ -22,7 +23,7 @@ _SQL_JOINS = {
 }
 
 
-def _generate_table_alias(src_table_alias, link):
+def _generate_table_alias(src_table_alias: str, link: str) -> str:
     """ Generate a standard table alias name. An alias is generated as following:
 
         - the base is the source table name (that can already be an alias)
@@ -72,7 +73,7 @@ class Query:
         self.offset: int | None = None
 
         # memoized result
-        self._ids: tuple[int] | None = None
+        self._ids: tuple[int, ...] | None = None
 
     def make_alias(self, alias: str, link: str) -> str:
         """ Return an alias based on ``alias`` and ``link``. """
@@ -104,7 +105,7 @@ class Query:
         self._where_clauses.append(SQL(where_clause, *where_params)) # pylint: disable = sql-injection
         self._ids = None
 
-    def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str):
+    def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str) -> str:
         """
         Perform a join between a table already present in the current Query object and
         another table.  This method is essentially a shortcut for methods :meth:`~.make_alias`
@@ -123,7 +124,7 @@ class Query:
         self.add_join('JOIN', rhs_alias, rhs_table, condition)
         return rhs_alias
 
-    def left_join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str):
+    def left_join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str) -> str:
         """ Add a LEFT JOIN to the current table (if necessary), and return the
         alias corresponding to ``rhs_table``.
 
@@ -152,15 +153,16 @@ class Query:
     @property
     def from_clause(self) -> SQL:
         """ Return the FROM clause of ``self``, without the FROM keyword. """
-        tables = SQL(", ").join(
-            _sql_from_table(alias, table)
-            for alias, table in self._tables.items()
-        )
+        tables = SQL(", ").join(itertools.starmap(_sql_from_table, self._tables.items()))
         if not self._joins:
             return tables
-        items = [tables]
-        for alias, (kind, table, condition) in self._joins.items():
-            items.append(_sql_from_join(kind, alias, table, condition))
+        items = (
+            tables,
+            *(
+                _sql_from_join(kind, alias, table, condition)
+                for alias, (kind, table, condition) in self._joins.items()
+            ),
+        )
         return SQL(" ").join(items)
 
     @property
@@ -211,7 +213,7 @@ class Query:
             SQL(" WHERE %s", self.where_clause) if self._where_clauses else SQL(),
         )
 
-    def get_result_ids(self):
+    def get_result_ids(self) -> tuple[int, ...]:
         """ Return the result of ``self.select()`` as a tuple of ids. The result
         is memoized for future use, which avoids making the same query twice.
         """
@@ -219,7 +221,7 @@ class Query:
             self._ids = tuple(id_ for id_, in self._env.execute_query(self.select()))
         return self._ids
 
-    def set_result_ids(self, ids, ordered=True):
+    def set_result_ids(self, ids: Iterable[int], ordered: bool = True) -> None:
         """ Set up the query to return the lines given by ``ids``. The parameter
         ``ordered`` tells whether the query must be ordered to match exactly the
         sequence ``ids``.
@@ -247,14 +249,14 @@ class Query:
             self.add_where(SQL("%s IN %s", SQL.identifier(self.table, 'id'), ids))
         self._ids = ids
 
-    def __str__(self):
+    def __str__(self) -> str:
         sql = self.select()
         return f"<Query: {sql.code!r} with params: {sql.params!r}>"
 
     def __bool__(self):
         return bool(self.get_result_ids())
 
-    def __len__(self):
+    def __len__(self) -> int:
         if self._ids is None:
             if self.limit or self.offset:
                 # optimization: generate a SELECT FROM, and then count the rows
@@ -264,5 +266,5 @@ class Query:
             return self._env.execute_query(sql)[0][0]
         return len(self.get_result_ids())
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[int]:
         return iter(self.get_result_ids())
