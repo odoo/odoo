@@ -380,6 +380,9 @@ class StockMoveLine(models.Model):
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
             raise UserError(_("Changing the product is only allowed in 'Draft' state."))
 
+        if ('lot_id' in vals or 'quant_id' in vals) and len(self.product_id) > 1:
+            raise UserError(_("Changing the Lot/Serial number for move lines with different products is not allowed."))
+
         moves_to_recompute_state = self.env['stock.move']
         triggers = [
             ('location_id', 'stock.location'),
