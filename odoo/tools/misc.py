@@ -791,40 +791,6 @@ class lower_logging(logging.Handler):
                     handler.emit(record)
 
 
-_ph = object()
-class CountingStream(object):
-    """ Stream wrapper counting the number of element it has yielded. Similar
-    role to ``enumerate``, but for use when the iteration process of the stream
-    isn't fully under caller control (the stream can be iterated from multiple
-    points including within a library)
-
-    ``start`` allows overriding the starting index (the index before the first
-    item is returned).
-
-    On each iteration (call to :meth:`~.next`), increases its :attr:`~.index`
-    by one.
-
-    .. attribute:: index
-
-        ``int``, index of the last yielded element in the stream. If the stream
-        has ended, will give an index 1-past the stream
-    """
-    def __init__(self, stream, start=-1):
-        self.stream = iter(stream)
-        self.index = start
-        self.stopped = False
-    def __iter__(self):
-        return self
-    def next(self):
-        if self.stopped: raise StopIteration()
-        self.index += 1
-        val = next(self.stream, _ph)
-        if val is _ph:
-            self.stopped = True
-            raise StopIteration()
-        return val
-    __next__ = next
-
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
     strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
