@@ -46,7 +46,7 @@ class TestPaymentTransaction(RazorpayCommon):
     def test_void_is_not_supported(self):
         """ Test that trying to void an authorized transaction raises an error. """
         tx = self._create_transaction('direct', state='authorized')
-        self.assertRaises(UserError, func=tx._send_void_request)
+        self.assertRaises(UserError, tx._send_void_request)
 
     def test_get_tx_from_notification_data_returns_refund_tx(self):
         """ Test that the refund transaction is returned if it exists when processing refund
