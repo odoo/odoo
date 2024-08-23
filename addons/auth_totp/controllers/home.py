@@ -27,7 +27,7 @@ class Home(web_home.Home):
 
         user = request.env['res.users'].browse(request.session.pre_uid)
         if user and request.httprequest.method == 'GET':
-            cookies = request.httprequest.cookies
+            cookies = request.cookies
             key = cookies.get(TRUSTED_DEVICE_COOKIE)
             if key:
                 user_match = request.env['auth_totp.device']._check_credentials_for_uid(
