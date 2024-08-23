@@ -113,6 +113,7 @@ class TestSaleCommonBase(TransactionCase):
                 'invoice_policy': 'delivery',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_service_order': cls.env['product.product'].with_company(company).create({
                 'name': 'product_service_order',
@@ -127,6 +128,7 @@ class TestSaleCommonBase(TransactionCase):
                 'invoice_policy': 'order',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_order_cost': cls.env['product.product'].with_company(company).create({
                 'name': 'product_order_cost',
@@ -142,6 +144,7 @@ class TestSaleCommonBase(TransactionCase):
                 'expense_policy': 'cost',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_delivery_cost': cls.env['product.product'].with_company(company).create({
                 'name': 'product_delivery_cost',
@@ -157,6 +160,7 @@ class TestSaleCommonBase(TransactionCase):
                 'expense_policy': 'cost',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_order_sales_price': cls.env['product.product'].with_company(company).create({
                 'name': 'product_order_sales_price',
@@ -172,6 +176,7 @@ class TestSaleCommonBase(TransactionCase):
                 'expense_policy': 'sales_price',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_delivery_sales_price': cls.env['product.product'].with_company(company).create({
                 'name': 'product_delivery_sales_price',
@@ -187,6 +192,7 @@ class TestSaleCommonBase(TransactionCase):
                 'expense_policy': 'sales_price',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_order_no': cls.env['product.product'].with_company(company).create({
                 'name': 'product_order_no',
@@ -202,6 +208,7 @@ class TestSaleCommonBase(TransactionCase):
                 'expense_policy': 'no',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
             'product_delivery_no': cls.env['product.product'].with_company(company).create({
                 'name': 'product_delivery_no',
@@ -217,6 +224,7 @@ class TestSaleCommonBase(TransactionCase):
                 'expense_policy': 'no',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
+                'company_id': company.id,
             }),
         })
 
