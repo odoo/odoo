@@ -4,6 +4,7 @@ import logging
 import random
 import re
 import psycopg2
+import typing
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Mapping
@@ -2210,9 +2211,9 @@ class IrModelData(models.Model):
     # NEW V8 API
     @api.model
     @tools.ormcache('xmlid')
-    def _xmlid_lookup(self, xmlid: str) -> tuple:
+    def _xmlid_lookup(self, xmlid: str) -> tuple[str, int]:
         """Low level xmlid lookup
-        Return (id, res_model, res_id) or raise ValueError if not found
+        Return (res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
         query = "SELECT model, res_id FROM ir_model_data WHERE module=%s AND name=%s"
@@ -2223,7 +2224,7 @@ class IrModelData(models.Model):
         return result
 
     @api.model
-    def _xmlid_to_res_model_res_id(self, xmlid, raise_if_not_found=False):
+    def _xmlid_to_res_model_res_id(self, xmlid: str, raise_if_not_found: bool = False) -> tuple[str, int] | tuple[typing.Literal[False], typing.Literal[False]]:
         """ Return (res_model, res_id)"""
         try:
             return self._xmlid_lookup(xmlid)

@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 import typing
 from collections.abc import Mapping
-from inspect import signature
+from functools import wraps
 
 try:
     from decorator import decoratorx as decorator
@@ -15,10 +15,12 @@ except ImportError:
     from decorator import decorator
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable
-    from .types import ValuesType
+    from collections.abc import Callable, Collection
+    from .types import BaseModel, ValuesType
 
     T = typing.TypeVar('T')
+    C = typing.TypeVar("C", bound=Callable)
+    Decorator = Callable[[C], C]
 
 _logger = logging.getLogger('odoo.api')
 
@@ -34,12 +36,37 @@ _logger = logging.getLogger('odoo.api')
 #  - method._api: decorator function, used for re-applying decorator
 #
 
-def attrsetter(attr, value):
+def attrsetter(attr, value) -> Decorator:
     """ Return a function that sets ``attr`` on its argument and returns it. """
-    return lambda method: setattr(method, attr, value) or method
+    def setter(method):
+        setattr(method, attr, value)
+        return method
+
+    return setter
 
 
-def constrains(*args: str) -> Callable[[T], T]:
+def propagate(method1: T | None, method2: T) -> T:
+    """ Propagate decorators from ``method1`` to ``method2``, and return the
+        resulting method.
+    """
+    if method1:
+        for attr in ('_returns',):
+            if hasattr(method1, attr) and not hasattr(method2, attr):
+                setattr(method2, attr, getattr(method1, attr))
+    return method2
+
+
+@typing.overload
+def constrains(func: Callable[[BaseModel], Collection[str]], /) -> Decorator:
+    ...
+
+
+@typing.overload
+def constrains(*args: str) -> Decorator:
+    ...
+
+
+def constrains(*args) -> Decorator:
     """Decorate a constraint checker.
 
     Each argument must be a field name used in the check::
@@ -77,7 +104,7 @@ def constrains(*args: str) -> Callable[[T], T]:
     return attrsetter('_constrains', args)
 
 
-def ondelete(*, at_uninstall):
+def ondelete(*, at_uninstall: bool) -> Decorator:
     """
     Mark a method to be executed during :meth:`~odoo.models.BaseModel.unlink`.
 
@@ -136,7 +163,7 @@ def ondelete(*, at_uninstall):
     return attrsetter('_ondelete', at_uninstall)
 
 
-def onchange(*args):
+def onchange(*args: str) -> Decorator:
     """Return a decorator to decorate an onchange method for given fields.
 
     In the form views where the field appears, the method will be called
@@ -185,7 +212,17 @@ def onchange(*args):
     return attrsetter('_onchange', args)
 
 
-def depends(*args: str) -> Callable[[T], T]:
+@typing.overload
+def depends(func: Callable[[BaseModel], Collection[str]], /) -> Decorator:
+    ...
+
+
+@typing.overload
+def depends(*args: str) -> Decorator:
+    ...
+
+
+def depends(*args) -> Decorator:
     """ Return a decorator that specifies the field dependencies of a "compute"
         method (for new-style function fields). Each argument must be a string
         that consists in a dot-separated sequence of field names::
@@ -210,7 +247,7 @@ def depends(*args: str) -> Callable[[T], T]:
     return attrsetter('_depends', args)
 
 
-def depends_context(*args):
+def depends_context(*args: str) -> Decorator:
     """ Return a decorator that specifies the context dependencies of a
     non-stored "compute" method.  Each argument is a key in the context's
     dictionary::
@@ -236,18 +273,18 @@ def depends_context(*args):
     return attrsetter('_depends_context', args)
 
 
-def autovacuum(method):
+def autovacuum(method: C) -> C:
     """
     Decorate a method so that it is called by the daily vacuum cron job (model
     ``ir.autovacuum``).  This is typically used for garbage-collection-like
     tasks that do not deserve a specific cron job.
     """
     assert method.__name__.startswith('_'), "%s: autovacuum methods must be private" % method.__name__
-    method._autovacuum = True
+    method._autovacuum = True  # type: ignore
     return method
 
 
-def model(method: T) -> T:
+def model(method: C) -> C:
     """ Decorate a record-style method where ``self`` is a recordset, but its
         contents is not relevant, only the model is. Such a method::
 
@@ -257,31 +294,20 @@ def model(method: T) -> T:
 
     """
     if method.__name__ == 'create':
-        return model_create_multi(method)
-    method._api = 'model'
+        return model_create_multi(method)  # type: ignore
+    method._api = 'model'  # type: ignore
     return method
 
 
-def readonly(method: T) -> T:
+def readonly(method: C) -> C:
     """ Decorate a record-style method where ``self.env.cr`` can be a
         readonly cursor when called trough a rpc call.
 
             @api.readonly
             def method(self, args):
                 ...
-
     """
-    method._readonly = True
-    return method
-
-
-@decorator
-def _model_create_multi(create: Callable[[T, list[ValuesType]], T], self: T, arg: ValuesType | list[ValuesType]) -> T:
-    # 'create' expects a list of dicts and returns a recordset
-    # make it accept a dict as a parameter
-    if isinstance(arg, Mapping):
-        return create(self, [arg])
-    return create(self, arg)
+    return attrsetter('_readonly', True)(method)
 
 
 def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[T, list[ValuesType] | ValuesType], T]:
@@ -292,6 +318,11 @@ def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = _model_create_multi(method)
-    wrapper._api = 'model_create'
-    return wrapper
+    @wraps(method)
+    def create(self: T, vals_list: list[ValuesType] | ValuesType) -> T:
+        if isinstance(vals_list, Mapping):
+            vals_list = [vals_list]
+        return method(self, vals_list)
+
+    create._api = 'model_create'  # type: ignore
+    return create

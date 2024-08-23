@@ -234,7 +234,7 @@ class Field(typing.Generic[T]):
     inherited_field = None              # the corresponding inherited field
 
     name: str                           # name of the field
-    model_name: str | None = None       # name of the model of this field
+    model_name: str = ''                # name of the model of this field
     comodel_name: str | None = None     # name of the model of values (if relational)
 
     store = True                        # whether the field is stored in database
