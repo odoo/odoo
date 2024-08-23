@@ -5025,12 +5025,16 @@ class AccountMove(models.Model):
 
     def _get_invoice_portal_extra_values(self):
         self.ensure_one()
-        installment = self.get_next_installment_due()
+        installment = self.sudo().get_next_installment_due()
         amount_overdue = self.get_amount_overdue()
         show_payment_info = (
             self.payment_state not in ('paid', 'in_payment', 'reversed') and self.move_type == 'out_invoice'
         )
         show_amount_overdue = show_payment_info and amount_overdue and amount_overdue != self.amount_residual
+        epd_value = self.amount_residual - installment['amount_residual_currency_unsigned'] if (
+            installment
+            and installment['type'] == 'early_payment_discount'
+        ) else 0.0
         show_installment = (
             show_payment_info
             and installment
@@ -5047,6 +5051,7 @@ class AccountMove(models.Model):
             'date_next_installment': installment['date_maturity'] if show_installment else None,
             'name_next_installment': f"{self.name}-{installment['number']}" if show_installment else "",
             'amount_overdue': amount_overdue if show_amount_overdue else 0.0,
+            'early_payment_discount': epd_value,
         }
 
     def _get_accounting_date(self, invoice_date, has_tax, lock_dates=None):
