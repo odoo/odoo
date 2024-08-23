@@ -171,7 +171,7 @@ QUnit.test("performRPC: read_group, group by date", async function (assert) {
     });
     assert.deepEqual(
         result.map((x) => x["date:day"]),
-        ["2016-12-14", "2016-10-26", "2016-12-15", "2016-04-11", "2019-12-30"]
+        ["14 Dec 2016", "26 Oct 2016", "15 Dec 2016", "11 Apr 2016", "30 Dec 2019"]
     );
     assert.deepEqual(
         result.map((x) => x.date_count),
@@ -288,7 +288,7 @@ QUnit.test("performRPC: read_group, group by datetime", async function (assert) 
     });
     assert.deepEqual(
         result.map((x) => x["datetime:day"]),
-        ["2016-12-14", "2016-10-26", "2016-12-15", "2016-04-11", "2019-12-30"]
+        ["14 Dec 2016", "26 Oct 2016", "15 Dec 2016", "11 Apr 2016", "30 Dec 2019"]
     );
     assert.deepEqual(
         result.map((x) => x.datetime_count),
