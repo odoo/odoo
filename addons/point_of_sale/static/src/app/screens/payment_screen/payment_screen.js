@@ -17,8 +17,8 @@ import { floatIsZero, roundPrecision as round_pr } from "@web/core/utils/numbers
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
-import { getUTCString } from "@point_of_sale/utils";
 import { sprintf } from "@web/core/utils/strings";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -257,7 +257,7 @@ export class PaymentScreen extends Component {
             this.hardwareProxy.openCashbox();
         }
 
-        this.currentOrder.date_order = getUTCString(luxon.DateTime.now());
+        this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
         for (const line of this.paymentLines) {
             if (!line.amount === 0) {
                 this.currentOrder.remove_paymentline(line);
