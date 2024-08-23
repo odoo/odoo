@@ -62,7 +62,7 @@ from .tools import (
     SQL, sql,
 )
 from .tools.lru import LRU
-from .tools.misc import CountingStream, LastOrderedSet, ReversedIterable, unquote
+from .tools.misc import LastOrderedSet, ReversedIterable, unquote
 from .tools.translate import _, _lt
 
 import typing
@@ -1474,8 +1474,7 @@ class BaseModel(metaclass=MetaModel):
                 record.update(info)
             log(record)
 
-        stream = CountingStream(records)
-        for record, extras in stream:
+        for stream_index, (record, extras) in enumerate(records):
             # xid
             xid = record.get('id', False)
             # dbid
@@ -1489,14 +1488,14 @@ class BaseModel(metaclass=MetaModel):
                 if not self.search([('id', '=', dbid)]):
                     log(dict(extras,
                         type='error',
-                        record=stream.index,
+                        record=stream_index,
                         field='.id',
                         message=_(u"Unknown database identifier '%s'", dbid)))
                     dbid = False
 
-            converted = convert(record, functools.partial(_log, extras, stream.index))
+            converted = convert(record, functools.partial(_log, extras, stream_index))
 
-            yield dbid, xid, converted, dict(extras, record=stream.index)
+            yield dbid, xid, converted, dict(extras, record=stream_index)
 
     def _validate_fields(self, field_names, excluded_names=()):
         """ Invoke the constraint methods for which at least one field name is
