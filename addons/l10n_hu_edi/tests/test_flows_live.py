@@ -35,6 +35,7 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
             send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             send_and_print.action_send_and_print()
             self.assertRecordValues(invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
 
@@ -42,6 +43,7 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         with self.set_invoice_name(credit_note, 'RINV/2024/'):
             credit_note.action_post()
             send_and_print = self.create_send_and_print(credit_note, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             send_and_print.action_send_and_print()
             self.assertRecordValues(credit_note, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': 1}])
 
@@ -57,16 +59,21 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         if 'sale_line_ids' not in self.env['account.move.line']:
             self.skipTest('Sale module not installed, skipping advance invoice tests.')
 
-        advance_invoice, final_invoice = self.create_advance_invoice()
+        sale_order, advance_invoice = self.create_advance_invoice()
         with self.set_invoice_name(advance_invoice, 'INV/2024/'):
             advance_invoice.action_post()
             send_and_print = self.create_send_and_print(advance_invoice, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             send_and_print.action_send_and_print()
             self.assertRecordValues(advance_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
 
+        self.env['account.payment.register'].with_context(active_ids=advance_invoice.ids, active_model='account.move').create({})._create_payments()
+
+        final_invoice = self.create_final_invoice(sale_order)
         with self.set_invoice_name(final_invoice, 'INV/2024/'):
             final_invoice.action_post()
             send_and_print = self.create_send_and_print(final_invoice, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             send_and_print.action_send_and_print()
             self.assertRecordValues(final_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
 
@@ -75,6 +82,7 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
             send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             send_and_print.action_send_and_print()
             self.assertRecordValues(invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
 
@@ -83,6 +91,7 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
             send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             send_and_print.action_send_and_print()
             self.assertRecordValues(invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
 
@@ -91,6 +100,7 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         invoice.action_post()
 
         send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+        self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
         with self.patch_call_nav_endpoint('manageInvoice', make_request=False), contextlib.suppress(UserError):
             send_and_print.action_send_and_print()
 
@@ -107,6 +117,7 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
             send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
             with self.patch_call_nav_endpoint('manageInvoice'), contextlib.suppress(UserError):
                 send_and_print.action_send_and_print()
 

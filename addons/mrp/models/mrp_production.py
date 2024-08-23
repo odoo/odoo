@@ -859,14 +859,16 @@ class MrpProduction(models.Model):
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
-        if 'move_raw_ids' in vals and self.state not in ['draft', 'cancel', 'done']:
-            # When adding a move raw, it should have the source location's `warehouse_id`.
+        for move_str in ('move_raw_ids', 'move_finished_ids'):
+            if move_str not in vals or self.state in ['draft', 'cancel', 'done']:
+                continue
+            # When adding a move raw/finished, it should have the source location's `warehouse_id`.
             # Before, it was handle by an onchange, now it's forced if not already in vals.
             warehouse_id = self.location_src_id.warehouse_id.id
             if vals.get('location_src_id'):
                 location_source = self.env['stock.location'].browse(vals.get('location_src_id'))
                 warehouse_id = location_source.warehouse_id.id
-            for move_vals in vals['move_raw_ids']:
+            for move_vals in vals[move_str]:
                 command, _id, field_values = move_vals
                 if command == Command.CREATE and not field_values.get('warehouse_id', False):
                     field_values['warehouse_id'] = warehouse_id
@@ -2018,7 +2020,7 @@ class MrpProduction(models.Model):
         else:
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
-
+        productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
         self.workorder_ids.button_finish()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
@@ -2145,21 +2147,19 @@ class MrpProduction(models.Model):
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
-            prods_auto_backorder = [prod for prod in quantity_issues if prod.picking_type_id.create_backorder == "always"]
-            if prods_auto_backorder:
-                auto_backorders = self.env['mrp.production.backorder'].create({
-                    "mrp_production_backorder_line_ids": [Command.create({
-                            'mrp_production_id': prod.id,
-                            'to_backorder': True,
-                        }) for prod in prods_auto_backorder
-                    ],
-                })
-                return auto_backorders.action_backorder()
-            ask_backorder = [prod for prod in quantity_issues if prod.picking_type_id.create_backorder == "ask"]
-            if ask_backorder:
-                return self._action_generate_backorder_wizard(ask_backorder)
-            else:
-                return True
+            mo_ids_always = []  # we need to pass the mo.ids in a context, so collect them to avoid looping through the list twice
+            mos_ask = []  # we need to pass a list of mo records to the backorder wizard, so collect records
+            for mo in quantity_issues:
+                if mo.picking_type_id.create_backorder == "always":
+                    mo_ids_always.append(mo.id)
+                elif mo.picking_type_id.create_backorder == "ask":
+                    mos_ask.append(mo)
+            if mos_ask:
+                # any "never" MOs will be passed to the wizard, but not considered for being backorder-able, always backorder mos are hack forced via context
+                return self.with_context(always_backorder_mo_ids=mo_ids_always)._action_generate_backorder_wizard(mos_ask)
+            elif mo_ids_always:
+                # we have to pass all the MOs that the nevers/no issue MOs are also passed to be "mark done" without a backorder
+                return self.with_context(skip_backorder=True, mo_ids_to_backorder=mo_ids_always).button_mark_done()
         return True
 
     def _button_mark_done_sanity_checks(self):
