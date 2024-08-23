@@ -449,7 +449,7 @@
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" readonly="state == 'cancel' or (state == 'done' and is_locked)" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_product_uom_id': product_uom_id, 'from_manufacturing_order': True}"/>
+                            <field name="workorder_ids" readonly="state == 'cancel' or (state == 'done' and is_locked)" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'default_product_uom_id': product_uom_id, 'from_manufacturing_order': True}"/>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
