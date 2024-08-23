@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -57,28 +56,34 @@ QUnit.test("initially away", async () => {
 
 QUnit.test("change icon on change partner im_status", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
+        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
         channel_type: "chat",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start({ hasTimeControl: true });
     openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Online']");
 
-    pyEnv["res.partner"].write([partnerId], { im_status: "offline" });
-    advanceTime(UPDATE_BUS_PRESENCE_DELAY);
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { im_status: "offline" });
+    pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
+        partner_id: pyEnv.currentPartnerId,
+        im_status: "offline",
+    });
     await contains(".o-mail-ImStatus i[title='Offline']");
 
-    pyEnv["res.partner"].write([partnerId], { im_status: "away" });
-    advanceTime(UPDATE_BUS_PRESENCE_DELAY);
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { im_status: "away" });
+    pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
+        partner_id: pyEnv.currentPartnerId,
+        im_status: "away",
+    });
     await contains(".o-mail-ImStatus i[title='Idle']");
 
-    pyEnv["res.partner"].write([partnerId], { im_status: "online" });
-    advanceTime(UPDATE_BUS_PRESENCE_DELAY);
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { im_status: "online" });
+    pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
+        partner_id: pyEnv.currentPartnerId,
+        im_status: "online",
+    });
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 
