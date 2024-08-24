@@ -60,7 +60,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             archivable: archAttrs.archivable ? !!JSON.parse(archAttrs.archivable) : true,
-            group_creatable: activeActions.group_create,
+            group_creatable: activeActions.group_create && !params.isDialog,
             quickCreateView: archAttrs.quick_create_view || null,
             recordsDraggable: archAttrs.records_draggable ? !!JSON.parse(archAttrs.records_draggable) : true,
             hasProgressBar: !!progressBar,
