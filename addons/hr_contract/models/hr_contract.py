@@ -127,7 +127,7 @@ class Contract(models.Model):
                 end_domain = ['|', ('date_end', '>=', contract.date_start), ('date_end', '=', False)]
             else:
                 start_domain = [('date_start', '<=', contract.date_end)]
-                end_domain = ['|', ('date_end', '>', contract.date_start), ('date_end', '=', False)]
+                end_domain = ['|', ('date_end', '>=', contract.date_start), ('date_end', '=', False)]
 
             domain = expression.AND([domain, start_domain, end_domain])
             if self.search_count(domain):
