@@ -15,8 +15,8 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name"::text LIKE %s)
-                   AND ("res_partner"."phone"::text LIKE %s)
+                WHERE (("res_partner"."name" LIKE %s)
+                   AND ("res_partner"."phone" LIKE %s)
                 )
             ))
             ORDER BY "test_new_api_multi"."id"
@@ -33,8 +33,8 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name"::text LIKE %s)
-                    OR ("res_partner"."phone"::text LIKE %s)
+                WHERE (("res_partner"."name" LIKE %s)
+                    OR ("res_partner"."phone" LIKE %s)
                 )
             ))
             ORDER BY "test_new_api_multi"."id"
@@ -52,8 +52,8 @@ class TestSubqueries(TransactionCase):
             WHERE (("test_new_api_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name"::text LIKE %s)
-                    AND ("res_partner"."phone"::text LIKE %s)
+                WHERE (("res_partner"."name" LIKE %s)
+                    AND ("res_partner"."phone" LIKE %s)
                 )
             )) OR "test_new_api_multi"."partner" IS NULL)
             ORDER BY "test_new_api_multi"."id"
@@ -71,8 +71,8 @@ class TestSubqueries(TransactionCase):
             WHERE (("test_new_api_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name"::text LIKE %s)
-                    OR ("res_partner"."phone"::text LIKE %s)
+                WHERE (("res_partner"."name" LIKE %s)
+                    OR ("res_partner"."phone" LIKE %s)
                 )
             )) OR "test_new_api_multi"."partner" IS NULL)
             ORDER BY "test_new_api_multi"."id"
@@ -91,8 +91,8 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
                 ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
             WHERE (
-                ("test_new_api_multi__partner"."name"::text LIKE %s)
-                OR ("test_new_api_multi__partner"."phone"::text LIKE %s)
+                ("test_new_api_multi__partner"."name" LIKE %s)
+                OR ("test_new_api_multi__partner"."phone" LIKE %s)
             )
             ORDER BY "test_new_api_multi"."id"
         """]):
@@ -112,8 +112,8 @@ class TestSubqueries(TransactionCase):
             WHERE (
                 "test_new_api_multi__partner"."id" IS NULL OR (
                     NOT ((
-                        ("test_new_api_multi__partner"."name"::text LIKE %s)
-                        OR ("test_new_api_multi__partner"."phone"::text LIKE %s)
+                        ("test_new_api_multi__partner"."name" LIKE %s)
+                        OR ("test_new_api_multi__partner"."phone" LIKE %s)
                     ))
                 )
             )
@@ -133,9 +133,9 @@ class TestSubqueries(TransactionCase):
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE (
-                    ("res_partner"."email"::text LIKE %s)
-                    AND (("res_partner"."name"::text LIKE %s)
-                      OR ("res_partner"."phone"::text LIKE %s)
+                    ("res_partner"."email" LIKE %s)
+                    AND (("res_partner"."name" LIKE %s)
+                      OR ("res_partner"."phone" LIKE %s)
                     )
                 )
             ))
@@ -156,22 +156,22 @@ class TestSubqueries(TransactionCase):
                 (
                     (
                         ({many2one} IN (
-                            {subselect} WHERE ("res_partner"."function"::text LIKE %s)
+                            {subselect} WHERE ("res_partner"."function" LIKE %s)
                         )) OR (({many2one} NOT IN (
                             {subselect} WHERE (
-                                ("res_partner"."phone"::text LIKE %s)
-                                AND ("res_partner"."mobile"::text LIKE %s)
+                                ("res_partner"."phone" LIKE %s)
+                                AND ("res_partner"."mobile" LIKE %s)
                             )))
                             OR "test_new_api_multi"."partner" IS NULL
                         )
                     ) AND ({many2one} IN (
                         {subselect} WHERE (
-                            ("res_partner"."name"::text LIKE %s)
-                            OR ("res_partner"."email"::text LIKE %s)
+                            ("res_partner"."name" LIKE %s)
+                            OR ("res_partner"."email" LIKE %s)
                         )
                     ))
                 ) AND (({many2one} NOT IN (
-                    {subselect} WHERE ("res_partner"."website"::text LIKE %s)
+                    {subselect} WHERE ("res_partner"."website" LIKE %s)
                     ))
                     OR "test_new_api_multi"."partner" IS NULL
                 )
@@ -202,12 +202,12 @@ class TestSubqueries(TransactionCase):
             WHERE (("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                WHERE ("test_new_api_multi_line"."name" LIKE %s)
                       AND "test_new_api_multi_line"."multi" IS NOT NULL
             )) AND ("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                WHERE ("test_new_api_multi_line"."name" LIKE %s)
                       AND "test_new_api_multi_line"."multi" IS NOT NULL
             )))
             ORDER BY "test_new_api_multi"."id"
@@ -224,8 +224,8 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE (("test_new_api_multi_line"."name"::text LIKE %s)
-                    OR ("test_new_api_multi_line"."name"::text LIKE %s)
+                WHERE (("test_new_api_multi_line"."name" LIKE %s)
+                    OR ("test_new_api_multi_line"."name" LIKE %s)
                 ) AND "test_new_api_multi_line"."multi" IS NOT NULL
             ))
             ORDER BY "test_new_api_multi"."id"
@@ -243,13 +243,13 @@ class TestSubqueries(TransactionCase):
             WHERE (("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name"::text LIKE %s)
+                WHERE ("test_new_api_multi_line"."name" LIKE %s)
                    AND "test_new_api_multi_line"."multi" IS NOT NULL)
             ) AND ("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE (("test_new_api_multi_line"."name"::text LIKE %s)
-                    OR ("test_new_api_multi_line"."name"::text LIKE %s)
+                WHERE (("test_new_api_multi_line"."name" LIKE %s)
+                    OR ("test_new_api_multi_line"."name" LIKE %s)
                 ) AND "test_new_api_multi_line"."multi" IS NOT NULL
             )))
             ORDER BY "test_new_api_multi"."id"
@@ -273,8 +273,8 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
                     WHERE (
-                        ("test_new_api_multi_tag"."name"::text ILIKE %s)
-                        AND ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        ("test_new_api_multi_tag"."name" ILIKE %s)
+                        AND ("test_new_api_multi_tag"."name" LIKE %s)
                     )
                 )
             ) AND EXISTS (
@@ -285,8 +285,8 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
                     WHERE (
-                        ("test_new_api_multi_tag"."name"::text ILIKE %s)
-                        AND ("test_new_api_multi_tag"."name"::text LIKE %s)
+                        ("test_new_api_multi_tag"."name" ILIKE %s)
+                        AND ("test_new_api_multi_tag"."name" LIKE %s)
                     )
                 )
             ))
@@ -309,10 +309,10 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
                     WHERE (
-                        ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                        ("test_new_api_multi_tag"."name" ILIKE %s)
                         AND (
-                            ("test_new_api_multi_tag"."name"::text LIKE %s)
-                            OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                            ("test_new_api_multi_tag"."name" LIKE %s)
+                            OR ("test_new_api_multi_tag"."name" LIKE %s)
                         )
                     )
                 )
@@ -338,8 +338,8 @@ class TestSubqueries(TransactionCase):
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
                         WHERE (
-                            ("test_new_api_multi_tag"."name"::text ILIKE %s)
-                            AND ("test_new_api_multi_tag"."name"::text LIKE %s)
+                            ("test_new_api_multi_tag"."name" ILIKE %s)
+                            AND ("test_new_api_multi_tag"."name" LIKE %s)
                         )
                     )
                 ) AND EXISTS (
@@ -350,10 +350,10 @@ class TestSubqueries(TransactionCase):
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
                         WHERE (
-                            ("test_new_api_multi_tag"."name"::text ILIKE %s)
+                            ("test_new_api_multi_tag"."name" ILIKE %s)
                             AND (
-                                ("test_new_api_multi_tag"."name"::text LIKE %s)
-                                OR ("test_new_api_multi_tag"."name"::text LIKE %s)
+                                ("test_new_api_multi_tag"."name" LIKE %s)
+                                OR ("test_new_api_multi_tag"."name" LIKE %s)
                             )
                         )
                     )
@@ -821,7 +821,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."name"::text LIKE %s)
+            WHERE ("test_new_api_city"."name" LIKE %s)
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.name = "Bruxelles"
@@ -841,7 +841,7 @@ class TestFlushSearch(TransactionCase):
             WHERE ("test_new_api_city"."country_id" IN (
                 SELECT "test_new_api_country"."id"
                 FROM "test_new_api_country"
-                WHERE ("test_new_api_country"."name"::text LIKE %s)
+                WHERE ("test_new_api_country"."name" LIKE %s)
             ))
             ORDER BY "test_new_api_city"."id"
         ''']):
@@ -861,7 +861,7 @@ class TestFlushSearch(TransactionCase):
             WHERE ("test_new_api_city"."country_id" IN (
                 SELECT "test_new_api_country"."id"
                 FROM "test_new_api_country"
-                WHERE ("test_new_api_country"."name"::text LIKE %s)
+                WHERE ("test_new_api_country"."name" LIKE %s)
             ))
             ORDER BY "test_new_api_city"."id"
         ''']):
@@ -883,7 +883,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_city"
             LEFT JOIN "test_new_api_country" AS "test_new_api_city__country_id"
                 ON ("test_new_api_city"."country_id" = "test_new_api_city__country_id"."id")
-            WHERE ("test_new_api_city__country_id"."name"::text LIKE %s)
+            WHERE ("test_new_api_city__country_id"."name" LIKE %s)
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.country_id = self.france
@@ -948,7 +948,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."id" = %s) AND ("test_new_api_city"."name"::text LIKE %s)
+            WHERE ("test_new_api_city"."id" = %s) AND ("test_new_api_city"."name" LIKE %s)
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.name = "Bruxelles"
@@ -1033,7 +1033,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."name"::text LIKE %s)
+            WHERE ("test_new_api_city"."name" LIKE %s)
             ORDER BY "test_new_api_city"."id"
         '''], flush=False):
             self.brussels.name = "Brussel"
