@@ -263,6 +263,7 @@ class Channel(models.Model):
     # ------------------------------------------------------------
 
     def _subscribe_users_automatically(self):
+        self = self.with_context(active_test=False)
         new_members = self._subscribe_users_automatically_get_members()
         if new_members:
             to_create = [
