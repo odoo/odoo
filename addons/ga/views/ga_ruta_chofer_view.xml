@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_ruta_chofer_list" >
+            <field name="name">Ga Ruta Chofer List</field>
+            <field name="model">ga.ruta.chofer</field>
+            <field name="arch" type="xml">
+                <tree string="Ruta Chofer " create="true" edit="true">
+                    <field name="chofer_id"/>
+                    <field name="alumno_id"/>
+                    <field name="ruta_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ga_ruta_chofer" >
+            <field name="name">Ga Ruta Chofer Form</field>
+            <field name="model">ga.ruta.chofer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="chofer_id"/>
+                    <field name="alumno_id"/>
+                    <field name="ruta_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
