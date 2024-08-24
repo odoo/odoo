@@ -1508,8 +1508,16 @@ class BaseModel(metaclass=MetaModel):
                 try:
                     dbid = int(record['.id'])
                 except ValueError:
-                    # in case of overridden id column
-                    dbid = record['.id']
+                    if self._fields["id"].type != "integer":
+                        # in case of overridden id column
+                        dbid = record['.id']
+                    else:
+                        log(dict(extras,
+                            type='error',
+                            record=stream.index,
+                            field='.id',
+                            message=_(u"Invalid database identifier '%s'") % dbid))
+
                 if not self.search([('id', '=', dbid)]):
                     log(dict(extras,
                         type='error',
