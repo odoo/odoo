@@ -848,7 +848,12 @@ class Picking(models.Model):
         return True
 
     def _send_confirmation_email(self):
-        for stock_pick in self.filtered(lambda p: p.company_id.stock_move_email_validation and p.picking_type_id.code == 'outgoing'):
+        to_email = self.filtered(
+            lambda p: p.company_id.stock_move_email_validation
+            and p.picking_type_id.code == 'outgoing'
+            and p.location_dest_id.usage == 'customer'
+        )
+        for stock_pick in to_email:
             delivery_template_id = stock_pick.company_id.stock_mail_confirmation_template_id.id
             stock_pick.with_context(force_send=True).message_post_with_template(delivery_template_id, email_layout_xmlid='mail.mail_notification_light')
 
