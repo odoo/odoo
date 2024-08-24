@@ -5,8 +5,8 @@
 # Translators:
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Martin Trigaux, 2024
-# Marianna Ciofani, 2024
 # Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,13 +30,15 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Il problema si verifica perché la quantità diventa zero a seguito dell'arrotondamento, durante la conversione. Per sistemarlo, correggi i fattori di conversione o il metodo di arrotondamento per garantire che anche la quantità più piccola nell'unità originale non venga arrotondata a zero nell'unità di destinazione."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 #, python-format
 msgid " - From \"%s\" to \"%s\""
-msgstr ""
+msgstr " - Da \"%s\" a \"%s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -903,7 +905,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Si è verificato un errore durante il caricamento del Punto Vendita: \n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1861,6 +1863,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Errore di conversione: la conversione della seguente unità di misura "
+"restituisce una quantità pari a zero per via dell'arrotondamento:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2096,7 +2100,7 @@ msgstr "Schermo cliente"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen : {{message}}"
-msgstr ""
+msgstr "Schermo cliente: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2112,7 +2116,7 @@ msgstr "Schermo cliente collegato"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Not Found : {{message}}"
-msgstr ""
+msgstr "Schermo cliente non trovato: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2127,7 +2131,7 @@ msgstr "Schermo cliente non supportato. Aggiorna il box IoT"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Warning : {{message}}"
-msgstr ""
+msgstr "Avviso schermo cliente: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2647,7 +2651,7 @@ msgstr "E-mail inviata."
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr ""
+msgstr "E-mail: {{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6586,7 +6590,7 @@ msgstr "Imposta prezzi multipli per prodotto, sconti automatici ecc."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Configura il nuovo sconto"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7144,6 +7148,9 @@ msgid ""
 "The datas received from the point of sale has been saved in the attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"L'ordine del Punto Vendita con il seguente riferimento %s è stato ricevuto dal server Odoo ma l'elaborazione non è riuscita.\n"
+"I dati ricevuti dal punto vendita sono stati salvati negli allegati.\n"
+"Contatta il servizio di supporto per ricevere aiuto sul ripristino"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8858,4 +8865,4 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
-msgstr ""
+msgstr "{{partnerDetailsFields[item]}}"

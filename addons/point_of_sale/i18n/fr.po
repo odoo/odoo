@@ -6,8 +6,8 @@
 # Richard Mouthier <rmo@odoo.com>, 2024
 # Larissa Manderfeld, 2024
 # Jolien De Paepe, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,13 +31,15 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Ce problème survient parce que la quantité devient nulle après avoir été arrondie lors de la conversion. Pour résoudre ce problème, ajustez les facteurs de conversion ou la méthode d'arrondi afin de vous assurer que même la plus petite quantité dans l'unité d'origine n'est pas arrondie à zéro dans l'unité cible."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 #, python-format
 msgid " - From \"%s\" to \"%s\""
-msgstr ""
+msgstr " - De \"%s\" à \"%s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -906,7 +908,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Une erreur s'est produite lors du chargement du point de vente : \n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1871,6 +1873,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Erreur de conversion : les conversions d'unités de mesure suivantes "
+"aboutissent à une quantité nulle en raison des arrondis :"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2107,7 +2111,7 @@ msgstr "Écran client"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen : {{message}}"
-msgstr ""
+msgstr "Écran du client : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2123,7 +2127,7 @@ msgstr "Ecran du client connecté"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Not Found : {{message}}"
-msgstr ""
+msgstr "Écran du client non trouvé : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2138,7 +2142,7 @@ msgstr "Ecran client non pris en charge. Veuillez mettre a jour votre IoT Box"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Warning : {{message}}"
-msgstr ""
+msgstr "Avertissement écran client : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2557,7 +2561,7 @@ msgstr "Afficher des commandes sur l'écran de préparation"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Accès non disponible, ne pas tenir compte de cette donnée dans le digest "
-"d'email envoyé à l'utilisateur"
+"d'e-mail envoyé à l'utilisateur"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2649,21 +2653,21 @@ msgstr "Balance électronique"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
 #, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 #, python-format
 msgid "Email sent."
-msgstr "Email envoyé"
+msgstr "E-mail envoyé"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr ""
+msgstr "E-mail: {{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3267,7 +3271,7 @@ msgstr "Action invalide"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr "Email invalide."
+msgstr "E-mail invalide."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4771,7 +4775,7 @@ msgstr "Mode de paiement"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_tree
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Methods"
-msgstr "Modes de paiements"
+msgstr "Modes de paiement"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -4865,7 +4869,7 @@ msgstr "Écart de règlement"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr "Modes de paiements"
+msgstr "Modes de paiement"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6452,14 +6456,14 @@ msgstr "Envoyer la demande de paiement"
 #: code:addons/point_of_sale/static/src/app/errors/popups/error_traceback_popup.xml:0
 #, python-format
 msgid "Send by email"
-msgstr "Envoyer par email"
+msgstr "Envoyer par e-mail"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr "L'envoi de l'email a échoué. Veuillez réessayer."
+msgstr "L'envoi de l'e-mail a échoué. Veuillez réessayer."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6611,7 +6615,7 @@ msgstr "Un produit peut avoir plusieurs prix, remises automatiques, etc."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Fixer la nouvelle réduction"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7170,6 +7174,9 @@ msgid ""
 "The datas received from the point of sale has been saved in the attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"La commande Point de Vente avec la référence suivante %s a été reçue par le serveur d'Odoo, mais la phase de traitement de la commande a échoué.\n"
+"Les données reçues du point de vente ont été enregistrées dans les pièces jointes.\n"
+"Veuillez contacter le service d'assistance pour vous aider à restaurer les données."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8896,4 +8903,4 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
-msgstr ""
+msgstr "{{partnerDetailsFields[item]}}"

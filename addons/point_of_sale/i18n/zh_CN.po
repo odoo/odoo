@@ -6,9 +6,9 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Yazi Tian, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
 # Wil Odoo, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2044,7 +2044,7 @@ msgstr "客户屏幕"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen : {{message}}"
-msgstr ""
+msgstr "客户显示屏 : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2825,7 +2825,7 @@ msgstr "强制完成"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr "强制未完成账户"
+msgstr "强制未结清账户"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -3485,7 +3485,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "留空以使用公司设置中的默认账户。\n"
-"当创建银行支付的账户支付记录时，账户将用作未完成账户。"
+"当创建银行支付的账户支付记录时，账户将用作未结清账户。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -3513,7 +3513,7 @@ msgstr ""
 "留空以使用客户的应收账款。\n"
 "定义在结束门店会话后在何处记录累计支付（或个人支付，如果客户正确）的凭证。\n"
 "对于现金凭证，我們通过报表行直接写入凭证的的默认账户。\n"
-"对于银行凭证，我们会写入此支付方式中指定的未完成账户。\n"
+"对于银行凭证，我们会写入此支付方式中指定的未结清账户。\n"
 "只允许现金和银行凭证。"
 
 #. module: point_of_sale
@@ -4479,7 +4479,7 @@ msgstr "其它"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "未结科目"
+msgstr "未结清科目"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
@@ -8482,7 +8482,7 @@ msgstr "订单："
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "outstanding rescue session"
-msgstr "未完成的救援会话"
+msgstr "未结清的救援会话"
 
 #. module: point_of_sale
 #. odoo-javascript
