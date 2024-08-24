@@ -51,8 +51,9 @@ def float_to_time(hours):
     """ Convert a number of hours into a time object. """
     if hours == 24.0:
         return time.max
-    fractional, integral = math.modf(hours)
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
+    fractional, seconds = math.modf(hours * 3600)
+    microseconds = round(fractional * 1e6)
+    return (datetime(1, 1, 1) + timedelta(seconds=seconds, microseconds=microseconds)).time()
 
 
 def _boundaries(intervals, opening, closing):
