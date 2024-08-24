@@ -1210,8 +1210,10 @@ class Meeting(models.Model):
 
     @api.model
     def _get_custom_fields(self):
-        all_fields = self.fields_get(attributes=['manual'])
-        return {fname for fname in all_fields if all_fields[fname]['manual']}
+        return {
+            fname
+            for fname, field in self._fields.items()
+            if field.get_description(self.env)['manual'] and (not field.groups or self.user_has_groups(field.groups))}
 
     @api.model
     def _get_public_fields(self):
