@@ -342,20 +342,44 @@ const ReplenishReport = clientAction.extend({
     },
 
     /**
-     * Reserve the specified model/id, then reload this report.
+     * Reserve the specified model/id, then reload this report if needed.
      *
      * @returns {Promise}
      */
     _onClickReserve: function(ev) {
         const model = ev.target.getAttribute('model');
         const modelId = parseInt(ev.target.getAttribute('model-id'));
-        return this._rpc( {
+        let productModel = this.resModel;
+        let productId = this.productId;
+        if (productModel === 'product.template') {
+            // If it's a product template's report, we try to get the product id
+            // from the line (in case the template has multiple variants).
+            const parentRow = ev.target.closest('tr');
+            const productCell = parentRow.querySelector('td[data-product-id]');
+            if (productCell) {
+                productModel = 'product.product';
+                productId = Number(productCell.dataset.productId);
+            }
+        }
+        return this._rpc({
             model,
             args: [[modelId]],
-            method: 'action_assign'
-        }).then(() => this._reloadReport());
+            kwargs: { model: productModel, product_id: productId },
+            method: 'action_assign_from_forecast_report',
+        }).then(res => {
+            if (res.should_refresh) {
+                this._reloadReport();
+            }
+            if (res.should_alert) {
+                const title = _t("Reservation is not processed");
+                const message = _.str.sprintf(
+                    _t(`The reservation can not be fully processed for %s.
+                    Please check the product's stock location(s) matches their source location(s).`),
+                    res.doc_name);
+                this.displayNotification({ title, message, type: 'danger' });
+            }
+        });
     }
-
 });
 
 core.action_registry.add('replenish_report', ReplenishReport);
