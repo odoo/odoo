@@ -5487,6 +5487,43 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('recompute buttonbox based on attrs', async function (assert) {
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<field name="foo"/>' +
+                        '<field name="bar" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<field name="int_field" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<field name="qux" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<field name="display_name" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<field name="state" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<field name="date" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<field name="datetime" attrs="{\'invisible\': [(\'foo\', \'=\', \'bli\')]}"/>' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.doesNotHaveClass(form.$('.oe_button_box'), 'o_not_full',
+            "the buttonbox should be full");
+
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), 'bli');
+
+        assert.hasClass(form.$('.oe_button_box'), 'o_not_full',
+            "the buttonbox should not be full");
+
+        form.destroy();
+    });
+
     QUnit.test('display correctly buttonbox, in large size class', async function (assert) {
         assert.expect(1);
 
