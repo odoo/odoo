@@ -73,6 +73,7 @@ class AccruedExpenseRevenue(models.TransientModel):
 
     @api.depends('date')
     def _compute_reversal_date(self):
+        self.reversal_date = False
         for record in self:
             if not record.reversal_date or record.reversal_date <= record.date:
                 record.reversal_date = record.date + relativedelta(days=1)
