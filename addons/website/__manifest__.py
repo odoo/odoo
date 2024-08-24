@@ -130,6 +130,7 @@
         'views/snippets/s_striped_center_top.xml',
         'views/snippets/s_numbers_list.xml',
         'views/snippets/s_quadrant.xml',
+        'views/snippets/s_website_form_aside.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
