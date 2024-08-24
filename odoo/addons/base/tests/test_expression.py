@@ -1265,7 +1265,7 @@ class TestQueries(TransactionCase):
             WHERE (
                 (
                     ("res_partner"."active" = %s) AND
-                    ("res_partner"."name"::text LIKE %s)
+                    ("res_partner"."name" LIKE %s)
                 ) AND (
                     ("res_partner"."title" = %s) OR (
                         ("res_partner"."ref" != %s) OR
@@ -1284,7 +1284,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             Model.search([('name', 'like', 'foo')])
@@ -1292,7 +1292,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
             ORDER BY "res_partner"."id"
         ''']):
             Model.search([('name', 'like', 'foo')], order='id')
@@ -1304,7 +1304,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT COUNT(*)
             FROM "res_partner"
-            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
         ''']):
             Model.search_count([('name', 'like', 'foo')])
 
@@ -1315,7 +1315,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT COUNT(*) FROM (
                 SELECT FROM "res_partner"
-                WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+                WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
                 LIMIT %s
             ) t
         ''']):
@@ -1329,7 +1329,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner_title"."id"
             FROM "res_partner_title"
-            WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s) like %s)
+            WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s) LIKE %s)
             ORDER BY COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s)
         ''']):
             Model.search([('name', 'like', 'foo')])
@@ -1378,7 +1378,7 @@ class TestQueries(TransactionCase):
             FROM "ir_model"
             WHERE (
                 ("ir_model"."name"->>%s ILIKE %s)
-                OR ("ir_model"."model"::text ILIKE %s)
+                OR ("ir_model"."model" ILIKE %s)
             )
             ORDER BY "ir_model"."model"
             LIMIT %s
@@ -1389,8 +1389,8 @@ class TestQueries(TransactionCase):
             SELECT "ir_model"."id", "ir_model"."name"->>%s
             FROM "ir_model"
             WHERE (
-                ("ir_model"."name" is NULL OR "ir_model"."name"->>%s not ilike %s)
-                AND (("ir_model"."model"::text NOT ILIKE %s) OR "ir_model"."model" IS NULL)
+                (("ir_model"."name"->>%s NOT ILIKE %s) OR "ir_model"."name"->>%s IS NULL)
+                AND (("ir_model"."model" NOT ILIKE %s) OR "ir_model"."model" IS NULL)
             )
             ORDER BY "ir_model"."model"
             LIMIT %s
@@ -1411,7 +1411,7 @@ class TestMany2one(TransactionCase):
             FROM "res_users"
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
-            WHERE ("res_users__partner_id"."name"::text LIKE %s)
+            WHERE ("res_users__partner_id"."name" LIKE %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             self.User.search([('name', 'like', 'foo')])
@@ -1423,7 +1423,7 @@ class TestMany2one(TransactionCase):
             FROM "res_users"
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
-            WHERE ("res_users__partner_id"."name"::text LIKE %s)
+            WHERE ("res_users__partner_id"."name" LIKE %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             self.User.search([('partner_id.name', 'like', 'foo')])
@@ -1446,7 +1446,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."name"::text LIKE %s)
+                WHERE ("res_company"."name" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1461,7 +1461,7 @@ class TestMany2one(TransactionCase):
                 WHERE ("res_company"."partner_id" IN (
                     SELECT "res_partner"."id"
                     FROM "res_partner"
-                    WHERE ("res_partner"."name"::text LIKE %s)
+                    WHERE ("res_partner"."name" LIKE %s)
                 ))
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
@@ -1474,11 +1474,11 @@ class TestMany2one(TransactionCase):
             WHERE (("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."name"::text LIKE %s)
+                WHERE ("res_company"."name" LIKE %s)
             )) OR ("res_partner"."country_id" IN (
                 SELECT "res_country"."id"
                 FROM "res_country"
-                WHERE ("res_country"."code"::text LIKE %s)
+                WHERE ("res_country"."code" LIKE %s)
             )))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1496,7 +1496,7 @@ class TestMany2one(TransactionCase):
             WHERE (("res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."name"::text LIKE %s)
+                WHERE ("res_company"."name" LIKE %s)
             )) OR "res_partner"."company_id" IS NULL)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1511,7 +1511,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name" LIKE %s))
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1525,7 +1525,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name" LIKE %s))
                 ORDER BY "res_company"."id"
                 LIMIT %s
             ))
@@ -1538,7 +1538,7 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_company"."id"
             FROM "res_company"
-            WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+            WHERE (("res_company"."active" = %s) AND ("res_company"."name" LIKE %s))
             ORDER BY "res_company"."id"
         ''', '''
             SELECT "res_partner"."id"
@@ -1554,7 +1554,7 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_company"."id"
             FROM "res_company"
-            WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+            WHERE (("res_company"."active" = %s) AND ("res_company"."name" LIKE %s))
             ORDER BY "res_company"."id"
         ''', '''
             SELECT "res_partner"."id"
@@ -1573,7 +1573,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name" LIKE %s))
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1591,7 +1591,7 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner__company_id"."name"::text LIKE %s)
+            WHERE ("res_partner__company_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -1604,7 +1604,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner__company_id"."partner_id" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE ("res_partner"."name"::text LIKE %s)
+                WHERE ("res_partner"."name" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1623,7 +1623,7 @@ class TestMany2one(TransactionCase):
                 FROM "res_company"
                 LEFT JOIN "res_partner" AS "res_company__partner_id" ON
                     ("res_company"."partner_id" = "res_company__partner_id"."id")
-                WHERE ("res_company__partner_id"."name"::text LIKE %s)
+                WHERE ("res_company__partner_id"."name" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1641,7 +1641,7 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner__company_id__partner_id"."name"::text LIKE %s)
+            WHERE ("res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -1662,8 +1662,8 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."country_id" = "res_partner__country_id"."id")
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE (("res_partner__company_id"."name"::text LIKE %s)
-                OR ("res_partner__country_id"."code"::text LIKE %s))
+            WHERE (("res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner__country_id"."code" LIKE %s))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([
@@ -1681,7 +1681,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."name"::text LIKE %s)
+                WHERE ("res_company"."name" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1693,7 +1693,7 @@ class TestMany2one(TransactionCase):
             WHERE (("res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."name"::text LIKE %s)
+                WHERE ("res_company"."name" LIKE %s)
             )) OR "res_partner"."company_id" IS NULL)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1736,7 +1736,7 @@ class TestOne2many(TransactionCase):
             WHERE ("res_partner"."id" IN (
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
-                WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1753,7 +1753,7 @@ class TestOne2many(TransactionCase):
                     AND ("res_partner"."id" IN (
                         SELECT "res_partner_bank"."partner_id"
                         FROM "res_partner_bank"
-                        WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                        WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)
                     ))
                 ) AND "res_partner"."parent_id" IS NOT NULL
             ))
@@ -1786,7 +1786,7 @@ class TestOne2many(TransactionCase):
             WHERE ("res_partner"."id" IN (
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
-                WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1798,11 +1798,11 @@ class TestOne2many(TransactionCase):
             WHERE (("res_partner"."id" IN (
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
-                WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)
             )) AND ("res_partner"."id" IN (
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
-                WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)
             )))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1820,7 +1820,7 @@ class TestOne2many(TransactionCase):
                       WHERE (("res_partner"."active" = TRUE) AND ("res_partner"."id" IN
                                 (SELECT "res_partner_bank"."partner_id"
                                  FROM "res_partner_bank"
-                                 WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)))
+                                 WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)))
                              )))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1847,7 +1847,7 @@ class TestOne2many(TransactionCase):
                         WHERE ((
                             "res_partner_bank"."id" IN %s
                         ) AND (
-                            "res_partner_bank"."sanitized_acc_number"::text LIKE %s
+                            "res_partner_bank"."sanitized_acc_number" LIKE %s
                         ))
                     )
                 ))
@@ -1875,7 +1875,7 @@ class TestOne2many(TransactionCase):
                 WHERE ((
                     "res_partner"."active" = TRUE
                 ) AND (
-                    "res_partner__state_id__country_id"."code"::text LIKE %s
+                    "res_partner__state_id__country_id"."code" LIKE %s
                 ))
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
@@ -1891,7 +1891,7 @@ class TestOne2many(TransactionCase):
             WHERE ("res_partner"."id" IN (
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
-                WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
+                WHERE ("res_partner_bank"."sanitized_acc_number" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1995,7 +1995,7 @@ class TestMany2many(TransactionCase):
                         AND "res_groups__rule_groups"."rule_group_id" IN (
                             SELECT "ir_rule"."id"
                             FROM "ir_rule"
-                            WHERE ("ir_rule"."name"::text LIKE %s)
+                            WHERE ("ir_rule"."name" LIKE %s)
                         )
                     )
                 )
@@ -2021,7 +2021,7 @@ class TestMany2many(TransactionCase):
                 AND "res_users__company_ids"."cid" IN (
                     SELECT "res_company"."id"
                     FROM "res_company"
-                    WHERE ("res_company"."name"::text LIKE %s)
+                    WHERE ("res_company"."name" LIKE %s)
                 )
             )
             ORDER BY "res_users"."id"
