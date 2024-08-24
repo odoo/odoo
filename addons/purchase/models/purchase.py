@@ -1238,7 +1238,8 @@ class PurchaseOrderLine(models.Model):
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
         if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
             price_unit = seller.currency_id._convert(
-                price_unit, self.order_id.currency_id, self.order_id.company_id, self.date_order or fields.Date.today())
+                price_unit, self.order_id.currency_id, self.order_id.company_id, self.date_order or fields.Date.today(), round=False
+            )
 
         if seller and self.product_uom and seller.product_uom != self.product_uom:
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
