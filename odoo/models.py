@@ -2891,7 +2891,7 @@ class BaseModel(metaclass=MetaModel):
         field_to_flush = field if flush and fname != 'id' else None
         sql_field = SQL.identifier(alias, fname, to_flush=field_to_flush)
 
-        if field.translate and not self.env.context.get('prefetch_langs'):
+        if field.translate:
             langs = field.get_translation_fallback_langs(self.env)
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
             if len(sql_field_langs) == 1:
@@ -3072,6 +3072,9 @@ class BaseModel(metaclass=MetaModel):
                 if params:
                     if fname != 'id':
                         params = [field.convert_to_column(p, self, validate=False) for p in params]
+                        if field.translate:
+                            # unwrap actual values from the Json values returned by convert_to_column()
+                            params = [p.adapted['en_US'] for p in params]
                     sql = SQL("(%s %s %s)", sql_field, sql_operator, tuple(params))
                 else:
                     # The case for (fname, 'in', []) or (fname, 'not in', []).
@@ -3119,12 +3122,16 @@ class BaseModel(metaclass=MetaModel):
             sql_value = value
         elif need_wildcard:
             sql_value = SQL("%s", f"%{value}%")
+        elif field.translate:
+            # convert_to_column returns psycopg2.extras.Json({'en_US': text_value})
+            # only take the text_value to compare with the result of field_to_sql
+            sql_value = SQL("%s", field.convert_to_column(value, self, validate=False).adapted['en_US'])
         else:
             sql_value = SQL("%s", field.convert_to_column(value, self, validate=False))
 
         sql_left = sql_field
-        if operator.endswith('like'):
-            sql_left = SQL("%s::text", sql_field)
+        if operator.endswith('like') and field.type not in ('char', 'text', 'html'):
+            sql_left = SQL("(%s)::text", sql_field)
         if operator.endswith('ilike'):
             sql_left = self.env.registry.unaccent(sql_left)
             sql_value = self.env.registry.unaccent(sql_value)
@@ -4094,6 +4101,8 @@ class BaseModel(metaclass=MetaModel):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
                     sql = self._field_to_sql(self._table, field.name, query)
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
+                elif field.translate and self.env.context.get('prefetch_langs'):
+                    sql = SQL.identifier(self._table, field.name, to_flush=field)
                 else:
                     # flushing is necessary to retrieve the en_US value of fields without a translation
                     sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)

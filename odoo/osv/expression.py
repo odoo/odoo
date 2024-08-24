@@ -1389,88 +1389,34 @@ class expression(object):
                     else:
                         push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
-                elif field.translate and (isinstance(right, str) or right is False) and left == field.name:
+                elif field.translate and (isinstance(right, str) or right is False) and left == field.name and \
+                    self._has_trigram and field.index == 'trigram' and operator in ('=', 'like', 'ilike', '=like', '=ilike'):
                     right = right or ''
-                    model_raw_trans = model.with_context(prefetch_langs=True)
-                    sql_field = model_raw_trans._field_to_sql(alias, field.name, self.query)
                     sql_operator = SQL_OPERATORS[operator]
-                    sql_exprs = []
-
                     need_wildcard = operator in WILDCARD_OPERATORS
 
                     if need_wildcard and not right:
                         push_result(SQL("FALSE") if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE"))
                         continue
+                    push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
                     if not need_wildcard:
                         right = field.convert_to_column(right, model, validate=False).adapted['en_US']
 
-                    if (
-                        (need_wildcard and not right)
-                        or (right and operator in NEGATIVE_TERM_OPERATORS)
-                        or (operator == '=' and right == '')  # noqa: PLC1901
-                    ):
-                        sql_exprs.append(SQL("%s IS NULL OR", sql_field))
-
-                    if self._has_trigram and field.index == 'trigram' and operator in ('=', 'like', 'ilike', '=like', '=ilike'):
-                        # a prefilter using trigram index to speed up '=', 'like', 'ilike'
-                        # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
-                        if operator == '=':
-                            _right = value_to_translated_trigram_pattern(right)
-                        else:
-                            _right = pattern_to_translated_trigram_pattern(right)
-
-                        if _right != '%':
-                            _left = SQL("jsonb_path_query_array(%s, '$.*')::text", sql_field)
-                            _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
-                            sql_exprs.append(SQL(
-                                "%s %s %s AND",
-                                self._unaccent(_left),
-                                _sql_operator,
-                                self._unaccent(SQL("%s", _right))
-                            ))
-
-                    unaccent = self._unaccent if operator.endswith('ilike') else lambda x: x
-                    sql_left = model._field_to_sql(alias, field.name, self.query)
-
-                    if need_wildcard:
-                        right = f'%{right}%'
-
-                    sql_exprs.append(SQL(
-                        "%s %s %s",
-                        unaccent(sql_left),
-                        sql_operator,
-                        unaccent(SQL("%s", right)),
-                    ))
-                    push_result(SQL("(%s)", SQL(" ").join(sql_exprs)))
-
-                elif field.translate and operator in ['in', 'not in'] and isinstance(right, (list, tuple)) and left == field.name:
-                    model_raw_trans = model.with_context(prefetch_langs=True)
-                    sql_field = model_raw_trans._field_to_sql(alias, field.name, self.query)
-                    sql_operator = SQL_OPERATORS[operator]
-                    params = [it for it in right if it is not False and it is not None]
-                    check_null = len(params) < len(right)
-                    if check_null and '' not in params:
-                        params.append('')
-                    check_null = check_null or ('' in params)
-                    if params:
-                        params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]
-                        langs = field.get_translation_fallback_langs(model.env)
-                        sql_left_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
-                        if len(sql_left_langs) == 1:
-                            sql_left = sql_left_langs[0]
-                        else:
-                            sql_left = SQL('COALESCE(%s)', SQL(', ').join(sql_left_langs))
-                        sql = SQL("%s %s %s", sql_left, sql_operator, tuple(params))
+                    # a prefilter using trigram index to speed up '=', 'like', 'ilike'
+                    # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
+                    if operator == '=':
+                        _right = value_to_translated_trigram_pattern(right)
                     else:
-                        # The case for (left, 'in', []) or (left, 'not in', []).
-                        sql = SQL("FALSE") if operator == 'in' else SQL("TRUE")
-                    if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
-                        sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-                    elif operator == 'not in' and check_null:
-                        sql = SQL("(%s AND %s IS NOT NULL)", sql, sql_field)  # needed only for TRUE.
-                    push_result(sql)
+                        _right = pattern_to_translated_trigram_pattern(right)
 
+                    if _right != '%':
+                        # combine both generated SQL expressions (above and below) with an AND
+                        push('&', model, alias)
+                        sql_column = SQL('%s.%s', SQL.identifier(alias), SQL.identifier(field.name))
+                        indexed_value = self._unaccent(SQL("jsonb_path_query_array(%s, '$.*')::text", sql_column))
+                        _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
+                        push_result(SQL("%s %s %s", indexed_value, _sql_operator, self._unaccent(SQL("%s", _right))))
                 else:
                     push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
