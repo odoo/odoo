@@ -32,13 +32,15 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Este error ocurre porque la cantidad se convierte en cero luego de redondear durante la conversión. Para solucionarlo, ajuste los factores de conversión o el método de redondeo para garantizar que ninguna unidad original se redondee a cero en la unidad de objetivo."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 #, python-format
 msgid " - From \"%s\" to \"%s\""
-msgstr ""
+msgstr " - De \"%s\" a \"%s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -129,7 +131,7 @@ msgstr "Se encontraron %s productos para \"%s\"."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s sin impuestos"
 
 #. module: point_of_sale
 #. odoo-python
@@ -905,7 +907,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Ocurrió un error al cargar el punto de venta:\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1868,6 +1870,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Error de conversión: el resultado de las siguientes conversiones de unidades"
+" de medida es cero debido al redondeo:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2103,7 +2107,7 @@ msgstr "Pantalla del cliente"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen : {{message}}"
-msgstr ""
+msgstr "Pantalla del cliente: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2119,7 +2123,7 @@ msgstr "Pantalla de cliente conectada"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Not Found : {{message}}"
-msgstr ""
+msgstr "No se encontró la pantalla del cliente: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2134,7 +2138,7 @@ msgstr "La pantalla de cliente no es compatible. Actualice la caja IoT"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Warning : {{message}}"
-msgstr ""
+msgstr "Advertencia de la pantalla del cliente: {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2658,7 +2662,7 @@ msgstr "Correo electrónico enviado."
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr ""
+msgstr "Correo electrónico: {{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5130,7 +5134,7 @@ msgstr "Categoría de producto de PdV "
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS order %s can not be processed"
-msgstr ""
+msgstr "No es posible procesar la orden %s del PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -6596,7 +6600,7 @@ msgstr "Establezca varios precios por producto, descuentos automáticos, etc."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Establezca el nuevo descuento"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7154,6 +7158,9 @@ msgid ""
 "The datas received from the point of sale has been saved in the attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"El servidor de Odoo recibió la orden con referencia %s del punto de venta, pero ocurrió un error al procesarla.\n"
+"La información proporcionada por el punto de venta se almacenó en los archivos adjuntos.\n"
+"Póngase en contacto con su servicio de soporte para que le ayuden a restaurarla."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7181,6 +7188,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"El importe de sus líneas de pago debe estar redondeado para validar la transacción.\n"
+"La precisión de redondeo es %s, por lo que debe establecer %s o %s como importe de pago en lugar de %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8857,4 +8866,4 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
-msgstr ""
+msgstr "{{partnerDetailsFields[item]}}"

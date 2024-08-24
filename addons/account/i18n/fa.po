@@ -37,14 +37,15 @@
 # Abbas Ebadian, 2024
 # Hanna Kheradroosta, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Hamid Mirzapour, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Hamid Mirzapour, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -671,7 +672,7 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "<div style=\"margin: 0px; padding: 0px;\">"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1107,7 +1108,7 @@ msgstr "<span> سررسید در </span>"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
-msgstr ""
+msgstr "<span> روی </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1922,6 +1923,11 @@ msgid ""
 msgstr ""
 "حساب: ورودی های پیشنویس را با استفاده از auto_post و تاریخ حسابداری تا امروز"
 " ارسال کنید"
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3399,7 +3405,6 @@ msgid "Billing"
 msgstr "صدور صورت‌حساب"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "مسئول صدور صورت‌حساب"
 
@@ -3450,6 +3455,11 @@ msgstr "اگر صفر بود خالی بماند"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "مسدود کردن پیام"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6145,7 +6155,7 @@ msgstr "تخفیف پرداخت پیش از موعد تعلق گرفته به ا
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "تخفیف پرداخت زودتر از موعد"
 
 #. module: account
 #. odoo-python
@@ -6951,6 +6961,13 @@ msgstr "فرمول"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__carryover_target
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
@@ -9750,7 +9767,7 @@ msgstr "خنثی کردن ارزش فیلد مبلغ در صورتی که نوع
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "گروه تو در تو مالیاتی مجاز نیست."
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -11705,6 +11722,11 @@ msgid "Re-Sequence"
 msgstr "توالی مجدد"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "دلیل مشخص شده در سند بستانکار"
@@ -11776,7 +11798,7 @@ msgstr "تاریخ پذیرش"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
+msgstr "همه مالیات ها و حساب ها را بر اساس این موقعیت مالی دوباره محاسبه کنید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -13010,7 +13032,6 @@ msgstr ""
 " طور پیش فرض با استفاده از این پیشوند نامگذاری می شوند."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "نمایش ویژگی‌های حسابداری - فقط خواندنی"
 
@@ -13045,7 +13066,6 @@ msgid "Show Force Tax Included"
 msgstr "نمایش شامل مالیات تکلیفی"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "نمایش خصوصیات حسابداری کامل"
 
@@ -13126,7 +13146,7 @@ msgstr "پست‌معمولی"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Some documents are being sent by another process already."
-msgstr ""
+msgstr "برخی از اسناد در حال حاضر با فرآیند دیگری ارسال می شوند."
 
 #. module: account
 #. odoo-python
@@ -16434,6 +16454,15 @@ msgstr ""
 "نخواهد شد."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -17251,6 +17280,15 @@ msgstr "شما نمی توانید از یک حساب منسوخ شده استف
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr ""
 "شما نمی توانید از مالیات بر روی خطوط دارای حساب خارج از تراز استفاده کنید"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
 
 #. module: account
 #. odoo-python
