@@ -272,8 +272,23 @@ class ServerActions(models.Model):
             user = False
             if self.activity_user_type == 'specific':
                 user = self.activity_user_id
-            elif self.activity_user_type == 'generic' and self.activity_user_field_name in record:
-                user = record[self.activity_user_field_name]
+            elif self.activity_user_type == 'generic' and self.activity_user_field_name:
+                field_names = self.activity_user_field_name.split('.')
+
+                # Start with the record object
+                user = record
+
+                # Iterate through the fields and get the corresponding attribute
+                for i, field in enumerate(field_names):
+                    try:
+                        user = getattr(user, field)
+                    except AttributeError:
+                        if i > 0:  # Ensure there's a previous element
+                            prev_field = field_names[i - 1]
+                            raise ValidationError(_(f'object {prev_field} has no attribute {field}'))
+                        else:
+                            active_model = record.env.context.get('active_model')
+                            raise ValidationError(_(f'model {active_model} has no attribute {field}'))
             if user:
                 vals['user_id'] = user.id
             record.activity_schedule(**vals)
