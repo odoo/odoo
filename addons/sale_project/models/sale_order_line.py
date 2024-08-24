@@ -54,6 +54,10 @@ class SaleOrderLine(models.Model):
                     sale_order = self.env['sale.order'].create(so_create_values)
                     sale_order.action_confirm()
                 default_values['order_id'] = sale_order.id
+                # When a user create a sol from a task/ticket without company, the default value in the context will be empty. We set a correct default company instead.
+                if not self.env.context.get('company_id'):
+                    default_values['company_id'] = sale_order.company_id.id
+
             if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
                 product = self.env['product.product'].search([
                     ('name', 'ilike', product_name),
