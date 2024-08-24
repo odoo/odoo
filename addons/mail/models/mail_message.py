@@ -483,7 +483,8 @@ class Message(models.Model):
         document_related_candidate_ids = [
             mid for mid, message in message_values.items()
             if (message.get('model') and message.get('res_id') and
-                message.get('message_type') != 'user_notification')
+                message.get('message_type') != 'user_notification' and
+                mid in list(messages_to_check))
         ]
         model_record_ids = _generate_model_record_ids(message_values, document_related_candidate_ids)
         for model, doc_ids in model_record_ids.items():
