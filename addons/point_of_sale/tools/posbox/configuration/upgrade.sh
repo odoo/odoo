@@ -5,6 +5,7 @@ file_exists () {
 }
 
 create_partition () {
+    echo "[inside create_partition]"
     mount -o remount,rw /
 
     if  [ -f start_upgrade ]
@@ -61,13 +62,26 @@ create_partition () {
 }
 
 download_raspios () {
-    if  [ ! -f *raspios*.img ] ; then
+    echo "[inside download_raspios]"
+    found=0
+    for file in *raspios*.img; do
+        if [ -f "$file" ]; then
+            found=1
+            break
+        fi
+    done
+
+    if [ $found -eq 0 ]; then
         # download latest Raspios image and check integrity
-        LATEST_RASPIOS=$(curl -LIsw %{url_effective} http://downloads.raspberrypi.org/raspios_lite_armhf_latest | tail -n 1)
-        wget -c "${LATEST_RASPIOS}"
-        RASPIOS=$(echo *raspios*.zip)
-        wget -c "${LATEST_RASPIOS}".sha256
+        LATEST_RASPIOS=$(curl -LIsw %{url_effective} http://downloads.raspberrypi.org/raspios_oldstable_lite_armhf_latest | tail -n 1)
+        printf "Downloading %s..." "${LATEST_RASPIOS}"
+        wget -q -c "${LATEST_RASPIOS}"
+        RASPIOS=$(echo *raspios*.xz)
+        printf "Downloading %s.sha256..." "${LATEST_RASPIOS}"
+        wget -q -c "${LATEST_RASPIOS}".sha256
+        printf "done.\nChecking integrity of %s..." "${RASPIOS}"
         CHECK=$(sha256sum -c "${RASPIOS}".sha256)
+        printf "done.\n"
         if [ "${CHECK}" != "${RASPIOS}: OK" ]
         then
             # Checksum is not correct so clean and reset self-flashing
@@ -79,13 +93,26 @@ download_raspios () {
             echo "Error_Raspios_Download"
             exit 0
         fi
-        unzip "${RASPIOS}"
+        pkill chromium # kill chromium to free space
+        rm -rf /tmp/0  # clean chrome workspace to free space
+        printf "Uncompressing %s..." "${RASPIOS}"
+        touch .uncompressing
+        xz -d -T4 --verbose "${RASPIOS}"  # uncompressing raspios.xz w/ 4 threads
+        rm .uncompressing
+        printf "done.\n"
     fi
 
     echo "end dowloading raspios"
 }
 
 copy_raspios () {
+    echo "[inside copy_raspios]"
+
+    # Wait for uncompressing raspios.xz to finish
+    while [ -f .uncompressing ]; do
+        sleep 1
+    done
+
     umount -v /boot
 
     # mapper raspios
@@ -102,7 +129,7 @@ copy_raspios () {
     mount -o remount,rw /
     # copy raspios
     dd if="${LOOP_RASPIOS_ROOT}" of="${PART_RASPIOS_ROOT}" bs=4M status=progress
-    e2fsck -fv "${PART_RASPIOS_ROOT}" # resize2fs requires clean fs
+    e2fsck -fvy "${PART_RASPIOS_ROOT}" # resize2fs requires clean fs
 
     # Modify startup
     mkdir -v raspios
@@ -115,14 +142,14 @@ copy_raspios () {
     NBR_LIGNE=$(sed -n -e '$=' raspios/etc/rc.local)
     sed -ie "${NBR_LIGNE}"'i\. /home/pi/upgrade.sh; copy_iot' raspios/etc/rc.local
     cp -v /etc/fstab raspios/etc/fstab
-    sed -ie "s/$(echo ${PART_ODOO_ROOT} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPIOS_ROOT} | sed -e 's/\//\\\//g')/g" raspios/etc/fstab
+    sed -ie "s/$(echo "${PART_ODOO_ROOT}" | sed -e 's/\//\\\//g')/$(echo "${PART_RASPIOS_ROOT}" | sed -e 's/\//\\\//g')/g" raspios/etc/fstab
     mkdir raspios/home/pi/config
     find /home/pi -maxdepth 1 -type f ! -name ".*" -exec cp {} raspios/home/pi/config/ \;
 
     # download latest IoT Box image and check integrity
     wget -c 'https://nightly.odoo.com/master/iotbox/iotbox-latest.zip' -O raspios/iotbox-latest.zip
     wget -c 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt' -O raspios/SHA1SUMS.txt
-    cd raspios/
+    cd raspios/ || (echo "Error_Raspios_Download"; exit 1)
     CHECK=$(sha1sum -c --ignore-missing SHA1SUMS.txt)
     cd ..
 
@@ -144,7 +171,7 @@ copy_raspios () {
     mkdir -v boot
     mount -v "${PART_BOOT}" boot
     PART_IOT_BOOT_ID=$(grep -oP '(?<=root=).*(?=rootfstype)' boot/cmdline.txt)
-    sed -ie "s/$(echo ${PART_IOT_BOOT_ID} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPIOS_ROOT} | sed -e 's/\//\\\//g')/g" boot/cmdline.txt
+    sed -ie "s/$(echo "${PART_IOT_BOOT_ID}" | sed -e 's/\//\\\//g')/$(echo "${PART_RASPIOS_ROOT}" | sed -e 's/\//\\\//g')/g" boot/cmdline.txt
     umount -v boot
 
     kpartx -dv "${RASPIOS}"
@@ -154,6 +181,7 @@ copy_raspios () {
 }
 
 copy_iot () {
+    echo "[inside copy_iot]"
     mount -o remount,rw /
 
     PART_IOTBOX_ROOT=$(fdisk -l | tail -n 2 | awk 'NR==1 {print $1}')
@@ -186,7 +214,7 @@ copy_iot () {
 
     # Modify boot file
     PART_BOOT_ID=$(grep -oP '(?<=root=).*(?=rootfstype)' /boot/cmdline.txt)
-    sed -ie "s/$(echo ${PART_BOOT_ID} | sed -e 's/\//\\\//g')/$(echo ${PART_IOTBOX_ROOT} | sed -e 's/\//\\\//g')/g" /boot/cmdline.txt
+    sed -ie "s/$(echo "${PART_BOOT_ID}" | sed -e 's/\//\\\//g')/$(echo "${PART_IOTBOX_ROOT}" | sed -e 's/\//\\\//g')/g" /boot/cmdline.txt
     sed -i 's| init=/usr/lib/raspi-config/init_resize.sh||' /boot/cmdline.txt
 
     # Modify startup
@@ -201,6 +229,7 @@ copy_iot () {
 }
 
 cleanup () {
+    echo "[inside cleanup]"
     # clean partitions
     PART_RASPIOS_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
     mkfs.ext4 -Fv "${PART_RASPIOS_ROOT}" # format file sytstem
@@ -210,7 +239,7 @@ cleanup () {
 
     (echo 'p';                                  # print
      echo 'd';                                  # delete partition
-     echo '3';                                  #   number 3
+     echo '3';                                  # number 3
      echo 'p';                                  # print
      echo 'w') |fdisk "${PARTITION}"            # write and quit
 
@@ -218,6 +247,7 @@ cleanup () {
 }
 
 clean_local () {
+    echo "[inside clean_local]"
     mount -o remount,rw /
     mount -o remount,rw /root_bypass_ramdisks/
     cleanup
