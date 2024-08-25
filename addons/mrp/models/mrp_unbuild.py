@@ -108,8 +108,8 @@ class MrpUnbuild(models.Model):
                 order.bom_id = order.mo_id.bom_id
             else:
                 order.bom_id = self.env['mrp.bom']._bom_find(
-                    order.product_id, company_id=order.company_id.id
-                )[order.product_id]
+                    order.product_id, company_ids=[order.company_id.id]
+                )[(order.product_id, order.company_id.id)]
 
     @api.depends('mo_id')
     def _compute_lot_id(self):

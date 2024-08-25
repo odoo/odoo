@@ -297,7 +297,7 @@ class Orderpoint(models.Model):
     def _get_orderpoint_products(self):
         non_kit_ids = []
         for products in split_every(2000, super()._get_orderpoint_products().ids, self.env['product.product'].browse):
-            kit_ids = set(k.id for k in self.env['mrp.bom']._bom_find(products, bom_type='phantom').keys())
+            kit_ids = {p.id for (p, dummy) in self.env['mrp.bom']._bom_find(products, bom_type='phantom')}
             non_kit_ids.extend(id_ for id_ in products.ids if id_ not in kit_ids)
             products.invalidate_recordset()
         return self.env['product.product'].browse(non_kit_ids)

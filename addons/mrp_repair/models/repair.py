@@ -20,8 +20,9 @@ class Repair(models.Model):
     def action_explode(self):
         lines_to_unlink_ids = set()
         line_vals_list = []
+        kit_boms = self.env['mrp.bom'].sudo()._bom_find(self.move_ids.product_id, company_ids=self.move_ids.company_id.ids, bom_type='phantom')
         for op in self.move_ids:
-            bom = self.env['mrp.bom'].sudo()._bom_find(op.product_id, company_id=op.company_id.id, bom_type='phantom')[op.product_id]
+            bom = kit_boms[(op.product_id, op.company_id.id)]
             if not bom:
                 continue
             factor = op.product_uom._compute_quantity(op.product_uom_qty, bom.product_uom_id) / bom.product_qty
@@ -36,7 +37,7 @@ class Repair(models.Model):
             self.env['stock.move'].create(line_vals_list)
 
     def _get_action_add_from_catalog_extra_context(self):
-        bom = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
+        bom = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[(self.product_id, self.company_id.id)]
         product_ids = [line.product_id.id for line in bom.bom_line_ids] if bom else []
         return {
             **super()._get_action_add_from_catalog_extra_context(),

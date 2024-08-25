@@ -152,7 +152,7 @@ class StockRule(models.Model):
             return values['bom_id']
         if values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
             return values['orderpoint_id'].bom_id
-        return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
+        return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_ids=company_id.ids)[(product_id, company_id.id)]
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(bom, values)
@@ -206,7 +206,7 @@ class StockRule(models.Model):
         if not manufacture_rule:
             return delays, delay_description
         manufacture_rule.ensure_one()
-        bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
+        bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_ids=manufacture_rule.company_id.ids)[(product, manufacture_rule.company_id.id)]
         manufacture_delay = bom.produce_delay
         delays['total_delay'] += manufacture_delay
         delays['manufacture_delay'] += manufacture_delay
@@ -252,15 +252,14 @@ class ProcurementGroup(models.Model):
         the original 'run' method with the values of the components of that kit.
         """
         procurements_without_kit = []
-        product_by_company = defaultdict(OrderedSet)
+        products = self.env['product.product']
+        company_ids = set()
         for procurement in procurements:
-            product_by_company[procurement.company_id].add(procurement.product_id.id)
-        kits_by_company = {
-            company: self.env['mrp.bom']._bom_find(self.env['product.product'].browse(product_ids), company_id=company.id, bom_type='phantom')
-            for company, product_ids in product_by_company.items()
-        }
+            products |= procurement.product_id
+            company_ids.add(procurement.company_id.id)
+        kit_boms = self.env['mrp.bom']._bom_find(products, company_ids=[*company_ids], bom_type='phantom')
         for procurement in procurements:
-            bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
+            bom_kit = kit_boms[(procurement.product_id, procurement.company_id.id)]
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)

@@ -72,9 +72,9 @@ class StockWarehouseOrderpoint(models.Model):
     def _quantity_in_progress(self):
         bom_kits = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')
         bom_kit_orderpoints = {
-            orderpoint: bom_kits[orderpoint.product_id]
+            orderpoint: bom_kits[(orderpoint.product_id, False)]
             for orderpoint in self
-            if orderpoint.product_id in bom_kits
+            if (orderpoint.product_id, False) in bom_kits
         }
         orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(*bom_kit_orderpoints.keys())
         res = super(StockWarehouseOrderpoint, orderpoints_without_kit)._quantity_in_progress()
@@ -123,7 +123,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.ensure_one()
         qty_multiple_to_order = super()._get_qty_multiple_to_order()
         if 'manufacture' in self.rule_ids.mapped('action'):
-            bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='normal')[self.product_id]
+            bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='normal')[(self.product_id, False)]
             return bom.product_uom_id._compute_quantity(bom.product_qty, self.product_uom)
         return qty_multiple_to_order
 

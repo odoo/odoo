@@ -18,7 +18,7 @@ class StockRule(models.Model):
         seller = seller[0]
         bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
             product,
-            company_id=buy_rule.picking_type_id.company_id.id,
+            company_ids=buy_rule.picking_type_id.company_id.ids,
             bom_type='subcontract',
             subcontractor=seller.partner_id)
         if not bom:
