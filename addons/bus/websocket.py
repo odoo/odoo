@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import psycopg2
+import queue
 import random
 import socket
 import struct
@@ -34,8 +35,41 @@ from odoo.tools import config
 _logger = logging.getLogger(__name__)
 
 
+class FairSemaphore:
+    """Fair Semaphore, based on `threading.Semaphore`, but with a FIFO ordering of
+    acquisitions.
+    """
+    def __init__(self, value=1):
+        self._sem = threading.Semaphore(value)
+        self._wait_queue = queue.Queue()
+
+    def __enter__(self):
+        return self.acquire()
+
+    def __exit__(self, *args):
+        return self.release()
+
+    def acquire(self):
+        if self._sem.acquire(blocking=False):
+            return True
+        event = threading.Event()
+        self._wait_queue.put(event)
+        event.wait()
+        return self._sem.acquire()
+
+    def release(self):
+        self._sem.release()
+        with suppress(queue.Empty):
+            event = self._wait_queue.get_nowait()
+            event.set()
+
+
 MAX_TRY_ON_POOL_ERROR = 10
-DELAY_ON_POOL_ERROR = 0.03
+DELAY_ON_POOL_ERROR = 0.2
+# Keep 10% of the cursors to handle connection requests, rest can be used to
+# fetch notifications.
+FETCH_CURSORS_COUNT = int(int(config.get("db_maxconn_gevent") or config["db_maxconn"]) * 0.9)
+FETCH_CURSORS_SEM = FairSemaphore(FETCH_CURSORS_COUNT)
 
 
 def acquire_cursor(db):
@@ -272,12 +306,12 @@ class Websocket:
                 if not readables:
                     self._send_ping_frame()
                     continue
-                if self.__notif_sock_r in readables:
-                    self._dispatch_bus_notifications()
                 if self.__socket in readables:
                     message = self._process_next_message()
                     if message is not None:
                         yield message
+                if self.__notif_sock_r in readables:
+                    self._dispatch_bus_notifications()
             except Exception as exc:
                 self._handle_transport_error(exc)
 
@@ -624,7 +658,7 @@ class Websocket:
         session = root.session_store.get(self._session.sid)
         if not session:
             raise SessionExpiredException()
-        with acquire_cursor(session.db) as cr:
+        with FETCH_CURSORS_SEM, acquire_cursor(session.db) as cr:
             env = api.Environment(cr, session.uid, session.context)
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
