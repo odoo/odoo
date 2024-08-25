@@ -28,9 +28,9 @@ class PosPaymentMethod(models.Model):
                         'MessageClass': "Service",
                         'MessageType': "Request",
                         'MessageCategory': "Payment",
-                        'SaleID': f'{pos_config.display_name} (ID:{pos_config.id})', #	Your unique ID for the POS system component to send this request from.
+                        'SaleID': f'{pos_config.display_name} (ID:{pos_config.id})', #  Your unique ID for the POS system component to send this request from.
                         'ServiceID': str(random_number), # Your unique ID for this request, consisting of 1-10 alphanumeric characters.
-                        'POIID': self.adyen_terminal_identifier, #	The unique ID of the terminal to send this request to.
+                        'POIID': self.adyen_terminal_identifier, #  The unique ID of the terminal to send this request to.
                     },
                     'PaymentRequest': {
                         'SaleData': {

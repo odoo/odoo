@@ -4,11 +4,14 @@ import json
 import logging
 import pprint
 import requests
+import uuid
+from datetime import datetime, timezone
 from urllib.parse import parse_qs
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessDenied
 from odoo.tools import hmac
+from odoo.addons.point_of_sale.models.pos_payment import PosPayment
 
 _logger = logging.getLogger(__name__)
 
@@ -52,6 +55,70 @@ class PosPaymentMethod(models.Model):
                                              company=existing_payment_method.company_id.name,
                                              payment_method=existing_payment_method.display_name))
 
+    def _adyen_get_sale_id(self, pos_payment: PosPayment):
+        config = pos_payment.pos_order_id.config_id
+        # return sprintf("%s (ID: %s)", config.display_name, config.id)
+        return f"{config.display_name} (ID: {config.id})"
+
+    def _adyen_common_message_header(self, pos_payment_id: PosPayment):
+        # FIXME: take just first 10 characters of the UUID
+        pos_payment_id.adyen_last_secret_key = uuid.uuid4().hex
+        return {
+            'ProtocolVersion': '3.0',
+            'MessageClass': 'Service',
+            'MessageType': 'Request',
+            'MessageCategory': "Payment",
+            'SaleID': self._adyen_get_sale_id(pos_payment),
+            # TODO: check that this has a value at this point
+            'ServiceID': pos_payment_id.adyen_last_secret_key,
+            'POIID': self.adyen_terminal_identifier,
+        }
+
+    def send_payment_request(self, pos_payment_id: int):
+        # FIXME: might need sudo
+        pos_payment = self.env['pos.payment'].browse(pos_payment_id)
+        if(pos_payment.amount < 0):
+            return UserError(_('Cannot process transactions with negative amount.'))
+        config = pos_payment.pos_order_id.config_id
+        order = pos_payment.pos_order_id
+        response = self.proxy_adyen_request({
+            'SaleToPOIRequest': {
+                'MessageHeader': {
+                    **self._adyen_common_message_header(pos_payment),
+                    'MessageCategory': "Payment",
+                },
+                'PaymentRequest': {
+                    'SaleData': {
+                        'SaleTransactionID': {
+                            'TransactionID': f"{order.uuid}--{order.session_id.id}",
+                            'TimeStamp': datetime.now(tz=timezone.utc).isoformat(timespec='seconds'), # date and time of the request in UTC format.
+                        },
+                        **({'SaleToAcquirerData': 'tenderOption=AskGratuity'} if config.adyen_ask_customer_for_tip else {}),
+                    },
+                    'PaymentTransaction': {
+                        'AmountsReq': {
+                            'Currency': config.currency_id.name,
+                            'RequestedAmount': pos_payment.amount,
+                        },
+                    },
+                },
+            },
+        })
+        if response.get('error') and response['error'].get('status_code') == 401:
+            raise UserError(_('Authentication failed. Please check your Adyen credentials.'))
+        if response.get('SaleToPOIRequest', {}).get('EventNotification', {}).get('EventToNotify') == 'Reject':
+            msg = ''
+            if response['SaleToPOIRequest'].get('EventNotification'):
+                params = parse_qs(response['SaleToPOIRequest']['EventNotification']['EventDetails'])
+                msg = params.get('message')
+            raise UserError(_('An unexpected error occurred. Message from Adyen: %s', msg))
+        return {
+            "payment_status": "waitingCard",
+        }
+
+    def send_payment_cancel():
+        pass
+
     def _get_adyen_endpoints(self):
         return {
             'terminal_request': 'https://terminal-api-%s.adyen.com/async',
@@ -70,6 +137,7 @@ class PosPaymentMethod(models.Model):
         return latest_response
 
     def proxy_adyen_request(self, data, operation=False):
+        print('proxy_adyen_request', data)
         ''' Necessary because Adyen's endpoints don't have CORS enabled '''
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group('point_of_sale.group_pos_user'):

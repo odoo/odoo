@@ -507,7 +507,11 @@ export class PaymentScreen extends Component {
         this.paymentLines.forEach(function (line) {
             line.can_be_reversed = false;
         });
-
+        // await this.pos.data.create("pos.payment", [line]);
+        const line_uuid = line.uuid;
+        this.pos.addPendingOrder([line.pos_order_id.id]);
+        await this.pos.syncAllOrders();
+        line = this.pos.get_order().payment_ids.find((line) => line.uuid === line_uuid);
         let isPaymentSuccessful = false;
         if (line.payment_method_id.payment_method_type === "qr_code") {
             const resp = await this.pos.showQR(line);
