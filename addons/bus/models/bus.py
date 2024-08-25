@@ -15,7 +15,7 @@ import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools import date_utils
+from odoo.tools import date_utils, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -82,6 +82,26 @@ def get_notify_payloads(channels):
                 get_notify_payloads(channels[pivot:]))
 
 
+def fetch_notifications(cr, channels, last=0):
+    """
+    Fetch bus notifications on the given channels.
+
+    :param list channels:
+    :return List[Dict[str, Any]]:
+    """
+    filter_condition = SQL("id > %s", last)
+    if last == 0:
+        timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT)
+        filter_condition = SQL("create_date > %s", timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+    query = SQL(
+        "SELECT id, message FROM bus_bus WHERE %s AND channel IN %s ORDER BY id",
+        filter_condition,
+        tuple(json_dump(channel_with_db(cr.dbname, c)) for c in channels)
+    )
+    cr.execute(query)
+    return [{"id": r[0], "message": json.loads(r[1])} for r in cr.fetchall()]
+
+
 class ImBus(models.Model):
 
     _name = 'bus.bus'
@@ -133,23 +153,7 @@ class ImBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0):
-        # first poll return the notification in the 'buffer'
-        if last == 0:
-            timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
-            domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-        else:  # else returns the unread notifications
-            domain = [('id', '>', last)]
-        channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
-        domain.append(('channel', 'in', channels))
-        notifications = self.sudo().search_read(domain)
-        # list of notification to return
-        result = []
-        for notif in notifications:
-            result.append({
-                'id': notif['id'],
-                'message': json.loads(notif['message']),
-            })
-        return result
+        return fetch_notifications(self.env.cr, channels, last)
 
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)

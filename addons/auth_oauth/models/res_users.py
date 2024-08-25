@@ -140,6 +140,3 @@ class ResUsers(models.Model):
                 if res:
                     return
             raise
-
-    def _get_session_token_fields(self):
-        return super(ResUsers, self)._get_session_token_fields() | {'oauth_access_token'}
