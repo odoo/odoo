@@ -9,6 +9,7 @@ To enforce users to use a two-factor authentication by default,
 and encourage users to configure their 2FA using an authenticator app.
     """,
     'depends': ['auth_totp', 'mail'],
+    'auto_install': True,
     'category': 'Extra Tools',
     'data': [
         'data/mail_template_data.xml',
