@@ -1065,6 +1065,13 @@ export class PosOrder extends Base {
             change: this.get_change() && formatCurrency(this.get_change()),
         };
     }
+    get originalSplittedOrder() {
+        const splittedOrderUuid = this.uiState.splittedOrderUuid;
+        if (splittedOrderUuid) {
+            return this.models["pos.order"].find((o) => o.uuid === splittedOrderUuid);
+        }
+        return null;
+    }
 }
 
 registry.category("pos_available_models").add(PosOrder.pythonModel, PosOrder);
