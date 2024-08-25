@@ -53,6 +53,7 @@ function closeProfileDialog({content, totp_state}) {
     return [{
         content,
         trigger,
+        allowDisabled: true,
         run(helpers) {
             const modal = document.querySelector(".o_dialog");
             if (modal) {
