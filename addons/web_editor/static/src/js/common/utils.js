@@ -367,10 +367,10 @@ function _getBgImageURL(el) {
 function _backgroundImageCssToParts(css) {
     const parts = {};
     css = css || '';
-    if (css.startsWith('url(')) {
-        const urlEnd = css.indexOf(')') + 1;
-        parts.url = css.substring(0, urlEnd).trim();
-        const commaPos = css.indexOf(',', urlEnd);
+    const matchedUrl = /^url\((['"]?)(.*?)\1\)/.exec(css);
+    if (matchedUrl) {
+        parts.url = matchedUrl[0];
+        const commaPos = css.indexOf(',', matchedUrl[0].length);
         css = commaPos > 0 ? css.substring(commaPos + 1) : '';
     }
     if (_isColorGradient(css)) {
