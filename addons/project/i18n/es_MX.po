@@ -8,8 +8,8 @@
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Martin Trigaux, 2024
-# Fernanda Alvarez, 2024
 # Lucia Pacheco, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Lucia Pacheco, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,6 +533,9 @@ msgid ""
 "                                        <span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
 "                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Create tasks by sending an email to </span>"
 msgstr ""
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\" style=\"opacity: 0.7;\">Cree tareas al enviar un correo electrónico a </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Cree tareas al enviar un correo electrónico a </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Cree tareas al enviar un correo electrónico a </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1216,22 +1219,22 @@ msgstr "Programar recordatorio o marcar como hecho"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__day
 msgid "By Day"
-msgstr ""
+msgstr "Por día"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__month
 msgid "By Month"
-msgstr ""
+msgstr "Por mes"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__year
 msgid "By Year"
-msgstr ""
+msgstr "Por año"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
 msgid "By quarter"
-msgstr ""
+msgstr "Por trimestre"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -2554,6 +2557,8 @@ msgid ""
 "It seems that this task is part of a recurrence. You must keep it as a model"
 " to create the next occurences."
 msgstr ""
+"Parece que esta tarea pertenece a una recurrencia. Debe mantenerla como "
+"modelo para crear las siguientes ocurrencias."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january

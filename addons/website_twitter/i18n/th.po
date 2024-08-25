@@ -4,22 +4,36 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Wichanon Jamwutthipreecha, 2021
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr ", ให้<strong>สร้างโปรเจ็กต์</strong>โดยมีข้อมูลต่อไปนี้:"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr ""
+"คลิกที่ <strong>ยกระดับ</strong> จากนั้นคลิกที่ <strong>ใช้</strong> "
+"และกรอกแบบฟอร์มให้สมบูรณ์"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -41,8 +55,8 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr "<strong>เรียกกลับ URL: </strong>ปล่อยว่าง"
+msgid "<strong>App Name: </strong> choose a unique name"
+msgstr "<strong>ชื่อแอป: </strong> เลือกชื่อที่ไม่ซ้ำ"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -56,8 +70,8 @@ msgstr "<strong>ชื่อ: </strong> การผสาน Odoo Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
-msgstr "<strong>เว็บไซต์: </strong>"
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
+msgstr "<strong>กรณีการใช้งาน:</strong> การฝังทวีตในเว็บไซต์"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -70,15 +84,6 @@ msgstr "API Key"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr "API secret"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr ""
-"ยอมรับเงื่อนไขการใช้งานและคลิกที่ปุ่มสร้างแอปพลิเคชัน Twitter "
-"ของคุณที่ด้านล่าง"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -97,17 +102,8 @@ msgstr "ตั้งค่าการกำหนดค่า"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
-msgstr ""
-"คัดลอก/วาง Consumer Key( คีย์ API) และ Consumer Secret (รหัสลับของ API) "
-"ด้านล่าง"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "สร้างแอปพลิเคชัน Twitter ใหม่บน"
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
+msgstr "คัดลอก/วางค่าคีย์ API และรหัสลับของคีย์ API ลงในช่องด้านบน"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -129,6 +125,11 @@ msgstr "แสดงชื่อ"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "รายการโปรดจาก"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
+msgstr "รับการเข้าถึงแบบยกระดับโดยไปที่"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -172,6 +173,25 @@ msgstr "อัปเดตครั้งล่าสุดโดย"
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
+msgstr "เข้าสู่ระบบหรือสร้างบัญชีที่"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "บน"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr ""
+"เมื่อเชื่อมต่อแล้วและยังไม่ได้ดำเนินการ "
+"ให้ดำเนินการตามขั้นตอนการเข้าถึงพอร์ทัล Twitter ให้เสร็จสิ้น"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
@@ -218,11 +238,6 @@ msgid ""
 msgstr ""
 "ชื่อหน้าจอของบัญชี Twitter ที่คุณต้องการโหลดรายการโปรด "
 "ไม่จำเป็นต้องตรงกับคีย์ Key/Secret"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "สลับไปที่แท็บคีย์ API: <br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -323,6 +338,11 @@ msgid "Twitter Configuration"
 msgstr "การกำหนดค่า Twitter"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
+msgstr "พอร์ทัลทวิตเตอร์"
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -395,10 +415,15 @@ msgstr "เว็บไซต์ Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+msgid "https://developer.twitter.com/"
+msgstr "https://developer.twitter.com/"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "ด้วยค่าต่อไปนี้:"
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr "https://developer.twitter.com/en/portal/products"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/portal/"
+msgstr "https://developer.twitter.com/portal/"

@@ -7,20 +7,35 @@
 # Martin Trigaux, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Abe Manyo, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr ", <strong>buat project</strong> dengan informasi berikut:"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr ""
+", klik pada <strong>Elevated</strong> lalu pada <strong>Terapkan</strong> "
+"untuk akhirnya menyelesaikan formulir."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -38,8 +53,8 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr ""
+msgid "<strong>App Name: </strong> choose a unique name"
+msgstr "<strong>Nama App: </strong> pilih nama yang unik"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -53,8 +68,8 @@ msgstr "<strong>Nama: </strong> Integrasi Odoo Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
-msgstr ""
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
+msgstr "<strong>Kasus Penggunaan: </strong> Embed Tweet di website"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -67,13 +82,6 @@ msgstr "API Key"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr "API secret"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -92,15 +100,8 @@ msgstr "Pengaturan Konfigurasi"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
-msgstr ""
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "Membuat sebuah aplikasi Twitter yang baru di"
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
+msgstr "Salin/Tempel value API Key dan API Key Secret ke field di atas"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -122,6 +123,11 @@ msgstr "Nama Tampilan"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "Favorit Dari"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
+msgstr "Dapatkan akses Elevated dengan pergi ke"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -164,6 +170,25 @@ msgstr "Terakhir diperbarui oleh"
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
+msgstr "Login atau buat akun pada"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "On the"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr ""
+"Setelah terhubung, dan bila belum dilakukan, selesaikan proses akses portal "
+"Twitter pada"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
@@ -211,11 +236,6 @@ msgid ""
 msgstr ""
 "Nama layar Twitter account yang Anda ingin memuat favorit. Tidak memiliki "
 "untuk mencocokkan API Key/rahasia."
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -315,6 +335,11 @@ msgid "Twitter Configuration"
 msgstr "Twitter Configuration"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
+msgstr "Portal Twitter"
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -387,10 +412,15 @@ msgstr "Website Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://Apps.twitter.com/app/New"
+msgid "https://developer.twitter.com/"
+msgstr "https://developer.twitter.com/"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "dengan nilai berikut:"
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr "https://developer.twitter.com/en/portal/products"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/portal/"
+msgstr "https://developer.twitter.com/portal/"

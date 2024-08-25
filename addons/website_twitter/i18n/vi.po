@@ -5,20 +5,35 @@
 # Translators:
 # Martin Trigaux, 2021
 # Vo Thanh Thuy, 2021
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2021\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr ", <strong>tạo một dự án</strong> với thông tin sau:"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr ""
+", nhấp vào <strong>Nâng cao</strong> rồi nhấp vào <strong>Áp dụng</strong> "
+"và cuối cùng là hoàn thành biểu mẫu."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -40,8 +55,8 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr "<strong>Callback URL: </strong>Để trống"
+msgid "<strong>App Name: </strong> choose a unique name"
+msgstr "<strong>Tên ứng dụng: </strong> chọn tên duy nhất"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -55,8 +70,8 @@ msgstr "<strong>Tên: </strong> Odoo tích hợp Twitter "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
-msgstr "<strong>Website: </strong>"
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
+msgstr "<strong>Trường hợp sử dụng: </strong> Chèn Tweet vào trang web"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -69,14 +84,6 @@ msgstr "API Key"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr "API secret"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr ""
-"Chấp nhận điều khoản sử dụng và bấm vào nút Tạo ứng dụng Twitter ở cuối"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -95,17 +102,10 @@ msgstr "Thiết lập cấu hình"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
 msgstr ""
-"Sao chép/Dán mã khóa Consumer Key (API Key) và Consumer Secret (API Secret) "
-"dưới đây. "
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "Tạo ứng dụng Twitter mới trên"
+"Sao chép/Dán các giá trị Mã khóa API và Bí mật mã khoá API vào các trường "
+"trên"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -127,6 +127,11 @@ msgstr "Tên hiển thị"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "Yêu thích từ"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
+msgstr "Nhận quyền truy cập nâng cao bằng cách truy cập"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -170,6 +175,25 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
+msgstr "Đăng nhập hoặc tạo tài khoản trên"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "Trên"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr ""
+"Sau khi kết nối và nếu chưa hoàn tất, hãy hoàn thành quy trình truy cập cổng"
+" Twitter trên"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
@@ -217,11 +241,6 @@ msgid ""
 msgstr ""
 "Tên hiển thị của tài khoản Twitter mà bạn tải về tin yêu thích. Không nhất "
 "thiết phải khớp với API Key/Secret."
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "Chuyển sang thẻ API Key: <br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -320,6 +339,11 @@ msgid "Twitter Configuration"
 msgstr "Cấu hình Twitter"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
+msgstr "Cổng thông tin Twitter"
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -392,10 +416,15 @@ msgstr "Website Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+msgid "https://developer.twitter.com/"
+msgstr "https://developer.twitter.com/"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "với các giá trị sau: "
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr "https://developer.twitter.com/en/portal/products"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/portal/"
+msgstr "https://developer.twitter.com/portal/"

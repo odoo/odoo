@@ -7,20 +7,36 @@
 # Dorin Hongu <dhongu@gmail.com>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
+# Wil Odoo, 2024
+# Maria Muntean, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2021\n"
+"Last-Translator: Maria Muntean, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr ", <strong>creați un proiect</strong> cu următoarele informații:"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr ""
+", apăsați pe <strong>Ridicat</strong> apoi pe <strong>Aplică</strong> și, în"
+" final, completați formularul."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -43,8 +59,8 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr ""
+msgid "<strong>App Name: </strong> choose a unique name"
+msgstr "<strong>Nume aplicație: </strong> alegeți un nume unic"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -58,8 +74,10 @@ msgstr "<strong>Nume:</strong> Integrare Odoo Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
-msgstr "<strong>Website: </strong>"
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
+msgstr ""
+"<strong>Exemplu de utilizare: </strong> Încorporarea Tweet-uri pe un site "
+"web"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -72,15 +90,6 @@ msgstr "Cheie API"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr "Secret API"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr ""
-"Acceptați termenii de utilizare și faceți clic pe butonul Creați aplicația "
-"dumneavoastră Twitter din partea de jos"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -99,15 +108,9 @@ msgstr "Setări de configurare"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
 msgstr ""
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "Creați o nouă aplicație Twitter pe"
+"Copiați/inserați valorile API Key și API Key Secret în câmpurile de mai sus"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -131,6 +134,11 @@ msgid "Favorites From"
 msgstr "Favorite din"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
+msgstr "Obțineți acces elevat accesând"
+
+#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Obțineți favoriții de pe acest nume de ecran"
@@ -139,7 +147,7 @@ msgstr "Obțineți favoriții de pe acest nume de ecran"
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
-msgstr ""
+msgstr "Eroare HTTP: Ceva nu este configurat corect"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -173,6 +181,25 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
+msgstr "Conectați-vă sau creați un cont pe"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "În ziua de"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr ""
+"Odată conectat și dacă nu ați făcut-o deja, finalizați procesul de acces la "
+"portalul Twitter pe"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
@@ -220,11 +247,6 @@ msgid ""
 msgstr ""
 "Numele ecranului contului Twitter din care doriți să încărcați favorite. Nu "
 "trebuie să se potrivească cu cheia / secretul API."
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "Treceți la fila Chei API: <br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -325,6 +347,11 @@ msgid "Twitter Configuration"
 msgstr "Configurare Twitter"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
+msgstr "Portal Twitter"
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -354,7 +381,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "Twitter server uri"
-msgstr ""
+msgstr "Twitter server uri"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -368,6 +395,8 @@ msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr ""
+"Utilizatorul Twitter @%(username)s are mai puțin de 12 tweet-uri favorite.  "
+"Vă rugăm să adăugați mai multe sau să alegeți un nume de ecran diferit."
 
 #. module: website_twitter
 #. openerp-web
@@ -381,7 +410,7 @@ msgstr "Utilizatorul Twitter"
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
+msgstr "Twitter: Obțineți noi favorite"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -396,10 +425,15 @@ msgstr "Site-ul Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+msgid "https://developer.twitter.com/"
+msgstr "https://developer.twitter.com/"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "cu următoarele valori:"
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr "https://developer.twitter.com/en/portal/products"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/portal/"
+msgstr "https://developer.twitter.com/portal/"

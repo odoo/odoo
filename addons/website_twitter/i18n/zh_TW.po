@@ -6,20 +6,33 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Martin Trigaux, 2023
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr "，使用以下資料<strong>建立一個專案項目</strong>："
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr "，按「<strong>提升</strong>」，然後按「<strong>套用</strong>」，最後完成填寫表格。"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -41,8 +54,8 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr "<strong>召回(Callback)網址： </strong>留空"
+msgid "<strong>App Name: </strong> choose a unique name"
+msgstr "<strong>應用程式名稱：</strong>選擇一個獨一無二的名稱"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -56,8 +69,8 @@ msgstr "<strong>名稱：</strong>Odoo Twitter 整合"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
-msgstr "<strong>網站: </strong>"
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
+msgstr "<strong>使用案例：</strong>在網站中嵌入推文"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -70,13 +83,6 @@ msgstr "API 金鑰"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr "API 密鑰"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr "同意使用條款，並按一下底部的「建立你的 Twitter 應用程式」按鈕"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -93,15 +99,8 @@ msgstr "配置設定"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
-msgstr "複製/粘貼消費者金鑰（API Key）和消費者金鑰 （API Secret）於後 。"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "建立新的Twitter模組"
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
+msgstr "將 API 密鑰以及 API 密鑰秘密值，複製貼上至上述欄位"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -123,6 +122,11 @@ msgstr "顯示名稱"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "最愛來源"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
+msgstr "獲取提升的存取權限，請前往"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -167,6 +171,23 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
+msgstr "登入或建立新帳戶在"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "於此"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr "成功連線後，若未曾做完，請完成 Twitter 門戶存取流程，在"
+
+#. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
@@ -206,11 +227,6 @@ msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
 msgstr "用以載入最愛資料的 Twitter 帳戶的螢幕名稱。此名稱無需與 API 密鑰/秘密相符。"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "切換到API密鑰選項："
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -302,6 +318,11 @@ msgid "Twitter Configuration"
 msgstr "Twitter 配置"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
+msgstr "Twitter 門戶"
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -368,10 +389,15 @@ msgstr "網站 Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+msgid "https://developer.twitter.com/"
+msgstr "https://developer.twitter.com/"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "使用以下數值:"
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr "https://developer.twitter.com/en/portal/products"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/portal/"
+msgstr "https://developer.twitter.com/portal/"

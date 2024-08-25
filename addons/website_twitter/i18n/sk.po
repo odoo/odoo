@@ -5,22 +5,35 @@
 # Translators:
 # Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -42,8 +55,8 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
-msgstr "<strong>Zavolat´ späť URL: </strong>nechajte prázdne"
+msgid "<strong>App Name: </strong> choose a unique name"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -57,8 +70,8 @@ msgstr "<strong>Meno: </strong>Integrácia Odoo Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
-msgstr "<strong>Webstránka: </strong>"
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -71,15 +84,6 @@ msgstr "API Kľúč"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr "API je tajné"
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr ""
-"Prijmite podmienky používania a v dolnej časti kliknite na tlačidlo Vytvoriť"
-" aplikáciu Twitter"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -98,17 +102,8 @@ msgstr "Nastavenia konfigurácie"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
 msgstr ""
-"Nižšie skopírujte / prilepte kľúč spotrebiteľa (kľúč API) a kľúča tajomstva "
-"spotrebiteľa (tajomstvo API)."
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "Vytvorte novú Twitter aplikáciu na"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -130,6 +125,11 @@ msgstr "Zobrazovaný názov"
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "Obľúbené položky od"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -172,6 +172,23 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "Na"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
@@ -220,11 +237,6 @@ msgid ""
 msgstr ""
 "Názov obrazovky Twitter účtu z ktorého chcete nahrať obľúbené. Nemusí sa "
 "zhodovať s API kľúčom / Tajomstvom."
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "Prepnúť na záložku API kľúčov: <br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -323,6 +335,11 @@ msgid "Twitter Configuration"
 msgstr "Twitter konfigurácia"
 
 #. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -393,10 +410,15 @@ msgstr "Webstránka Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+msgid "https://developer.twitter.com/"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "s nasledovnými hodnotami:"
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/portal/"
+msgstr ""

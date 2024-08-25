@@ -8,7 +8,6 @@
 # Thomas Deleval <thd@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2022
-# Fred Gilson <fgi@odoo.com>, 2022
 # SAKodoo <sak@odoo.com>, 2022
 # RHTodoo, 2022
 # Moka Tourisme <hello@mokatourisme.fr>, 2022
@@ -16,6 +15,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +191,7 @@ msgid ""
 "                    "
 msgstr ""
 "Vous retrouvez tous les paniers abandonnés ici. Si les visiteurs ont encodé "
-"leurs coordonnées, envoyez-leur un email de relance."
+"leurs coordonnées, envoyez-leur un e-mail de relance."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -311,7 +311,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">Email de confirmation</span>"
+msgstr "<span class=\"o_form_label\">E-mail de confirmation</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -588,8 +588,8 @@ msgstr ""
 "                <tr><td valign=\"middle\" align=\"left\" t-out=\"company.name or ''\">My Company (San Francisco)</td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    <t t-out=\"company.phone or ''\">+1 650-123-4567</t>\n"
-"                    <t t-if=\"company.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ company.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.email or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if=\"company.e-mail\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ company.e-mail }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.e-mail or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"company.website\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ company.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.website or ''\">http://www.example.com</a>\n"
@@ -988,7 +988,7 @@ msgstr "Quantité du panier"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr "Email de relance"
+msgstr "E-mail de relance"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -998,7 +998,7 @@ msgstr "Le panier est abandonné après"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr "Email de relance déjà envoyé"
+msgstr "E-mail de relance déjà envoyé"
 
 #. module: website_sale
 #. openerp-web
@@ -1449,7 +1449,7 @@ msgstr ""
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Accès non disponible, ne pas tenir compte de cette donnée dans l'email "
+"Accès non disponible, ne pas tenir compte de cette donnée dans l'e-mail "
 "digest de l'utilisateur"
 
 #. module: website_sale
@@ -1549,7 +1549,7 @@ msgstr "Modèle de courriel"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Assistant de composition d'emails"
+msgstr "Assistant de composition d'e-mails"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1723,7 +1723,7 @@ msgid ""
 "the account settings or contact your administrator."
 msgstr ""
 "Si vous commandez pour une personne externe, placez votre commande via le "
-"backend. Si vous voulez modifier votre nom ou adresse email, faites les "
+"backend. Si vous voulez modifier votre nom ou adresse e-mail, faites les "
 "modifications dans les paramètres du compte ou contactez votre "
 "administrateur."
 
@@ -1767,7 +1767,8 @@ msgstr "Nom de l'image"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Adresse email incorrecte ! Merci de saisir une adresse email valable."
+msgstr ""
+"Adresse e-mail incorrecte ! Merci de saisir une adresse e-mail valable."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
@@ -2732,12 +2733,12 @@ msgstr "Articles Vus récemment"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr "Email de relance envoyé"
+msgstr "E-mail de relance envoyé"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr "Email de relance à envoyer"
+msgstr "E-mail de relance à envoyer"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -2950,12 +2951,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr "Envoyer un email de relance du panier"
+msgstr "Envoyer un e-mail de relance du panier"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr "Envoyer un email de relance"
+msgstr "Envoyer un e-mail de relance"
 
 #. module: website_sale
 #. openerp-web
@@ -2963,13 +2964,13 @@ msgstr "Envoyer un email de relance"
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
 msgstr ""
-"Envoyez un email de relance aux visiteurs qui n'ont pas terminé leur "
+"Envoyez un e-mail de relance aux visiteurs qui n'ont pas terminé leur "
 "commande."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a recovery email when a cart is abandoned"
-msgstr "Envoyez un email de relance lorsqu'un panier est abandonné"
+msgstr "Envoyez un e-mail de relance lorsqu'un panier est abandonné"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
@@ -3330,7 +3331,7 @@ msgstr "Cette combinaison n'existe pas."
 msgid ""
 "This email template is suggested by default when you send a recovery email."
 msgstr ""
-"Ce modèle d'email est suggéré par défaut lorsque vous envoyez un email de "
+"Ce modèle d'e-mail est suggéré par défaut lorsque vous envoyez un e-mail de "
 "relance."
 
 #. module: website_sale
@@ -3723,7 +3724,7 @@ msgid ""
 "                If they completed their address, you should send them a recovery email!"
 msgstr ""
 "Vous trouverez ici tous les paniers abandonnés par vos visiteurs.\n"
-"                S'ils ont rempli leur adresse, vous devriez leur envoyer un email de relance !"
+"                S'ils ont rempli leur adresse, vous devriez leur envoyer un e-mail de relance !"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3744,7 +3745,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #, python-format
 msgid "Your Email"
-msgstr "Votre email"
+msgstr "Votre e-mail"
 
 #. module: website_sale
 #. openerp-web

@@ -19,6 +19,7 @@
 # Cécile Collart <cco@odoo.com>, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +68,7 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
-"%(email)s n'est pas reconnue comme une adresse email valide. Ceci est "
+"%(email)s n'est pas reconnue comme une adresse e-mail valide. Ceci est "
 "obligatoire pour créer un nouveau client."
 
 #. module: mail
@@ -413,7 +414,7 @@ msgid ""
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"<strong>Email de masse</strong> pour\n"
+"<strong>E-mail de masse</strong> pour\n"
 "<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">le fichier sélectionné</span>\n"
 "<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">le filtre de recherche actuellement utilisé</span>.\n"
 "</span>\n"
@@ -809,12 +810,12 @@ msgstr "Ajouter une description"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr "Ajoutez un nouveau %(document)s ou envoyez un email à %(email_link)s"
+msgstr "Ajoutez un nouveau %(document)s ou envoyez un e-mail à %(email_link)s"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address to the blacklist"
-msgstr "Ajouter une adresse email à la liste noire"
+msgstr "Ajouter une adresse e-mail à la liste noire"
 
 #. module: mail
 #. openerp-web
@@ -999,14 +1000,14 @@ msgstr "Un jeton d'accès doit être fourni pour chaque pièce jointe."
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr "Un email est demandé pour trouver_ou_créer du travail"
+msgstr "Un e-mail est demandé pour trouver_ou_créer du travail"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an email."
-msgstr "Une erreur est survenue lors de l'envoi d'un email."
+msgstr "Une erreur est survenue lors de l'envoi d'un e-mail."
 
 #. module: mail
 #. openerp-web
@@ -1090,7 +1091,7 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to unblacklist this Email Address?"
 msgstr ""
-"Êtes-vous sûr de vouloir supprimer cette adresse email de la liste noire ?"
+"Êtes-vous sûr de vouloir supprimer cette adresse e-mail de la liste noire ?"
 
 #. module: mail
 #. openerp-web
@@ -1394,7 +1395,7 @@ msgstr "Navigateur par défaut"
 #: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
-msgstr "Email cc"
+msgstr "E-mail cc"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -1503,7 +1504,7 @@ msgstr "Catchall"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr "Email Catchall"
+msgstr "E-mail Catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -1762,7 +1763,7 @@ msgstr "Sociétés"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "Rédiger un email"
+msgstr "Rédiger un e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -1933,7 +1934,7 @@ msgstr "Créer un nouveau %(document)s"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr "Créer un nouveau %(document)s en envoyant un email à %(email_link)s"
+msgstr "Créer un nouveau %(document)s en envoyant un e-mail à %(email_link)s"
 
 #. module: mail
 #. openerp-web
@@ -2053,7 +2054,7 @@ msgstr "Nom du canal personnalisé"
 msgid "Customer is required for inbox / email notification"
 msgstr ""
 "Le Client est requis pour la notification dans la boîte de réception / par "
-"email"
+"e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2148,7 +2149,7 @@ msgstr ""
 "Destinataires par défaut de l'enregistrement :\n"
 "- partenaire (utilisant l'ID d'un partenaire ou le champ partner_id)\n"
 "OU\n"
-"- courriel (utilisant le champ email_from ou email)"
+"- courriel (utilisant le champ email_from ou e-mail)"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -2512,7 +2513,7 @@ msgstr "Date d'échéance"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
 msgid "Duplicated Email"
-msgstr "Email dupliqué"
+msgstr "E-mail dupliqué"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -2593,22 +2594,22 @@ msgstr "Incorporer les alias de messagerie"
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr "Liste Noire Email"
+msgstr "Liste Noire E-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
 msgid "Email CC management"
-msgstr "Gestion de l'email cc"
+msgstr "Gestion de l'e-mail cc"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr "Configuration de l'email"
+msgstr "Configuration de l'e-mail"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
 msgid "Email Mass Mailing"
-msgstr "Email Marketing"
+msgstr "E-mail Marketing"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -2618,7 +2619,7 @@ msgstr "Aperçu du courriel"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email Search"
-msgstr "Recherche des emails"
+msgstr "Recherche des e-mails"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
@@ -2641,12 +2642,12 @@ msgstr "Modèles de courriels"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Discussion par email"
+msgstr "Discussion par e-mail"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
 msgid "Email address already exists!"
-msgstr "L'adresse email existe déjà !"
+msgstr "L'adresse e-mail existe déjà !"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
@@ -2662,7 +2663,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to which replies will be redirected"
-msgstr "Adresse email vers laquelle les réponses seront redirigées"
+msgstr "Adresse e-mail vers laquelle les réponses seront redirigées"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2670,8 +2671,8 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
 msgstr ""
-"Adresse email vers laquelle les réponses seront redirigées lors de l'envoi "
-"d'emails en masse"
+"Adresse e-mail vers laquelle les réponses seront redirigées lors de l'envoi "
+"d'e-mails en masse"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -2680,15 +2681,15 @@ msgid ""
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
 msgstr ""
-"Adresse email vers laquelle les réponses seront redirigées lors de l'envoi "
-"d'emails en masse ; seulement utilisée lorsque la réponse n'est pas inscrite"
-" dans le fil de discussion original."
+"Adresse e-mail vers laquelle les réponses seront redirigées lors de l'envoi "
+"d'e-mails en masse ; seulement utilisée lorsque la réponse n'est pas "
+"inscrite dans le fil de discussion original."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
-msgstr "Les adresses qui sont sur liste noire ne recevront plus d'emails."
+msgstr "Les adresses qui sont sur liste noire ne recevront plus d'e-mails."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -2704,12 +2705,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "E-mail cc"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Assistant de composition d'emails"
+msgstr "Assistant de composition d'e-mails"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -2720,13 +2721,13 @@ msgstr "Message du courriel"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
-msgstr "Assistant de renvoi d'email"
+msgstr "Assistant de renvoi d'e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Email templates"
-msgstr "Modèles d'email"
+msgstr "Modèles d'e-mail"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -3115,7 +3116,7 @@ msgstr "Icône Font Awesome e.g. fa-tasks"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr "Email mis en forme"
+msgstr "E-mail mis en forme"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -3248,7 +3249,7 @@ msgstr "Routage HTTP"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr "Recevoir par email"
+msgstr "Recevoir par e-mail"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
@@ -3503,7 +3504,7 @@ msgid ""
 "it is considered as being in UTC timezone."
 msgstr ""
 "Si cette option est définie, le gestionnaire de file d'attente enverra "
-"l'email après la date. Si cette option n'est pas définie, l'e-mail sera "
+"l'e-mail après la date. Si cette option n'est pas définie, l'e-mail sera "
 "envoyée dès que possible. Sauf si un fuseau horaire est spécifié, il est "
 "considéré comme étant dans le fuseau horaire UTC."
 
@@ -3515,7 +3516,7 @@ msgid ""
 "expression."
 msgstr ""
 "Si l'option est définie, le gestionnaire de la file d'attente enverra "
-"l'email après la date. Si l'option n'est pas définie, l'email sera envoyé "
+"l'e-mail après la date. Si l'option n'est pas définie, l'e-mail sera envoyé "
 "dès que possible. Vous pouvez utiliser des expressions dynamiques."
 
 #. module: mail
@@ -3536,8 +3537,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si l'adresse email est sur la blacklist, le contact ne recevra plus de mass "
-"mailing d'aucune liste."
+"Si l'adresse e-mail est sur la blacklist, le contact ne recevra plus de mass"
+" mailing d'aucune liste."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -3558,7 +3559,7 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Si vous avez configuré un domain \"catch-all\" email redirigé vers le "
+"Si vous avez configuré un domain \"catch-all\" e-mail redirigé vers le "
 "serveur d'Odoo, entrez le nom du domaine ici."
 
 #. module: mail
@@ -3697,7 +3698,7 @@ msgstr "Adresse e-mail non-valide"
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr "Adresse email invalide %r"
+msgstr "Adresse e-mail invalide %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -3714,7 +3715,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr "Champ email principal invalide sur le modèle %s"
+msgstr "Champ e-mail principal invalide sur le modèle %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -4061,7 +4062,7 @@ msgstr "Quitter ce canal"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Liste de cc d'emails entrants."
+msgstr "Liste de cc d'e-mails entrants."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
@@ -4310,7 +4311,7 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
-"Gérez les réponses comme de nouveaux emails entrants, au lieu que les "
+"Gérez les réponses comme de nouveaux e-mails entrants, au lieu que les "
 "réponses aillent dans le même fil de discussion."
 
 #. module: mail
@@ -4492,7 +4493,7 @@ msgstr "Message posté sur \"%s\""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
 msgid "Message recipients (emails)"
-msgstr "Destinataires du message (emails)"
+msgstr "Destinataires du message (e-mails)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__references
@@ -4626,12 +4627,12 @@ msgstr "Activité minimale pour la détection vocale"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr "Email manquant"
+msgstr "E-mail manquant"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
 msgid "Missing email addresss"
-msgstr "Adresse email manquante"
+msgstr "Adresse e-mail manquante"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
@@ -4963,7 +4964,7 @@ msgstr "Aucun"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr "Email normalisé"
+msgstr "E-mail normalisé"
 
 #. module: mail
 #. openerp-web
@@ -4986,7 +4987,7 @@ msgstr "Notifications"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_notification
 msgid "Notification Email"
-msgstr "Notifications par email"
+msgstr "Notifications par e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
@@ -5351,7 +5352,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
-"d'un email. S'il n'est pas défini, la version anglaise sera utilisée. Il "
+"d'un e-mail. S'il n'est pas défini, la version anglaise sera utilisée. Il "
 "doit généralement s'agir d'une expression d'espace réservé qui fournit le "
 "langage approprié, par ex. {{ object.partner_id.lang }}."
 
@@ -5371,7 +5372,7 @@ msgid ""
 " This has an impact on the generated message-id."
 msgstr ""
 "Discussion originale : les réponses vont au fil de discussion du document original. \n"
-" Une autre adresse email : les réponses vont à l'adresse email mentionnée dans l'ID de suivi du message au lieu du fil de discussion du document original. \n"
+" Une autre adresse e-mail : les réponses vont à l'adresse e-mail mentionnée dans l'ID de suivi du message au lieu du fil de discussion du document original. \n"
 " Ceci a un impact sur l'ID du message généré."
 
 #. module: mail
@@ -5562,7 +5563,7 @@ msgid ""
 "will still be able to read the content of this message and reply to it."
 msgstr ""
 "Attention : Les abonnés de ce document qui ont reçu une notification par "
-"email seront toujours en mesure de lire le contenu de ce message et d'y "
+"e-mail seront toujours en mesure de lire le contenu de ce message et d'y "
 "répondre."
 
 #. module: mail
@@ -5692,7 +5693,7 @@ msgid ""
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
 "Politique de gestion des notifications de messagerie:\n"
-"- Gérer par Emails: Les notifications sont envoyées à votre adresse email\n"
+"- Gérer par E-mails: Les notifications sont envoyées à votre adresse e-mail\n"
 "- Gérer dans Odoo: Les notifications apparaitront dans votre Boite de Réception Odoo"
 
 #. module: mail
@@ -6140,7 +6141,7 @@ msgstr "Supprimer"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr "Wizard pour supprimer l'email de la liste noire"
+msgstr "Wizard pour supprimer l'e-mail de la liste noire"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -6495,8 +6496,9 @@ msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
 msgstr ""
-"Sélectionnez l'action à effectuer sur chaque email et corrigez l'adresse si "
-"nécessaire. L'adresse modifiée sera sauvegarder sur le contat correspondant."
+"Sélectionnez l'action à effectuer sur chaque e-mail et corrigez l'adresse si"
+" nécessaire. L'adresse modifiée sera sauvegarder sur le contat "
+"correspondant."
 
 #. module: mail
 #. openerp-web
@@ -7176,7 +7178,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr "L'email envoyé à"
+msgstr "L'e-mail envoyé à"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -7236,7 +7238,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr "Le gestionnaire de file d'attente enverra l'email après la date"
+msgstr "Le gestionnaire de file d'attente enverra l'e-mail après la date"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -7292,13 +7294,13 @@ msgstr "Ce(tte)"
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "This action will send an email."
-msgstr "Cette action enverra un email"
+msgstr "Cette action enverra un e-mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Cette adresse email fait partie de la liste noire. Cliquez pour l'en "
+"Cette adresse e-mail fait partie de la liste noire. Cliquez pour l'en "
 "retirer."
 
 #. module: mail
@@ -7342,7 +7344,7 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"Cette option supprime définitivement quelconque trace de l'email après son "
+"Cette option supprime définitivement quelconque trace de l'e-mail après son "
 "envoi, y compris du Menu technique dans les Paramètres, afin de préserver de"
 " l'espace de stockage dans votre base de données Odoo."
 
@@ -7394,7 +7396,7 @@ msgstr "Vers"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
 msgid "To (Emails)"
-msgstr "À (emails)"
+msgstr "À (e-mails)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
@@ -8279,7 +8281,7 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
-"Vous n'avez pas les droits d'accès aux emails sur liste noire. Veuillez "
+"Vous n'avez pas les droits d'accès aux e-mails sur liste noire. Veuillez "
 "contacter votre administrateur."
 
 #. module: mail
