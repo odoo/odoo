@@ -17,6 +17,7 @@ import { PageOption } from "./page_options";
 import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
 import { router } from "@web/core/browser/router";
+import { OptimizeSEODialog } from '@website/components/dialog/seo';
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -98,6 +99,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.orm = useService('orm');
         this.dialogs = useService('dialog');
         this.action = useService('action');
+        this.notificationService = useService("notification");
 
         useBus(this.websiteService.bus, 'LEAVE-EDIT-MODE', (ev) => this.leaveEditMode(ev.detail));
 
@@ -1138,7 +1140,64 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @private
      */
     async _onSaveRequest(event) {
-        let callback = () => this.leaveEditMode({ forceLeave: true });
+        let callback = () => {
+            this.leaveEditMode({ forceLeave: true });
+            if (this.websiteService.currentWebsite.metadata.canPublish) {
+                const {
+                    mainObject: { id, model },
+                } = this.websiteService.currentWebsite.metadata;
+                this.orm.read(model, [id], ["is_published"]).then(
+                    (record) => {
+                        rpc("/website/get_seo_data", {
+                            res_id: id,
+                            res_model: model,
+                        }).then(
+                            (seo_data) => {
+                                if (record[0].is_published && seo_data) {
+                                    let message;
+                                    if (
+                                        !seo_data.website_meta_title ||
+                                        seo_data.website_meta_title === ""
+                                    ) {
+                                        message = _t("Page title not set.");
+                                    } else if (
+                                        !seo_data.website_meta_description ||
+                                        seo_data.website_meta_description === ""
+                                    ) {
+                                        message = _t("Page description not set.");
+                                    }
+                                    if (
+                                        !seo_data.website_meta_title ||
+                                        seo_data.website_meta_title === "" ||
+                                        !seo_data.website_meta_description ||
+                                        seo_data.website_meta_description === ""
+                                    ) {
+                                        this.notificationService.add(message, {
+                                            type: "warning",
+                                            sticky: false,
+                                            buttons: [
+                                                {
+                                                    name: _t("Optimize SEO"),
+                                                    onClick: () => {
+                                                        this.dialogs.add(OptimizeSEODialog);
+                                                    },
+                                                },
+                                            ],
+                                        });
+                                    }
+                                }
+                            },
+                            (err) => {
+                                throw err;
+                            }
+                        );
+                    },
+                    (err) => {
+                        throw err;
+                    }
+                );
+            }
+        };
         if (event.data.reload || event.data.reloadEditor) {
             this.props.willReload(this._getDummmySnippetsEl());
             callback = async () => {

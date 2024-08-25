@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { Component, xml, useState } from "@odoo/owl";
+import { OptimizeSEODialog } from '@website/components/dialog/seo';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -24,6 +26,8 @@ class PublishSystray extends Component {
     setup() {
         this.website = useService('website');
         this.orm = useService('orm');
+        this.dialogService = useService('dialog');
+        this.notificationService = useService('notification');
 
         this.state = useState({
             published: this.website.currentWebsite.metadata.isPublished,
@@ -56,6 +60,51 @@ class PublishSystray extends Component {
             published => {
                 this.state.published = published;
                 this.state.processing = false;
+                if (published) {
+                    rpc("/website/get_seo_data", {
+                        res_id: mainObject.id,
+                        res_model: mainObject.model,
+                    }).then(
+                        (seo_data) => {
+                            if (seo_data) {
+                                let message;
+                                if (
+                                    !seo_data.website_meta_title ||
+                                    seo_data.website_meta_title === ""
+                                ) {
+                                    message = _t("Page title not set.");
+                                } else if (
+                                    !seo_data.website_meta_description ||
+                                    seo_data.website_meta_description === ""
+                                ) {
+                                    message = _t("Page description not set.");
+                                }
+                                if (
+                                    !seo_data.website_meta_title ||
+                                    seo_data.website_meta_title === "" ||
+                                    !seo_data.website_meta_description ||
+                                    seo_data.website_meta_description === ""
+                                ) {
+                                    this.notificationService.add(message, {
+                                        type: "warning",
+                                        sticky: false,
+                                        buttons: [
+                                            {
+                                                name: _t("Optimize SEO"),
+                                                onClick: () => {
+                                                    this.dialogService.add(OptimizeSEODialog);
+                                                },
+                                            },
+                                        ],
+                                    });
+                                }
+                            }
+                        },
+                        (err) => {
+                            throw err;
+                        }
+                    );
+                }
                 return published;
             },
             err => {
