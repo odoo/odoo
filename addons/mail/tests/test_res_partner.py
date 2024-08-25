@@ -546,3 +546,21 @@ class TestPartner(MailCommon):
         all_msg = p2_msg_ids_init + p1_msg_ids_init + p1_msg1
         self.assertEqual(len(p2.message_ids), len(all_msg) + 1, 'Should have original messages + a log')
         self.assertTrue(all(msg in p2.message_ids for msg in all_msg))
+
+    def test_find_or_create_from_emails_multi_company(self):
+        # Create a partner with the same email in the other company
+        partner2 = self.env['res.partner'].with_company(self.company_2).create({
+            'name': 'Partner 2',
+            'email': 'partner1@example.com',
+            'company_id': self.company_2.id,
+        })
+
+        # Call find_or_create_from_emails with current company
+        new_samples = ['partner1@example.com']
+        new_partners = self.env['res.partner'].with_company(self.env.company)._find_or_create_from_emails(
+            new_samples,
+            additional_values=None,
+        )
+
+        # Check if creates a new partner because the one available is in another company
+        self.assertNotEqual(partner2, new_partners[0])
