@@ -42,9 +42,6 @@ patch(MockServer.prototype, {
         return mockWriteResult;
     },
     async _performRPC(route, args) {
-        if (args.model === "discuss.channel" && args.method === "execute_command_help") {
-            return this._mockDiscussChannelExecuteCommandHelp(args.args[0], args.model);
-        }
         if (args.model === "discuss.channel" && args.method === "action_unfollow") {
             const ids = args.args[0];
             return this._mockDiscussChannelActionUnfollow(ids, args.kwargs.context);
@@ -126,9 +123,6 @@ patch(MockServer.prototype, {
         if (args.model === "discuss.channel" && args.method === "execute_command_leave") {
             return this._mockDiscussChannelExecuteCommandLeave(args, args.kwargs?.context);
         }
-        if (args.model === "discuss.channel" && args.method === "execute_command_who") {
-            return this._mockDiscussChannelExecuteCommandWho(args);
-        }
         if (
             args.model === "discuss.channel" &&
             args.method === "write" &&
@@ -146,48 +140,6 @@ patch(MockServer.prototype, {
             return this._mockDiscussChannelGetMentionSuggestions(args);
         }
         return super._performRPC(route, args);
-    },
-
-    /**
-     * Simulates `execute_command_help` on `discuss.channel`.
-     *
-     * @param {number} id
-     * @param {Object} [model]
-     * @returns
-     */
-    _mockDiscussChannelExecuteCommandHelp(ids, model) {
-        const id = ids[0];
-        if (model !== "discuss.channel") {
-            return;
-        }
-        const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", id]]);
-        const notifBody = `
-            <span class="o_mail_notification">You are in ${
-                channel.channel_type === "channel" ? "channel" : "a private conversation with"
-            }
-            <b>${
-                channel.channel_type === "channel"
-                    ? `#${channel.name}`
-                    : channel.channel_member_ids.map(
-                          (id) =>
-                              this.pyEnv["discuss.channel.member"].search_read([["id", "=", id]])[0]
-                                  .name
-                      )
-            }</b>.<br><br>
-
-            Type <b>@username</b> to mention someone, and grab their attention.<br>
-            Type <b>#channel</b> to mention a channel.<br>
-            Type <b>/command</b> to execute a command.<br></span>
-        `;
-        this.pyEnv["bus.bus"]._sendone(
-            this.pyEnv.currentPartner,
-            "discuss.channel/transient_message",
-            {
-                body: notifBody,
-                thread: { model: "discuss.channel", id: channel.id },
-            }
-        );
-        return true;
     },
     /**
      * Simulates `message_post` on `discuss.channel`.
@@ -792,41 +744,6 @@ patch(MockServer.prototype, {
             this._mockDiscussChannelActionUnfollow([channel.id], context);
         } else {
             this._mockDiscussChannelChannelPin([channel.id], false);
-        }
-    },
-    /**
-     * Simulates `execute_command_who` on `discuss.channel`.
-     *
-     * @private
-     */
-    _mockDiscussChannelExecuteCommandWho(args) {
-        const ids = args.args[0];
-        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
-        for (const channel of channels) {
-            const members = this.getRecords("discuss.channel.member", [
-                ["id", "in", channel.channel_member_ids],
-            ]);
-            const otherPartnerIds = members
-                .filter(
-                    (member) =>
-                        member.partner_id && member.partner_id !== this.pyEnv.currentPartnerId
-                )
-                .map((member) => member.partner_id);
-            const otherPartners = this.getRecords("res.partner", [["id", "in", otherPartnerIds]]);
-            let message = "You are alone in this channel.";
-            if (otherPartners.length > 0) {
-                message = `Users in this channel: ${otherPartners
-                    .map((partner) => partner.name)
-                    .join(", ")} and you`;
-            }
-            this.pyEnv["bus.bus"]._sendone(
-                this.pyEnv.currentPartner,
-                "discuss.channel/transient_message",
-                {
-                    body: `<span class="o_mail_notification">${message}</span>`,
-                    thread: { model: "discuss.channel", id: channel.id },
-                }
-            );
         }
     },
     /**
