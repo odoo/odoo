@@ -57,6 +57,8 @@ export class RecordInternal {
     fieldsSortProxy2 = new Map();
     /** @type {Map<string, this>} */
     fieldsComputeProxy2 = new Map();
+    /** @type {Map<string, boolean>} */
+    fieldsComputeSelfObserve = new Map();
     uses = new RecordUses();
     updatingAttrs = new Map();
     proxyUsed = new Map();
@@ -196,11 +198,13 @@ export class RecordInternal {
         const store = record._rawStore;
         this.fieldsComputing.set(fieldName, true);
         this.fieldsComputeOnNeed.delete(fieldName);
+        const proxy2 = this.fieldsComputeProxy2.get(fieldName);
         store._.updateFields(record, {
-            [fieldName]: Model._.fieldsCompute
-                .get(fieldName)
-                .call(this.fieldsComputeProxy2.get(fieldName)),
+            [fieldName]: Model._.fieldsCompute.get(fieldName).call(proxy2),
         });
+        this.fieldsComputeSelfObserve.set(fieldName, true);
+        void proxy2[fieldName];
+        this.fieldsComputeSelfObserve.delete(fieldName);
         this.fieldsComputing.delete(fieldName);
     }
     /**

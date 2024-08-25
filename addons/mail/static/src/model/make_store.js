@@ -65,7 +65,9 @@ export function makeStore(env, { localRegistry } = {}) {
                                 return res;
                             }
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
-                                record._.fieldsComputeInNeed.set(name, true);
+                                if (!record._.fieldsComputeSelfObserve.get(name)) {
+                                    record._.fieldsComputeInNeed.set(name, true);
+                                }
                                 if (record._.fieldsComputeOnNeed.get(name)) {
                                     record._.compute(record, name);
                                 }
