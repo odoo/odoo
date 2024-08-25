@@ -1,0 +1,31 @@
+<odoo>
+    <template id="product_inventory_template" name="Product Inventory">
+        <t t-call="website.layout">
+            <div class="container">
+                <h1>Product Inventory</h1>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>SKU</th>
+                            <th>Price</th>
+                            <th>Quantity Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="products" t-as="product">
+                            <tr>
+                                <td><t t-esc="product['id']"/></td>
+                                <td><t t-esc="product['name']"/></td>
+                                <td><t t-esc="product['default_code']"/></td>
+                                <td><t t-esc="product['list_price']"/></td>
+                                <td><t t-esc="product['qty_available']"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>
