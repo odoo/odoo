@@ -9622,6 +9622,14 @@ msgstr "이미 품목 유형을 사용한 경우에는 변경할 수 없습니�
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "수동으로 실행시키지 않으면 일시 중지된 주문 지점을 생성할 수 없습니다."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9656,6 +9664,16 @@ msgstr "수량은 양수만 입력할 수 있습니다."
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "고유 Serial 번호가 있는 품목의 1.0 %s만 처리할 수 있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"주문 포인트는 수동 주문 포인트만 일시 중지할 수 있습니다. 자동 체결 주문 포인트를 활성화하지 않으려면 보관처리해야 합니다."
 
 #. module: stock
 #. odoo-python

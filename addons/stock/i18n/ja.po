@@ -9557,6 +9557,14 @@ msgstr "すでに使用されているプロダクトタイプを変更するこ
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "手動でトリガされないスヌーズオーダポイントを作成することはできません。"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9591,6 +9599,15 @@ msgstr "正の数量しか入力することができません。"
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "一意のシリアル番号を持つ製品の1.0%sのみを処理できます。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr "スヌーズできるのは手動オーダポイントのみです。トリガさせたくない場合は、'自動トリガ'オーダーポイントをアーカイブして下さい。"
 
 #. module: stock
 #. odoo-python

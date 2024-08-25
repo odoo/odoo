@@ -362,11 +362,11 @@ msgstr ""
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
-"                    <t t-if=\"user.company_id.email\">\n"
-"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.e-mail or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.e-mail\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.e-mail }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.e-mail or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
-"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.e-mail and user.company_id.website\">|</t>\n"
 "                    <t t-if=\"user.company_id.website\">\n"
 "                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
@@ -877,7 +877,7 @@ msgstr "Modifier la commande"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__mail
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
@@ -983,12 +983,12 @@ msgstr "Icône Font Awesome par ex. fa-tasks"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "Format d'adresse email \"Nom <email@domain>\""
+msgstr "Format d'adresse e-mail \"Nom <e-mail@domain>\""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
 msgid "Formatted Email"
-msgstr "Email formaté"
+msgstr "E-mail formaté"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_italiana
@@ -1344,27 +1344,27 @@ msgstr "Déjeuner : Alerte notification via Chat (Alerte pour le bureau 3)"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to Coin gourmand"
-msgstr "Déjeuner : Envoyer un email automatique à Coin gourmand"
+msgstr "Déjeuner : Envoyer un e-mail automatique à Coin gourmand"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
 msgid "Lunch: send automatic email to Lunch Supplier"
-msgstr "Déjeuner : Envoyer un email automatique au fournisseur de déjeuner"
+msgstr "Déjeuner : Envoyer un e-mail automatique au fournisseur de déjeuner"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Pizza Inn"
-msgstr "Déjeuner : Envoyer un email automatique à Pizza Inn"
+msgstr "Déjeuner : Envoyer un e-mail automatique à Pizza Inn"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to Sushi Shop"
-msgstr "Déjeuner : Envoyer un email automatique à Sushi Shop"
+msgstr "Déjeuner : Envoyer un e-mail automatique à Sushi Shop"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to The Corner"
-msgstr "Déjeuner : Envoyer un email automatique à The Corner"
+msgstr "Déjeuner : Envoyer un e-mail automatique à The Corner"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
