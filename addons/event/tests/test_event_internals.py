@@ -821,7 +821,7 @@ class TestEventRegistrationPhone(EventCase):
                 self.assertEqual(reg.phone, exp_phone)
 
         # no country on event -> based on partner or event company country
-        self.test_event.write({'address_id': False})
+        self.test_event.write({'address_id': False, 'event_url': 'https://www.odoo.com'})
         expected = [
             '0485112233',  # partner values, no format (phone only)
             '0456987654',  # partner values, no format (both: phone wins)

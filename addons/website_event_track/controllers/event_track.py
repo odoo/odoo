@@ -179,6 +179,7 @@ class EventTrackController(http.Controller):
             'is_html_empty': is_html_empty,
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
     # ------------------------------------------------------------
@@ -193,6 +194,7 @@ class EventTrackController(http.Controller):
             'main_object': event,
             'tag': tag,
             'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
         vals.update(self._prepare_calendar_values(event))
@@ -389,6 +391,7 @@ class EventTrackController(http.Controller):
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_user'),
             'user_event_manager': request.env.user.has_group('event.group_event_manager'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
     @http.route("/event/track/toggle_reminder", type="json", auth="public", website=True)

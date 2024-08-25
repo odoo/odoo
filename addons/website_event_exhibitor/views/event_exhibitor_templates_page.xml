@@ -56,7 +56,8 @@
                 <span class="my-0" t-else="">
                     starts on
                     <span t-field="sponsor.event_id.date_begin"
-                        t-options="{'format': 'medium', 'tz_name': sponsor.event_id.date_tz}"/> (<t t-out="sponsor.event_id.date_tz"/>).
+                        t-options="{'format': 'medium', 'tz_name': sponsor.event_id.date_tz}"/>
+                    <span>(<t t-if="website_visitor_timezone != sponsor.event_id.date_tz" t-out="event.date_tz"/>)</span>
                 </span>
                 <br/>
                 <span t-if="is_event_user">Attendees will be able to join to meet <b t-out="sponsor.partner_name"/> .</span>
@@ -73,7 +74,7 @@
                         <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
                         -
                         <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
-                    </strong> (<span t-out="sponsor.event_date_tz"/>)
+                    </strong> <span t-if="website_visitor_timezone != sponsor.event_id.date_tz">(<t t-out="event.date_tz"/>)</span>
                     to meet them!
                 </div>
             </t>
@@ -124,7 +125,7 @@
                         <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
                         -
                         <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
-                        (<span t-out="sponsor.event_date_tz"/>)
+                        <span t-if="website_visitor_timezone != sponsor.event_id.date_tz">(<t t-out="event.date_tz"/>)</span>
                     </div>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
                         <i class="fa fa-globe me-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>

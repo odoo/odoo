@@ -67,13 +67,12 @@
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="address_id" context="{'show_address': 1}" placeholder="Online if not set"/>
+                            <field name="event_url" invisible="address_id" widget="url" placeholder='e.g. "https://www.odoo.com"'/>
                             <label for="seats_limited" string="Limit Registrations"/>
                             <div>
                                 <field name="seats_limited"/>
                                 <span invisible="not seats_limited" required="not seats_limited">to <field name="seats_max" class="oe_inline o_input_9ch"/> Attendees</span>
                             </div>
-                            <field name="badge_format"/>
-                            <field name="badge_image"/>
                         </group>
                     </group>
                     <notebook>
@@ -143,16 +142,24 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Notes" name="event_notes">
+                        <page string="Notes &amp; Documents" name="event_notes">
                             <group>
-                                <label for="note" string="Note" />
-                                <br />
-                                <field nolabel="1" colspan="2" name="note"
-                                    placeholder="Add some internal notes (to do lists, contact info, ...)" />
-                                <label for="ticket_instructions" string="Ticket Instructions" />
-                                <br />
-                                <field nolabel="1" colspan="2" name="ticket_instructions"
-                                    placeholder="e.g. How to get to your event, door closing time, ..." />
+                                <group>
+                                    <field name="badge_format"/>
+                                    <field name="badge_image"/>
+                                </group>
+                                <group>
+                                    <label for="ticket_instructions" string="Ticket Instructions" />
+                                    <br />
+                                    <field nolabel="1" colspan="2" name="ticket_instructions"
+                                        placeholder="e.g. How to get to your event, door closing time, ..." />
+                                </group>
+                                <group>
+                                    <label for="note" string="Note" />
+                                    <br />
+                                    <field nolabel="1" colspan="2" name="note"
+                                        placeholder="Add some internal notes (to do lists, contact info, ...)" />
+                                </group>
                             </group>
                         </page>
                     </notebook>

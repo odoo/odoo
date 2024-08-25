@@ -68,6 +68,7 @@ class WebsiteEventMeetController(EventCommunityController):
             "default_username": visitor.display_name if visitor else None,
             # environment
             "is_event_user": is_event_user,
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
     @http.route("/event/<model('event.event'):event>/meeting_room_create",
@@ -155,4 +156,5 @@ class WebsiteEventMeetController(EventCommunityController):
             # options
             'option_widescreen': True,
             'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }

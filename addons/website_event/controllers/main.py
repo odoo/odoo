@@ -196,6 +196,7 @@ class WebsiteEventController(http.Controller):
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
             'registration_error_code': post.get('registration_error_code'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
     def _process_tickets_form(self, event, form_details):
@@ -396,7 +397,8 @@ class WebsiteEventController(http.Controller):
             'attendees': attendees_sudo,
             'event': event,
             'google_url': urls.get('google_url'),
-            'iCal_url': urls.get('iCal_url')
+            'iCal_url': urls.get('iCal_url'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
     # ------------------------------------------------------------

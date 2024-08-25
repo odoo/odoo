@@ -4,15 +4,17 @@
 import logging
 import pytz
 import textwrap
+import re
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from urllib.parse import urlparse
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_date, format_datetime, frozendict
+from odoo.tools import format_date, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
@@ -213,8 +215,6 @@ class EventEvent(models.Model):
         compute='_compute_date_tz', precompute=True, readonly=False, store=True)
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
-    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
@@ -231,6 +231,9 @@ class EventEvent(models.Model):
         compute_sudo=True)
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
+    event_url = fields.Char(string='Event URL',
+        help="""This URL can be set for online events, and will be used in links redirecting the attendees to the event.
+            By default, the links redirect to the website event page if website is installed.""")
     lang = fields.Selection(_lang_get, string='Language',
         help="All the communication emails sent to attendees will be translated in this language.")
     # ticket reports
@@ -390,24 +393,6 @@ class EventEvent(models.Model):
                 (event.seats_limited and event.seats_max and not event.seats_available)
                 or (event.event_ticket_ids and all(ticket.is_sold_out for ticket in event.event_ticket_ids))
             )
-
-    @api.depends('date_tz', 'date_begin')
-    def _compute_date_begin_tz(self):
-        for event in self:
-            if event.date_begin:
-                event.date_begin_located = format_datetime(
-                    self.env, event.date_begin, tz=event.date_tz, dt_format='medium')
-            else:
-                event.date_begin_located = False
-
-    @api.depends('date_tz', 'date_end')
-    def _compute_date_end_tz(self):
-        for event in self:
-            if event.date_end:
-                event.date_end_located = format_datetime(
-                    self.env, event.date_end, tz=event.date_tz, dt_format='medium')
-            else:
-                event.date_end_located = False
 
     @api.depends('date_begin', 'date_end')
     def _compute_is_ongoing(self):
@@ -631,6 +616,23 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+
+    @api.constrains('event_url')
+    def _check_event_url(self):
+        for event in self:
+            if event.event_url and not re.match(tools.mail.TEXT_URL_REGEX, event.event_url):
+                raise ValidationError(_('Please enter a valid event URL.'))
+
+    @api.onchange('event_url', 'address_id')
+    def _onchange_event_url(self):
+        if self.event_url:
+            if self.address_id:
+                self.event_url = ''
+            else:
+                parsed_url = urlparse(self.event_url)
+                if not (parsed_url.scheme in {'http', 'https'} and parsed_url.netloc):
+                    self.event_url = f"https://{self.event_url}"
+
 
     @api.model_create_multi
     def create(self, vals_list):
