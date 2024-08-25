@@ -42,7 +42,7 @@ class StockValuationLayer(models.Model):
         for svl in self:
             if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
-            if svl.currency_id.is_zero(svl.value):
+            if not svl._should_create_account_entry_move():
                 continue
             am_vals += svl.stock_move_id.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
         if am_vals:
@@ -126,3 +126,6 @@ class StockValuationLayer(models.Model):
             new_valuation = unit_cost * new_valued_qty
 
         return new_valued_qty, new_valuation
+
+    def _should_create_account_entry_move(self):
+        return not self.currency_id.is_zero(self.value)
