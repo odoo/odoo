@@ -10,7 +10,7 @@ import {
     handleSaleDetails,
 } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -49,6 +49,25 @@ export class Navbar extends Component {
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
+        useExternalListener(document, "keydown", this.handleKeydown.bind(this));
+    }
+
+    handleKeydown(event) {
+        if (
+            this.inputRef &&
+            document.activeElement !== this.inputRef.el &&
+            !this.pos.get_order()?.get_selected_orderline() &&
+            this.noOpenDialogs() &&
+            event.key.length == 1
+        ) {
+            this.inputRef.el.focus();
+            this.inputRef.el.value = event.key;
+            event.preventDefault();
+        }
+    }
+
+    noOpenDialogs() {
+        return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
     }
     onClickScan() {
         if (!this.pos.scanning) {

@@ -30,6 +30,7 @@
                     placeholder.translate="Search products..."
                     icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
                     debounceMillis="500"
+                    getRef="(ref) => this.inputRef = ref"
                     t-if="pos.showSearchButton()" />
                     <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
