@@ -72,7 +72,7 @@ msgstr "% オプトアウト"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "% of recipients"
-msgstr "% の受信者"
+msgstr "宛先%"
 
 #. module: mass_mailing
 #. odoo-python
@@ -603,12 +603,12 @@ msgstr "<span>デザイン</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "<span>There wasn't enough recipients left for this mailing</span>"
-msgstr "<span>このメーリングには十分な受信者が残されていませんでした。</span>"
+msgstr "<span>このメーリングには十分な宛先が残されていませんでした。</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "<span>Valid Email Recipients</span>"
-msgstr "<span>有効なメール受信者</span>"
+msgstr "<span>有効なEメール宛先</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -623,7 +623,7 @@ msgid ""
 "                            </strong>"
 msgstr ""
 "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
-"                                <span name=\"ab_test_text\">このメーリングには十分な受信者がいませんでした。</span>\n"
+"                                <span name=\"ab_test_text\">このメーリングには十分な宛先がありませんでした。</span>\n"
 "                            </strong>"
 
 #. module: mass_mailing
@@ -1145,7 +1145,7 @@ msgstr "ブラックリストに登録されたアドレス"
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklisted Email Addresses"
-msgstr "ブラックリストに登録された電子メールアドレス"
+msgstr "ブラックリストに登録されたEメールアドレス"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2415,7 +2415,7 @@ msgid ""
 " lets you send different mailings to randomly selected recipients and test "
 "the effectiveness of the mailings, without causing duplicate messages."
 msgstr ""
-"有効化されると、受信者にはキャンペーン全体で一回のみメールが配信されます。異なるメールをランダムに選択された受信者に重複なく送信し、メールの効果をテストすることができます。"
+"有効化されると、宛先にはキャンペーン全体で一回のみメールが配信されます。異なるメールをランダムに選択された受信者に重複なく送信し、メールの効果をテストすることができます。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
@@ -3465,7 +3465,7 @@ msgstr "オプトアウト数"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Number of Recipients"
-msgstr "受信者数"
+msgstr "宛先数"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
@@ -3516,7 +3516,7 @@ msgstr "オムニチャネル販売"
 msgid ""
 "Once the best version is identified, we will send the best one to the "
 "remaining recipients."
-msgstr "ベスト版が判明した時点で、残りの受信者にベスト版を送付します。"
+msgstr "ベスト版が判明した時点で、残りの宛先にベスト版を送付します。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -3861,12 +3861,12 @@ msgstr "宛先モデル"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__mailing_model_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_model_name
 msgid "Recipients Model Name"
-msgstr "受信者モデル名"
+msgstr "宛先モデル名"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_model_real
 msgid "Recipients Real Model"
-msgstr "受信者リアルモデル"
+msgstr "宛先リアルモデル"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -4554,14 +4554,14 @@ msgstr "これらのEメールのコンテンツが自分に関係ない"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_filter.py:0
 msgid "The filter domain is not valid for this recipients."
-msgstr "フィルタドメインはこの受信者に有効ではありません。"
+msgstr "フィルタドメインはこの宛先に有効ではありません。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_list__is_public
 msgid ""
 "The mailing list can be accessible by recipients in the subscription "
 "management page to allow them to update their preferences."
-msgstr "メール配信リストは、受信者が購読管理ページからアクセスすることができ、受信者は自分の設定を更新することができます。"
+msgstr "メール配信リストは、宛先が購読管理ページからアクセスすることができ、受信者は自分の設定を更新することができます。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
@@ -4605,7 +4605,7 @@ msgstr "そして、以下で:"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "There are no recipients selected."
-msgstr "選択された受信者がいません"
+msgstr "選択された宛先がありません"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -4881,7 +4881,7 @@ msgstr "ユーザ"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Valid Email Recipients"
-msgstr "有効なメール受信者"
+msgstr "有効なメール宛先"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -4905,7 +4905,7 @@ msgstr "オンラインで見る"
 msgid ""
 "Wait until your mailing has been sent to check how many recipients you "
 "managed to reach."
-msgstr "メール配信が送信されるまで待ち、何人の受信者に到達できたかを確認しましょう。"
+msgstr "メール配信が送信されるまで待ち、何件の宛先に到達できたかを確認しましょう。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -4978,9 +4978,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
-"メールのデザイン中に、受信者をフィルタリングするための規則を定義することができます。\n"
+"メールのデザイン中に、宛先をフィルタリングするための規則を定義することができます。\n"
 "                同じ条件を保存して後で使用するには、\n"
-"　　　　 \"受信者\"の隣にある <i class=\"fa fa-floppy-o text-warning\"></i>アイコンをクリックして、お気に入りリストに追加します。"
+"　　　　 \"宛先\"の隣にある <i class=\"fa fa-floppy-o text-warning\"></i>アイコンをクリックして、お気に入りリストに追加します。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -5236,7 +5236,7 @@ msgstr "ブロックリストに入っています。"
 msgid ""
 "is the winner of the A/B testing campaign and has been sent to all remaining"
 " recipients."
-msgstr "はA/Bテストキャンペーンの当選者であり、残りの全ての受信者に送信されました。"
+msgstr "はA/Bテストキャンペーンの当選者であり、残りの全ての宛先に送信されました。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -5244,7 +5244,7 @@ msgid ""
 "of all potential recipients.<br/>\n"
 "                        <b class=\"text-danger\">Some of the mailings will not be sent</b>, as only 1 email will be sent for each unique recipient in this campaign."
 msgstr ""
-"全ての潜在的な受信者のうち。<br/>\n"
+"全ての潜在的な宛先のうち。<br/>\n"
 "                        <b class=\"text-danger\">メール配信のいくつかは送信されませんでした。</b>このキャンペーンでは、各受信者に対して1通のみEメールが送信されるためです。 "
 
 #. module: mass_mailing
@@ -5271,7 +5271,7 @@ msgstr "・"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "to the remaining recipients."
-msgstr "残っている受信者へ"
+msgstr "残っている宛先へ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description

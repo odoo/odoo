@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:05+0000\n"
+"POT-Creation-Date: 2024-08-20 09:02+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -1151,6 +1151,12 @@ msgid "Generate eWallet"
 msgstr "Genera eWallet"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Genera {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Get 10% off on some products, with a code"
@@ -1715,6 +1721,7 @@ msgstr "Tipo di riconoscimento"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Premi"
 
@@ -1845,6 +1852,12 @@ msgstr "Il codice promozionale deve essere unico."
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
 msgstr "I punti richiesti per un premio devono essere positivi."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+msgid "The reward description field cannot be empty."
+msgstr "Il campo descrizione del premio non può essere vuoto."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1999,13 +2012,6 @@ msgstr "Con un codice promozionale"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "You can not delete a program in an active state"
 msgstr "Non è possibile eliminare un programma in stato attivo."
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_reward.py:0
-#, python-format
-msgid "The reward description field cannot be empty."
-msgstr "Il campo descrizione del premio non può essere vuoto."
 
 #. module: loyalty
 #. odoo-python
@@ -2173,3 +2179,9 @@ msgstr "utilizzi"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "your order"
 msgstr "il tuo ordine"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

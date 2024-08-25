@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -24,6 +24,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
 msgid "API Key"
 msgstr "Chiave API"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Can't create payment method. Please check the data and update it."
+msgstr ""
+"Impossibile creare il metodo di pagamento. Verifica i dati e aggiornali."
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Can't update payment method. Please check the data and update it."
+msgstr ""
+"Impossibile aggiornare il metodo di pagamento. Verifica i dati e aggiornali."
 
 #. module: pos_viva_wallet
 #. odoo-javascript
@@ -50,12 +64,6 @@ msgid ""
 msgstr ""
 "Impossibile connettersi al server Odoo, controlla la tua connessione "
 "internet e riprova."
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Non si ha accesso al token di recupero di Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -191,7 +199,6 @@ msgstr "Chiave di verifica Webhook Viva Wallet"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
 msgid "Your transaction with Viva Wallet failed. Please try again later."
 msgstr ""
 "La tua transazione con Viva Wallet non è riuscita. Prova di nuovo più tardi."

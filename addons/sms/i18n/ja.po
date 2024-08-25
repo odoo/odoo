@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:06+0000\n"
+"POT-Creation-Date: 2024-08-20 09:02+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +23,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr "無効な受信者数"
+msgstr "無効な宛先数"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr "有効な受信者数"
+msgstr "有効な宛先数"
 
 #. module: sms
 #. odoo-python
@@ -39,7 +40,7 @@ msgstr "%s (コピー)"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "%s invalid recipients"
-msgstr "%s無効な受信者 "
+msgstr "%s無効な宛先"
 
 #. module: sms
 #. odoo-python
@@ -47,6 +48,12 @@ msgstr "%s無効な受信者 "
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr "%s（選択されたSMS%sのうち)が正常に送信されました。"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
+msgstr "、以下にフィット:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -93,17 +100,16 @@ msgid ""
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
-"<span invisible=\"mail_post_method != 'email'\">\n"
-"                                メッセージはテンプレートの受信者にSMSとして送信され、\n"
-"メッセージ履歴には表示されません。\n"
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                メッセージはテンプレートの受信者にSMSとして送信され、メッセージ履歴には表示されません。\n"
 "                            </span>\n"
-"                            <span invisible=\"mail_post_method != 'note'\">\n"
-"                                このSMSは、社内メモとして投稿され、メッセージング履歴の社内ユーザ\n"
-"が閲覧できます。\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                 このSMSは、社内メモとして投稿され、メッセージング履歴の社内ユーザが閲覧できます。\n"
 "                            </span>\n"
-"                            <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                このSMSはレコード上のメッセージとして投稿され、\n"
-"　　　　　　　　　全フォロワーに通知されます。メッセージ履歴に表示されます。\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                SMSはテンプレートの宛先にSMSとして送信され、\n"
+"                                また内部メモとしてメッセージ履歴に\n"
+"                               投稿されます。\n"
 "                            </span>"
 
 #. module: sms
@@ -742,7 +748,7 @@ msgstr "配信エラーが発生されたメッセージ数"
 msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
-msgstr "アクティブドメインの値を適用せずに、一括モードで送信した場合にSMSを受信する受信者の数"
+msgstr "アクティブドメインの値を適用せずに、一括モードで送信した場合にSMSを受信する宛先数"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
@@ -852,12 +858,12 @@ msgstr "宛先"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
 msgid "Recipients (Numbers)"
-msgstr "受信者(番号)"
+msgstr "宛先(数)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
 msgid "Recipients (Partners)"
-msgstr "受信者(取引先)"
+msgstr "宛先(取引先)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
@@ -1456,8 +1462,8 @@ msgstr "SMSテキストメッセージには、空白以外の文字を少なく
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
-msgstr "文字、以下に当てはまる:"
+msgid "characters"
+msgstr "文字"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1489,7 +1495,7 @@ msgstr "から"
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr "受信者の電話番号が無効で、このテキストメッセージを受信しません。"
+msgstr "宛先電話番号が無効で、このテキストメッセージを受信しません。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

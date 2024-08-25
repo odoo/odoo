@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -22,6 +22,12 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
+msgstr " En caso de problemas, póngase en contacto con %(contact_infos)s"
+
+#. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "%s's Application"
 msgstr "Solicitud de %s"
@@ -29,7 +35,7 @@ msgstr "Solicitud de %s"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "'. Showing results for '"
-msgstr "Mostrando resultados para"
+msgstr "\". Mostrando resultados para \""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -48,7 +54,7 @@ msgid ""
 "                        Job Page"
 msgstr ""
 "<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
-"                        Página del trabajo"
+"                        Página de trabajos"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -118,12 +124,12 @@ msgstr "<span class=\"s_website_form_label_content\">Perfil de LinkedIn</span>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Resume</span>"
-msgstr "<span class=\"s_website_form_label_content\">Currículo</span>"
+msgstr "<span class=\"s_website_form_label_content\">Currículum</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Short Introduction</span>"
-msgstr "<span class=\"s_website_form_label_content\">Introducción Corta</span>"
+msgstr "<span class=\"s_website_form_label_content\">Breve introducción</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -189,7 +195,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "A full-time position <br/>Attractive salary package."
-msgstr "Puesto indefinido <br/>Paquete salarial atractivo."
+msgstr "Puesto de tiempo completo <br/> Sueldo atractivo."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -199,7 +205,7 @@ msgstr "Sobre Nosotros"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "About us"
-msgstr "Acerca de"
+msgstr "Sobre nosotros"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -239,9 +245,12 @@ msgstr "Todos los tipos"
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
-msgid "An application already exists for %s. Duplicates might be rejected."
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. "
+"%(recruiter_contact)s"
 msgstr ""
-"Ya existe una aplicación para %s. Es posible que los duplicados se rechacen."
+"Ya existe una aplicación para %(value)s. Es posible que los duplicados se "
+"rechacen. %(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -295,7 +304,7 @@ msgstr "Autonomía"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Bachelor Degree or Higher"
-msgstr "Licenciatura o superior"
+msgstr "Título de grado o superior"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__can_publish
@@ -311,7 +320,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Congratulations!"
-msgstr "¡Felicitaciones!"
+msgstr "¡Enhorabuena!"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -464,12 +473,6 @@ msgid "I'm feeling lucky"
 msgstr "Me siento afortunado"
 
 #. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/controllers/main.py:0
-msgid "In case of issue, contact %s"
-msgstr "En caso de problemas, póngase en contacto con %s"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
 msgstr "Inserte una descripción del trabajo..."
@@ -483,7 +486,7 @@ msgstr "Está publicado"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Job Application Form"
-msgstr "Formulario de solicitud de trabajo"
+msgstr "Formulario de solicitud de empleo"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__description
@@ -518,7 +521,7 @@ msgstr "Trabajo no encontrado"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Jobs"
-msgstr "Empleos"
+msgstr "Trabajos"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -528,7 +531,7 @@ msgstr "Página de trabajos"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Lead the entire sales cycle"
-msgstr "Liderar todo el ciclo de ventas"
+msgstr "Dirigir todo el ciclo de ventas"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -559,7 +562,7 @@ msgstr "Negociar y contratar"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Nice to have"
-msgstr "Se valorará"
+msgstr "Deseable"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
@@ -576,7 +579,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "No results found for '"
-msgstr "No se han encontrado resultados para '"
+msgstr "No se han encontrado resultados para \""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -706,7 +709,7 @@ msgstr "Responsabilidades"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
 msgid "Restrict publishing to this website."
-msgstr "Restringir publicar a este sitio web."
+msgstr "Restrinja la publicación en este sitio web."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -731,7 +734,8 @@ msgstr "Nombre SEO"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
 msgid "Set if the application is published on the website of the company."
-msgstr "Establezca si la solicitud se publica en el sitio web de la empresa."
+msgstr ""
+"Establezca si la solicitud se publicará en el sitio web de la empresa."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -747,7 +751,7 @@ msgstr "Barra lateral"
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr "Origen de los solicitantes"
+msgstr "Origen de los candidatos"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -757,7 +761,7 @@ msgstr "Actividad deportiva"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Strong analytical skills"
-msgstr "Fuertes habilidades analiticas"
+msgstr "Habilidades analíticas avanzadas"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -778,8 +782,8 @@ msgstr "Esta oferta de trabajo está cerrada."
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
-msgid "The value entered doesn't seems like a linkedin profile."
-msgstr "El valor introducido no corresponde con un perfil de LinkedIn."
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr "Parece que el perfil que nos proporcionó no es de LinkedIn"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -868,7 +872,7 @@ msgstr "Título meta del sitio web"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Imagen del Open Graph del sitio"
+msgstr "Imagen Open Graph del sitio web"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -881,8 +885,8 @@ msgid "What's great in the job?"
 msgstr "¿Qué hay de bueno en el trabajo?"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid ""
 "You already applied to another position recently. You can continue if it's "
 "not a mistake."
@@ -906,8 +910,8 @@ msgid ""
 "You can write here a short description of your Job Description that will be "
 "displayed on the main Jobs' list page."
 msgstr ""
-"Puede escribir aquí un texto corto de su descripción de trabajo que se "
-"mostrará en la página principal de la lista de trabajos."
+"Puede escribir aquí una breve descripción de su trabajo que se mostrará en "
+"la página principal de la lista de trabajos."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -943,12 +947,12 @@ msgstr "barra de migas"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "e.g. https://www.linkedin.com/in/fpodoo/"
-msgstr "por ejemplo, https://www.linkedin.com/in/fpodoo/"
+msgstr "p. ej. https://www.linkedin.com/in/fpodoo/"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "info@yourcompany.example.com"
-msgstr "info@yourcompany.ejemplo.com"
+msgstr "info@sucompañía.example.com"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

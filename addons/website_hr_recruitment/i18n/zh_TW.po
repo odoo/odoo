@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -19,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
+msgstr " 如有問題，請聯絡 %(contact_infos)s"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -233,8 +239,10 @@ msgstr "所有類型"
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
-msgid "An application already exists for %s. Duplicates might be rejected."
-msgstr "已有 %s 的申請。重複的申請可能會被拒絕。"
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. "
+"%(recruiter_contact)s"
+msgstr "已有 %(value)s 的職位申請。重複申請可能會被拒絕。%(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -440,12 +448,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "I'm feeling lucky"
 msgstr "我覺得很幸運"
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/controllers/main.py:0
-msgid "In case of issue, contact %s"
-msgstr "如有問題，請聯絡 %s"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -747,8 +749,8 @@ msgstr "該工作機會已關閉。"
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
-msgid "The value entered doesn't seems like a linkedin profile."
-msgstr "輸入的值不似 Linkedin個人資料。"
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr "你提供的個人資料檔案，不似是 linkedin 個人資料檔案"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -850,8 +852,8 @@ msgid "What's great in the job?"
 msgstr "這份工作的優點?"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid ""
 "You already applied to another position recently. You can continue if it's "
 "not a mistake."

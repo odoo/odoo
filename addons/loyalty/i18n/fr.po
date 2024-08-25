@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:05+0000\n"
+"POT-Creation-Date: 2024-08-20 09:02+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -706,7 +706,7 @@ msgstr "Société"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "Compose Email"
-msgstr "Rédiger un email"
+msgstr "Rédiger un e-mail"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__rule_ids
@@ -1015,12 +1015,12 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
 msgid "Email Template"
-msgstr "Modèle d'email"
+msgstr "Modèle d'e-mail"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__mail_template_id
 msgid "Email template"
-msgstr "Modèle d'email"
+msgstr "Modèle d'e-mail"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_to
@@ -1153,6 +1153,12 @@ msgid "Generate eWallet"
 msgstr "Générer un e-wallet"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Générer {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Get 10% off on some products, with a code"
@@ -1205,7 +1211,7 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, Gift Cards can be used to pay orders."
 msgstr ""
-"Les cartes-cadeaux sont créées manuellement ou envoyées automatiquement par email lorsque le client commande un produit de type carte-cadeau.\n"
+"Les cartes-cadeaux sont créées manuellement ou envoyées automatiquement par e-mail lorsque le client commande un produit de type carte-cadeau.\n"
 "<br/>\n"
 "Ensuite, les cartes-cadeaux peuvent être utilisées pour payer les commandes."
 
@@ -1718,6 +1724,7 @@ msgstr "Type de récompense"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Récompenses"
 
@@ -1850,6 +1857,12 @@ msgstr "Le code promotionnel doit être unique."
 msgid "The required points for a reward must be strictly positive."
 msgstr ""
 "Les points requis pour une récompense doivent être strictement positifs."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+msgid "The reward description field cannot be empty."
+msgstr "La description de la récompense ne peut pas être vide."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -2005,13 +2018,6 @@ msgstr "Avec un code promotionnel"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "You can not delete a program in an active state"
 msgstr "Vous ne pouvez pas supprimer un programme dans un état actif"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_reward.py:0
-#, python-format
-msgid "The reward description field cannot be empty."
-msgstr "La description de la récompense ne peut pas être vide."
 
 #. module: loyalty
 #. odoo-python
@@ -2179,3 +2185,9 @@ msgstr "usages"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "your order"
 msgstr "votre commande"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

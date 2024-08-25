@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -19,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
+msgstr "في حال وقوع مشكلة، يرجى التواصل مع %(contact_infos)s "
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -238,8 +244,12 @@ msgstr "كافة الأنواع "
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
-msgid "An application already exists for %s. Duplicates might be rejected."
-msgstr "يوجد طلب تقديم بالفعل لـ %s. قد يتم رفض الطلبات المكررة. "
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. "
+"%(recruiter_contact)s"
+msgstr ""
+"يوجد طلب تقديم بالفعل لـ %(value)s. قد يتم رفض الطلبات المكررة. "
+"%(recruiter_contact)s "
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -458,12 +468,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "I'm feeling lucky"
 msgstr "ضربة حظ "
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/controllers/main.py:0
-msgid "In case of issue, contact %s"
-msgstr "في حال وقوع مشكلة، يرجى التواصل مع %s "
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -767,8 +771,8 @@ msgstr "لقد تم إغلاق هذه الوظيفة. "
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
-msgid "The value entered doesn't seems like a linkedin profile."
-msgstr "لا تبدو القيمة المدخلة كملف تعريف LinkedIn. "
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr "الملف التعريفي الذي أدخلته لا يبدو كملف تعريفي على LinkedIn "
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -870,8 +874,8 @@ msgid "What's great in the job?"
 msgstr "ما الرائع بشأن الوظيفة؟ "
 
 #. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid ""
 "You already applied to another position recently. You can continue if it's "
 "not a mistake."

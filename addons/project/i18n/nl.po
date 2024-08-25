@@ -3,17 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2024
 # Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -875,6 +875,7 @@ msgid "Allocated Time"
 msgstr "Toegewezen tijd"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Toegewezen tijd:"
@@ -1035,8 +1036,6 @@ msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -3398,7 +3397,6 @@ msgstr "Eenmaal per maand"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr ""
 "Alleen jpeg-, png-, bmp- en tiff-afbeeldingen zijn toegestaan ​​als "
@@ -4286,16 +4284,14 @@ msgstr "Ongelukkig gezicht"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to paste images in description"
-msgstr "Sla de taak op om afbeeldingen in de beschrijving te kunnen plakken"
+msgid "Save the task to be able to drag images in description"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to drag images in Description"
-msgstr "Sla de taak op om afbeeldingen in beschrijving te kunnen slepen"
+msgid "Save the task to be able to paste images in description"
+msgstr "Sla de taak op om afbeeldingen in de beschrijving te kunnen plakken"
 
 #. module: project
 #. odoo-javascript
@@ -4914,6 +4910,7 @@ msgstr "Taak: beoordelingsverzoek"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4996,6 +4993,13 @@ msgstr "De persoonlijke fase van de huidige gebruiker."
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "De persoonlijke taakfase van de huidige gebruiker."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "Het document bestaat niet of je hebt geen rechten om het te bekijken."
 
 #. module: project
 #. odoo-python
@@ -6108,6 +6112,12 @@ msgstr "status om de taak als geannuleerd te markeren."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
 msgstr "status om de taak als voltooid te markeren."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+msgid "state.message"
+msgstr ""
 
 #. module: project
 #. odoo-javascript

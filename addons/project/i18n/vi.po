@@ -3,16 +3,16 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -869,6 +869,7 @@ msgid "Allocated Time"
 msgstr "Thời gian được phân bổ"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Thời gian đã phân bổ:"
@@ -1028,8 +1029,6 @@ msgid "Assigned to"
 msgstr "Phân công cho"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -3395,7 +3394,6 @@ msgstr "Mỗi tháng một lần"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr "Chỉ cho phép dùng hình ảnh jpeg, png, bmp và tiff làm tệp đính kèm."
 
@@ -4282,16 +4280,14 @@ msgstr "Mặt buồn"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to paste images in description"
-msgstr "Lưu nhiệm vụ để có thể dán hình ảnh vào phần mô tả"
+msgid "Save the task to be able to drag images in description"
+msgstr "Lưu nhiệm vụ để có thể kéo hình ảnh vào phần mô tả"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to drag images in Description"
-msgstr "Lưu nhiệm vụ để có thể kéo hình ảnh vào phần mô tả"
+msgid "Save the task to be able to paste images in description"
+msgstr "Lưu nhiệm vụ để có thể dán hình ảnh vào phần mô tả"
 
 #. module: project
 #. odoo-javascript
@@ -4912,6 +4908,7 @@ msgstr "Nhiệm vụ: Yêu cầu đánh giá"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4994,6 +4991,14 @@ msgstr "Giai đoạn cá nhân của người dùng hiện tại."
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "Giai đoạn nhiệm vụ cá nhân của người dùng hiện tại."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
+"Tài liệu không tồn tại hoặc bạn không có quyền truy cập vào tài liệu đó."
 
 #. module: project
 #. odoo-python
@@ -6103,6 +6108,12 @@ msgstr "trạng thái để đánh dấu nhiệm vụ là đã bị hủy."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
 msgstr "trạng thái để đánh dấu nhiệm vụ là hoàn thành."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+msgid "state.message"
+msgstr "state.message"
 
 #. module: project
 #. odoo-javascript
