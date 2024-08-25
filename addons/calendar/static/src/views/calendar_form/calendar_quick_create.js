@@ -15,7 +15,8 @@ const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
     allday: { type: "boolean" },
     partner_ids: { type: "many2many" },
     videocall_location: { type: "string" },
-    description: { type: "string" }
+    description: { type: "string" },
+    duration: { type: "Number" },
 };
 
 function getDefaultValuesFromRecord(data) {
@@ -45,6 +46,8 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
 
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data)
+        const milliseconds_diff = new Date(context['default_stop']) - new Date(context['default_start']);
+        context['default_duration'] = milliseconds_diff / (1000 * 60 * 60);
         this.props.goToFullEvent(context);
     }
 }
