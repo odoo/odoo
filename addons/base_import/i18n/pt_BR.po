@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2024
 # Maitê Dietze, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:10+0000\n"
+"POT-Creation-Date: 2024-08-19 07:27+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,6 +222,8 @@ msgstr "Ponto"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Download"
 msgstr "Baixar"
@@ -396,6 +399,17 @@ msgstr ""
 "especialmente quando o arquivo tem muitas colunas."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Se o modelo usar o openchatter, o rastreamento de histórico configurará "
+"assinaturas e enviará notificações durante a importação, mas resultará em "
+"uma importação mais lenta."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -454,6 +468,7 @@ msgstr "Importação"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
@@ -801,6 +816,16 @@ msgstr "Usar a primeira linha como cabeçalho"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "Usuário"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Aviso: ignora a linha de rótulos, linhas vazias e compostas apenas por "
+"células vazias"
 
 #. module: base_import
 #. odoo-javascript

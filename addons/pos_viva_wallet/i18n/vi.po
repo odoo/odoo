@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-08-19 07:27+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -24,6 +24,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
 msgid "API Key"
 msgstr "Khóa API"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Can't create payment method. Please check the data and update it."
+msgstr ""
+"Không thể tạo phương thức thanh toán. Vui lòng kiểm tra dữ liệu và cập nhật."
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Can't update payment method. Please check the data and update it."
+msgstr ""
+"Không thể cập nhật phương thức thanh toán. Vui lòng kiểm tra dữ liệu và cập "
+"nhật."
 
 #. module: pos_viva_wallet
 #. odoo-javascript
@@ -50,12 +65,6 @@ msgid ""
 msgstr ""
 "Không thể kết nối với máy chủ Odoo, vui lòng kiểm tra kết nối mạng và thử "
 "lại. "
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Không có quyền truy cập để tìm nạp token từ Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -183,6 +192,13 @@ msgstr "Endpoint Webhook Viva Wallet"
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
 msgstr "Mã khoá xác thực Webhook Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr ""
+"Giao dịch qua Viva Wallet của bạn không thành công. Vui lòng thử lại sau."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

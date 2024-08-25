@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-08-19 07:27+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -25,6 +25,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
 msgid "API Key"
 msgstr "API-Schlüssel"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Can't create payment method. Please check the data and update it."
+msgstr ""
+"Zahlungsmethode kann nicht erstellt werden. Bitte prüfen Sie die Daten und "
+"aktualisieren Sie sie."
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Can't update payment method. Please check the data and update it."
+msgstr ""
+"Zahlungsmethode kann nicht aktualisiert werden. Bitte prüfen Sie die Daten "
+"und aktualisieren Sie sie."
 
 #. module: pos_viva_wallet
 #. odoo-javascript
@@ -51,12 +67,6 @@ msgid ""
 msgstr ""
 "Verbindung zum Odoo-Server konnte nicht hergestellt werden, bitte prüfen Sie"
 " Ihre Internetverbindung und versuchen Sie es erneut."
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Sie haben keinen Zugriff auf die Abfrage des Tokens von Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -186,6 +196,14 @@ msgstr "Webhook-Endpunkt von Viva Wallet"
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
 msgstr "Webhook-Verifizierungsschlüssel von Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr ""
+"Ihre Transaktion mit Viva Wallet ist fehlgeschlagen. Bitte versuchen Sie es "
+"später erneut."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

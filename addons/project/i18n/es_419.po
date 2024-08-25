@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"POT-Creation-Date: 2024-08-19 07:26+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -875,6 +875,7 @@ msgid "Allocated Time"
 msgstr "Tiempo asignado"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Tiempo asignado:"
@@ -1035,8 +1036,6 @@ msgid "Assigned to"
 msgstr "Asignada a"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1046,7 +1045,7 @@ msgstr "Asignada a"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignees"
-msgstr "Asignados"
+msgstr "Personas asignadas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1990,8 +1989,8 @@ msgstr "Mostrar el botón de tarea principal"
 #: code:addons/project/models/digest_digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, omita esta información para el correo electrónico del "
-"usuario"
+"No tiene acceso, omita esta información para el correo electrónico de "
+"resumen del usuario"
 
 #. module: project
 #. odoo-javascript
@@ -2073,6 +2072,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "CC del correo electrónico"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
+"Dominio del correo electrónico, por ejemplo, \"ejemplo.com\" en "
+"\"odoo@ejemplo.com\""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2342,12 +2348,12 @@ msgstr "Historial"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history
 msgid "History data"
-msgstr "Historial de datos"
+msgstr "Datos del historial"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__html_field_history_metadata
 msgid "History metadata"
-msgstr "Historial de los metadatos"
+msgstr "Metadatos del historial"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_construction
@@ -2599,7 +2605,7 @@ msgstr "Facturado"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr "Está cerrado (gráfico burn-up)"
+msgstr "Está cerrado (gráfico de trabajo completado)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2883,7 +2889,7 @@ msgstr "Marcar como hecho"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Canceled</b>"
-msgstr "Marcar las tareas como <b>Canceladas</b>"
+msgstr "Marque la tarea como <b>cancelada</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3346,7 +3352,6 @@ msgstr "Mensualmente"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr "Solo es posible adjuntar imágenes en formato jpeg, png, bmp y tiff."
 
@@ -3377,7 +3382,7 @@ msgstr "Abrir las subtareas en la sección del cuaderno"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
 msgid "Open tasks"
-msgstr "Abrir tareas"
+msgstr "Tareas abiertas"
 
 #. module: project
 #. odoo-python
@@ -4211,16 +4216,14 @@ msgstr "Carita triste"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to paste images in description"
-msgstr "Guarde la tarea para poder pegar imágenes en la descripción"
+msgid "Save the task to be able to drag images in description"
+msgstr "Guarde la tarea para poder arrastrar imágenes a la descripción"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to drag images in Description"
-msgstr "Guarde la tarea para poder arrastrar imágenes a la descripción"
+msgid "Save the task to be able to paste images in description"
+msgstr "Guarde la tarea para poder pegar imágenes en la descripción"
 
 #. module: project
 #. odoo-javascript
@@ -4805,6 +4808,7 @@ msgstr "Tareas: solicitud de calificación"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4888,6 +4892,14 @@ msgstr "La etapa personal del usuario actual."
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "La etapa personal de la tarea del usuario actual."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr ""
+"El documento no existe o no cuenta con los permisos de acceso necesarios."
 
 #. module: project
 #. odoo-python
@@ -5762,7 +5774,7 @@ msgstr "Se le invitó a seguir %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
 msgid "You have been invited to follow Task Document :"
-msgstr "Se le invitó a seguir este documento de la tarea:"
+msgstr "Se le invitó a seguir el documento de la tarea:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5783,7 +5795,7 @@ msgid ""
 msgstr ""
 "Tiene cambios sin guardar pero no se preocupe, Odoo los guardará en "
 "automático mientras avanza.<br/> Puede descartar estos cambios desde aquí o "
-"guardar manualmente su tarea.<br/>Guardémoslo de forma manual."
+"guardar su tarea de forma manual.<br/>Guardémosla manualmente."
 
 #. module: project
 #. odoo-javascript
@@ -5984,6 +5996,12 @@ msgstr "estado para marcar la tarea como completada."
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+msgid "state.message"
+msgstr "state.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 msgid "sub-tasks)"
 msgstr "subtareas)"
@@ -6038,8 +6056,12 @@ msgstr "generará tareas en su"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: Encuesta de satisfacción"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: encuesta "
+"de satisfacción"
 
 #. module: project
 #. odoo-javascript

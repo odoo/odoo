@@ -30,21 +30,21 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2024
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2024
 # Pekka Ikonen, 2024
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Martin Trigaux, 2024
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-27 04:55+0000\n"
+"POT-Creation-Date: 2024-08-19 07:28+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -987,8 +987,16 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
+"Voit jakaa asiakirjan asiakkaillesi.\n"
+"Jätä se tyhjäksi, jos et halua jakaa asiakirjaa asiakkaan kanssa.\n"
+"Tarjous: Asiakirja lähetetään asiakkaille ja se on asiakkaiden käytettävissä milloin tahansa.\n"
+"- tämä vaihtoehto voi olla hyödyllinen tuotekuvaustiedostojen jakamisessa.\n"
+"Vahvistettu tilaus: Asiakirja lähetetään asiakkaille, ja asiakkaat saavat sen käyttöönsä.\n"
+"- tämä vaihtoehto voi olla hyödyllinen esimerkiksi käyttöohjeiden tai verkkokaupasta ostetun digitaalisen sisällön jakamisessa.\n"
+"Tarjous: Asiakirja sisällytetään tarjouksen pdf-tiedostoon otsikkosivujen ja tarjoustaulukon väliin. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1784,8 +1792,14 @@ msgstr "Toimituksen määrä"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines."
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Toimituspäivä jonka voit luvata asiakkaalle, laskettu myyntirivien "
+"minimiliidiajan perusteella, jos rivillä on palvelutuote. Jos tarvitaan "
+"toimitusta, tilauksen toimitusehdot otetaan huomioon laskettaessa rivien "
+"minimi- tai maksimiliidiaikoja."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2777,6 +2791,11 @@ msgid "New Quotation"
 msgstr "Uusi tarjous"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Seuraavan toimenpiteen kalenterimerkintä"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Seuraavan toimenpiteen eräpäivä"
@@ -3142,6 +3161,11 @@ msgstr "Oscar Morgan"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Info"
 msgstr "Muut tiedot"
+
+#. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "PDF Quote"
+msgstr "PDF-tarjouspyyntö"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
@@ -3510,11 +3534,6 @@ msgid "Quotation #"
 msgstr "Tarjous #"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "Quotation / Order"
-msgstr "Myyntitarjous / Myyntitilaus"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Tarjousten määrä"
@@ -3595,6 +3614,11 @@ msgstr "Myyntitarjoukset ja myyntitilaukset"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "Tarkasteltavat tarjoukset"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3826,14 +3850,14 @@ msgid "Sales Analysis"
 msgstr "Myyntianalyysi"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis Per Customers"
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Myyntianalyysi myyjittäin"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Myyntianalyysi asiakkaittain"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -3954,6 +3978,17 @@ msgstr "Myyntitiimit"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Myyntivaroitukset"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
+msgid ""
+"Sales order item to which the time spent will be added in order to be "
+"invoiced to your customer. Remove the sales order item for the timesheet "
+"entry to be non-billable."
+msgstr ""
+"Myyntitilauserä, johon käytetty aika lisätään, jotta se voidaan laskuttaa "
+"asiakkaalta. Poista myyntitilauserä, jotta työaikakirjaus ei olisi "
+"laskutettava."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4636,11 +4671,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "Ennakkomaksun on olatava positiivinen."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Tilauksia ei löytynyt."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Tililläsi ei tällä hetkellä ole tarjouksia."
@@ -5077,6 +5107,7 @@ msgstr "Varoitus"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Warning for %s"

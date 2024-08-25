@@ -3,17 +3,17 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 10:10+0000\n"
+"POT-Creation-Date: 2024-08-19 07:27+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -563,6 +563,11 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
+msgid "Company warning"
+msgstr "Avertissement de la société"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
@@ -651,7 +656,7 @@ msgstr "Activer Xml Ubl Cii"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "Erreurs survenues lors de la création du document EDI (format : %s):"
 
@@ -741,9 +746,13 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
+msgid "Partner warning"
+msgstr "Avertissement du partenaire"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
-#, python-format
 msgid ""
 "Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code "
 "instead."
@@ -754,7 +763,6 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
-#, python-format
 msgid "Peppol EAS code 9955 is deprecated. Please use 0007 instead."
 msgstr ""
 "Le code EAS 9955 Peppol est obsolète. Veuillez utiliser le code 0007 à la "
@@ -763,23 +771,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
-#, python-format
 msgid ""
 "Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
 "instead."
 msgstr ""
 "Les codes EAS 0037, 0212, 0213, 0215 Peppol sont obsolètes. Veuillez "
 "utiliser le code 0216 à la place."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
-#, python-format
-msgid ""
-"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
-msgstr ""
-"Les codes EAS 0212 et 0213 Peppol sont obsolètes. Veuillez utiliser le code "
-"0216 à la place."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -797,6 +794,15 @@ msgstr "Peppol e-address (EAS)"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
 msgid "Peppol format"
 msgstr "Format Peppol"
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_move_send_form
+msgid ""
+"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
+"generate a complete file."
+msgstr ""
+"Veuillez compléter l'EAS Peppol et Endpoint Peppol dans le formulaire de "
+"votre entreprise pour générer un fichier complet."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -817,7 +823,6 @@ msgstr "Taxe '%s' est invalide : %s"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
-#, python-format
 msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
@@ -856,14 +861,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
 msgid "The VAT of the %s should be prefixed with its country code."
 msgstr "La TVA de %s doit être précédée du code du pays. "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
 msgid "The country is required for the %s."
 msgstr "Le pays est requis pour %s."
 
@@ -897,8 +900,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
-#, python-format
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 msgid ""
 "The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
 "Please check those in their Accounting tab. Otherwise, the generated files "
@@ -907,17 +909,6 @@ msgstr ""
 "Les partenaires suivants n'ont pas de champ Peppol EAS ou Peppol Endpoint : "
 "%s. Veuillez les vérifier dans l'onglet Comptabilité. Dans le cas contraire,"
 " les fichiers générés seront incomplets."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
-msgstr ""
-"La facture contient des lignes avec un prix unitaire négatif, ce qui n'est "
-"pas autorisé. Il se peut que vous deviez définir une quantité négative à la "
-"place."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -931,8 +922,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
-#, python-format
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
 "those in its Accounting tab or the generated file will be incomplete."
@@ -940,13 +930,6 @@ msgstr ""
 "Le partenaire suivant n'a pas de champ EAS Peppol ou Endpoint Peppol. "
 "Veuillez vérifier ceux-ci dans l'onglet Comptabilité. Dans le cas contraire,"
 " le fichier généré sera incomplet."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr "Le fournisseur %s doit avoir un registre des sociétés de Bronnoysund."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -1011,11 +994,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "faux"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
