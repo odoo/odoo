@@ -726,7 +726,7 @@ class Meeting(models.Model):
             recurrences._select_new_base_event()
 
         # Notify the concerned attendees (must be done after removing the events)
-        self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
+        # self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
 
     def copy(self, default=None):
@@ -951,29 +951,19 @@ class Meeting(models.Model):
     # ALARMS
     # ------------------------------------------------------------
 
-    def _get_trigger_alarm_types(self):
-        return ['email']
-
     def _setup_alarms(self):
         """ Schedule cron triggers for future events """
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm').sudo()
-        alarm_types = self._get_trigger_alarm_types()
-        events_to_notify = self.env['calendar.event']
-        triggers_by_events = {}
+        triggers_by_events = defaultdict(lambda: [])
         for event in self:
-            existing_trigger = event.recurrence_id.trigger_id
-            for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
+            existing_triggers = event.recurrence_id.trigger_ids
+            for alarm in event.alarm_ids:
                 at = event.start - timedelta(minutes=alarm.duration_minutes)
-                create_trigger = not existing_trigger or existing_trigger and existing_trigger.call_at != at
+                create_trigger = not existing_triggers or existing_triggers and existing_triggers.filtered(lambda t: t.alarm_type == alarm.alarm_type).call_at != at
                 if create_trigger and (not cron.lastcall or at > cron.lastcall):
                     # Don't trigger for past alarms, they would be skipped by design
                     trigger = cron._trigger(at=at)
-                    triggers_by_events[event.id] = trigger.id
-            if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
-                # filter events before notifying attendees through calendar_alarm_manager
-                events_to_notify |= event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
-        if events_to_notify:
-            self.env['calendar.alarm_manager']._notify_next_alarm(events_to_notify.partner_ids.ids)
+                    triggers_by_events[event.id].append(trigger.id)
         return triggers_by_events
 
     def get_next_alarm_date(self, events_by_alarm):

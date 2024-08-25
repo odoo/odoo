@@ -43,6 +43,3 @@ class CalendarEvent(models.Model):
                 'default_mass_keep_log': True,
             },
         }
-
-    def _get_trigger_alarm_types(self):
-        return super()._get_trigger_alarm_types() + ['sms']
