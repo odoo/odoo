@@ -5,7 +5,7 @@
 <!-- All Forums Layout -->
 <template id="forum_all" name="Forum Navigation">
 
-    <t t-set="col_class" t-valuef="col-md col-xl-3 col-xxl-2 mb-3"/>
+    <t t-set="col_class" t-valuef="col-md col-xl-3 col-xxl-2"/>
     <t t-set="img_class" t-valuef="col-md-4"/>
     <t t-set="content_class" t-valuef="col-md-8"/>
 
@@ -34,10 +34,10 @@
     <!-- First, list all forums (those with descriptions first) -->
     <t t-foreach="sorted_forums" t-as="forum">
         <t t-set="has_desc" t-value="forum.description"/>
-        <div t-attf-class="#{col_class}">
+        <div t-attf-class="#{is_view_active('website_forum.opt_last_post') and forum.last_post_id and 'd-flex flex-column gap-2 mb-4 '}#{col_class} mb-lg-3">
             <a t-attf-href="/forum/#{slug(forum)}"
-                class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base"
-                t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920') if forum.image_1920 else ''}')"
+               class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base"
+               t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920') if forum.image_1920 else ''}')"
             >
                 <div class="o_we_bg_filter o_wforum_background_gradient"/>
                 <div t-if="forum_badge" class="badge position-absolute top-0 end-0 m-3 text-bg-secondary" t-out="forum_badge"></div>
@@ -51,17 +51,17 @@
                         </span>
                         <span t-else="" class="badge text-dark">No posts yet</span>
                     </t>
-                    <div t-if="is_view_active('website_forum.opt_last_post') and forum.last_post_id" class="text-truncate">
-                        <span class="badge bg-dark me-1">Last post:</span>
-                        <object>
-                            <a
-                                t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"
-                                t-out="forum.last_post_id.name"
-                            />
-                        </object>
-                    </div>
                 </div>
             </a>
+            <div class="o_wforum_latest_post d-flex flex-column" t-if="is_view_active('website_forum.opt_last_post') and forum.last_post_id">
+                <small class="text-uppercase text-muted">Latest post</small>
+                <object class="position-relative d-flex align-items-center gap-1">
+                   <img class="o_wforum_avatar rounded-circle" t-att-src="request.website.image_url(forum.last_post_id.create_uid, 'avatar_128', '40x40')"></img>
+                    <a class="small text-truncate stretched-link"
+                       t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"
+                       t-out="forum.last_post_id.name"/>
+                </object>
+            </div>
         </div>
     </t>
 </template>
