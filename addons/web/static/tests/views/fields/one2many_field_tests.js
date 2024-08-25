@@ -3846,6 +3846,43 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "Boolean toggle in x2many must not be editable if form is not editable",
+        async function (assert) {
+            assert.expect(7);
+            serverData.views = {
+                "turtle,false,form":
+                    '<form><field name="turtle_bar" widget="boolean_toggle"/></form>',
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form edit="0">
+                        <field name="turtles">
+                            <tree>
+                                <field name="turtle_bar" widget="boolean_toggle"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+            });
+
+            assert.hasClass(target.querySelector("div.o_form_renderer"), "o_form_readonly");
+            assert.hasClass(target.querySelector("div.o_list_view"), "o_field_x2many o_field_x2many_list");
+            var $booleanToggle = target.querySelector('.o_data_row .o_boolean_toggle input');
+            assert.ok($booleanToggle.disabled, "The boolean toggle should be disabled when the form is readonly");
+            await click(target, ".o_data_cell");
+            assert.containsOnce(target, "div.modal-dialog");
+            assert.hasClass(target.querySelector("div.modal-content"), "o_form_view");
+            assert.hasClass(target.querySelector("div.o_form_renderer"), "o_form_readonly");
+            var $booleanToggle2 = target.querySelector("div.o-checkbox input[type='checkbox']");
+            assert.ok($booleanToggle2.disabled, "The boolean toggle should be disabled when the form is readonly");
+        }
+    );
+
     QUnit.test("many2many list: unlink two records", async function (assert) {
         assert.expect(4);
         serverData.models.partner.records[0].p = [1, 2, 4];
