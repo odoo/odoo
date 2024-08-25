@@ -40,6 +40,24 @@ class Http(models.AbstractModel):
         return any(bot in user_agent for bot in cls.bots)
 
     @classmethod
+    def may_be_defender(cls):
+        defender_mimetypes = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+        defender_language = 'en-US,en;q=0.9'
+
+        request_language = request.httprequest.accept_languages.to_header()
+        request_mimetypes = ''
+        if 'HTTP_ACCEPT' in request.httprequest.environ:
+            # Werkzeug sorts the request mimetypes weirdly, so it's easier to use the source accept header
+            request_mimetypes = request.httprequest.environ['HTTP_ACCEPT']
+
+        if defender_mimetypes == request_mimetypes and defender_language == request_language:
+            return True
+        if request.httprequest.method == 'HEAD' and not request.httprequest.user_agent:
+            return True
+        return False
+
+
+    @classmethod
     def _handle_debug(cls):
         debug = request.httprequest.args.get('debug')
         if debug is not None:
