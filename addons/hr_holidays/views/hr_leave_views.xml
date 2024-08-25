@@ -94,6 +94,8 @@
                 <field name="name"/>
                 <field name="number_of_days"/>
                 <field name="can_approve"/>
+                <field name="can_validate"/>
+                <field name="can_refuse"/>
                 <field name="holiday_status_id"/>
                 <field name="state"/>
                 <field name="supported_attachment_ids_count"/>
@@ -139,13 +141,13 @@
                                     <span t-attf-class="badge badge-pill {{ classname }}"><t t-esc="record.state.value"/></span>
                                 </div>
                                 <div class="col-6" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
-                                    <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm pl-0">
+                                    <button t-if="record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-thumbs-up"/> Approve
                                     </button>
-                                    <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm pl-0" groups="hr_holidays.group_hr_holidays_manager">
+                                    <button t-if="record.can_validate.raw_value" name="action_validate" type="object" class="btn btn-link btn-sm pl-0" groups="hr_holidays.group_hr_holidays_manager">
                                         <i class="fa fa-check"/> Validate
                                     </button>
-                                    <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm pl-0">
+                                    <button t-if="record.can_refuse.raw_value" name="action_refuse" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-times"/> Refuse
                                     </button>
                                 </div>
@@ -197,15 +199,22 @@
         <field name="arch" type="xml">
             <form string="Time Off Request">
             <field name="can_reset" invisible="1"/>
+            <field name="can_confirm" invisible="1"/>
             <field name="can_approve" invisible="1"/>
+            <field name="can_validate" invisible="1"/>
+            <field name="can_refuse" invisible="1"/>
             <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
-                <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('id', '=', False), ('can_confirm', '=', False)]}"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('id', '=', False), ('can_approve', '=', False)]}"/>
+                <button string="Validate" name="action_validate" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('id', '=', False), ('can_validate', '=', False)]}"/>
+                <button string="Refuse" name="action_refuse" type="object"
+                    attrs="{'invisible': ['|', ('id', '=', False), ('can_refuse', '=', False)]}"/>
                 <button string="Mark as Draft" name="action_draft" type="object"
-                        attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                    attrs="{'invisible': ['|', ('id', '=', False), ('can_reset', '=', False)]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
