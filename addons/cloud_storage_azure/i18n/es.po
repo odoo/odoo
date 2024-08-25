@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-08-18 03:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,37 +28,38 @@ msgstr "Archivo adjunto"
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_account_name
 msgid "Azure Account Name"
-msgstr ""
+msgstr "Nombre de la cuenta de Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_id
 msgid "Azure Client ID"
-msgstr ""
+msgstr "ID de cliente de Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_secret
 msgid "Azure Client Secret"
-msgstr ""
+msgstr "Secreto de cliente de Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields.selection,name:cloud_storage_azure.selection__res_config_settings__cloud_storage_provider__azure
 msgid "Azure Cloud Storage"
-msgstr ""
+msgstr "Almacenamiento en la nube de Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_container_name
 msgid "Azure Container Name"
-msgstr ""
+msgstr "Nombre del contenedor de Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_tenant_id
 msgid "Azure Tenant ID"
-msgstr ""
+msgstr "ID del propietario de Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
 msgstr ""
+"El proveedor de almacenamiento en la nube para los nuevos archivos adjuntos"
 
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_res_config_settings
@@ -67,7 +69,7 @@ msgstr "Ajustes de configuración"
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key
 msgid "Invalidate Cached Azure User Delegation Key"
-msgstr ""
+msgstr "Invalidar la clave de delegación de usuarios de Azure en caché"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -76,6 +78,8 @@ msgid ""
 "Some Azure attachments are in use, please migrate their cloud storages "
 "before disable this module"
 msgstr ""
+"Algunos archivos adjuntos de Azure están en uso, migre su almacenamiento en "
+"la nube antes de deshabilitar este módulo. "
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -84,6 +88,8 @@ msgid ""
 "The connection string is not allowed to download blobs from the container.\n"
 "%s"
 msgstr ""
+"La cadena de conexión no tiene permitido descargar blobs del contenedor. \n"
+"%s"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -92,3 +98,5 @@ msgid ""
 "The connection string is not allowed to upload blobs to the container.\n"
 "%s"
 msgstr ""
+"La cadena de conexión no tiene permitido subir blobs al contenedor.\n"
+"%s"

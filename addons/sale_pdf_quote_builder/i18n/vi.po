@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr ""
 "VD: tùy chọn này có thể hữu ích khi chia sẻ tệp mô tả Sản phẩm.\n"
 "Khi xác nhận đơn hàng: tài liệu sẽ được gửi và khách hàng có thể truy cập.\n"
 "VD: tùy chọn này có thể hữu ích khi chia sẻ Hướng dẫn sử dụng hoặc nội dung kỹ thuật số được mua trên sàn thương mại điện tử.\n"
-"Bên trong báo giá pdf: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
+"Pdf bên trong báo giá: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -154,7 +154,7 @@ msgstr "Trang mở đầu"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_quote_builder_dynamic_fields_wizard_line__document_type__header_footer
 msgid "Header/Footer"
-msgstr ""
+msgstr "Header/Footer"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__id
@@ -174,6 +174,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Tên trường biểu mẫu %(field_name)s không hợp lệ. Tên trường biểu mẫu trong "
+"header hoặc footer không được bắt đầu bằng \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -182,6 +184,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Tên trường biểu mẫu %(field_name)s không hợp lệ. Tên chỉ được chứa chữ cái, "
+"số, dấu gạch nối hoặc dấu gạch dưới."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -190,6 +194,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Đường dẫn %(path)s không hợp lệ. Đường dẫn chỉ được chứa chữ cái, số, dấu "
+"gạch nối hoặc dấu gạch dưới."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -311,7 +317,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/wizards/dynamic_fields_wizard.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "Trường %(field_name)s không tồn tại trong mô hình %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -325,6 +331,14 @@ msgid ""
 "                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>\n"
 "                            documents using pdf form fields. (see"
 msgstr ""
+"Báo giá được tạo bằng cách ghép các trang header, mô tả sản phẩm,<br/>\n"
+"                            và trang footer. <br/>\n"
+"                            Để thêm các trang sản phẩm:<br/>\n"
+"                            1. từ biểu mẫu sản phẩm, sử dụng nút \"tài liệu sản phẩm\"<br/>\n"
+"                            2. tải lên tệp PDF của sản phẩm<br/>\n"
+"                            3. đặt chế độ hiển thị thành \"Bên trong báo giá\"<br/>\n"
+"                            Dữ liệu của báo giá (tên khách hàng, mã tham chiếu báo giá, ...) được đưa vào<br/>\n"
+"                            tài liệu bằng cách sử dụng các trường biểu mẫu pdf. (xem"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard

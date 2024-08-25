@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-08-18 03:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,19 +24,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(field_path)s cannot be used as an image value for %(element_role)s"
-msgstr ""
+msgstr "%(field_path)s 不可在以下項目作為圖片值使用：%(element_role)s"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(model_name)s.%(field_name)s cannot be used for card campaigns."
-msgstr ""
+msgstr "%(model_name)s.%(field_name)s 不可用於卡片活動。"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(model_name)s.%(field_name)s does not seem reachable."
-msgstr ""
+msgstr "%(model_name)s.%(field_name)s 似乎無法到達。"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
@@ -43,16 +44,18 @@ msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
 "title=\"Clicks\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"點擊次數\" role=\"img\" "
+"title=\"點擊次數\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-share\" aria-label=\"分享次數\" role=\"img\" title=\"分享次數\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "<small>Where does this link to?</small>"
-msgstr ""
+msgstr "<small>這是連結至哪裏的？</small>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -61,6 +64,9 @@ msgid ""
 "                                Clicks\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                點擊次數\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -69,6 +75,9 @@ msgid ""
 "                                Opened\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                已開啟\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -77,6 +86,9 @@ msgid ""
 "                                Sent\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                已傳送\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -85,6 +97,9 @@ msgid ""
 "                                Shared\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                已分享\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_needaction
@@ -179,53 +194,53 @@ msgstr "卡片"
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_campaign_action
 msgid "Card Campaign"
-msgstr ""
+msgstr "卡片活動"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
 msgid "Card Click Count"
-msgstr ""
+msgstr "卡片點按次數"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_count
 msgid "Card Count"
-msgstr ""
+msgstr "卡片數目"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_element_ids
 msgid "Card Element"
-msgstr ""
+msgstr "卡片元素"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_image
 msgid "Card Element Image"
-msgstr ""
+msgstr "卡片元素圖片"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_role
 msgid "Card Element Role"
-msgstr ""
+msgstr "卡片元素角色"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_text
 msgid "Card Element Text"
-msgstr ""
+msgstr "卡片元素文字"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_share_count
 msgid "Card Share Count"
-msgstr ""
+msgstr "卡片分享次數"
 
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_template_action
 #: model:ir.ui.menu,name:marketing_card.cards_template_menu
 msgid "Card Template"
-msgstr ""
+msgstr "卡片範本"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Click here for your reward!"
-msgstr ""
+msgstr "按此處領取獎勵！"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__color
@@ -235,12 +250,12 @@ msgstr "顏色"
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.cards_card_action
 msgid "Create a Card Campaign to send cards to your partners"
-msgstr ""
+msgstr "建立卡片活動，以向你的合作夥伴發送卡片"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid "Create a Sharing Campaign!"
-msgstr ""
+msgstr "建立分享推廣活動！"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_template_action
@@ -270,12 +285,12 @@ msgstr "建立於"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
 msgid "Default Background"
-msgstr ""
+msgstr "預設背景"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__post_suggestion
 msgid "Description below the card and default text when sharing on X"
-msgstr ""
+msgstr "卡片下方的描述，以及在 X 分享時的預設文字"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_template_id
@@ -305,7 +320,7 @@ msgstr "動態"
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_campaign_element_role_uniq
 msgid "Each campaign should only have one element for each role."
-msgstr ""
+msgstr "每個活動的每個角色，只可擁有一個元素。"
 
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_card_campaign_record_unique
@@ -315,17 +330,17 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card_share
 msgid "Email Marketing Cards Wizard"
-msgstr ""
+msgstr "電子郵件推廣卡片精靈"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__field_path
 msgid "Field Path"
-msgstr ""
+msgstr "欄位路徑"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Filter By"
-msgstr ""
+msgstr "篩選依據"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -369,11 +384,17 @@ msgid ""
 "\n"
 "Many thanks"
 msgstr ""
+"大家好\n"
+"\n"
+"這是宣傳你有份參與的連結。\n"
+"            非常感謝你對此推廣活動的幫助！\n"
+"\n"
+"謝謝"
 
 #. module: marketing_card
 #: model:ir.module.category,description:marketing_card.module_category_marketing_card
 msgid "Helps you manage marketing card campaigns."
-msgstr ""
+msgstr "協助你管理推廣卡片推廣活動。"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -415,17 +436,17 @@ msgstr "圖片"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__image_1
 msgid "Image 1"
-msgstr ""
+msgstr "圖片 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__image_2
 msgid "Image 2"
-msgstr ""
+msgstr "圖片 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__image_preview
 msgid "Image Preview"
-msgstr ""
+msgstr "圖片預覽"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_is_follower
@@ -435,7 +456,7 @@ msgstr "是關注者"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Join me at this event!"
-msgstr ""
+msgstr "跟我一起參加這個活動吧！"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__lang
@@ -478,38 +499,38 @@ msgstr "手動"
 #: model:ir.ui.menu,name:marketing_card.card_menu
 #: model:ir.ui.menu,name:marketing_card.marketing_card_menu_technical
 msgid "Marketing Card"
-msgstr ""
+msgstr "推廣卡片"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__card_campaign_id
 msgid "Marketing Card Campaign"
-msgstr ""
+msgstr "推廣卡片推廣活動"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_element
 msgid "Marketing Card Campaign Element"
-msgstr ""
+msgstr "推廣卡片活動元素"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_tag
 msgid "Marketing Card Campaign Tag"
-msgstr ""
+msgstr "推廣卡片活動標籤"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_manager
 msgid "Marketing Card Manager"
-msgstr ""
+msgstr "推廣卡片經理"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_template
 msgid "Marketing Card Template"
-msgstr ""
+msgstr "推廣卡片範本"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_user
 msgid "Marketing Card User"
-msgstr ""
+msgstr "推廣卡片使用者"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__message
@@ -615,33 +636,33 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__post_suggestion
 msgid "Post Suggestion"
-msgstr ""
+msgstr "帖文建議"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Powered By"
-msgstr ""
+msgstr "技術提供："
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid ""
 "Prepare a design and some content and let your community spread the word!"
-msgstr ""
+msgstr "準備設計和一些內容，讓你的社群傳播消息！"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_ref
 msgid "Preview Record"
-msgstr ""
+msgstr "預覽記錄"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_url
 msgid "Preview Record Link"
-msgstr ""
+msgstr "預覽記錄連結"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Preview Target"
-msgstr ""
+msgstr "預覽目標"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_color
@@ -651,7 +672,7 @@ msgstr "主要色彩"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_text_color
 msgid "Primary Text Color"
-msgstr ""
+msgstr "主要文字顏色"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -660,7 +681,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_5
 msgid "Profile Picture"
-msgstr ""
+msgstr "主題圖片"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__rating_ids
@@ -685,7 +706,7 @@ msgstr "記錄 ID"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__render_type
 msgid "Render Type"
-msgstr ""
+msgstr "繪製類型"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__render_model
@@ -706,7 +727,7 @@ msgstr "責任使用者"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_target_url
 msgid "Reward Link"
-msgstr ""
+msgstr "獎勵連結"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
@@ -716,12 +737,12 @@ msgstr "簡訊發送錯誤"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Search Card"
-msgstr ""
+msgstr "搜尋卡片"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 msgid "Search Share Campaign"
-msgstr ""
+msgstr "搜尋分享推廣活動"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_color
@@ -731,22 +752,22 @@ msgstr "次要色彩"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_text_color
 msgid "Secondary Text Color"
-msgstr ""
+msgstr "次要文字顏色"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__section_1
 msgid "Section 1"
-msgstr ""
+msgstr "章節 1"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Select a preview record..."
-msgstr ""
+msgstr "選擇預覽記錄⋯"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Select where to share"
-msgstr ""
+msgstr "選擇分享位置"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -762,32 +783,32 @@ msgstr "發送並關閉"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Send Cards"
-msgstr ""
+msgstr "傳送卡片"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Share Campaign"
-msgstr ""
+msgstr "分享推廣計劃"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_element_view_form
 msgid "Share Campaign Render Element"
-msgstr ""
+msgstr "分享推廣活動繪製元素"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_list
 msgid "Share Card"
-msgstr ""
+msgstr "分享卡片"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_share_view_form
 msgid "Share Cards"
-msgstr ""
+msgstr "分享卡片"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__share_status
 msgid "Share Status"
-msgstr ""
+msgstr "分享狀態"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_template_view_form
@@ -797,7 +818,7 @@ msgstr "分享模板"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__visited
 msgid "Share URL Visited"
-msgstr ""
+msgstr "分享網址已存取"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -812,12 +833,12 @@ msgstr "分享"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url
 msgid "Shared Link"
-msgstr ""
+msgstr "已分享連結"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__shared
 msgid "Shared on Social Networks"
-msgstr ""
+msgstr "已在社交網絡上分享"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_state
@@ -835,17 +856,17 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subheader
 msgid "Sub-Header"
-msgstr ""
+msgstr "副標題"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_1
 msgid "Sub-Section 1"
-msgstr ""
+msgstr "小節 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_2
 msgid "Sub-Section 2"
-msgstr ""
+msgstr "小節 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__subject
@@ -892,7 +913,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
 msgid "Thanks to You Message"
-msgstr ""
+msgstr "感謝訊息"
 
 #. module: marketing_card
 #. odoo-python
@@ -900,7 +921,7 @@ msgstr ""
 msgid ""
 "The UTM source '%s' cannot be deleted as it is used to promote marketing "
 "cards campaigns."
-msgstr ""
+msgstr "UTM 來源「%s」不可刪除，因為它用於宣傳推廣卡片的推廣活動。"
 
 #. module: marketing_card
 #. odoo-python
@@ -921,7 +942,7 @@ msgstr "UTM 來源"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__render_type__text
 msgid "User Text"
-msgstr ""
+msgstr "使用者文字"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.robots
@@ -929,6 +950,8 @@ msgid ""
 "User-agent: *\n"
 "                Allow: /cards/"
 msgstr ""
+"使用者代理：*\n"
+"                允許：/cards/"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__value_type
@@ -938,7 +961,7 @@ msgstr "金額類型"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Visited"
-msgstr ""
+msgstr "已到訪"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__website_message_ids
@@ -954,12 +977,12 @@ msgstr "網站溝通記錄"
 #. odoo-python
 #: code:addons/marketing_card/wizards/card_card_share.py:0
 msgid "Your Card"
-msgstr ""
+msgstr "你的卡片"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
-msgstr ""
+msgstr "你的網站主頁"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -973,15 +996,15 @@ msgstr "按鈕文字"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. \"https://www.mycompany.com/reward\""
-msgstr ""
+msgstr "例：https://www.mycompany.com/reward"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Odoo Experience Talks"
-msgstr ""
+msgstr "例：Odoo 體驗展演講"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "field path must be set on %(element_role)s"
-msgstr ""
+msgstr "%(element_role)s 必須設定欄位路徑"

@@ -3,8 +3,8 @@
 # 	* sale_project
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,6 +125,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">顧客</span>\n"
+"                        <span class=\"o_stat_text\">プレビュー</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -152,17 +154,17 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送数量はメカニズムによって自動的に計算されます：\n"
-"  - 手動：数量を明細上で手動で設定します\n"
-"  - 費用からの分析： 数量は計上された費用からの合計数量です\n"
-"  - タイムシート：数量は、この売上明細にリンクされたタスクに記録された時間の合計です\n"
-"  - 在庫移動： 数量は確定したピッキングに由来します\n"
+"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されます: \n"
+"  - 手動: 数量を明細上で手動で設定します\n"
+"  - 費用からの分析: 数量は計上された費用からの合計数量です\n"
+"  - タイムシート:数量は、この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - 在庫移動: 数量は確定したピッキングに由来します\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr "納品数量に基づく（手動）"
+msgstr "配送済数量に基づく(手動)"
 
 #. module: sale_project
 #. odoo-python
@@ -210,19 +212,19 @@ msgstr "販売の第一歩、見積を作成しましょう。"
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
-msgstr ""
+msgstr "販売オーダの明細ごとにタスクを作成し、費やした時間を追跡します。"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
-msgstr ""
+msgstr "既存のプロジェクトにタスクを作成し費やした時間を追跡します。"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "オーダ用に空のプロジェクトを作成し費やした時間を追跡します。"
 
 #. module: sale_project
 #. odoo-python
@@ -244,7 +246,7 @@ msgstr "オーダで作成"
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
-msgstr ""
+msgstr "プロジェクトまたはタスクを後で作成し、それらをオーダにリンクして費やした時間を追跡します。"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -402,7 +404,7 @@ msgstr "オフィス家具設定(タスク)"
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
+msgstr "見積が顧客に確認されると、販売オーダになります。"
 
 #. module: sale_project
 #. odoo-python
@@ -639,7 +641,7 @@ msgstr "タスク"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "タスクが作成されました (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -698,7 +700,7 @@ msgstr "この販売オーダは少なくとも1つのプロダクトタイプ \
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "このタスクの作成元: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #. odoo-python
@@ -756,4 +758,4 @@ msgstr "オーダ項目%(order_id)s-%(product_id)sは再請求された費用で
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "顧客請求書を作成して支払を回収することができます。"

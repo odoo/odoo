@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Show me how to obtain the X API key and X API secret"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Chỉ cho tôi cách lấy mã khóa API X và mã bí mật API X"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -48,17 +51,17 @@ msgstr "<strong>Tên ứng dụng: </strong> chọn tên duy nhất"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo X Integration"
-msgstr ""
+msgstr "<strong>Mô tả: </strong> Tích hợp Odoo với X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo X Integration"
-msgstr ""
+msgstr "<strong>Tên: </strong> Tích hợp Odoo với X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Use Case: </strong> Embedding Posts in a website"
-msgstr ""
+msgstr "<strong>Trường hợp sử dụng: </strong> Chèn Bài viết vào trang web"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -79,6 +82,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "posts are protected."
 msgstr ""
+"Thông tin xác thực đăng nhập bị thiếu hoặc không chính xác. Có thể tên hiển "
+"thị của bài viết được bảo vệ.  "
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -132,7 +137,7 @@ msgstr "Lỗi HTTP: Định cấu hình sai "
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "How to configure the X API access"
-msgstr ""
+msgstr "Cách cấu hình quyền truy cập API X"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -143,7 +148,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "Internet connection refused: We failed to reach a X server."
-msgstr ""
+msgstr "Kết nối Internet bị từ chối: Kết nối với máy chủ X không thành công. "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -171,6 +176,8 @@ msgid ""
 "Once connected, and if not already done, complete the X portal access "
 "process on"
 msgstr ""
+"Sau khi kết nối và nếu chưa hoàn tất, hãy hoàn thành quy trình truy cập cổng"
+" X trên"
 
 #. module: website_twitter
 #. odoo-python
@@ -179,12 +186,15 @@ msgid ""
 "Please set a X screen name to load favorites from, in the Website Settings "
 "(it does not have to be yours)"
 msgstr ""
+"Hãy đặt tên hiển thị X để tải về tin yêu thích, trong cài đặt Trang web "
+"(không nhất thiết phải là tên của bạn)"
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 msgid "Please set the X API Key and Secret in the Website Settings."
 msgstr ""
+"Vui lòng thiết lập mã khoá và mã bí mật API X trong cài đặt Trang web."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
@@ -218,12 +228,15 @@ msgid ""
 "Screen Name of the X Account from which you want to load favorites.It does "
 "not have to match the API Key/Secret."
 msgstr ""
+"Tên hiển thị của tài khoản X mà bạn tải về tin yêu thích. Không nhất thiết "
+"phải khớp với mã khoá/mã bó mật API."
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "The X servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"Máy chủ X đã hoạt động nhưng bị quá tải yêu cầu. Vui lòng thử lại sau. "
 
 #. module: website_twitter
 #. odoo-python
@@ -232,6 +245,8 @@ msgid ""
 "The X servers are up, but the request could not be serviced due to some "
 "failure within our stack. Try again later."
 msgstr ""
+"Máy chủ X đã hoạt động nhưng không thể thực hiện yêu cầu do lỗi trong stack "
+"của chúng tôi. Vui lòng thử lại sau. "
 
 #. module: website_twitter
 #. odoo-python
@@ -240,6 +255,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your X API Key and Secret."
 msgstr ""
+"Yêu cầu được tiếp nhận nhưng bị từ chối hoặc truy cập không được phép. Vui "
+"lòng kiểm tra mã khoá và mã bí mật API X"
 
 #. module: website_twitter
 #. odoo-python
@@ -271,7 +288,7 @@ msgstr "Trang web X"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X API Credentials"
-msgstr ""
+msgstr "Thông tin xác thực API X"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -286,28 +303,28 @@ msgstr "Mã bí mật API X"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "X API key"
-msgstr ""
+msgstr "Mã khóa API X"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "X API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Bạn có thể lấy mã khoá API X từ https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "X API secret"
-msgstr ""
+msgstr "Mã bí mật API X"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "X API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Bạn có thể lấy mã bí mật API X từ https://apps.twitter.com/"
 
 #. module: website_twitter
 #. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 msgid "X Configuration"
-msgstr ""
+msgstr "Cấu hình X"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -317,12 +334,12 @@ msgstr "ID X"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X Portal"
-msgstr ""
+msgstr "Cổng thông tin X"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X Roller"
-msgstr ""
+msgstr "Roller X"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
@@ -334,12 +351,13 @@ msgstr "X Scroller"
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "X authorization error! Please double-check your X API Key and Secret!"
 msgstr ""
+"Lỗi xác thực X! Vui lòng kiểm tra lại mã khóa và mã bí mật API X của bạn!"
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "X is down or being upgraded."
-msgstr ""
+msgstr "X không hoạt động hoặc đang được cập nhật. "
 
 #. module: website_twitter
 #. odoo-python
@@ -348,16 +366,18 @@ msgid ""
 "X seems broken. Please retry later. You may consider posting an issue on X "
 "forums to get help."
 msgstr ""
+"Có vẻ X không hoạt động. Vui lòng thử lại sau. Bạn có thể cân nhắc đăng lỗi "
+"này lên diễn đàn X để nhận trợ giúp. "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "X server uri"
-msgstr ""
+msgstr "Url máy chủ X"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X tutorial"
-msgstr ""
+msgstr "Hướng dẫn X"
 
 #. module: website_twitter
 #. odoo-python
@@ -366,17 +386,19 @@ msgid ""
 "X user @%(username)s has less than 12 favorite posts. Please add more or "
 "choose a different screen name."
 msgstr ""
+"Người dùng X @%(username)s có ít hơn 12 bài viết yêu thích. Vui lòng thêm "
+"hoặc chọn một tên hiển thị khác. "
 
 #. module: website_twitter
 #. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 msgid "X's user"
-msgstr ""
+msgstr "Người dùng X"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 msgid "X: Fetch new favorites"
-msgstr ""
+msgstr "X: Lấy tin yêu thích mới"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

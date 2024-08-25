@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Show me how to obtain the X API key and X API secret"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            X APIキーとX APIシークレットの取得方法を教えてください。"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -46,17 +49,17 @@ msgstr "<strong>アプリ名: </strong>一意の名前を選択して下さい�
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo X Integration"
-msgstr ""
+msgstr "<strong>説明: </strong> Odoo X 統合"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo X Integration"
-msgstr ""
+msgstr "<strong>名前: </strong> Odoo X 統合"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Use Case: </strong> Embedding Posts in a website"
-msgstr ""
+msgstr "<strong>使用例: </strong> ウェブサイトへの投稿の埋込"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -76,7 +79,7 @@ msgstr "API secret"
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "posts are protected."
-msgstr ""
+msgstr "認証情報が不足しているか、間違っています。スクリーンネームの投稿が保護されているのかもしれません。"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -128,7 +131,7 @@ msgstr "HTTPエラー: 何かが間違って設定されています"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "How to configure the X API access"
-msgstr ""
+msgstr "Twitter Xアクセスの設定方法"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -139,7 +142,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "Internet connection refused: We failed to reach a X server."
-msgstr ""
+msgstr "インターネットアクセスが拒否されました:Xサーバにアクセスできませんでした。"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -166,7 +169,7 @@ msgstr "　"
 msgid ""
 "Once connected, and if not already done, complete the X portal access "
 "process on"
-msgstr ""
+msgstr "接続が完了したら、まだの場合は、以下で、Xポータルへのアクセス手続きを行います:"
 
 #. module: website_twitter
 #. odoo-python
@@ -174,13 +177,13 @@ msgstr ""
 msgid ""
 "Please set a X screen name to load favorites from, in the Website Settings "
 "(it does not have to be yours)"
-msgstr ""
+msgstr "ウェブサイトの設定(自分のものでなくても構いません)で、お気に入りを読み込むXのスクリーンネームを設定して下さい。"
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 msgid "Please set the X API Key and Secret in the Website Settings."
-msgstr ""
+msgstr "ウェブサイト設定でX APIキーとシークレットを設定して下さい。"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
@@ -211,13 +214,13 @@ msgstr "スクリーン名"
 msgid ""
 "Screen Name of the X Account from which you want to load favorites.It does "
 "not have to match the API Key/Secret."
-msgstr ""
+msgstr "お気に入りを読み込みたいXアカウントのスクリーン名。APIキー/シークレットと一致する必要はありません。"
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "The X servers are up, but overloaded with requests. Try again later."
-msgstr ""
+msgstr "Xのサーバは稼働していますが、要求で過重負荷がかかっています。後でもう一度お試し下さい。"
 
 #. module: website_twitter
 #. odoo-python
@@ -225,7 +228,7 @@ msgstr ""
 msgid ""
 "The X servers are up, but the request could not be serviced due to some "
 "failure within our stack. Try again later."
-msgstr ""
+msgstr "Xサーバは稼動していますが、スタック内で何らかの障害が発生したため、要求を処理できませんでした。後でもう一度お試し下さい。"
 
 #. module: website_twitter
 #. odoo-python
@@ -233,7 +236,7 @@ msgstr ""
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your X API Key and Secret."
-msgstr ""
+msgstr "要求は理解できますが、拒否されたか、アクセスが許可されていません。X APIキーとシークレットを確認して下さい。"
 
 #. module: website_twitter
 #. odoo-python
@@ -263,7 +266,7 @@ msgstr "ウェブサイトX"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X API Credentials"
-msgstr ""
+msgstr "X API 認証情報"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -278,28 +281,28 @@ msgstr "X API シークレット"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "X API key"
-msgstr ""
+msgstr "X API キー"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "X API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "X APIキーは以下から入手できます: https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "X API secret"
-msgstr ""
+msgstr "X API シークレット"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "X API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "X APIシークレットは以下から入手できます: https://apps.twitter.com/"
 
 #. module: website_twitter
 #. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 msgid "X Configuration"
-msgstr ""
+msgstr "X 設定"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -309,12 +312,12 @@ msgstr "X ID"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X Portal"
-msgstr ""
+msgstr "X ポータル"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X Roller"
-msgstr ""
+msgstr "X Roller"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
@@ -325,13 +328,13 @@ msgstr "X スクローラ"
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "X authorization error! Please double-check your X API Key and Secret!"
-msgstr ""
+msgstr "X認証エラー。X API Keyおよびシークレットを再度確認して下さい。"
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "X is down or being upgraded."
-msgstr ""
+msgstr "Xがダウンしているか、アップグレード中です。"
 
 #. module: website_twitter
 #. odoo-python
@@ -339,17 +342,17 @@ msgstr ""
 msgid ""
 "X seems broken. Please retry later. You may consider posting an issue on X "
 "forums to get help."
-msgstr ""
+msgstr "Xが壊れているようです。もう少し後でお試し下さい。Xフォーラムに問題を投稿して、サポートを頼むこともできるでしょう。"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "X server uri"
-msgstr ""
+msgstr "Xサーバ uri"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X tutorial"
-msgstr ""
+msgstr "X チュートリアル"
 
 #. module: website_twitter
 #. odoo-python
@@ -357,18 +360,18 @@ msgstr ""
 msgid ""
 "X user @%(username)s has less than 12 favorite posts. Please add more or "
 "choose a different screen name."
-msgstr ""
+msgstr "Xユーザ @%(username)s のお気に入り投稿は12以下です。さらに追加するか違うスクリーン名を選んで下さい。"
 
 #. module: website_twitter
 #. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 msgid "X's user"
-msgstr ""
+msgstr "Xユーザ"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 msgid "X: Fetch new favorites"
-msgstr ""
+msgstr "X: 新しいお気に入りを見つける"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

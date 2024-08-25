@@ -534,7 +534,7 @@ msgstr "勘定科目"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "勘定科目キャッシュラウンディング"
+msgstr "勘定科目現金端数処理"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__account_move_id
@@ -1328,17 +1328,17 @@ msgstr "出金"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Rounding"
-msgstr "キャッシュラウンディング"
+msgstr "現金端数処理"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
 msgid "Cash Rounding (PoS)"
-msgstr "現金丸め (POS)"
+msgstr "現金端数処理 (POS)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "キャッシュラウンディング"
+msgstr "現金端数処理"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1386,7 +1386,7 @@ msgstr "キャッシュレジスタ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_rounding_method
 msgid "Cash rounding"
-msgstr "キャッシュラウンディング"
+msgstr "現金端数処理"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
@@ -4261,7 +4261,7 @@ msgstr "管理者のみが領収書のヘッダとフッタを編集できます
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr "現金にのみ丸めを適用する"
+msgstr "現金にのみ端数処理を適用する"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7163,7 +7163,7 @@ msgstr "取引を有効にするには、支払明細の金額を四捨五入す
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
-msgstr "POS%(pos)sの現金丸め方針は以下である必要があります: '%(value)s'"
+msgstr "POS%(pos)sの現金端数処理方針は以下である必要があります: '%(value)s'"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8327,7 +8327,7 @@ msgstr "現在オフラインです。ページを再読み込みすると、未
 msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
-msgstr "それを使用するPOSセッションがすでに開かれている間は、現金丸め構成を変更する権限がありません。"
+msgstr "それを使用するPOSセッションがすでに開かれている間は、現金端数処理構成を変更する権限がありません。"
 
 #. module: point_of_sale
 #. odoo-javascript

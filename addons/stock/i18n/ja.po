@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1576,7 +1576,7 @@ msgstr "カレンダービュー"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Can't find any customer or supplier location."
-msgstr "顧客またはサプライヤの場所を見つけることができません。"
+msgstr "顧客または仕入先のロケーションが見つかりません。"
 
 #. module: stock
 #. odoo-python
@@ -8626,7 +8626,7 @@ msgstr "在庫規則レポート"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr "在庫サプライヤ補充情報"
+msgstr "在庫仕入先補充情報"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
@@ -8787,6 +8787,13 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr "手動操作'値は、現在のものの後に在庫移動を作成します。 '自動ステップ追加なし'を使用すると、元の移動で場所が置き換えられます。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9307,7 +9314,7 @@ msgstr "この在庫場所は、棚卸しの実行で生成される在庫移動
 msgid ""
 "This user will be responsible of the next activities related to logistic "
 "operations for this product."
-msgstr "このユーザーは、この製品のロジスティック操作に関連する次のアクティビティを担当します。"
+msgstr "このユーザは、このプロダクトのロジスティックオペレーションに関連する次の活動を担当します。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
@@ -9872,6 +9879,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"この運送のロケーションを更新すると、現在割当てられている項目の予約が解除されます。新しいロケーションで項目の引当が試みられ、以前の運送とのリンクは破棄されます。\n"
+"\n"
+"これを回避するには、保存する前に移動元ロケーションの変更を破棄して下さい。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10194,7 +10204,7 @@ msgstr "警告！"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Warning: change source location"
-msgstr ""
+msgstr "警告: 移動元ロケーションの変更"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

@@ -5,6 +5,7 @@
 # Translators:
 # Sarah Park, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +62,9 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"이 프로젝트에 연결된 "
+"판매 주문이 취소되었습니다. 판매 주문 항목을 업데이트하거나 판매 주문 취소에 맞춰 프로젝트를 취소하는 것이 좋습니다.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -71,6 +75,9 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"이 작업과 관련된 판매"
+" 주문이 취소되었습니다. 판매 주문 취소에 맞춰 판매 주문 항목을 업데이트하거나 이 작업을 취소하는 것이 좋습니다.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
@@ -200,19 +207,19 @@ msgstr "새로운 견적서를 생성하세요. 신규 매출을 향한 첫 단�
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
-msgstr ""
+msgstr "각 판매 주문 항목에 대한 작업을 포함하여 주문에 대한 프로젝트를 생성하여 소요 시간을 모니터링합니다."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
-msgstr ""
+msgstr "기존 프로젝트에서 작업을 만들어 소요 시간을 추적하세요."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "주문에 대한 빈 프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -234,7 +241,7 @@ msgstr "주문서 생성"
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
-msgstr ""
+msgstr "프로젝트나 작업을 나중에 만들고 주문에 연결하여 소요 시간을 추적하세요."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -392,7 +399,7 @@ msgstr "사무용 가구 세트 (작업)"
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
+msgstr "고객이 견적을 확인하면 판매 주문이 됩니다."
 
 #. module: sale_project
 #. odoo-python
@@ -748,4 +755,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "청구서를 작성하고 대금을 수금할 수 있습니다."

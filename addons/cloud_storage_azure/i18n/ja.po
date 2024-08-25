@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-08-18 03:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,37 +28,37 @@ msgstr "添付ファイル"
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_account_name
 msgid "Azure Account Name"
-msgstr ""
+msgstr "Azureアカウント名"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_id
 msgid "Azure Client ID"
-msgstr ""
+msgstr "AzureクライアントID"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_secret
 msgid "Azure Client Secret"
-msgstr ""
+msgstr "Azureクライアントシークレット"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields.selection,name:cloud_storage_azure.selection__res_config_settings__cloud_storage_provider__azure
 msgid "Azure Cloud Storage"
-msgstr ""
+msgstr "Azureクラウドストレージ"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_container_name
 msgid "Azure Container Name"
-msgstr ""
+msgstr "Azureコンテナ名"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_tenant_id
 msgid "Azure Tenant ID"
-msgstr ""
+msgstr "AzureテナントID"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "新しい添付ファイルのためのクラウドストレージプロバイダ"
 
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_res_config_settings
@@ -67,7 +68,7 @@ msgstr "コンフィグ設定"
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key
 msgid "Invalidate Cached Azure User Delegation Key"
-msgstr ""
+msgstr "キャッシュされた Azure ユーザ委任キーの無効化"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -75,7 +76,7 @@ msgstr ""
 msgid ""
 "Some Azure attachments are in use, please migrate their cloud storages "
 "before disable this module"
-msgstr ""
+msgstr "使用中のAzure添付があります。このモジュールを無効にする前に、クラウドストレージを移行して下さい。"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -84,6 +85,8 @@ msgid ""
 "The connection string is not allowed to download blobs from the container.\n"
 "%s"
 msgstr ""
+"接続文字列は、コンテナから blob をダウンロードすることを許可されていません。\n"
+"%s"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -92,3 +95,5 @@ msgid ""
 "The connection string is not allowed to upload blobs to the container.\n"
 "%s"
 msgstr ""
+"接続文字列は、コンテナへ blob をアップロードすることを許可されていません。\n"
+"%s"

@@ -33,7 +33,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Watch Video"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Assista ao vídeo"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -42,6 +42,9 @@ msgid ""
 "                        the sale order while <strong>Product documents</strong> are filled with data\n"
 "                        from the sale order line."
 msgstr ""
+"<strong>Cabeçalho e rodapé de documentos</strong> são preenchidos com dados (caminho) do\n"
+"                        pedido de venda enquanto os <strong>Documentos do produto</strong> são preenchidos com dados\n"
+"                        da linha do pedido de venda."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -83,21 +86,21 @@ msgstr "Configurações"
 #: code:addons/sale_pdf_quote_builder/models/sale_order_template.py:0
 #: code:addons/sale_pdf_quote_builder/wizards/res_config_settings.py:0
 msgid "Configure Dynamic Fields"
-msgstr ""
+msgstr "Configurar campos dinâmicos"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "Configurar campos dinâmicos"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "Configure o caminho para preencher os campos do formulário."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__create_uid
@@ -137,12 +140,12 @@ msgstr "Páginas de rodapé"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field"
-msgstr ""
+msgstr "Campo do formulário"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field Name as seen in the PF form"
-msgstr ""
+msgstr "Nome do campo do formulário, como visto no formulário PF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
@@ -154,7 +157,7 @@ msgstr "Páginas de cabeçalho"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_quote_builder_dynamic_fields_wizard_line__document_type__header_footer
 msgid "Header/Footer"
-msgstr ""
+msgstr "Cabeçalho/Rodapé"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__id
@@ -174,6 +177,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Nome de campo de formulário inválido %(field_name)s. O nome de um campo de "
+"formulário em um cabeçalho ou rodapé não pode começar com \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -182,6 +187,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Nome de campo de formulário inválido %(field_name)s. Deve conter apenas "
+"alfanuméricos, hífens ou sublinhados."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -190,6 +197,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Caminho inválido %(path)s. Deve conter apenas alfanuméricos, hífens, "
+"sublinhados ou pontos."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -219,6 +228,8 @@ msgid ""
 "Make your quote attractive by adding header, product descriptions and footer"
 " to your quote."
 msgstr ""
+"Deixe sua cotação mais atrativa adicionando a ela cabeçalho, rodapé e "
+"descrições de produtos."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -229,7 +240,7 @@ msgstr "Não"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__path
 msgid "Odoo path to get the expected value to fill the PDF."
-msgstr ""
+msgstr "Caminho do Odoo para obter o valor esperado para preencher o PDF."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -255,7 +266,7 @@ msgstr "Caminho"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Preview Sample Quote"
-msgstr ""
+msgstr "Visualizar amostra de cotação"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -281,7 +292,7 @@ msgstr "Ação de relatório"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Venda: Visível em"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
@@ -301,17 +312,20 @@ msgstr "Nome do cabeçalho de vendas"
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard
 msgid "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
 msgstr ""
+"Assistente de configuração de campos dinâmicos do construtor de cotações de "
+"venda em PDF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard_line
 msgid "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
 msgstr ""
+"Representação transitória de SalePdfQuoteBuilderDynamicFieldsWizardLine"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/wizards/dynamic_fields_wizard.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "O campo %(field_name)s não existe no modelo %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -325,6 +339,14 @@ msgid ""
 "                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>\n"
 "                            documents using pdf form fields. (see"
 msgstr ""
+"A cotação é feita com a montagem de páginas de cabeçalho, descrições de produtos,<br/>\n"
+"                            e páginas de rodapé. <br/>\n"
+"                            Para adicionar planilhas de produtos:<br/>\n"
+"                            1. em um formulário de produto, use o botão \"documentos do produto\"<br/>\n"
+"                            2. carregar um PDF do produto<br/>\n"
+"                            3. definir a visibilidade como \"Cotações internas\"<br/>\n"
+"                            Os dados da cotação (nome do cliente, referência da cotação…) são injetados em<br/>\n"
+"                            documentos que usam campos de formulários em PDF. (consulte"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -346,7 +368,7 @@ msgstr "Assistente"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Linha do assistente"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -362,4 +384,4 @@ msgstr "documentação"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "for detailed explanations)"
-msgstr ""
+msgstr "para obter explicações detalhadas)"
