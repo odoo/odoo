@@ -9,9 +9,9 @@
 # Jakub Smolka, 2024
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Jiří Podhorecký, 2024
 # Tomáš Píšek, 2024
 # Wil Odoo, 2024
+# Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17945,7 +17945,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_website_sale
 msgid "Ecuadorian Website"
-msgstr ""
+msgstr "Web Ekvádoru"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -18858,7 +18858,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sms
 msgid "FSM - SMS"
-msgstr ""
+msgstr "FSM - SMS"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__fail
@@ -19792,7 +19792,7 @@ msgstr "GPL-3 nebo novější verze"
 #. module: base
 #: model:res.country,vat_label:base.nz
 msgid "GST"
-msgstr ""
+msgstr "GST"
 
 #. module: base
 #: model:res.country,vat_label:base.sg
@@ -25272,7 +25272,7 @@ msgstr "Niue"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__false
 msgid "No (False)"
-msgstr ""
+msgstr "Ne (False)"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -27437,6 +27437,14 @@ msgstr ""
 #, python-format
 msgid "Odoo is unable to merge the generated PDFs."
 msgstr "Odoo nemohlo sloučit vygenerované PDF."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_actions_report.py:0
+msgid ""
+"Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
+" file(s)"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -33310,7 +33318,7 @@ msgstr "Formát TGZ: svazuje více souborů PO (T) do jednoho archivu"
 #. module: base
 #: model:res.country,vat_label:base.ug
 msgid "TIN"
-msgstr ""
+msgstr "TIN"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls
@@ -33325,7 +33333,7 @@ msgstr "CELKOVÝ Portál"
 #. module: base
 #: model:res.country,vat_label:base.zm
 msgid "TPIN"
-msgstr ""
+msgstr "TPIN"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__tabloid
@@ -36815,6 +36823,12 @@ msgid "View livechat sessions for leads"
 msgstr "Zobrazit relace livechat pro potenciální zákazníky"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_actions_report.py:0
+msgid "View Problematic Record(s)"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__views
 #: model:ir.model.fields,field_description:base.field_ir_model__view_ids
@@ -37232,7 +37246,7 @@ msgstr "Západní Sahara"
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "What are my best achievement(s) since my last appraisal?"
-msgstr ""
+msgstr "Jaké jsou mé nejlepší úspěchy od mého posledního hodnocení?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -37240,6 +37254,7 @@ msgid ""
 "What are my short and long-term goals with the company, and for my\n"
 "            career?"
 msgstr ""
+"Jaké jsou mé krátkodobé a dlouhodobé cíle se společností a pro mou kariéru?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -37247,11 +37262,13 @@ msgid ""
 "What has been the most challenging aspect of my work this past year and\n"
 "            why?"
 msgstr ""
+"Co bylo nejnáročnějším aspektem mé práce v minulém roce a\n"
+"proč?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "What would I need to improve my work?"
-msgstr ""
+msgstr "Co bych potřeboval ke zlepšení své práce?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -37261,7 +37278,7 @@ msgstr "K čemu je tento klíč?"
 #. module: base
 #: model:ir.module.category,name:base.module_category_whatsapp
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_whatsapp
@@ -37380,7 +37397,7 @@ msgstr ""
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "Which parts of my job do I most / least enjoy?"
-msgstr ""
+msgstr "Které části mé práce mě baví nejvíce/nejméně?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__implementation
@@ -37740,6 +37757,8 @@ msgid ""
 "You cannot archive the language in which Odoo was setup as it is used by "
 "automated processes."
 msgstr ""
+"Jazyk, ve kterém bylo Odoo nastaveno, nemůžete archivovat, protože jej "
+"používají automatizované procesy."
 
 #. module: base
 #. odoo-python
@@ -37838,6 +37857,8 @@ msgid ""
 "You cannot delete the admin user because it is utilized in various places "
 "(such as security configurations,...). Instead, archive it."
 msgstr ""
+"Uživatele admin nelze smazat, protože se používá na různých místech (jako "
+"jsou konfigurace zabezpečení,...). Místo toho jej archivujte."
 
 #. module: base
 #. odoo-python

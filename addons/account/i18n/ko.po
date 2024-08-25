@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Sarah Park, 2024
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1863,6 +1863,11 @@ msgid ""
 msgstr "계정: 자동 발행 기능이 활성화되어 있고 회계일자가 금일까지로 설정되어 있는 미결 전표를 발행합니다"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "회계사"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -3316,7 +3321,6 @@ msgid "Billing"
 msgstr "청구"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "청구서 관리자"
 
@@ -3367,6 +3371,11 @@ msgstr "0인 경우 비워둠"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "차단 메시지"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "회계 담당자"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6809,6 +6818,13 @@ msgstr "수식"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__carryover_target
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
@@ -11455,6 +11471,11 @@ msgid "Re-Sequence"
 msgstr "재배치"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "읽기 전용"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "대변전표 표시 내용:"
@@ -12743,7 +12764,6 @@ msgid ""
 msgstr "표시용 줄임말입니다. 전표에 입력할 때도 이 머릿말을 기본값으로 이름을 지정합니다."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "회계 기능 표시 - 읽기 전용"
 
@@ -12778,7 +12798,6 @@ msgid "Show Force Tax Included"
 msgstr "고정세 포함 표시"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "전체 회계 관리 기능 표시"
 
@@ -16025,6 +16044,15 @@ msgid ""
 msgstr "선택하면, 값이 0인 경우 해당 표현식 값에 표시되지 않습니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -16755,6 +16783,15 @@ msgstr "사용이 중단된 계정은 선택할 수 없습니다."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr "재무상태표에 기입되지 않는 계정에는 세금을 적용할 수 없습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
 
 #. module: account
 #. odoo-python

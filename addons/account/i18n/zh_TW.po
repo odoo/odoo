@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Pak Wai Ho, 2024
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1889,6 +1889,11 @@ msgid ""
 msgstr "此賬戶用作誌賬已開啟 auto_post 功能、會計日期截至今天的所有草稿記項"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "會計人員"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -3336,7 +3341,6 @@ msgid "Billing"
 msgstr "開立帳單"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "帳單管理員"
 
@@ -3387,6 +3391,11 @@ msgstr "如果為零則留空"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "受阻消息"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "簿記員"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6814,6 +6823,13 @@ msgstr "公式"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__carryover_target
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
@@ -11435,6 +11451,11 @@ msgid "Re-Sequence"
 msgstr "重新開始序列"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "只限讀取"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
 msgstr "退款單顯示原因"
@@ -12709,7 +12730,6 @@ msgid ""
 msgstr "用於顯示的較短名稱. 預設情況下，此日記帳的日記帳分錄也將使用此前綴命名."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "顯示會計功能 - 唯讀"
 
@@ -12744,7 +12764,6 @@ msgid "Show Force Tax Included"
 msgstr "顯示強制含稅"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "顯示所有會計功能"
 
@@ -15963,6 +15982,15 @@ msgid ""
 msgstr "選中後，顯示此表達式的值時不會顯示0值."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -16680,6 +16708,15 @@ msgstr "您不能使用已作廢的科目."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr "您不能對具有資產負債科目的明細使用稅款"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
 
 #. module: account
 #. odoo-python
