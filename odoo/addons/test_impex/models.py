@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
 
 def selection_fn(self):
     return [
@@ -197,7 +199,21 @@ class WithRequiredField(models.Model):
     name = fields.Char()
     value = fields.Integer(required=True)
 
+
 class Many2OneRequiredSubfield(models.Model):
     _name = _description = 'export.many2one.required.subfield'
 
     name = fields.Many2one('export.with.required.field')
+
+
+class WithNonDemoConstraint(models.Model):
+    _name = _description = 'export.with.non.demo.constraint'
+
+    name = fields.Char()
+
+    @api.constrains('name')
+    def _check_name_starts_with_uppercase_except_demo_data(self):
+        if self.env.context.get('install_mode'):
+            return  # skipped on demo data
+        if any(rec.name and rec.name[0].islower() for rec in self):
+            raise ValidationError('Name must start with an uppercase letter')

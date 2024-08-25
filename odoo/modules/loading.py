@@ -34,6 +34,7 @@ def load_data(env, idref, mode, kind, package):
     :returns: Whether a file was loaded
     :rtype: bool
     """
+    env = env(context=dict(env.context, install_mode=True))
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
