@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import datetime
 from enum import Enum
+from hashlib import sha256
+import hmac
 from importlib import util
 import platform
 import io
@@ -85,6 +88,25 @@ def start_nginx_server():
     elif platform.system() == 'Linux':
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
+
+def _get_certificate():
+    if platform.system() == 'Windows':
+        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+    elif platform.system() == 'Linux':
+        path = Path('/etc/ssl/certs/nginx-cert.crt')
+
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            return crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+
+
 def check_certificate():
     """
     Check if the current certificate is up to date or not authenticated
@@ -96,21 +118,9 @@ def check_certificate():
         return {"status": CertificateStatus.ERROR,
                 "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
 
-    if platform.system() == 'Windows':
-        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
-    elif platform.system() == 'Linux':
-        path = Path('/etc/ssl/certs/nginx-cert.crt')
-
-    if not path.exists():
-        return {"status": CertificateStatus.NEED_REFRESH}
-
-    try:
-        with path.open('r') as f:
-            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
-    except EnvironmentError:
-        _logger.exception("Unable to read certificate file")
-        return {"status": CertificateStatus.ERROR,
-                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+    cert = _get_certificate()
+    if isinstance(cert, dict):
+        return cert
 
     cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
     for key in cert.get_subject().get_components():
@@ -193,6 +203,34 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
     write_file('token', token)
     write_file('odoo-db-uuid.conf', db_uuid or '')
     write_file('odoo-enterprise-code.conf', enterprise_code or '')
+
+
+def check_iot_security_token(token, expiration_time=5 * 24 * 3600):
+    """
+    Check token for support access to sensible information
+    The default expiration time is set to 5 days
+    """
+    db_uuid = read_file_first_line('odoo-db-uuid.conf')
+    enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+    if not (db_uuid and enterprise_code):
+        raise ValueError('Cannot check access token, not dbuuid or subscription code')
+
+    # split the token to retrieve the timestamp at which it has been generated
+    # and retrieve the signature to check
+    timestamp, _, signature = token.rpartition('.')
+    if float(timestamp) + expiration_time < time.time():
+        raise ValueError('Token has expired')
+    # The key here would be the secret information (dbuuid and subscription code)
+    key = '%s-%s' % (db_uuid, enterprise_code)
+    # The message contains the timestamp that should be checked against the one provided in cleartext
+    msg = 'IoT-Support-Access>%s<' % timestamp
+
+    # The signature should be decoded (it is a bytearray encoded in b64)
+    signature = base64.urlsafe_b64decode(signature.encode())
+    # create the hmac digest using sha256
+    h = hmac.new(key=key.encode(), msg=msg.encode(), digestmod=sha256)
+    # compare the signature using a constant time comparison
+    return hmac.compare_digest(h.digest(), signature)
 
 def generate_password():
     """

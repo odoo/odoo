@@ -4,6 +4,7 @@
 from threading import Thread, Event
 
 from odoo.addons.hw_drivers.main import drivers, iot_devices
+from odoo.addons.hw_drivers.iot_object_info import IoTObjectInfo
 from odoo.tools.lru import LRU
 
 
@@ -14,11 +15,12 @@ class DriverMetaClass(type):
             newclass.priority += 1
         else:
             newclass.priority = 0
-        drivers.append(newclass)
+        if clsname != 'Driver':  # Avoid registering the abstract Driver class itself
+            drivers.append(newclass)
         return newclass
 
 
-class Driver(Thread, metaclass=DriverMetaClass):
+class Driver(Thread, IoTObjectInfo, metaclass=DriverMetaClass):
     """
     Hook to register the driver into the drivers list
     """
@@ -73,3 +75,16 @@ class Driver(Thread, metaclass=DriverMetaClass):
             return cache[iot_idempotent_id]
         cache[iot_idempotent_id] = session_id
         return False
+
+    def _set_iot_info(self) -> dict:
+        return {
+            'thread': self._get_thread_info(),
+            'connection_type': self.connection_type,
+            'dev': self.dev,
+            'device_identifier': self.device_identifier,
+            'device_name': self.device_name,
+            'device_connection': self.device_connection,
+            'device_type': self.device_type,
+            'device_manufacturer': self.device_manufacturer,
+            'data': self.data,
+        }
