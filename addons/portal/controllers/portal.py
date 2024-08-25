@@ -11,6 +11,7 @@ from werkzeug import urls
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError
 from odoo.http import content_disposition, Controller, request, route
+from odoo.osv.expression import AND
 from odoo.tools import consteq
 
 # --------------------------------------------------
@@ -137,6 +138,15 @@ class CustomerPortal(Controller):
     OPTIONAL_BILLING_FIELDS = ["street2", "zipcode", "state_id", "vat", "company_name"]
 
     _items_per_page = 80
+
+    def _check_page_visibility(self, key):
+        if hasattr(request, 'website'):
+            domain = AND([[("key", "=", key)], request.website.website_domain(request.website.id)])
+            record = request.env['ir.ui.view'].with_context(active_test=False).sudo().search(domain)
+            record_with_website = record.filtered(lambda x: x.website_id)
+            record_without_website = record - record_with_website
+            return record_with_website.active if record_with_website else record_without_website.active
+        return True
 
     def _prepare_portal_layout_values(self):
         """Values for /my/* templates rendering.

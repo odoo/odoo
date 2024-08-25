@@ -198,6 +198,8 @@ class PaymentPortal(portal.CustomerPortal):
         :return: The rendered manage form
         :rtype: str
         """
+        if not self._check_page_visibility("payment.portal_my_home_payment"):
+            return request.not_found()
         partner_sudo = request.env.user.partner_id  # env.user is always sudoed
 
         availability_report = {}
