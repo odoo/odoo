@@ -9562,6 +9562,14 @@ msgstr "不能变更产品的类型，因为它早已使用。"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "您不能创建非手动触发的延后订单点。"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9596,6 +9604,15 @@ msgstr "只能输入正数"
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "只能处理1.0%s具有唯一序列号的产品。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr "您只能暂停手动订单点。如果不想触发订单点，则应将其存档。"
 
 #. module: stock
 #. odoo-python
