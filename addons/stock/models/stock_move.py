@@ -33,7 +33,8 @@ class StockMove(models.Model):
         PROCUREMENT_PRIORITIES, 'Priority', default='0',
         compute="_compute_priority", store=True)
     date = fields.Datetime(
-        'Date Scheduled', default=fields.Datetime.now, index=True, required=True,
+        'Date Scheduled', store=True, compute = '_compute_date',
+        default=fields.Datetime.now, index=True, required=True,
         help="Scheduled date until move is done, then date of actual move processing")
     date_deadline = fields.Datetime(
         "Deadline", readonly=True, copy=False,
@@ -187,6 +188,11 @@ class StockMove(models.Model):
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
+
+    @api.depends()
+    def _compute_date(self):
+        # for overloading in descendant models
+        pass
 
     @api.depends('product_id')
     def _compute_product_uom(self):

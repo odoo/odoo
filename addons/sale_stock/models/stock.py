@@ -65,6 +65,12 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    @api.depends('sale_line_id.scheduled_date')
+    def _compute_date(self):
+        for move in self:
+            date = move.sale_line_id and move.sale_line_id.scheduled_date
+            if date:
+                move.date = date
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
