@@ -17,6 +17,7 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
@@ -87,12 +88,14 @@ export class Thread extends Component {
             () => [this.messageHighlight?.highlightedMessageId]
         );
         this.present = useRef("load-newer");
+        this.jumpPresentRef = useRef("jump-present");
+        this.root = useRef("messages");
         /**
          * This is the reference element with the scrollbar. The reference can
          * either be the chatter scrollable (if chatter) or the thread
          * scrollable (in other cases).
          */
-        this.scrollableRef = this.props.scrollRef ?? useRef("messages");
+        this.scrollableRef = this.props.scrollRef ?? this.root;
         this.loadOlderState = useVisible(
             "load-older",
             async () => {
@@ -117,6 +120,28 @@ export class Thread extends Component {
             this.updateShowJumpPresent()
         );
         this.setupScroll();
+        useEffect(
+            () => {
+                if (!this.viewportEl || !this.jumpPresentRef.el) {
+                    return;
+                }
+                const width = this.viewportEl.clientWidth;
+                const height = this.viewportEl.clientHeight;
+                const computedStyle = window.getComputedStyle(this.viewportEl);
+                const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
+                const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
+                const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
+                const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
+                this.jumpPresentRef.el.style.transform = `translate(${
+                    this.env.inChatter ? 22 : width - ps - pe - 22
+                }px, ${
+                    this.env.inChatter && !this.env.inChatter.aside
+                        ? 0
+                        : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+                }px)`;
+            },
+            () => [this.jumpPresentRef.el, this.viewportEl]
+        );
         useEffect(
             () => this.updateShowJumpPresent(),
             () => [this.props.thread.loadNewer]
@@ -159,9 +184,7 @@ export class Thread extends Component {
                 if (!this.state.mountedAndLoaded) {
                     return;
                 }
-                if (!this.env.inChatter) {
-                    this.updateShowJumpPresent();
-                }
+                this.updateShowJumpPresent();
             },
             () => [this.state.mountedAndLoaded]
         );
@@ -422,9 +445,18 @@ export class Thread extends Component {
         );
     }
 
+    get viewportEl() {
+        let viewportEl = this.scrollableRef.el;
+        if (viewportEl && viewportEl.clientHeight > browser.innerHeight) {
+            while (viewportEl && viewportEl.clientHeight > browser.innerHeight) {
+                viewportEl = viewportEl.parentElement;
+            }
+        }
+        return viewportEl;
+    }
+
     get PRESENT_THRESHOLD() {
-        const viewportHeight =
-            (this.scrollableRef.el?.clientHeight ?? 0) * PRESENT_VIEWPORT_THRESHOLD;
+        const viewportHeight = (this.getViewportEl?.clientHeight ?? 0) * PRESENT_VIEWPORT_THRESHOLD;
         const messagesHeight = [...this.props.thread.nonEmptyMessages]
             .reverse()
             .slice(0, PRESENT_MESSAGE_THRESHOLD)
