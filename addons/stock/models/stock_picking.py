@@ -906,6 +906,9 @@ class Picking(models.Model):
             if all(m.picked for m in picking.move_ids):
                 picking.show_check_availability = False
                 continue
+            if all(move.product_uom_qty == move.quantity for move in picking.move_ids):
+                picking.show_check_availability = False
+                continue
             picking.show_check_availability = any(
                 move.state in ('waiting', 'confirmed', 'partially_available') and
                 float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
