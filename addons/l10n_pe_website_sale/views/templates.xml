@@ -37,8 +37,7 @@
     <template id="partner_address_info" name="Peruvian partner address">
 
         <!-- show city -->
-        <div t-attf-class="mb-3 #{error.get('city_id') and 'o_has_error' or ''} col-lg-6 div_city_id"
-            t-attf-style="#{(country and country.code != 'PE') and 'd-none' or ''}">
+        <div t-attf-class="mb-3 #{error.get('city_id') and 'o_has_error' or ''} col-lg-6 div_city_id">
             <label class="col-form-label" for="city_id">City</label>
             <select id="city_id"
                 name="city_id"
@@ -54,8 +53,7 @@
         </div>
 
         <!-- show district -->
-        <div t-attf-class="mb-3 #{error.get('l10n_pe_district') and 'o_has_error' or ''} col-lg-6 div_district"
-            t-att-style="not city and 'd-none'">
+        <div t-attf-class="mb-3 #{error.get('l10n_pe_district') and 'o_has_error' or ''} col-lg-6 div_district">
             <label class="col-form-label" for="l10n_pe_district">District</label>
             <select id="l10n_pe_district"
                 name="l10n_pe_district"
