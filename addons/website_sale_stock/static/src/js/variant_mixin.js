@@ -42,6 +42,16 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct) {
+        loadXml().then(function (result) {
+            $('.oe_website_sale')
+                .find('.availability_message_' + combination.product_template)
+                .remove();
+            const $message = $(QWeb.render(
+                'website_sale_stock.product_availability',
+                combination
+            ));
+            $('div.availability_messages').html($message);
+        });
         return;
     }
 
