@@ -4,7 +4,7 @@ import {
     DYNAMIC_PLACEHOLDER_PLUGINS,
 } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, status, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -128,6 +128,9 @@ export class HtmlField extends Component {
     }
 
     async _commitChanges({ urgent }) {
+        if (status(this) === "destroyed") {
+            return;
+        }
         if (this.isDirty) {
             if (this.state.showCodeView) {
                 await this.updateValue(this.codeViewRef.el.value);
