@@ -1508,13 +1508,9 @@ class Website(models.Model):
         }
         return action
 
-    def button_go_website(self, path='/', mode_edit=False):
+    def button_go_website(self, path='/'):
         self._force()
-        if mode_edit:
-            # If the user gets on a translated page (e.g /fr) the editor will
-            # never start. Forcing the default language fixes this issue.
-            path = self.env['ir.http']._url_for(path, self.default_lang_id.url_code)
-        return self.get_client_action(path, mode_edit)
+        return self.get_client_action(path)
 
     def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""
