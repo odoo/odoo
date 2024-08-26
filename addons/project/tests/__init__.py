@@ -29,3 +29,4 @@ from . import test_project_report
 from . import test_project_task_quick_create
 from . import test_task_state
 from . import test_project_task_mail_tracking_duration
+from . import test_task_link_preview_name
