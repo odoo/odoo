@@ -63,13 +63,13 @@ function createOdooChartRuntime(chart, getters) {
 }
 
 function getBarConfiguration(chart, labels, locale) {
-    const fontColor = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
+    const color = chartFontColor(chart.background);
+    const config = getDefaultChartJsRuntime(chart, labels, color, { locale });
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: { fontColor },
+        labels: { color },
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};
@@ -85,15 +85,13 @@ function getBarConfiguration(chart, labels, locale) {
                 minRotation: 15,
                 padding: 5,
                 labelOffset: 2,
-                color: fontColor,
+                color,
             },
             title: getChartAxisTitleRuntime(chart.axesDesign?.x),
         },
         y: {
             position: chart.verticalAxisPosition,
-            ticks: {
-                color: fontColor,
-            },
+            ticks: { color },
             beginAtZero: true, // the origin of the y axis is always zero
             title: getChartAxisTitleRuntime(chart.axesDesign?.y),
         },
