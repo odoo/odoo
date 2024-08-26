@@ -285,6 +285,7 @@ class PickingType(models.Model):
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         # Try to reverse the `display_name` structure
         parts = name.split(': ')
+        domain = domain or []
         if len(parts) == 2:
             name_domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
             return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
