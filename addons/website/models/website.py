@@ -1634,6 +1634,14 @@ class Website(models.Model):
             is_snippet_used = snippet_used[key]
             if is_snippet_used != snippet_asset.active:
                 snippet_asset.active = is_snippet_used
+                # Handle missing data-snippet attributes
+                if snippet_id == 's_quotes_carousel' and asset_type == 'css' and asset_version in ['000', '001']:
+                    old_blockquote_key = ('s_blockquote', '000', 'css')
+                    if not snippet_used.get(old_blockquote_key):
+                        snippet_used[old_blockquote_key] = True
+                        old_blockquote_asset = snippet_assets.filtered(lambda asset: asset.path == 'website/static/src/snippets/s_blockquote/000.scss')
+                        if old_blockquote_asset and not old_blockquote_asset.active:
+                            old_blockquote_asset.active = True
         self.env['ir.asset'].flush_model()
 
     def _search_build_domain(self, domain, search, fields, extra=None):
