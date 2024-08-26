@@ -47,6 +47,46 @@ def acquire_cursor(db):
     raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
 
 
+websocket_notifications = []
+websocket_events = []
+
+
+def log_websocket_stats():
+    while True:
+        time.sleep(60)
+        if websocket_notifications:
+            _logger.info(
+                "[GEVENT.DEBUG] Dispatched %d notifications to %d websockets in the last minute. Medium payload size: %d.",
+                len(websocket_notifications),
+                len({p[2] for p in websocket_notifications}),
+                sum(p[1] for p in websocket_notifications) // len(websocket_notifications),
+            )
+            count_by_type = {}
+            for p in websocket_notifications:
+                count_by_type.setdefault(p[0], 0)
+                count_by_type[p[0]] += 1
+            _logger.info(
+                "[GEVENT.DEBUG] Notification count by type: %s", json.dumps(count_by_type, indent=4)
+            )
+            websocket_notifications.clear()
+        if websocket_events:
+            _logger.info(
+                "[GEVENT.DEBUG] Received %d events from %d websockets in the last minute.",
+                len(websocket_events),
+                len({p[1] for p in websocket_events}),
+            )
+            count_by_event = {}
+            for p in websocket_events:
+                count_by_event.setdefault(p[0], 0)
+                count_by_event[p[0]] += 1
+            _logger.info(
+                "[GEVENT.DEBUG] Event count by type: %s", json.dumps(count_by_event, indent=4)
+            )
+            websocket_events.clear()
+
+if odoo.evented:
+    threading.Thread(target=log_websocket_stats, daemon=True).start()
+
 # ------------------------------------------------------
 # EXCEPTIONS
 # ------------------------------------------------------
@@ -646,6 +686,9 @@ class Websocket:
             return
         self._last_notif_sent_id = notifications[-1]['id']
         self._send(notifications)
+        websocket_notifications.extend(
+            (notif["message"]["type"], len(json.dumps(notif)), id(self)) for notif in notifications
+        )
 
 
 class TimeoutReason(IntEnum):
@@ -753,6 +796,7 @@ class WebsocketRequest:
             ) from exc
         data = jsonrequest.get('data')
         self.session = self._get_session()
+        websocket_events.append((event_name, id(self.ws)))
 
         try:
             self.registry = Registry(self.db)
