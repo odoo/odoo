@@ -36,6 +36,7 @@ class TestProjectSharingUi(HttpCase):
                 Command.create({'name': 'Done', 'sequence': 10})
             ],
         })
+        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
 
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
