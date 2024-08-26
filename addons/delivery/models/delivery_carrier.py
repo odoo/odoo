@@ -328,12 +328,13 @@ class DeliveryCarrier(models.Model):
                 'warning_message': False}
 
     def _get_conversion_currencies(self, order, conversion):
-        if conversion == 'company_to_pricelist':
-            from_currency, to_currency = order.company_id.currency_id, order.currency_id
-        elif conversion == 'pricelist_to_company':
-            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+        company_currency = (self.company_id or self.env['res.company']._get_main_company()).currency_id
+        pricelist_currency = order.currency_id
 
-        return from_currency, to_currency
+        if conversion == 'company_to_pricelist':
+            return company_currency, pricelist_currency
+        elif conversion == 'pricelist_to_company':
+            return pricelist_currency, company_currency
 
     def _compute_currency(self, order, price, conversion):
         from_currency, to_currency = self._get_conversion_currencies(order, conversion)
