@@ -773,7 +773,7 @@ class AccountAccount(models.Model):
     @api.depends('code')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = f"{account.code} {account.name}"
+            account.display_name = f"{account.code} {account.name}" if account.code else account.name
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
