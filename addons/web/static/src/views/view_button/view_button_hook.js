@@ -7,7 +7,11 @@ import { status, useComponent, useEnv, useSubEnv } from "@odoo/owl";
 export async function executeButtonCallback(el, fct) {
     let btns = [];
     function disableButtons() {
-        btns = [...btns, ...el.querySelectorAll("button:not([disabled])")];
+        btns = [
+            ...btns,
+            ...el.querySelectorAll("button:not([disabled])"),
+            ...document.querySelectorAll(".o-overlay-container button:not([disabled])"),
+        ];
         for (const btn of btns) {
             btn.setAttribute("disabled", "1");
         }

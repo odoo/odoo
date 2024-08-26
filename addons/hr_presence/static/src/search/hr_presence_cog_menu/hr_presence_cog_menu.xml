@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="hr_presence.cogmenu" t-inherit="web.CogMenu" t-inherit-mode="primary">
+    <t t-name="hr_presence.cogmenu" t-inherit="web.FormCogMenu" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='state.printItems.length']" position="after">
             <t t-if="PresenceActionItems.length">
                 <t t-call="hr_presence.menu">

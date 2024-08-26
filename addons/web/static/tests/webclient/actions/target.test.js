@@ -162,7 +162,7 @@ describe("new", () => {
         });
     });
 
-    test("Button with `close` attribute closes dialog", async () => {
+    test.tags("desktop")("Button with `close` attribute closes dialog on desktop", async () => {
         Partner._views = {
             "form,false": `
                 <form>
@@ -211,6 +211,64 @@ describe("new", () => {
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
+        await contains(`button[name="5"]`).click();
+        expect.verifySteps(["web_save", "/web/action/load", "get_views", "onchange"]);
+        expect(".modal").toHaveCount(1);
+        await contains(`button[name=some_method]`).click();
+        expect.verifySteps(["web_save", "some_method", "web_read"]);
+        expect(".modal").toHaveCount(0);
+    });
+
+    test.tags("mobile")("Button with `close` attribute closes dialog on mobile", async () => {
+        Partner._views = {
+            "form,false": `
+                <form>
+                    <header>
+                        <button string="Open dialog" name="5" type="action"/>
+                    </header>
+                </form>`,
+            "form,17": `
+                <form>
+                    <footer>
+                        <button string="I close the dialog" name="some_method" type="object" close="1"/>
+                    </footer>
+                </form>`,
+            "search,false": "<search></search>",
+        };
+        defineActions([
+            {
+                id: 4,
+                name: "Partners Action 4",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            {
+                id: 5,
+                name: "Create a Partner",
+                res_model: "partner",
+                target: "new",
+                type: "ir.actions.act_window",
+                views: [[17, "form"]],
+            },
+        ]);
+
+        onRpc("/web/dataset/call_button", async (request) => {
+            const { params } = await request.json();
+            if (params.method === "some_method") {
+                return {
+                    tag: "display_notification",
+                    type: "ir.actions.client",
+                };
+            }
+        });
+        stepAllNetworkCalls();
+
+        await mountWithCleanup(WebClient);
+        expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+        await getService("action").doAction(4);
+        expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
+        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
         await contains(`button[name="5"]`).click();
         expect.verifySteps(["web_save", "/web/action/load", "get_views", "onchange"]);
         expect(".modal").toHaveCount(1);
