@@ -459,7 +459,11 @@ class AccountAccount(models.Model):
     @api.depends('account_type')
     def _compute_reconcile(self):
         for account in self:
-            account.reconcile = account.account_type in ('asset_receivable', 'liability_payable')
+            if account.internal_group in ('income', 'expense', 'equity'):
+                account.reconcile = False
+            elif account.account_type in ('asset_receivable', 'liability_payable'):
+                account.reconcile = True
+            # For other asset/liability accounts, don't do any change to account.reconcile.
 
     def _set_opening_debit(self):
         for record in self:
