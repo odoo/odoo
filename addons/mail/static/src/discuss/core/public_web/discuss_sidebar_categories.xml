@@ -128,7 +128,7 @@
                     <t t-component="indicators[0]" t-props="{ thread }"/>
                 </div>
             </t>
-            <span t-if="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt" class="o-mail-DiscussSidebarChannel-unreadIndicator position-absolute" name="unread-indicator" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
+            <span t-if="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt and thread.importantCounter === 0" class="o-mail-DiscussSidebarChannel-unreadIndicator position-absolute" name="unread-indicator" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
             <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge fw-bold {{thread.mute_until_dt ? 'o-muted' : ''}}" t-att-class="{ 'ms-1 me-2': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
         </div>
     </t>
