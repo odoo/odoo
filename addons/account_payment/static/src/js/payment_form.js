@@ -19,40 +19,13 @@ PaymentForm.include({
         const chosenPaymentDetails = paymentDialog
             ? paymentDialog.querySelector(".o_btn_payment_tab.active")
             : null;
-        if (chosenPaymentDetails && chosenPaymentDetails.id === "o_payment_installments_tab") {
-            this.paymentContext.payNextInstallment = true;
-        }
-        await this._super(...arguments);
-    },
-
-    /**
-     * Add installment specific params for the RPC to the transaction route.
-     *
-     * @override method from payment.payment_form
-     * @private
-     * @returns {Object} The transaction route params.
-     */
-    _prepareTransactionRouteParams() {
-        const transactionRouteParams = this._super(...arguments);
-
-        const amountCustom =
-            this.paymentContext.amountCustom && parseFloat(this.paymentContext.amountCustom);
-        const amountOverdue =
-            this.paymentContext.amountOverdue && parseFloat(this.paymentContext.amountOverdue);
-        const amountNextInstallment =
-            this.paymentContext.amountNextInstallment &&
-            parseFloat(this.paymentContext.amountNextInstallment);
-
-        if (this.paymentContext.payNextInstallment) {
-            transactionRouteParams.amount = amountCustom || amountOverdue || amountNextInstallment;
-            if (!amountCustom && !amountOverdue) {
-                transactionRouteParams.name_next_installment =
-                    this.paymentContext.nameNextInstallment;
+        if (chosenPaymentDetails){
+            if (chosenPaymentDetails.id === "o_payment_installments_tab") {
+                this.paymentContext.amount = parseFloat(this.paymentContext.invoiceNextAmountToPay);
+            } else {
+                this.paymentContext.amount = parseFloat(this.paymentContext.invoiceAmountDue);
             }
         }
-
-        transactionRouteParams.payment_reference = this.paymentContext.paymentReference;
-
-        return transactionRouteParams;
+        await this._super(...arguments);
     },
 });

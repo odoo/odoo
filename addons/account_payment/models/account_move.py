@@ -100,27 +100,34 @@ class AccountMove(models.Model):
         return action
 
     def _get_default_payment_link_values(self):
-        self.ensure_one()
-        installments = [
-            {
-                'number': installment['number'],
-                'amount': installment['amount_residual_currency_unsigned'],
-                'date_maturity': format_date(self.env, installment['date_maturity']),
-            }
-            for installment in self._get_installments_data()
-            if not installment['reconciled']
-        ]
-        max_amount = next_amount = sum(installment['amount'] for installment in installments)
-        amount_overdue = self.get_amount_overdue()
-        if amount_overdue:
-            next_amount = amount_overdue
-        elif installments:
-            next_amount = installments[0]['amount']
+        next_payment_values = self._get_invoice_next_payment_values()
+        amount_max = next_payment_values['amount_due']
+        additional_info = {}
+        open_installments = []
+        if next_payment_values['installment_state'] in ('next', 'overdue'):
+            open_installments = []
+            for installment in next_payment_values['not_reconciled_installments']:
+                data = {
+                    'type': installment['type'],
+                    'number': installment['number'],
+                    'amount': installment['amount_residual_currency_unsigned'],
+                    'date_maturity': format_date(self.env, installment['date_maturity']),
+                }
+                open_installments.append(data)
+
+        elif next_payment_values['installment_state'] == 'epd':
+            amount_max = next_payment_values['next_amount_to_pay']  # with epd, next_amount_to_pay is the invoice amount residual
+            additional_info.update({
+                'has_eligible_epd': True,
+                'discount_date': next_payment_values['discount_date']
+            })
 
         return {
-            'amount': next_amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
-            'open_installments': installments,
-            'amount_max': max_amount,
+            'open_installments': open_installments,
+            'installment_state': next_payment_values['installment_state'],
+            'amount': next_payment_values['next_amount_to_pay'],
+            'amount_max': amount_max,
+            **additional_info
         }

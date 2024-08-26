@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.tools import formatLang
+from odoo.tools import format_date, formatLang
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -18,6 +18,13 @@ class PaymentLinkWizard(models.TransientModel):
     open_installments_preview = fields.Html(
         export_string_translation=False, compute='_compute_open_installments_preview'
     )
+    display_open_installments = fields.Boolean(compute='_compute_display_open_installments')
+    has_eligible_epd = fields.Boolean()
+    discount_date = fields.Date()
+    epd_info = fields.Char(
+        string="Early Payment Discount Information",
+        compute='_compute_epd_info',
+    )
 
     @api.depends('amount_max')
     def _compute_invoice_amount_due(self):
@@ -28,20 +35,36 @@ class PaymentLinkWizard(models.TransientModel):
     def _compute_open_installments_preview(self):
         for wizard in self:
             preview = ""
-            for installment in wizard.open_installments or []:
-                preview += "<div>"
-                preview += _(
-                    '#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong class="text-primary">%(date)s</strong>',
-                    number=installment['number'],
-                    amount=formatLang(
-                        self.env,
-                        installment['amount'],
-                        currency_obj=wizard.currency_id,
-                    ),
-                    date=installment['date_maturity'],
-                )
-                preview += "</div>"
+            if wizard.display_open_installments:
+                for installment in wizard.open_installments or []:
+                    preview += "<div>"
+                    preview += _(
+                        '#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong class="text-primary">%(date)s</strong>',
+                        number=installment['number'],
+                        amount=formatLang(
+                            self.env,
+                            installment['amount'],
+                            currency_obj=wizard.currency_id,
+                        ),
+                        date=installment['date_maturity'],
+                    )
+                    preview += "</div>"
             wizard.open_installments_preview = preview
+
+    @api.depends('amount')
+    def _compute_epd_info(self):
+        for wizard in self:
+            wizard.epd_info = ''
+            if wizard.has_eligible_epd and wizard.amount == wizard.invoice_amount_due:
+                msg = _("A discount will be applied if the customer pays before %s included.", format_date(wizard.env, wizard.discount_date))
+                wizard.epd_info = msg
+
+    @api.depends('open_installments')
+    def _compute_display_open_installments(self):
+        # hides the installments section if only one installment
+        for wizard in self:
+            installments = wizard.open_installments or []
+            wizard.display_open_installments = len(installments) > 1
 
     def _prepare_url(self, base_url, related_document):
         """ Override of `payment` to use the portal page URL. """
