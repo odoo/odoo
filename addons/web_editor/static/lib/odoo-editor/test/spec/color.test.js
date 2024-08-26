@@ -113,4 +113,12 @@ describe('applyColor', () => {
             contentAfter: '<p>[abcabc]</p>',
         });
     });
+
+    it('should apply color on header link', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="font-size: 62px;"><a href="http://test.com">[Your Site Title]</a></font></p>',
+            stepFunction: setColor('rgb(255, 0, 0)', 'color'),
+            contentAfter: '<p><font style="font-size: 62px;"><a href="http://test.com"><font style="color: rgb(255, 0, 0);">[Your Site Title]</font></a></font></p>',
+        });
+    });
 });
