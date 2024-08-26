@@ -3,10 +3,8 @@
 
     <template id="account_payment.form" inherit_id="payment.form" name="Invoice Payment Form">
         <xpath expr="//form[@id='o_payment_form']" position="attributes">
-            <attribute name="t-att-data-amount-custom">amount_custom</attribute>
-            <attribute name="t-att-data-amount-overdue">amount_overdue</attribute>
-            <attribute name="t-att-data-amount-next-installment">amount_next_installment</attribute>
-            <attribute name="t-att-data-name-next-installment">name_next_installment</attribute>
+            <attribute name="t-att-data-invoice-next-amount-to-pay">next_amount_to_pay</attribute>
+            <attribute name="t-att-data-invoice-amount-due">amount_due</attribute>
             <attribute name="t-att-data-payment-reference">payment_reference</attribute>
         </xpath>
     </template>

@@ -6,11 +6,18 @@
         <field name="model">payment.link.wizard</field>
         <field name="arch" type="xml">
             <form string="Generate Payment Link">
-                <div class="alert alert-warning fw-bold"
+                <div name="no_partner_email"
+                     class="alert alert-warning fw-bold"
                      role="alert"
                      invisible="partner_email">
                      This partner has no email, which may cause issues with some payment providers.
                      Setting an email for this partner is advised.
+                </div>
+                <div name="payment_link_warning_information"
+                     class="alert alert-warning fw-bold"
+                     role="alert"
+                     invisible="warning_message == ''">
+                    <field name="warning_message"/>
                 </div>
                 <group>
                     <group name="payment_info" string="Payment Info" class="mt-n4">
@@ -24,12 +31,6 @@
                         <field name="currency_id" invisible="1"/>
                     </group>
                 </group>
-                <div name="payment_link_warning_information"
-                     class="alert alert-warning text-center fw-bold"
-                     role="alert"
-                     invisible="warning_message == ''">
-                    <field name="warning_message"/>
-                </div>
                 <footer>
                     <field name="link"
                            string="Generate and Copy Payment Link"

@@ -37,9 +37,12 @@ class PortalAccount(CustomerPortal):
         return overdue_invoice_count
 
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
+        custom_amount = None
+        if kwargs.get('amount'):
+            custom_amount = float(kwargs['amount'])
         values = {
             'page_name': 'invoice',
-            **invoice._get_invoice_portal_extra_values(),
+            **invoice._get_invoice_portal_extra_values(custom_amount=custom_amount),
         }
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 

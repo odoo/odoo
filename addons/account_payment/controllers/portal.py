@@ -23,32 +23,30 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'payment': payment,  # We want to show the dialog even when everything has been paid (with a custom message)
             }
 
+        epd = values.get('epd_discount_amount_currency', 0.0)
+        discounted_amount = invoice.amount_residual - epd
+
         common_view_values = self._get_common_page_view_values(
             invoices_data={
                 'partner': invoice.partner_id,
                 'company': invoice.company_id,
                 'total_amount': invoice.amount_total,
                 'currency': invoice.currency_id,
-                'amount_residual': invoice.amount_residual,
+                'amount_residual': discounted_amount,
                 'landing_route': invoice.get_portal_url(),
                 'transaction_route': f'/invoice/transaction/{invoice.id}',
             },
             access_token=access_token,
             **kwargs)
-        installment = invoice.get_next_installment_due()
-        next_installment = (
-            installment
-            and installment['type'] != 'early_payment_discount'
-            and installment['amount_residual_currency_unsigned'] != invoice.amount_residual
-        )
+
+        amount_custom = float(kwargs['amount']) if kwargs.get('amount') else 0.0
         values |= {
             **common_view_values,
-            'amount_custom': float(kwargs['amount']) if kwargs.get('amount') else 0.0,
-            'amount_next_installment': installment['amount_residual_currency_unsigned'] if next_installment else 0.0,
+            'amount_custom': amount_custom,
             'payment': payment,
             'invoice_id': invoice.id,
             'invoice_name': invoice.name,
-            'invoice_name_installment': f"{invoice.name}-{installment['number']}" if next_installment else "",
+            'show_epd': epd,
         }
         return values
 
@@ -149,7 +147,6 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             ),
         }
         payment_context = {
-            'amount': invoices_data['amount_residual'],
             'currency': invoices_data['currency'],
             'partner_id': partner_sudo.id,
             'providers_sudo': providers_sudo,
@@ -172,4 +169,4 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         # If we have a custom payment amount, make sure it hasn't been tampered with
         if amount and not payment_utils.check_access_token(payment_token, invoice_id, amount):
             return request.redirect('/my')
-        return super().portal_my_invoice_detail(invoice_id, **kw)
+        return super().portal_my_invoice_detail(invoice_id, amount=amount, **kw)

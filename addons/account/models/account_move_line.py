@@ -3202,6 +3202,8 @@ class AccountMoveLine(models.Model):
                     'amount_residual': line.discount_balance,
                     'amount_residual_currency_unsigned': -sign * line.discount_amount_currency,
                     'amount_residual_unsigned': -sign * line.discount_balance,
+                    'discount_amount_currency': line.amount_currency - line.discount_amount_currency,
+                    'discount_amount': line.balance - line.discount_balance,
                     'type': 'early_payment_discount',
                 })
                 continue
