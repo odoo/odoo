@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, waitFor, queryOne, hover, press, waitUntil } from "@odoo/hoot-dom";
+import { click, waitFor, queryOne, hover, press, waitUntil, edit } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -106,6 +106,35 @@ test("custom colors used in the editor are shown in the colorpicker", async () =
     expect(queryOne("button[data-color='rgb(0, 255, 0)']").style.backgroundColor).toBe(
         "rgb(0, 255, 0)"
     );
+});
+
+test("select hex color and apply it", async () => {
+    const { el } = await setupEditor(`<p><font style="color: rgb(255, 0, 0);">[test]</font></p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    click(".o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    click(".btn:contains('Custom')");
+    await animationFrame();
+    click(".o_hex_input");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+    expect("button[data-color='rgb(1, 126, 132)']").toHaveCount(1);
+    expect(queryOne("button[data-color='rgb(1, 126, 132)']").style.backgroundColor).toBe(
+        "rgb(1, 126, 132)"
+    );
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+
+    click(".odoo-editor-editable");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
 });
 
 test("Can reset a color", async () => {

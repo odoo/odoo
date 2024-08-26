@@ -12,7 +12,7 @@
 
             <div t-if="this.state.type === 'linear'" class="d-flex align-items-center justify-content-between">
                 Angle
-                <span class="d-flex justify-content-between" data-prevent-closing-overlay="true">
+                <span class="d-flex justify-content-between">
                     <input name="angle" type="text" t-att-value="this.state.angle" t-on-change="onAngleChange" style="width: 5ch" />
                     <span class="input-group-text">deg</span>
                 </span>
@@ -20,13 +20,13 @@
             <div t-else="">
                 <div class="d-flex align-items-center justify-content-between">
                     Position X
-                    <span class="d-flex justify-content-between" data-prevent-closing-overlay="true">
+                    <span class="d-flex justify-content-between">
                         <input name="positionX" t-att-value="this.positions['x']" t-on-change="(ev) => this.onPositionChange('x', ev)" class="input" type="text" style="width: 5ch"/>
                     </span>
                 </div>
                 <div class="d-flex align-items-center justify-content-between">
                     Position Y
-                    <span class="d-flex justify-content-between" data-prevent-closing-overlay="true">
+                    <span class="d-flex justify-content-between">
                         <input name="positionY" t-att-value="this.positions['y']" t-on-change="(ev) => this.onPositionChange('y', ev)" class="input" type="text" style="width: 5ch" />
                     </span>
                 </div>
@@ -77,11 +77,11 @@
 
             <div>
                 First color %
-                <span class="d-flex justify-content-between" data-prevent-closing-overlay="true">
+                <span class="d-flex justify-content-between">
                     <input name="firstColorPercentage" t-att-value="this.colors[0].percentage" t-on-click="() => this.state.currentColorIndex = 0" t-on-change="(ev) => this.onColorPercentageChange(0, ev)" class="w-100 form-range" type="range" min="0" max="100"/>
                 </span>
                 Second color %
-                <span class="d-flex justify-content-between" data-prevent-closing-overlay="true">
+                <span class="d-flex justify-content-between">
                     <input name="secondColorPercentage" t-att-value="this.colors[1].percentage" t-on-click="() => this.state.currentColorIndex = 1 " t-on-change="(ev) => this.onColorPercentageChange(1, ev)" class="w-100 form-range" type="range" min="0" max="100"/>
                 </span>
             </div>
