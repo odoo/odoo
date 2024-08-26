@@ -1022,12 +1022,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 7,
             },
-            "credit": {
-                'name': _('Credit Card'),
-                'type': 'credit',
-                'show_on_dashboard': True,
-                'sequence': 8,
-            },
             "cash": {
                 'name': _('Cash'),
                 'type': 'cash',

@@ -255,8 +255,8 @@
                         <div id="dashboard_bank_cash_left" class="col mb-3 mb-sm-0 o_kanban_primary_left">
                             <div name="bank_cash_buttons" class="clearfix">
                                 <t t-set="bank_requires_setup" t-value="!record.bank_account_id.raw_value and ['undefined', 'online_sync'].includes(dashboard.bank_statements_source)"/>
-                                <div name="setup_bank_btn" class="float-start me-1" t-if="(journal_type == 'bank' or journal_type == 'credit') and bank_requires_setup">
-                                    <button name="action_configure_bank_journal" type="object" class="btn btn-primary" groups="account.group_account_basic">Setup Bank</button>
+                                <div name="setup_bank_btn" class="float-start me-1" t-if="journal_type == 'bank' and bank_requires_setup">
+                                    <button name="action_configure_bank_journal" type="object" class="btn btn-primary" groups="account.group_account_basic">Bank Setup</button>
                                 </div>
                                 <div name="transactions_btn" class="float-start me-1">
                                     <button id="all_transactions_btn" type="object" name="open_action" class="btn btn-primary">Transactions</button>
