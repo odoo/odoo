@@ -36,6 +36,7 @@ class TestProjectSharingUi(HttpCase):
                 Command.create({'name': 'Done', 'sequence': 10})
             ],
         })
+        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
 
     def test_blocked_task_with_project_sharing_string_portal(self):
         """
