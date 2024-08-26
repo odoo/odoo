@@ -5,20 +5,17 @@ import time
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
+from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestProductAttributeValueCommon(TransactionCase):
+class TestProductAttributeValueCommon(BaseCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
-        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',
@@ -761,3 +758,53 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             'price_extra'
         )
         self.assertEqual(extra_prices, copied_extra_prices)
+
+    def test_04_create_product_variant_non_dynamic(self):
+        """The goal of this test is to make sure the _create_product_variant does
+        not create variant if the type is not dynamic. It can however return a
+        variant if it already exists."""
+        computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
+        computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
+        computer_ram_16 = self._get_product_template_attribute_value(self.ram_16)
+        computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
+        self._add_exclude(computer_ram_16, computer_hdd_1)
+
+        # CASE: variant is already created, it should return it
+        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
+        variant1 = self.computer._get_variant_for_combination(combination)
+        self.assertEqual(self.computer._create_product_variant(combination), variant1)
+
+        # CASE: variant does not exist, but template is non-dynamic, so it
+        # should not create it
+        Product = self.env['product.product']
+        variant1.unlink()
+        self.assertEqual(self.computer._create_product_variant(combination), Product)
+
+    def test_05_create_product_variant_dynamic(self):
+        """The goal of this test is to make sure the _create_product_variant does
+        work with dynamic. If the combination is possible, it should create it.
+        If it's not possible, it should not create it."""
+        self.computer_hdd_attribute_lines.write({'active': False})
+        self.hdd_attribute.create_variant = 'dynamic'
+        self._add_hdd_attribute_line()
+
+        computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
+        computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
+        computer_ram_16 = self._get_product_template_attribute_value(self.ram_16)
+        computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
+        self._add_exclude(computer_ram_16, computer_hdd_1)
+
+        # CASE: variant does not exist, but combination is not possible
+        # so it should not create it
+        impossible_combination = computer_ssd_256 + computer_ram_16 + computer_hdd_1
+        Product = self.env['product.product']
+        self.assertEqual(self.computer._create_product_variant(impossible_combination), Product)
+
+        # CASE: the variant does not exist, and the combination is possible, so
+        # it should create it
+        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
+        variant = self.computer._create_product_variant(combination)
+        self.assertTrue(variant)
+
+        # CASE: the variant already exists, so it should return it
+        self.assertEqual(variant, self.computer._create_product_variant(combination))
