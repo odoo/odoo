@@ -97,6 +97,7 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.ui = useState(useService("ui"));
+        this.CANCEL_OR_SAVE_EDIT_TEXT = this.getCancelOrSaveEditText();
         this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
@@ -221,7 +222,7 @@ export class Composer extends Component {
         }
     }
 
-    get CANCEL_OR_SAVE_EDIT_TEXT() {
+    getCancelOrSaveEditText() {
         if (this.ui.isSmall) {
             return markup(
                 sprintf(
