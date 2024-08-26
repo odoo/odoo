@@ -1450,15 +1450,16 @@ Please change the quantity done or the rounding precision of your unit of measur
         move_create_proc, move_to_confirm, move_waiting = self.browse(move_create_proc), self.browse(move_to_confirm), self.browse(move_waiting)
 
         # create procurements for make to order moves
-        procurement_requests = []
-        for move in move_create_proc:
-            values = move._prepare_procurement_values()
-            origin = move._prepare_procurement_origin()
-            procurement_requests.append(self.env['procurement.group'].Procurement(
-                move.product_id, move.product_uom_qty, move.product_uom,
-                move.location_id, move.rule_id and move.rule_id.name or "/",
-                origin, move.company_id, values))
-        self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
+        if not self.env.context.get('do_not_procure'):
+            procurement_requests = []
+            for move in move_create_proc:
+                values = move._prepare_procurement_values()
+                origin = move._prepare_procurement_origin()
+                procurement_requests.append(self.env['procurement.group'].Procurement(
+                    move.product_id, move.product_uom_qty, move.product_uom,
+                    move.location_id, move.rule_id and move.rule_id.name or "/",
+                    origin, move.company_id, values))
+            self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})

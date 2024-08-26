@@ -1356,13 +1356,13 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 line.product_uom_qty = 3
 
         moves = so.picking_ids.move_ids.sorted('id')
-        ship_sm, pack_sm, pick_sm, ret_pack_sm, ret_pick_sm = moves
+        pick_sm, pack_sm, ship_sm, ret_pick_sm, ret_pack_sm = moves
         self.assertRecordValues(moves, [
-            {'location_id': out_location.id, 'location_dest_id': custo_location.id, 'move_orig_ids': pack_sm.ids, 'move_dest_ids': []},
-            {'location_id': pack_location.id, 'location_dest_id': out_location.id, 'move_orig_ids': pick_sm.ids, 'move_dest_ids': ship_sm.ids},
             {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'move_orig_ids': [], 'move_dest_ids': pack_sm.ids},
-            {'location_id': out_location.id, 'location_dest_id': pack_location.id, 'move_orig_ids': [], 'move_dest_ids': ret_pick_sm.ids},
+            {'location_id': pack_location.id, 'location_dest_id': out_location.id, 'move_orig_ids': pick_sm.ids, 'move_dest_ids': ship_sm.ids},
+            {'location_id': out_location.id, 'location_dest_id': custo_location.id, 'move_orig_ids': pack_sm.ids, 'move_dest_ids': []},
             {'location_id': pack_location.id, 'location_dest_id': stock_location.id, 'move_orig_ids': ret_pack_sm.ids, 'move_dest_ids': []},
+            {'location_id': out_location.id, 'location_dest_id': pack_location.id, 'move_orig_ids': [], 'move_dest_ids': ret_pick_sm.ids},
         ])
 
         ret_pack_sm.picking_id.action_assign()
