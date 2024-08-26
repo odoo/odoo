@@ -19,8 +19,7 @@
             <div t-if="!ui.isSmall"  class="pos-centerheader d-flex justify-content-center">
                 <img class="pos-logo pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>
-            <div t-if="pos.shouldShowNavbarButtons()"
-                class="pos-rightheader d-flex justify-content-end"
+            <div class="pos-rightheader d-flex justify-content-end"
                 t-att-class="{ 'ms-auto': !ui.isSmall, 'me-1 position-absolute end-0 width-100 pos-nav-small': ui.isSmall }"
             >
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">

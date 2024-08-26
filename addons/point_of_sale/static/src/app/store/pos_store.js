@@ -1457,9 +1457,6 @@ export class PosStore extends Reactive {
             this.redirectToBackend();
         }
     }
-    shouldShowNavbarButtons() {
-        return true;
-    }
     async selectPricelist(pricelist) {
         await this.get_order().set_pricelist(pricelist);
     }

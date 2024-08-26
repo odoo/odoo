@@ -335,9 +335,6 @@ patch(PosStore.prototype, {
     tableHasOrders(table) {
         return this.getActiveOrdersOnTable(table).length > 0;
     },
-    shouldShowNavbarButtons() {
-        return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
-    },
     async transferOrder(destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
         const originalTable = order.table_id;

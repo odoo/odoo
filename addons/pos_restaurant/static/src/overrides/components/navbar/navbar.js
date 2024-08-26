@@ -30,7 +30,11 @@ patch(Navbar.prototype, {
             : this.pos.selectedTable;
     },
     showTabs() {
-        return !this.pos.selectedTable;
+        if (this.pos.config.module_pos_restaurant) {
+            return !(this.pos.selectedTable || this.pos.orderToTransferUuid);
+        } else {
+            return super.showTabs();
+        }
     },
     getFloatingOrders() {
         const draftOrders = super.getFloatingOrders() || [];
@@ -44,7 +48,14 @@ patch(Navbar.prototype, {
     get showEditPlanButton() {
         return true;
     },
-    async switchTable() {
+    async getTableOrFloatingOrder() {
+        const orderToTransfer = this.pos.models["pos.order"].getBy(
+            "uuid",
+            this.pos.orderToTransferUuid
+        );
+        if (orderToTransfer) {
+            return [this.getTable(), orderToTransfer];
+        }
         const table_number = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Table Selector"),
             placeholder: _t("Enter a table number"),
@@ -56,7 +67,7 @@ patch(Navbar.prototype, {
             confirmButtonLabel: _t("Jump to table"),
         });
         if (!table_number) {
-            return;
+            return [null, null];
         }
         const find_table = (t) => t.table_number === parseInt(table_number);
         let table = this.pos.currentFloor?.table_ids.find(find_table);
@@ -69,6 +80,10 @@ patch(Navbar.prototype, {
                 (o) => o.getFloatingOrderName() === table_number
             );
         }
+        return [table, floating_order];
+    },
+    async switchTable() {
+        const [table, floating_order] = await this.getTableOrFloatingOrder();
         if (!table && !floating_order) {
             this.dialog.add(AlertDialog, {
                 title: _t("Error"),
@@ -82,6 +97,22 @@ patch(Navbar.prototype, {
             await this.pos.setTableFromUi(table);
         } else {
             this.selectFloatingOrder(floating_order);
+            this.pos.orderToTransferUuid = null;
         }
+    },
+    getOrderToDisplay() {
+        const currentOrder = this.pos.get_order();
+        const orderToTransfer = this.pos.models["pos.order"].find((order) => {
+            return order.uuid === this.pos.orderToTransferUuid;
+        });
+        return currentOrder || orderToTransfer;
+    },
+    getOrderName() {
+        const order = this.getOrderToDisplay();
+        return order.table_id?.table_number || order.getFloatingOrderName();
+    },
+    onClickPlanButton() {
+        this.pos.orderToTransferUuid = null;
+        this.pos.showScreen("FloorScreen", { floor: this.floor });
     },
 });
