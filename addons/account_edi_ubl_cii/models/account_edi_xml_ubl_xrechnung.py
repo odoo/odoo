@@ -20,6 +20,13 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
             'credit_note': 'de.xrechnung:ubl-creditnote:2.2.0',
         }
 
+    def _get_delivery_vals_list(self, invoice):
+        # EXTENDS account.edi.xml.ubl_21
+        vals_list = super()._get_delivery_vals_list(invoice)
+        for vals in vals_list:
+            vals['actual_delivery_date'] = invoice.delivery_date or invoice.invoice_date
+        return vals_list
+
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._export_invoice_vals(invoice)
