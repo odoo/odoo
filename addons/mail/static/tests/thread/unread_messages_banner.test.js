@@ -96,9 +96,7 @@ test("scroll to the first unread message (slow ref registration)", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
+    await click("[title='Jump to Present']");
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     slowRegisterMessageRef = true;
