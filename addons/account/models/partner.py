@@ -41,7 +41,9 @@ class AccountFiscalPosition(models.Model):
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')
     fiscal_country_codes = fields.Char(string="Company Fiscal Country Code", related='company_country_id.code')
-    country_id = fields.Many2one('res.country', string='Country',
+    fiscal_country_id = fields.Many2one('res.country', string='Fiscal Country',
+        help="Country from which's taxes are available for the fiscal position mapping.")
+    country_id = fields.Many2one('res.country', string='Delivery Country',
         help="Apply only if delivery country matches.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery country matches the group.")
@@ -99,11 +101,11 @@ class AccountFiscalPosition(models.Model):
             if bool(position.zip_from) != bool(position.zip_to) or position.zip_from > position.zip_to:
                 raise ValidationError(_('Invalid "Zip Range", You have to configure both "From" and "To" values for the zip range and "To" should be greater than "From".'))
 
-    @api.constrains('country_id', 'country_group_id', 'state_ids', 'foreign_vat')
+    @api.constrains('fiscal_country_id', 'country_group_id', 'country_id', 'state_ids', 'foreign_vat')
     def _validate_foreign_vat_country(self):
         for record in self:
             if record.foreign_vat:
-                if record.country_id == record.company_id.account_fiscal_country_id:
+                if record.fiscal_country_id == record.company_id.account_fiscal_country_id:
                     if record.foreign_vat == record.company_id.vat:
                         raise ValidationError(_("You cannot create a fiscal position within your fiscal country with the same VAT number as the main one set on your company."))
 
@@ -126,9 +128,9 @@ class AccountFiscalPosition(models.Model):
                     foreign_vat_country = self.country_group_id.country_ids.filtered(lambda c: c.code == record.foreign_vat[:2].upper())
                     if not foreign_vat_country:
                         raise ValidationError(_("The country code of the foreign VAT number does not match any country in the group."))
-                    similar_fpos_domain += [('country_group_id', '=', record.country_group_id.id), ('country_id', '=', foreign_vat_country.id)]
+                    similar_fpos_domain += [('country_group_id', '=', record.country_group_id.id), ('fiscal_country_id', '=', foreign_vat_country.id)]
                 elif record.country_id:
-                    similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False)]
+                    similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False), ('fiscal_country_id', '=', record.fiscal_country_id.id)]
 
                 if record.state_ids:
                     similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
@@ -175,6 +177,8 @@ class AccountFiscalPosition(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            vals = self.adjust_vals_fiscal_country_id(vals)
+            vals = self.adjust_vals_country_id(vals)
             zip_from = vals.get('zip_from')
             zip_to = vals.get('zip_to')
             if zip_from and zip_to:
@@ -182,12 +186,31 @@ class AccountFiscalPosition(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        vals = self.adjust_vals_fiscal_country_id(vals)
+        vals = self.adjust_vals_country_id(vals)
         zip_from = vals.get('zip_from')
         zip_to = vals.get('zip_to')
         if zip_from or zip_to:
             for rec in self:
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
+
+    def adjust_vals_fiscal_country_id(self, vals):
+        foreign_vat = vals.get('foreign_vat')
+        country_id = self.country_id or vals.get('country_id')
+        if not (self.fiscal_country_id or vals.get("fiscal_country_id")):
+            if country_id:
+                vals['fiscal_country_id'] = country_id
+            elif foreign_vat:
+                vals['fiscal_country_id'] = self.env['res.country'].search([("code", "=", foreign_vat[:2].upper())], limit=1) or False
+        return vals
+
+    def adjust_vals_country_id(self, vals):
+        fiscal_country_id = self.fiscal_country_id or vals.get('fiscal_country_id')
+        country_id = self.country_id or vals.get('country_id')
+        if not country_id and fiscal_country_id:
+            vals['country_id'] = fiscal_country_id
+        return vals
 
     def _get_vat_valid(self, delivery, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements """
@@ -307,7 +330,6 @@ class AccountFiscalPositionTax(models.Model):
          'unique (position_id,tax_src_id,tax_dest_id)',
          'A tax fiscal position could be defined only one time on same taxes.')
     ]
-
 
 class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
