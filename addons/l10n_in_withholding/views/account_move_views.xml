@@ -36,8 +36,27 @@
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning" role="alert" invisible="not l10n_in_tcs_tds_warning">
                     <field name="l10n_in_tcs_tds_warning" readonly="1"/>
+                    <button class="oe_link" name="action_group_by_tds_tcs_lines" string="View" type="object"/>
+                    <button class="oe_link" name="action_apply_tcs_to_all_invoice_lines" string="Apply" type="object" invisible="move_type != 'out_invoice'"/>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_tds_tcs_l10n_in_withholding" model="ir.ui.view">
+        <field name="name">account.move.line.tree.tds.tcs.l10n.in.withholding</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Journal items" editable="top" create="0" default_group_by="section_id">
+                <header>
+                    <button name="action_apply_tcs_to_selected_invoice_lines" type="object" string="Apply TCS" invisible="context.get('default_tax_type_use') != 'sale'"/>
+                </header>
+                <field name="parent_state"/>
+                <field name="product_id" readonly="1"/>
+                <field name="name" widget="section_and_note_text"/>
+                <field name="account_id"/>
+                <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', context.get('default_tax_type_use'))]"/>
+            </list>
         </field>
     </record>
 </odoo>

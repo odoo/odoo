@@ -224,3 +224,33 @@ class AccountMove(models.Model):
                     move.l10n_in_tcs_tds_warning = False
             else:
                 move.l10n_in_tcs_tds_warning = False
+
+    def action_group_by_tds_tcs_lines(self):
+        self.ensure_one()
+        view_id = self.env.ref('l10n_in_withholding.view_move_line_tree_tds_tcs_l10n_in_withholding').id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Journal items'),
+            'res_model': 'account.move.line',
+            'domain': [('id', 'in', self.invoice_line_ids.ids)],
+            'views': [(view_id, 'list')],
+            'context': {
+                'default_tax_type_use': self.invoice_filter_type_domain,
+            }
+        }
+
+    def apply_applicable_tcs_invoice_lines(self, invoice_lines):
+        self.ensure_one()
+        sectioned_lines = {}
+        for line in invoice_lines:
+            if line.section_id and line.section_id not in line.tax_ids.mapped('l10n_in_section_id'):
+                sectioned_lines.setdefault(line.section_id.id, []).append(line)
+        order = 'amount ASC' if self.commercial_partner_id.l10n_in_pan else 'amount DESC'
+        for section_id, lines in sectioned_lines.items():
+            tcs_applicable_tax = self.env['account.tax'].search([('l10n_in_section_id', '=', section_id)], limit=1, order=order)
+            for line in lines:
+                line.tax_ids = line.tax_ids | tcs_applicable_tax if line.tax_ids else tcs_applicable_tax
+
+    def action_apply_tcs_to_all_invoice_lines(self):
+        self.ensure_one()
+        self.apply_applicable_tcs_invoice_lines(self.invoice_line_ids)
