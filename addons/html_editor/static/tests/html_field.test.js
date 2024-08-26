@@ -19,6 +19,7 @@ import {
     fields,
     models,
     mountView,
+    mountViewInDialog,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -40,7 +41,9 @@ class Partner extends models.Model {
 
     _onChanges = {
         name(record) {
-            record.txt = `<p>${record.name}</p>`;
+            if (record.name) {
+                record.txt = `<p>${record.name}</p>`;
+            }
         },
     };
 }
@@ -226,6 +229,31 @@ test("edit and save a html field", async () => {
     expect.verifySteps(["web_save"]);
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_save`).not.toBeVisible();
+});
+
+test("edit a html field in new form view dialog and close the dialog with 'escape'", async () => {
+    await mountViewInDialog({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"></field>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(".modal").toHaveCount(1);
+    expect(".odoo-editor-editable p").toHaveText("");
+
+    await contains("[name='txt'] .odoo-editor-editable").focus();
+    setSelectionInHtmlField();
+    insertText(htmlEditor, "test");
+    await animationFrame();
+    expect(".odoo-editor-editable p").toHaveText("test");
+    expect(".o_form_button_save").toBeVisible();
+
+    press("escape");
+    await animationFrame();
+    expect(".modal").toHaveCount(0);
 });
 
 test("onchange update html field in edition", async () => {
