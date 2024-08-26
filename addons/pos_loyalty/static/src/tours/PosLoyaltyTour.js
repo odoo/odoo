@@ -255,10 +255,9 @@ ProductScreen.do.clickDisplayedProduct('Product A');
 ProductScreen.check.totalAmountIs('210.00');
 PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.clickRewardButton();
-ProductScreen.check.totalAmountIs('205.00');
-PosLoyalty.check.isRewardButtonHighlighted(true);
-PosLoyalty.do.clickRewardButton();
-ProductScreen.check.totalAmountIs('200.00');
+PosLoyalty.check.hasRewardLine('$ 5 per order on your order', '-110');
+PosLoyalty.check.hasRewardLine('$ 5 per order on your order', '-100');
+ProductScreen.check.totalAmountIs('0.00');
 
 Tour.register('PosLoyaltyTour9', { test: true, url: '/pos/web' }, getSteps());
 

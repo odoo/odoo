@@ -871,7 +871,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, "PosLoyaltySpecificDiscountTour", login="accountman")
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, "PosLoyaltyOrderDiscountMerge", login="accountman")
 
     def test_discount_specific_product_with_free_product(self):
         LoyaltyProgram = self.env['loyalty.program']

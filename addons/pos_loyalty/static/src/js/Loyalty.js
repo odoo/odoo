@@ -1379,13 +1379,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             return [];
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
+        let points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ?
+            this._getRealCouponPoints(coupon_id) :
+            Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
         if (reward.discount_mode === 'per_point') {
-            let points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ?
-                this._getRealCouponPoints(coupon_id) :
-                Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
             maxDiscount = Math.min(maxDiscount, reward.discount * points);
         } else if (reward.discount_mode === 'per_order') {
-            maxDiscount = Math.min(maxDiscount, reward.discount);
+            maxDiscount = Math.min(maxDiscount, reward.discount * points / reward.required_points);
         } else if (reward.discount_mode === 'percent') {
             maxDiscount = Math.min(maxDiscount, discountable * (reward.discount / 100));
         }
@@ -1393,6 +1393,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         let pointCost = reward.clear_wallet ? this._getRealCouponPoints(coupon_id) : reward.required_points;
         if (reward.discount_mode === 'per_point' && !reward.clear_wallet) {
             pointCost = Math.min(maxDiscount, discountable) / reward.discount;
+        } else if (reward.discount_mode === 'per_order') {
+            pointCost = Math.min(maxDiscount * pointCost, discountable * reward.required_points / reward.discount);
         }
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
