@@ -1021,3 +1021,25 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
         self.assertEqual(svl[0].unit_cost, 67.5)
         self.assertEqual(svl[1].unit_cost, 135000000)
+
+    def test_total_cost_share_rounded_to_precision(self):
+        kit, compo01, compo02 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': price,
+            'type': 'product',
+        } for name, price in [('Kit', 30), ('Compo 01', 10), ('Compo 02', 20)]])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': compo01.id,
+                'product_qty': 1,
+                'cost_share': 99.99,
+            }), (0, 0, {
+                'product_id': compo02.id,
+                'product_qty': 1,
+                'cost_share': 0.01,
+            })],
+        })
+        self.assertTrue(bom)
