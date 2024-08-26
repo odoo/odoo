@@ -70,26 +70,7 @@ class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProduc
 
 
 @tagged('post_install', '-at_install')
-class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
-    def _setup_pricelist(self, currency_ratio=2):
-        to_currency = self._setup_currency(currency_ratio)
-
-        discount = 10
-
-        pricelist = self.env['product.pricelist'].create({
-            'name': 'test pl',
-            'currency_id': to_currency.id,
-            'company_id': self.computer.company_id.id,
-        })
-
-        pricelist_item = self.env['product.pricelist.item'].create({
-            'min_quantity': 2,
-            'compute_price': 'percentage',
-            'percent_price': discount,
-            'pricelist_id': pricelist.id,
-        })
-
-        return (pricelist, pricelist_item, currency_ratio, 1 - discount / 100)
+class TestSaleProductAttributeValueConfig(TestProductAttributeValueCommon):
 
     def test_01_is_combination_possible_archived(self):
         """The goal is to test the possibility of archived combinations.
@@ -201,77 +182,3 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
         self.assertEqual(computer_ssd_256_after, computer_ssd_256_before)
         self.assertEqual(computer_ssd_256_after.attribute_line_id, computer_ssd_256_before.attribute_line_id)
         do_test(self)
-
-    def test_04_create_product_variant_non_dynamic(self):
-        """The goal of this test is to make sure the _create_product_variant does
-        not create variant if the type is not dynamic. It can however return a
-        variant if it already exists."""
-        computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
-        computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
-        computer_ram_16 = self._get_product_template_attribute_value(self.ram_16)
-        computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
-        self._add_exclude(computer_ram_16, computer_hdd_1)
-
-        # CASE: variant is already created, it should return it
-        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
-        variant1 = self.computer._get_variant_for_combination(combination)
-        self.assertEqual(self.computer._create_product_variant(combination), variant1)
-
-        # CASE: variant does not exist, but template is non-dynamic, so it
-        # should not create it
-        Product = self.env['product.product']
-        variant1.unlink()
-        self.assertEqual(self.computer._create_product_variant(combination), Product)
-
-    def test_05_create_product_variant_dynamic(self):
-        """The goal of this test is to make sure the _create_product_variant does
-        work with dynamic. If the combination is possible, it should create it.
-        If it's not possible, it should not create it."""
-        self.computer_hdd_attribute_lines.write({'active': False})
-        self.hdd_attribute.create_variant = 'dynamic'
-        self._add_hdd_attribute_line()
-
-        computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
-        computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
-        computer_ram_16 = self._get_product_template_attribute_value(self.ram_16)
-        computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
-        self._add_exclude(computer_ram_16, computer_hdd_1)
-
-        # CASE: variant does not exist, but combination is not possible
-        # so it should not create it
-        impossible_combination = computer_ssd_256 + computer_ram_16 + computer_hdd_1
-        Product = self.env['product.product']
-        self.assertEqual(self.computer._create_product_variant(impossible_combination), Product)
-
-        # CASE: the variant does not exist, and the combination is possible, so
-        # it should create it
-        combination = computer_ssd_256 + computer_ram_8 + computer_hdd_1
-        variant = self.computer._create_product_variant(combination)
-        self.assertTrue(variant)
-
-        # CASE: the variant already exists, so it should return it
-        self.assertEqual(variant, self.computer._create_product_variant(combination))
-
-    def _add_keyboard_attribute(self):
-        self.keyboard_attribute = self.env['product.attribute'].create({
-            'name': 'Keyboard',
-            'sequence': 6,
-            'create_variant': 'dynamic',
-        })
-        self.keyboard_included = self.env['product.attribute.value'].create({
-            'name': 'Included',
-            'attribute_id': self.keyboard_attribute.id,
-            'sequence': 1,
-        })
-        self.keyboard_excluded = self.env['product.attribute.value'].create({
-            'name': 'Excluded',
-            'attribute_id': self.keyboard_attribute.id,
-            'sequence': 2,
-        })
-        self.computer_keyboard_attribute_lines = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.computer.id,
-            'attribute_id': self.keyboard_attribute.id,
-            'value_ids': [(6, 0, [self.keyboard_included.id, self.keyboard_excluded.id])],
-        })
-        self.computer_keyboard_attribute_lines.product_template_value_ids[0].price_extra = 5
-        self.computer_keyboard_attribute_lines.product_template_value_ids[1].price_extra = -5
