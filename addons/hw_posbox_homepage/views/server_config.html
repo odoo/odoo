@@ -10,8 +10,8 @@
         }
 
         $(function () {
-            $('#server-config').on("submit", (function(e){
-                const server_token = $('#server-token').val().split('|')[0]; // only url
+            $('#server-config').on("submit", (function(e) {
+                const server_token = new URL($('#server-token').val()).origin; // only url
                 e.preventDefault();
                 $('.loading-block').removeClass('o_hide');
                 $.ajax({
