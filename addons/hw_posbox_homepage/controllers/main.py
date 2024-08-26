@@ -255,13 +255,12 @@ class IoTboxHomepage(Home):
     @http.route('/server_connect', type='http', auth='none', cors='*', csrf=False)
     def connect_to_server(self, token, iotname):
         if token:
-            credential = token.split('|')
-            url = credential[0]
-            token = credential[1]
-            db_uuid = credential[2]
-            enterprise_code = credential[3]
             try:
-                helpers.save_conf_server(url, token, db_uuid, enterprise_code)
+                configuration = helpers.parse_url(token)
+                helpers.save_conf_server(**configuration)
+            except ValueError:
+                _logger.warning("Wrong server token: %s", token)
+                return 'Invalid URL provided.'
             except (subprocess.CalledProcessError, OSError, Exception):
                 return 'Failed to write server configuration files on IoT. Please try again.'
 
