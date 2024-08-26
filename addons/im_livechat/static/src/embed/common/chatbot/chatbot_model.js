@@ -14,7 +14,12 @@ export class Chatbot extends Record {
     script = Record.one("ChatbotScript");
     currentStep = Record.one("ChatbotStep");
     steps = Record.many("ChatbotStep");
-    thread = Record.one("Thread", { inverse: "chatbot" });
+    thread = Record.one("Thread", {
+        inverse: "chatbot",
+        onDelete() {
+            this.delete();
+        },
+    });
     typingMessage = Record.one("Message", {
         compute() {
             if (this.isTyping && this.thread) {
@@ -59,10 +64,10 @@ export class Chatbot extends Record {
         if (!this.currentStep || this.currentStep.completed || !this.thread) {
             return;
         }
-        const { Message: messages = [] } = this.store.insert(this.currentStep.data, { html: true });
-        this.currentStep.message =
-            messages[0] ??
-            this.store.Message.insert(
+        if (!this.currentStep.message) {
+            // Thread is not persisted thus messages do not exist on the server,
+            // create them now on the client side.
+            this.currentStep.message = this.store.Message.insert(
                 {
                     id: this.store.getNextTemporaryId(),
                     author: this.script.partner,
@@ -71,6 +76,7 @@ export class Chatbot extends Record {
                 },
                 { html: true }
             );
+        }
         this.thread.messages.add(this.currentStep.message);
     }
 
@@ -98,10 +104,12 @@ export class Chatbot extends Record {
                 this.currentStep.isLast = true;
                 return;
             }
-            this.steps.push(nextStep);
+            const { ChatbotStep: steps } = this.store.insert(nextStep.data, { html: true });
+            this.steps.push(steps[0]);
+        } else {
+            const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
+            this.currentStep = this.steps[nextStepIndex];
         }
-        const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
-        this.currentStep = this.steps[nextStepIndex];
     }
 
     /**

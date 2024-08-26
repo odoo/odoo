@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import html2plaintext, is_html_empty, email_normalize, plaintext2html
+from odoo.addons.mail.tools.discuss import Store
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -366,6 +367,30 @@ class ChatbotScriptStep(models.Model):
             discuss_channel.channel_pin(pinned=True)
 
         return posted_message
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        if fields is None:
+            fields = {
+                "answers": None,
+                "message": [],
+                "type": True,
+                "isLast": True,
+            }
+        for step in self:
+            data = {"id": step.id}
+            if "answers" in fields:
+                store.add(
+                    "ChatbotScriptStepAnswer",
+                    Store(step.answer_ids).get_result().get("ChatbotScriptAnswer", []),
+                )
+                data["answers"] = [{"id": answer.id} for answer in step.answer_ids]
+            if "message" in fields:
+                data["message"] = plaintext2html(step.message) if not is_html_empty(step.message) else False
+            if "type" in fields:
+                data["type"] = step.step_type
+            if "isLast" in fields:
+                data["isLast"] = step._is_last_step()
+            store.add("ChatbotScriptStep", data)
 
     # --------------------------
     # Tooling / Misc
