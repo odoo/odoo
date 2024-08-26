@@ -285,3 +285,10 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('BillScreenTour')
+
+    def test_12_order_tracking(self):
+        self.pos_config.write({'order_edit_tracking': True})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OrderTrackingTour')
+        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
+        self.assertTrue(order1.is_edited)

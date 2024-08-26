@@ -264,3 +264,23 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             billScreenQRCode,
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("OrderTrackingTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.selectedOrderlineHas("Coca-Cola", "2.0"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("1"),
+            ProductScreen.selectedOrderlineHas("Coca-Cola", "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
