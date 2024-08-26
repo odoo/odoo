@@ -33,6 +33,10 @@ echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /ro
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias nano='write_mode; nano -l'" | tee -a /home/pi/.bashrc
 echo  "alias vim='write_mode; sudo vim'" | tee -a /home/pi/.bashrc
+echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
 echo "
 show_odoo_aliases() {
   echo 'Welcome to Odoo IoTBox tools'
@@ -43,6 +47,9 @@ show_odoo_aliases() {
   echo 'read_mode           Switches system to read-only mode'
   echo 'install             Bypasses ramdisks to allow package installation'
   echo 'blackbox            Lists all serial connected devices'
+  echo 'odoo_start          Starts Odoo service'
+  echo 'odoo_stop           Stops Odoo service'
+  echo 'odoo_restart        Restarts Odoo service'
 }
 alias odoo_help='show_odoo_aliases'
 " | tee -a ~/.bashrc /home/pi/.bashrc
