@@ -261,7 +261,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(account.name, "Existing Account")
 
     def test_compute_account_type(self):
-        existing_account = self.env['account.account'].search([('company_ids', '=', self.company_data['company'].id)], limit=1)
+        existing_account = self.company_data['default_account_revenue']
         # account_type should be computed
         new_account_code = self.env['account.account']._search_new_account_code(existing_account.code)
         new_account = self.env['account.account'].create({
