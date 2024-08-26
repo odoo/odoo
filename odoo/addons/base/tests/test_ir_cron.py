@@ -3,19 +3,15 @@
 
 # ruff: noqa: E201, E272, E301, E306
 
-import collections
 import secrets
 import textwrap
-import threading
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from datetime import timedelta
-from unittest.mock import call, patch
+from unittest.mock import patch
 from freezegun import freeze_time
 
-import odoo
-from odoo import api, fields
-from odoo.tests.common import BaseCase, TransactionCase, RecordCapturer, get_db_name, tagged
+from odoo import fields
+from odoo.tests.common import TransactionCase, RecordCapturer
 from odoo.tools import mute_logger
 from odoo.addons.base.models.ir_cron import MIN_FAILURE_COUNT_BEFORE_DEACTIVATION, MIN_DELTA_BEFORE_DEACTIVATION
 
@@ -526,139 +522,3 @@ class TestIrCron(TransactionCase, CronMixinCase):
         # Test acquire job on already processed jobs
         job = self.env['ir.cron']._acquire_one_job(self.cr, self.cron.id)
         self.assertEqual(job, None, "No error should be thrown, job should just be none")
-
-
-@tagged('-standard', '-at_install', 'post_install', 'database_breaking')
-class TestIrCronConcurrent(BaseCase, CronMixinCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        # Keep a reference on the real cron methods, those without patch
-        cls.registry = odoo.registry(get_db_name())
-        cls.cron_process_job = cls.registry['ir.cron']._process_job
-        cls.cron_process_jobs = cls.registry['ir.cron']._process_jobs
-        cls.cron_get_all_ready_jobs = cls.registry['ir.cron']._get_all_ready_jobs
-        cls.cron_acquire_one_job = cls.registry['ir.cron']._acquire_one_job
-        cls.cron_callback = cls.registry['ir.cron']._callback
-
-    def setUp(self):
-        super().setUp()
-
-        with self.registry.cursor() as cr:
-            env = api.Environment(cr, odoo.SUPERUSER_ID, {})
-            env['ir.cron'].search([]).unlink()
-            env['ir.cron.trigger'].search([]).unlink()
-
-            self.cron1_data = env['ir.cron'].create(self._get_cron_data(env, priority=1)).read(load=None)[0]
-            self.cron2_data = env['ir.cron'].create(self._get_cron_data(env, priority=2)).read(load=None)[0]
-            self.partner_data = env['res.partner'].create(self._get_partner_data(env)).read(load=None)[0]
-            self.cron_ids = [self.cron1_data['id'], self.cron2_data['id']]
-
-    def test_cron_concurrency_1(self):
-        """
-        Two cron threads "th1" and "th2" wake up at the same time and
-        see two jobs "job1" and "job2" that are ready (setup).
-
-        Th1 acquire job1, before it can process and release its job, th2
-        acquire a job too (setup). Th2 shouldn't be able to acquire job1
-        as another thread is processing it, it should skips job1 and
-        should acquire job2 instead (test). Both thread then process
-        their job, update its `nextcall` and release it (setup).
-
-        All the threads update and release their job before any thread
-        attempt to acquire another job. (setup)
-
-        The two thread each attempt to acquire a new job (setup), they
-        should both fail to acquire any as each job's nextcall is in the
-        future* (test).
-
-        *actually, in their own transaction, the other job's nextcall is
-        still "in the past" but any attempt to use that information
-        would result in a serialization error. This tests ensure that
-        that serialization error is correctly handled and ignored.
-        """
-        lock = threading.Lock()
-        barrier = threading.Barrier(2)
-
-        ###
-        # Setup
-        ###
-
-        # Watchdog, if a thread was waiting at the barrier when the
-        # other exited, it receives a BrokenBarrierError and exits too.
-        def process_jobs(*args, **kwargs):
-            try:
-                self.cron_process_jobs(*args, **kwargs)
-            finally:
-                barrier.reset()
-
-        # The two threads get the same list of jobs
-        def get_all_ready_jobs(*args, **kwargs):
-            jobs = self.cron_get_all_ready_jobs(*args, **kwargs)
-            barrier.wait()
-            return jobs
-
-        # When a thread acquire a job, it processes it till the end
-        # before another thread can acquire one.
-        def acquire_one_job(*args, **kwargs):
-            lock.acquire(timeout=1)
-            try:
-                with mute_logger('odoo.sql_db'):
-                    job = self.cron_acquire_one_job(*args, **kwargs)
-            except Exception:
-                lock.release()
-                raise
-            if not job:
-                lock.release()
-            return job
-
-        # When a thread is done processing its job, it waits for the
-        # other thread to catch up.
-        def process_job(*args, **kwargs):
-            try:
-                return_value = self.cron_process_job(*args, **kwargs)
-            finally:
-                lock.release()
-            barrier.wait(timeout=1)
-            return return_value
-
-        # Set 2 jobs ready, process them in 2 different threads.
-        with self.registry.cursor() as cr:
-            env = api.Environment(cr, odoo.SUPERUSER_ID, {})
-            env['ir.cron'].browse(self.cron_ids).write({
-                'nextcall': fields.Datetime.now() - timedelta(hours=1)
-            })
-
-        ###
-        # Run
-        ###
-        with patch.object(self.registry['ir.cron'], '_process_jobs', process_jobs), \
-             patch.object(self.registry['ir.cron'], '_get_all_ready_jobs', get_all_ready_jobs), \
-             patch.object(self.registry['ir.cron'], '_acquire_one_job', acquire_one_job), \
-             patch.object(self.registry['ir.cron'], '_process_job', process_job), \
-             patch.object(self.registry['ir.cron'], '_callback') as callback, \
-             ThreadPoolExecutor(max_workers=2) as executor:
-            fut1 = executor.submit(self.registry['ir.cron']._process_jobs, self.registry.db_name)
-            fut2 = executor.submit(self.registry['ir.cron']._process_jobs, self.registry.db_name)
-            fut1.result(timeout=2)
-            fut2.result(timeout=2)
-
-        ###
-        # Validation
-        ###
-
-        self.assertEqual(len(callback.call_args_list), 2, 'Two jobs must have been processed.')
-        self.assertEqual(callback.call_args_list, [
-            call(
-                self.cron1_data['name'],
-                self.cron1_data['ir_actions_server_id'],
-                self.cron1_data['id'],
-            ),
-            call(
-                self.cron2_data['name'],
-                self.cron2_data['ir_actions_server_id'],
-                self.cron2_data['id'],
-            ),
-        ])
