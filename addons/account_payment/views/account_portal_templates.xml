@@ -82,17 +82,17 @@
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="after">
             <td class="d-none d-lg-table-cell text-center">
                 <span
-                    t-if="invoice_data['show_installment']"
-                    t-attf-class="{{'text-danger' if invoice_data['amount_overdue'] else ''}}"
-                    t-out="invoice_data['amount_overdue'] or invoice_data['amount_next_installment']"
+                    t-if="invoice_data['installment_state'] in ('next', 'overdue')"
+                    t-attf-class="{{'text-danger' if invoice_data['installment_state'] == 'overdue' else ''}}"
+                    t-out="invoice_data['next_amount_to_pay']"
                     t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"
                 />
                 <small
-                    t-if="invoice_data['show_installment'] and not invoice_data['amount_overdue']"
+                    t-if="invoice_data['installment_state'] == 'next'"
                     class="o_portal_invoice_due_date"
-                    t-att-datetime="invoice_data['date_next_installment']"
+                    t-att-datetime="invoice_data['next_due_date']"
                 />
-                <small t-if="invoice_data['amount_overdue']" class="text-danger">
+                <small t-if="invoice_data['installment_state'] == 'overdue'" class="text-danger">
                     overdue
                 </small>
             </td>
@@ -141,7 +141,7 @@
                             <div t-if="company_mismatch">
                                 <t t-call="payment.company_mismatch_warning"/>
                             </div>
-                            <div t-elif="amount_custom or amount_overdue or amount_next_installment" id="o_payment_installments_modal">
+                            <div t-elif="installment_state in ('next', 'overdue') and amount_due != next_amount_to_pay" id="o_payment_installments_modal">
                                 <div class="btn-group w-100" id="o_payment_tabs" role="tablist">
                                     <button class="btn btn-outline-primary o_btn_payment_tab active"
                                         id="o_payment_installments_tab"
@@ -155,7 +155,7 @@
                                         <strong>Installment</strong>
                                         <br/>
                                         <t
-                                            t-out="amount_custom or amount_overdue or amount_next_installment"
+                                            t-out="next_amount_to_pay"
                                             t-options="{'widget': 'monetary', 'display_currency': currency}"
                                         />
                                     </button>
@@ -169,7 +169,7 @@
                                         aria-selected="false"
                                     >
                                         <strong>Full Amount</strong><br/>
-                                        <t t-out="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        <t t-out="amount_due" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     </button>
                                 </div>
                                 <div class="tab-content" id="o_payment_tabcontent">
@@ -184,7 +184,7 @@
                                             <t t-call="payment.summary_item">
                                                 <t t-set="name" t-value="'amount_installment'"/>
                                                 <t t-set="label">Amount</t>
-                                                <t t-set="value" t-value="amount_custom or amount_overdue or amount_next_installment"/>
+                                                <t t-set="value" t-value="next_amount_to_pay"/>
                                                 <t t-set="options"
                                                     t-value="{'widget': 'monetary', 'display_currency': currency}"
                                                 />
@@ -192,7 +192,7 @@
                                             <t t-call="payment.summary_item">
                                                 <t t-set="name" t-value="'reference_installment'"/>
                                                 <t t-set="label">Reference</t>
-                                                <t t-set="value" t-value="invoice_name if amount_custom or amount_overdue else invoice_name_installment"/>
+                                                <t t-set="value" t-value="next_payment_reference"/>
                                                 <t t-set="include_separator" t-value="True"/>
                                             </t>
                                         </div>
@@ -203,11 +203,14 @@
                                         aria-labelledby="o_payment_full_tab"
                                         tabindex="0"
                                     >
+                                        <div t-if="show_epd" class="alert alert-success">
+                                            Early Payment Discount of <span t-out="epd_discount_amount_currency" t-options="{'widget': 'monetary', 'display_currency': currency}"/> has been applied.
+                                        </div>
                                         <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 py-2 rounded">
                                             <t t-call="payment.summary_item">
                                                 <t t-set="name" t-value="'amount_full'"/>
                                                 <t t-set="label">Amount</t>
-                                                <t t-set="value" t-value="amount"/>
+                                                <t t-set="value" t-value="amount_due"/>
                                                 <t t-set="options"
                                                     t-value="{'widget': 'monetary', 'display_currency': currency}"
                                                 />
@@ -215,20 +218,24 @@
                                             <t t-call="payment.summary_item">
                                                 <t t-set="name" t-value="'reference_full'"/>
                                                 <t t-set="label">Reference</t>
-                                                <t t-set="value" t-value="invoice_name"/>
+                                                <t t-set="value" t-value="next_payment_reference"/>
                                                 <t t-set="include_separator" t-value="True"/>
                                             </t>
                                         </div>
                                     </div>
+                                    <!-- the 'amount' is set js-side depending the active tab -->
                                     <t t-call="account_payment.form"/>
                                 </div>
                             </div>
-                            <t t-elif="amount > 0">
+                            <t t-else="">
+                                <div t-if="show_epd" class="alert alert-success">
+                                    Early Payment Discount of <span t-out="epd_discount_amount_currency" t-options="{'widget': 'monetary', 'display_currency': currency}"/> has been applied.
+                                </div>
                                 <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
                                     <t t-call="payment.summary_item">
                                         <t t-set="name" t-value="'amount_full'"/>
                                         <t t-set="label">Amount</t>
-                                        <t t-set="value" t-value="amount"/>
+                                        <t t-set="value" t-value="amount_due"/>
                                         <t t-set="options"
                                             t-value="{'widget': 'monetary', 'display_currency': currency}"
                                         />
@@ -236,11 +243,13 @@
                                     <t t-call="payment.summary_item">
                                         <t t-set="name" t-value="'reference_full'"/>
                                         <t t-set="label">Reference</t>
-                                        <t t-set="value" t-value="invoice_name"/>
+                                        <t t-set="value" t-value="next_payment_reference"/>
                                         <t t-set="include_separator" t-value="True"/>
                                     </t>
                                 </div>
-                                <t t-call="account_payment.form"/>
+                                <t t-call="account_payment.form">
+                                    <t t-set="amount" t-value="amount_due"/>
+                                </t>
                             </t>
                         </div>
                     </div>
@@ -299,10 +308,6 @@
             <div t-else="" id="portal_pay" t-att-data-payment="payment">
                 <t t-call="account_payment.portal_invoice_payment_paid"/>
             </div>
-        </xpath>
-        <xpath expr="//h3[@name='installment_amount']" position="attributes">
-            <attribute name="t-if" separator=" or " add="amount_custom"/>
-            <attribute name="t-out">amount_custom or amount_overdue or amount_next_installment</attribute>
         </xpath>
     </template>
 

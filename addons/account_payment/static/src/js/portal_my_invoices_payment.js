@@ -18,7 +18,7 @@ publicWidget.registry.PortalMyInvoicesPaymentList = publicWidget.Widget.extend({
         const dueDateLabels = this.el.querySelectorAll(".o_portal_invoice_due_date");
         const today = DateTime.now().startOf("day");
         dueDateLabels.forEach((label) => {
-            const dateTime = deserializeDateTime(label.getAttribute("datetime"));
+            const dateTime = deserializeDateTime(label.getAttribute("datetime")).startOf('day');
             const diff = dateTime.diff(today).as("days");
 
             let dueDateLabel = "";

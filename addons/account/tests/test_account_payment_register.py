@@ -1644,7 +1644,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 1036.0,
             'installments_mode': 'full',
             'installments_switch_amount': 115.0,
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': invoice.name,
         }])
 
         # Case when at date of the first installment.
@@ -1664,7 +1664,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 1034.0,
             'installments_mode': 'full',
             'installments_switch_amount': 115.0,
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': invoice.name,
         }])
 
         # First installment is overdue.
@@ -1684,7 +1684,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 0.0,
             'installments_mode': 'overdue',
             'installments_switch_amount': 1150.0,
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': invoice.name,
         }])
 
         # Third installment is overdue.
@@ -1694,5 +1694,5 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 0.0,
             'installments_mode': 'full',
             'installments_switch_amount': 0.0,
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': invoice.name,
         }])

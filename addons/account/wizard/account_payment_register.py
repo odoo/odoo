@@ -174,9 +174,9 @@ class AccountPaymentRegister(models.TransientModel):
         :param lines:           A recordset of the `account.move.line`'s that will be reconciled.
         :return:                A string representing a communication to be set on payment.
         '''
-        if len(lines) == 1:
-            line = lines[0]
-            label = line.name or line.move_id.ref or line.move_id.name
+        if len(lines.move_id) == 1:
+            move = lines.move_id
+            label = (len(lines) == 1 and lines.name) or move.ref or move.name
         else:
             label = self.company_id.get_next_batch_payment_communication()
         return label
