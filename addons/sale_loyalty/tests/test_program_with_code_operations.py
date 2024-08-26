@@ -33,7 +33,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         self.env['loyalty.generate.wizard'].with_context(active_id=self.code_promotion_program.id).create({
             'mode': 'selected',
-            'customer_ids': self.steve,
+            'customer_ids': self.partner,
             'points_granted': 1,
         }).generate_coupons()
         coupon = self.code_promotion_program.coupon_ids
