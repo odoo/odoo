@@ -41,7 +41,7 @@ class TestProgramRules(TestSaleCouponCommon):
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(len(order.order_line.ids), 2, "The promo offer shouldn't have been applied as the purchased amount is not enough")
 
-        order = self.env['sale.order'].create({'partner_id': self.steve.id})
+        order = self.env['sale.order'].create({'partner_id': self.partner.id})
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_A.id,
