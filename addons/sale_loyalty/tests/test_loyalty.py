@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, new_test_user
+from odoo.fields import Command
+from odoo.tests import new_test_user, tagged
 from odoo.tools.float_utils import float_compare
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
@@ -16,14 +16,18 @@ class TestLoyalty(TestSaleCouponCommon):
         super().setUpClass()
         cls.env['loyalty.program'].search([]).write({'active': False})
 
-        cls.partner_a = cls.env['res.partner'].create({'name': 'Jean Jacques'})
-
-        cls.product_a = cls.env['product.product'].create({
-            'name': 'Product C',
-            'list_price': 100,
-            'sale_ok': True,
-            'taxes_id': [(6, 0, [])],
-        })
+        cls.product_a, cls.product_b = cls.env['product.product'].create([
+            {
+                'name': 'Product C',
+                'list_price': 100,
+                'sale_ok': True,
+                'taxes_id': [Command.set([])],
+            },
+            {
+                'name': "Product B",
+                'sale_ok': True,
+            }
+        ])
 
         cls.ewallet_program = cls.env['loyalty.program'].create({
             'name': 'eWallet Program',
@@ -45,7 +49,7 @@ class TestLoyalty(TestSaleCouponCommon):
 
         cls.ewallet = cls.env['loyalty.card'].create({
             'program_id': cls.ewallet_program.id,
-            'partner_id': cls.partner_a.id,
+            'partner_id': cls.partner.id,
             'points': 10,
         })
         cls.ewallet_program.coupon_ids = [Command.set([cls.ewallet.id])]
@@ -90,16 +94,14 @@ class TestLoyalty(TestSaleCouponCommon):
             })],
         })
 
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-        })
+        order = self.empty_order
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
         # Should be empty since we do not have any coupon created yet
         self.assertFalse(claimable_rewards, "No program should be applicable")
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 10,
         })
         self.ewallet.points = 0
@@ -144,7 +146,7 @@ class TestLoyalty(TestSaleCouponCommon):
         })
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 (0, 0, {
                     'product_id': self.product_a.id,
@@ -218,20 +220,20 @@ class TestLoyalty(TestSaleCouponCommon):
         coupon_partner, _ = self.env['loyalty.card'].create([
             {
                 'program_id': coupon_program.id,
-                'partner_id': self.partner_a.id,
+                'partner_id': self.partner.id,
                 'points': 1,
                 'code': '5555',
             },
             {
                 'program_id': ewallet_program.id,
-                'partner_id': self.partner_a.id,
+                'partner_id': self.partner.id,
                 'points': 115,
             },
         ])
 
         # Create the order
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                     Command.create({
                         'product_id': product_a.id,
@@ -284,7 +286,7 @@ class TestLoyalty(TestSaleCouponCommon):
         })
 
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [Command.create({'product_id': product_a.id})],
         })
         self.assertEqual(order.reward_amount, 0)
@@ -340,12 +342,12 @@ class TestLoyalty(TestSaleCouponCommon):
 
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 0,
         })
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
@@ -387,12 +389,12 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 0,
         })
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
@@ -428,12 +430,12 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_program.rule_ids.product_category_id = product_category_food.id
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 0,
         })
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
@@ -474,7 +476,7 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_program.rule_ids.product_category_id = product_category_food.id
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 0,
         })
 
@@ -486,7 +488,7 @@ class TestLoyalty(TestSaleCouponCommon):
         discount_product.categ_id = product_category_food.id
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
@@ -513,11 +515,11 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 0,
         })
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
@@ -541,7 +543,7 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
         loyalty_card = self.env['loyalty.card'].create({
             'program_id': loyalty_program.id,
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'points': 0,
         })
 
@@ -565,7 +567,7 @@ class TestLoyalty(TestSaleCouponCommon):
         gift_card = program_gift_card.coupon_ids[0]
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
@@ -610,7 +612,7 @@ class TestLoyalty(TestSaleCouponCommon):
         }])
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [Command.create({
                     'product_id': product_A.id,
                     'product_uom_qty': 3,
@@ -789,7 +791,7 @@ class TestLoyalty(TestSaleCouponCommon):
         }])
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': product_A.id,
@@ -825,7 +827,7 @@ class TestLoyalty(TestSaleCouponCommon):
         }])
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': product_A.id,
@@ -845,7 +847,7 @@ class TestLoyalty(TestSaleCouponCommon):
         }).generate_coupons()
 
         order = self.env['sale.order'].with_user(self.user_salemanager).create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_a.id,
@@ -884,10 +886,10 @@ class TestLoyalty(TestSaleCouponCommon):
             })],
         }])
         self.env['loyalty.card'].create({
-            'program_id': loyalty_program.id, 'partner_id': self.partner_a.id, 'points': 2
+            'program_id': loyalty_program.id, 'partner_id': self.partner.id, 'points': 2
         })
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [(0, 0, {
                 'product_id': self.product_A.id, 'product_uom_qty': 1, 'price_unit': price
             }) for price in (5.60, 8.92, 44.91, 217.26, 2400.00)],
@@ -921,9 +923,9 @@ class TestLoyalty(TestSaleCouponCommon):
                 'required_points': 1,
             })],
         }])
-        self.env['loyalty.card'].create({'program_id': loyalty_program.id, 'partner_id': self.partner_a.id, 'points': 2})
+        self.env['loyalty.card'].create({'program_id': loyalty_program.id, 'partner_id': self.partner.id, 'points': 2})
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [(0, 0, {'product_id': self.product_D.id, 'product_uom_qty': 1})],
         })
 
@@ -937,7 +939,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.ewallet.points = 1000
 
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [Command.create({
                 'product_id': self.product_a.id,
                 'points_cost': 100,
@@ -954,7 +956,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.ewallet.points = 10
 
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [Command.create({
                 'product_id': self.product_a.id,
                 'points_cost': 100,
@@ -1000,7 +1002,7 @@ class TestLoyalty(TestSaleCouponCommon):
         })
 
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [Command.create({'product_id': self.product_a.id})]
         })
 
@@ -1046,7 +1048,7 @@ class TestLoyalty(TestSaleCouponCommon):
         product_c.active = False
 
         order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_a.id,
