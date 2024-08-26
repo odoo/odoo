@@ -57,6 +57,9 @@ class CalendarAttendee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
+            if 'event_id' in values:
+                event = self.env['calendar.event'].browse(values['event_id'])
+                event.check_access('write')
             # by default, if no state is given for the attendee corresponding to the current user
             # that means he's the event organizer so we can set his state to "accepted"
             if 'state' not in values and values.get('partner_id') == self.env.user.partner_id.id:
@@ -69,6 +72,12 @@ class CalendarAttendee(models.Model):
         attendees = super().create(vals_list)
         attendees._subscribe_partner()
         return attendees
+
+    def write(self, vals):
+        if 'event_id' in vals:
+            event = self.env['calendar.event'].browse(vals['event_id'])
+            event.check_access('write')
+        return super().write(vals)
 
     def unlink(self):
         self._unsubscribe_partner()
@@ -87,7 +96,10 @@ class CalendarAttendee(models.Model):
         for partners, events in mapped_followers.items():
             if not partners:
                 continue
-            events.message_subscribe(partner_ids=partners.ids)
+            # call to _message_subscribe do not check ACL. It allows one user to create
+            # an event without being an attendee or the organizer. In that case, calling
+            # event.message_subscribe() would trigger permission issues.
+            events._message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
         for event in self.event_id:

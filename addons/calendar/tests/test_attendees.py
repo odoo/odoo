@@ -67,9 +67,9 @@ class TestEventNotifications(TransactionCase):
             'name': "Doom's day",
             'start': datetime(2019, 10, 25, 8, 0),
             'stop': datetime(2019, 10, 27, 18, 0),
+            'partner_ids': [Command.set(self.partner.ids)],
         })
         events = self.event | event
-        events.partner_ids = self.partner
         self.assertEqual(len(events.attendee_ids), 2, "It should have created one attendee per event")
 
     def test_attendee_added_write(self):
