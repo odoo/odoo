@@ -1,0 +1,19 @@
+
+<div class="collapse">
+    {% if iot_devices|length == 0 %}
+        <i>No Device Found</i>
+    {% endif %}
+    {% for iot_device in iot_devices|groupby('type') %}
+        <div class="collapsible">
+            <div class="title arrow-down">{{ iot_device.grouper|capitalize }}s</div>
+            <div class="content">
+                {% for device in iot_device.list %}
+                    <div class="device-status">
+                        <span class="device">{{ device['name'] }}</span>
+                        <div class="identifier">{{ device['identifier'] }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

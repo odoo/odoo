@@ -1,0 +1,145 @@
+{% extends "_layout.jinja2" %}
+{% from "loading.jinja2" import loading_block_ui %}
+{% block head %}
+<style>
+    .btn-sm-restart {
+        display: flex;
+        min-width: 100%;
+        justify-content: center;
+    }
+    .item-restart {
+        display: flex;
+        flex-direction: column;
+        margin-left: auto;
+        max-width: 100%;
+    }
+    .device-status {
+        margin: 6px 0;
+    }
+    .device-status .identifier {
+        font-size: 0.8rem;
+        max-width: 350px;
+    }
+    .device-status .indicator {
+        margin-left: 4px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+    }
+    .device-status .device {
+        font-weight: 500;
+    }
+    .collapse .collapsible{
+        border: 1px solid #f1f1f1;
+    }
+    .collapse .title {
+        position: relative;
+        color: #00a09d;
+        cursor: pointer;
+        padding: 8px;
+    }
+    .collapse  .active, .collapse .title:hover {
+        background-color: #f1f1f1;
+        color: #006d6b;
+    }
+    .collapse  .content {
+        padding: 0 8px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+    }
+    .arrow-down::after {
+        content: '\25bc';
+        padding: 0 10px;
+        position: absolute;
+        right: 0;
+    }
+    .arrow-up::after {
+        content: '\25b2';
+        padding: 0 10px;
+        position: absolute;
+        right: 0;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.collapsible .title').on('click', function (ev) {
+            $(ev.target).toggleClass('active');
+            $(ev.target).toggleClass('arrow-down arrow-up');
+            var content = $(ev.target).next('.content');
+            var maxHeight = ( content.css('max-height') === '0px' ? content.prop('scrollHeight') : 0) + 'px';
+            content.css('max-height', maxHeight);
+        });
+    });
+
+    function display_error_and_clear_interval(interval, xhrStatus, thrownError) {
+        /// Displays the error message and stops sending requests to the server
+        if (interval) {
+            clearInterval(interval);
+        }
+        $('.loading-block').addClass('o_hide');
+        $('.error-message').text(xhrStatus + ": " + thrownError);
+    }
+
+    function restart_odoo_or_reboot(action) {
+        /// Call restart method on server, then ping it until restarting is finished
+        /// If an error is encountered, display it and stop
+        $('.loading-block').removeClass('o_hide');
+        $('.message-title').text('Restarting');
+        $('.message-status').text('Please wait');
+        $.ajax({
+            url: '/iot_restart_odoo_or_reboot/',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({ params: {action: action} }),
+            timeout: 15000,
+        }).done(function(data) {
+            if (data.result == 'success') {
+                const interval = setInterval(function() {
+                    $.ajax({
+                        url:'/',
+                        timeout: 4000
+                    }).done(function() {
+                        location.reload();
+                    }).fail(function(xhr, textStatus, thrownError) {
+                        if (xhr.status) {
+                            display_error_and_clear_interval(interval, xhr.status, thrownError);
+                        }
+                    })
+                }, 4000)
+                setTimeout(function(){
+                    display_error_and_clear_interval(interval, '0', 'timeout');
+                }, 600000);
+            }
+            else {
+                display_error_and_clear_interval(interval, 'Error', data.result);
+            }
+        }).fail(function(xhr, textStatus, thrownError) {
+            display_error_and_clear_interval(null, xhr.status, thrownError);
+        })
+    }
+</script>
+{% endblock %}
+{% block content %}
+    <div class="collapse item-restart">
+        <div class="collapsible item-restart">
+            <div class="title arrow-down"><i class="fa fa-refresh" aria-hidden="true"></i> Restart</div>
+            <div class="content">
+                <div class="device-status">
+                    {% if iot.IS_BOX %}
+                        <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('reboot_iot_box')">Reboot the IoT Box</button>
+                    {% endif %}
+                    <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('restart_odoo')">Restart Odoo service</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-center text-green"><i class="fa fa-check-circle" aria-hidden="true"></i> Your {{ "IoT Box" if iot.IS_BOX else "Virtual IoT" }} is up and running</h2>
+
+    {{ iot_table(homepage_table) }}
+
+    <div style="margin: 20px auto 10px auto;" class="text-center">
+        <a class="btn" href='/point_of_sale/display'><i class="fa fa-television" aria-hidden="true"></i> PoS Display</a>
+        <a class="btn" style="margin-left: 10px;" href='/technical'><i class="fa fa-cogs" aria-hidden="true"></i> Technical</a>
+    </div>
+    {{ loading_block_ui(loading_message) }}
+{% endblock %}

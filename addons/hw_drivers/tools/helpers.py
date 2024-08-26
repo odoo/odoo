@@ -39,6 +39,10 @@ except ImportError:
 # Helper
 #----------------------------------------------------------
 
+IS_BOX = platform.system() == 'Linux'
+"""True if the system is an IoT Box, False otherwise."""
+IS_VIRTUAL = platform.system() == 'Windows'
+"""True if the system is a virtual Windows IoT, False otherwise."""
 
 class CertificateStatus(Enum):
     OK = 1
