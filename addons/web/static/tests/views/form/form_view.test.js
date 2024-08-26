@@ -282,16 +282,6 @@ test(`form view with a group that contains an invisible group`, async () => {
     expect(`.o_form_view .o_group`).toHaveCount(1);
 });
 
-test(`status bar rendering without buttons`, async () => {
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `<form><header/><sheet/></form>`,
-        resId: 2,
-    });
-    expect(`.o_form_sheet_bg > .o_form_statusbar > .o_statusbar_buttons`).toHaveCount(1);
-});
-
 test.tags("mobile")(`button box rendering on small screen`, async () => {
     await mountView({
         resModel: "partner",
@@ -3129,7 +3119,28 @@ test.tags("desktop")(`buttons classes in form view`, async () => {
     expect(`button[name="15"]`).toHaveClass("btn o_this_is_a_button");
 });
 
-test.tags("desktop")(`buttons should be in .o_statusbar_buttons in form view header on desktop`, async () => {
+test.tags("desktop")(
+    `buttons should be in .o_statusbar_buttons in form view header on desktop`,
+    async () => {
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <header>
+                    <button name="0"/>
+                    <field name="foo" widget="url" class="btn btn-secondary" text="My Button" readonly="1"/>
+                </header>
+            </form>
+        `,
+            resId: 2,
+        });
+        expect(`.o_statusbar_buttons > button:eq(0)`).toHaveAttribute("name", "0");
+        expect(`.o_statusbar_buttons > div:eq(0)`).toHaveAttribute("name", "foo");
+    }
+);
+
+test.tags("mobile")(`buttons should be in CogMenu in form view header on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -3143,31 +3154,49 @@ test.tags("desktop")(`buttons should be in .o_statusbar_buttons in form view hea
         `,
         resId: 2,
     });
-    expect(`.o_statusbar_buttons > button:eq(0)`).toHaveAttribute("name", "0");
-    expect(`.o_statusbar_buttons > div:eq(0)`).toHaveAttribute("name", "foo");
-});
 
-test.tags("mobile")(`buttons should be in .o_statusbar_buttons in form view header on mobile`, async () => {
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
-            <form>
-                <header>
-                    <button name="0"/>
-                    <field name="foo" widget="url" class="btn btn-secondary" text="My Button" readonly="1"/>
-                </header>
-            </form>
-        `,
-        resId: 2,
-    });
-
-    await contains(`.o_statusbar_buttons .dropdown-toggle`).click();
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(`.o_statusbar_button_dropdown_item > button`).toHaveAttribute("name", "0");
     expect(`.o_statusbar_button_dropdown_item > div`).toHaveAttribute("name", "foo");
 });
 
 test(`button in form view and long willStart`, async () => {
+    let rpcCount = 0;
+    class AsyncField extends CharField {
+        setup() {
+            onWillStart(async () => {
+                expect.step("willStart");
+            });
+        }
+    }
+    fieldsRegistry.add("asyncwidget", { component: AsyncField });
+
+    onRpc("web_read", () => {
+        rpcCount++;
+        expect.step(`web_read${rpcCount}`);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="state" invisible="1"/>
+                <header>
+                    <button name="post" class="child_ids" string="Confirm" type="object"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="foo" widget="asyncwidget"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect.verifySteps(["web_read1", "willStart"]);
+});
+
+test.tags("desktop")(`button in form view and long willStart on desktop`, async () => {
     mockService("action", {
         doActionButton(params) {
             params.onClose();
@@ -3177,9 +3206,6 @@ test(`button in form view and long willStart`, async () => {
     let rpcCount = 0;
     class AsyncField extends CharField {
         setup() {
-            onWillStart(async () => {
-                expect.step("willStart");
-            });
             onWillUpdateProps(async () => {
                 expect.step("willUpdateProps");
                 if (rpcCount === 1) {
@@ -3212,12 +3238,65 @@ test(`button in form view and long willStart`, async () => {
         `,
         resId: 2,
     });
-    expect.verifySteps(["web_read1", "willStart"]);
+    expect.verifySteps(["web_read1"]);
 
     await contains(`.o_form_statusbar button.child_ids`).click();
     expect.verifySteps(["web_read2", "willUpdateProps"]);
 
     await contains(`.o_form_statusbar button.child_ids`).click();
+    expect.verifySteps(["web_read3", "willUpdateProps"]);
+});
+
+test.tags("mobile")(`button in form view and long willStart on mobile`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            params.onClose();
+        },
+    });
+
+    let rpcCount = 0;
+    class AsyncField extends CharField {
+        setup() {
+            onWillUpdateProps(async () => {
+                expect.step("willUpdateProps");
+                if (rpcCount === 1) {
+                    return new Promise(() => {});
+                }
+            });
+        }
+    }
+    fieldsRegistry.add("asyncwidget", { component: AsyncField });
+
+    onRpc("web_read", () => {
+        rpcCount++;
+        expect.step(`web_read${rpcCount}`);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="state" invisible="1"/>
+                <header>
+                    <button name="post" class="child_ids" string="Confirm" type="object"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="foo" widget="asyncwidget"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect.verifySteps(["web_read1"]);
+
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_statusbar_button_dropdown_item button.child_ids`).click();
+    expect.verifySteps(["web_read2", "willUpdateProps"]);
+
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_statusbar_button_dropdown_item button.child_ids`).click();
     expect.verifySteps(["web_read3", "willUpdateProps"]);
 });
 
@@ -3262,32 +3341,34 @@ test.tags("desktop")(`buttons in form view, new record`, async () => {
     expect.verifySteps(["web_save", "execute_action", "web_read"]);
 });
 
-test(`buttons in form view, new record, with field id in view`, async () => {
-    // buttons in form view are one of the rare example of situation when we
-    // save a record without reloading it immediately, because we only care
-    // about its id for the next step.  But at some point, if the field id
-    // is in the view, it was registered in the changes, and caused invalid
-    // values in the record (data.id was set to null)
+test.tags("desktop")(
+    `buttons in form view, new record, with field id in view on desktop`,
+    async () => {
+        // buttons in form view are one of the rare example of situation when we
+        // save a record without reloading it immediately, because we only care
+        // about its id for the next step.  But at some point, if the field id
+        // is in the view, it was registered in the changes, and caused invalid
+        // values in the record (data.id was set to null)
 
-    let resId = null;
-    mockService("action", {
-        doActionButton(params) {
-            expect.step("execute_action");
-            expect(params.resId).toBe(resId);
-            params.onClose();
-        },
-    });
+        let resId = null;
+        mockService("action", {
+            doActionButton(params) {
+                expect.step("execute_action");
+                expect(params.resId).toBe(resId);
+                params.onClose();
+            },
+        });
 
-    onRpc("web_save", ({ parent }) => {
-        const result = parent();
-        resId = result[0].id;
-        return result;
-    });
-    onRpc(({ method }) => expect.step(method));
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
+        onRpc("web_save", ({ parent }) => {
+            const result = parent();
+            resId = result[0].id;
+            return result;
+        });
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
             <form>
                 <header>
                     <button name="post" class="child_ids" string="Confirm" type="object"/>
@@ -3300,10 +3381,59 @@ test(`buttons in form view, new record, with field id in view`, async () => {
                 </sheet>
             </form>
         `,
-    });
-    await contains(`.o_form_statusbar button.child_ids`).click();
-    expect.verifySteps(["get_views", "onchange", "web_save", "execute_action", "web_read"]);
-});
+        });
+        await contains(`.o_form_statusbar button.child_ids`).click();
+        expect.verifySteps(["get_views", "onchange", "web_save", "execute_action", "web_read"]);
+    }
+);
+
+test.tags("mobile")(
+    `buttons in form view, new record, with field id in view on mobile`,
+    async () => {
+        // buttons in form view are one of the rare example of situation when we
+        // save a record without reloading it immediately, because we only care
+        // about its id for the next step.  But at some point, if the field id
+        // is in the view, it was registered in the changes, and caused invalid
+        // values in the record (data.id was set to null)
+
+        let resId = null;
+        mockService("action", {
+            doActionButton(params) {
+                expect.step("execute_action");
+                expect(params.resId).toBe(resId);
+                params.onClose();
+            },
+        });
+
+        onRpc("web_save", ({ parent }) => {
+            const result = parent();
+            resId = result[0].id;
+            return result;
+        });
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <header>
+                    <button name="post" class="child_ids" string="Confirm" type="object"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="id" invisible="1"/>
+                        <field name="foo"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        });
+
+        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+        await contains(`.o_statusbar_button_dropdown_item button.child_ids`).click();
+        expect.verifySteps(["get_views", "onchange", "web_save", "execute_action", "web_read"]);
+    }
+);
 
 test(`buttons with data-hotkey attribute`, async () => {
     mockService("action", {
@@ -8445,18 +8575,20 @@ test.tags("desktop")(`buttons are disabled until status bar action is resolved`,
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 });
 
-test(`buttons with "confirm" attribute save before calling the method`, async () => {
-    mockService("action", {
-        doActionButton() {
-            expect.step("execute_action");
-        },
-    });
+test.tags("desktop")(
+    `buttons with "confirm" attribute save before calling the method on desktop`,
+    async () => {
+        mockService("action", {
+            doActionButton() {
+                expect.step("execute_action");
+            },
+        });
 
-    onRpc(({ method }) => expect.step(method));
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
             <form>
                 <header>
                     <button name="post" class="child_ids" string="Confirm" type="object" confirm="Very dangerous. U sure?"/>
@@ -8466,30 +8598,76 @@ test(`buttons with "confirm" attribute save before calling the method`, async ()
                 </sheet>
             </form>
         `,
-    });
+        });
 
-    // click on button, and cancel in confirm dialog
-    await contains(`.o_statusbar_buttons button`).click();
-    expect(`.o_statusbar_buttons button`).not.toBeEnabled();
+        // click on button, and cancel in confirm dialog
+        await contains(`.o_statusbar_buttons button`).click();
+        expect(`.o_statusbar_buttons button`).not.toBeEnabled();
 
-    await contains(`.modal-footer button.btn-secondary`).click();
-    expect(`.o_statusbar_buttons button`).toBeEnabled();
+        await contains(`.modal-footer button.btn-secondary`).click();
+        expect(`.o_statusbar_buttons button`).toBeEnabled();
 
-    expect.verifySteps(["get_views", "onchange"]);
+        expect.verifySteps(["get_views", "onchange"]);
 
-    // click on button, and click on ok in confirm dialog
-    await contains(`.o_statusbar_buttons button`).click();
-    expect.verifySteps([]);
-    await contains(`.modal-footer button.btn-primary`).click();
-    expect.verifySteps(["web_save", "execute_action"]);
-});
+        // click on button, and click on ok in confirm dialog
+        await contains(`.o_statusbar_buttons button`).click();
+        expect.verifySteps([]);
+        await contains(`.modal-footer button.btn-primary`).click();
+        expect.verifySteps(["web_save", "execute_action"]);
+    }
+);
 
-test(`buttons with "confirm-title" and "confirm-label" attributes`, async () => {
-    onRpc(({ method }) => expect.step(method));
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
+test.tags("mobile")(
+    `buttons with "confirm" attribute save before calling the method on mobile`,
+    async () => {
+        mockService("action", {
+            doActionButton() {
+                expect.step("execute_action");
+            },
+        });
+
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <header>
+                    <button name="post" class="child_ids" string="Confirm" type="object" confirm="Very dangerous. U sure?"/>
+                </header>
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+            </form>
+        `,
+        });
+
+        // click on button, and cancel in confirm dialog
+        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        expect(`.o_statusbar_button_dropdown_item button`).not.toBeEnabled();
+
+        await contains(`.modal-footer button.btn-secondary`).click();
+        expect(`.o_statusbar_button_dropdown_item button`).toBeEnabled();
+
+        expect.verifySteps(["get_views", "onchange"]);
+
+        // click on button, and click on ok in confirm dialog
+        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        expect.verifySteps([]);
+        await contains(`.modal-footer button.btn-primary`).click();
+        expect.verifySteps(["web_save", "execute_action"]);
+    }
+);
+
+test.tags("desktop")(
+    `buttons with "confirm-title" and "confirm-label" attributes on desktop`,
+    async () => {
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
             <form>
                 <header>
                     <button name="post" class="child_ids" string="Confirm" type="object" confirm="Very dangerous. U sure?"
@@ -8500,14 +8678,75 @@ test(`buttons with "confirm-title" and "confirm-label" attributes`, async () => 
                 </sheet>
             </form>
         `,
-    });
-    await contains(`.o_statusbar_buttons button`).click();
-    expect(`.modal-title`).toHaveText("Confirm Title");
-    expect(`.modal-footer button.btn-primary`).toHaveText("Confirm Label");
-    expect.verifySteps(["get_views", "onchange"]);
-});
+        });
+        await contains(`.o_statusbar_buttons button`).click();
+        expect(`.modal-title`).toHaveText("Confirm Title");
+        expect(`.modal-footer button.btn-primary`).toHaveText("Confirm Label");
+        expect.verifySteps(["get_views", "onchange"]);
+    }
+);
 
-test(`buttons with "confirm" attribute: click twice on "Ok"`, async () => {
+test.tags("mobile")(
+    `buttons with "confirm-title" and "confirm-label" attributes on mobile`,
+    async () => {
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <header>
+                    <button name="post" class="child_ids" string="Confirm" type="object" confirm="Very dangerous. U sure?"
+                        confirm-title="Confirm Title" confirm-label="Confirm Label"/>
+                </header>
+                <sheet>
+                    <field name="foo"/>
+                </sheet>
+            </form>
+        `,
+        });
+        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        expect(`.modal-title`).toHaveText("Confirm Title");
+        expect(`.modal-footer button.btn-primary`).toHaveText("Confirm Label");
+        expect.verifySteps(["get_views", "onchange"]);
+    }
+);
+
+test.tags("desktop")(
+    `buttons with "confirm" attribute: click twice on "Ok" on desktop`,
+    async () => {
+        mockService("action", {
+            doActionButton() {
+                expect.step("execute_action"); // should be called only once
+            },
+        });
+
+        onRpc(({ method }) => expect.step(method));
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <header>
+                    <button name="post" class="child_ids" string="Confirm" type="object" confirm="U sure?"/>
+                </header>
+            </form>
+        `,
+        });
+        expect.verifySteps(["get_views", "onchange"]);
+
+        await contains(`.o_statusbar_buttons button`).click();
+        expect.verifySteps([]);
+
+        contains(`.modal-footer button.btn-primary`).click();
+        await animationFrame();
+        expect(`.modal-footer button.btn-primary`).not.toBeEnabled();
+        expect.verifySteps(["web_save", "execute_action"]);
+    }
+);
+
+test.tags("mobile")(`buttons with "confirm" attribute: click twice on "Ok" on mobile`, async () => {
     mockService("action", {
         doActionButton() {
             expect.step("execute_action"); // should be called only once
@@ -8528,7 +8767,8 @@ test(`buttons with "confirm" attribute: click twice on "Ok"`, async () => {
     });
     expect.verifySteps(["get_views", "onchange"]);
 
-    await contains(`.o_statusbar_buttons button`).click();
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_statusbar_button_dropdown_item button`).click();
     expect.verifySteps([]);
 
     contains(`.modal-footer button.btn-primary`).click();
@@ -8992,28 +9232,58 @@ test(`can toggle column in x2many in sub form view`, async () => {
     expect(queryAllTexts`.o_dialog:not(.o_inactive_modal) .o_data_cell`).toEqual(["blip", "yop"]);
 });
 
-test(`rainbowman attributes correctly passed on button click`, async () => {
-    mockService("action", {
-        doActionButton({ effect }) {
-            expect.step("doActionButton");
-            expect(effect).toBe("{'message': 'Congrats!'}");
-        },
-    });
+test.tags("desktop")(
+    `rainbowman attributes correctly passed on button click on desktop`,
+    async () => {
+        mockService("action", {
+            doActionButton({ effect }) {
+                expect.step("doActionButton");
+                expect(effect).toBe("{'message': 'Congrats!'}");
+            },
+        });
 
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
             <form>
                 <header>
                     <button name="action_won" string="Won" type="object" effect="{'message': 'Congrats!'}"/>
                 </header>
             </form>
         `,
-    });
-    await contains(`.o_form_statusbar .btn-secondary`).click();
-    expect.verifySteps(["doActionButton"]);
-});
+        });
+        await contains(`.o_form_statusbar .btn-secondary`).click();
+        expect.verifySteps(["doActionButton"]);
+    }
+);
+
+test.tags("mobile")(
+    `rainbowman attributes correctly passed on button click on mobile`,
+    async () => {
+        mockService("action", {
+            doActionButton({ effect }) {
+                expect.step("doActionButton");
+                expect(effect).toBe("{'message': 'Congrats!'}");
+            },
+        });
+
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <header>
+                    <button name="action_won" string="Won" type="object" effect="{'message': 'Congrats!'}"/>
+                </header>
+            </form>
+        `,
+        });
+        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        expect.verifySteps(["doActionButton"]);
+    }
+);
 
 test(`basic support for widgets`, async () => {
     class MyComponent extends Component {
@@ -9085,12 +9355,23 @@ test(`widget with readonly attribute`, async () => {
     expect(`.o_widget`).toHaveText("readonly");
 });
 
-test(`support header button as widgets on form statusbar`, async () => {
+test.tags("desktop")(`support header button as widgets on form statusbar on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
         arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
     });
+    expect(`button.o_attachment_button`).toHaveCount(1);
+    expect(`span.o_attach_document`).toHaveText("Attach document");
+});
+
+test.tags("mobile")(`support header button as widgets on form statusbar on mobile`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
+    });
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(`button.o_attachment_button`).toHaveCount(1);
     expect(`span.o_attach_document`).toHaveText("Attach document");
 });

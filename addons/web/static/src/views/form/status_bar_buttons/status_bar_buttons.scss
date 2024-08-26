@@ -1,4 +1,8 @@
 // Unstyle buttons so they behave like regular dropdown-item
-.o_statusbar_button_dropdown_item button, .o_statusbar_button_dropdown_item button:hover {
-    all: unset;
+.o_statusbar_button_dropdown_item {
+    &, .o_web_client.o_touch_device & {
+        button, button:hover, button:disabled {
+            all: unset;
+        }
+    }
 }

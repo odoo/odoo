@@ -127,7 +127,7 @@ test.tags("desktop")("on close with effect from server", async () => {
     expect(".o_reward").toHaveCount(1);
 });
 
-test("on close with effect in xml", async () => {
+test.tags("desktop")("on close with effect in xml on desktop", async () => {
     patchWithCleanup(user, { showEffect: true });
 
     Partner._views["form,false"] = `
@@ -143,6 +143,28 @@ test("on close with effect in xml", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);
+    await contains("button[name=object]").click();
+    expect(".o_reward").toHaveCount(1);
+    expect(".o_reward .o_reward_msg_content").toHaveText("rainBowInXML");
+});
+
+test.tags("mobile")("on close with effect in xml on mobile", async () => {
+    patchWithCleanup(user, { showEffect: true });
+
+    Partner._views["form,false"] = `
+        <form>
+            <header>
+            <button string="Call method" name="object" type="object"
+                effect="{'type': 'rainbow_man', 'message': 'rainBowInXML'}"
+            />
+            </header>
+            <field name="display_name"/>
+        </form>`;
+    onRpc("/web/dataset/call_button", () => false);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(6);
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     await contains("button[name=object]").click();
     expect(".o_reward").toHaveCount(1);
     expect(".o_reward .o_reward_msg_content").toHaveText("rainBowInXML");

@@ -324,6 +324,12 @@
             --fieldWidget-margin-bottom: 0;
 
             align-self: flex-start;
+
+            &:first-child:last-child {
+                @include media-breakpoint-down(md) {
+                    width: 100%;
+                }
+            }
         }
     }
 

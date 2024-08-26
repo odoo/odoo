@@ -9066,19 +9066,21 @@ test.tags("desktop")("create and edit on m2o in o2m, and press ESCAPE", async ()
     expect(".o_selected_row [name=turtle_trululu] input").toBeFocused();
 });
 
-test("one2many add a line should not crash if orderedResIDs is not set", async () => {
-    mockService("action", {
-        doActionButton(args) {
-            return Promise.reject();
-        },
-    });
+test.tags("desktop")(
+    "one2many add a line should not crash if orderedResIDs is not set on desktop",
+    async () => {
+        mockService("action", {
+            doActionButton(args) {
+                return Promise.reject();
+            },
+        });
 
-    Partner._records[0].turtles = [];
+        Partner._records[0].turtles = [];
 
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <form>
                 <header>
                     <button name="post" type="object" string="Validate" class="oe_highlight"/>
@@ -9089,12 +9091,47 @@ test("one2many add a line should not crash if orderedResIDs is not set", async (
                     </list>
                 </field>
             </form>`,
-    });
+        });
 
-    await contains('button[name="post"]').click();
-    await contains(".o_field_x2many_list_row_add a").click();
-    expect(".o_data_row.o_selected_row").toHaveCount(1);
-});
+        await contains('button[name="post"]').click();
+        await contains(".o_field_x2many_list_row_add a").click();
+        expect(".o_data_row.o_selected_row").toHaveCount(1);
+    }
+);
+
+test.tags("mobile")(
+    "one2many add a line should not crash if orderedResIDs is not set on mobile",
+    async () => {
+        mockService("action", {
+            doActionButton(args) {
+                return Promise.reject();
+            },
+        });
+
+        Partner._records[0].turtles = [];
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <header>
+                    <button name="post" type="object" string="Validate" class="oe_highlight"/>
+                </header>
+                <field name="turtles">
+                    <list editable="bottom">
+                        <field name="turtle_foo"/>
+                    </list>
+                </field>
+            </form>`,
+        });
+
+        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+        await contains('button[name="post"]').click();
+        await contains(".o_field_x2many_list_row_add a").click();
+        expect(".o_data_row.o_selected_row").toHaveCount(1);
+    }
+);
 
 test("one2many shortcut tab should not crash when there is no input widget", async () => {
     // create a one2many view which has no input (only 1 textarea in this case)

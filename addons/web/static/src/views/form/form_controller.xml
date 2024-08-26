@@ -33,7 +33,11 @@
                     </t>
 
                     <t t-set-slot="control-panel-additional-actions">
-                        <CogMenu t-props="this.cogMenuProps"/>
+                        <CogMenu t-props="this.cogMenuProps">
+                            <t t-if="env.isSmall and statusBarDropdownItemsTemplate">
+                                <t t-call="{{ statusBarDropdownItemsTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+                            </t>
+                        </CogMenu>
                         <t t-if="env.isSmall and buttonBoxTemplate">
                             <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>

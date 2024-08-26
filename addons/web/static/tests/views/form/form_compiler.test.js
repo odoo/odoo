@@ -173,7 +173,7 @@ test("properly compile no sheet", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"><StatusBarButtons/></div>
+                <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"><StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog"/></div>
                 <div>someDiv</div>
             </div>
         </t>
@@ -196,7 +196,7 @@ test("properly compile sheet", () => {
         <t t-translation="off">
             <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"><StatusBarButtons/></div>
+                    <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"><StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog"/></div>
                     <div>someDiv</div>
                     <div class="o_form_sheet position-relative">
                         <div>inside sheet</div>
@@ -291,7 +291,7 @@ test("properly compile status bar with content", () => {
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0">
-                    <StatusBarButtons>
+                    <StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog">
                         <t t-set-slot="button_0" isVisible="true">
                             <div>someDiv</div>
                         </t>
@@ -313,7 +313,7 @@ test("properly compile status bar without content", () => {
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0">
-                    <StatusBarButtons/>
+                    <StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog"/>
                 </div>
             </div>
         </t>
