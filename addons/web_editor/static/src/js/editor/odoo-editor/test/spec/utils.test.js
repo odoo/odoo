@@ -1877,6 +1877,13 @@ describe('Utils', () => {
                 `),
             });
         });
+        it('should not traceback when detached node', async () => {
+            const detached = document.createTextNode('');
+            let [node, offset] = getDeepestPosition(detached, 0);
+            window.chai
+                .expect([node, offset])
+                .to.eql([detached, 0]);
+        });
     });
     // TODO:
     // - getCursors
