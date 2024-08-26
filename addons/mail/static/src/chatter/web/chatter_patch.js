@@ -147,6 +147,12 @@ patch(Chatter.prototype, {
             },
             () => [this.state.thread?.status, this.attachments]
         );
+        useEffect(
+            () => {
+                this.state.aside = this.props.isChatterAside;
+            },
+            () => [this.props.isChatterAside]
+        );
     },
 
     /**
@@ -165,7 +171,9 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        return { ...super.childSubEnv, messageHighlight: this.messageHighlight };
+        const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
+        res.inChatter.aside = this.props.isChatterAside;
+        return res;
     },
 
     get followerButtonLabel() {

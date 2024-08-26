@@ -40,13 +40,8 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
         PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Thread").clientHeight,
         { message: "should have enough scroll height to trigger jump to present" }
     );
-    await click(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
@@ -72,13 +67,8 @@ test("Basic jump to present when scrolling to outdated messages (chatter, DESC)"
     );
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", "bottom");
-    await click(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Chatter", { scroll: 0 });
 });
 
@@ -124,13 +114,8 @@ test("Jump to old reply should prompt jump to present", async () => {
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains(".o-mail-Message", { count: 30 });
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Hello world!" });
-    await click(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -177,13 +162,8 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await click(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
@@ -220,15 +200,10 @@ test("Post message when seeing old message should jump to present", async () => 
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
+    await contains("[title='Jump to Present']");
     await insertText(".o-mail-Composer-input", "Newly posted");
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await contains(".o-mail-Message-content", {
         text: "Newly posted",
@@ -277,19 +252,11 @@ test("show jump to present banner after scrolling up 10 messages", async () => {
     const messageHeight = top2 - top1;
     // scroll slightly (1 long message)
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollTop - messageHeight);
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await contains("[title='Jump to Present']", { count: 0 });
     // scroll to 5th message before newest
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollTop - 4 * messageHeight);
-    await contains(".o-mail-Thread-banner", {
-        count: 0,
-        text: "You're viewing older messagesJump to Present",
-    });
+    await contains("[title='Jump to Present']", { count: 0 });
     // scroll to around 10th message before newest
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollTop - 5 * messageHeight);
-    await contains(".o-mail-Thread-banner", {
-        text: "You're viewing older messagesJump to Present",
-    });
+    await contains("[title='Jump to Present']");
 });

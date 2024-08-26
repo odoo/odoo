@@ -30,6 +30,7 @@ export class Chatter extends Component {
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */
             thread: undefined,
+            aside: false,
         });
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
@@ -57,7 +58,7 @@ export class Chatter extends Component {
     }
 
     get childSubEnv() {
-        return { inChatter: true };
+        return { inChatter: this.state };
     }
 
     get requestList() {

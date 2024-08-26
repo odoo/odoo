@@ -2,9 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread">
-    <t t-if="env.inChatter" t-call="mail.Thread.jumpPresent"/> <!-- chatter has its own scrollable, this ensures proper sticky showing -->
-    <t t-else="" t-call="mail.Thread.jumpUnread"/>
-    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-4':  props.showJumpPresent and !state.showJumpPresent, 'px-3': !env.inChatter and !props.isInChatWindow }" t-ref="messages" tabindex="-1">
+    <t t-if="!env.inChatter" t-call="mail.Thread.jumpUnread"/>
+    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-3': !env.inChatter and !props.isInChatWindow }" t-ref="messages" tabindex="-1">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column position-relative flex-grow-1" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
@@ -13,7 +12,7 @@
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
                 </t>
-                <span t-else="" t-ref="load-newer"/>
+                <span t-else="" class="pt-1" t-ref="load-newer"/>
                 <t t-set="messages" t-value="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()"/>
                 <t t-if="state.mountedAndLoaded" t-foreach="messages" t-as="msg" t-key="msg.id">
                     <t t-set="prevMsg" t-value="messages[msg_index -1]"/>
@@ -41,7 +40,7 @@
                         showDates="props.showDates"
                     />
                 </t>
-                <span t-if="props.order === 'asc'" t-ref="load-newer"/>
+                <span t-if="props.order === 'asc'" class="pt-1" t-ref="load-newer"/>
                 <t t-else="">
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
@@ -55,17 +54,12 @@
                 </t>
             </div>
         </t>
+        <t t-call="mail.Thread.jumpPresent"/>
     </div>
-    <t t-if="!env.inChatter" t-call="mail.Thread.jumpPresent"/>
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
-    <span t-if="props.showJumpPresent and state.showJumpPresent" t-att-class="{
-        'm-0 px-4 position-sticky top-0': env.inChatter,
-    }" class="o-mail-Thread-banner o-mail-Thread-bannerHover d-flex d-print-none justify-content-between alert alert-secondary border-0 rounded-0 mb-0 py-1 cursor-pointer shadow-sm small fw-bold" t-on-click="() => this.jumpToPresent()">
-        <span>You're viewing older messages</span>
-        <span>Jump to Present<i class="ms-2 fa" t-att-class="{ 'fa-caret-up': props.order !== 'asc', 'fa-caret-down': props.order === 'asc' }"/></span>
-    </span>
+    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light border" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
 </t>
 
 <t t-name="mail.Thread.jumpUnread">
