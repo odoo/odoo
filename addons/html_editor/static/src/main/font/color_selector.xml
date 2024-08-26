@@ -2,11 +2,11 @@
     <t t-name="html_editor.ColorSelector">
         <Dropdown state="dropdown">
             <button class="btn btn-light" t-attf-class="o-select-color-{{props.type}} {{dropdown.isOpen ? 'active' : ''}}" t-att-title="props.title">
-                <t t-if="props.type === 'foreground'">
-                    <i class="fa fa-fw fa-font py-1" t-att-style="this.getSelectedColorStyle('color')"/>
+                <t t-if="mode === 'color'">
+                    <i class="fa fa-fw fa-font py-1" t-att-style="this.getSelectedColorStyle()"/>
                 </t>
                 <t t-else="">
-                    <i class="fa fa-fw fa-paint-brush py-1" t-att-style="this.getSelectedColorStyle('background')"/>
+                    <i class="fa fa-fw fa-paint-brush py-1" t-att-style="this.getSelectedColorStyle()"/>
                 </t>
             </button>
             <t t-set-slot="content">
@@ -74,6 +74,7 @@
                                     <button data-color="white" class="o_color_button btn bg-white"></button>
                                 </div>
                                 <Colorpicker
+                                    defaultColor="this.defaultColor"
                                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
                                     onColorPreview.bind="onColorPreview" />
                             </div>

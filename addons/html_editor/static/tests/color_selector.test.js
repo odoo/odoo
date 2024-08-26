@@ -1,5 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, waitFor, queryOne, hover, press, waitUntil, edit } from "@odoo/hoot-dom";
+import {
+    click,
+    waitFor,
+    queryOne,
+    hover,
+    press,
+    waitUntil,
+    edit,
+    queryAllValues,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -88,8 +97,8 @@ test("can render and apply gradient color", async () => {
 test("custom colors used in the editor are shown in the colorpicker", async () => {
     await setupEditor(
         `<p>
-            <font style="color: rgb(255, 0, 0);">[test]</font>
-            <font style="color: rgb(0, 255, 0);">test</font>
+            <font style="color: rgb(255, 0, 0);">test</font>
+            <font style="color: rgb(0, 255, 0);">[test]</font>
         </p>`
     );
     await waitFor(".o-we-toolbar");
@@ -98,6 +107,8 @@ test("custom colors used in the editor are shown in the colorpicker", async () =
     await animationFrame();
     click(".btn:contains('Custom')");
     await animationFrame();
+    expect(".o_hex_input").toHaveValue("#00FF00");
+    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
     expect("button[data-color='rgb(255, 0, 0)']").toHaveCount(1);
     expect(queryOne("button[data-color='rgb(255, 0, 0)']").style.backgroundColor).toBe(
         "rgb(255, 0, 0)"
