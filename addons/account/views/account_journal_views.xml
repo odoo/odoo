@@ -96,7 +96,7 @@
                                         <field name="bank_id" invisible="not bank_account_id"/>
                                         <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_basic"/>
                                     </group>
-                                    <group name="bank_source" string="" invisible="type != 'credit'">
+                                    <group name="bank_source" string="Credit Card Setup" invisible="type != 'credit'">
                                         <label for="bank_statements_source" string="Transaction Feeds" invisible="type != 'credit'" groups="account.group_account_readonly"/>
                                         <field name="bank_statements_source" nolabel="1" widget="radio" required="type != 'credit'" groups="account.group_account_basic"/>
                                     </group>
