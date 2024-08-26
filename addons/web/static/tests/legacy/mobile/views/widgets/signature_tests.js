@@ -87,7 +87,7 @@ QUnit.module("Widgets", (hooks) => {
         await editInput(target, ".o_field_widget[name=display_name] input", "test");
 
         // open the signature dialog
-        await click(target, ".o_statusbar_buttons .dropdown-toggle");
+        await click(target, ".o_cp_action_menus button:has(.fa-cog)");
         await click(target, ".o_widget_signature button.o_sign_button");
 
         assert.containsOnce(target, ".modal-dialog", "Should have one modal opened");

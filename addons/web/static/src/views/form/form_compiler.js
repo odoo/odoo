@@ -442,7 +442,7 @@ export class FormCompiler extends ViewCompiler {
             if (!compiled || isTextNode(compiled)) {
                 continue;
             }
-            if (getTag(child, true) === "field" && !child.classList.contains("btn"))  {
+            if (getTag(child, true) === "field" && !child.classList.contains("btn")) {
                 compiled.setAttribute("showTooltip", true);
                 others.push(compiled);
             } else {
@@ -453,7 +453,14 @@ export class FormCompiler extends ViewCompiler {
             }
         }
         let slotId = 0;
-        const statusBarButtons = createElement("StatusBarButtons");
+        let statusBarButtons;
+        if (params.asDropdownItems) {
+            statusBarButtons = createElement("StatusBarDropdownItems");
+        } else {
+            statusBarButtons = createElement("StatusBarButtons", {
+                "t-if": "!__comp__.env.isSmall or __comp__.env.inDialog",
+            });
+        }
         for (const button of buttons) {
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,
@@ -461,6 +468,9 @@ export class FormCompiler extends ViewCompiler {
             });
             append(slot, button);
             append(statusBarButtons, slot);
+        }
+        if (params.asDropdownItems) {
+            return statusBarButtons;
         }
         append(statusBar, statusBarButtons);
         append(statusBar, others);

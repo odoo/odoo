@@ -24,13 +24,15 @@ import { Field } from "@web/views/fields/field";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useViewCompiler } from "@web/views/view_compiler";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { Widget } from "@web/views/widgets/widget";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
 import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { StatusBarDropdownItems } from "./status_bar_dropdown_items/status_bar_dropdown_items";
+import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
 import {
     Component,
@@ -119,7 +121,9 @@ export class FormController extends Component {
         ButtonBox,
         ViewButton,
         Field,
-        CogMenu,
+        CogMenu: FormCogMenu,
+        StatusBarDropdownItems,
+        Widget,
     };
 
     static props = {
@@ -233,6 +237,16 @@ export class FormController extends Component {
                 { isSubView: true }
             );
             this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
+        }
+
+        const xmlDocHeader = this.archInfo.xmlDoc.querySelector("header");
+        if (xmlDocHeader) {
+            const { StatusBarDropdownItems } = useViewCompiler(
+                this.props.Compiler || FormCompiler,
+                { StatusBarDropdownItems: xmlDocHeader },
+                { isSubView: true, asDropdownItems: true }
+            );
+            this.statusBarDropdownItemsTemplate = StatusBarDropdownItems;
         }
 
         this.rootRef = useRef("root");

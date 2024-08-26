@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import {
     click,
-    clickSave,
     editInput,
     getFixture,
     makeDeferred,
@@ -63,16 +62,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             `,
         });
 
-        assert.containsOnce(
-            fixture,
-            ".o_statusbar_buttons .o-dropdown",
-            "statusbar should contain a button 'Action'"
-        );
-        assert.containsNone(fixture, ".o-dropdown--menu", "statusbar should contain a dropdown");
-        assert.containsNone(fixture, ".o-dropdown--menu:visible", "dropdown should be hidden");
-
         // open the dropdown
-        await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
+        await click(fixture, ".o_cp_action_menus button:has(.fa-cog)");
         assert.containsOnce(fixture, ".o-dropdown--menu:visible", "dropdown should be visible");
         assert.containsN(
             fixture,
@@ -82,107 +73,17 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(
-        `statusbar "Action" button should be displayed only if there are multiple visible buttons`,
-        async (assert) => {
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
-                    <form>
-                        <header>
-                            <button string="Confirm" invisible="display_name == 'first record'" />
-                            <button string="Do it" invisible="display_name == 'first record'" />
-                        </header>
-                        <sheet>
-                            <group>
-                                <field name="display_name" />
-                            </group>
-                        </sheet>
-                    </form>
-                `,
-            });
+    QUnit.test(`statusbar widgets should appear in the CogMenu dropdown`, async (assert) => {
+        serviceRegistry.add("http", {
+            start: () => ({}),
+        });
 
-            // if all buttons are invisible then there should be no action button
-            assert.containsNone(
-                fixture,
-                ".o_statusbar_buttons > btn-group > .dropdown-toggle",
-                "'Action' dropdown is not displayed as there are no visible buttons"
-            );
-
-            // change display_name to update buttons modifiers and make it visible
-            await editInput(fixture, ".o_field_widget[name=display_name] input", "test");
-            await clickSave(fixture);
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "statusbar should contain a dropdown"
-            );
-        }
-    );
-
-    QUnit.test(
-        `statusbar "Action" button shouldn't be displayed for only one visible button`,
-        async (assert) => {
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                resId: 1,
-                arch: `
-                    <form>
-                        <header>
-                            <button string="Hola" invisible="display_name == 'first record'" />
-                            <button string="Ciao" />
-                        </header>
-                        <sheet>
-                            <group>
-                                <field name="display_name" />
-                            </group>
-                        </sheet>
-                    </form>
-                `,
-            });
-
-            // There should be a simple statusbar button and no action dropdown
-            assert.containsNone(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "should have no 'Action' dropdown"
-            );
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons > button",
-                "should have a simple statusbar button"
-            );
-
-            // change display_name to update buttons modifiers and make both buttons visible
-            await editInput(fixture, ".o_field_widget[name=display_name] input", "test");
-
-            // Now there should an action dropdown, because there are two visible buttons
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "should have no 'Action' dropdown"
-            );
-        }
-    );
-
-    QUnit.test(
-        `statusbar widgets should appear in the statusbar dropdown only if there are multiple items`,
-        async (assert) => {
-            serviceRegistry.add("http", {
-                start: () => ({}),
-            });
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                resId: 2,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 2,
+            arch: `
                     <form>
                         <header>
                             <widget name="attach_document" string="Attach document" />
@@ -195,48 +96,39 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                         </sheet>
                     </form>
                 `,
-            });
+        });
 
-            // Now there should an action dropdown, because there are two visible buttons
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "should have 'Action' dropdown"
-            );
+        // Now there should an action dropdown, because there are two visible buttons
+        assert.containsOnce(
+            fixture,
+            ".o_cp_action_menus button:has(.fa-cog)",
+            "should have 'CogMenu' dropdown"
+        );
 
-            await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
-            assert.containsN(
-                fixture,
-                ".o-dropdown--menu button",
-                2,
-                "should have 2 buttons in the dropdown"
-            );
+        await click(fixture, ".o_cp_action_menus button:has(.fa-cog)");
+        assert.containsN(
+            fixture,
+            ".o-dropdown--menu button",
+            2,
+            "should have 2 buttons in the dropdown"
+        );
 
-            // change display_name to update buttons modifiers and make one button visible
-            await editInput(fixture, ".o_field_widget[name=display_name] input", "first record");
+        // change display_name to update buttons modifiers and make one button visible
+        await editInput(fixture, ".o_field_widget[name=display_name] input", "first record");
 
-            // There should be a simple statusbar button and no action dropdown
-            assert.containsNone(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "shouldn't have 'Action' dropdown"
-            );
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons button:visible",
-                "should have 1 button visible in the statusbar"
-            );
-        }
-    );
+        assert.containsOnce(
+            fixture,
+            ".o-dropdown--menu button",
+            "should have 1 button in the dropdown"
+        );
+    });
 
-    QUnit.test(
-        `statusbar "Action" dropdown should keep its open/close state`,
-        async function (assert) {
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+    QUnit.test(`CogMenu dropdown should keep its open/close state`, async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <header>
                             <button string="Just more than one" />
@@ -248,44 +140,43 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                         </sheet>
                     </form>
                 `,
-            });
+        });
 
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "statusbar should contain a dropdown"
-            );
-            assert.doesNotHaveClass(
-                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
-                "show",
-                "dropdown should be closed"
-            );
+        assert.containsOnce(
+            fixture,
+            ".o_cp_action_menus button:has(.fa-cog)",
+            "should have a 'CogMenu' dropdown"
+        );
+        assert.doesNotHaveClass(
+            fixture.querySelector(".o_cp_action_menus button:has(.fa-cog)"),
+            "show",
+            "dropdown should be closed"
+        );
 
-            // open the dropdown
-            await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
-            assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
-                "show",
-                "dropdown should be opened"
-            );
+        // open the dropdown
+        await click(fixture, ".o_cp_action_menus button:has(.fa-cog)");
+        assert.hasClass(
+            fixture.querySelector(".o_cp_action_menus button:has(.fa-cog)"),
+            "show",
+            "dropdown should be opened"
+        );
 
-            // change display_name to update buttons' modifiers
-            await editInput(fixture, ".o_field_widget[name=display_name] input", "test");
-            assert.containsOnce(
-                fixture,
-                ".o_statusbar_buttons .o-dropdown",
-                "statusbar should contain a dropdown"
-            );
-            assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
-                "show",
-                "dropdown should still be opened"
-            );
-        }
-    );
+        // change display_name to update buttons' modifiers
+        await editInput(fixture, ".o_field_widget[name=display_name] input", "test");
+        assert.containsOnce(
+            fixture,
+            ".o_cp_action_menus button:has(.fa-cog)",
+            "should have a 'CogMenu' dropdown"
+        );
+        assert.hasClass(
+            fixture.querySelector(".o_cp_action_menus button:has(.fa-cog)"),
+            "show",
+            "dropdown should still be opened"
+        );
+    });
 
     QUnit.test(
-        `statusbar "Action" dropdown's open/close state shouldn't be modified after 'onchange'`,
+        `CogMenu dropdown's open/close state shouldn't be modified after 'onchange'`,
         async function (assert) {
             serverData.models.partner.onchanges = {
                 display_name: async () => {},
@@ -317,19 +208,19 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
 
             assert.containsOnce(
                 fixture,
-                ".o_statusbar_buttons .o-dropdown",
+                ".o_cp_action_menus button:has(.fa-cog)",
                 "statusbar should contain a dropdown"
             );
             assert.doesNotHaveClass(
-                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
+                fixture.querySelector(".o_cp_action_menus button:has(.fa-cog)"),
                 "show",
                 "dropdown should be closed"
             );
 
             await editInput(fixture, ".o_field_widget[name=display_name] input", "before onchange");
-            await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
+            await click(fixture, ".o_cp_action_menus button:has(.fa-cog)");
             assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
+                fixture.querySelector(".o_cp_action_menus button:has(.fa-cog)"),
                 "show",
                 "dropdown should be opened"
             );
@@ -341,7 +232,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 "after onchange"
             );
             assert.hasClass(
-                fixture.querySelector(".o_statusbar_buttons .o-dropdown"),
+                fixture.querySelector(".o_cp_action_menus button:has(.fa-cog)"),
                 "show",
                 "dropdown should still be opened"
             );
@@ -460,7 +351,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             `,
         });
 
-        await click(fixture, ".o_statusbar_buttons .dropdown-toggle");
+        await click(fixture, ".o_cp_action_menus button:has(.fa-cog)");
         await click(fixture, ".o_attach_document");
         fileInput.dispatchEvent(new Event("change"));
         await nextTick();
