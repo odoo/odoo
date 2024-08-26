@@ -1552,7 +1552,7 @@ class MailCommon(common.TransactionCase, MailCase):
         Not written in a modular way to avoid complex override for a simple test tool.
         """
         for data in threads_data:
-            if not issubclass(self.env.registry[data["model"]], self.env.registry["rating.mixin"]):
+            if "rating.mixin" not in self.env.registry or not issubclass(self.env.registry[data["model"]], self.env.registry["rating.mixin"]):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
         return list(threads_data)
