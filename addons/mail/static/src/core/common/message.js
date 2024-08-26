@@ -38,7 +38,6 @@ import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
-import { useLongTouchPress } from "@mail/utils/common/hooks";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 
@@ -110,7 +109,6 @@ export class Message extends Component {
             emailHeaderOpen: false,
             showTranslation: false,
             actionMenuMobileOpen: false,
-            longTouching: false,
         });
         /** @type {ShadowRoot} */
         this.shadowRoot;
@@ -130,7 +128,6 @@ export class Message extends Component {
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
-        useLongTouchPress("root", () => this.openMobileActions());
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -216,7 +213,6 @@ export class Message extends Component {
                 this.props.thread,
                 this.props.message
             ),
-            "o-longTouching": this.state.longTouching,
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
         };
     }
@@ -434,16 +430,6 @@ export class Message extends Component {
                 mail_message_to_resend: message.id,
             },
         });
-    }
-
-    onTouchstart() {
-        clearTimeout(this.longTouchingTimeoutId);
-        this.longTouchingTimeoutId = setTimeout(() => (this.state.longTouching = true), 150);
-    }
-
-    onTouchend() {
-        clearTimeout(this.longTouchingTimeoutId);
-        this.state.longTouching = false;
     }
 
     /** @param {MouseEvent} [ev] */
