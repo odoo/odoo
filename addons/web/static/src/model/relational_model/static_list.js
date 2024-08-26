@@ -50,9 +50,11 @@ export class StaticList extends DataPoint {
 
         this._cache = markRaw({});
         this._commands = [];
+        this._initialCommands = [];
         this._savePoint = undefined;
         this._unknownRecordCommands = {}; // tracks update commands on records we haven't fetched yet
         this._currentIds = [...this.resIds];
+        this._initialCurrentIds = [...this.currentIds];
         this._needsReordering = false;
         this._tmpIncreaseLimit = 0;
         // In kanban and non editable list views, x2many records can be opened in a form view in
@@ -660,6 +662,12 @@ export class StaticList extends DataPoint {
         }
     }
 
+    _applyInitialCommands(commands) {
+        this._applyCommands(commands);
+        this._initialCommands = [...commands];
+        this._initialCurrentIds = [...this._currentIds];
+    }
+
     async _createNewRecordDatapoint(params = {}) {
         const changes = {};
         if (!params.withoutParent && this.config.relationField) {
@@ -787,7 +795,6 @@ export class StaticList extends DataPoint {
             this._commands = this._savePoint._commands;
             this._currentIds = this._savePoint._currentIds;
             this.count = this._savePoint.count;
-            this._savePoint = undefined;
         } else {
             this._commands = [];
             this._currentIds = [...this.resIds];
@@ -800,6 +807,10 @@ export class StaticList extends DataPoint {
         this.records = this._currentIds
             .slice(this.offset, this.limit)
             .map((resId) => this._cache[resId]);
+        if (!this._savePoint) {
+            this._applyCommands(this._initialCommands);
+        }
+        this._savePoint = undefined;
     }
 
     _getCommands({ withReadonly } = {}) {

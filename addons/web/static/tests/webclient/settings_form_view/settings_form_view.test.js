@@ -1093,12 +1093,71 @@ test("click on save button which throws an error", async () => {
 });
 
 test("clicking a button with dirty settings -- discard", async () => {
+    ResConfigSettings._fields.product_ids = fields.Many2many({
+        relation: "product",
+        onChange(record) {
+            record.product_ids = [
+                [
+                    4,
+                    37,
+                    {
+                        id: 37,
+                        display_name: "xphone",
+                    },
+                ],
+                [
+                    4,
+                    41,
+                    {
+                        id: 41,
+                        display_name: "xpad",
+                    },
+                ],
+                [
+                    1,
+                    41,
+                    {
+                        color: 3,
+                    },
+                ],
+            ];
+        },
+    });
+    ResConfigSettings._fields.bar = fields.Boolean({
+        onChange(record) {
+            record.bar = true;
+        },
+    });
+
+    class Product extends models.Model {
+        name = fields.Char();
+        color = fields.Integer();
+
+        _records = [
+            {
+                id: 37,
+                name: "xphone",
+                color: 1,
+            },
+            {
+                id: 41,
+                name: "xpad",
+                color: 2,
+            },
+        ];
+    }
+    defineModels([Product]);
+
     mockService("action", {
         doActionButton(params) {
             expect.step(`action executed ${JSON.stringify(params)}`);
         },
     });
-    onRpc(({ method }) => {
+    onRpc(({ method, args }) => {
+        if (method === "web_save") {
+            expect.step(method + " - " + JSON.stringify(args[1]));
+            return;
+        }
         expect.step(method);
     });
     await mountView({
@@ -1106,6 +1165,8 @@ test("clicking a button with dirty settings -- discard", async () => {
         arch: /* xml */ `
             <form js_class="base_settings">
                 <app string="CRM" name="crm">
+                    <field name="product_ids" widget="many2many_tags" options="{ 'color_field': 'color' }"/>
+                    <field name="bar" />
                     <field name="foo" />
                     <button type="object" name="mymethod" class="myBtn"/>
                 </app>
@@ -1114,16 +1175,31 @@ test("clicking a button with dirty settings -- discard", async () => {
         resModel: "res.config.settings",
     });
     expect.verifySteps(["get_views", "onchange"]);
-    click(".o_field_boolean input[type='checkbox']");
+
+    // Initial State:
+    // The first checkbox "bar" is checked.
+    // Two tags on the many2many : xphone and xpad.
+    // The colors are 1 and 3 (the onchange is correctly apply)
+    expect(".o_field_boolean[name='bar'] input").toBeChecked();
+    expect(queryAllTexts`.o_field_tags .o_tag`).toEqual(["xphone", "xpad"]);
+    expect(".o_tag_color_1").toHaveCount(1);
+    expect(".o_tag_color_3").toHaveCount(1);
+    click(".o_field_boolean[name='foo'] input[type='checkbox']");
     await animationFrame();
     click(".myBtn");
     await animationFrame();
     click(".modal .btn-secondary:eq(1)");
     await animationFrame();
     expect.verifySteps([
-        "web_save",
+        'web_save - {"product_ids":[[4,37],[4,41],[1,41,{"color":3}]],"bar":true,"foo":false}',
         'action executed {"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
     ]);
+    // We came back to the same initial state.
+    expect(".o_field_boolean[name='bar'] input").toBeChecked();
+    expect(queryAllTexts`.o_field_tags .o_tag`).toEqual(["xphone", "xpad"]);
+    expect(".o_tag_color_1").toHaveCount(1);
+    expect(".o_tag_color_3").toHaveCount(1);
+    click(".o_field_boolean[name='foo'] input[type='checkbox']");
 });
 
 test("clicking on a button with noSaveDialog will not show discard warning", async () => {
