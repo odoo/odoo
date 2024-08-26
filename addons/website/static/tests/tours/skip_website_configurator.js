@@ -1,63 +1,11 @@
 /** @odoo-module **/
 
-import { redirect } from "@web/core/utils/urls";
-import { goToTheme, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { registry } from "@web/core/registry";
 
-registerWebsitePreviewTour('automatic_editor_on_new_website', {
+registry.category("web_tour.tours").add('skip_website_configurator', {
     test: true,
-    edition: true,
-    url: '/',
-},
-() => [
-    ...goToTheme(),
-    {
-        content: "click on Add a language",
-        trigger: "we-button[data-add-language]",
-        run: "click",
-    },
-    {
-        content: "confirm leave editor",
-        trigger: ".modal-dialog button.btn-primary",
-        run: "click",
-    },
-    {
-        content: "type Parseltongue",
-        trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-        run: "edit Parseltongue",
-    },
-    {
-        content: 'select Parseltongue',
-        trigger: '.dropdown-item:contains(Parseltongue)',
-        run: "click",
-    },
-    {
-        trigger: '.modal div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
-    },
-    {
-        content: "load parseltongue",
-        trigger: '.modal-footer button[name=lang_install]',
-        run: "click",
-    },
-    {
-        content: "Select the language dropdown",
-        trigger: ':iframe .js_language_selector .dropdown-toggle',
-        run: "click",
-    },
-    {
-        content: "Select parseltongue",
-        trigger: ':iframe a.js_change_lang[data-url_code=pa_GB]',
-        run: "click",
-    },
-    {
-        content: "Check that we're on parseltongue and then go to settings",
-        trigger: ':iframe html[lang=pa-GB]',
-        run() {
-            // Now go through the settings for a new website. A frontend_lang
-            // cookie was set during previous steps. It should not be used when
-            // redirecting to the frontend in the following steps.
-            redirect('/odoo/action-website.action_website_configuration');
-        }
-    },
+    url: '/odoo/action-website.action_website_configuration',
+    steps: () => [
     {
         content: "create a new website",
         trigger: 'button[name="action_website_create_new"]',
@@ -102,4 +50,4 @@ registerWebsitePreviewTour('automatic_editor_on_new_website', {
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
     },
-]);
+]});
