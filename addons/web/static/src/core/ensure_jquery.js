@@ -4,7 +4,7 @@ export async function ensureJQuery() {
     if (!window.jQuery) {
         await loadBundle("web._assets_jquery");
         // allow to instantiate Bootstrap classes via jQuery: e.g. $(...).dropdown
-        const BTS_CLASSES = ["Carousel", "Dropdown", "Modal", "Popover", "Tooltip"];
+        const BTS_CLASSES = ["Carousel", "Dropdown", "Modal", "Popover", "Tooltip", "Collapse"];
         const $ = window.jQuery;
         for (const CLS of BTS_CLASSES) {
             const plugin = window[CLS];
