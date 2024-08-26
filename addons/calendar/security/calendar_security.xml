@@ -9,13 +9,6 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
 
-        <record id="calendar_event_rule_employee" model="ir.rule">
-            <field ref="model_calendar_event" name="model_id"/>
-            <field name="name">All Calendar Event for employees</field>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field eval="[(4,ref('base.group_user'))]" name="groups"/>
-        </record>
-
         <record id="calendar_attendee_rule_my" model="ir.rule">
             <field name="name">Own attendees</field>
             <field ref="model_calendar_attendee" name="model_id"/>
@@ -23,14 +16,48 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
 
+        <record id="calendar_event_admin_write" model="ir.rule">
+            <field name="name">Calendar Event: Admin can write all events</field>
+            <field ref="model_calendar_event" name="model_id"/>
+            <field name="domain_force">[('privacy', '!=', 'private')]</field>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="groups" eval="[(4, ref('base.group_partner_manager'))]"/>
+        </record>
+
+        <record id="calendar_event_own_event_write" model="ir.rule">
+            <field name="name">Calendar Event: write own events</field>
+            <field ref="model_calendar_event" name="model_id"/>
+            <field name="domain_force">['|', '|', ('partner_ids.user_ids', 'in', user.id), ('user_id.id', '=', user.id),  ('create_uid', '=', user.id)]</field>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="calendar_event_rule_employee" model="ir.rule">
+            <field ref="model_calendar_event" name="model_id"/>
+            <field name="name">Calendar Event: Internal user can read all events</field>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
         <record id="calendar_event_rule_private" model="ir.rule">
             <field ref="model_calendar_event" name="model_id"/>
             <field name="name">Private events</field>
-            <field name="domain_force">['|', ('privacy', '!=', 'private'), '&amp;', ('privacy', '=', 'private'), '|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]</field>
+            <field name="domain_force">[('privacy', '=', 'private'), '|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]</field>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
         </record>
 
     </data>
