@@ -44,6 +44,7 @@ import requests
 import werkzeug.urls
 from lxml import etree, html
 from requests import PreparedRequest, Session
+from urllib3.util import Url, parse_url
 
 import odoo
 from odoo import api
@@ -1050,8 +1051,14 @@ class ChromeBrowser:
             '--user-data-dir': user_data_dir,
             '--window-size': window_size,
             '--no-first-run': '',
-            # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
-            # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
+            # '--enable-precise-memory-info': '',  # uncomment to debug memory leaks in unit tests
+            # FIXME: the next flag is temporarily uncommented to allow client
+            # code to manually run garbage collection. This is done as currently
+            # the Chrome unit test process doesn't have access to its available
+            # memory, so it cannot run the GC efficiently and may run out of memory
+            # and crash. These should be re-commented when the process is correctly
+            # configured.
+            '--js-flags': '--expose-gc',  # uncomment to debug memory leaks in unit tests
         }
         if headless:
             switches.update(headless_switches)
@@ -1695,6 +1702,38 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
         self.opener = Opener(self.cr)
+
+    def parse_http_location(self, location):
+        """ Parse a Location http header typically found in 201/3xx
+        responses, return the corresponding Url object. The scheme/host
+        are taken from ``base_url()`` in case they are missing from the
+        header.
+
+        https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Url
+        """
+        if not location:
+            return Url()
+        base_url = parse_url(self.base_url())
+        url = parse_url(location)
+        return Url(
+            scheme=url.scheme or base_url.scheme,
+            auth=url.auth or base_url.auth,
+            host=url.host or base_url.host,
+            port=url.port or base_url.port,
+            path=url.path,
+            query=url.query,
+            fragment=url.fragment,
+        )
+
+    def assertURLEqual(self, test_url, truth_url, message=None):
+        """ Assert that two URLs are equivalent. If any URL is missing
+        a scheme and/or host, assume the same scheme/host as base_url()
+        """
+        self.assertEqual(
+            self.parse_http_location(test_url).url,
+            self.parse_http_location(truth_url).url,
+            message,
+        )
 
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):

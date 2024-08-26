@@ -323,8 +323,7 @@ class StockMoveLine(models.Model):
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
-                moves = move_line.picking_id.move_ids.filtered(lambda x: x.product_id == move_line.product_id)
-                moves = sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+                moves = move_line._get_linkable_moves()
                 if moves:
                     move_line.write({
                         'move_id': moves[0].id,
@@ -380,6 +379,9 @@ class StockMoveLine(models.Model):
     def write(self, vals):
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
             raise UserError(_("Changing the product is only allowed in 'Draft' state."))
+
+        if ('lot_id' in vals or 'quant_id' in vals) and len(self.product_id) > 1:
+            raise UserError(_("Changing the Lot/Serial number for move lines with different products is not allowed."))
 
         moves_to_recompute_state = self.env['stock.move']
         triggers = [
@@ -512,6 +514,9 @@ class StockMoveLine(models.Model):
             # which is clear by the unlink of move line
             moves.with_prefetch()._recompute_state()
         return res
+
+    def _sorting_move_lines(self):
+        return (self.id,)
 
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
@@ -735,8 +740,8 @@ class StockMoveLine(models.Model):
             return (
                 cand.picking_id != self.move_id.picking_id,
                 -(cand.picking_id.scheduled_date or cand.move_id.date).timestamp()
-                if cand.picking_id or cand.move_id
-                else -cand.id)
+                if cand.picking_id or cand.move_id else 0,
+                -cand.id)
 
         outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
 
@@ -984,3 +989,8 @@ class StockMoveLine(models.Model):
                 'message': _("The inventory adjustments have been reverted."),
             }
         }
+
+    def _get_linkable_moves(self):
+        self.ensure_one()
+        moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
+        return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)

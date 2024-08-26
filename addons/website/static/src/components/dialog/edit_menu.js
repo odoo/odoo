@@ -218,6 +218,12 @@ export class EditMenuDialog extends Component {
 
     deleteMenu(id) {
         const menuToDelete = this.map.get(id);
+
+        // Delete children first
+        for (const child of menuToDelete.children) {
+            this.deleteMenu(child.fields.id);
+        }
+
         const parentId = menuToDelete.fields['parent_id'] || this.state.rootMenu.fields['id'];
         const parent = this.map.get(parentId);
         parent.children = parent.children.filter(menu => menu.fields['id'] !== id);

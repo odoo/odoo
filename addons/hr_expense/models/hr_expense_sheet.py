@@ -653,7 +653,7 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_reset_approval(self):
-        self.sudo().write({'approval_state': False})
+        self.sudo().write({'approval_state': False, 'accounting_date': False})
         self.activity_update()
 
     def _do_refuse(self, reason):
@@ -727,7 +727,7 @@ class HrExpenseSheet(models.Model):
             # force the name to the default value, to avoid an eventual 'default_name' in the context
             # to set it to '' which cause no number to be given to the account.move when posted.
             'name': '/',
-            'date': self.accounting_date or max(self.expense_line_ids.mapped('date')) or fields.Date.context_today(self),
+            'date': self.accounting_date or max(self.expense_line_ids.filtered(lambda exp: exp.date).mapped('date'), default=fields.Date.context_today(self)),
             'expense_sheet_id': self.id,
         }
 

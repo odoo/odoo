@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -50,7 +50,6 @@ msgstr "%s reseñas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Envío"
 
@@ -127,7 +126,6 @@ msgstr "<b>Lista de precios</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Envío:</b>"
 
@@ -532,11 +530,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Documentos</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Términos y condiciones</u>"
@@ -919,7 +912,6 @@ msgstr "Grande"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Facturación"
 
@@ -1670,7 +1662,7 @@ msgstr "Código de descuento..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Descuentos y tarjetas de lealtad y regalo"
+msgstr "Descuentos, programas de lealtad y tarjetas de regalo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -1731,6 +1723,11 @@ msgstr ""
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "¿Desea vaciar su carrito antes de agregarle productos?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Documentos"
 
 #. module: website_sale
 #. odoo-python
@@ -2614,7 +2611,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "No shipping method is selected."
 msgstr "No se seleccionó ningún método de envío."
@@ -2836,11 +2833,6 @@ msgid "Pay now"
 msgstr "Pagar ahora"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Pagar con"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2861,6 +2853,11 @@ msgstr "Métodos de pago"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Proveedores de pago"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pago"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens

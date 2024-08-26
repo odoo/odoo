@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -358,19 +358,9 @@ msgid "Add extra content to display in the email"
 msgstr "メールに表示するコンテンツを追加する"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr "住所の追加、削除、変更ができます。"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "以下に追加"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
-msgstr "住所"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -808,6 +798,13 @@ msgstr ""
 "　　　　重要です、"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr "キー説明"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -911,11 +908,6 @@ msgstr "新しいパスワード:"
 #, python-format
 msgid "Next"
 msgstr "次へ"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr "表示するドキュメントがありません。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -1104,6 +1096,7 @@ msgstr "セキュリティ"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "セキュリティ管理"
@@ -1571,6 +1564,13 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "パスワード"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr "取消"
 
 #. module: portal
 #. odoo-javascript

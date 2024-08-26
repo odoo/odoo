@@ -274,8 +274,8 @@ export class Product extends PosModel {
         const categories = this.parent_category_ids.concat(this.categ.id);
         return (
             (!item.categ_id || categories.includes(item.categ_id[0])) &&
-            (!item.date_start || deserializeDate(item.date_start) <= date) &&
-            (!item.date_end || deserializeDate(item.date_end) >= date)
+            (!item.date_start || deserializeDate(item.date_start, {zone: "utc"}) <= date) &&
+            (!item.date_end || deserializeDate(item.date_end, {zone: "utc"}) >= date)
         );
     }
     // Port of _get_product_price on product.pricelist.

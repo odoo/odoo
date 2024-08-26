@@ -6,16 +6,16 @@
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2024
 # Wil Odoo, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-24 12:25+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1388,8 +1388,8 @@ msgid ""
 "                payments on a daily basis."
 msgstr ""
 "Una caja registradora le permite gestionar asientos de efectivo en sus diarios\n"
-"                de efectivo. Esta función le proporciona una forma sencilla de llevar el seguimiento de pagos\n"
-"                en efectivo diariamente."
+"                de efectivo. Esta función es una manera sencilla de llevar el seguimiento de pagos\n"
+"                en efectivo a diario."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -1414,9 +1414,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
-"Un estado de cuenta bancario es un resumen de todas sus transacciones financieras\n"
-"                que ocurren en un periodo de tiempo en una cuenta bancaria. Debe\n"
-"                recibirlo de forma periódica."
+"Un estado de cuenta bancario es un resumen de todas las transacciones financieras\n"
+"                que ocurren en un periodo de tiempo en una cuenta bancaria. Debería\n"
+"                recibirlo de forma periódica de parte de su banco."
 
 #. module: account
 #. odoo-python
@@ -1431,8 +1431,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Un asiento contable está compuesto por varios apuntes contables, cada uno\n"
-"                de ellos es una transacción de débito o crédito."
+"Un conjunto de apuntes contables forman un asiento contable. Cada\n"
+"apunte es una transacción de cargo o abono."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -1463,8 +1463,8 @@ msgstr ""
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
-"Una línea de este movimiento utiliza una cuenta obsoleta, no puede "
-"publicarla."
+"Se está utilizando una cuenta obsoleta en una línea de este movimiento, por "
+"lo que no puede publicarlo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1545,7 +1545,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
 msgid ""
 "A tag with the same name and applicability already exists in this country."
-msgstr "Una etiqueta con el mismo nombre y relevancia ya existe en este país."
+msgstr "Ya existe una etiqueta con el mismo nombre y relevancia en este país."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1962,6 +1962,11 @@ msgid ""
 msgstr ""
 "Cuenta: publique asientos en estado de borrador con auto_post habilitado y "
 "la fecha contable hasta hoy"
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "Contador"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2688,7 +2693,7 @@ msgid ""
 "                to disclose a certain amount of information."
 msgstr ""
 "Una cuenta es la parte de un libro contable que le permite\n"
-"                a su empresa registrar todo tipo de transacciones de débito y crédito.\n"
+"                a su empresa registrar todo tipo de transacciones de cargos y abonos.\n"
 "                Las empresas presentan sus cuentas anuales principalmente en dos partes:\n"
 "                la hoja de balance general y el estado de resultados (ganancias y pérdidas)\n"
 "              Las cuentas anuales son requeridas por ley a las empresas\n"
@@ -3450,7 +3455,6 @@ msgid "Billing"
 msgstr "Facturación"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Administrador de facturación"
 
@@ -3501,6 +3505,11 @@ msgstr "Dejar en blanco si es cero"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Mensaje de bloqueo"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "Tenedor de libros"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3836,6 +3845,11 @@ msgstr "Cuenta de pérdida por cancelación por diferencia de efectivo"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Cajas registradoras"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_48
+msgid "Cash Restaurant"
+msgstr "Restaurante con efectivo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -7033,6 +7047,13 @@ msgstr "Fórmula"
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line. 'custom' is also "
 "allowed as value in case the carryover destination requires more complex "
 "logic."
@@ -8108,6 +8129,11 @@ msgstr "El dominio para la expresión '%s' de la línea '%s' no es válido: %s"
 #, python-format
 msgid "Invalid fiscal year last day"
 msgstr "El último día del año fiscal es inválido."
+
+#. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Valuación de inventario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -9844,6 +9870,13 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Valor negativo del campo de cantidad si el payment_type es de salida."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr "No se permiten los impuestos agrupados."
+
+#. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
 #: model:account.report.column,name:account.generic_tax_report_column_net
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_net
@@ -9888,6 +9921,16 @@ msgstr "Nuevos valores"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Más recientes primero"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Siguiente evento en el calendario de actividades"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -11728,6 +11771,7 @@ msgstr "Importar QIF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
+#: model:ir.model.fields,field_description:account.field_account_payment_register__qr_code
 msgid "QR Code URL"
 msgstr "URL del código QR"
 
@@ -11777,9 +11821,28 @@ msgid "RD Expenses"
 msgstr "Gastos de I+D"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Calificaciones"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Resecuenciación"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "Solo lectura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12886,12 +12949,13 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"Con frecuencia se reciben correos que contienen facturas falsas con cuentas "
-"fraudulentas, a esta práctica se le llama phishing. Es importante verificar "
-"los nuevos números de cuenta y la mejor manera de hacerlo es llamar al "
-"proveedor, esto es esencial porque si esto llega a pasar, quiere decir que "
-"el correo del proveedor está en peligro. Una vez que haya comprobado que la "
-"información es correcta puede activar la función de enviar dinero."
+"Con frecuencia se reciben correos que contienen facturas falsas con números "
+"de cuenta fraudulentos, a esta práctica se le llama phishing. Es importante "
+"verificar los nuevos números de cuenta y la mejor manera de hacerlo es "
+"llamar al proveedor, lo cual es esencial porque si se encuentra en esta "
+"situación, quiere decir que el correo del proveedor está en peligro. Una vez"
+" que haya comprobado que la información es correcta, puede activar la "
+"función de enviar dinero."
 
 #. module: account
 #. odoo-python
@@ -13107,7 +13171,6 @@ msgstr ""
 "también se nombrarán con este prefijo de forma predeterminada."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Mostrar funciones de contabilidad: solo lectura"
 
@@ -13142,7 +13205,6 @@ msgid "Show Force Tax Included"
 msgstr "Mostrar forzar impuestos incluidos"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Mostrar características de contabilidad completas"
 
@@ -16238,9 +16300,9 @@ msgid ""
 "should not have this option set."
 msgstr ""
 "Se utiliza en reportes para saber si se deberían considerar los apuntes "
-"contables desde el principio en lugar de para el año fiscal en curso "
-"solamente. No disponen de esta opción los tipos de cuenta que deben "
-"restablecerse a cero en cada año fiscal (como gastos, ingresos...)."
+"contables desde el principio en lugar de solo para el año fiscal en curso. "
+"Los tipos de cuenta que deben restablecerse a cero después da cada año "
+"fiscal nuevo (como gastos o ingress) no tienen esta opción."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -16345,7 +16407,7 @@ msgid ""
 msgstr ""
 "Valor por el importe de la línea de cancelación\n"
 "    * Porcentaje: porcentaje del balance, entre 0 y 100.\n"
-"    * Fijo: el valor fijo de la cancelación. El importe contará como débito si es negativo, como crédito si es positivo.\n"
+"    * Fijo: el valor fijo de la cancelación. El importe contará como cargo si es negativo, como abono si es positivo.\n"
 "    * De la etiqueta: no se necesita un delimitador de expresiones regulares, solo se necesita la expresión regular. Por ejemplo, si desea extraer la cantidad de\n"
 "R: 9672938 10/07 AX 9415126318 T: 5L: NA BRT: 3358,07 C:\n"
 "Podría ingresar\n"
@@ -16610,6 +16672,15 @@ msgid ""
 msgstr ""
 "Cuando se selecciona, los valores 0 no se aparecerán cuando se muestre el "
 "valor de esta expresión."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17449,6 +17520,15 @@ msgstr "No puede utilizar una cuenta obsoleta."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr "No puede utilizar impuestos en líneas con una cuenta fuera de balance"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
 
 #. module: account
 #. odoo-python

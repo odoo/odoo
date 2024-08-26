@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:46+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -419,7 +419,7 @@ msgstr "Alt-tag"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/file_selector.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "An error occurred while fetching the entered URL."
 msgstr "Er is een fout opgetreden bij het ophalen van de opgegeven URL."
@@ -885,10 +885,13 @@ msgstr "Kon de module %s niet installeren"
 
 #. module: web_editor
 #. odoo-javascript
-#. module: web_editor
 #: code:addons/web_editor/static/src/components/upload_progress_toast/upload_service.js:0
-#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 #, python-format
+msgid "Could not load the file \"%s\"."
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Cover"
 msgstr "Omslag"
 
@@ -1216,7 +1219,7 @@ msgstr "Leeg citaat"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/file_selector.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Error"
 msgstr "Fout"
@@ -1576,13 +1579,6 @@ msgstr "Dailymotion logo verbergen"
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
 #, python-format
-msgid "Hide Youtube logo"
-msgstr "YouTube logo verbergen"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
-#, python-format
 msgid "Hide fullscreen button"
 msgstr "Volledig-scherm knop verbergen"
 
@@ -1855,6 +1851,7 @@ msgstr "Hieronder invoegen"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert left"
 msgstr "Links invoegen"
@@ -1882,6 +1879,7 @@ msgstr "Gepersonaliseerde inhoud invoegen"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert right"
@@ -2124,12 +2122,14 @@ msgstr "Naar beneden verplaatsen"
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Move left"
 msgstr "Naar links verplaatsen"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #: code:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Move right"
@@ -2356,6 +2356,13 @@ msgstr "Patronen"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Position"
 msgstr "Positie"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Preset #{number}"
+msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
@@ -3713,6 +3720,13 @@ msgstr "toevoegen"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+#, python-format
+msgid "all"
+msgstr "alle"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
 #, python-format
 msgid "alternatives..."
@@ -3736,9 +3750,44 @@ msgid "darken"
 msgstr "verduisteren"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+#, python-format
+msgid "database"
+msgstr "database"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "exclusion"
 msgstr "uitsluiten"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "fill"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "fill,rounded-circle"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "flat"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "lg"
+msgstr ""
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -3746,9 +3795,30 @@ msgid "lighten"
 msgstr "verlichten"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
+#, python-format
+msgid "media-library"
+msgstr ""
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "multiply"
 msgstr "vermenigvuldigen"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "outline"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "outline,rounded-circle"
+msgstr ""
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -3763,9 +3833,23 @@ msgid "px"
 msgstr "px"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "rounded-circle"
+msgstr ""
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "screen"
 msgstr "scherm"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "sm"
+msgstr ""
 
 #. module: web_editor
 #. odoo-javascript

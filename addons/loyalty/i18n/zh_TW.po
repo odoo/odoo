@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -1167,6 +1167,13 @@ msgid "Generate eWallet"
 msgstr "生成電子錢包"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "產生 {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1739,6 +1746,7 @@ msgstr "獎勵類型"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "獎勵"
 
@@ -1864,6 +1872,13 @@ msgstr "推廣代碼必須是唯一的。"
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
 msgstr "獎勵所需的積分必須限定為正數。"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "獎勵描述欄位不可留空。"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -2008,13 +2023,6 @@ msgstr "有促銷代碼"
 #, python-format
 msgid "You can not delete a program in an active state"
 msgstr "不可刪除一個已啟用的計劃"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_reward.py:0
-#, python-format
-msgid "The reward description field cannot be empty."
-msgstr "獎勵描述欄位不可留空。"
 
 #. module: loyalty
 #. odoo-python
@@ -2179,3 +2187,10 @@ msgstr "使用"
 #, python-format
 msgid "your order"
 msgstr "您的訂單"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

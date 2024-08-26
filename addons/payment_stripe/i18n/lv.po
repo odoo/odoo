@@ -5,22 +5,29 @@
 # Translators:
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Martin Trigaux, 2023
-# Will Sensors, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+"Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lv\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Cannot display the payment form"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
@@ -50,6 +57,13 @@ msgstr "Piegāde"
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
 msgstr ""
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Bezmaksas piegāde"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form

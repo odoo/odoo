@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2023
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -996,6 +996,8 @@ msgstr ""
 "Duy trì tương tác thường xuyên với các khách hàng chủ chốt để khai thác và mở rộng tốt hơn."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1008,6 +1010,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Bộ phận"
 
@@ -1048,7 +1051,7 @@ msgstr "Ngày khỏi hành"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 msgid "Departure Reason"
-msgstr "Lý do kỷ luật"
+msgstr "Lý do nghỉ việc"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
@@ -2856,6 +2859,13 @@ msgstr "Số an sinh xã hội"
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
 msgstr "Nhà phát triển phần mềm"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Một số nhân viên đã có liên hệ công việc."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

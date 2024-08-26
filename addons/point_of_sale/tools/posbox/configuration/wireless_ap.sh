@@ -58,13 +58,12 @@ if [ -z "${WIRED_IP}" ] ; then
 		ip addr add 10.11.12.1/24 dev wlan0
 
 		service dnsmasq restart
-
-		service odoo restart
+		service odoo restart # As this file is executed on boot, this line is responsible for restarting odoo service on reboot
 	fi
 # wired
 else
 	killall nginx
 	service nginx restart
 	service dnsmasq stop
-	service odoo restart
+	service odoo restart # As this file is executed on boot, this line is responsible for restarting odoo service on reboot
 fi

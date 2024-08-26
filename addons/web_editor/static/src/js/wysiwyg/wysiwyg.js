@@ -1472,7 +1472,7 @@ export class Wysiwyg extends Component {
                 ...this.options.linkOptions,
                 editable: this.odooEditor.editable,
                 link,
-                needLabel: true,
+                needLabel: true && !link.querySelector('img'),
                 focusField: link.innerHTML ? 'url' : '',
                 onSave: (data) => {
                     if (!data) {
@@ -2447,7 +2447,7 @@ export class Wysiwyg extends Component {
                 callback: async () => {
                     const [user] = await this.orm.read(
                         'res.users',
-                        [session.uid],
+                        [session.user_id],
                         ['signature'],
                     );
                     if (user && user.signature) {

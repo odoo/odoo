@@ -5,18 +5,18 @@
 # Translators:
 # Mads Søndergaard, 2023
 # Morten Paaske, 2024
-# Martin Trigaux, 2024
 # Mads Søndergaard, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
+# Martin Trigaux, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -52,7 +52,6 @@ msgstr "%s anmeldelser"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; levering"
 
@@ -129,7 +128,6 @@ msgstr "<b>Prisliste</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Levering: </b>"
 
@@ -534,11 +532,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Dokumenter</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Salgs- og leveringsbetingelser</u>"
@@ -923,7 +916,6 @@ msgstr "Stor"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Fakturering"
 
@@ -1728,6 +1720,11 @@ msgstr ""
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr ""
 "Ønsker du at rydde din indkøbskurv, før du tilføjer produkter til den?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Dokumenter"
 
 #. module: website_sale
 #. odoo-python
@@ -2599,7 +2596,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "No shipping method is selected."
 msgstr "Der er ikke valgt nogen forsendelsesmetode."
@@ -2821,11 +2818,6 @@ msgid "Pay now"
 msgstr "Betal nu"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Betal med"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2846,6 +2838,11 @@ msgstr "Betalingsmetoder"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Betalingsudbydere"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Betalingstoken"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -4446,7 +4443,7 @@ msgstr "Hjemmeside besøgende"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
 msgid "Website communication history"
-msgstr "Website kommunikations historik"
+msgstr "Hjemmesidens kommunikations historik"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description

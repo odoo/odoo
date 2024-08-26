@@ -88,6 +88,10 @@
                                 </div>
                             </div>
                         </group>
+                        <field name="qr_code" invisible="1"/>
+                        <div invisible="not qr_code" colspan="2" class="text-center">
+                            <field name="qr_code"/>
+                        </div>
                     </group>
                     <footer>
                         <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>

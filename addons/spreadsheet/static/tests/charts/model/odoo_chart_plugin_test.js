@@ -591,4 +591,26 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         model.dispatch("DELETE_SHEET", { sheetId });
         assert.strictEqual(model.getters.getOdooChartIds().length, 0);
     });
+
+    QUnit.test("Odoo chart legend color changes with background color update", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const definition = model.getters.getChartDefinition(chartId);
+        const runtime = model.getters.getChartRuntime(chartId);
+        assert.strictEqual(runtime.chartJsConfig.options.plugins.legend.labels.color, "#000000");
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                background: "#000000",
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.strictEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.options.plugins.legend.labels
+                .color,
+            "#FFFFFF"
+        );
+    });
 });

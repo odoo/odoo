@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:16+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -52,13 +52,6 @@ msgid ""
 msgstr ""
 "Không thể kết nối với máy chủ Odoo, vui lòng kiểm tra kết nối mạng và thử "
 "lại. "
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Không có quyền truy cập để tìm nạp token từ Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -194,6 +187,14 @@ msgstr "Endpoint Webhook Viva Wallet"
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_webhook_verification_key
 msgid "Viva Wallet Webhook Verification Key"
 msgstr "Mã khoá xác thực Webhook Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr ""
+"Giao dịch qua Viva Wallet của bạn không thành công. Vui lòng thử lại sau."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

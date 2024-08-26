@@ -4,14 +4,14 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -142,11 +142,6 @@ msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
 msgstr "<span><i class=\"oi oi-arrow-right\"/> 如何設定你的 PayPal 帳戶</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>你的付款方式</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1625,6 +1620,11 @@ msgid "Test Mode"
 msgstr "測試模式"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "謝謝！"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -2238,6 +2238,11 @@ msgid "Your payment has not been processed yet."
 msgstr "你的付款仍未處理。"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "你的付款方式"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "郵遞區號"
@@ -2246,16 +2251,6 @@ msgstr "郵遞區號"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "郵遞區號"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "危險"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "資訊"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2274,11 +2269,6 @@ msgid "provider"
 msgstr "服務商"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "成功"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2286,8 +2276,3 @@ msgid ""
 msgstr ""
 "以進行此項\n"
 "                    付款。"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "警告"

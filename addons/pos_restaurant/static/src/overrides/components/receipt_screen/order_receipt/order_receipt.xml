@@ -37,10 +37,6 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//p[text()='Odoo Point of Sale']" position="replace">
-            <p t-if="props.data.isRestaurant">Odoo Restaurant</p>
-            <p t-else="">Odoo Point of Sale</p>
-        </xpath>
     </t>
     <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('cashier')]" position="after">

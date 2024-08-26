@@ -14,14 +14,15 @@
 # Larisa_nexterp, 2024
 # Betty Keresztesi, 2024
 # Corina Calin, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3962,7 +3963,7 @@ msgstr "Înregistrare plată"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr "Factură periodică"
+msgstr "Factură normală"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4151,14 +4152,14 @@ msgid "Sales Analysis"
 msgstr "Analiză vânzări"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis Per Customers"
-msgstr "Analiza vânzărilor pe clienți"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Analiza vânzărilor în funcție de agenții de vânzări"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Analiza vânzărilor pe clienți"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4982,7 +4983,6 @@ msgstr "Procentul din suma care trebuie plătită pentru confirmarea ofertelor."
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5028,11 +5028,6 @@ msgstr "Parametrii furnizați nu sunt valizi."
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Valoarea plății în avans trebuie să fie pozitivă."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "În prezent nu există comenzi pentru contul tau."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5486,6 +5481,7 @@ msgstr "Avertizare"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

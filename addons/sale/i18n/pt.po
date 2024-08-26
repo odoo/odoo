@@ -16,14 +16,15 @@
 # Bruno Bessa, 2024
 # Maitê Dietze, 2024
 # Arxi, 2024
+# GRACE CONLON, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Arxi, 2024\n"
+"Last-Translator: GRACE CONLON, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -421,6 +422,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        Olá,\n"
+"        <br><br>\n"
+"        A sua\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            fatura pro forma para a <t t-out=\"doc_name or ''\">cotação</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (com a referência: <t t-out=\"object.origin or ''\"></t> )\n"
+"            </t>\n"
+"            no valor de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span> está disponível.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">cotação</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (com a referência: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            no valor de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span> está disponível para revisão.\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Entre em contato conosco em caso de dúvidas.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -3796,13 +3827,13 @@ msgid "Sales Analysis"
 msgstr "Análise de vendas"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
+#: model:ir.actions.act_window,name:sale.action_order_report_salesperson
+msgid "Sales Analysis By Salespersons"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_salesperson
-msgid "Sales Analysis By Salespersons"
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
 msgstr ""
 
 #. module: sale
@@ -4589,7 +4620,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -4631,11 +4661,6 @@ msgstr ""
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "O valor do adiantamento deve ser positivo."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Atualmente não existem ordens na sua conta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5073,6 +5098,7 @@ msgstr "Aviso"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

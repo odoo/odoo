@@ -199,7 +199,13 @@ def translate_xml_node(node, callback, parse, serialize):
     def translatable(node):
         """ Return whether the given node can be translated as a whole. """
         return (
-            node.tag in TRANSLATED_ELEMENTS
+            # Some specific nodes (e.g., text highlights) have an auto-updated
+            # DOM structure that makes them impossible to translate.
+            # The introduction of a translation `<span>` in the middle of their
+            # hierarchy breaks their functionalities. We need to force them to
+            # be translated as a whole using the `o_translate_inline` class.
+            "o_translate_inline" in node.attrib.get("class", "").split()
+            or node.tag in TRANSLATED_ELEMENTS
             and not any(key.startswith("t-") for key in node.attrib)
             and all(translatable(child) for child in node)
         )

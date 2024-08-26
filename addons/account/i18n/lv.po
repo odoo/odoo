@@ -10,17 +10,17 @@
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # ievaputnina <ievai.putninai@gmail.com>, 2024
+# Will Sensors, 2024
 # Martin Trigaux, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
-# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-24 12:25+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1895,6 +1895,11 @@ msgstr ""
 "datumu līdz šodienai"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -3378,7 +3383,6 @@ msgid "Billing"
 msgstr "Norēķini"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Norēķinu administrators"
 
@@ -3429,6 +3433,11 @@ msgstr "Tukšs ja ir nulle"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Bloķēšanas ziņa"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3762,6 +3771,11 @@ msgstr "Naudas diskonta norakstīšanas zaudējumu konts"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Kases Iekārtas"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_48
+msgid "Cash Restaurant"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -6934,6 +6948,13 @@ msgstr "Formula"
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line. 'custom' is also "
 "allowed as value in case the carryover destination requires more complex "
 "logic."
@@ -7996,6 +8017,11 @@ msgstr ""
 #, python-format
 msgid "Invalid fiscal year last day"
 msgstr "Nederīga fiskālā gada pēdējā diena"
+
+#. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Inventarizācija"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -9723,6 +9749,13 @@ msgstr ""
 "Summas lauka negatīvā vērtība, ja maksājuma_tips ir izejošais maksājums"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
 #: model:account.report.column,name:account.generic_tax_report_column_net
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_net
@@ -9767,6 +9800,16 @@ msgstr "Jaunas vērtības"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Vispirms vispirms"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nākamās darbības kalendāra pasākums"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -11602,6 +11645,7 @@ msgstr "QIF Importēšana"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
+#: model:ir.model.fields,field_description:account.field_account_payment_register__qr_code
 msgid "QR Code URL"
 msgstr "QR koda URL"
 
@@ -11651,9 +11695,28 @@ msgid "RD Expenses"
 msgstr "RD izdevumi"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Reitingi"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Pārkārtot"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12963,7 +13026,6 @@ msgstr ""
 "arī tiks nosaukti, izmantojot šo prefiksu."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Rādīt grāmatvedības funkcijas - tikai lasāmās versijas"
 
@@ -12998,7 +13060,6 @@ msgid "Show Force Tax Included"
 msgstr "Rādīt Spēka nodoklis iekļauts"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Rādīt pilnas grāmatvedības funkcijas"
 
@@ -16423,6 +16484,15 @@ msgstr ""
 "izteiksmes vērtību."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -17216,6 +17286,15 @@ msgstr "Nevarat izmantot novecojušu kontu."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr "Jūs nevarat izmantot nodokļus rindās ar ārpusbilances kontu"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
 
 #. module: account
 #. odoo-python

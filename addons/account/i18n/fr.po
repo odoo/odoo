@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-24 12:25+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -650,6 +650,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bonjour\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Veuillez trouver ci-joint votre\n"
+"        <t t-if=\"object.name\">\n"
+"            facture <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            facture\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (avec la référence: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        d'un montant de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Cette facture est déjà payée.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Veuillez procéder au paiement dans les meilleurs délais.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                Veuillez utiliser la communication suivante pour votre paiement : <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    sur le compte <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PS : vous pouvez revoir vos feuilles de temps <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">depuis le  portail.</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        N'hésitez pas à nous contacter si vous avez des questions.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -766,7 +815,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Choose or Configure "
 "Email Servers"
-msgstr "Choisir ou configurer des serveurs d'email"
+msgstr "Choisir ou configurer des serveurs d'e-mail"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -1880,7 +1929,7 @@ msgstr "Tour de découverte du téléchargement d'une facture"
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr "Tour de découverte du téléchargement d'une facture par email"
+msgstr "Tour de découverte du téléchargement d'une facture par e-mail"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
@@ -1918,6 +1967,11 @@ msgid ""
 msgstr ""
 "Compte : publier des écritures en brouillon avec auto_post activé et date "
 "comptable jusqu'à aujourd'hui"
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3406,7 +3460,6 @@ msgid "Billing"
 msgstr "Facturation"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Paramétrage facturation"
 
@@ -3457,6 +3510,11 @@ msgstr "Vide si zéro"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Message bloquant"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "Aide-comptable"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3797,6 +3855,11 @@ msgstr "Compte des pertes d'annulation d'escompte"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Caisses"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_48
+msgid "Cash Restaurant"
+msgstr "Espèces restaurant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4248,7 +4311,7 @@ msgstr "Société liée à ce journal"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr "Compléter l'email dans les données du partenaire"
+msgstr "Compléter l'e-mail dans les données du partenaire"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -4314,7 +4377,7 @@ msgstr "Configurer l'agencement de votre document"
 msgid "Configure your email server first and send your bill by email."
 msgstr ""
 "Configurez d'abord votre serveur de messagerie et envoyez votre facture par "
-"email."
+"e-mail."
 
 #. module: account
 #. odoo-python
@@ -4533,7 +4596,7 @@ msgstr "Créer une facture"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Invoices upon Emails"
-msgstr "Créer des factures depuis les emails"
+msgstr "Créer des factures depuis les e-mails"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -5921,7 +5984,7 @@ msgstr "Rémunération du capital"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Accès non disponible, ne pas tenir compte de cette donnée dans le digest "
-"d'email envoyé à l'utilisateur"
+"d'e-mail envoyé à l'utilisateur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
@@ -6209,7 +6272,7 @@ msgstr "Échange de données informatisé"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_send_mail
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -6221,12 +6284,12 @@ msgstr "Alias de messagerie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
 msgid "Email by default"
-msgstr "Email par défaut"
+msgstr "E-mail par défaut"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "Domaine de l'email e.g. 'example.com' dans 'odoo@example.com'"
+msgstr "Domaine de l'e-mail e.g. 'example.com' dans 'odoo@example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6991,6 +7054,13 @@ msgstr "Formule"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__carryover_target
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
@@ -8079,6 +8149,11 @@ msgstr "Domaine invalide pour l'expression '%s' de la ligne '%s' : %s"
 #, python-format
 msgid "Invalid fiscal year last day"
 msgstr "Dernier jour de l'exercice fiscal est invalide"
+
+#. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Valorisation des stocks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -9818,6 +9893,13 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Valeur négative du champ montant si le payment_type est sortant."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr "Les groupes de taxes imbriqués ne sont pas autorisés."
+
+#. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
 #: model:account.report.column,name:account.generic_tax_report_column_net
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_net
@@ -9862,6 +9944,16 @@ msgstr "Nouvelles valeurs"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Le plus récent en premier"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10929,7 +11021,7 @@ msgstr "Correspondance de partenaires pour les modèles de rapprochement"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr "Les partenaires doivent avoir une adresse email."
+msgstr "Les partenaires doivent avoir une adresse e-mail."
 
 #. module: account
 #. odoo-python
@@ -11076,7 +11168,7 @@ msgstr "Mode de paiement :"
 #: model:ir.model,name:account.model_account_payment_method_line
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Methods"
-msgstr "Modes de paiements"
+msgstr "Modes de paiement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
@@ -11712,6 +11804,7 @@ msgstr "Import QIF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
+#: model:ir.model.fields,field_description:account.field_account_payment_register__qr_code
 msgid "QR Code URL"
 msgstr "Code QR URL "
 
@@ -11761,9 +11854,28 @@ msgid "RD Expenses"
 msgstr "RD Charges"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Évaluations"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Reséquencer"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "Lecture seule"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11838,6 +11950,7 @@ msgstr "Date de comptabilisation"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
 msgstr ""
+"Recalculer les taxes et les comptes en fonction de cette position fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -12754,7 +12867,7 @@ msgstr "Envoyer et imprimer des valeurs"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
 msgid "Send Email"
-msgstr "Envoyer un email"
+msgstr "Envoyer un e-mail"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_readonly
@@ -12778,7 +12891,7 @@ msgstr "Envoyer de l'argent"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Send a bill by email"
-msgstr "Envoyer une facture par email"
+msgstr "Envoyer une facture par e-mail"
 
 #. module: account
 #. odoo-python
@@ -12825,7 +12938,7 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
-"Envoyer un email distinct pour chaque facture.\n"
+"Envoyer un e-mail distinct pour chaque facture.\n"
 "\n"
 "Toute extension de fichier sera acceptée.\n"
 "\n"
@@ -12834,12 +12947,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
-msgstr "Envoyez le reçu par email"
+msgstr "Envoyez le reçu par e-mail"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr "Envoyer des reçus par email"
+msgstr "Envoyer des reçus par e-mail"
 
 #. module: account
 #. odoo-javascript
@@ -12858,7 +12971,7 @@ msgstr "Envoyez la facture au client et vérifiez ce qu'il reçoit."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Send your email to"
-msgstr "Envoyez votre email à"
+msgstr "Envoyez votre e-mail à"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -12873,7 +12986,7 @@ msgstr ""
 "L'envoi de fausses factures avec un numéro de compte frauduleux est une "
 "pratique courante de phishing. Pour vous protéger, vérifiez toujours les "
 "nouveaux numéros de compte bancaire, de préférence en appelant le "
-"fournisseur, car le phishing se produit généralement lorsque leurs emails "
+"fournisseur, car le phishing se produit généralement lorsque leurs e-mails "
 "sont compromis. Une fois le numéro vérifié, vous pouvez activer la "
 "possibilité d'envoyer de l'argent."
 
@@ -12902,8 +13015,8 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
-"Envoyé manuellement au client en cliquant sur \"Envoyer le reçu par email\" "
-"dans l'action de paiement"
+"Envoyé manuellement au client en cliquant sur \"Envoyer le reçu par e-mail\""
+" dans l'action de paiement"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -13090,7 +13203,6 @@ msgstr ""
 "seront également nommées en utilisant ce préfixe par défaut."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr "Afficher les fonctionnalités de comptabilité - Lecture seule"
 
@@ -13125,7 +13237,6 @@ msgid "Show Force Tax Included"
 msgstr "Afficher Forcer toutes taxes comprises"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr "Montrer les fonctions de comptabilité complètes"
 
@@ -13269,7 +13380,7 @@ msgstr "Document d'origine"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_source_email
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_source_email
 msgid "Source Email"
-msgstr "Email source"
+msgstr "E-mail source"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__amount
@@ -14301,6 +14412,7 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
+"Le code pays du numéro de TVA étranger ne correspond à aucun pays du groupe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14622,7 +14734,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Le nom de l'alias de messagerie, par ex. 'carrières' pour récupérer les "
-"emails pour <carrières@example.odoo.com>"
+"e-mails pour <carrières@example.odoo.com>"
 
 #. module: account
 #. odoo-python
@@ -15504,6 +15616,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"Ceci mettra à jour les taxes et comptes basés sur la position fiscale "
+"actuellement sélectionnée."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -16079,7 +16193,7 @@ msgstr "UdM"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "Mettre à jour les taxes et comptes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16591,6 +16705,15 @@ msgstr ""
 "valeur de cette expression."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -16647,7 +16770,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr "Écrivez ici <b> votre adresse email </b> pour tester le flux"
+msgstr "Écrivez ici <b> votre adresse e-mail </b> pour tester le flux"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
@@ -16996,6 +17119,7 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"Vous ne pouvez pas modifier ces écritures. Demandez plutôt une annulation."
 
 #. module: account
 #. odoo-python
@@ -17434,6 +17558,15 @@ msgstr "Vous ne pouvez pas utiliser de compte expiré."
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr ""
 "Vous ne pouvez employer des taxes sur des lignes avec un compte hors bilan"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
+msgstr ""
 
 #. module: account
 #. odoo-python

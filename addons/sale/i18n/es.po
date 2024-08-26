@@ -10,16 +10,16 @@
 # Wil Odoo, 2024
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2024
 # Carolina Fernández, 2024
-# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4151,14 +4151,14 @@ msgid "Sales Analysis"
 msgstr "Análisis de ventas"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis Per Customers"
-msgstr "Análisis de ventas por cliente"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Análisis de ventas por comerciales"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Análisis de ventas por cliente"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4289,7 +4289,7 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"Línea del pedido de venta al que se añadirá el tiempo dedicado para "
+"Artículo del pedido de venta al que se añadirá el tiempo dedicado para "
 "facturarlo a su cliente. Elimine el dato para que el parte de horas no sea "
 "facturable."
 
@@ -4987,7 +4987,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5032,11 +5031,6 @@ msgstr "Los parámetros proporcionados no son válidos."
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "El valor del importe del anticipo debe ser positivo."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Actualmente no hay pedidos para su cuenta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5491,6 +5485,7 @@ msgstr "Advertencia"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

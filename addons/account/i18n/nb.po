@@ -15,18 +15,19 @@
 # Jens Nymoen <jens@nettimport.no>, 2024
 # Jorunn D. Newth, 2024
 # Marius Stedjan <marius@stedjan.com>, 2024
-# Henning Fyllingsnes, 2024
-# Martin Trigaux, 2024
 # Ørjan Wean <orjan@wean.no>, 2024
 # Rune Restad, 2024
+# Martin Trigaux, 2024
+# Henning Fyllingsnes, 2024
+# Jens Nymoen <jens.nymoen@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-24 12:25+0000\n"
+"POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rune Restad, 2024\n"
+"Last-Translator: Jens Nymoen <jens.nymoen@gmail.com>, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,7 +196,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "%s installment #%s"
-msgstr ""
+msgstr "%s avdrag %s"
 
 #. module: account
 #. odoo-python
@@ -273,7 +274,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "- Installment of"
-msgstr ""
+msgstr "- Antall avdrag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -673,7 +674,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Waiting for Payment</span>"
-msgstr ""
+msgstr "Venter på betaling"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
@@ -794,7 +795,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">1 Payment</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> 1 Betaling</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -809,7 +810,7 @@ msgstr "<span class=\"o_stat_text\">Fakturert</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Journal poster</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1763,6 +1764,11 @@ msgstr ""
 msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
+msgstr ""
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
 msgstr ""
 
 #. module: account
@@ -3206,7 +3212,6 @@ msgid "Billing"
 msgstr "Fakturering"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr ""
 
@@ -3257,6 +3262,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Blokkeringsmelding"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3584,6 +3594,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Kontantkasser"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_48
+msgid "Cash Restaurant"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -6689,6 +6704,13 @@ msgstr "Formel"
 msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
+"expression), in case it is different from the parent line."
+msgstr ""
+
+#. module: account
+msgid ""
+"Formula in the form line_code.expression_label. This allows setting the "
+"target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line. 'custom' is also "
 "allowed as value in case the carryover destination requires more complex "
 "logic."
@@ -7691,6 +7713,11 @@ msgstr ""
 #, python-format
 msgid "Invalid fiscal year last day"
 msgstr ""
+
+#. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Lagerbeholdingverdi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -9372,6 +9399,13 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
 #: model:account.report.column,name:account.generic_tax_report_column_net
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_net
@@ -9416,6 +9450,16 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Neste kalender aktivitet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -11201,6 +11245,7 @@ msgstr "QIF-import"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
+#: model:ir.model.fields,field_description:account.field_account_payment_register__qr_code
 msgid "QR Code URL"
 msgstr ""
 
@@ -11250,8 +11295,27 @@ msgid "RD Expenses"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Vurderinger"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
+msgstr ""
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
 msgstr ""
 
 #. module: account
@@ -12524,7 +12588,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr ""
 
@@ -12559,7 +12622,6 @@ msgid "Show Force Tax Included"
 msgstr ""
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr ""
 
@@ -13224,7 +13286,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Eks.mva"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15710,6 +15772,15 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"When targeting an expression for carryover, the label of that expression "
+"must start with _applied_carryover_"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -16412,6 +16483,15 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"You cannot use the field carryover_target in an expression that does not "
+"have the label starting with _carryover_"
 msgstr ""
 
 #. module: account

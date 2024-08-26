@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -223,6 +223,7 @@ msgstr ""
 "fiscală."
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -271,6 +272,15 @@ msgstr "Vies Vat To Check"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 cifre] și trebuie să respecte suma de control a algoritmului "
+"Luhn"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
 msgstr "fie 11 cifre pentru CPF, fie 14 cifre pentru CNPJ"
 
@@ -287,12 +297,3 @@ msgstr "poziție fiscală [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "partener [%s]"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
-msgstr ""
-"XXXXXXXXX [9 cifre] și trebuie să respecte suma de control a algoritmului "
-"Luhn"

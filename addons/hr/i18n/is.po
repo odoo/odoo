@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
@@ -293,7 +293,7 @@ msgstr "Aðgerða þörf"
 #: model:ir.model.fields,field_description:hr.field_hr_job__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
-msgstr ""
+msgstr "Virk"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
@@ -458,7 +458,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
-msgstr ""
+msgstr "Vistuð"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -704,7 +704,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
 msgid "Code"
-msgstr ""
+msgstr "Kóði"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -719,7 +719,7 @@ msgstr "Litur"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
 msgid "Color Index"
-msgstr ""
+msgstr "Litavísitala"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_company
@@ -762,7 +762,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "Fullt nafn"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
@@ -827,7 +827,7 @@ msgstr "Land"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Landskóði"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
@@ -918,7 +918,7 @@ msgstr "Búið til þann"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Gjaldmiðill"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -964,6 +964,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -976,6 +978,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr ""
 
@@ -998,7 +1001,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr ""
+msgstr "Deildir"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1884,7 +1887,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -2196,7 +2199,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Aðgerð ekki studd"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
@@ -2339,7 +2342,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
 msgid "Plan"
-msgstr ""
+msgstr "Plan"
 
 #. module: hr
 #. odoo-python
@@ -2555,7 +2558,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
 msgid "Reason"
-msgstr ""
+msgstr "Ástæða"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
@@ -2623,7 +2626,7 @@ msgstr ""
 #. module: hr
 #: model:hr.department,name:hr.dep_rd
 msgid "Research & Development"
-msgstr ""
+msgstr "Rannsóknir og þróun"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
@@ -2775,6 +2778,13 @@ msgid "Software Developer"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2806,7 +2816,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
-msgstr ""
+msgstr "Fylki"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2913,6 +2923,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO landskóði í tveimur stöfum. \n"
+"Þú getur notað þennan reit fyrir skjóta leit."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
@@ -3123,7 +3135,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
 #: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
-msgstr ""
+msgstr "Notandi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -3432,7 +3444,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "t.d. John Doe"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form

@@ -18,14 +18,15 @@
 # Martin Trigaux, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Duma <domantasdoom@gmail.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Duma <domantasdoom@gmail.com>, 2024\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "<span>Days</span>"
-msgstr ""
+msgstr "<span>Dienos</span>"
 
 #. module: hr_contract
 #. odoo-python
@@ -299,7 +300,7 @@ msgstr "Sutarties pabaigos data"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr ""
+msgstr "Sutarties galiojimo pabaigos įspėjimo laikotarpis"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
@@ -836,6 +837,11 @@ msgid "Reference Working Time"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "Ištekliaus darbo laikas"
@@ -1041,6 +1047,7 @@ msgid "Working Schedule"
 msgstr "Darbo grafikas"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_employee.py:0
 #, python-format
 msgid "You cannot delete an employee with a running contract."

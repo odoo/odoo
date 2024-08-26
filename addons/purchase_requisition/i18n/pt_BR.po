@@ -3,15 +3,15 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Wil Odoo, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Wil Odoo, 2024
 # Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -20,6 +20,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "$50"
+msgstr "R$ 50,00"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -133,6 +138,7 @@ msgstr "Ícone do tipo de atividade"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Agreement"
 msgstr "Acordo"
 
@@ -152,6 +158,16 @@ msgstr "Tipo de seleção do acordo"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
 msgstr "Tipo de acordo"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Agreement00004"
+msgstr "Agreement00004"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Agreement:"
+msgstr "Acordo:"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
@@ -405,11 +421,6 @@ msgstr "Data de entrega"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__description
 msgid "Description"
 msgstr "Descrição"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "Description Demo"
-msgstr "Descrição (demo)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
@@ -705,8 +716,8 @@ msgstr "Data do pedido"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "Origin Demo"
-msgstr "Origem (demo)"
+msgid "Origin"
+msgstr "Origem"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
@@ -719,14 +730,14 @@ msgid "Other potential purchase orders for purchasing products"
 msgstr "Outros pedidos de compra em potencial para comprar produtos"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "PO000042"
+msgstr "PO000042"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
 msgid "POs to Confirm"
 msgstr "PCs a confirmar"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "Price"
-msgstr "Preço"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -749,6 +760,11 @@ msgstr "Unidade de medida do produto"
 #: model:ir.model,name:purchase_requisition.model_product_product
 msgid "Product Variant"
 msgstr "Variante do produto"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Product description"
+msgstr "Descrição do produto"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -861,16 +877,6 @@ msgstr "Avaliações"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Reference"
 msgstr "Referência"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "Reference Demo"
-msgstr "Referência (demo)"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "Reference:"
-msgstr "Referência:"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -1111,11 +1117,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "Type Demo"
-msgstr "Tipo (demo)"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Tipo de atividade de exceção registrada."
@@ -1144,21 +1145,6 @@ msgstr "Usar linhas do acordo"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
 msgstr "Usar quantidades do acordo"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "VAT"
-msgstr "Imposto"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "VAT123"
-msgstr "VAT123"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
-msgid "VAT_DEMO"
-msgstr "VAT_DEMO"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

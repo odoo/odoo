@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -100,7 +100,7 @@ msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "کشور"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -283,19 +283,9 @@ msgid "Add extra content to display in the email"
 msgstr "افزودن محتوای اضافی برای نمایش در ایمیل"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "اضافه شده در"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -334,6 +324,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"تغییر شماره مالیات بر ارزش افزوده (VAT) پس از صدور مستندات برای حساب شما "
+"مجاز نیست. لطفاً برای انجام این عملیات مستقیماً با ما تماس بگیرید"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -341,6 +333,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"تغییر نام شرکت پس از صدور مستندات برای حساب شما مجاز نیست. لطفاً برای انجام "
+"این عملیات مستقیماً با ما تماس بگیرید."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -724,6 +718,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -827,11 +828,6 @@ msgstr "گذرواژه جدید:"
 #, python-format
 msgid "Next"
 msgstr "بعدی"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -1020,6 +1016,7 @@ msgstr "امنیت"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "کنترل امنیتی"
@@ -1482,6 +1479,13 @@ msgstr "اودو"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "گذرواژه"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript

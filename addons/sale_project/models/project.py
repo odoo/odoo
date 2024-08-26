@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 from collections import defaultdict
-from datetime import date
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
@@ -166,7 +165,12 @@ class Project(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             'name': _("%(name)s's Sales Orders", name=self.name),
-            "context": {"create": self.env.context.get('create_for_project_id', False), "show_sale": True},
+            "context": {
+                "create": self.env.context.get('create_for_project_id', False),
+                "show_sale": True,
+                "default_partner_id": self.partner_id.id,
+                "default_analytic_account_id": self.analytic_account_id.id,
+            },
         }
         if len(all_sale_orders) <= 1:
             action_window.update({
@@ -207,6 +211,11 @@ class Project(models.Model):
         if section_name in ['other_invoice_revenues', 'downpayments']:
             action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
             action['domain'] = domain if domain else []
+            action['context'] = {
+                **ast.literal_eval(action['context']),
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
+            }
             if res_id:
                 action['views'] = [(False, 'form')]
                 action['view_mode'] = 'form'
@@ -256,7 +265,9 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'out_invoice',
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
             }
         }
         if len(invoice_ids) == 1:
@@ -683,6 +694,9 @@ class Project(models.Model):
                 'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
+                'additional_context': json.dumps({
+                    'create_for_project_id': self.id,
+                }),
                 'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
@@ -769,7 +783,8 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', vendor_bill_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'in_invoice',
+                'project_id': self.id,
             }
         }
         if len(vendor_bill_ids) == 1:
@@ -829,16 +844,20 @@ class ProjectTask(models.Model):
             if not task.allow_billable:
                 task.sale_order_id = False
                 continue
-            sale_order_id = task.sale_order_id or self.env["sale.order"]
-            if task.sale_line_id:
-                sale_order_id = task.sale_line_id.sudo().order_id
-            elif task.project_id.sale_order_id:
-                sale_order_id = task.project_id.sale_order_id
-            if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
-                sale_order_id = False
-            if sale_order_id and not task.partner_id:
-                task.partner_id = sale_order_id.partner_id
-            task.sale_order_id = sale_order_id
+            sale_order = (
+                task.sale_line_id.order_id
+                or task.project_id.sale_order_id
+                or task.sale_order_id
+            )
+            so_partners = (
+                sale_order.partner_id
+                | sale_order.partner_invoice_id
+                | sale_order.partner_shipping_id
+            )
+            if task.partner_id.commercial_partner_id in so_partners.commercial_partner_id:
+                task.sale_order_id = sale_order
+            else:
+                task.sale_order_id = False
 
     @api.depends('allow_billable')
     def _compute_partner_id(self):

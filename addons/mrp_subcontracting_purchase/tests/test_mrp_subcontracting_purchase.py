@@ -870,3 +870,35 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(stock_quants.filtered(lambda q: q.location_id == final_loc).quantity, 2.0)
         self.assertEqual(stock_quants.filtered(lambda q: q.location_id == subcontract_loc).quantity, 0.0)
         self.assertEqual(stock_quants.filtered(lambda q: q.location_id == production_loc).quantity, -2.0)
+
+    def test_return_subcontracted_product_to_supplier_location(self):
+        """
+        Test that we can return subcontracted product to the supplier location.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_qty': 2.0,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 10.0,
+            })],
+        })
+
+        po.button_confirm()
+        self.assertEqual(len(po.picking_ids), 1)
+        picking = po.picking_ids
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        # create a return to the vendor location
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking'))
+        wizard = return_form.save()
+        wizard.product_return_moves.quantity = 2.0
+        wizard.location_id = supplier_location
+        return_picking_id, _pick_type_id = wizard._create_returns()
+
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')

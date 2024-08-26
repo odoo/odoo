@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -75,6 +75,15 @@ msgstr "% Laimingas"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
 msgid "% of Happiness"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/discuss_channel.py:0
+#, python-format
+msgid ""
+"%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
+"response in your message."
 msgstr ""
 
 #. module: im_livechat
@@ -1832,13 +1841,6 @@ msgid "Treated sessions"
 msgstr "Apdorotos sesijos"
 
 #. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/discuss_channel.py:0
-#, python-format
-msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
 msgstr "URL Regex"
@@ -1899,8 +1901,8 @@ msgid "User's raw answer"
 msgstr ""
 
 #. module: im_livechat
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
@@ -1970,6 +1972,11 @@ msgstr "Valdiklis"
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
 msgstr ""
 
 #. module: im_livechat

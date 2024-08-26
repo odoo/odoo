@@ -6,22 +6,27 @@
 # Wil Odoo, 2023
 # Lucia Pacheco, 2024
 # Martin Trigaux, 2024
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_419\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "#{year}"
+msgstr "#{year}"
 
 #. module: website_blog
 #. odoo-python
@@ -371,6 +376,7 @@ msgid "All"
 msgstr "Todos"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "All Blogs"
 msgstr "Todos los blogs"
@@ -678,6 +684,7 @@ msgstr "Título del blog"
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
 msgstr "Blogs"
@@ -780,6 +787,7 @@ msgstr ""
 " su primera publicación de blog."
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Close"
 msgstr "Cerrar"
@@ -1098,10 +1106,10 @@ msgid ""
 "homework like this, you will find just the right telescope for this next big"
 " step in the evolution of your passion for astronomy."
 msgstr ""
-"¿Qué tan complejo es un telescopio? ¿Tendrá problemas de mantenimiento? "
-"Relaciónese con expertos para obtener respuestas a estas y otras preguntas. "
-"Si lo hace así, encontrará el telescopio adecuado para dar el siguiente paso"
-" en la evolución de su pasión por la astronomía."
+"¿Qué tan complejo es un telescopio? ¿El mantenimiento será complicado? "
+"Conozca a expertos para obtener respuestas a estas y otras preguntas. Si "
+"habla con las personas adecuadas, podrá encontrar el telescopio adecuado "
+"para dar el siguiente paso en la evolución de su pasión por la astronomía."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -1145,11 +1153,11 @@ msgid ""
 "surroundings. There should be distance charts to the airport offered as well"
 " as some form of interactive map."
 msgstr ""
-"Si lo que le importa es que su hotel esté, por ejemplo, en la playa, cerca "
-"de un parque temático o cerca del aeropuerto, entonces la ubicación es "
-"primordial. Cualquier directorio decente debería ofrecer un mapa de "
-"ubicación del hotel y sus alrededores. Debería haber información sobre la "
-"distancia al aeropuerto, así como algún tipo de mapa interactivo."
+"Si está buscando un hotel que esté específicamente en una playa, cerca de un"
+" parque temático o del aeropuerto, entonces lo esencial para usted es la "
+"ubicación. Cualquier buen directorio debería ofrecer un mapa de ubicación "
+"del hotel y sus alrededores, la información sobre la distancia al "
+"aeropuerto, o algún tipo de mapa interactivo."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -1157,8 +1165,8 @@ msgid ""
 "If the night is clear, you can see amazing detail of the lunar surface just star gazing on in your back yard.\n"
 "Naturally, as you grow in your love of astronomy, you will find many celestial bodies fascinating. But the moon may always be our first love because is the one far away space object that has the unique distinction of flying close to the earth and upon which man has walked."
 msgstr ""
-"Si la noche está despejada, puede ver detalles asombrosos de la superficie lunar con solo mirar las estrellas desde su patio trasero.\n"
-"Evidentemente, a medida que crezca su amor por la astronomía, encontrará muchos cuerpos celestes fascinantes, aunque la Luna siempre será nuestro primer amor porque es el único objeto espacial lejano que tiene la distinción única de girar cerca de la Tierra sobre la cual ha caminado el hombre."
+"Si el cielo nocturno está despejado, solo necesita voltear a las estrellas para ver los asombrosos de la superficie lunar desde su patio trasero.\n"
+"Evidentemente, a medida que crezca su amor por la astronomía, encontrará más cuerpos celestes fascinantes, aunque la Luna siempre será nuestro primer amor porque es el único objeto espacial que gira en torno a la tierra y sobre el cual un humano ha caminado."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_card
@@ -1233,8 +1241,8 @@ msgid ""
 "the enormity of the universe that we see in the night sky."
 msgstr ""
 "Se puede decir que en algún momento de nuestras vidas, todos y cada uno de "
-"nosotros tenemos ese momento en el que nos quedamos atónitos al encontrarnos"
-" cara a cara con la enormidad del universo que vemos en el cielo nocturno."
+"nosotros pasamos por un momento en el que nos quedamos atónitos al "
+"comprender la inmensidad del universo que vemos en el cielo nocturno."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -1247,12 +1255,12 @@ msgid ""
 "exact same sky that our ancestors hundreds and thousands of years ago "
 "enjoyed when they just looked up."
 msgstr ""
-"Es realmente sorprendente cuando se piensa que, con solo mirar hacia arriba "
-"en una noche cualquiera, se pueden ver posiblemente cientos de miles de "
-"estrellas, sistemas estelares, planetas, lunas, asteroides, cometas e "
-"incluso un ocasional transbordador espacial. Es aún más impresionante cuando"
-" uno se da cuenta de que el cielo que está mirando es prácticamente el mismo"
-" cielo que disfrutaban nuestros antepasados hace cientos y miles de años."
+"Es increíble pensar que cualquier noche puede mirar al cielo y se encontrará"
+" con millares de estrellas, sistemas estelares, planetas, lunas, asteroides,"
+" cometas, o incluso algún transbordador espacial que esté navegando la "
+"noche. Darse cuenta que el cielo que estamos viendo es prácticamente el "
+"mismo cielo que vieron nuestros ancestros hace cientos de miles de años "
+"también le puede robar el aliento a cualquiera."
 
 #. module: website_blog
 #. odoo-python
@@ -1264,7 +1272,7 @@ msgstr "Jungla"
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
 msgid "Know what you are looking at"
-msgstr "Sepa lo que está mirando"
+msgstr "Sepa qué está viendo"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -1303,12 +1311,12 @@ msgstr "Última actualización el"
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Latest"
-msgstr "Último"
+msgstr "Más reciente"
 
 #. module: website_blog
 #: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
-msgstr "Últimas publicaciones en el blog"
+msgstr "Publicaciones de blog más recientes"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -1351,10 +1359,11 @@ msgid ""
 "whether or not they are smart or informal. A good hotel report should tell "
 "you this, and particularly about breakfast facilities."
 msgstr ""
-"El estilo local es estupendo, pero los restaurantes y bares del hotel pueden"
-" contribuir en gran medida a su estancia. Debe tener en cuenta la elección, "
-"el estilo y si son elegantes o informales. Un buen reporte del hotel debería"
-" indicar esto, en especial sobre la oferta de desayunos."
+"El estilo local es estupendo, pero los restaurantes y bares del hotel mismo "
+"pueden ser de igual importancia para su estancia. Debe tener en cuenta las "
+"diferentes opciones disponibles, el estilo y si son elegantes o informales. "
+"Un buen reporte del hotel debería incluir esta información, sobre todo qué "
+"ofrecen para desayunar."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1378,9 +1387,10 @@ msgid ""
 "perspective and have a fun adventure. If you have never been on a helicopter"
 " before, this is a great place to do it."
 msgstr ""
-"Los recorridos en helicóptero en Maui son una forma estupenda de ver la isla"
-" desde una perspectiva diferente y de vivir una aventura divertida. Si nunca"
-" se ha subido a un helicóptero, este es un gran lugar para hacerlo."
+"Los recorridos en helicóptero en Maui son la mejor manera de ver la isla "
+"desde una perspectiva nueva mientras vive una divertida aventura. Si nunca "
+"se ha subido a un helicóptero, este es el mejor momento para hacerlo por "
+"primera vez."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1393,13 +1403,14 @@ msgid ""
 "to capture the moments will also allow you to relive the tour again and "
 "again as you reminisce throughout the years."
 msgstr ""
-"Los recorridos en helicóptero por Maui son una excelente manera de conocer "
-"aquellos lugares a los que no puede llegar a pie o en coche. Duran "
-"aproximadamente una hora y su precio varía entre ciento ochenta y cinco "
-"dólares y doscientos cuarenta dólares por persona. Para muchos, esta es una "
-"oportunidad única en la vida de ver un paisaje natural que no volverá a "
-"estar disponible. Si lleva cámara de fotos y videos para capturar los "
-"momentos, podrá revivir el recorrido una y otra vez a lo largo de los años."
+"Recorrer Maui en helicóptero es la mejor manera de conocer aquellos lugares "
+"a los que no puede llegar caminando o en coche. Los recorridos en "
+"helicóptero duran aproximadamente una hora y su precio varía entre ciento "
+"ochenta y cinco dólares y doscientos cuarenta dólares por persona. Para "
+"muchos, esta es una oportunidad única en la vida de ver un paisaje natural, "
+"una oportunidad que no podrán repetir. Si lleva cámara de fotos y videos "
+"para capturar estos momentos, podrá volver a vivir este recorrido las veces "
+"que quiera a lo largo de los años."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1459,8 +1470,8 @@ msgid ""
 "Molokai Maui helicopter tours will take you to a different island but one that is only nine miles away and easily accessible by air. This island has a very small population with a different culture and scenery. The entire coast of the northeast is lined with cliffs and remote beaches. They are completely inaccessible by any other means of transportation than air.\n"
 "People who live on the island have never even seen this remarkable scenery unless they have taken Maui helicopter tours to view it. When the weather has been rainy and there is a lot of rainfall for he season you will see many astounding waterfalls."
 msgstr ""
-"Los recorridos en helicóptero por Molokai Maui le llevarán otra isla que está a solo 14 kilómetros de distancia con fácil acceso por aire. Esta isla tiene una población muy pequeña con una cultura y un paisaje diferentes. Toda la costa del noreste está rodeada por acantilados y playas remotas. Solo se puede acceder por vía aérea.\n"
-"Las personas que viven en la isla nunca han visto este extraordinario paisaje a no ser que hayan hecho un recorrido en helicóptero para verlo. En las épocas de lluvia, cuando hay una gran cantidad de precipitaciones, se pueden ver muchas cascadas asombrosas."
+"Con los recorridos en helicóptero por Molokai Maui podrá conocer otra isla que está a solo 14 kilómetros de distancia con fácil acceso aéreo. Esta isla tiene una población muy pequeña con una cultura y un paisaje diferentes. Toda la costa del noreste está rodeada por acantilados y playas remotas a las que solo se puede llegar por vía aérea.\n"
+"Incluso las personas que viven en la isla solo pueden ver este hermoso paisaje con un recorrido por helicóptero. En las épocas de lluvia, cuando hay una gran cantidad de precipitaciones, se pueden ver muchas cascadas asombrosas."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1472,11 +1483,12 @@ msgid ""
 "children this is of course very relevant too – perhaps a hotel that is not "
 "child friendly would be something more appropriate!"
 msgstr ""
-"Lo más importante al viajar en familia es averiguar si el hotel es apto para"
-" niños y tomar la decisión correspondiente. Una cosa que vale la pena buscar"
-" es si el hotel ofrece un servicio de guardería. Si viaja por negocios y "
-"desea evitar a los niños, esto también es muy importante; quizá prefiera un "
-"hotel que sea solo para adultos."
+"Las personas que viajan por negocios no buscan lo mismo que las personas que"
+" viajan en familia, por ejemplo, para un viaje familiar es importante "
+"investigar si el hotel del directorio es apto para niños antes de tomar la "
+"decisión. Algo importante es saber si el hotel cuenta con servicio de "
+"guardería. Esta información también es importante para alguien que viaja por"
+" negocios, pues quizá prefiera un hotel que no sea apto para niños."
 
 #. module: website_blog
 #: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
@@ -1548,12 +1560,12 @@ msgid ""
 "these guidelines, you will enjoy hours of enjoyment stargazing at the "
 "phenomenal sights in the night sky that are beyond the naked eye."
 msgstr ""
-"Nada de esto le impide continuar con sus planes de instalar un impresionante"
-" sistema de telescopios. Solo debe asegurarse de recibir consejos y "
-"capacitación de calidad sobre cómo instalar un telescopio que se ajuste a "
-"sus necesidades. Si sigue estas recomendaciones, podrá disfrutar varias "
-"horas admirando las extraordinarias vistas del cielo nocturno que no son tan"
-" fáciles de ver."
+"Nada de esto debería frustrar sus planes de crear un increíble sistema de "
+"telescopios. Solo asegúrese de seguir solo los mejores consejos al "
+"configurar su telescopio para cumplir con sus necesidades. Con estas "
+"recomendaciones, podrá disfrutar de las estrellas por horas y descubrir las "
+"maravillas del cielo nocturno más allá de lo que podrá ver solo con sus "
+"ojos."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -1567,11 +1579,10 @@ msgid ""
 "but if you learn when the big meteor showers and other big astronomy events "
 "will happen will make the excitement of astronomy come alive for you."
 msgstr ""
-"Informarse acerca de las condiciones meteorológicas no solo hará que la "
-"observación de las estrellas resulte gratificante, sino que también sabrá "
-"cuándo se producirán las lluvias de estrellas y otros acontecimientos "
-"astronómicos importantes, con lo que se sentirá más atraído por la "
-"astronomía."
+"Mantenerse informado sobre las condiciones meteorológicas le ayudará a "
+"mejorar su experiencia al observar el cielo nocturno, pero si además "
+"investiga cuándo serán las lluvias de estrellas y otros eventos astronómicos"
+" importantes su amor por la astronomía solo crecerá más. "
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_needaction_counter
@@ -1607,12 +1618,12 @@ msgid ""
 "geometrically. For many amateur astronomers, we sometimes cannot get enough "
 "of what we can see on this our closest space object."
 msgstr ""
-"Por supuesto, si desea intensificar su interés por la Luna, considere "
-"mejorar su telescopio para principiantes, con el cual podrá ver la "
-"superficie lunar con el mayor detalle posible. Con cada una de estas "
-"mejoras, su conocimiento y su capacidad de observación aumentarán "
-"considerablemente. Muchos astrónomos principiantes no nos cansamos de ver "
-"nuestro objeto espacial más cercano."
+"Si lo que desea es admirar la Luna con mayor detalle, debe mejorar su equipo"
+" a un buen telescopio para principiantes, con el que podrá observar la "
+"hermosa superficie lunar. Con cada mejora que haga no solo podrá aumentar su"
+" conocimiento, sino que también podrá ver cada vez más cosas. Los "
+"aficionados de la astronomía como nosotros jamás nos cansaremos de descubrir"
+" más del objeto celeste más cercano a nosotros."
 
 #. module: website_blog
 #. odoo-python
@@ -1937,9 +1948,9 @@ msgid ""
 "The area is a favorite destination among those seeking an adventurous "
 "vacation."
 msgstr ""
-"La Sierra Tarahumara, conocida popularmente como Barrancas del Cobre, está "
-"ubicada en México. La zona es uno de los destinos favoritos entre quienes "
-"buscan unas vacaciones llenas de aventura."
+"La Sierra Tarahumara, conocida comúnmente como Barrancas del Cobre, está "
+"ubicada en México. La zona es uno de los destinos favoritos para personas "
+"que buscan unas vacaciones repletas de aventura."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
@@ -1962,11 +1973,11 @@ msgid ""
 "“Telescope 101″ concepts to increase your chances that you will buy the "
 "right thing."
 msgstr ""
-"Por ello, es muy importante que adquiera el telescopio adecuado para el "
-"lugar en el que se encuentra y para sus preferencias de observación de las "
-"estrellas. Para empezar, vamos a hablar de los tres tipos principales de "
-"telescopios, luego estableceremos algunos conceptos básicos sobre los "
-"telescopios para aumentar las posibilidades de comprar el producto adecuado."
+"Es de suma importancia que seleccione el telescopio adecuado para el lugar "
+"donde se encuentra y para lo que quiere ver al observar el cielo nocturno. "
+"Primero hablaremos de los tres tipos principales de telescopios y luego "
+"estableceremos algunos conceptos básicos sobre los telescopios para "
+"asegurarnos de que adquirirá el producto perfecto."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -1979,12 +1990,12 @@ msgid ""
 "remember that exact moment when you could say little else but “wow” at what "
 "you saw."
 msgstr ""
-"Puede ser que durante unas vacaciones en un campamento o en la casa de un "
-"pariente en el campo, nos encontremos en el exterior y el cielo nocturno "
-"decida ofrecer un espectáculo. Si ha tenido ese tipo de momento en el que se"
-" ha quedado literalmente sin aliento por el espectáculo que el cielo "
-"nocturno puede mostrarnos, quizá pueda recordar ese momento exacto en el que"
-" no pudo decir nada más que \"wow\" ante lo que vio."
+"El cielo nocturno puede elegir cualquier momento para mostrarnos un hermoso "
+"espectáculo, no importa si está de vacaciones en el campo o de visita en "
+"casa de un pariente. Si ha podido ser testigo de uno de estos maravillosos "
+"momentos en los que la noche le ha quitado el aliento, entonces seguramente "
+"jamás olvidará esos minutos en los que solo pudo decir \"wow\" ante la "
+"maravilla de lo que estaba viendo."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -1996,12 +2007,12 @@ msgid ""
 "up front and get exposure to the different kinds. So before you make your "
 "first purchase…"
 msgstr ""
-"Por lo tanto, para seleccionar el tipo de telescopio adecuado, es importante"
-" tener en cuenta los objetivos de su uso. Para comprender realmente los "
-"puntos fuertes y débiles, no solo de las lentes y el diseño, sino también "
-"del rendimiento del telescopio en diversas situaciones de observación de las"
-" estrellas, lo mejor es investigar por adelantado y conocer los diferentes "
-"tipos. Así que antes de hacer su primera compra..."
+"Por lo tanto, para seleccionar el tipo de telescopio adecuado es importante "
+"tener en cuenta para qué quiere usarlo. Debe comprender realmente los puntos"
+" fuertes y débiles, no solo de las lentes y el diseño, sino también del "
+"rendimiento del telescopio en diversas situaciones de observación de las "
+"estrellas, por lo que debe investigar por adelantado y conocer los "
+"diferentes tipos de telescopios. Así que antes de hacer su primera compra..."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -2139,7 +2150,7 @@ msgstr ""
 "Hace diez años, probablemente habría acudido a su agencia de viajes local y "
 "habría confiado en los consejos personales de los llamados \"expertos\". En "
 "el siglo XXI, la forma de elegir y reservar un hotel es, por supuesto, por "
-"Internet, a través de los sitios web de viajes."
+"internet, a través de los sitios web de viajes."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -2153,16 +2164,16 @@ msgid ""
 "begin looking for ways to look deeper and learn more about the spectacular "
 "universe we see in the millions of stars above us each night."
 msgstr ""
-"Ese momento “Wow” es de lo que trata la astronomía, ese instante de asombro "
-"se convierte en una pasión que lleva a una carrera estudiando las estrellas."
-" Para unos pocos afortunados, ese momento se convierte en una obsesión que "
-"los lleva a viajar a las estrellas en un transbordador espacial o en una de "
-"las primeras misiones espaciales. Pero para la mayoría de nosotros la "
-"astronomía puede convertirse en un pasatiempo o actividad habitual. Sin "
-"embargo, el asombro nos acompaña durante el resto de nuestras vidas y así "
-"empezamos a buscar formas de profundizar y aprender más sobre el "
-"espectacular universo que vemos en los millones de estrellas que hay sobre "
-"nosotros cada noche."
+"Eso es de lo que se trata la astronomía, de ese instante de asombro en el "
+"que esto se convierte en una pasión que, para algunos, culminará en una vida"
+" estudiando las estrellas. Para unos pocos afortunados, ese momento se "
+"convierte en una obsesión que los lleva a viajar al espacio en un "
+"transbordador espacial o en una de las primeras misiones espaciales. Pero "
+"para la mayoría de nosotros la astronomía puede convertirse en un pasatiempo"
+" o una actividad habitual. Sin embargo, el asombro nos acompaña durante el "
+"resto de nuestras vidas y es lo que nos impulsa a buscar formas de "
+"profundizar y aprender más sobre el espectacular universo que vemos en los "
+"millones de estrellas que hay sobre nosotros cada noche."
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_5
@@ -2180,13 +2191,14 @@ msgid ""
 "part of the moon with some detail as well, even if the moon is only at "
 "quarter or half display."
 msgstr ""
-"El mejor momento para ver la luna, obviamente, es por la noche, cuando hay "
-"pocas nubes y el clima es propicio para un estudio largo y duradero. El "
-"primer trimestre es el que permite un estudio más detallado. Y no se deje "
-"engañar por el oscurecimiento de una parte de la luna cuando no está en fase"
-" de luna llena. El fenómeno conocido como \"luz cenicienta\" le permite ver "
-"la parte oscura de la luna con cierto detalle, incluso si la luna se "
-"encuentra en cuarto menguante o cuarto creciente."
+"El mejor momento para ver la Luna, obviamente, es por la noche, cuando hay "
+"pocas nubes y el clima es perfecto para estudiarla por un largo rato. "
+"Durante el primer trimestre del año podrá estudiar la Luna con el mejor "
+"detalle. No se deje engañar por el oscurecimiento de una parte de la Luna "
+"cuando no está en fase de luna llena. Hay un fenómeno en el que la Tierra "
+"ilumina la parte oscura de la Luna, este fenómeno le permite ver la luna con"
+" cierto detalle, incluso si la Luna se encuentra en cuarto menguante o "
+"cuarto creciente."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2199,8 +2211,8 @@ msgid ""
 "The blog post will be visible for your visitors as of this date on the "
 "website if it is set as published."
 msgstr ""
-"Sus visitantes podrán ver la entrada del blog en el sitio web cuando la "
-"establezca como publicada."
+"Sus visitantes podrán ver la publicación del blog en el sitio web cuando la "
+"haya publicado."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -2232,10 +2244,10 @@ msgid ""
 msgstr ""
 "Lo siguiente que queremos conseguir es un buen telescopio. Es posible que ya"
 " haya visto a algún aficionado que haya avanzado mucho en su estudio y que "
-"haya instalado esos telescopios tan bonitos en alguna colina. Eso despierta "
-"el interés de un astrónomo aficionado porque ese debe ser el siguiente paso "
-"lógico para el desarrollo de su afición. Sin embargo, el proceso de compra "
-"de un buen telescopio puede ser muy confuso e intimidante."
+"ya tenga instalado un hermoso telescopio en alguna colina. Esta imagen "
+"despierta el interés de todo aficionado, pues parece ser el siguiente paso "
+"lógico para evolucionar nuestra pasión por la astronomía. Sin embargo, "
+"comprar un buen telescopio puede ser un proceso muy confuso e intimidante."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -2247,8 +2259,8 @@ msgid ""
 "accessibility policy. Whilst again this does not apply to every visitor, it "
 "is absolutely vital to some."
 msgstr ""
-"El sitio debe ofrecer un análisis detallado de los servicios recreativos "
-"dentro del hotel (spa, alberca, gimnasio, sauna), así como detalles de "
+"El sitio debe ofrecer un análisis detallado de los servicios recreativos que"
+" el hotel ofrece (spa, alberca, gimnasio, sauna), así como detalles de "
 "cualquier otra instalación cercana, como los campos de golf. 7. Necesidades "
 "especiales: el sitio web del directorio de hoteles debería informar al "
 "visitante sobre los servicios para necesidades especiales y la política de "
@@ -2263,8 +2275,8 @@ msgid ""
 "many remote locations."
 msgstr ""
 "Las decisiones sobre el tripié y otros accesorios cambiarán dependiendo si "
-"es un telescopio que permanecerá en su terraza o uno que planeé llevar a "
-"muchos lugares alejados."
+"es un telescopio que permanecerá en su terraza o uno que quiera llevar a "
+"muchos lugares."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -2278,14 +2290,13 @@ msgid ""
 "the island and it is something that is not easily accessible by any other "
 "means than by air."
 msgstr ""
-"La vista es realmente impresionante y es un espectáculo que no debe "
-"perderse. También es muy educativo, ya que permite ver de cerca un volcán "
-"inactivo, algo que no se puede ver todos los días. Sin embargo, en los lados"
-" norte y sur del volcán, podrá ver un panorama totalmente diferente. Estos "
-"lados son frondosos y verdes y podrá ver algunas hermosas cascadas y "
-"magníficos matorrales. Los bosques tropicales abundan en este lado de la "
-"isla y se trata de algo que no está al alcance de cualquier otro medio que "
-"no sea el aéreo."
+"La vista es realmente impresionante y es un espectáculo que no se puede "
+"perder. También es muy educativo puesto que podrá ver de cerca un volcán "
+"inactivo, algo que no sucede todos los días. Sin embargo, en los lados norte"
+" y sur del volcán, tendrá una vista totalmente diferente. Estos lados son "
+"frondosos y verdes y podrá ver algunas hermosas cascadas y preciosos "
+"matorrales. Los bosques tropicales abundan en este lado de la isla y es algo"
+" que solo podrá presenciar volando."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -2301,24 +2312,25 @@ msgid ""
 "that gives up-to-date, independent, impartial information that really "
 "matters."
 msgstr ""
-"Luego está el problema de la motivación del autor. Cuantas más críticas se "
-"leen, más se nota que tienden a ser extremistas. Por un lado, están los "
-"críticos enfadados con intereses personales y, por otro, los huéspedes "
-"encantados que ofrecen elogios inimaginables. No le sorprenderá saber que "
-"los hoteles a veces publican sus propias reseñas positivas, o que los "
-"competidores se preparan para atacar a la competencia con malas críticas. "
-"Por ello, conviene tener en cuenta lo que es realmente importante para usted"
-" a la hora de elegir un hotel. Entonces, debería escoger un directorio en "
-"línea de hoteles que ofrezca información actualizada, independiente e "
-"imparcial que realmente tenga importancia."
+"También hay que tomar en cuenta qué está motivando al autor de la reseña. "
+"Mientras más reseñas vea, más notará que las opiniones se van a los "
+"extremos. De un lado encontrará personas que tienen ya un problema personal,"
+" mientras que del otro solo verá personas que tirarán laureles en demasía. "
+"También se dará cuenta que algunas veces los propios hoteles publican sus "
+"reseñas perfectas, o que entre competidores no pierden la oportunidad de "
+"volcar malas reseñas en otros hoteles. Debe considerar lo que es importante "
+"para usted al momento de seleccionar un hotel, por lo que debería consultar "
+"un directorio en línea que le brinde información sobre hoteles actualizada, "
+"independiente y completamente imparcial sobre las cosas que verdaderamente "
+"importan."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
 msgid ""
 "There are other considerations to factor into your final purchase decision."
 msgstr ""
-"Hay otras cuestiones que deben tenerse en cuenta a la hora de tomar la "
-"decisión final de compra."
+"Hay otras cuestiones que deben tenerse en cuenta cuando finalmente decida "
+"qué comprará."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -2330,12 +2342,12 @@ msgid ""
 "hundreds of thousands of years ago. That light is just now reaching the "
 "earth. So in a very real way, looking up is like time travel."
 msgstr ""
-"El cosmos tiene algo atemporal. El hecho de que los planetas, la luna y las "
-"estrellas más lejanas estén ahí desde hace mucho tiempo nos hace sentir que "
-"ocupamos un lugar en el universo. De hecho, muchas de las estrellas que "
-"“vemos” a simple vista son, en realidad, luz que salió de esa estrella hace "
-"cientos de miles de años. Esa luz acaba de llegar a la Tierra. Así que, de "
-"una manera muy especial, mirar hacia arriba es como viajar en el tiempo."
+"Los planetas, la Luna y cada una de las estrellas han estado en el vasto "
+"universo por años. Comprender la atemporalidad del cosmos afecta la forma en"
+" la que vemos el lugar que ocupamos en el universo. Incluso algunas de las "
+"estrellas que \"vemos\" con nuestros propios ojos son solo la luz restante "
+"de una estrella que murió hace cientos de años y que apenas está llegando a "
+"la Tierra. En realidad, mirar al cielo es viajar en el tiempo."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -2410,15 +2422,15 @@ msgid ""
 " if you add to that map some well done introductory materials into the hobby"
 " of astronomy, you are well on your way."
 msgstr ""
-"Para empezar a aprender cómo observar las estrellas de mejor manera, hay "
-"algunas cosas básicas que podríamos necesitar para mirar más a fondo, más "
-"allá de lo que podemos ver a simple vista, y empezar a estudiar las "
-"estrellas además de disfrutarlas. Lo primero que se necesita no es un "
-"equipo, sino literatura. Un buen mapa estelar le mostrará las principales "
-"constelaciones, la ubicación de las estrellas principales que se usan para "
-"navegar por el cielo y los planetas que aparecerán más grandes que las "
-"estrellas. Y si a ese mapa le añades unos buenos materiales de introducción,"
-" irá por buen camino."
+"Antes de aprender a observar las estrellas mejor, primero debemos ahondar en"
+" conceptos básicos e ir mucho más allá de lo que observamos a simple vista "
+"para poder empezar a estudiar y disfrutar de las estrellas. Antes de obtener"
+" el equipo tenemos que saber más sobre la teoría. Un buen mapa de las "
+"estrellas le mostrará las constelaciones principales, la ubicación de las "
+"estrellas que se usan para recorrer el cielo nocturno y los planetas, que se"
+" verán más grandes que las estrellas. Si además del mapa usa buenos "
+"materiales de introducción, estará listo para empezar a ser un aficionado de"
+" la astronomía."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2432,14 +2444,14 @@ msgid ""
 "you can affix the binoculars to so you can study the moon in comfort and "
 "with a stable viewing platform."
 msgstr ""
-"Además, contar con un buen par de binoculares puede hacer maravillas a la "
-"hora de ver los detalles de la superficie lunar. Para obtener los mejores "
-"resultados, utilice un campo amplio en la configuración de los binoculares "
-"para que pueda contemplar el paisaje lunar en todo su esplendor. Dado que es"
-" casi imposible mantener los binoculares quietos durante todo el tiempo que "
-"querrá contemplar este magnífico cuerpo en el espacio, quizá quiera añadir a"
-" su equipo un buen tripié en el que pueda fijar los binoculares para poder "
-"estudiar la luna con comodidad y con una plataforma de observación estable."
+"Además, tener buenos binoculares puede ser la diferencia para ver los "
+"detalles en la superficie de la luna. Para obtener los mejores los mejores "
+"resultados, configure los binoculares para que sean de campo amplio para "
+"poder disfrutar de la belleza que es el paisaje lunar. Como es casi "
+"imposible sostener los binoculares completamente quietos por el tiempo "
+"durante el que querrá mirar a este hermoso cuerpo celestial, le recomendamos"
+" agregar un buen tripié a su equipo. Así podrá montar los binoculares y "
+"podrá estudiar la Luna con comodidad y en una plataforma estable."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2454,15 +2466,14 @@ msgid ""
 "carefully synchronized with computers for the best view of the lunar "
 "landscape."
 msgstr ""
-"Para alcanzar el siguiente nivel, puede ser útil asociarse con otros "
-"astrónomos o visitar uno de los grandes telescopios instalados por "
-"profesionales que han invertido en mejores técnicas para eliminar las "
-"interferencias atmosféricas y poder ver la luna aún mejor. Se puede acceder "
-"al Hubble y a muchos de los enormes telescopios que apuntan a la luna todo "
-"el tiempo a través de Internet. Además, muchos grupos de astronomía están "
-"trabajando en formas de combinar varios telescopios, debidamente "
-"sincronizados con las computadoras, con el fin de obtener la mejor vista del"
-" paisaje lunar."
+"Para sacar aún más provecho, le recomendamos conocer a más astrónomos o "
+"visitar alguno de esos increíbles telescopios que los profesionales preparan"
+" y en los que han invertido para contar con mejores técnicas y para eliminar"
+" la interferencia y ver la luna todavía mejor. Con el internet puede acceder"
+" al telescopio Hubble y a muchos otros enormes telescopios que todo el "
+"tiempo apuntan a la luna. Además, muchos clubes de astronomía buscan la "
+"manera de combinar varios telescopios  y sincronizarlos con computadoras "
+"para obtener la mejor vista del panorama lunar."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -2495,7 +2506,7 @@ msgstr "Publicación sin título"
 #, python-format
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
 msgstr ""
-"Use este icono para previsualizar su publicación en el blog desde "
+"Al hacer clic en este icono podrá ver cómo se visualizará su publicación en "
 "<b>dispositivos móviles</b>."
 
 #. module: website_blog
@@ -2595,7 +2606,7 @@ msgstr "Imagen Open Graph del sitio web"
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_5
 msgid "What If They Let You Run The Hubble"
-msgstr "¿Y si le dejan dirigir el Hubble?"
+msgstr "¿Qué pasaría si le dejaran dirigir el Hubble?"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -2606,12 +2617,11 @@ msgid ""
 "you look up. Here are some steps you can take to make the moments you can "
 "devote to your hobby of astronomy much more enjoyable."
 msgstr ""
-"Aunque cualquiera puede mirar hacia arriba y enamorarse de las estrellas en "
-"cualquier momento, lo divertido de la astronomía es aprender a ser cada vez "
-"más hábil y estar más preparado a la hora de contemplar las estrellas para "
-"ver y entender cada vez más. Los siguientes son algunos pasos que puede "
-"seguir para que el tiempo que dedique a la astronomía sea mucho más "
-"agradable."
+"Cualquiera puede mirar al cielo y enamorarse de las estrellas, no importa el"
+" momento. Lo divertido de la astronomía es volverse cada vez más experto y "
+"preparado para observar las estrellas y entenderlas cada vez más. Estos son "
+"algunos pasos que puede seguir para que los momentos que le dedique a la "
+"astronomía sean cada vez más divertidos y fáciles de disfrutar."
 
 #. module: website_blog
 #. odoo-python
@@ -2636,13 +2646,13 @@ msgid ""
 "offerings like a Pillow menu or Bath menu, choice of smoking or non smoking "
 "rooms etc."
 msgstr ""
-"Siempre hay que prever el tipo de instalaciones que necesita en su "
-"habitación y encontrar el hotel que tenga las que considere más importantes."
-" El sitio web del directorio de hoteles debería detallar cuestiones como: el"
-" tamaño de la cama, el acceso a Internet (su precio, si hay conexión Wi-Fi o"
-" de banda ancha por cable), los servicios de cortesía, las vistas desde la "
-"habitación y las ofertas de lujo, el menú de almohadas o el menú de baño, la"
-" elección de habitaciones para fumadores o no fumadores, etc."
+"Debe pensar muy bien en qué tipo de amenidades necesita tener su habitación "
+"y encontrar un hotel que tenga todo lo que usted considera importante. Un "
+"buen sitio web de directorio de hoteles debería hablar a detalle sobre cosas"
+" como el tamaño de la cama, acceso a internet (si cuesta, si es WiFi, "
+"conexión de banda ancha por cable), los servicios de cortesía, las vistas "
+"desde el cuarto y ofertas de lujo, como si tienen un menú de almohadas o "
+"baño, si tienen cuartos para fumadores y no fumadores, entre otras cosas."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -2656,15 +2666,14 @@ msgid ""
 "considerable amount of time, you may want to think about doing multiple Maui"
 " helicopter tours."
 msgstr ""
-"Verá toda la belleza que ofrece Maui y podrá pasar un buen rato con toda la "
-"familia. Los recorridos no son demasiado caros y duran desde cuarenta y "
-"cinco minutos hasta más de una hora. Con los recorridos en helicóptero por "
-"Maui podrá ver lugares que normalmente no son accesibles para el público. Se"
-" pueden ver los lugares a los que no se puede acceder a pie o en vehículo. "
-"Los que se animen a hacer estos recorridos por Maui, podrán disfrutar de "
-"unas vistas impresionantes. Si va a quedarse en la isla durante un tiempo "
-"considerable, quizá quiera considerar la posibilidad de hacer varios "
-"recorridos."
+"Verá toda la belleza que ofrece Maui y pasará un momento ameno con toda su "
+"familia. Los recorridos tienen un buen precio y duran de cuarenta y cinco "
+"minutos a una hora. Podrá ver lugares a los que usualmente no podría acceder"
+" a pie o en automóvil, pero sí lo puede hacer por aire. Aquellos que se "
+"animen a experimentar uno de los recorridos por helicóptero de Maui podrán "
+"ser testigos de vistas que les robarán el aliento. Si se quedará en la isla "
+"por un periodo considerable debería considerar realizar varios recorridos "
+"por helocóptero."
 
 #. module: website_blog
 #: model:blog.tag,name:website_blog.blog_tag_2

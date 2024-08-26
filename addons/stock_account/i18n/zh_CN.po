@@ -5,17 +5,16 @@
 # Translators:
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
-# 湘子 南 <1360857908@qq.com>, 2024
 # Chloe Wang, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -326,7 +325,7 @@ msgstr "当前数量"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Current Value"
-msgstr "当前值"
+msgstr "当前价值"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -610,7 +609,7 @@ msgstr "重新计价的原因"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr "收据 WH"
+msgstr "接收 WH"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -832,7 +831,7 @@ msgstr "凭证处于不一致的状态:它们不属于同一个来源或目标�
 msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
-msgstr "库存估值层的值不能为负。到岸成本可用于纠正特定的转移."
+msgstr "库存计价层的值不能为负。到岸成本可用于纠正特定的调拨."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.inventory_aging_action
@@ -872,7 +871,7 @@ msgstr "总价值"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -960,7 +959,7 @@ msgstr "产品类别的计价方法更改 %s: 从 %s 到 %s."
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
 msgid "Value"
-msgstr "值"
+msgstr "价值"
 
 #. module: stock_account
 #. odoo-javascript
@@ -1049,18 +1048,18 @@ msgstr "您没有在产品类别中定义任何输入计价账户。您必须在
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
-msgstr "您的产品类别上没有定义任何库存输入账户。您必须在处理这个作业之前定义一个。"
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr "您的产品类别未定义任何输出估价账户。您必须在处理此操作前定义一个。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any output valuation account defined on your product "
-"category. You must define one before processing this operation."
-msgstr "您的产品类别未定义任何输出估价账户。您必须在处理此操作前定义一个。"
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
+msgstr "您的产品类别上没有定义任何库存输入账户。您必须在处理这个作业之前定义一个。"
 
 #. module: stock_account
 #. odoo-python
