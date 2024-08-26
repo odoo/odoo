@@ -10,8 +10,11 @@
         }
 
         $(function () {
-            $('#server-config').on("submit", (function(e){
-                const server_token = $('#server-token').val().split('|')[0]; // only url
+            $('#server-config').on("submit", (function(e) {
+                let serverToken = null;
+                try {
+                    serverToken = new URL($('#server-token').val()).origin;
+                } catch { }
                 e.preventDefault();
                 $('.loading-block').removeClass('o_hide');
                 $.ajax({
@@ -24,7 +27,7 @@
                     setTimeout(() => {
                         $('.loading-block').addClass('o_hide')
                         displayMessage(response, $('.alert'), !success);
-                        if (success) $('#server-status').html(server_token);
+                        if (success) $('#server-status').html(serverToken);
                     }, success ? 2000 : 0);  // Add little delay if success
                 })
                 .fail(function () {
