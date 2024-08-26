@@ -63,8 +63,35 @@ class LivechatChatbotScriptController(http.Controller):
             return None
 
         posted_message = next_step._process_step(discuss_channel)
+        store = Store()
+        store.add(posted_message, for_current_user=True)
+        store.add(next_step)
+        step_basic_info = {
+            "id": (next_step.id, discuss_channel.id),
+            "scriptStep": {"id": next_step.id},
+        }
+        if posted_message:
+            step_basic_info["message"] = {"id": posted_message.id}
+        store.add(
+            "ChatbotStep",
+            {
+                **step_basic_info,
+                "isLast": next_step._is_last_step(discuss_channel),
+                "operatorFound": next_step.step_type == "forward_operator"
+                and len(discuss_channel.channel_member_ids) > 2,
+            },
+        )
+        store.add(
+            "Chatbot",
+            {
+                "id": (chatbot.id, discuss_channel.id, "discuss.channel"),
+                "script": {"id": chatbot.id},
+                "thread": {"id": discuss_channel.id, "model": "discuss.channel"},
+                "currentStep": step_basic_info,
+            },
+        )
         return {
-            "data": Store(posted_message, for_current_user=True).get_result(),
+            "data": store.get_result(),
             'scriptStep': {
                 'id': next_step.id,
                 'answers': [{

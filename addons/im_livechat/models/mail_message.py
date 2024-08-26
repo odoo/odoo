@@ -41,31 +41,25 @@ class MailMessage(models.Model):
                     .sudo()
                     .search([("mail_message_id", "=", message.id)], limit=1)
                 )
-                if chatbot_message.script_step_id:
-                    store.add(
-                        "Message",
-                        {
-                            "id": message.id,
-                            "chatbotStep": {
-                                "message": {"id": message.id},
-                                "scriptStep": {"id": chatbot_message.script_step_id.id},
-                                "chatbot": {
-                                    "script": {
-                                        "id": chatbot_message.script_step_id.chatbot_script_id.id
-                                    },
-                                    "thread": {"id": channel.id, "model": "discuss.channel"},
+                if step := chatbot_message.script_step_id:
+                    message_data = {
+                        "id": message.id,
+                        "chatbotStep": {
+                            "message": {"id": message.id},
+                            "scriptStep": {"id": step.id},
+                            "chatbot": {
+                                "script": {
+                                    "id": step.chatbot_script_id.id
                                 },
-                                "selectedAnswer": (
-                                    {"id": chatbot_message.user_script_answer_id.id}
-                                    if chatbot_message.user_script_answer_id
-                                    else False
-                                ),
-                                "operatorFound": channel.chatbot_current_step_id.step_type
-                                == "forward_operator"
-                                and len(channel.channel_member_ids) > 2,
+                                "thread": {"id": channel.id, "model": "discuss.channel"},
                             },
+                            "operatorFound": step.step_type == "forward_operator"
+                            and len(channel.channel_member_ids) > 2,
                         },
-                    )
+                    }
+                    if answer := chatbot_message.user_script_answer_id:
+                        message_data["chatbotStep"]["selectedAnswer"] = {"id": answer.id}
+                    store.add("Message", message_data)
 
     def _author_to_store(self, store: Store):
         messages_w_author_channel = self.filtered(

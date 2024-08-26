@@ -16,6 +16,8 @@ patch(ChatWindow.prototype, {
             this.open({ notifyState: this.thread?.state !== "open" });
         } else {
             await super.close(...arguments);
+            this.thread.messages.forEach((message) => message.delete());
+            this.thread.delete();
         }
         this.store.env.services["im_livechat.livechat"].leave();
         this.store.env.services["im_livechat.chatbot"].stop();
