@@ -62,7 +62,7 @@ export class ColorPlugin extends Plugin {
     });
 
     setup() {
-        this.selectedColors = reactive({ font: "", background: "" });
+        this.selectedColors = reactive({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.shared.makePreviewableOperation((color, mode) =>
             this.applyColor(color, mode)
         );
@@ -84,7 +84,7 @@ export class ColorPlugin extends Plugin {
 
         this.selectedColors.color =
             hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
-        this.selectedColors.background =
+        this.selectedColors.backgroundColor =
             hasGradient && !hasTextGradientClass
                 ? backgroundImage
                 : rgbToHex(elStyle.backgroundColor);
