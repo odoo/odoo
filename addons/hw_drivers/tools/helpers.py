@@ -18,6 +18,7 @@ import requests
 import secrets
 import socket
 import subprocess
+from urllib.parse import parse_qs
 import urllib3
 from threading import Thread, Lock
 import time
@@ -550,3 +551,38 @@ def load_browser_state():
     url = read_file_first_line('browser-url.conf')
     orientation = read_file_first_line('screen-orientation.conf') or Orientation.NORMAL
     return url, Orientation(orientation)
+
+
+def url_is_valid(url):
+    """
+    Checks whether the provided url is a valid one or not
+    :param url: the URL to check
+    :return: boolean indicating if the URL is valid.
+    """
+    try:
+        result = urllib3.util.parse_url(url.strip())
+        return all([result.scheme in ["http", "https"], result.netloc, result.host != 'localhost'])
+    except urllib3.exceptions.LocationParseError:
+        return False
+
+
+def parse_url(url):
+    """
+    Parses URL params and returns them as a dictionary starting by the url.
+
+    Does not allow multiple params with the same name (e.g. <url>?a=1&a=2 will return the same as <url>?a=1)
+    :param url: the URL to parse
+    :return: the dictionary containing the URL and params
+    """
+    if not url_is_valid(url):
+        raise ValueError("Invalid URL provided.")
+
+    url = urllib3.util.parse_url(url.strip())
+    search_params = {
+        key: value[0]
+        for key, value in parse_qs(url.query, keep_blank_values=True).items()
+    }
+    return {
+        "url": f"{url.scheme}://{url.netloc}",
+        **search_params,
+    }
