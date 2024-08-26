@@ -1479,6 +1479,7 @@ class Website(models.Model):
         return action
 
     def button_go_website(self, path='/', mode_edit=False):
+        # TODO: adapt in master as 'mode_edit' is always set to False
         self._force()
         if mode_edit:
             # If the user gets on a translated page (e.g /fr) the editor will
