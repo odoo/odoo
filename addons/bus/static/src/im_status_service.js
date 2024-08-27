@@ -32,7 +32,7 @@ export const imStatusService = {
 
         const startAwayTimeout = () => {
             clearTimeout(becomeAwayTimeout);
-            const awayTime = AWAY_DELAY - lastSentInactivity;
+            const awayTime = AWAY_DELAY - presence.getInactivityPeriod();
             if (awayTime > 0) {
                 becomeAwayTimeout = browser.setTimeout(() => updateBusPresence(), awayTime);
             }
