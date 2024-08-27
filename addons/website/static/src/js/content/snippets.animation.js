@@ -1988,6 +1988,13 @@ registry.TextHighlight = publicWidget.Widget.extend({
         // to block the callback on this first notification for observed items.
         this.observerLock = new Map();
         this.resizeObserver = new window.ResizeObserver(entries => {
+            // Some options, like the popup, trigger a resize after a delay
+            // before the page is saved. This causes the highlights to be added
+            // back to the DOM after the "TextHighlight" widget has been
+            // destroyed. This is why the following line is needed.
+            if (this.isDestroyed()) {
+                return;
+            }
             window.requestAnimationFrame(() => {
                 const textHighlightEls = new Set();
                 entries.forEach(entry => {
@@ -2064,6 +2071,9 @@ registry.TextHighlight = publicWidget.Widget.extend({
         // we use a lock map (`observerLocked`) to block the callback on this
         // first notification for observed items.
         this.resizeObserver = new window.ResizeObserver(entries => {
+            if (this.isDestroyed()) {
+                return;
+            }
             window.requestAnimationFrame(() => {
                 const topTextEls = new Set();
                 entries.forEach(entry => {
