@@ -120,12 +120,13 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
  */
 export async function makeDialogMockEnv(partialEnv) {
     return makeMockEnv({
+        ...partialEnv,
         dialogData: {
             close: () => {},
             isActive: true,
             scrollToOrigin: () => {},
+            ...partialEnv?.dialogData,
         },
-        ...partialEnv,
     });
 }
 
