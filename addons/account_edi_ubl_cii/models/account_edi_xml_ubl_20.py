@@ -113,6 +113,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         return []
 
+    def _get_additional_document_reference_list(self, invoice):
+        """
+        This is optional and meant to be overridden when required under the form:
+        {
+            'id': str,
+            'issue_date': str,
+            'document_type_code': str,
+            'document_type': str,
+            'document_description': str,
+        }.
+        Should return a list.
+        """
+        return []
+
     def _get_delivery_vals_list(self, invoice):
         # the data is optional, except for ubl bis3 (see the override, where we need to set a default delivery address)
         return [{
@@ -222,7 +236,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
                     'taxable_amount': vals['base_amount_currency'],
                     'tax_amount': vals['tax_amount_currency'],
-                    'percent': vals['_tax_category_vals_']['percent'],
+                    'percent': vals['tax_category_percent'],
                     'tax_category_vals': vals['_tax_category_vals_'],
                 }
                 if epd_tax_to_discount:
@@ -596,6 +610,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'party_vals': self._get_partner_party_vals(customer, role='customer'),
                 },
                 'invoice_period_vals_list': self._get_invoice_period_vals_list(invoice),
+                'additional_document_reference_list': self._get_additional_document_reference_list(invoice),
                 'delivery_vals_list': self._get_delivery_vals_list(invoice),
                 'payment_means_vals_list': self._get_invoice_payment_means_vals_list(invoice),
                 'payment_terms_vals': self._get_invoice_payment_terms_vals_list(invoice),
