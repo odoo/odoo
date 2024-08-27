@@ -1,36 +1,36 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from ast import literal_eval
-from contextlib import ExitStack
-from markupsafe import Markup
-from urllib.parse import urlparse
-
-from odoo import api, fields, models, tools
-from odoo.exceptions import UserError, AccessError, RedirectWarning
-from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path
-from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
-from odoo.tools import _, check_barcode_encoding, config, is_html_empty, parse_version, split_every
-from odoo.http import request
-from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
-
 import io
+import json
 import logging
 import os
-import lxml.html
-import tempfile
-import subprocess
 import re
-import json
-
-from lxml import etree
-from contextlib import closing
-from reportlab.graphics.barcode import createBarcodeDrawing
-from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
+import subprocess
+import tempfile
+import threading
+import unittest
+from ast import literal_eval
 from collections import OrderedDict
 from collections.abc import Iterable
-from PIL import Image, ImageFile
+from contextlib import closing, ExitStack
 from itertools import islice
+from urllib.parse import urlparse
+
+import lxml.html
+from PIL import Image, ImageFile
+from lxml import etree
+from markupsafe import Markup
+from reportlab.graphics.barcode import createBarcodeDrawing
+from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
+
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError, AccessError, RedirectWarning
+from odoo.http import request
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
+from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
+from odoo.tools.misc import find_in_path
+from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
+from odoo.tools.safe_eval import safe_eval, time
 
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -577,31 +577,34 @@ class IrActionsReport(models.Model):
         os.close(pdf_report_fd)
         temporary_files.append(pdf_report_path)
 
-        try:
-            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
-            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
-            _out, err = process.communicate()
+        wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
+        process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
+        _out, err = process.communicate()
 
-            if process.returncode not in [0, 1]:
-                if process.returncode == -11:
-                    message = _(
-                        'Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or maximum file number of subprocess reached. Message : %(message)s',
-                        error_code=process.returncode,
-                        message=err[-1000:],
-                    )
-                else:
-                    message = _(
-                        'Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s',
-                        error_code=process.returncode,
-                        message=err[-1000:],
-                    )
+        match process.returncode:
+            case 0:
+                pass
+            case 1:
+                if len(bodies) > 1:
+                    v = subprocess.run([_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, check=True, encoding="utf-8")
+                    if '(with patched qt)' not in v.stdout:
+                        if getattr(threading.current_thread(), 'testing', False):
+                            raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
+                        raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
+
+                _logger.warning("wkhtmltopdf: %s", err)
+            case c:
+                message = _(
+                    'Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or maximum file number of subprocess reached. Message : %(message)s',
+                    error_code=c,
+                    message=err[-1000:],
+                ) if c == -11 else _(
+                    'Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s',
+                    error_code=c,
+                    message=err[-1000:],
+                )
                 _logger.warning(message)
                 raise UserError(message)
-            else:
-                if err:
-                    _logger.warning('wkhtmltopdf: %s' % err)
-        except:
-            raise
 
         with open(pdf_report_path, 'rb') as pdf_document:
             pdf_content = pdf_document.read()
