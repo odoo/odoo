@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
@@ -112,7 +111,7 @@ class SaleOrder(models.Model):
 
     def _all_product_available(self):
         self.ensure_one()
-        for line in self.with_context(website_sale_stock_get_quantity=True).order_line:
+        for line in self.order_line:
             product = line.product_id
             if not product.is_storable or product.allow_out_of_stock_order:
                 continue

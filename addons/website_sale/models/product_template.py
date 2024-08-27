@@ -3,6 +3,7 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
@@ -316,7 +317,8 @@ class ProductTemplate(models.Model):
         """
         Pre-check to `_is_add_to_cart_possible` to know if product can be sold.
         """
-        return self.sale_ok
+        self.ensure_one()
+        return bool(self.filtered_domain(self.env['website']._product_domain()))
 
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
@@ -384,7 +386,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         combination = combination or self.env['product.template.attribute.value']
-        website = self.env['website'].get_current_website().with_context(self.env.context)
+        website = request.website.with_context(self.env.context)
 
         if not product_id and not combination and not only_template:
             combination = self._get_first_possible_combination()
@@ -838,9 +840,9 @@ class ProductTemplate(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        # TODO VFE pass website as param and avoid existence check
-        website = self.env['website'].get_current_website()
-        return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())
+        if not self.filtered_domain(self.env['website']._product_domain()):
+            return False
+        return not request.website.prevent_zero_price_sale or self._get_contextual_price()
 
     @api.model
     def _get_configurator_display_price(

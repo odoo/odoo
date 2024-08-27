@@ -74,14 +74,16 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
             # set warehouse_id
             self.website.warehouse_id = wh
 
-            combination_info = self.product_A.with_env(test_env)._get_combination_info_variant()
+            with MockRequest(test_env, website=self.website.with_env(test_env)):
+                combination_info = self.product_A.with_env(test_env)._get_combination_info_variant()
 
             # Check available quantity of product is according to warehouse
             self.assertEqual(
                 combination_info['free_qty'], qty_a,
                 f"{qty_a} units of Product A should be available in warehouse {wh}")
 
-            combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
+            with MockRequest(test_env, website=self.website.with_env(test_env)):
+                combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
 
             # Check available quantity of product is according to warehouse
             self.assertEqual(
