@@ -6,7 +6,7 @@ export class CameraBarcodeScanner extends BarcodeVideoScanner {
     setup() {
         super.setup();
         this.barcodeScanner = useService("barcode_reader");
-        this.sound = useService("sound");
+        this.sound = useService("mail.sound_effects");
         this.props = {
             ...this.props,
             facingMode: "environment",
