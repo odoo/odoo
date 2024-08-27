@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import date, datetime
 
 from odoo import fields, models
+from odoo.tools import groupby
 
 
 def get_twilio_credentials(env) -> (str, str):
@@ -37,6 +38,7 @@ ids_by_model = defaultdict(lambda: ("id",))
 ids_by_model.update(
     {
         "mail.thread": ("model", "id"),
+        "MessageReactions": ("message", "content"),
         "Rtc": (),
         "Store": (),
     }
@@ -200,7 +202,13 @@ class Store:
         should be avoided. It is kept as a public method until all remaining
         occurences can be removed.
         Using the method ``many(..., only_id=True)`` is preferable."""
-        res = [Store.one_id(record, as_thread=as_thread) for record in records]
+        if records._name == "mail.message.reaction":
+            res = [
+                {"message": message.id, "content": content}
+                for (message, content), _ in groupby(records, lambda r: (r.message_id, r.content))
+            ]
+        else:
+            res = [Store.one_id(record, as_thread=as_thread) for record in records]
         if mode == "ADD":
             res = [("ADD", res)]
         elif mode == "DELETE":

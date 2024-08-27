@@ -12,6 +12,7 @@ import {
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { groupBy } from "@web/core/utils/arrays";
 
 export const DISCUSS_ACTION_ID = 104;
 
@@ -965,6 +966,7 @@ async function processRequest(request) {
 
 const ids_by_model = {
     "mail.thread": ["model", "id"],
+    MessageReactions: ["message", "content"],
     Rtc: [],
     Store: [],
 };
@@ -1222,6 +1224,14 @@ class Store {
         let res = records.map((record) =>
             Store.one_id(records.browse(record.id), makeKwArgs({ as_thread }))
         );
+        if (records._name === "mail.message.reaction") {
+            res = [];
+            const reactionGroups = groupBy(records, (r) => [r.message_id, r.content]);
+            for (const groupId in reactionGroups) {
+                const { message_id, content } = reactionGroups[groupId][0];
+                res.push({ message: message_id, content: content });
+            }
+        }
         if (mode === "ADD") {
             res = [["ADD", res]];
         } else if (mode === "DELETE") {
