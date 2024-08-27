@@ -49,8 +49,9 @@ patch(PosStore.prototype, {
         await this.orderUpdateLoyaltyPrograms();
     },
     async selectPartner(partner) {
-        await super.selectPartner(partner);
+        const res = await super.selectPartner(partner);
         await this.updateRewards();
+        return res;
     },
     async selectPricelist(pricelist) {
         await super.selectPricelist(pricelist);

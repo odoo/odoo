@@ -10,9 +10,16 @@ export function handleRPCError(error, dialog) {
         const title = odooExceptionTitleMap.get(error.exceptionName).toString();
         dialog.add(AlertDialog, { title, body: data.message });
     } else {
-        dialog.add(ErrorDialog, {
-            traceback: data.message + "\n" + data.debug + "\n",
-        });
+        if (odoo.debug === "assets") {
+            dialog.add(ErrorDialog, {
+                traceback: data.message + "\n" + data.debug + "\n",
+            });
+        } else {
+            dialog.add(AlertDialog, {
+                title: _t("Odoo Server Error"),
+                body: data.message,
+            });
+        }
     }
 }
 
