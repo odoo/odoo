@@ -1464,7 +1464,7 @@ export class PosStore extends Reactive {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
         if (!currentOrder) {
-            return;
+            return false;
         }
         const currentPartner = currentOrder.get_partner();
         if (currentPartner && currentOrder.getHasRefundLines()) {
@@ -1475,7 +1475,7 @@ export class PosStore extends Reactive {
                     currentPartner.name
                 ),
             });
-            return;
+            return currentPartner;
         }
         const payload = await makeAwaitable(this.dialog, PartnerList, {
             partner: currentPartner,
