@@ -675,8 +675,11 @@ css_error_message {
             return ''
 
         out, err = rtlcss.communicate(input=source)
-        if rtlcss.returncode:
-            error = self.get_rtlcss_error(err or f"Process exited with return code {rtlcss.returncode}", source=source)
+        if rtlcss.returncode or (source and not out):
+            if rtlcss.returncode:
+                error = self.get_rtlcss_error(err or f"Process exited with return code {rtlcss.returncode}", source=source)
+            else:
+                error = "rtlcss: error processing payload\n"
             _logger.warning("%s", error)
             self.css_errors.append(error)
             return ''
