@@ -5,9 +5,9 @@ import {
     insertText,
     openDiscuss,
     start,
-    startServer
+    startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineCrmModels } from "@crm/../tests/crm_test_helpers";
 
 describe.current.tags("desktop");
@@ -25,25 +25,6 @@ test("Can open lead from internal link", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-
-    onRpc("discuss.channel", "execute_command_lead", (params) => {
-        const { body } = params.kwargs;
-        const leadName = body.substring("/lead".length).trim();
-        const leadId = pyEnv["crm.lead"].create({ name: leadName });
-        pyEnv["bus.bus"]._sendone(
-            serverState.partnerId,
-            "discuss.channel/transient_message",
-            {
-                body: `
-                    <span class="o_mail_notification">
-                        Create a new lead: <a href="#" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a>
-                    </span>`,
-                thread: { model: "discuss.channel", id: params.args[0][0] },
-            }
-        );
-        return true;
-    });
-
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/lead My Lead");
