@@ -418,6 +418,34 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         self.assertEqual(len(project_A.message_ids), init_nb_log + 2,
             "should have 2 new messages: one for tracking, one for template")
 
+    def test_project_notify_get_recipients_groups(self):
+        projects = self.env['project.project'].create([
+            {
+                'name': 'public project',
+                'privacy_visibility': 'portal',
+                'partner_id': self.partner_1.id,
+            },
+            {
+                'name': 'internal project',
+                'privacy_visibility': 'employees',
+                'partner_id': self.partner_1.id,
+            },
+            {
+                'name': 'private project',
+                'privacy_visibility': 'followers',
+                'partner_id': self.partner_1.id,
+            },
+        ])
+        for project in projects:
+            groups = project._notify_get_recipients_groups()
+            portal_customer_group = next((g for g in groups if g[0] == 'portal_customer'), False)
+            if portal_customer_group:
+                self.assertEqual(
+                    portal_customer_group[2]['has_button_access'],
+                    project.name == 'public project',
+                    "Only the public project should have its name clickable in the email sent to the customer when an email is sent via a email template set in the project stage for instance."
+                )
+
     def test_private_task_search_tag(self):
         task = self.env['project.task'].create({
             'name': 'Test Private Task',
