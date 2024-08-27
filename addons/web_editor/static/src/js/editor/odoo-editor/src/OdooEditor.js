@@ -240,6 +240,7 @@ export class OdooEditor extends EventTarget {
                     }
                 },
                 preHistoryUndo: () => {},
+                beforeAnyCommand: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
                 onPostSanitize: () => {},
@@ -2250,6 +2251,9 @@ export class OdooEditor extends EventTarget {
                 return true;
             }
         }
+
+        this.options.beforeAnyCommand();
+
         if (editorCommands[method]) {
             return editorCommands[method](this, ...args);
         }
@@ -2327,7 +2331,7 @@ export class OdooEditor extends EventTarget {
     activateContenteditable() {
         this.canActivateContentEditable = true;
         this._activateContenteditable();
-    } 
+    }
     _stopContenteditable() {
         this.observerUnactive('_stopContenteditable');
         if (this.options.isRootEditable) {
