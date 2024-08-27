@@ -60,6 +60,17 @@ TYPE_REVERSE_MAP = {
     'in_receipt': 'in_refund',
 }
 
+ALLOWED_MIMETYPES = {
+    'text/plain',
+    'text/csv',
+    'application/pdf',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.oasis.opendocument.spreadsheet',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+}
+
 EMPTY = object()
 
 
@@ -3574,7 +3585,7 @@ class AccountMove(models.Model):
                 file_data['type'] == 'binary'
                 and self._context.get('from_alias')
                 and not attachments_by_invoice.get(file_data['attachment'])
-                and file_data['attachment'].mimetype not in FILE_TYPE_DICT
+                and file_data['attachment'].mimetype not in ALLOWED_MIMETYPES
             ):
                 close_file(file_data)
                 continue
@@ -3612,7 +3623,7 @@ class AccountMove(models.Model):
                         invoice = current_invoice or self.create({})
                         success = decoder(invoice, file_data, new)
 
-                        if success or file_data['type'] == 'pdf' or file_data['attachment'].mimetype in FILE_TYPE_DICT:
+                        if success or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
                             invoices |= invoice
                             current_invoice = self.env['account.move']
