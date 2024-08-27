@@ -2,10 +2,12 @@
 <odoo>
     <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
         <xpath expr="//button[hasclass('o_wish_rm')]" position="before">
-            <small class="text-danger d-md-block" t-if="wish.product_id.sudo()._is_sold_out()">Temporarily out of stock</small>
+            <t t-set="is_sold_out"
+               t-value="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order"/>
+            <small class="text-danger d-md-block" t-if="is_sold_out">Temporarily out of stock</small>
         </xpath>
         <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
-            <t t-if="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()">
+            <t t-if="is_sold_out">
                 <t t-set="has_stock_notification"
                    t-value="wish.product_id._has_stock_notification(wish.partner_id) or request and wish.product_id.id in request.session.get('product_with_stock_notification_enabled', set())"/>
                 <div id="stock_notification_div" t-if="not wish.product_id.allow_out_of_stock_order"
@@ -44,8 +46,6 @@
             </t>
         </xpath>
         <xpath expr="//button[@id='add_to_cart_button']" position="replace">
-            <t t-set="is_sold_out"
-               t-value="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()"/>
             <button t-if="not combination_info['prevent_zero_price_sale']" id="add_to_cart_button"
                     class="btn btn-secondary btn-block o_wish_add mb4"
                     t-att-disabled="is_sold_out">
