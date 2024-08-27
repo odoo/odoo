@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from . import controllers
 from . import models
-from . import tests
+
 
 def _post_self_order_post_init(env):
     env['pos.config']._modify_pos_restaurant_config()
