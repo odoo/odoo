@@ -58,6 +58,9 @@
             ('include', 'test_assetsbundle.manifest4'),
         ],
         'test_assetsbundle.manifest_multi_module1': [],
+        'test_assetsbundle.broken_css': [
+            'test_assetsbundle/static/invalid_src/css/invalid_css.css',
+        ],
     },
     'license': 'LGPL-3',
 }
