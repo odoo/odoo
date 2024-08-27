@@ -10,7 +10,6 @@ import base64
 import concurrent.futures
 import contextlib
 import difflib
-import freezegun
 import importlib
 import inspect
 import itertools
@@ -85,6 +84,11 @@ try:
 except ImportError:
     # chrome headless tests will be skipped
     websocket = None
+
+try:
+    import freezegun
+except ImportError:
+    freezegun = None
 
 _logger = logging.getLogger(__name__)
 
@@ -2162,11 +2166,18 @@ class freeze_time:
             func.freeze_time = self.time_to_freeze
             return func
         else:
-            return freezegun.freeze_time(self.time_to_freeze)(func)
+            if freezegun:
+                return freezegun.freeze_time(self.time_to_freeze)(func)
+            else:
+                _logger.warning("freezegun package missing")
 
     def __enter__(self):
-        self.freezer = freezegun.freeze_time(self.time_to_freeze)
-        return self.freezer.start()
+        if freezegun:
+            self.freezer = freezegun.freeze_time(self.time_to_freeze)
+            return self.freezer.start()
+        else:
+            _logger.warning("freezegun package missing")
 
     def __exit__(self, *args):
-        self.freezer.stop()
+        if self.freezer:
+            self.freezer.stop()
