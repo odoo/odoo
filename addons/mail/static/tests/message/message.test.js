@@ -652,6 +652,7 @@ test("Reaction summary", async () => {
                 after: ["span", { textContent: "Smileys & Emotion" }],
                 text: "😅",
             });
+            await contains(".o-mail-MessageReaction", { text: `😅${idx + 1}` });
             await hover(".o-mail-MessageReaction");
             await contains(".o-mail-MessageReactionList-preview", {
                 text: `${expectedSummaries[idx]}`,

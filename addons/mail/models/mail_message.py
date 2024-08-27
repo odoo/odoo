@@ -868,22 +868,17 @@ class Message(models.Model):
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
             reaction.unlink()
-        # format result
+        self._bus_send_reaction_group(content)
+
+    def _bus_send_reaction_group(self, content):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
-        count = self.env["mail.message.reaction"].search_count(group_domain)
-        group_command = "ADD" if count > 0 else "DELETE"
-        group_values = {
-            "content": content,
-            "count": count,
-            "personas": Store.many_ids(guest or partner, "ADD" if action == "add" else "DELETE"),
-            "message": Store.one_id(self),
-        }
-        # sudo: mail.guest - guest can send their own name when reacting
-        self._bus_send_store(
-            Store(self, {"reactions": [(group_command, group_values)]}).add(
-                guest.sudo() or partner, fields=["name", "write_date"]
-            )
+        reactions = self.env["mail.message.reaction"].search(group_domain)
+        reaction_group = (
+            Store.many(reactions, "ADD")
+            if reactions
+            else [("DELETE", {"message": self.id, "content": content})]
         )
+        self._bus_send_store(self, {"reactions": reaction_group})
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
@@ -1022,23 +1017,6 @@ class Message(models.Model):
                 record_name = False
                 default_subject = False
             data["default_subject"] = default_subject
-            reactions_per_content = defaultdict(self.env["mail.message.reaction"].sudo().browse)
-            # sudo: mail.message - reading reactions on accessible message is allowed
-            reactions = message.sudo().reaction_ids
-            for reaction in reactions:
-                reactions_per_content[reaction.content] |= reaction
-            store.add(reactions.guest_id, fields=["name", "write_date"])
-            store.add(reactions.partner_id, fields=["name", "write_date"])
-            reaction_groups = [
-                {
-                    "content": content,
-                    "count": len(reactions),
-                    "personas": Store.many_ids(reactions.guest_id)
-                    + Store.many_ids(reactions.partner_id),
-                    "message": Store.one_id(message),
-                }
-                for content, reactions in reactions_per_content.items()
-            ]
             vals = {
                 # sudo: mail.message - reading attachments on accessible message is allowed
                 "attachments": Store.many(message.sudo().attachment_ids.sorted("id")),
@@ -1046,7 +1024,8 @@ class Message(models.Model):
                 "linkPreviews": Store.many(
                     message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
                 ),
-                "reactions": reaction_groups,
+                # sudo: mail.message - reading reactions on accessible message is allowed
+                "reactions": Store.many(message.sudo().reaction_ids),
                 "record_name": record_name,  # keep for iOS app
                 "is_note": message.subtype_id.id == note_id,
                 "is_discussion": message.subtype_id.id == com_id,
