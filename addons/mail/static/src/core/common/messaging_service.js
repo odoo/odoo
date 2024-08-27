@@ -25,7 +25,13 @@ export class Messaging {
         this.isReady = new Deferred();
         this.imStatusService = services.im_status;
         const user = services.user;
-        this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
+        if (user.partnerId) {
+            this.store.Persona.insert({
+                id: user.partnerId,
+                type: "partner",
+                isAdmin: user.isAdmin,
+            });
+        }
         this.store.discuss.inbox = {
             id: "inbox",
             model: "mail.box",

@@ -907,7 +907,9 @@ class AccountGroup(models.Model):
             company_ids = account_ids.company_id.root_id.ids
             account_ids = account_ids.ids
         else:
-            company_ids = self.company_id.ids
+            company_ids = []
+            for company in self.company_id:
+                company_ids.extend(company._accessible_branches().ids)
             account_ids = []
         if not company_ids and not account_ids:
             return

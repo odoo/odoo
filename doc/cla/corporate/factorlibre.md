@@ -19,3 +19,4 @@ Adriana Saiz adriana.saiz@factorlibre.com https://github.com/AdrianaSaiz
 Pablo Calvo pablo.calvo@factorlibre.com https://github.com/Pablocce
 Juan Carlos Bonilla juancarlos.bonilla@factorlibre.com https://github.com/suker
 Adrián Cifuentes adrian.cifuentes@factorlibre.com https://github.com/xadriancif
+Miguel Cepeda miguel.cepeda@factorlibre.com https://github.com/miguelcb2003
