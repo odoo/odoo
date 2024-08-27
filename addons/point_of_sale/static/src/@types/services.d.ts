@@ -5,7 +5,6 @@ declare module "services" {
     import { numberBufferService } from "@point_of_sale/app/utils/number_buffer_service";
     import { notificationService } from "@point_of_sale/app/notification/notification_service";
     import { reportService } from "@point_of_sale/app/utils/report_service";
-    import { soundService } from "@point_of_sale/app/sound/sound_service";
 
     export interface Services {
         barcode_reader: typeof barcodeReaderService;
@@ -13,6 +12,5 @@ declare module "services" {
         hardware_proxy: typeof hardwareProxyService;
         number_buffer: typeof numberBufferService;
         report: typeof reportService;
-        sound: typeof soundService;
     }
 }
