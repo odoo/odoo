@@ -207,7 +207,9 @@ class ProductProduct(models.Model):
             {'name': w.name,
             'available_quantity': self.with_context({'warehouse_id': w.id}).qty_available,
             'forecasted_quantity': self.with_context({'warehouse_id': w.id}).virtual_available,
-            'uom': self.uom_name}
+            'uom': self.uom_name,
+            'id': w.id,
+            }
             for w in self.env['stock.warehouse'].search([])]
 
         # Suppliers

@@ -48,3 +48,44 @@ class Warehouse(models.Model):
         for warehouse in warehouses:
             new_vals = warehouse._create_or_update_sequences_and_picking_types()
             warehouse.write(new_vals)
+
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(self.id)
+        data = self.search_read(domain, fields, load=False)
+
+        return {
+            'data': data,
+            'fields': fields,
+        }
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ["id"]
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return []
+
+
+
+class StockLocation(models.Model):
+    _inherit = 'stock.location'
+
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(self.id)
+        data = self.search_read(domain, fields, load=False)
+
+        return {
+            'data': data,
+            'fields': fields,
+        }
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ["id", "warehouse_id"]
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return []

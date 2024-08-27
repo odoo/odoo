@@ -1453,6 +1453,33 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboChangeFP', login="pos_user")
 
+    def test_product_info_quantity(self):
+        warehouse_test = self.env['stock.warehouse'].create({'name': 'WH C', 'code': 'WHC', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id})
+        self.product4 = self.env['product.product'].create({
+            'name': 'Product 3',
+            'lst_price': 10,
+            'is_storable': True,
+            'available_in_pos': True,
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product4.id,
+            'inventory_quantity': 10,
+            'location_id': warehouse_test.lot_stock_id.id,
+            'owner_id': self.partner_a.id,
+        }).action_apply_inventory()
+
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product4.id,
+            'inventory_quantity': 20,
+            'location_id': self.main_pos_config.picking_type_id.default_location_src_id.id,
+            'owner_id': self.partner_a.id,
+        }).action_apply_inventory()
+
+        self.main_pos_config.picking_type_id.default_location_src_id = warehouse_test.lot_stock_id
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'CheckProductInformationQuantity', login="pos_user")
+
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

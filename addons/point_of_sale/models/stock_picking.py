@@ -180,7 +180,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'use_create_lots', 'use_existing_lots']
+        return ['id', 'use_create_lots', 'use_existing_lots', 'default_location_src_id']
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

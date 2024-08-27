@@ -324,3 +324,16 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CheckProductInformationQuantity", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickInfoProduct("Product 3"),
+            {
+                trigger: ".h4:contains('On hand'):contains('10 Units')",
+                run: () => {},
+            },
+        ].flat(),
+});
