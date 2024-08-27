@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.tools import groupby
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessageReaction(models.Model):
@@ -22,3 +23,17 @@ class MailMessageReaction(models.Model):
     _sql_constraints = [
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A message reaction must be from a partner or from a guest."),
     ]
+
+    def _to_store(self, store: Store):
+        for (message_id, content), reactions in groupby(self, lambda r: (r.message_id, r.content)):
+            reactions = self.env["mail.message.reaction"].union(*reactions)
+            store.add(reactions.guest_id, fields=["name", "write_date"])
+            store.add(reactions.partner_id, fields=["name", "write_date"])
+            data = {
+                "content": content,
+                "count": len(reactions),
+                "personas": Store.many_ids(reactions.guest_id)
+                + Store.many_ids(reactions.partner_id),
+                "message": Store.one_id(message_id),
+            }
+            store.add("MessageReactions", data)
