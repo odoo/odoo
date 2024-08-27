@@ -2469,6 +2469,39 @@ class TestSinglePicking(TestStockCommon):
         self.env['procurement.group'].run_scheduler()
         self.assertRecordValues(picking.move_line_ids, [{'state': 'assigned', 'quantity': 10.0}])
 
+    def test_create_picked_move_line(self):
+        """
+        Check that a move line created and auto assigned to a picked move will also be picked
+        """
+        product = self.productA
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out)
+        picking_type_out.reservation_method = 'at_confirm'
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'product_uom': product.uom_id.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        picking.action_confirm()
+        picking.move_ids.quantity = 5
+        picking.move_ids.picked = True
+        sml = self.env['stock.move.line'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'product_id': product.id,
+            'picking_id': picking.id,
+            'quantity': 1.0,
+        })
+        self.assertEqual(picking.move_ids.quantity, 6.0)
+        self.assertTrue(sml.picked)
+
 class TestStockUOM(TestStockCommon):
     @classmethod
     def setUpClass(cls):
