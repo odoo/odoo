@@ -249,6 +249,7 @@
     <template id="ubl_20_DeliveryType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('delivery_id')"/>
             <cbc:ActualDeliveryDate t-out="vals.get('actual_delivery_date')"/>
             <cac:DeliveryLocation>
                 <cac:Address>
@@ -420,6 +421,7 @@
                 t-att="vals.get('profile_id_attrs', {})"
                 t-out="vals.get('profile_id')"/>
             <cbc:ID t-out="vals.get('id')"/>
+            <cbc:CopyIndicator t-out="vals.get('copy_indicator')"/>
             <cbc:UUID
                 t-att="vals.get('uuid_attrs', {})"
                 t-out="vals.get('uuid')"/>
@@ -443,6 +445,7 @@
             <cac:OrderReference>
                 <cbc:ID t-out="vals.get('order_reference')"/>
                 <cbc:SalesOrderID t-out="vals.get('sales_order_id')"/>
+                <cbc:IssueDate t-out="vals.get('order_issue_date')"/>
             </cac:OrderReference>
             <cac:BillingReference>
                 <t t-set="billing_reference_vals" t-value="vals.get('billing_reference_vals', {})"/>
@@ -458,7 +461,9 @@
             <t t-foreach="vals.get('additional_document_reference_list', [])" t-as="foreach_vals">
                 <cac:AdditionalDocumentReference>
                     <cbc:ID t-out="foreach_vals.get('id')"/>
+                    <cbc:IssueDate t-out="foreach_vals.get('issue_date')"/>
                     <cbc:DocumentTypeCode t-out="foreach_vals.get('document_type_code')"/>
+                    <cbc:DocumentType t-out="foreach_vals.get('document_type')"/>
                     <cbc:DocumentDescription t-out="foreach_vals.get('document_description')"/>
                 </cac:AdditionalDocumentReference>
             </t>
