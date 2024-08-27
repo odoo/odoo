@@ -54,16 +54,16 @@ const getDefaultConfig = () => ({
  * - Write more integration tests. NumberPopup can be used as test component.
  */
 class NumberBuffer extends EventBus {
-    static serviceDependencies = ["sound", "localization"];
+    static serviceDependencies = ["mail.sound_effects", "localization"];
     constructor() {
         super();
         this.setup(...arguments);
     }
-    setup({ sound, localization }) {
+    setup(services) {
         this.isReset = false;
         this.bufferHolderStack = [];
-        this.sound = sound;
-        this.defaultDecimalPoint = localization.decimalPoint;
+        this.sound = services["mail.sound_effects"];
+        this.defaultDecimalPoint = services.localization.decimalPoint;
         window.addEventListener("keyup", this._onKeyboardInput.bind(this));
     }
     /**
