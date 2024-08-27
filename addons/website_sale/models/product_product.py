@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 
 
 class ProductProduct(models.Model):
@@ -127,16 +128,19 @@ class ProductProduct(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        # TODO VFE pass website as param and avoid existence check
-        website = self.env['website'].get_current_website()
-        return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())
+        if not self.filtered_domain(self.env['website']._product_domain()):
+            return False
+        return not request.website.prevent_zero_price_sale or self._get_contextual_price()
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
-        is_product_salable = self.active and self.sale_ok and self.website_published
-        website = self.env['website'].get_current_website()
-        return (is_product_salable and website.has_ecommerce_access()) \
-               or self.env.user.has_group('base.group_system')
+        if self.env.user.has_group('base.group_system'):
+            return True
+        if not self.active or not self.website_published:
+            return False
+        if not self.filtered_domain(self.env['website']._product_domain()):
+            return False
+        return request.website.has_ecommerce_access()
 
     @api.onchange('public_categ_ids')
     def _onchange_public_categ_ids(self):

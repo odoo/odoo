@@ -6,6 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
     TestSaleProductAttributeValueCommon,
 )
+from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
@@ -21,6 +22,13 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         cls.other_currency = cls.setup_other_currency('GBP')
 
     def test_get_combination_info(self):
+        # Setup website.
+        website = self.env['website'].create({
+            'name': "Test website",
+            'company_id': self.env.company.id,
+            'user_id': self.env.user.id,
+        })
+
         # Setup pricelist: make sure the pricelist has a 10% discount
         self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
@@ -31,14 +39,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
                 'price_discount': 10,
                 'compute_price': 'formula',
             })],
-        })
-
-        # Setup website.
-        website = self.env['website'].create({
-            'name': "Test website",
-            'company_id': self.env.company.id,
-            'user_id': self.env.user.id,
-            'pricelist_ids': [Command.set(pricelist.ids)],
+            'website_id': website.id,
         })
 
         # Setup product with 15% tax.
@@ -53,18 +54,19 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         currency_ratio = 2
 
         # CASE: B2B setting (default)
-        combination_info = product_template._get_combination_info()
-        self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
-        self.assertEqual(combination_info['list_price'], 2222 * currency_ratio)
-        self.assertEqual(combination_info['has_discounted_price'], True)
+        with MockRequest(product_template.env, website=website, website_sale_current_pl=pricelist.id):
+            combination_info = product_template._get_combination_info()
+            self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
+            self.assertEqual(combination_info['list_price'], 2222 * currency_ratio)
+            self.assertEqual(combination_info['has_discounted_price'], True)
 
-        # CASE: B2C setting
-        website.show_line_subtotals_tax_selection = 'tax_included'
+            # CASE: B2C setting
+            website.show_line_subtotals_tax_selection = 'tax_included'
 
-        combination_info = product_template._get_combination_info()
-        self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
-        self.assertAlmostEqual(combination_info['list_price'], 2222 * currency_ratio * tax_ratio)
-        self.assertEqual(combination_info['has_discounted_price'], True)
+            combination_info = product_template._get_combination_info()
+            self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
+            self.assertAlmostEqual(combination_info['list_price'], 2222 * currency_ratio * tax_ratio)
+            self.assertEqual(combination_info['has_discounted_price'], True)
 
     def test_get_combination_info_with_fpos(self):
         # Setup product.
@@ -78,11 +80,19 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
             'company_id': self.env.company.id,
         })
 
+        # Setup website.
+        website = self.env['website'].create({
+            'name': "Test website",
+            'company_id': self.env.company.id,
+            'user_id': self.env.user.id,
+        })
+
         # Setup pricelist: make sure the pricelist has a 10% discount
         self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
             'name': "test_get_combination_info",
             'company_id': self.env.company.id,
+            'website_id': website.id,
             'item_ids': [Command.create({
                 'applied_on': "1_product",
                 'base': "list_price",
@@ -90,14 +100,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
                 'fixed_price': 500,
                 'product_tmpl_id': product.id,
             })],
-        })
-
-        # Setup website.
-        website = self.env['website'].create({
-            'name': "Test website",
-            'company_id': self.env.company.id,
-            'user_id': self.env.user.id,
-            'pricelist_ids': [Command.set(pricelist.ids)],
         })
 
         product = product.with_context(website_id=website.id)
@@ -113,7 +115,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         # Enable tax included
         website.show_line_subtotals_tax_selection = 'tax_included'
 
-        combination_info = product._get_combination_info()
+        with MockRequest(product.env, website=website):
+            combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 575, "500$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 2530, "500$ + 15% tax (2)")
 
@@ -133,7 +136,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country
         website.invalidate_recordset(['fiscal_position_id'])
-        combination_info = product._get_combination_info()
+        with MockRequest(product.env, website=website):
+            combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(combination_info['list_price'], 2200, "500% + 0% tax (mapped from fp 15% -> 0%)")
 
@@ -143,19 +147,22 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         # Reset / Safety check
         self.env.user.partner_id.country_id = None
         website.invalidate_recordset(['fiscal_position_id'])
-        combination_info = product._get_combination_info()
+        with MockRequest(product.env, website=website):
+            combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 2200, "434.78$ + 15% tax (2)")
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country.id
         website.invalidate_recordset(['fiscal_position_id'])
-        combination_info = product._get_combination_info()
+        with MockRequest(product.env, website=website):
+            combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(round(combination_info['list_price'], 2), 1913.04, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
 
         # Try same flow with tax included for apply tax
         tax0.write({'name': "Test tax 5", 'amount': 5, 'price_include_override': 'tax_included'})
-        combination_info = product._get_combination_info()
+        with MockRequest(product.env, website=website):
+            combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 456.52, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")
         self.assertEqual(round(combination_info['list_price'], 2), 2008.7, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")
