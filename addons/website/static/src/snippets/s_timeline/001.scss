@@ -31,4 +31,12 @@
             left: 50%;
         }
     }
+
+    .s_timeline_card {
+        // Keep the cards aligned in mobile view.
+        @include media-breakpoint-down(md) {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
 }
