@@ -614,6 +614,19 @@ class Project(models.Model):
                 res -= waiting_subtype
         return res
 
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+        """ Give access to the portal user/customer if the project visibility is portal. """
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
+        if not self:
+            return groups
+
+        self.ensure_one()
+        portal_privacy = self.privacy_visibility == 'portal'
+        for group_name, _group_method, group_data in groups:
+            if group_name in ('customer', 'user') or group_name == 'portal_customer' and not portal_privacy:
+                group_data['has_button_access'] = False
+        return groups
+
     # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
