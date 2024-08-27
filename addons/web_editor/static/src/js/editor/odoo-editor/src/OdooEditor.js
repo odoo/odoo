@@ -2404,7 +2404,7 @@ export class OdooEditor extends EventTarget {
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
-        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table'))) {
+        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table')) && !selection.isCollapsed) {
             // The selection goes through a table but also outside of it ->
             // select the whole table.
             this.observerUnactive('handleSelectionInTable');
@@ -3257,6 +3257,17 @@ export class OdooEditor extends EventTarget {
                 node.before(fontNode);
                 node.replaceChildren(...fontNode.childNodes);
                 fontNode.appendChild(node);
+            } else if (node.nodeName === 'IMG' && node.getAttribute('aria-roledescription') === 'checkbox') {
+                const checklist = closestElement(node, 'ul');
+                const closestLi = closestElement(node, 'li');
+                if (checklist) {
+                    checklist.classList.add('o_checklist');
+                    if (node.getAttribute('alt') === 'checked') {
+                        closestLi.classList.add('o_checked');
+                    }
+                    node.remove();
+                    node = checklist;
+                }
             }
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
@@ -3730,10 +3741,10 @@ export class OdooEditor extends EventTarget {
             // Tab
             const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
             const sel = this.document.getSelection();
-            const closestLi = closestElement(sel.anchorNode, 'li');
-            if (closestElement(sel.anchorNode, 'table') && !closestLi) {
+            const closestTableOrLi = closestElement(sel.anchorNode, 'table, li');
+            if (closestTableOrLi && closestTableOrLi.nodeName === 'TABLE') {
                 this._onTabulationInTable(ev);
-            } else if (!ev.shiftKey && sel.isCollapsed && !closestLi) {
+            } else if (!ev.shiftKey && sel.isCollapsed && !closestTableOrLi) {
                 // Indent text (collapsed selection).
                 this.execCommand('insert', parseHTML(tabHtml));
             } else {

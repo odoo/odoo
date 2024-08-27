@@ -286,6 +286,23 @@ class Sanitize {
                 node = paragraph;
             }
 
+            // If node is UL or OL and its parent is UL or OL, nest it in an LI
+            // with class 'oe-nested'.
+            if (
+                ['UL', 'OL'].includes(node.nodeName) &&
+                ['UL', 'OL'].includes(node.parentNode.nodeName)
+            ) {
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                const li = document.createElement('li');
+                node.parentNode.insertBefore(li, node);
+                li.appendChild(node);
+                li.classList.add('oe-nested');
+                node = li;
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
             // Ensure a zero width space is present inside the FA element.
             if (isFontAwesome(node) && node.textContent !== '\u200B') {
                 node.textContent = '\u200B';
