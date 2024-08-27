@@ -1394,7 +1394,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_uom_qty': 10,
                 'product_uom': self.product_a.uom_id.id,
                 'price_unit': 1,
-                'route_id': mto_route.id,
+                'route_ids': mto_route.ids,
             })],
         })
         so.action_confirm()

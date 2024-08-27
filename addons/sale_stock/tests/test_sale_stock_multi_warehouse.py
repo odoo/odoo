@@ -38,7 +38,7 @@ class TestSaleStockMultiWarehouse(TestSaleStockCommon, ValuationReconciliationTe
                     'product_uom_qty': 9,
                     'product_uom': self.product_a.uom_id.id,
                     'price_unit': 1,
-                    'route_id': self.warehouse_A.delivery_route_id.id,
+                    'route_ids': [self.warehouse_A.delivery_route_id.id],
                 }),
                 (0, 0, {
                     'name': self.product_a.name,
@@ -46,7 +46,7 @@ class TestSaleStockMultiWarehouse(TestSaleStockCommon, ValuationReconciliationTe
                     'product_uom_qty': 10,
                     'product_uom': self.product_a.uom_id.id,
                     'price_unit': 1,
-                    'route_id': self.warehouse_B.delivery_route_id.id,
+                    'route_ids': [self.warehouse_B.delivery_route_id.id],
                 }),
             ],
         })
