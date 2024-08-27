@@ -10,7 +10,7 @@ import {
     mountWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { click, edit, queryAll, select } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryFirst, select } from "@odoo/hoot-dom";
 
 const { DateTime } = luxon;
 
@@ -209,6 +209,33 @@ describe("DateTimeInput (date)", () => {
         await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("1997/01/09");
+    });
+
+    test.tags("mobile")("popover should have enough space to be displayed", async () => {
+        class Root extends Component {
+            static components = { DateTimeInput };
+            static template = xml`<div class="d-flex"><DateTimeInput t-props="props" /></div>`;
+            static props = ["*"];
+        }
+        await mountWithCleanup(Root, {
+            props: {
+                value: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy"),
+                type: "date",
+            },
+        });
+        const parent = queryFirst(".o_datetime_input").parentElement;
+        const initialParentHeight = parent.clientHeight;
+
+        await contains(".o_datetime_input", { root: parent }).click();
+
+        const pickerRectHeight = queryFirst(".o_datetime_picker").clientHeight;
+
+        expect(initialParentHeight).toBeLessThan(pickerRectHeight, {
+            message: "initial height shouldn't be big enough to display the picker",
+        });
+        expect(parent.clientHeight).toBeGreaterThan(pickerRectHeight, {
+            message: "initial height should be big enough to display the picker",
+        });
     });
 });
 
