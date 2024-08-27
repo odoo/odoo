@@ -459,11 +459,11 @@ export class SelfOrder extends Reactive {
 
     _getKioskPrintingCategoriesChanges(categories) {
         return this.currentOrder.lines.filter((orderline) =>
-            categories.some((categId) =>
+            categories.some((category) =>
                 this.models["product.product"]
-                    .get(orderline["product_id"])
+                    .get(orderline.product_id.id)
                     .pos_categ_ids.map((categ) => categ.id)
-                    .includes(categId)
+                    .includes(category.id)
             )
         );
     }
@@ -482,7 +482,7 @@ export class SelfOrder extends Reactive {
                 const printingChanges = {
                     new: orderlines,
                     tracker: this.currentOrder.table_stand_number,
-                    trackingNumber: this.currentOrder.trackingNumber || "unknown number",
+                    trackingNumber: this.currentOrder.tracking_number || "unknown number",
                     name: this.currentOrder.pos_reference || "unknown order",
                     time: {
                         hours,
