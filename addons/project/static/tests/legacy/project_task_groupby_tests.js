@@ -116,7 +116,7 @@ QUnit.module("Project", (hooks) => {
             views: [[false, "kanban"]],
         });
 
-        assert.strictEqual(target.querySelector(".o_column_title").innerText, "🔒 Private\n1");
+        assert.strictEqual(target.querySelector(".o_column_title").innerText, "🔒 Private\n(1)");
     });
 
     QUnit.test("Test group label for empty assignees in kanban", async function (assert) {
@@ -137,7 +137,7 @@ QUnit.module("Project", (hooks) => {
             views: [[false, "kanban"]],
         });
 
-        assert.strictEqual(target.querySelector(".o_column_title").innerText, "👤 Unassigned\n1");
+        assert.strictEqual(target.querySelector(".o_column_title").innerText, "👤 Unassigned\n(1)");
     });
 
     QUnit.test("Test group label for empty deadline in kanban", async function (assert) {
@@ -158,7 +158,7 @@ QUnit.module("Project", (hooks) => {
             views: [[false, "kanban"]],
         });
 
-        assert.strictEqual(target.querySelector(".o_column_title").innerText, "None");
+        assert.strictEqual(target.querySelector(".o_column_title").innerText, "None\n(1)");
     });
 
     QUnit.test("Test group label for empty project in pivot", async function (assert) {
