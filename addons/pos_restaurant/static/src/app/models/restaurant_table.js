@@ -73,10 +73,6 @@ export class RestaurantTable extends Base {
     getOrder() {
         return this.parent_id?.getOrder?.() || this["<-pos.order.table_id"][0];
     }
-    get hasOrder() {
-        const order = this.getOrder();
-        return order && !order.finalized;
-    }
     setPositionAsIfLinked(parent, side) {
         // console.log("132")
         this.parent_id = parent;

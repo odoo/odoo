@@ -100,7 +100,7 @@
                         </div>
                         <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-3 p-3': pos.floorPlanStyle == 'kanban'}">
                            <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
-                                <t t-set="isOccupied" t-value="table.hasOrder"/>
+                                <t t-set="isOccupied" t-value="pos.tableHasOrders(table)"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
                                 <div
@@ -143,12 +143,11 @@
                                     </div>
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
-                                        t-if="data.changes > 0 || data.skip > 0 || table.hasOrder"
-                                        t-esc="data.changes > 0 ? data.changes : table.hasOrder ? 1 : data.skip"
+                                        t-if="data.changes > 0 || data.skip > 0"
+                                        t-esc="data.changes > 0 ? data.changes : data.skip"
                                         t-att-class="{
                                             'text-bg-danger': data.changes,
                                             'text-bg-info'  : !data.changes and data.skip,
-                                            'text-bg-dark'  : !data.changes and !data.skip
                                         }"
                                         class="order-count d-flex align-items-center justify-content-center position-absolute top-0 start-100 translate-middle rounded-circle smaller fw-bolder z-2"
                                         t-attf-style="width: 2rem; height: 2rem;"
