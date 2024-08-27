@@ -11,7 +11,7 @@
                         <t t-if="sale_orders">
                             <t t-set="sale_order" t-value="sale_orders[0]"/>
                             <t t-foreach="sale_order.order_line" t-as="sale_order_line">
-                                <t t-if="sale_order_line.product_id != down_payment_product">
+                                <t t-if="sale_order_line.product_id != down_payment_product and sale_order_line.tax_id == line.tax_ids">
                                     <div>
                                         <span style="margin-right: 5px;"><t t-esc="int(sale_order_line.product_uom_qty)"/>x</span>
                                         <span t-esc="sale_order_line.name" />
