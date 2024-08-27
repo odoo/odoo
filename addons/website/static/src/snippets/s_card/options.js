@@ -8,7 +8,8 @@ options.registry.CardWidth = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState(methodName, params) {
+    async _computeWidgetState(methodName, params) {
+        const value = await this._super(...arguments);
         if (methodName === "selectStyle") {
             if (params.cssProperty === "max-width") {
                 // If no `max-width` is set, consider it to be at 100%.
@@ -16,6 +17,20 @@ options.registry.CardWidth = options.Class.extend({
                     return "100%";
                 }
             }
+        } else if (methodName === "selectClass" && !value) {
+            // If no alignment has been set, consider it to be set to the left.
+            return "me-auto";
+        }
+        return value;
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === "card_alignment_opt") {
+            const maxWidth = this.$target[0].style.maxWidth;
+            const isFullWidth = !maxWidth || maxWidth === "100%";
+            return !isFullWidth;
         }
         return this._super(...arguments);
     },

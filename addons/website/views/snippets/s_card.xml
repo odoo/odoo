@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="s_card" name="Card">
-    <div class="s_card o_card_img_top card o_cc o_cc1" data-vcss="001" data-vxml="001">
+    <div class="s_card o_card_img_top card o_cc o_cc1" data-vxml="001">
         <figure class="o_card_img_wrapper ratio ratio-16x9 mb-0">
             <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1"/>
         </figure>
@@ -39,6 +39,12 @@
                 data-max="100"
                 data-display-range-value="true"
                 data-display-range-value-unit="%"/>
+
+            <we-button-group string="Alignment" class="o_we_sublevel_1" data-name="card_alignment_opt">
+                <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
+                <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
+                <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
+            </we-button-group>
         </div>
 
         <div data-js="CardImageOptions" data-selector=".s_card">
@@ -117,13 +123,6 @@
     <field name="name">Card 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_card/000.scss</field>
-    <field name="active" eval="False"/>
-</record>
-
-<record id="website.s_card_001_scss" model="ir.asset">
-    <field name="name">Card 001 SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website/static/src/snippets/s_card/001.scss</field>
 </record>
 
 </odoo>
