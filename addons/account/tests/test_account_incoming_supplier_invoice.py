@@ -54,6 +54,38 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
             'mimetype': 'image/gif',
         })
 
+    def _create_dummy_xlsx_attachment(self):
+        self.attachment_number += 1
+        return self.env['ir.attachment'].create({
+            'name': f"attachment_{self.attachment_number}",
+            'raw': 'test',
+            'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+
+    def _create_dummy_docx_attachment(self):
+        self.attachment_number += 1
+        return self.env['ir.attachment'].create({
+            'name': f"attachment_{self.attachment_number}",
+            'raw': 'test',
+            'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+
+    def _create_dummy_txt_attachment(self):
+        self.attachment_number += 1
+        return self.env['ir.attachment'].create({
+            'name': f"attachment_{self.attachment_number}",
+            'raw': 'test',
+            'mimetype': 'text/plain',
+        })
+
+    def _create_dummy_csv_attachment(self):
+        self.attachment_number += 1
+        return self.env['ir.attachment'].create({
+            'name': f"attachment_{self.attachment_number}",
+            'raw': 'test',
+            'mimetype': 'text/csv',
+        })
+
     def _disable_ocr(self, company):
         if 'extract_in_invoice_digitalization_mode' in company._fields:
             company.extract_in_invoice_digitalization_mode = 'no_send'
@@ -267,3 +299,21 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
             self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True, from_alias=True)
             self.assertEqual(decoded_files, {xml1.name})
+
+    def test_extend_with_attachments_document_formats(self):
+        txt = self._create_dummy_txt_attachment()
+        csv = self._create_dummy_csv_attachment()
+        xlsx = self._create_dummy_xlsx_attachment()
+        docx = self._create_dummy_docx_attachment()
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({txt: 1}, new=True, from_alias=True)
+            self.assertEqual(decoded_files, {txt.name})
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({csv: 1}, new=True, from_alias=True)
+            self.assertEqual(decoded_files, {csv.name})
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({xlsx: 1}, new=True, from_alias=True)
+            self.assertEqual(decoded_files, {xlsx.name})
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({docx: 1}, new=True, from_alias=True)
+            self.assertEqual(decoded_files, {docx.name})
