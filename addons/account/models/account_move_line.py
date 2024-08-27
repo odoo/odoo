@@ -45,6 +45,14 @@ class AccountMoveLine(models.Model):
         index=True,
         copy=False,
     )
+
+    journal_group_id = fields.Many2one(
+        string='Ledger',
+        comodel_name='account.journal.group',
+        store=False,
+        search='_search_journal_group_id',
+    )
+
     company_id = fields.Many2one(
         related='move_id.company_id', store=True, readonly=True, precompute=True,
         index=True,
@@ -1204,6 +1212,15 @@ class AccountMoveLine(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
+
+    # -------------------------------------------------------------------------
+    # SEARCH METHODS
+    # -------------------------------------------------------------------------
+
+    def _search_journal_group_id(self, operator, value):
+        field = 'name' if 'like' in operator else 'id'
+        journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
+        return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
