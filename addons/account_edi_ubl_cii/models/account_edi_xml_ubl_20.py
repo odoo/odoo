@@ -102,6 +102,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         return []
 
+    def _get_additional_document_reference_vals_list(self, invoice):
+        """
+        This is optional and meant to be overridden when required under the form:
+        {
+            'id': str,
+            'issue_date': str,
+            'document_type_code': str,
+            'document_type': str,
+        }.
+        """
+        return []
+
     def _get_delivery_vals_list(self, invoice):
         # the data is optional, except for ubl bis3 (see the override, where we need to set a default delivery address)
         return [{
@@ -543,6 +555,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'party_vals': self._get_partner_party_vals(customer, role='customer'),
                 },
                 'invoice_period_vals_list': self._get_invoice_period_vals_list(invoice),
+                'additional_document_reference_vals_list': self._get_additional_document_reference_vals_list(invoice),
                 'delivery_vals_list': self._get_delivery_vals_list(invoice),
                 'payment_means_vals_list': self._get_invoice_payment_means_vals_list(invoice),
                 'payment_terms_vals': self._get_invoice_payment_terms_vals_list(invoice),
