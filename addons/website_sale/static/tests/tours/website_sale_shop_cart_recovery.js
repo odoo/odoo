@@ -42,9 +42,19 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         run: "click",
     },
     {
-        content: "click Send a Cart Recovery Email",
-        trigger: "span:contains(/^Send a Cart Recovery Email$/)",
+        content: "click Send an Email",
+        trigger: "span:contains(/^Send an email$/)",
         run: "click",
+    },
+    {
+        content: "select template",
+        trigger: ".mail-composer-template-dropdown-btn",
+        run: "click",
+    },
+    {
+        content: 'Select the "Ecommerce: Cart Recovery" template from the list.',
+        trigger: '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Ecommerce: Cart Recovery")',
+        run: 'click'
     },
     {
         content: "click Send email",

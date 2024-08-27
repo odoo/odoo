@@ -134,17 +134,6 @@
     </record>
 
     <!-- Server action to send multiple recovery email-->
-    <record id="ir_actions_server_sale_cart_recovery_email" model="ir.actions.server">
-        <field name="name">Send a Cart Recovery Email</field>
-        <field name="model_id" ref="model_sale_order"/>
-        <field name="state">code</field>
-        <field name="code">
-            if records:
-                action = records.action_recovery_email_send()
-        </field>
-        <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list,form</field>
-    </record>
 
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
