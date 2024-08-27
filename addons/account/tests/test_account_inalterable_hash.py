@@ -2,7 +2,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.models import Model
 from odoo.tests import Form, tagged
 from odoo import fields, Command
-from odoo.exceptions import UserError, RedirectWarning
+from odoo.exceptions import UserError
 from unittest.mock import patch
 
 
@@ -357,9 +357,13 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         move2 = self.init_invoice("out_invoice", self.partner_a, "2024-01-02", amounts=[1000], post=True)
         move3 = self.init_invoice("out_invoice", self.partner_a, "2024-01-02", amounts=[1000], post=True)
 
-        move2.button_draft()  # Create hole in sequence
+        move2.button_draft()  # Create hole in the middle of unhashed chain [move1, move2, move3]
         with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
             self._send(move3)
+
+        move1.button_hash()  # Afterwards move2 is a hole at the beginning of the unhashed part of the chain [move1 (hashed), move2, move3]
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
+            move3.button_hash()
 
         move2.action_post()
         self._send(move3)  # Shouldn't raise
@@ -487,8 +491,11 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self._verify_integrity(moves, "Entries are correctly hashed", move4, move6, prefix=move4.sequence_prefix)
 
     def test_hash_on_lock_date(self):
-        """When setting a lock date, we should hash the moves before the lock date
-        otherwise we won't ever be able to hash them"""
+        """
+        The lock date and hashing should not interfere with each other.
+          * We should be able to hash moves protected by a lock date.
+          * We should be able to lock a period containing unhashed moves.
+        """
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
 
         for lock_date_field in [
@@ -506,7 +513,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                 for move in (move1, move2, move3, move4, move5):
                     self.assertFalse(move.inalterable_hash)
 
-                # Shouldn't raise since no moves has ever been hashed
+                # Shouldn't raise (case no moves have ever been hashed)
                 self.company_data['company'][lock_date_field] = fields.Date.to_date('2024-01-31')
 
                 # Let's has just one and revert the lock date
@@ -520,29 +527,17 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                     self.company_data['company'][lock_date_field] = False
                 move1.button_hash()
 
-                # Now we should raise because we have a hashed move before the lock date
-                try:
-                    self.company_data['company'][lock_date_field] = fields.Date.to_date('2024-01-31')
-                except RedirectWarning as rw:
-                    self.assertEqual(rw.args[0], 'Some journal entries have not been hashed yet. You should hash them before setting the lock dates.')
-                    self.assertEqual(rw.args[1]['domain'][0][2], [move2.id, move3.id])
-                else:
-                    self.fail("RedirectWarning not raised")
+                # We should be able to set the lock date (case there are hashed moves)
+                self.company_data['company'][lock_date_field] = fields.Date.to_date('2024-01-31')
 
                 for move in (move2, move3, move4, move5):
                     self.assertFalse(move.inalterable_hash)
 
-                # Let's hash them manually
+                # We should be able to hash the moves despite the lock date
                 move5.button_hash()
                 for move in (move1, move2, move3, move4, move5):
                     self.assertNotEqual(move.inalterable_hash, False)
                 self._verify_integrity(move5, "Entries are correctly hashed", move1, move5)
-
-                # Now we can lock
-                self.company_data['company'][lock_date_field] = fields.Date.to_date('2024-01-31')
-
-                # No moves to lock, shouldn't raise
-                self.company_data['company'][lock_date_field] = fields.Date.to_date('2024-02-29')
 
                 sp.close()  # Rollback to ensure all subtests start in the same situation
 
