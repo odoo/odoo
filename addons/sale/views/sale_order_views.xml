@@ -1100,4 +1100,17 @@
         <field name="state">code</field>
         <field name="code">action = records.action_share()</field>
     </record>
+
+    <record id="model_sale_order_send_mail" model="ir.actions.server">
+        <field name="name">Send an email</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="sequence">1</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.with_context(hide_default_template=True).action_quotation_send()
+        </field>
+    </record>
 </odoo>
