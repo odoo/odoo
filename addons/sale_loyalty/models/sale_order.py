@@ -450,7 +450,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return [('active', '=', True), ('sale_ok', '=', True),
-                ('company_id', 'in', (self.company_id.id, False)),
+                ('company_id', 'in', (self.company_id.id, self.company_id.parent_id.id, False)),
                 '|', ('date_to', '=', False), ('date_to', '>=', fields.Date.context_today(self))]
 
     def _get_trigger_domain(self):
@@ -459,7 +459,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return [('active', '=', True), ('program_id.sale_ok', '=', True),
-                ('company_id', 'in', (self.company_id.id, False)),
+                ('company_id', 'in', (self.company_id.id, self.company_id.parent_id.id, False)),
                 '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', fields.Date.context_today(self))]
 
     def _get_applicable_program_points(self, domain=None):
