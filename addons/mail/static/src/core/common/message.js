@@ -307,6 +307,10 @@ export class Message extends Component {
         return Boolean(this.env.inChatWindow && this.props.message.isSelfAuthored);
     }
 
+    get isPersistentMessageFromAnotherThread() {
+        return !this.isOriginThread && !this.message.is_transient;
+    }
+
     get isOriginThread() {
         if (!this.props.thread) {
             return false;
