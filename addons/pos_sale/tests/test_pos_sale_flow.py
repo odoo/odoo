@@ -754,6 +754,12 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerTax', login="accountman")
 
+        # We check the content of the invoice to make sure Product A/B/C only appears only once
+        invoice_pdf_content = str(self.env['pos.order'].search([]).account_move.get_invoice_pdf_report_attachment()[0])
+        self.assertEqual(invoice_pdf_content.count('Product A'), 1)
+        self.assertEqual(invoice_pdf_content.count('Product B'), 1)
+        self.assertEqual(invoice_pdf_content.count('Product C'), 1)
+
     def test_settle_so_with_pos_downpayment(self):
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,

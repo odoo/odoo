@@ -294,6 +294,11 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
                 quantity: "1.0",
                 price: "3.00",
             }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 
