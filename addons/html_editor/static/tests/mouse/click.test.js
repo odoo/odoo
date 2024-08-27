@@ -1,19 +1,19 @@
-import { test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { pointerDown, pointerUp } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { leftPos, rightPos } from "@html_editor/utils/position";
-import { setSelection } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
 
 /**
  * Simulates placing the cursor at the editable root after a mouse click.
  *
  * @param {HTMLElement} node
- * @param {boolean} [after=false] whether to place the cursor after the node
+ * @param {boolean} [before=false] whether to place the cursor after the node
  */
-async function simulateMouseClick(node, after = false) {
+async function simulateMouseClick(node, before = false) {
     pointerDown(node);
-    const pos = after ? leftPos(node) : rightPos(node);
+    const pos = before ? leftPos(node) : rightPos(node);
     setSelection({
         anchorNode: pos[0],
         anchorOffset: pos[1],
@@ -86,4 +86,17 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
         },
         contentAfter: "<table></table><p>[]<br></p><table></table>",
     });
+});
+
+test("should insert a paragraph before the table, then one after it", async () => {
+    const { el } = await setupEditor("<table></table>");
+    const table = el.querySelector("table");
+    await simulateMouseClick(table, true);
+    expect(getContent(el)).toBe(
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><table></table>`
+    );
+    await simulateMouseClick(table);
+    expect(getContent(el)).toBe(
+        `<p><br></p><table></table><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
 });
