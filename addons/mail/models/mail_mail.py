@@ -584,6 +584,7 @@ class MailMail(models.Model):
         # to actually commit during tests
         if getattr(threading.current_thread(), 'testing', False):
             self.send()
+            return
 
         email_ids = self.ids
         dbname = self.env.cr.dbname
