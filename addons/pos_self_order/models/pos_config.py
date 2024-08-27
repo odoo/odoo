@@ -7,7 +7,7 @@ from werkzeug.urls import url_quote
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
-from odoo.tools import file_open, split_every
+from odoo.tools import convert, file_open, split_every
 
 
 class PosConfig(models.Model):
@@ -340,15 +340,46 @@ class PosConfig(models.Model):
         return self.self_ordering_url
 
     @api.model
-    def _modify_pos_restaurant_config(self):
-        pos_config = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
-        if pos_config:
-            pos_config.write({
-                'self_ordering_service_mode': 'table',
-                'self_ordering_pay_after': 'meal'
-            })
-
-    @api.model
     def _load_restaurant_data(self):
         super()._load_restaurant_data()
-        self._modify_pos_restaurant_config()
+        convert.convert_file(
+            self.env,
+            'pos_restaurant',
+            'data/scenarios/restaurant_data.xml',
+            None,
+            noupdate=True,
+            mode='init',
+            kind='data'
+        )
+
+    @api.model
+    def load_onboarding_restaurant_scenario(self):
+        ref_name = 'pos_restaurant.pos_config_main_restaurant'
+        if not self.env.ref(ref_name, raise_if_not_found=False):
+            self._load_restaurant_data()
+
+        journal, payment_methods_ids = self._create_journal_and_payment_methods()
+        restaurant_categories = [
+            self.env.ref('pos_restaurant.food').id,
+            self.env.ref('pos_restaurant.drinks').id,
+        ]
+        not_cash_payment_methods_ids = self.env['pos.payment.method'].search([
+            ('is_cash_count', '=', False),
+            ('id', 'in', payment_methods_ids),
+        ]).ids
+        config = self.env['pos.config'].create({
+            'name': _('Kiosk'),
+            'company_id': self.env.company.id,
+            'journal_id': journal.id,
+            'payment_method_ids': not_cash_payment_methods_ids,
+            'limit_categories': True,
+            'iface_available_categ_ids': restaurant_categories,
+            'iface_splitbill': True,
+            'module_pos_restaurant': True,
+        })
+        config.write({'self_ordering_mode': 'kiosk'})
+        self.env['ir.model.data']._update_xmlids([{
+            'xml_id': self._get_suffixed_ref_name(ref_name),
+            'record': config,
+            'noupdate': True,
+        }])
