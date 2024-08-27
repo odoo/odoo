@@ -183,6 +183,7 @@ class ThemePage(models.Model):
     view_id = fields.Many2one('theme.ir.ui.view', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     is_published = fields.Boolean()
+    is_new_page_template = fields.Boolean(string="New Page Template")
 
     # Page options
     header_overlay = fields.Boolean()
@@ -204,6 +205,7 @@ class ThemePage(models.Model):
             'view_id': view_id.id,
             'website_indexed': self.website_indexed,
             'is_published': self.is_published,
+            'is_new_page_template': self.is_new_page_template,
             'header_overlay': self.header_overlay,
             'header_color': self.header_color,
             'header_visible': self.header_visible,
