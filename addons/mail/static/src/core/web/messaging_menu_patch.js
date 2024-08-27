@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
+import { isIOS } from "@web/core/browser/feature_detection";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -67,7 +68,7 @@ patch(MessagingMenu.prototype, {
             (this.store.failures.length > 0 &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
-            (this.notification.permission === "prompt" &&
+            (this.shouldAskPushPermission &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.canPromptToInstall &&
@@ -93,9 +94,7 @@ patch(MessagingMenu.prototype, {
             displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown:
-                this.store.discuss.activeTab === "main" &&
-                this.notification.permission === "prompt",
+            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
         };
     },
     get tabs() {
@@ -170,12 +169,15 @@ patch(MessagingMenu.prototype, {
         if (this.canPromptToInstall) {
             value++;
         }
-        if (this.notification.permission === "prompt") {
+        if (this.shouldAskPushPermission) {
             value++;
         }
         return value;
     },
     get displayStartConversation() {
         return this.store.discuss.activeTab !== "channel" && !this.state.adding;
+    },
+    get shouldAskPushPermission() {
+        return this.notification.permission === "prompt" && !isIOS();
     },
 });
