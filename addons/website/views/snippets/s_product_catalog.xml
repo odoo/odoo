@@ -96,8 +96,8 @@
         </div>
     </xpath>
     <xpath expr="." position="inside">
-        <div data-js="ProductCatalog" data-selector=".s_product_catalog">
-            <we-checkbox string="Descriptions" data-toggle-description="true" data-no-preview="true"/>
+        <div data-js="Pricelist" data-selector=".s_product_catalog">
+            <we-checkbox string="Descriptions" data-toggle-description="true" data-items-class="s_product_catalog_dish" data-description-class="s_product_catalog_dish_description" data-no-preview="true"/>
             <t t-call="website.snippet_options_border_line_widgets">
                 <t t-set="label">Separator</t>
                 <t t-set="direction" t-value="'top'"/>

@@ -263,7 +263,6 @@
             'website/static/src/snippets/s_countdown/options.xml',
             'website/static/src/snippets/s_masonry_block/options.js',
             'website/static/src/snippets/s_popup/options.js',
-            'website/static/src/snippets/s_product_catalog/options.js',
             'website/static/src/snippets/s_chart/options.js',
             'website/static/src/snippets/s_rating/options.js',
             'website/static/src/snippets/s_tabs/options.js',
