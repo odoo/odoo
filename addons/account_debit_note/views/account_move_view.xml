@@ -49,8 +49,8 @@ if records:
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter" />
         <field name="arch" type="xml">
-            <filter name="to_check" position="before">
-                <filter string="Debit Note" name="debit_note_filter"
+            <filter name="out_refund" position="after">
+                <filter string="Debit Notes" name="debit_note_filter"
                     domain="[('debit_origin_id', '!=', False)]" />
                 <separator />
             </filter>

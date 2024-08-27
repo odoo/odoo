@@ -11,7 +11,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="journal_group_ids" widget="many2many_tags" readonly="1" optional="show"/>
+                    <field name="journal_group_ids" widget="many2many_tags" readonly="1" optional="hide"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
                     <field name="code" optional="show"/>
                     <field name="default_account_id" optional="show"/>
@@ -273,9 +273,9 @@
                 <list editable="bottom">
                     <field name="company_id" column_invisible="True"/>
                     <field name="sequence"  widget="handle"/>
-                    <field name="name"/>
+                    <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
                     <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" placeholder="All Companies" options="{'no_create': True}"/>
                 </list>
             </field>
         </record>

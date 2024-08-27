@@ -173,6 +173,12 @@ class AccountMove(models.Model):
         check_company=True,
         domain="[('id', 'in', suitable_journal_ids)]",
     )
+    journal_group_id = fields.Many2one(
+        'account.journal.group',
+        string='Ledger',
+        store=False,
+        search='_search_journal_group_id',
+    )
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company',
@@ -1886,6 +1892,14 @@ class AccountMove(models.Model):
                 if not is_html_empty(tax.invoice_legal_notes)
             )
 
+    # -------------------------------------------------------------------------
+    # SEARCH METHODS
+    # -------------------------------------------------------------------------
+
+    def _search_journal_group_id(self, operator, value):
+        field = 'name' if 'like' in operator else 'id'
+        journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
+        return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------

@@ -319,6 +319,7 @@
                     <field name="account_type"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
+                    <field name="journal_group_id"/>
                     <field name="product_id"/>
                     <field name="product_category_id"/>
                     <field name="move_id" string="Journal Entry" filter_domain="[
@@ -346,6 +347,7 @@
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
                     <filter string="Bank" name="bank" domain="[('journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
                     <filter string="Cash" name="cash" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Credit" name="credit" domain="[('journal_id.type', '=', 'credit')]" context="{'default_journal_type': 'credit'}"/>
                     <filter string="Miscellaneous" domain="[('journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]" help="From Trade Payable accounts" name="trade_payable"/>
@@ -1495,6 +1497,7 @@
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
                     <filter string="Bank" name="bankoperations" domain="[('journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
                     <filter string="Cash" name="cashoperations" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Credit" name="credit" domain="[('journal_id.type', '=', 'credit')]" context="{'default_journal_type': 'credit'}"/>
                     <filter string="Miscellaneous" name="misc_filter" domain="[('journal_id.type', '=', 'general')]" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
@@ -1532,6 +1535,7 @@
                     <field name="ref"/>
                     <field name="payment_reference"/>
                     <field name="journal_id"/>
+                    <field name="journal_group_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
                     <field name="date" string="Period"/>
@@ -1554,6 +1558,15 @@
                             string="Not Sent"
                             domain="[('is_move_sent', '=', False)]"
                             invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"
+                    />
+                    <separator/>
+                    <filter name="out_invoice"
+                            string="Invoices"
+                            domain="[('move_type', '=', 'out_invoice')]"
+                    />
+                    <filter name="out_refund"
+                            string="Credit Notes"
+                            domain="[('move_type', '=', 'out_refund')]"
                     />
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('checked', '=', False), ('state', '!=', 'draft')]"/>
@@ -1619,6 +1632,18 @@
                 <filter name="salesperson" position="replace"/>
                 <filter name="invoicedate" position="attributes">
                     <attribute name="string">Bill Date</attribute>
+                </filter>
+                <filter name="out_invoice" position="replace">
+                    <filter name="in_invoice"
+                            string="Bills"
+                            domain="[('move_type', '=', 'in_invoice')]"
+                    />
+                </filter>
+                <filter name="out_refund" position="replace">
+                    <filter name="in_refund"
+                            string="Refunds"
+                            domain="[('move_type', '=', 'in_refund')]"
+                    />
                 </filter>
             </field>
         </record>
@@ -1771,8 +1796,8 @@
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_out_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="domain">[('move_type', '=', 'out_invoice')]</field>
-            <field name="context">{'default_move_type': 'out_invoice'}</field>
+            <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+            <field name="context">{'search_default_out_invoice': 1, 'default_move_type': 'out_invoice'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a customer invoice
@@ -1789,8 +1814,8 @@
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="domain">[('move_type', '=', 'out_refund')]</field>
-            <field name="context">{'default_move_type': 'out_refund', 'display_account_trust': True}</field>
+            <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+            <field name="context">{'search_default_out_refund': 1, 'default_move_type': 'out_refund', 'display_account_trust': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a credit note
@@ -1808,8 +1833,8 @@
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
-            <field name="domain">[('move_type', '=', 'in_invoice')]</field>
-            <field name="context">{'default_move_type': 'in_invoice', 'display_account_trust': True}</field>
+            <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
+            <field name="context">{'search_default_in_invoice': 1, 'default_move_type': 'in_invoice', 'display_account_trust': True}</field>
             <field name="help" type="html">
                 <!-- An owl component should be displayed instead -->
                 <p class="o_view_nocontent_smiling_face">
@@ -1826,8 +1851,8 @@
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_refund_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
-            <field name="domain">[('move_type', '=', 'in_refund')]</field>
-            <field name="context">{'default_move_type': 'in_refund'}</field>
+            <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
+            <field name="context">{'search_default_in_refund': 1, 'default_move_type': 'in_refund'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a vendor credit note

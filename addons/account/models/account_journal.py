@@ -18,9 +18,12 @@ class AccountJournalGroup(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char("Ledger group", required=True, translate=True)
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
-    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals",
-        check_company=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        help="Define which company can select the multi-ledger in report filters. If none is provided, available for all companies",
+        default=lambda self: self.env.company,
+    )
+    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals")
     sequence = fields.Integer(default=10)
 
     _sql_constraints = [
