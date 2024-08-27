@@ -135,7 +135,7 @@ export class SelectionPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "pointerup", () => {
             this.isPointerDown = false;
-            this.preventNextMousedownFix = false;
+            this.preventNextPointerdownFix = false;
         });
     }
 
