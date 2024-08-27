@@ -5,6 +5,7 @@ import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
+import { getElementData } from '@web/core/utils/ui';
 
 /**
  * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
@@ -100,17 +101,25 @@ var Quiz = publicWidget.Widget.extend({
      * Decorate the answers according to state
      */
     _disableAnswers: function () {
-        this.$('.o_quiz_js_quiz_question').addClass('completed-disabled');
-        this.$('input[type=radio]').prop('disabled', true);
+        this.el.querySelectorAll(".o_quiz_js_quiz_question").forEach((question) => {
+            question.classList.add("completed-disabled");
+        });
+        this.el.querySelectorAll("input[type=radio]").forEach((input) => {
+            input.disabled = true;
+        });
     },
 
     /**
      * @private
      * Decorate the answers according to state
      */
-    _enableAnswers: function() {
-        this.$('.o_quiz_js_quiz_question').removeClass('completed-disabled');
-        this.$('input[type=radio]').prop('disabled', false);
+    _enableAnswers: function () {
+        this.el.querySelectorAll(".o_quiz_js_quiz_question").forEach((questionEl) => {
+            questionEl.classList.remove("completed-disabled");
+        });
+        this.el.querySelectorAll("input[type=radio]").forEach((inputEl) => {
+            inputEl.disabled = false;
+        });
     },
 
     /**
@@ -119,9 +128,9 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _getQuestionsIds: function () {
-        return this.$('.o_quiz_js_quiz_question').map(function () {
-            return $(this).data('question-id');
-        }).get();
+        return [...this.el.querySelectorAll(".o_quiz_js_quiz_question")].map(function (question) {
+            return parseInt(question.dataset.questionId);
+        });
     },
 
     /**
@@ -130,9 +139,7 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _getQuizAnswers: function () {
-        return this.$('input[type=radio]:checked').map(function (index, element) {
-            return parseInt($(element).val());
-        }).get();
+        return [...this.el.querySelectorAll("input[type=radio]:checked")].map((input) => parseInt(input.value));
     },
 
     /**
@@ -142,30 +149,27 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _renderAnswersHighlightingAndComments: function () {
-        var self = this;
-        this.$('.o_quiz_js_quiz_question').each(function () {
-            var $question = $(this);
-            var questionId = $question.data('questionId');
-            var answer = self.quiz.answers[questionId];
-            $question.find('a.o_quiz_quiz_answer').each(function () {
-                var $answer = $(this);
-                $answer.find('i.fa').addClass('d-none');
-                if ($answer.find('input[type=radio]').is(':checked')) {
+        this.el.querySelectorAll(".o_quiz_js_quiz_question").forEach((questionEl) => {
+            const questionId = parseInt(questionEl.dataset.questionId);
+            const answer = this.quiz.answers[questionId];
+            questionEl.querySelectorAll("a.o_quiz_quiz_answer").forEach(function (answerEl) {
+                answerEl.querySelector("i.fa").classList.add("d-none");
+                if (answerEl.querySelector("input[type=radio]").checked) {
                     if (answer.is_correct) {
-                        $answer.find('i.fa-check-circle').removeClass('d-none');
+                        answerEl.querySelector("i.fa-check-circle").classList.remove("d-none");
                     } else {
-                        $answer.find('label input').prop('checked', false);
-                        $answer.find('i.fa-times-circle').removeClass('d-none');
+                        answerEl.querySelector("label input").checked = false;
+                        answerEl.querySelector("i.fa-times-circle").classList.remove("d-none");
                     }
                     if (answer.awarded_points > 0) {
-                        $answer.append(renderToElement('quiz.badge', {'answer': answer}));
+                        answerEl.append(renderToElement("quiz.badge", { answer: answer }));
                     }
                 } else {
-                    $answer.find('i.fa-circle').removeClass('d-none');
+                    answerEl.querySelector("i.fa-circle").classList.remove("d-none");
                 }
             });
-            var $list = $question.find('.list-group');
-            $list.append(renderToElement('quiz.comment', {'answer': answer}));
+            const listEl = questionEl.querySelector(".list-group");
+            listEl.append(renderToElement("quiz.comment", { answer: answer }));
         });
     },
 
@@ -174,27 +178,29 @@ var Quiz = publicWidget.Widget.extend({
         * Update validation box (karma, buttons) according to widget state
         */
     _renderValidationInfo: function () {
-        var $validationElem = this.$('.o_quiz_js_quiz_validation');
-        $validationElem.empty().append(
-            renderToElement('quiz.validation', {'widget': this})
-        );
+        const validationEl = this.el.querySelector(".o_quiz_js_quiz_validation");
+        validationEl.replaceChild();
+        validationEl.append(renderToElement("quiz.validation", { widget: this }));
     },
 
     /**
      * Remove the answer decorators
      */
-     _resetQuiz: function () {
-        this.$('.o_quiz_js_quiz_question').each(function () {
-            var $question = $(this);
-            $question.find('a.o_quiz_quiz_answer').each(function () {
-                var $answer = $(this);
-                $answer.find('i.fa').addClass('d-none');
-                $answer.find('i.fa-circle').removeClass('d-none');
-                $answer.find('span.badge').remove();
-                $answer.find('input[type=radio]').prop('checked', false);
+    _resetQuiz: function () {
+        this.el.querySelectorAll(".o_quiz_js_quiz_question").forEach(function (questionEl) {
+            questionEl.querySelectorAll("a.o_quiz_quiz_answer").forEach(function (answerEl) {
+                answerEl.querySelectorAll("i.fa").forEach((el) => el.classList.add("d-none"));
+                answerEl
+                    .querySelectorAll("i.fa-circle")
+                    .forEach((el) => el.classList.remove("d-none"));
+                answerEl.querySelectorAll("span.badge").forEach((el) => el.remove());
+                answerEl
+                    .querySelectorAll("input[type=radio]")
+                    .forEach((el) => (el.checked = false));
             });
-            var $info = $question.find('.o_quiz_quiz_answer_info');
-            $info.remove();
+            questionEl
+                .querySelectorAll(".o_quiz_quiz_answer_info")
+                .forEach((infoEl) => infoEl.remove());
         });
         this.track.completed = false;
         this._enableAnswers();
@@ -245,7 +251,7 @@ var Quiz = publicWidget.Widget.extend({
     _onAnswerClick: function (ev) {
         ev.preventDefault();
         if (!this.track.completed) {
-            $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
+            ev.currentTarget.querySelector("input[type=radio]").checked = true;
         }
     },
 
@@ -279,8 +285,8 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
         var self = this;
         this.quizWidgets = [];
         var defs = [this._super.apply(this, arguments)];
-        this.$('.o_quiz_js_quiz').each(function () {
-            var data = $(this).data();
+        this.el.querySelectorAll(".o_quiz_js_quiz").forEach((el) => {
+            const data = getElementData(el);
             data.quizData = {
                 questions: self._extractQuestionsAndAnswers(),
                 sessionAnswers: data.sessionAnswers || [],
@@ -290,7 +296,7 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
                 quizPointsGained: data.quizPointsGained,
                 quizAttemptsCount: data.quizAttemptsCount,
             };
-            defs.push(new Quiz(self, data, data.quizData).attachTo($(this)));
+            defs.push(new Quiz(self, data, data.quizData).attachTo(el));
         });
         return Promise.all(defs);
     },
@@ -308,19 +314,17 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
      */
     _extractQuestionsAndAnswers: function () {
         var questions = [];
-        this.$('.o_quiz_js_quiz_question').each(function () {
-            var $question = $(this);
+        this.el.querySelectorAll(".o_quiz_js_quiz_question").forEach(function (question) {
             var answers = [];
-            $question.find('.o_quiz_quiz_answer').each(function () {
-                var $answer = $(this);
+            question.querySelectorAll(".o_quiz_quiz_answer").forEach(function (answer) {
                 answers.push({
-                    id: $answer.data('answerId'),
-                    text: $answer.data('text'),
+                    id: parseInt(answer.dataset.answerId),
+                    text: answer.dataset.text,
                 });
             });
             questions.push({
-                id: $question.data('questionId'),
-                title: $question.data('title'),
+                id: parseInt(question.dataset.questionId),
+                title: question.dataset.title,
                 answer_ids: answers,
             });
         });
