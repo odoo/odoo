@@ -306,6 +306,10 @@ export class Message extends Component {
         return isMobileOS();
     }
 
+    get isPersistentMessageFromAnotherThread() {
+        return !this.isOriginThread && !this.message.is_transient && this.message.thread;
+    }
+
     get isOriginThread() {
         if (!this.props.thread) {
             return false;
