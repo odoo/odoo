@@ -3506,7 +3506,6 @@ class AccountMove(models.Model):
                     *common_domain,
                     ('sequence_number', '<=', last_move_in_chain.sequence_number),
                     ('inalterable_hash', '=', False),
-                    ('date', '>', last_move_in_chain.company_id._get_user_fiscal_lock_date(journal)),
                 ], force_hash=True)
                 if last_move_hashed and not include_pre_last_hash:
                     # Hash moves only after the last hashed move, not the ones that may have been posted before the journal was set on restrict mode
@@ -3521,14 +3520,21 @@ class AccountMove(models.Model):
                 moves_to_hash = self.env['account.move'].sudo().search(domain, order='sequence_number')
                 if not moves_to_hash and force_hash and raise_if_no_document:
                     raise UserError(_(
-                        "This move could not be locked either because:\n"
-                        "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
-                        "- the move's date is anterior to the lock date"
+                        "This move could not be locked either because "
+                        "some move with the same sequence prefix has a higher number. You may need to resequence it."
                     ))
-                if raise_if_gap and moves_to_hash and moves_to_hash[0].sequence_number + len(moves_to_hash) - 1 != moves_to_hash[-1].sequence_number:
-                    raise UserError(_(
-                        "An error occurred when computing the inalterability. A gap has been detected in the sequence."
-                    ))
+                if raise_if_gap and moves_to_hash:
+                    if last_move_hashed:
+                        first = last_move_hashed.sequence_number
+                        difference = len(moves_to_hash)
+                    else:
+                        first = moves_to_hash[0].sequence_number
+                        difference = len(moves_to_hash) - 1
+                    last = moves_to_hash[-1].sequence_number
+                    if first + difference != last:
+                        raise UserError(_(
+                            "An error occurred when computing the inalterability. A gap has been detected in the sequence."
+                        ))
 
                 res.append({
                     'previous_hash': last_move_hashed.inalterable_hash,

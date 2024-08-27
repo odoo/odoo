@@ -503,52 +503,6 @@ class ResCompany(models.Model):
                 action_error = self._get_fiscalyear_lock_statement_lines_redirect_action(unreconciled_statement_lines)
                 raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
 
-        # Check for unhashed journal entries
-        if fiscal_lock_date or sale_lock_date or purchase_lock_date:
-            # Check if there are still unhashed journal entries
-            # Only check journals that have at least one hashed entry.
-            journals_to_check = self.env['account.journal']
-            for journal in self.env['account.journal'].search([
-                ('restrict_mode_hash_table', '=', True),
-            ]):
-                if self.env['account.move'].search_count([
-                    ('inalterable_hash', '!=', False),
-                    ('journal_id', '=', journal.id),
-                ], limit=1):
-                    journals_to_check |= journal
-            lock_date_domains = []
-            if fiscal_lock_date:
-                lock_date_domains.append([('date', '<=', fiscal_lock_date)])
-            for lock_date, journal_type in [(sale_lock_date, 'sale'), (purchase_lock_date, 'purchase')]:
-                if lock_date:
-                    lock_date_domains.append([
-                        ('date', '<=', lock_date),
-                        ('journal_id.type', '=', journal_type),
-                    ])
-            chains_to_hash = self.env['account.move'].search([
-                ('restrict_mode_hash_table', '=', True),
-                ('inalterable_hash', '=', False),
-                ('journal_id', 'in', journals_to_check.ids),
-                *expression.OR(lock_date_domains),
-            ])._get_chains_to_hash(force_hash=True, raise_if_no_document=False)
-
-            move_ids = [move.id for chain in chains_to_hash for move in chain['moves']]
-            if move_ids:
-                msg = _("Some journal entries have not been hashed yet. You should hash them before setting the lock dates.")
-                action = {
-                    'type': 'ir.actions.act_window',
-                    'name': _('Journal Entries to Hash'),
-                    'res_model': 'account.move',
-                    'domain': [('id', 'in', move_ids)],
-                    'views': [(False, 'list'), (False, 'form')],
-                }
-                if len(move_ids) == 1:
-                    action.update({
-                        'res_id': move_ids[0],
-                        'views': [(False, 'form')],
-                    })
-                raise RedirectWarning(msg, action, _('Show Journal Entries to Hash'))
-
     def _get_user_lock_date(self, soft_lock_date_field, ignore_exceptions=False):
         """Get the lock date called `soft_lock_date_field` for this company depending on the user.
         We consider the field and exceptions (except if `ignore_exceptions`) for it in this company and the parent companies.
