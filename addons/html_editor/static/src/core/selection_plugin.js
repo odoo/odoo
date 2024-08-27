@@ -223,6 +223,7 @@ export class SelectionPlugin extends Plugin {
                 textContent: () => "",
                 inEditable,
                 intersectsNode: () => false,
+                isDefault: true,
             };
         } else {
             range = selection.getRangeAt(0);
@@ -266,6 +267,7 @@ export class SelectionPlugin extends Plugin {
                 textContent: () => (range.collapsed ? "" : selection.toString()),
                 inEditable,
                 intersectsNode: (node) => range.intersectsNode(node),
+                isDefault: false,
             };
         }
 
@@ -404,7 +406,7 @@ export class SelectionPlugin extends Plugin {
      * Stores the current selection and returns an object with methods to:
      * - update the cursors (anchor and focus) node and offset after DOM
      * manipulations that migh affect them. Such methods are chainable.
-     * - restore the updated selection (if it was in the editable).
+     * - restore the updated selection.
      * @returns {Cursors}
      */
     preserveSelection() {
@@ -412,17 +414,37 @@ export class SelectionPlugin extends Plugin {
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
 
+        let externalRangeToRestore, documentSelection;
+        if (!selection.inEditable) {
+            documentSelection = this.document.getSelection();
+            if (documentSelection && documentSelection.rangeCount) {
+                externalRangeToRestore = documentSelection.getRangeAt(0);
+            }
+        }
         return {
             restore: () => {
-                if (selection.inEditable) {
-                    this.setSelection(
-                        {
-                            anchorNode: anchor.node,
-                            anchorOffset: anchor.offset,
-                            focusNode: focus.node,
-                            focusOffset: focus.offset,
-                        },
-                        { normalize: false }
+                if (selection.isDefault) {
+                    return;
+                }
+                // update the active selection
+                this.setSelection(
+                    {
+                        anchorNode: anchor.node,
+                        anchorOffset: anchor.offset,
+                        focusNode: focus.node,
+                        focusOffset: focus.offset,
+                    },
+                    { normalize: false }
+                );
+
+                if (!selection.inEditable && externalRangeToRestore) {
+                    const { startContainer, startOffset, endContainer, endOffset } =
+                        externalRangeToRestore;
+                    documentSelection.setBaseAndExtent(
+                        startContainer,
+                        startOffset,
+                        endContainer,
+                        endOffset
                     );
                 }
             },
