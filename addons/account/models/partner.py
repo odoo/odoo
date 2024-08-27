@@ -918,6 +918,10 @@ class ResPartner(models.Model):
                 [('company_id', '=', False)],
             ):
                 partner = search_method(extra_domain)
+
+                # The VAT should be a sufficiently distinctive criterion
+                if partner and search_method == search_with_vat:
+                    return partner[:1]
                 if partner and len(partner) == 1:
                     return partner
         return self.env['res.partner']
