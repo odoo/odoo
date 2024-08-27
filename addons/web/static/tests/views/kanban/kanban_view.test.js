@@ -637,14 +637,14 @@ test.tags("desktop")("empty group when grouped by date", async () => {
         groupBy: ["date:month"],
     });
 
-    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017", "February 2017"]);
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(1)", "February 2017\n(3)"]);
 
     Partner._records.shift(); // remove only record of the first group
 
     press("Enter"); // reload
     await animationFrame();
 
-    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017", "February 2017"]);
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(0)", "February 2017\n(3)"]);
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(0);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
@@ -706,9 +706,9 @@ test.tags("desktop")("m2m grouped rendering with active field (archivable true)"
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(2) })).toHaveCount(2);
 
     expect(queryAllTexts(".o_kanban_group")).toEqual([
-        "None\n1",
-        "gold\nyop\nblip",
-        "silver\nyop\ngnap",
+        "None (1)",
+        "gold\n(2)\nyop\nblip",
+        "silver\n(2)\nyop\ngnap",
     ]);
 
     click(getKanbanColumn(0));
@@ -740,7 +740,7 @@ test("kanban grouped by date field", async () => {
         groupBy: ["date"],
     });
 
-    expect(queryAllTexts(".o_column_title")).toEqual(["None", "June 2007"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["None\n(3)", "June 2007\n(1)"]);
 });
 
 test("context can be used in kanban template", async () => {
@@ -1725,7 +1725,7 @@ test.tags("desktop")("create in grouped on m2o", async () => {
     await createKanbanRecord();
 
     expect(".o_kanban_group:first-child > .o_kanban_quick_create").toHaveCount(1);
-    expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
 });
 
 test("create in grouped on char", async () => {
@@ -1746,7 +1746,7 @@ test("create in grouped on char", async () => {
 
     expect(".o_kanban_group.o_group_draggable").toHaveCount(0);
     expect(".o_kanban_group").toHaveCount(3);
-    expect(queryAllTexts(".o_column_title")).toEqual(["blip", "gnap", "yop"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["blip\n(2)", "gnap\n(1)", "yop\n(1)"]);
     expect(".o_kanban_group:first-child > .o_kanban_quick_create").toHaveCount(0);
 });
 
@@ -1802,12 +1802,12 @@ test.tags("desktop")("kanban grouped by many2one: false column is folded by defa
 
     expect(".o_kanban_group").toHaveCount(3);
     expect(".o_column_folded").toHaveCount(1);
-    expect(queryAllTexts(".o_kanban_header")).toEqual(["None\n1", "hello", "xmo"]);
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["None (1)", "hello\n(1)", "xmo\n(2)"]);
 
     await contains(".o_kanban_header").click();
 
     expect(".o_column_folded").toHaveCount(0);
-    expect(queryAllTexts(".o_kanban_header")).toEqual(["None", "hello", "xmo"]);
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["None\n(1)", "hello\n(1)", "xmo\n(2)"]);
 
     // reload -> None column should remain open
     click(".o_searchview_input");
@@ -1815,7 +1815,7 @@ test.tags("desktop")("kanban grouped by many2one: false column is folded by defa
     await animationFrame();
 
     expect(".o_column_folded").toHaveCount(0);
-    expect(queryAllTexts(".o_kanban_header")).toEqual(["None", "hello", "xmo"]);
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["None\n(1)", "hello\n(1)", "xmo\n(2)"]);
 });
 
 test.tags("desktop")("quick created records in grouped kanban are on displayed top", async () => {
@@ -4678,12 +4678,12 @@ test.tags("desktop")(
             groupBy: ["product_id"],
         });
 
-        expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
+        expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
 
         const groups = queryAll(".o_column_title");
         await contains(groups[0]).dragAndDrop(groups[1]);
 
-        expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
+        expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
 
         expect.verifyErrors(["No Permission"]);
     }
@@ -5063,10 +5063,10 @@ test.tags("desktop")("prevent drag and drop if grouped by many2many field", asyn
     });
 
     expect(".o_kanban_group").toHaveCount(2);
-    expect(queryFirst(".o_kanban_group:first-child .o_column_title").innerText).toBe("gold", {
+    expect(queryFirst(".o_kanban_group:first-child .o_column_title").innerText).toBe("gold\n(2)", {
         message: "first column should have correct title",
     });
-    expect(queryFirst(".o_kanban_group:last-child .o_column_title").innerText).toBe("silver", {
+    expect(queryFirst(".o_kanban_group:last-child .o_column_title").innerText).toBe("silver\n(3)", {
         message: "second column should have correct title",
     });
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
@@ -5085,7 +5085,11 @@ test.tags("desktop")("prevent drag and drop if grouped by many2many field", asyn
     await toggleMenuItem("GroupBy State");
 
     expect(".o_kanban_group").toHaveCount(3);
-    expect(queryAllTexts(".o_kanban_group .o_column_title")).toEqual(["ABC", "DEF", "GHI"]);
+    expect(queryAllTexts(".o_kanban_group .o_column_title")).toEqual([
+        "ABC\n(1)",
+        "DEF\n(1)",
+        "GHI\n(2)",
+    ]);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
         message: "first column should have 1 record",
     });
@@ -5467,7 +5471,9 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
     await validateKanbanColumn();
 
     expect(".o_kanban_group").toHaveCount(3);
-    expect(queryAll("span:contains(new value)", { root: getKanbanColumn(2) })).toHaveCount(1, {
+    expect(
+        queryAll(".o_column_title:contains(new value)", { root: getKanbanColumn(2) })
+    ).toHaveCount(1, {
         message: "the last column should be the newly created one",
     });
     expect(!!getKanbanColumn(2).dataset.id).toBe(true, {
@@ -5724,8 +5730,8 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
 
     // check the initial rendering
     expect(".o_kanban_group").toHaveCount(2, { message: "should have two columns" });
-    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("hello");
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("hello\n(2)");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo\n(2)");
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2, {
         message: "second column should have two records",
     });
@@ -5758,7 +5764,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog footer .btn-secondary").click();
 
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo\n(2)");
 
     clickColumnAction = await toggleKanbanColumnActions(1);
     await clickColumnAction("Delete");
@@ -5766,9 +5772,9 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog footer .btn-primary").click();
 
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("hello");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("hello\n(2)");
     expect(".o_kanban_group").toHaveCount(2, { message: "should still have two columns" });
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("None\n2", {
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("None (2)", {
         message: "first column should have no id (Undefined column)",
     });
 
@@ -5885,7 +5891,7 @@ test("create a column, delete it and create another one", async () => {
     await validateKanbanColumn();
 
     expect(".o_kanban_group").toHaveCount(3);
-    expect(getKanbanColumn(2).querySelector("span").innerText).toBe("new column 2", {
+    expect(getKanbanColumn(2).querySelector("div").innerText).toBe("new column 2\n(0)", {
         message: "the last column should be the newly created one",
     });
 });
@@ -5923,8 +5929,8 @@ test("delete an empty column, then a column with records.", async () => {
         groupBy: ["product_id"],
     });
 
-    expect(".o_kanban_header span:contains('empty group')").toHaveCount(1);
-    expect(".o_kanban_header span:contains('hello')").toHaveCount(1);
+    expect(".o_kanban_header .o_column_title:contains('empty group')").toHaveCount(1);
+    expect(".o_kanban_header .o_column_title:contains('hello')").toHaveCount(1);
     expect(".o_kanban_header .o_column_title:contains('None')").toHaveCount(0);
 
     // Delete the empty group
@@ -5973,7 +5979,7 @@ test.tags("desktop")("edit a column in grouped on m2o", async () => {
         groupBy: ["product_id"],
     });
 
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo\n(2)");
 
     // edit the title of column [5, 'xmo'] and close without saving
     let clickColumnAction = await toggleKanbanColumnActions(1);
@@ -5987,7 +5993,7 @@ test.tags("desktop")("edit a column in grouped on m2o", async () => {
     await contains(".modal-header .btn-close").click();
 
     expect(".modal").toHaveCount(0);
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo\n(2)");
     expect(nbRPCs).toBe(0, { message: "no RPC should have been done" });
 
     // edit the title of column [5, 'xmo'] and discard
@@ -5998,7 +6004,7 @@ test.tags("desktop")("edit a column in grouped on m2o", async () => {
     await contains(".modal button.o_form_button_cancel").click();
 
     expect(".modal").toHaveCount(0);
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("xmo\n(2)");
     expect(nbRPCs).toBe(0, { message: "no RPC should have been done" });
 
     // edit the title of column [5, 'xmo'] and save
@@ -6010,7 +6016,7 @@ test.tags("desktop")("edit a column in grouped on m2o", async () => {
     await animationFrame();
 
     expect(".modal").toHaveCount(0, { message: "the modal should be closed" });
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("ged");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("ged\n(2)");
     expect(nbRPCs).toBe(4, { message: "should have done 1 write, 1 read_group and 2 search_read" });
 });
 
@@ -6362,7 +6368,7 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(1);
     expect(".o_kanban_group.o_column_folded").toHaveCount(1);
-    expect(queryAllTexts(".o_kanban_group")).toEqual(["not folded", "folded\n0"]);
+    expect(queryAllTexts(".o_kanban_group")).toEqual(["not folded\n(0)", "folded (0)"]);
 });
 
 test.tags("desktop")("quick create column's apply button's display text", async () => {
@@ -7654,7 +7660,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".o_kanban_group:first .o_column_title").toHaveText("hello");
+    expect(".o_kanban_group:first .o_column_title").toHaveText("hello\n(16)");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(16);
     expect(".o_kanban_record").toHaveText("hello");
 });
@@ -8018,7 +8024,7 @@ test.tags("desktop")("resequence columns in grouped by m2o", async () => {
     });
 
     expect(".o_kanban_group").toHaveCount(2);
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello");
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     await contains(".o_kanban_group:first-child").dragAndDrop(
@@ -8026,14 +8032,14 @@ test.tags("desktop")("resequence columns in grouped by m2o", async () => {
     );
 
     // Drag & drop on column (not title) should not work
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello");
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     await contains(".o_kanban_group:first-child .o_column_title").dragAndDrop(
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("xmo");
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("xmo\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["2", "4", "1", "3"]);
 });
 
@@ -8114,7 +8120,7 @@ test("prevent resequence columns if groups_draggable=false", async () => {
     });
 
     expect(".o_kanban_group").toHaveCount(2);
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello");
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     await contains(".o_kanban_group:first-child").dragAndDrop(
@@ -8122,14 +8128,14 @@ test("prevent resequence columns if groups_draggable=false", async () => {
     );
 
     // Drag & drop on column (not title) should not work
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello");
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     await contains(".o_kanban_group:first-child .o_column_title").dragAndDrop(
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello");
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 });
 
@@ -8495,7 +8501,7 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(2) })).toHaveCount(1);
-    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None", {
+    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None\n(1)", {
         message: "first column should have a default title for when no value is provided",
     });
 
@@ -8515,8 +8521,8 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
             "second column should have a tooltip with the group_by_tooltip title and many2one field value",
     });
     expect(queryFirst(".o-tooltip").textContent).toBe("Kikouhello");
-    expect(queryFirst(".o_kanban_group:nth-child(2) span.o_column_title").textContent).toBe(
-        "hello",
+    expect(queryFirst(".o_kanban_group:nth-child(2) .o_column_title").textContent).toBe(
+        "hello(2)",
         { message: "second column should have a title with a value from the many2one" }
     );
     // should have done one read on product for the second column tooltip
@@ -12713,7 +12719,7 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(1).innerText).toBe("xmo\n2");
+    expect(getKanbanColumn(1).innerText).toBe("xmo (2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_column_folded")
@@ -12721,7 +12727,7 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(1).innerText).toBe("xmo\n3");
+    expect(getKanbanColumn(1).innerText).toBe("xmo (3)");
 });
 
 test.tags("desktop")("drag record on initially folded column should not unfold it", async () => {
@@ -12747,7 +12753,7 @@ test.tags("desktop")("drag record on initially folded column should not unfold i
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("xmo\n2");
+    expect(queryText(getKanbanColumn(1))).toBe("xmo (2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_column_folded")
@@ -12755,7 +12761,7 @@ test.tags("desktop")("drag record on initially folded column should not unfold i
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("xmo\n3");
+    expect(queryText(getKanbanColumn(1))).toBe("xmo (3)");
 });
 
 test.tags("desktop")("drag record to folded column, with progressbars", async () => {
@@ -12791,14 +12797,14 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("Yes\n2");
+    expect(queryText(getKanbanColumn(1))).toBe("Yes (2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryText(getKanbanColumn(1))).toBe("Yes\n3");
+    expect(queryText(getKanbanColumn(1))).toBe("Yes (3)");
     expect(getKanbanProgressBars(0).map((pb) => pb.style.width)).toEqual(["100%"]);
     expect(getKanbanCounters()).toEqual(["-4"]);
     expect.verifySteps([
@@ -12938,7 +12944,7 @@ test.tags("desktop")("no content helper, all groups folded with (unloaded) recor
     });
 
     expect(".o_column_folded").toHaveCount(2);
-    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n2", "xmo\n2"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello (2)", "xmo (2)"]);
     expect(".o_nocontent_help").toHaveCount(0);
 });
 
@@ -13287,8 +13293,8 @@ test("sample server: _mockWebReadGroup API", async () => {
 
     expect(".o_kanban_view .o_view_sample_data").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(1);
-    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
-    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022\n(16)");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022\n(16)");
     expect(".o_kanban_group .o_kanban_record").toHaveCount(16);
 });
 
@@ -13474,15 +13480,15 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
     await clickColumnAction("Delete");
     await contains(".o_dialog footer .btn-secondary").click();
 
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("gold");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("gold\n(1)");
 
     clickColumnAction = await toggleKanbanColumnActions(1);
     await clickColumnAction("Delete");
     await contains(".o_dialog footer .btn-primary").click();
 
     expect(".o_kanban_group").toHaveCount(2, { message: "should now have two columns" });
-    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("silver");
-    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None\n3");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("silver\n(1)");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None (3)");
 });
 
 test.tags("desktop")("searchbar filters are displayed directly", async () => {
