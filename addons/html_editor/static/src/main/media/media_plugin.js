@@ -9,6 +9,7 @@ import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_edit
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
+import { rightPos } from "@html_editor/utils/position";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
@@ -148,6 +149,10 @@ export class MediaPlugin extends Plugin {
         } else {
             this.shared.domInsert(element);
         }
+        // Collapse selection after the inserted/replaced element.
+        const [anchorNode, anchorOffset] = rightPos(element);
+        this.shared.setSelection({ anchorNode, anchorOffset });
+
         this.dispatch("ADD_STEP");
     }
 
