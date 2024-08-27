@@ -1,4 +1,4 @@
-import { describe, destroy, expect, test } from "@odoo/hoot";
+import { destroy, expect, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useState, xml } from "@odoo/owl";
@@ -11,8 +11,6 @@ import {
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-
-describe.current.tags("desktop");
 
 test("simple rendering", async () => {
     expect.assertions(8);
@@ -55,7 +53,6 @@ test("hotkeys work on dialogs", async () => {
         dialogData: {
             close: () => expect.step("close"),
             dismiss: () => expect.step("dismiss"),
-            isActive: true,
         },
     });
     await mountWithCleanup(Parent);
@@ -109,12 +106,11 @@ test("click on the button x triggers the service close", async () => {
         dialogData: {
             close: () => expect.step("close"),
             dismiss: () => expect.step("dismiss"),
-            isActive: true,
         },
     });
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
-    await contains(".o_dialog header button.btn-close").click();
+    await contains(".o_dialog header button[aria-label='Close']").click();
     expect.verifySteps(["dismiss", "close"]);
 });
 
@@ -127,6 +123,7 @@ test("click on the button x triggers the close and dismiss defined by a Child co
         setup() {
             this.env.dialogData.close = () => expect.step("close");
             this.env.dialogData.dismiss = () => expect.step("dismiss");
+            this.env.dialogData.scrollToOrigin = () => {};
         }
     }
     class Parent extends Component {
@@ -142,7 +139,7 @@ test("click on the button x triggers the close and dismiss defined by a Child co
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
 
-    await contains(".o_dialog header button.btn-close").click();
+    await contains(".o_dialog header button[aria-label='Close']").click();
     expect.verifySteps(["dismiss", "close"]);
 });
 
@@ -161,7 +158,6 @@ test("click on the default footer button triggers the service close", async () =
         dialogData: {
             close: () => expect.step("close"),
             dismiss: () => expect.step("dismiss"),
-            isActive: true,
         },
     });
     await mountWithCleanup(Parent);
@@ -325,7 +321,41 @@ test("can be the UI active element", async () => {
     });
 });
 
-test("dialog can be moved", async () => {
+test.tags("mobile")("dialog can't be moved on small screen", async () => {
+    class Parent extends Component {
+        static template = xml`<Dialog>content</Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
+    expect(".modal-content").toHaveStyle({
+        top: "0px",
+        left: "0px",
+    });
+
+    const header = queryOne(".modal-header");
+    const headerRect = header.getBoundingClientRect();
+
+    // Even if the `dragAndDrop` is called, confirms that there are no effects
+    await contains(header).dragAndDrop(".modal-content", {
+        position: {
+            // the util function sets the source coordinates at (x; y) + (w/2; h/2)
+            // so we need to move the dialog based on these coordinates.
+            x: headerRect.x + headerRect.width / 2 + 20,
+            y: headerRect.y + headerRect.height / 2 + 50,
+        },
+    });
+
+    expect(".modal-content").toHaveStyle({
+        top: "0px",
+        left: "0px",
+    });
+});
+
+test.tags("desktop")("dialog can be moved", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -355,7 +385,7 @@ test("dialog can be moved", async () => {
     });
 });
 
-test("dialog's position is reset on resize", async () => {
+test.tags("desktop")("dialog's position is reset on resize", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
