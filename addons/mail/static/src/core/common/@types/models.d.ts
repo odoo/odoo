@@ -1,5 +1,6 @@
 declare module "models" {
     import { Attachment as AttachmentClass } from "@mail/core/common/attachment_model";
+    import { ChannelCommand as ChannelCommandClass } from "@mail/core/common/channel_command_model";
     import { CannedResponse as CannedResponseClass } from "@mail/core/common/canned_response_model";
     import { ChannelMember as ChannelMemberClass } from "@mail/core/common/channel_member_model";
     import { ChatHub as ChatHubClass } from "@mail/core/common/chat_hub_model";
@@ -21,6 +22,7 @@ declare module "models" {
     // define interfaces for jsdoc, including with patches
     export interface Attachment extends AttachmentClass {}
     export interface CannedResponse extends CannedResponseClass {}
+    export interface ChannelCommand extends ChannelCommandClass {}
     export interface ChannelMember extends ChannelMemberClass {}
     export interface ChatHub extends ChatHubClass {}
     export interface ChatWindow extends ChatWindowClass {}
@@ -42,6 +44,7 @@ declare module "models" {
     export interface Models {
         "Attachment": Attachment,
         "mail.canned.response": CannedResponse,
+        "ChannelCommand": ChannelCommand,
         "ChannelMember": ChannelMember,
         "ChatHub": ChatHub,
         "ChatWindow": ChatWindow,

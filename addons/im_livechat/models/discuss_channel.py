@@ -108,6 +108,33 @@ class DiscussChannel(models.Model):
     def execute_command_history(self, **kwargs):
         self._bus_send("im_livechat.history_command", {"id": self.id})
 
+    def execute_command_bot(self, bot_id, **kwargs):
+        if not self.livechat_active:
+            # To-do: remove this after livechat visitor leave has been adapted to use action_unfollow
+            return
+        chatbot_script = self.env['chatbot.script'].browse(bot_id)
+        if not self or not chatbot_script.exists():
+            self._send_transient_message(self.env.user.partner_id, _("Please select a chatbot"))
+            return
+        if self.livechat_operator_id != chatbot_script.operator_partner_id:
+            operator_partner = self.env['chatbot.script'].search(
+                [('operator_partner_id', '=', self.livechat_operator_id.id)],
+                limit=1
+            ).operator_partner_id
+            if operator_partner:
+                # sudo - discuss.channel: non admin operator can remove other operators
+                self.sudo()._action_unfollow(operator_partner, post_left_message=False)
+            self.add_members(partner_ids=[chatbot_script.operator_partner_id.id], post_joined_message=False)
+        self._chatbot_restart(chatbot_script, post_restart_message=False)
+        self.livechat_operator_id = chatbot_script.operator_partner_id
+        store = Store(self, {
+            'chatbot': {'script': chatbot_script._format_for_frontend()},
+            'operator': Store.one(
+                self.livechat_operator_id, fields=["user_livechat_username", "write_date"]
+            )
+        })
+        self._bus_send('im_livechat.bot_command', store.get_result())
+
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor left the conversation.')
 
@@ -161,8 +188,9 @@ class DiscussChannel(models.Model):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
+        # sudo - res.partner: public user can access internal user messages
         return Markup('').join(
-            Markup('%s: %s<br/>') % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
+            Markup('%s: %s<br/>') % (message.sudo().author_id.name or self.anonymous_name, html2plaintext(message.body))
             for message in self.message_ids.sorted('id')
         )
 
@@ -237,12 +265,15 @@ class DiscussChannel(models.Model):
             })
         return super()._message_post_after_hook(message, msg_vals)
 
-    def _chatbot_restart(self, chatbot_script):
+    def _chatbot_restart(self, chatbot_script, post_restart_message=True):
         # sudo: discuss.channel - visitor can clear current step to restart the script
         self.sudo().chatbot_current_step_id = False
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
-        return self._chatbot_post_message(
+        if not post_restart_message:
+            return
+        # sudo: mail.message - chat bot can send the restart message
+        return self.sudo()._chatbot_post_message(
             chatbot_script,
             Markup('<div class="o_mail_notification">%s</div>') % _('Restarting conversation...'),
         )

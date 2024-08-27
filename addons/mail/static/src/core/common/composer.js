@@ -604,6 +604,7 @@ export class Composer extends Component {
                 mentionedPartners: composer.mentionedPartners,
                 cannedResponseIds: composer.cannedResponses.map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
+                subCommand: this.props.composer.subCommand,
             };
             await this._sendMessage(value, postData);
         });
@@ -637,6 +638,7 @@ export class Composer extends Component {
         }
         this.suggestion?.clearRawMentions();
         this.suggestion?.clearCannedResponses();
+        this.suggestion?.clearCommand();
         this.props.messageToReplyTo?.cancel();
     }
 

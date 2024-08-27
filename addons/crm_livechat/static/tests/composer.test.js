@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
+    contains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -24,7 +25,10 @@ test("Can execute lead command", async () => {
         return true;
     });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/lead great lead");
+    await insertText(".o-mail-Composer-input", "/lead");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "/lead " });
+    await insertText(".o-mail-Composer-input", "great lead");
     await click(".o-mail-Composer-send:enabled");
     await assertSteps(["execute_command_lead"]);
 });
