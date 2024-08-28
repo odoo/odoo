@@ -11,10 +11,10 @@ Fullscreen.include({
      * @private
      * @override
      */
-    _renderSlide: function (){
+    _renderSlide: function () {
         var def = this._super.apply(this, arguments);
         const contentEl = this.el.querySelector(".o_wslides_fs_content");
-        if (this.get('slide').category === "certification"){
+        if (this._slideValue.category === "certification") {
             contentEl.innerHTML = "";
             contentEl.append(
                 renderToElement("website.slides.fullscreen.certification", { widget: this })

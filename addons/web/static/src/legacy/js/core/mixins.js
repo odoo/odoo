@@ -1,4 +1,3 @@
-import { floatIsZero } from "@web/core/utils/numbers";
 
 /**
  * Mixin to structure objects' life-cycles folowing a parent-children
@@ -355,62 +354,7 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
     },
 });
 
-/**
- * @name PropertiesMixin
- * @mixin
- */
-var PropertiesMixin = Object.assign({}, EventDispatcherMixin, {
-    init: function () {
-        EventDispatcherMixin.init.call(this);
-        this.__getterSetterInternalMap = {};
-    },
-    set: function (arg1, arg2, arg3) {
-        var map;
-        var options;
-        if (typeof arg1 === "string") {
-            map = {};
-            map[arg1] = arg2;
-            options = arg3 || {};
-        } else {
-            map = arg1;
-            options = arg2 || {};
-        }
-        var self = this;
-        var changed = false;
-        for (const [key, val] of Object.entries(map)) {
-            var tmp = self.__getterSetterInternalMap[key];
-            if (tmp === val)
-                return;
-            // seriously, why are you doing this? it is obviously a stupid design.
-            // the properties mixin should not be concerned with handling fields details.
-            // this also has the side effect of introducing a dependency on utils.  Todo:
-            // remove this, or move it elsewhere.  Also, learn OO programming.
-            if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
-                var digits = self.field.digits;
-                if (Array.isArray(digits)) {
-                    if (floatIsZero(tmp - val, digits[1])) {
-                        return;
-                    }
-                }
-            }
-            changed = true;
-            self.__getterSetterInternalMap[key] = val;
-            if (! options.silent)
-                self.trigger("change:" + key, self, {
-                    oldValue: tmp,
-                    newValue: val
-                });
-        }
-        if (changed)
-            self.trigger("change", self);
-    },
-    get: function (key) {
-        return this.__getterSetterInternalMap[key];
-    }
-});
-
 export default {
     ParentedMixin: ParentedMixin,
     EventDispatcherMixin: EventDispatcherMixin,
-    PropertiesMixin: PropertiesMixin,
 };
