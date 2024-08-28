@@ -222,6 +222,7 @@
 
                 <!-- Contact & Forms group -->
                 <t t-snippet="website.s_website_form" string="Form" t-forbid-sanitize="form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" group="contact_and_forms"/>
+                <t t-snippet="website.s_contact_info" string="Contact Info" group="contact_and_forms"/>
 
                 <!-- Products group -->
                 <t id="sale_products_hook"/>
@@ -736,7 +737,7 @@
 
     <!-- Grid only -->
     <div data-js="layout_column"
-        data-selector="section.s_masonry_block"
+        data-selector="section.s_masonry_block, section.s_contact_info"
         data-target="> *:has(> .row)">
         <t t-call="website.grid_layout_options"/>
     </div>
@@ -745,7 +746,7 @@
     <div data-js="layout_column"
         data-selector="section"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant">
+        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_contact_info">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
