@@ -498,7 +498,7 @@ class Message(models.Model):
             author_ids = [mid for mid, message in message_values.items() if message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.items()
-                          if not self.is_thread_message(message)]
+                          if not self._is_thread_message(message)]
 
         messages_to_check = self.ids
         messages_to_check = set(messages_to_check).difference(set(author_ids))
@@ -698,7 +698,7 @@ class Message(models.Model):
                 if other_cmd:
                     message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-            if message.is_thread_message(values):
+            if message._is_thread_message(values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
 
         return messages
@@ -776,42 +776,25 @@ class Message(models.Model):
     # DISCUSS API
     # ------------------------------------------------------
 
-    @api.model
     def mark_all_as_read(self, domain=None):
-        # not really efficient method: it does one db request for the
-        # search, and one for each message in the result set is_read to True in the
-        # current notifications from the relation.
         notif_domain = [
             ('res_partner_id', '=', self.env.user.partner_id.id),
             ('is_read', '=', False)]
+        messages = None
         if domain:
             messages = self.search(domain)
-            messages.set_message_done()
-            return messages.ids
+        elif self:
+            messages = self
+        if messages is not None:
+            notif_domain = expression.AND([notif_domain, [("mail_message_id", "in", messages.ids)]])
+        elif not messages:
+            return
 
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
-        notifications.write({'is_read': True})
-
-        self.env.user._bus_send(
-            "mail.message/mark_as_read",
-            {
-                "message_ids": notifications.mail_message_id.ids,
-                "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
-            },
-        )
-
-    def set_message_done(self):
-        """ Remove the needaction from messages for the current partner. """
-        partner_id = self.env.user.partner_id
-        notifications = self.env['mail.notification'].sudo().search_fetch([
-            ('mail_message_id', 'in', self.ids),
-            ('res_partner_id', '=', partner_id.id),
-            ('is_read', '=', False),
-        ], ['mail_message_id'])
         if not notifications:
             return
+
         notifications.write({'is_read': True})
-        # notifies changes in messages through the bus.
         self.env.user._bus_send(
             "mail.message/mark_as_read",
             {
@@ -825,10 +808,7 @@ class Message(models.Model):
         """ Unstar messages for the current partner. """
         partner = self.env.user.partner_id
         starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
-        partner.starred_message_ids -= starred_messages
-        self.env.user._bus_send(
-            "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
-        )
+        starred_messages.toggle_message_starred()
 
     def toggle_message_starred(self):
         """ Toggle messages as (un)starred. Technically, the notifications related
@@ -836,45 +816,70 @@ class Message(models.Model):
         """
         # a user should always be able to star a message they can read
         self.check_access_rule('read')
-        starred = not self.starred
-        partner = self.env.user.partner_id
-        if starred:
-            partner.starred_message_ids |= self
-        else:
-            partner.starred_message_ids -= self
-        self.env.user._bus_send(
-            "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
+        if starred := self.filtered("starred"):
+            self.env.user.partner_id.starred_message_ids -= starred
+            self.env.user._bus_send(
+                "mail.message/toggle_star", {"message_ids": starred.ids, "starred": False}
+            )
+        if unstarred := self - starred:
+            self.env.user.partner_id.starred_message_ids |= unstarred
+            self.env.user._bus_send(
+                "mail.message/toggle_star", {"message_ids": unstarred.ids, "starred": True}
         )
+
+    @api.model
+    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
+        res = {}
+        if search_term:
+            # we replace every space by a % to avoid hard spacing matching
+            search_term = search_term.replace(" ", "%")
+            domain = expression.AND([domain, expression.OR([
+                # sudo: access to attachment is allowed if you have access to the parent model
+                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+                [("body", "ilike", search_term)],
+                [("subject", "ilike", search_term)],
+                [("subtype_id.description", "ilike", search_term)],
+            ])])
+            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
+            res["count"] = self.search_count(domain)
+        if around is not None:
+            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
+            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
+            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
+        if before:
+            domain = expression.AND([domain, [('id', '<', before)]])
+        if after:
+            domain = expression.AND([domain, [('id', '>', after)]])
+        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        if after:
+            res["messages"] = res["messages"].sorted('id', reverse=True)
+        return res
 
     def _message_reaction(self, content, action):
         self.ensure_one()
         partner, guest = self.env["res.partner"]._get_current_persona()
         # search for existing reaction
-        domain = [
-            ("message_id", "=", self.id),
-            ("partner_id", "=", partner.id),
-            ("guest_id", "=", guest.id),
-            ("content", "=", content),
-        ]
-        reaction = self.env["mail.message.reaction"].search(domain)
+        reaction = self.reaction_ids.filtered(lambda r:
+            r.partner_id == partner.id and r.guest_id == guest.id and r.content == content
+        )
         # create/unlink reaction if necessary
         if action == "add" and not reaction:
-            create_values = {
+            self.env["mail.message.reaction"].create({
                 "message_id": self.id,
                 "content": content,
                 "partner_id": partner.id,
                 "guest_id": guest.id,
-            }
-            self.env["mail.message.reaction"].create(create_values)
-        if action == "remove" and reaction:
+            })
+        elif action == "remove" and reaction:
             reaction.unlink()
         # format result
-        group_domain = [("message_id", "=", self.id), ("content", "=", content)]
-        count = self.env["mail.message.reaction"].search_count(group_domain)
-        group_command = "ADD" if count > 0 else "DELETE"
+        reactions = self.reaction_ids.filtered(lambda r:
+            r.content == content
+        )
+        group_command = "ADD" if reactions else "DELETE"
         group_values = {
             "content": content,
-            "count": count,
+            "count": len(reactions),
             "personas": Store.many_ids(guest or partner, "ADD" if action == "add" else "DELETE"),
             "message": Store.one_id(self),
         }
@@ -886,31 +891,8 @@ class Message(models.Model):
         )
 
     # ------------------------------------------------------
-    # MESSAGE READ / FETCH / FAILURE API
+    # STORE / NOTIFICATIONS
     # ------------------------------------------------------
-
-    def _records_by_model_name(self):
-        ids_by_model = defaultdict(OrderedSet)
-        prefetch_ids_by_model = defaultdict(OrderedSet)
-        prefetch_messages = self | self.browse(self._prefetch_ids)
-        for message in prefetch_messages.filtered(lambda m: m.model and m.res_id):
-            target = ids_by_model if message in self else prefetch_ids_by_model
-            target[message.model].add(message.res_id)
-        return {
-            model_name: self.env[model_name]
-            .browse(ids)
-            .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
-            for model_name, ids in ids_by_model.items()
-        }
-
-    def _record_by_message(self):
-        records_by_model_name = self._records_by_model_name()
-        return {
-            message: self.env[message.model]
-            .browse(message.res_id)
-            .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
-            for message in self.filtered(lambda m: m.model and m.res_id)
-        }
 
     def _to_store(
         self,
@@ -1104,34 +1086,6 @@ class Message(models.Model):
     def _extras_to_store(self, store: Store, format_reply):
         pass
 
-    @api.model
-    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
-        res = {}
-        if search_term:
-            # we replace every space by a % to avoid hard spacing matching
-            search_term = search_term.replace(" ", "%")
-            domain = expression.AND([domain, expression.OR([
-                # sudo: access to attachment is allowed if you have access to the parent model
-                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
-                [("body", "ilike", search_term)],
-                [("subject", "ilike", search_term)],
-                [("subtype_id.description", "ilike", search_term)],
-            ])])
-            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
-            res["count"] = self.search_count(domain)
-        if around is not None:
-            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
-            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
-        if before:
-            domain = expression.AND([domain, [('id', '<', before)]])
-        if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
-            res["messages"] = res["messages"].sorted('id', reverse=True)
-        return res
-
     def _message_notifications_to_store(self, store: Store):
         """Returns the current messages and their corresponding notifications in
         the format expected by the web client.
@@ -1251,7 +1205,7 @@ class Message(models.Model):
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None
-        if self.is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
+        if self._is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
@@ -1261,13 +1215,17 @@ class Message(models.Model):
     def _get_message_id(self, values):
         if values.get('reply_to_force_new', False) is True:
             message_id = tools.mail.generate_tracking_message_id('reply_to')
-        elif self.is_thread_message(values):
+        elif self._is_thread_message(values):
             message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
             message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
-    def is_thread_message(self, vals=None):
+    @api.model
+    def _get_search_domain_share(self):
+        return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
+
+    def _is_thread_message(self, vals=None):
         if vals:
             res_id = vals.get('res_id')
             model = vals.get('model')
@@ -1289,5 +1247,23 @@ class Message(models.Model):
             if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
 
-    def _get_search_domain_share(self):
-        return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
+    def _records_by_model_name(self):
+        ids_by_model = defaultdict(OrderedSet)
+        prefetch_ids_by_model = defaultdict(OrderedSet)
+        prefetch_messages = self | self.browse(self._prefetch_ids)
+        for message in prefetch_messages.filtered(lambda m: m.model and m.res_id):
+            target = ids_by_model if message in self else prefetch_ids_by_model
+            target[message.model].add(message.res_id)
+        return {
+            model_name: self.env[model_name].browse(ids)
+            .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
+            for model_name, ids in ids_by_model.items()
+        }
+
+    def _record_by_message(self):
+        records_by_model_name = self._records_by_model_name()
+        return {
+            message: self.env[message.model].browse(message.res_id)
+            .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
+            for message in self.filtered(lambda m: m.model and m.res_id)
+        }

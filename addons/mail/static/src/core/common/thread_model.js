@@ -819,6 +819,7 @@ export class Thread extends Record {
 
     async markAllMessagesAsRead() {
         await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
+            [],
             [
                 ["model", "=", this.model],
                 ["res_id", "=", this.id],

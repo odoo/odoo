@@ -117,6 +117,23 @@ class BaseModel(models.AbstractModel):
             return primary_email
         return None
 
+    def _mail_get_timezone(self):
+        """To be override to get desired timezone of the model
+
+        :returns: selected timezone (e.g. 'UTC' or 'Asia/Kolkata')
+        """
+        value = False
+        if self:
+            fname = next(
+                (
+                    potential for potential in {'tz', 'date_tz', 'x_tz', 'x_date_tz'}
+                    if potential in self and self._fields[potential].type in {'char', 'selection'}
+                ), False
+            )
+            if fname:
+                value = self[fname]
+        return value or self.env.user.tz or 'UTC'
+
     # ------------------------------------------------------------
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------
@@ -453,7 +470,7 @@ class BaseModel(models.AbstractModel):
         if isinstance(field_value, models.Model):
             return ' '.join((value.display_name or '') for value in field_value)
         if any(isinstance(value, datetime) for value in field_value):
-            tz = self._whatsapp_get_timezone()
+            tz = self._mail_get_timezone()
             return ' '.join([f"{tools.format_datetime(self.env, value, tz=tz)} {tz}"
                              for value in field_value if value and isinstance(value, datetime)])
         # find last field / last model when having chained fields
@@ -472,13 +489,3 @@ class BaseModel(models.AbstractModel):
                 for value in field_value
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
-
-    # TODO rename this or remove and inline with common tz fields
-    def _whatsapp_get_timezone(self):
-        """To be override to get desired timezone of the model
-
-        :returns: selected timezone (e.g. 'UTC' or 'Asia/Kolkata')
-        """
-        if self:
-            self.ensure_one()
-        return self.env.user.tz or 'UTC'

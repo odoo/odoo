@@ -20,7 +20,7 @@ export class MailMessage extends models.ServerModel {
     pinned_at = fields.Generic({ default: false });
 
     /** @param {DomainListRepr} [domain] */
-    mark_all_as_read(domain) {
+    mark_all_as_read(ids, domain) {
         ({ domain } = getKwArgs(arguments, "domain"));
 
         /** @type {import("mock_models").BusBus} */
@@ -37,7 +37,7 @@ export class MailMessage extends models.ServerModel {
         if (domain) {
             const messages = this._filter(domain);
             const ids = messages.map((messages) => messages.id);
-            this.set_message_done(ids);
+            this.mark_all_as_read(ids);
             return ids;
         }
         const notifications = MailNotification._filter(notifDomain);
@@ -254,53 +254,6 @@ export class MailMessage extends models.ServerModel {
                 );
             }
             store.add(this.browse(message.id), data);
-        }
-    }
-
-    /**
-     * Simulates `set_message_done` on `mail.message`, which turns provided
-     * needaction message to non-needaction (i.e. they are marked as read from
-     * from the Inbox mailbox). Also notify on the longpoll bus that the
-     * messages have been marked as read, so that UI is updated.
-     *
-     * @param {number[]} ids
-     */
-    set_message_done(ids) {
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").MailNotification} */
-        const MailNotification = this.env["mail.notification"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        if (!this.env.user) {
-            return;
-        }
-        const messages = this.browse(ids);
-        const notifications = MailNotification._filter([
-            ["res_partner_id", "=", this.env.user.partner_id],
-            ["is_read", "=", false],
-            ["mail_message_id", "in", messages.map((messages) => messages.id)],
-        ]);
-        if (notifications.length === 0) {
-            return;
-        }
-        MailNotification.write(
-            notifications.map((notification) => notification.id),
-            { is_read: true }
-        );
-        // simulate compute that should be done based on notifications
-        for (const message of messages) {
-            this.write([message.id], {
-                needaction: false,
-            });
-            const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "mail.message/mark_as_read", {
-                message_ids: [message.id],
-                needaction_inbox_counter: ResPartner._get_needaction_count(
-                    this.env.user.partner_id
-                ),
-            });
         }
     }
 

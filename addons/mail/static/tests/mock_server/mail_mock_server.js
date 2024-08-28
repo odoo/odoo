@@ -320,7 +320,7 @@ async function discuss_channel_messages(request) {
     const { messages } = res;
     delete res.messages;
     if (!around) {
-        MailMessage.set_message_done(messages.map((message) => message.id));
+        MailMessage.mark_all_as_read(messages.map((message) => message.id));
     }
     return {
         ...res,
@@ -838,7 +838,7 @@ async function mail_thread_messages(request) {
     const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
     const { messages } = res;
     delete res.messages;
-    MailMessage.set_message_done(messages.map((message) => message.id));
+    MailMessage.mark_all_as_read(messages.map((message) => message.id));
     return {
         ...res,
         data: new mailDataHelpers.Store(

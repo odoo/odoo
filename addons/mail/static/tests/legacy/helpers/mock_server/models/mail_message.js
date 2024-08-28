@@ -6,12 +6,9 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "mail.message" && args.method === "mark_all_as_read") {
-            const domain = args.args[0] || args.kwargs.domain;
-            return this._mockMailMessageMarkAllAsRead(domain);
-        }
-        if (args.model === "mail.message" && args.method === "set_message_done") {
             const ids = args.args[0];
-            return this._mockMailMessageSetMessageDone(ids);
+            const domain = args.args[1] || args.kwargs.domain;
+            return this._mockMailMessageMarkAllAsRead(ids, domain);
         }
         if (args.model === "mail.message" && args.method === "toggle_message_starred") {
             const ids = args.args[0];
@@ -97,7 +94,7 @@ patch(MockServer.prototype, {
      * @param {Array[]} [domain]
      * @returns {integer[]}
      */
-    _mockMailMessageMarkAllAsRead(domain) {
+    _mockMailMessageMarkAllAsRead(ids, domain) {
         const notifDomain = [
             ["res_partner_id", "=", this.pyEnv.currentPartnerId],
             ["is_read", "=", false],
@@ -107,6 +104,9 @@ patch(MockServer.prototype, {
             const ids = messages.map((messages) => messages.id);
             this._mockMailMessageSetMessageDone(ids);
             return ids;
+        }
+        else if (ids) {
+            const messages = this.getRecords("mail.message", [["id", "in", ids]]);
         }
         const notifications = this.getRecords("mail.notification", notifDomain);
         this.pyEnv["mail.notification"].write(
@@ -331,46 +331,6 @@ patch(MockServer.prototype, {
             }
             return response;
         });
-    },
-    /**
-     * Simulates `set_message_done` on `mail.message`, which turns provided
-     * needaction message to non-needaction (i.e. they are marked as read from
-     * from the Inbox mailbox). Also notify on the longpoll bus that the
-     * messages have been marked as read, so that UI is updated.
-     *
-     * @private
-     * @param {integer[]} ids
-     */
-    _mockMailMessageSetMessageDone(ids) {
-        const messages = this.getRecords("mail.message", [["id", "in", ids]]);
-
-        const notifications = this.getRecords("mail.notification", [
-            ["res_partner_id", "=", this.pyEnv.currentPartnerId],
-            ["is_read", "=", false],
-            ["mail_message_id", "in", messages.map((messages) => messages.id)],
-        ]);
-        if (notifications.length === 0) {
-            return;
-        }
-        this.pyEnv["mail.notification"].write(
-            notifications.map((notification) => notification.id),
-            { is_read: true }
-        );
-        // simulate compute that should be done based on notifications
-        for (const message of messages) {
-            this.pyEnv["mail.message"].write([message.id], {
-                needaction: false,
-                needaction_partner_ids: message.needaction_partner_ids.filter(
-                    (partnerId) => partnerId !== this.pyEnv.currentPartnerId
-                ),
-            });
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.message/mark_as_read", {
-                message_ids: [message.id],
-                needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(
-                    this.pyEnv.currentPartnerId
-                ),
-            });
-        }
     },
     /**
      * Simulates `toggle_message_starred` on `mail.message`.

@@ -33,7 +33,7 @@ class ThreadController(http.Controller):
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
         messages = res.pop("messages")
         if not request.env.user._is_public():
-            messages.set_message_done()
+            messages.mark_all_as_read()
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),

@@ -429,7 +429,7 @@ export class Message extends Record {
     }
 
     async setDone() {
-        await this.store.env.services.orm.silent.call("mail.message", "set_message_done", [
+        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
             [this.id],
         ]);
     }
