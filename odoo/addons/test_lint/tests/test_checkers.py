@@ -496,7 +496,7 @@ class TestSqlLint(TestPylintChecks):
 class TestI18nChecks(TestPylintChecks):
     def check(self, test_content):
         return super().check(
-            test_content, "_odoo_checker_gettext", "gettext-variable,gettext-placeholders,gettext-repr"
+            test_content, "_odoo_checker_gettext", "missing-gettext,gettext-variable,gettext-placeholders,gettext-repr"
         )
 
     def test_gettext_variable(self):
@@ -544,3 +544,39 @@ class TestI18nChecks(TestPylintChecks):
         self.assertEqual(len(errors), 2)
         for error in errors:
             self.assertEqual(error["symbol"], "gettext-repr")
+
+    def test_missing_gettext_no_errors(self):
+        node = """
+            raise UserError(_('This is translated'))
+            some_var = 'This is not translated'
+            raise UserError(some_var)
+            raise UserError(some_var + _('This is translated'))
+            raise UserError(_('This is translated') and some_var)
+            raise UserError(_('This is translated') + "this is not translated")
+            raise UserError(_('This is translated') if true else some_var)
+            def some_call():
+                return _("nothing")
+            some_arr = ["random_string", _("another_random_string")]
+            raise UserError(some_arr[0])
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 0)
+
+    def test_missing_gettext_catching_errors(self):
+        node = """
+            UserError('This is not translated')
+            exceptions.UserError('This is also not translated')
+            UserError(f'This is an f-string')
+            raise UserError('This is not translated' + 'This is also not translated')
+            some_var = 'random_string'
+            raise UserError('This is not translated' and some_var)
+            raise UserError('This is not translated' if true else _('This is translated'))
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 6)
+        for error in errors:
+            self.assertEqual(error["symbol"], "missing-gettext")
