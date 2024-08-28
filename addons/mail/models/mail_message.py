@@ -859,28 +859,24 @@ class Message(models.Model):
         self.ensure_one()
         partner, guest = self.env["res.partner"]._get_current_persona()
         # search for existing reaction
-        domain = [
-            ("message_id", "=", self.id),
-            ("partner_id", "=", partner.id),
-            ("guest_id", "=", guest.id),
-            ("content", "=", content),
-        ]
-        reaction = self.env["mail.message.reaction"].search(domain)
+        reaction = self.reaction_ids.filtered(lambda r:
+            r.partner_id == partner.id and r.guest_id == guest.id and r.content == content
+        )
         # create/unlink reaction if necessary
         if action == "add" and not reaction:
-            create_values = {
+            self.env["mail.message.reaction"].create({
                 "message_id": self.id,
                 "content": content,
                 "partner_id": partner.id,
                 "guest_id": guest.id,
-            }
-            self.env["mail.message.reaction"].create(create_values)
-        if action == "remove" and reaction:
+            })
+        elif action == "remove" and reaction:
             reaction.unlink()
         # format result
-        group_domain = [("message_id", "=", self.id), ("content", "=", content)]
-        count = self.env["mail.message.reaction"].search_count(group_domain)
-        group_command = "ADD" if count > 0 else "DELETE"
+        reactions = self.reaction_ids.filtered(lambda r:
+            r.content == content
+        )
+        group_command = "ADD" if reactions else "DELETE"
         group_values = {
             "content": content,
             "count": count,
