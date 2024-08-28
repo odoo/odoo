@@ -179,5 +179,5 @@ class SerialProxy(SimpleNamespace):
 
     @classmethod
     def __check(cls, key, value):
-        assert not key.startswith('_')
+        assert not key.startswith('_') or key.startswith('_value_')
         assert type(value) in SERIALIZABLE_TYPES + (SerialProxy,)
