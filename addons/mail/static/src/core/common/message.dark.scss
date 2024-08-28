@@ -1,3 +1,7 @@
+.o-mail-Message.o-card {
+    background-color: mix($gray-100, $gray-200);
+}
+
 .o-mail-Message-author {
     opacity: 75%;
 }
@@ -7,7 +11,9 @@
 }
 
 .o-mail-Message-bubble {
-    --border-opacity: 0;
+    .o-mail-Message:not(.o-card) & {
+        --border-opacity: 0;
+    }
 
     &.o-blue {
         background-color: mix($gray-100, $info, 87.5%) !important;
