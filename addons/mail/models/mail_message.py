@@ -866,6 +866,7 @@ class Message(models.Model):
 
     def _reaction_group_to_store(self, store: Store, content):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
+<<<<<<< 18.0
         reactions = self.env["mail.message.reaction"].search(group_domain)
         reaction_group = (
             Store.many(reactions, "ADD")
@@ -873,6 +874,37 @@ class Message(models.Model):
             else [("DELETE", {"message": self.id, "content": content})]
         )
         store.add(self, {"reactions": reaction_group})
+||||||| 7d9136a250ec14b13362b5b901306b9caba0cafd
+        count = self.env["mail.message.reaction"].search_count(group_domain)
+        group_command = "ADD" if count > 0 else "DELETE"
+        personas = [("ADD" if action == "add" else "DELETE", {"id": guest.id if guest else partner.id, "type": "guest" if guest else "partner"})] if guest or partner else []
+        group_values = {
+            "content": content,
+            "count": count,
+            "personas": personas,
+            "message": {"id": self.id},
+        }
+        payload = {"Message": {"id": self.id, "reactions": [(group_command, group_values)]}}
+        self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
+=======
+        count = self.env["mail.message.reaction"].search_count(group_domain)
+        group_command = "ADD" if count > 0 else "DELETE"
+        persona = guest or partner
+        personas = []
+        if persona:
+            persona_data = {"id": persona.id, "type": "guest" if guest else "partner"}
+            if group_command == "ADD":
+                persona_data.update({"name": persona.name, "write_date": persona.write_date})
+            personas = [("ADD" if action == "add" else "DELETE", persona_data)]
+        group_values = {
+            "content": content,
+            "count": count,
+            "personas": personas,
+            "message": {"id": self.id},
+        }
+        payload = {"Message": {"id": self.id, "reactions": [(group_command, group_values)]}}
+        self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
+>>>>>>> 6f3f81662cc3686a4fb42de61931529e9d9a1eaf
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
