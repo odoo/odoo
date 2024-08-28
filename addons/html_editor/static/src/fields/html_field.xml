@@ -10,11 +10,11 @@
             <t t-if="state.showCodeView">
                 <textarea t-ref="codeView" class="o_codeview" t-att-value="this.value" t-on-change="onChange"/>
             </t>
-            <t t-else="">
+            <t t-if="!this.sandboxedPreview">
                 <Wysiwyg
                     config="this.getConfig()"
                     onLoad.bind="onEditorLoad"
-                    contentClass="'note-editable'"
+                    contentClass="`note-editable ${this.state.showCodeView ? 'd-none' : ''}`"
                     onBlur.bind="onBlur"
                     t-key="wysiwygKey"/>
             </t>

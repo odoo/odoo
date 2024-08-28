@@ -100,6 +100,7 @@ export class HtmlField extends Component {
     get displayReadonly() {
         return this.props.readonly || (this.sandboxedPreview && !this.state.showCodeView);
     }
+
     get wysiwygKey() {
         return `${this.props.record.resId}_${this.state.key}`;
     }
@@ -172,6 +173,10 @@ export class HtmlField extends Component {
     async toggleCodeView() {
         await this.commitChanges();
         this.state.showCodeView = !this.state.showCodeView;
+        if (!this.state.showCodeView && this.editor) {
+            this.editor.editable.innerHTML = this.value;
+            this.editor.dispatch("ADD_STEP");
+        }
     }
 
     getConfig() {
