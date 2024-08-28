@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, mountOnFixture, test } from "@odoo/hoot";
 import {
     clear,
     click,
@@ -243,6 +243,10 @@ test("autocomplete menu clickout interactions", async () => {
             </search>
         `,
     });
+
+    // Create an input outside of the search panel to simulate another input outside of the search panel
+    await mountOnFixture(/* xml */ `<input id="foo"/>`);
+
     expect(`.o_searchview_autocomplete`).toHaveCount(0);
 
     await editSearch("Hello there");
@@ -258,9 +262,10 @@ test("autocomplete menu clickout interactions", async () => {
     expect(`.o_searchview input`).toHaveValue("General Kenobi");
     expect(`.o_searchview_autocomplete`).toHaveCount(1);
 
-    await contains(document.body).click();
+    await contains(`input#foo`).click();
     expect(`.o_searchview input`).toHaveValue("");
     expect(`.o_searchview_autocomplete`).toHaveCount(0);
+    expect("input#foo").toBeFocused();
 });
 
 test("select an autocomplete field", async () => {
