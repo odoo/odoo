@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="memo" position="after">
+                <field name="withhold_tax" invisible="not display_withholding" readonly="state != 'draft'"/>
+            </field>
+            <notebook name="payment_notebook" position="inside">
+                <page string="Withholding" invisible="not withhold_tax">
+                    <group>
+                        <field name="withholding_line_ids" nolabel="1" colspan="2" readonly="state != 'draft'">
+                            <list editable="bottom" no_open="1">
+                                <field name="currency_id" column_invisible="1"/>  <!-- Required to display the currency and sum of the amount_currency field -->
+                                <field name="custom_user_amount" column_invisible="1"/>  <!-- Required for the onchange, in order to save the value -->
+                                <field name="custom_user_currency_id" column_invisible="1"/>  <!-- Required for the onchange, in order to save the value -->
+                                <field name="name" string="Sequence Number" required="not withholding_sequence_id" width="92px" readonly="withholding_sequence_id"/>
+                                <field name="base_amount"/>
+                                <field name="tax_id" options="{'no_open': True, 'no_create': True}" string="Tax" width="92px"/>
+                                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
+                                <field name="amount" string="Withheld Amount" sum="Total Withheld Amount"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="outstanding_account_id"
+                                   required="withhold_tax and withholding_line_ids and not payment_account_id"
+                                   invisible="(not withhold_tax) or payment_account_id or not display_withholding"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
