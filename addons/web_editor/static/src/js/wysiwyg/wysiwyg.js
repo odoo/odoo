@@ -1101,21 +1101,23 @@ export class Wysiwyg extends Component {
      * @param {boolean} [reload=true]
      *        true if the page has to be reloaded when the user answers yes
      *        (do nothing otherwise but add this to allow class extension)
-     * @returns {Promise}
+     * @returns {Promise<boolean>}
+     *        true if the cancellation has been confirmed
      */
     cancel(reload) {
         var self = this;
         return new Promise((resolve, reject) => {
             this.env.services.dialog.add(ConfirmationDialog, {
                 body: _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
-                confirm: () => resolve(),
-                cancel: () => reject()
+                confirm: () => resolve(true),
+                cancel: () => resolve(false)
             });
-        }).then(function () {
-            if (reload !== false) {
+        }).then(function (cancelled) {
+            if (cancelled && reload !== false) {
                 window.onbeforeunload = null;
                 return self._reload();
             }
+            return cancelled;
         });
     }
     /**
