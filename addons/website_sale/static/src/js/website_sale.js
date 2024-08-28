@@ -4,7 +4,7 @@ import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { extraMenuUpdateCallbacks } from "@website/js/content/menu";
-import "@website/libs/zoomodoo/zoomodoo";
+import { zoomOdoo } from "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import { cartHandlerMixin } from "@website_sale/js/website_sale_utils";
@@ -237,13 +237,14 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             const images = salePage.querySelectorAll("img[data-zoom]");
             for (const image of images) {
                 const callback = () => {
-                    //TODO-VISP: remove this when website conversion gets merged
-                    $(image).zoomOdoo({
-                        event: "mouseenter",
-                        attach: this._getProductImageContainerSelector(),
-                        preventClicks: salePage.dataset.ecomZoomClick,
-                        attachToTarget: this._getProductImageLayout() === "grid",
-                    });
+                    if (typeof zoomOdoo !== "object") {
+                        zoomOdoo(image, {
+                            event: "mouseenter",
+                            attach: this._getProductImageContainerSelector(),
+                            preventClicks: salePage.dataset.ecomZoomClick,
+                            attachToTarget: this._getProductImageLayout() === "grid",
+                        });
+                    }
                     image.dataset.zoom = 1;
                 };
                 image.addEventListener('load', callback);
