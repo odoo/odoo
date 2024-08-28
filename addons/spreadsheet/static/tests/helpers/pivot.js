@@ -5,7 +5,7 @@ import { getBasicPivotArch, getPyEnv } from "@spreadsheet/../tests/helpers/data"
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { helpers } from "@odoo/o-spreadsheet";
-const { parseDimension, isDateField } = helpers;
+const { parseDimension, isDateOrDatetimeField } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -14,7 +14,7 @@ const { parseDimension, isDateField } = helpers;
 
 function addEmptyGranularity(dimensions, fields) {
     return dimensions.map((dimension) => {
-        if (dimension.fieldName !== "id" && isDateField(fields[dimension.fieldName])) {
+        if (dimension.fieldName !== "id" && isDateOrDatetimeField(fields[dimension.fieldName])) {
             return {
                 granularity: "month",
                 ...dimension,

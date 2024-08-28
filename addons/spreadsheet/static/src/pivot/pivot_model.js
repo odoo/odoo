@@ -8,7 +8,7 @@ import { PivotModel } from "@web/views/pivot/pivot_model";
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
 
-const { toNormalizedPivotValue, toNumber, isDateField, pivotTimeAdapter } = helpers;
+const { toNormalizedPivotValue, toNumber, isDateOrDatetimeField, pivotTimeAdapter } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 /**
@@ -131,7 +131,7 @@ export class OdooPivotModel extends PivotModel {
         const dimension = this.definition.getDimension(dimensionWithGranularity);
         const value = toNormalizedPivotValue(dimension, groupValueString);
         const undef = _t("None");
-        if (isDateField(field)) {
+        if (isDateOrDatetimeField(field)) {
             const adapter = pivotTimeAdapter(granularity);
             return adapter.toValueAndFormat(value).value;
         }
@@ -334,7 +334,7 @@ export class OdooPivotModel extends PivotModel {
         return groupBys.map((gb) => {
             const groupBy = this._normalize(gb);
             const { field, granularity } = this.parseGroupField(gb);
-            if (isDateField(field)) {
+            if (isDateOrDatetimeField(field)) {
                 return pivotTimeAdapter(granularity).normalizeServerValue(groupBy, field, group);
             }
             return this._sanitizeValue(group[groupBy]);
