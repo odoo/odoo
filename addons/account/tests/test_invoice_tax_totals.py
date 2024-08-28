@@ -1174,3 +1174,21 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                 ],
                 'subtotals_order': ["Untaxed Amount"],
             })
+
+    def test_display_tax_base_rounding(self):
+        tax_19 = self.env['account.tax'].create({
+            'name': "tax_19",
+            'amount_type': 'percent',
+            'amount': 19.0,
+        })
+
+        self.company_data['company'].currency_id = self.currency_data['currency']
+        self.company_data['company'].tax_calculation_rounding_method = 'round_globally'
+        self.currency_data['currency'].rounding = 1.00
+        for amount in (23.0, 23.67):
+            document = self._create_document_for_tax_totals_test([
+                (amount, tax_19),
+            ])
+            document.currency_id = self.currency_data['currency']
+            document.invalidate_model(fnames=['tax_totals'])
+            self.assertFalse(document.tax_totals['display_tax_base'])
