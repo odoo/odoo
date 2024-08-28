@@ -81,6 +81,9 @@ export class BarcodeReader {
         }
     }
     showNotFoundNotification(code) {
+        if (code.code.length <= 3) {
+            return;
+        }
         this.notification.add(
             _t(
                 "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."

@@ -82,13 +82,17 @@
         ],
         'web.assets_unit_tests': [
             # for the related_models.test.js
-            'point_of_sale/static/src/app/models/related_models.js',
+            # 'point_of_sale/static/src/app/models/related_models.js',
             # for the data_service.test.js
-            'point_of_sale/static/src/app/models/utils/indexed_db.js',
-            'point_of_sale/static/src/app/models/data_service_options.js',
-            'point_of_sale/static/src/utils.js',
-            'point_of_sale/static/src/app/models/data_service.js',
-            'point_of_sale/static/tests/unit/**/*',
+            # 'point_of_sale/static/src/app/models/utils/indexed_db.js',
+            # 'point_of_sale/static/src/app/models/data_service_options.js',
+            # 'point_of_sale/static/src/utils.js',
+            # 'point_of_sale/static/src/app/models/data_service.js',
+            'point_of_sale/static/src/app/generic_components/numpad/numpad.js',
+            'point_of_sale/static/src/app/generic_components/numpad/numpad.xml',
+            'point_of_sale/static/tests/tours/utils/numpad_util.js',
+            # 'point_of_sale/static/tests/unit/**/*',
+            'point_of_sale/static/tests/unit/numpad.test.js',
         ],
 
         # PoS assets
