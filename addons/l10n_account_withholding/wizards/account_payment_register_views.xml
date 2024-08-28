@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <group name="group1" position="inside">
+                <field name="l10n_account_withholding_withhold_tax" invisible="not l10n_account_withholding_display_withholding"/>
+            </group>
+            <footer position="before">
+                <!-- Hide for argentina, it should be handled by their own module -->
+                <notebook name="payment_register_notebook" colspan="2" invisible="not l10n_account_withholding_withhold_tax or not can_edit_wizard or (can_group_payments and not group_payment) or country_code == 'AR'">
+                    <page name="withholding_page" string="Withholding">
+                        <group>
+                            <field name="l10n_account_withholding_line_ids" nolabel="1" colspan="2">
+                                <list editable="bottom">
+                                    <field name="withholding_sequence_id" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="name" readonly="withholding_sequence_id" column_invisible="parent.l10n_account_withholding_hide_number_col" width="92px"/>
+                                    <field name="base_amount"/>
+                                    <field name="tax_id" options="{'no_open': True, 'no_create': True}" width="92px"/>  <!-- Tax names tend to be short -->
+                                    <field name="amount" sum="Total Withheld Amount"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="l10n_account_withholding_outstanding_account"
+                                       required="l10n_account_withholding_withhold_tax and l10n_account_withholding_line_ids and not l10n_account_withholding_payment_account_id"
+                                       invisible="(not l10n_account_withholding_line_ids) or l10n_account_withholding_payment_account_id or not can_edit_wizard or (can_group_payments and not group_payment) or country_code == 'AR'"/>
+                            </group>
+                            <group>
+                                <field name="l10n_account_withholding_net_amount"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </footer>
+            <div role="alert" position="after">
+                <!-- Hide for argentina, it should be handled by their own module -->
+                <div role="alert" class="alert alert-info" invisible="can_edit_wizard and (not can_group_payments or can_group_payments and group_payment) or country_code == 'AR'">
+                    <p>Withholding taxes cannot be registered for journal entries from different partners or the same partner without grouping.</p>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
