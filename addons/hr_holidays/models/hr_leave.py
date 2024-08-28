@@ -807,10 +807,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             ])
             # Check for any valid allocation covering the leave request period
             valid_allocation = any(
-                allocation.date_from <= leave.request_date_from <= leave.request_date_to <= allocation.date_to
+                allocation.date_from or datetime.min <= leave.request_date_from <= leave.request_date_to <= allocation.date_to or datetime.max
                 for leave in leaves
                 for allocation in allocation_records
-                if allocation.date_from and allocation.date_to
             )
             if not valid_allocation:
                 raise ValidationError(_("The leave dates are outside the allocation period."))
