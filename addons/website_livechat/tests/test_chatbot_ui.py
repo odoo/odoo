@@ -162,3 +162,43 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
         default_website.channel_id = livechat_channel.id
         self.env.ref("website.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "website_livechat.chatbot_redirect")
+
+    def test_chatbot_trigger_selection(self):
+        chatbot_trigger_selection = self.env["chatbot.script"].create(
+            {"title": "Trigger question selection bot"}
+        )
+        question_1, question_2 = tuple(
+            self.env["chatbot.script.step"].create([
+                {
+                    "chatbot_script_id": chatbot_trigger_selection.id,
+                    "message": "Hello, here is a first question?",
+                    "step_type": "question_selection",
+                },
+                {
+                    "chatbot_script_id": chatbot_trigger_selection.id,
+                    "message": "Hello, here is a second question?",
+                    "step_type": "question_selection",
+                },
+            ])
+        )
+        self.env["chatbot.script.answer"].create([
+            {
+                "name": "Yes to first question",
+                "script_step_id": question_1.id,
+            },
+            {
+                "name": "No to second question",
+                "script_step_id": question_2.id,
+            },
+        ])
+        livechat_channel = self.env["im_livechat.channel"].create({
+            'name': 'Redirection Channel',
+            'rule_ids': [Command.create({
+                'regex_url': '/contactus',
+                'chatbot_script_id': chatbot_trigger_selection.id,
+            })]
+        })
+        default_website = self.env.ref("website.default_website")
+        default_website.channel_id = livechat_channel.id
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/contactus", "website_livechat.chatbot_trigger_selection")

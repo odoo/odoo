@@ -1,5 +1,6 @@
 import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 
@@ -11,6 +12,8 @@ export class DiscussCorePublicWeb {
     constructor(env, services) {
         this.env = env;
         this.store = services["mail.store"];
+        this.busService = services.bus_service;
+        this.notificationService = services.notification;
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
                 "discuss_core_public_web.sidebar_categories"
@@ -27,6 +30,17 @@ export class DiscussCorePublicWeb {
         } catch {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
         }
+        this.busService.subscribe("discuss.channel/joined", async (payload) => {
+            const { channel, invited_by_user_id: invitedByUserId } = payload;
+            const thread = this.store.Thread.insert(channel);
+            await thread.fetchChannelInfo();
+            if (invitedByUserId && invitedByUserId !== this.store.self.userId) {
+                this.notificationService.add(
+                    _t("You have been invited to #%s", thread.displayName),
+                    { type: "info" }
+                );
+            }
+        });
     }
 
     /**
@@ -40,7 +54,7 @@ export class DiscussCorePublicWeb {
 }
 
 export const discussCorePublicWeb = {
-    dependencies: ["mail.store"],
+    dependencies: ["bus_service", "mail.store", "notification"],
 
     /**
      * @param {import("@web/env").OdooEnv} env

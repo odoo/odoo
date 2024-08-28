@@ -14,7 +14,12 @@ export class Chatbot extends Record {
     script = Record.one("ChatbotScript");
     currentStep = Record.one("ChatbotStep");
     steps = Record.many("ChatbotStep");
-    thread = Record.one("Thread", { inverse: "chatbot" });
+    thread = Record.one("Thread", {
+        inverse: "chatbot",
+        onDelete() {
+            this.delete();
+        },
+    });
     typingMessage = Record.one("Message", {
         compute() {
             if (this.isTyping && this.thread) {
@@ -59,10 +64,10 @@ export class Chatbot extends Record {
         if (!this.currentStep || this.currentStep.completed || !this.thread) {
             return;
         }
-        const { Message: messages = [] } = this.store.insert(this.currentStep.data, { html: true });
-        this.currentStep.message =
-            messages[0] ??
-            this.store.Message.insert(
+        if (this.thread.isTransient) {
+            // Thread is not persisted thus messages do not exist on the server,
+            // create them now on the client side.
+            this.currentStep.message = this.store.Message.insert(
                 {
                     id: this.store.getNextTemporaryId(),
                     author: this.script.partner,
@@ -71,6 +76,7 @@ export class Chatbot extends Record {
                 },
                 { html: true }
             );
+        }
         this.thread.messages.add(this.currentStep.message);
     }
 
@@ -90,18 +96,20 @@ export class Chatbot extends Record {
             return;
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {
-            const nextStep = await rpc("/chatbot/step/trigger", {
+            const storeData = await rpc("/chatbot/step/trigger", {
                 channel_id: this.thread.id,
                 chatbot_script_id: this.script.id,
             });
-            if (!nextStep) {
+            if (!storeData) {
                 this.currentStep.isLast = true;
                 return;
             }
-            this.steps.push(nextStep);
+            const { ChatbotStep: steps } = this.store.insert(storeData, { html: true });
+            this.steps.push(steps[0]);
+        } else {
+            const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
+            this.currentStep = this.steps[nextStepIndex];
         }
-        const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
-        this.currentStep = this.steps[nextStepIndex];
     }
 
     /**
@@ -137,26 +145,26 @@ export class Chatbot extends Record {
         if (this.currentStep.selectedAnswer) {
             return true;
         }
-        const answer = this.currentStep.answers.find(({ label }) => message.body.includes(label));
+        const answer = this.currentStep.answers.find(({ name }) => message.body.includes(name));
         this.currentStep.selectedAnswer = answer;
         await rpc("/chatbot/answer/save", {
             channel_id: this.thread.id,
             message_id: this.currentStep.message.id,
             selected_answer_id: answer.id,
         });
-        if (!answer.redirectLink) {
+        if (!answer.redirect_link) {
             return true;
         }
         let isRedirecting = false;
-        if (answer.redirectLink && URL.canParse(answer.redirectLink, window.location.href)) {
+        if (answer.redirect_link && URL.canParse(answer.redirect_link, window.location.href)) {
             const url = new URL(window.location.href);
-            const nextURL = new URL(answer.redirectLink, window.location.href);
+            const nextURL = new URL(answer.redirect_link, window.location.href);
             isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
         }
-        const targetURL = new URL(answer.redirectLink, window.location.origin);
+        const targetURL = new URL(answer.redirect_link, window.location.origin);
         const redirectionAlreadyDone = targetURL.href === location.href;
         if (!redirectionAlreadyDone) {
-            browser.location.assign(answer.redirectLink);
+            browser.location.assign(answer.redirect_link);
         }
         return redirectionAlreadyDone || !isRedirecting;
     }
