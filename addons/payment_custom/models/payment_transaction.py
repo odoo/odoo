@@ -70,6 +70,9 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        return
+
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on custom data.
 

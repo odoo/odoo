@@ -99,6 +99,14 @@ class PaymentTransaction(models.Model):
             ))
         return tx
 
+    def _compare_notification_data(self, notification_data):
+        payment_data = self.provider_id._mollie_make_request(
+            f'/payments/{self.provider_reference}', method="GET"
+        )
+        amount = payment_data.get('amount', {}).get('value')
+        currency_code = payment_data.get('amount', {}).get('currency')
+        self._validate_amount_and_currency_code(amount, currency_code)
+
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Mollie data.
 

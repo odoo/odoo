@@ -10,7 +10,11 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_sips.const import RESPONSE_CODES_MAPPING, SUPPORTED_CURRENCIES
+from odoo.addons.payment_sips.const import (
+    RESPONSE_CODES_MAPPING,
+    SUPPORTED_CURRENCIES,
+    SUPPORTED_CURRENCIES_INV,
+)
 from odoo.addons.payment_sips.controllers.main import SipsController
 
 _logger = logging.getLogger(__name__)
@@ -109,6 +113,12 @@ class PaymentTransaction(models.Model):
             )
 
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        data = self._sips_notification_data_to_object(notification_data.get('Data'))
+        amount = payment_utils.to_major_currency_units(float(data.get('amount')), self.currency_id)
+        currency_code = SUPPORTED_CURRENCIES_INV[data.get('currencyCode')]
+        self._validate_amount_and_currency_code(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Sips data.

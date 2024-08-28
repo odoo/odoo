@@ -2,6 +2,7 @@
 
 import logging
 import pprint
+
 from urllib.parse import quote as url_quote
 
 from werkzeug import urls
@@ -11,7 +12,6 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
-
 
 _logger = logging.getLogger(__name__)
 
@@ -131,6 +131,12 @@ class PaymentTransaction(models.Model):
                 "Mercado Pago: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        # TODO(loti): need to get verified_payment_data first?
+        amount = notification_data.get('items', [{}])[0].get('unit_price')
+        currency_code = notification_data.get('items', [{}])[0].get('currency_id')
+        self._validate_amount_and_currency_code(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Mercado Pago data.
