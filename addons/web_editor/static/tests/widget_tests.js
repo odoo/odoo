@@ -1,6 +1,8 @@
-import Widget from "@web_editor/js/core/widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
+
+const Widget = publicWidget.Widget;
 
 QUnit.module('core', {}, function () {
 
@@ -392,27 +394,6 @@ QUnit.module('core', {}, function () {
             assert.ok(true, "alive(p, true) should fail its promise");
             done();
         });
-    });
-
-    QUnit.test("calling do_hide on a widget destroyed before being rendered", async function (assert) {
-        assert.expect(1);
-
-        const MyWidget = Widget.extend({
-            willStart() {
-                return new Promise(() => {});
-            }
-        });
-
-        const widget = new MyWidget();
-        widget.appendTo(document.createDocumentFragment());
-        widget.destroy();
-
-        // those calls should not crash
-        widget.do_hide();
-        widget.do_show();
-        widget.do_toggle(true);
-
-        assert.ok(true);
     });
 
     QUnit.test('start is not called when widget is destroyed', function (assert) {

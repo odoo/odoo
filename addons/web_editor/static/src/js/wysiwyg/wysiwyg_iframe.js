@@ -189,7 +189,7 @@ patch(Wysiwyg.prototype, {
      * 1. scroll event in the top document, if the iframe is a descendant of
      * the scroll container.
      * 2. scroll event in the iframe's document.
-     * 
+     *
      * @override
      */
     _onScroll(ev) {
@@ -241,10 +241,10 @@ function getWysiwygIframeContent(params) {
         ${assets.jsLibs.join('\n')}
 
         <script type="text/javascript">
-            window.odoo?.define('root.widget', ['@web_editor/js/core/widget'], function (require) {
+            window.odoo?.define('root.widget', ['@web/legacy/js/public/public_widget'], function (require) {
                 'use strict';
-                var Widget = require('@web_editor/js/core/widget')[Symbol.for("default")];
-                var widget = new Widget();
+                const publicWidget = require('@web/legacy/js/public/public_widget')[Symbol.for("default")];
+                const widget = new publicWidget.Widget();
                 widget.appendTo(document.body);
                 return widget;
             });

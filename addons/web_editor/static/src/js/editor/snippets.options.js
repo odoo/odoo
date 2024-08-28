@@ -6,7 +6,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import { scrollTo } from "@web/core/utils/scrolling";
-import Widget from "@web_editor/js/core/widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
@@ -292,7 +292,7 @@ const NULL_ID = '__NULL__';
  * Base class for components to be used in snippet options widgets to retrieve
  * user values.
  */
-const UserValueWidget = Widget.extend({
+const UserValueWidget = publicWidget.Widget.extend({
     className: 'o_we_user_value_widget',
     custom_events: {
         'user_value_update': '_onUserValueNotification',
@@ -2663,7 +2663,7 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     },
     /**
      * @private
-     * @param {string} inputValue 
+     * @param {string} inputValue
      */
     _computeDisplayValue(inputValue) {
         if (this.el.dataset.toRatio) {
@@ -3325,7 +3325,7 @@ const userValueWidgetsRegistry = {
  * module contains the names of the specialized SnippetOptionWidget which can be
  * referenced thanks to the data-js key in the web_editor options template.
  */
-const SnippetOptionWidget = Widget.extend({
+const SnippetOptionWidget = publicWidget.Widget.extend({
     tagName: 'we-customizeblock-option',
     events: {
         'click .o_we_collapse_toggler': '_onCollapseTogglerClick',
@@ -7146,7 +7146,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     /**
      * Replace animation durations in SVG and CSS with modified values.
      *
-     * This function takes a ratio and an SVG string containing animations. It 
+     * This function takes a ratio and an SVG string containing animations. It
      * uses regular expressions to find and replace the duration values in both
      * CSS animation rules and SVG duration attributes based on the provided
      * ratio.
@@ -7155,7 +7155,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      *                       durations. If speed is 0.0, the original
      *                       durations are preserved.
      * @param {string} svg The SVG string containing animations.
-     * @returns {string} The modified SVG string with updated animation 
+     * @returns {string} The modified SVG string with updated animation
      *                   durations.
      */
     _replaceAnimationDuration(speed, svg) {
@@ -7182,7 +7182,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             // Replace the CSS --animation_ratio variable for future purpose.
             svg = svg.replace(CSS_ANIMATION_RATIO_REGEX, `--animation_ratio: ${ratio};`);
         } else {
-            // Add the style tag with the root variable --animation ratio for 
+            // Add the style tag with the root variable --animation ratio for
             // future purpose.
             const regex = /<svg .*>/m;
             const subst = `$&\n\t<style>\n\t\t:root { \n\t\t\t--animation_ratio: ${ratio};\n\t\t}\n\t</style>`;
