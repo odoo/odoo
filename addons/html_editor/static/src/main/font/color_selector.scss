@@ -18,6 +18,11 @@
     margin-bottom: 3px;
 }
 
+.o_colorpicker_section .o_color_button.selected {
+    // todo: check web_editor
+    border: 3px solid $o-enterprise-action-color;
+}
+
 :root {
     @each $color, $value in $grays {
         @include print-variable($color, $value);
