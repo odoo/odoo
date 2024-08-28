@@ -5,56 +5,28 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 /** @typedef {DraggableHandlerParams & { group: HTMLElement | null }} NestedSortableHandlerParams */
 
 /**
- *
- * MANDATORY
- *
- * @property {{ el: HTMLElement | null }} ref
+ * @typedef {import("./sortable").SortableParams} NestedSortableParams
  *
  * OPTIONAL
  *
- * @property {boolean | () => boolean} [enable] whether the sortable system should
- *  be enabled.
- * @property {string | () => string} [groups] defines parent groups of sortable
- *  elements. This allows to add `onGroupEnter` and `onGroupLeave` callbacks to
- *  work on group elements during the dragging sequence.
- * @property {string | () => string} [handle] additional selector for when the dragging
- *  sequence must be initiated when dragging on a certain part of the element.
- * @property {string | () => string} [ignore] selector targeting elements that must
- *  initiate a drag (recursive in depth: all draggable elements under an
- *  ignored element will be locked in place)
  * @property {(HTMLElement) => boolean} [preventDrag] function receiving a
  *  the current target for dragging (element) and returning a boolean, whether
  *  the element can be effectively dragged or not.
- * @property {boolean | () => boolean} [connectGroups] whether elements can be dragged
- *  across different parent groups. Note that it requires a `groups` param to work.
- * @property {string | () => string} [cursor] cursor style during the dragging sequence.
  * @property {boolean | () => boolean} [nest] whether elements are nested or not.
  * @property {string | () => string} [listTagName] type of lists ("ul" or "ol").
  * @property {number | () => number} [nestInterval] Horizontal distance needed to trigger
  * a change in the list hierarchy (i.e. changing parent when moving horizontally)
  * @property {number | () => number} [maxLevels] The maximum depth of nested items
  * the list can accept. If set to '0' the levels are unlimited. Default: 0
- * @property {(DraggableHookContext) => boolean}) [isAllowed] You can specify a custom function
+ * @property {(DraggableHookContext) => boolean} [isAllowed] You can specify a custom function
  * to verify if a drop location is allowed. return True by default
  * @property {boolean} [useElementSize] The placeholder use the dragged element size instead
  * of the small 8px lines. Default:false
  *
  * HANDLERS (also optional)
  *
- * @property {(params: NestedSortableHandlerParams) => any} [onDragStart] called when a
- * dragging sequence is initiated.
  * @property {(params: MoveParams) => any} [onMove] called when the element has moved
  * (changed position) (@see MoveParams).
- * @property {(params: NestedSortableHandlerParams) => any} [onGroupEnter] called when
- * the element enters a group.
- * @property {(params: NestedSortableHandlerParams) => any} [onGroupLeave] called when
- * the element leaves a group.
- * @property {(params: MoveParams) => any} [onDrop] called when the dragging sequence
- *  ends on a mouseup action AND the dragged element has been moved elsewhere. The
- *  callback will be given an object with any useful element regarding the new position
- *  of the dragged element (@see MoveParams).
- * @property {(params: NestedSortableHandlerParams) => any} [onDragEnd] called when the
- * dragging sequence ends, regardless of the reason.
  */
 
 /**
@@ -73,7 +45,7 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
  * @property {boolean} dragging
  */
 
-/** @type {(params: SortableParams) => SortableState} */
+/** @type {(params: NestedSortableParams) => SortableState} */
 export const useNestedSortable = makeDraggableHook({
     name: "useNestedSortable",
     acceptedParams: {
