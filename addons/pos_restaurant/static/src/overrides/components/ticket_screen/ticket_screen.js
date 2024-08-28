@@ -105,15 +105,6 @@ patch(TicketScreen.prototype, {
         }
         return result;
     },
-    async onDoRefund() {
-        const order = this.getSelectedOrder();
-        if (this.pos.config.module_pos_restaurant && order && !this.pos.selectedTable) {
-            await this.pos.setTable(
-                order.table ? order.table : this.pos.models["restaurant.table"].getAll()[0]
-            );
-        }
-        await super.onDoRefund(...arguments);
-    },
     isDefaultOrderEmpty(order) {
         if (this.pos.config.module_pos_restaurant) {
             return false;

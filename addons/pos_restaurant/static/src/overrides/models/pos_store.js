@@ -84,14 +84,8 @@ patch(PosStore.prototype, {
             ...("generalNote" in orderChanges ? [{ count: 1, name: _t("General Note") }] : []),
         ];
     },
-    createNewOrder() {
-        const order = super.createNewOrder(...arguments);
-
-        if (this.config.module_pos_restaurant && this.selectedTable && !order.table_id) {
-            order.table_id = this.selectedTable;
-        }
-
-        return order;
+    get selectedTable() {
+        return this.get_order()?.table_id;
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
@@ -174,11 +168,7 @@ patch(PosStore.prototype, {
             this.bus.subscribe("SYNC_ORDERS", this.ws_syncTableCount.bind(this));
         }
 
-        const res = await super.afterProcessServerData(...arguments);
-        if (this.config.module_pos_restaurant) {
-            this.selectedTable = null;
-        }
-        return res;
+        return await super.afterProcessServerData(...arguments);
     },
     //@override
     async add_new_order() {
@@ -223,12 +213,33 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
-        this.selectedTable = table;
+        this.loadingOrderState = true;
+
+        const tableOrders = table.orders;
+
+        let currentOrder = tableOrders.find((order) =>
+            orderUuid ? order.uuid === orderUuid : !order.finalized
+        );
+
+        if (currentOrder) {
+            this.set_order(currentOrder);
+        } else {
+            const potentialsOrders = this.models["pos.order"].filter(
+                (o) => !o.table_id && !o.finalized && o.lines.length === 0
+            );
+
+            if (potentialsOrders.length) {
+                currentOrder = potentialsOrders[0];
+                currentOrder.update({ table_id: table });
+                this.selectedOrderUuid = currentOrder.uuid;
+            } else {
+                await this.add_new_order({ table_id: table });
+            }
+        }
         try {
             this.loadingOrderState = true;
             const orders = await this.syncAllOrders({ throw: true });
             const orderUuids = orders.map((order) => order.uuid);
-
             for (const order of table.orders) {
                 if (
                     !orderUuids.includes(order.uuid) &&
@@ -240,28 +251,6 @@ patch(PosStore.prototype, {
             }
         } finally {
             this.loadingOrderState = false;
-
-            const tableOrders = table.orders;
-
-            let currentOrder = tableOrders.find((order) =>
-                orderUuid ? order.uuid === orderUuid : !order.finalized
-            );
-
-            if (currentOrder) {
-                this.set_order(currentOrder);
-            } else {
-                const potentialsOrders = this.models["pos.order"].filter(
-                    (o) => !o.table_id && !o.finalized && o.lines.length === 0
-                );
-
-                if (potentialsOrders.length) {
-                    currentOrder = potentialsOrders[0];
-                    currentOrder.table_id = table;
-                    this.selectedOrderUuid = currentOrder.uuid;
-                } else {
-                    await this.add_new_order();
-                }
-            }
         }
     },
     async setTableFromUi(table, orderUuid = null) {
@@ -288,7 +277,7 @@ patch(PosStore.prototype, {
                 }
                 this.showScreen(orders[0].get_screen_data().name, props);
             } else {
-                await this.add_new_order();
+                await this.add_new_order({ table_id: table });
                 this.showScreen("ProductScreen");
             }
         }
@@ -305,7 +294,6 @@ patch(PosStore.prototype, {
             }
             Promise.reject(e);
         }
-        this.selectedTable = null;
         const order = this.get_order();
         if (order && !order.isBooked) {
             this.removeOrder(order);
