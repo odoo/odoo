@@ -1,9 +1,10 @@
-import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
-import { useNestedSortable } from "@web/core/utils/nested_sortable";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { drag, queryFirst } from "@odoo/hoot-dom";
 import { expect, test } from "@odoo/hoot";
+import { queryFirst, queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+
+import { useNestedSortable } from "@web/core/utils/nested_sortable";
 
 /**
  * Dragging methods taking into account the fact that it's the top of the
@@ -11,23 +12,26 @@ import { animationFrame } from "@odoo/hoot-mock";
  * and the fact that during the first move, the dragged element is replaced by
  * a placeholder that does not have the same height. The moves are done with
  * the same x position to prevent triggering horizontal moves.
- * @param {string} from
+ *
+ * @param {import("@odoo/hoot-dom").Target} from
+ * @param {import("../../_framework/dom_test_helpers").DragAndDropOptions} [options]
  */
-const sortableDrag = (from) => {
-    const fromEl = queryFirst(from);
-    const fromRect = fromEl.getBoundingClientRect();
-    const { drop, moveTo } = drag(from);
+const sortableDrag = async (from, options) => {
+    const fromRect = queryRect(from);
+    const { cancel, drop, moveTo } = await contains(from).drag({
+        initialPointerMoveDistance: 0,
+        ...options,
+    });
 
     let isFirstMove = true;
 
     /**
      * @param {string} [targetSelector]
      */
-    const moveAbove = (targetSelector) => {
-        const el = queryFirst(targetSelector);
-        moveTo(el, {
+    const moveAbove = async (targetSelector) => {
+        await moveTo(targetSelector, {
             position: {
-                x: fromRect.x - el.getBoundingClientRect().x + fromRect.width / 2,
+                x: fromRect.x - queryRect(targetSelector).x + fromRect.width / 2,
                 y: fromRect.height / 2 + 5,
             },
             relative: true,
@@ -38,16 +42,12 @@ const sortableDrag = (from) => {
     /**
      * @param {string} [targetSelector]
      */
-    const moveUnder = (targetSelector) => {
-        const el = queryFirst(targetSelector);
-        const elRect = el.getBoundingClientRect();
-        let firstMoveBelow = false;
-        if (isFirstMove && elRect.y > fromRect.y) {
-            // Need to consider that the moved element will be replaced by a
-            // placeholder with a height of 5px
-            firstMoveBelow = true;
-        }
-        moveTo(el, {
+    const moveUnder = async (targetSelector) => {
+        const elRect = queryRect(targetSelector);
+        // Need to consider that the moved element will be replaced by a
+        // placeholder with a height of 5px
+        const firstMoveBelow = isFirstMove && elRect.y > fromRect.y;
+        await moveTo(targetSelector, {
             position: {
                 x: fromRect.x - elRect.x + fromRect.width / 2,
                 y:
@@ -59,14 +59,18 @@ const sortableDrag = (from) => {
         });
         isFirstMove = false;
     };
-    return { moveAbove, moveUnder, drop };
+
+    return { cancel, moveAbove, moveTo, moveUnder, drop };
 };
 
+/**
+ * @param {import("@odoo/hoot-dom").Target} from
+ * @param {import("@odoo/hoot-dom").Target} to
+ */
 const dragAndDrop = async (from, to) => {
-    const { drop, moveUnder } = sortableDrag(from);
-    moveUnder(to);
-    await animationFrame();
-    drop();
+    const { drop, moveUnder } = await sortableDrag(from);
+    await moveUnder(to);
+    await drop();
 };
 
 test("Parameters error handling", async () => {
@@ -161,6 +165,7 @@ test("Sorting in a single group without nesting", async () => {
             useNestedSortable({
                 ref: useRef("root"),
                 elements: ".sortable_list > li",
+                touchDelay: 0,
                 onDragStart({ element, group }) {
                     expect.step("start");
                     expect(element).toHaveAttribute("id", "1");
@@ -207,12 +212,11 @@ test("Sorting in a single group without nesting", async () => {
     expect.verifySteps([]);
 
     // Move first item after second item
-    const { drop, moveUnder } = sortableDrag(".sortable_list > .item:first-child");
-    moveUnder(".sortable_list > .item:nth-child(2)");
-    await animationFrame();
-    expect(queryFirst(".sortable_list > .item")).toHaveClass("o_dragged");
+    const { drop, moveUnder } = await sortableDrag(".sortable_list > .item:first-child");
+    await moveUnder(".sortable_list > .item:nth-child(2)");
+    expect(".sortable_list > .item:first").toHaveClass("o_dragged");
 
-    drop();
+    await drop();
     expect(".sortable_list > .item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
     expect.verifySteps(["start", "move", "drop", "end"]);
@@ -245,6 +249,7 @@ test("Sorting in groups without nesting", async () => {
                 elements: ".sortable_list > li",
                 groups: "section",
                 connectGroups: true,
+                touchDelay: 0,
                 onDragStart({ element, group }) {
                     expect.step("start");
                     expect(element).toHaveAttribute("id", "2.2");
@@ -380,29 +385,27 @@ test("Sorting with nesting - move right", async () => {
     expect.verifySteps([]);
 
     const movedEl = queryFirst(".sortable_list > .item:nth-child(2)");
-    const { drop, moveTo } = drag(movedEl);
-    moveTo(movedEl, {
+    const { drop, moveTo } = await sortableDrag(movedEl);
+    await moveTo(movedEl, {
         position: {
-            x: movedEl.getBoundingClientRect().width / 2 + 15,
+            x: queryRect(movedEl).width / 2 + 15,
         },
         relative: true,
     });
-    await animationFrame();
-    moveTo(movedEl, {
+    await moveTo(movedEl, {
         position: {
-            x: movedEl.getBoundingClientRect().width / 2 + 30,
+            x: queryRect(movedEl).width / 2 + 30,
         },
         relative: true,
     });
-    await animationFrame();
     // No move if row is already child
-    drop(movedEl, {
+    await moveTo(movedEl, {
         position: {
-            x: movedEl.getBoundingClientRect().width / 2 + 45,
+            x: queryRect(movedEl).width / 2 + 45,
         },
         relative: true,
     });
-    await animationFrame();
+    await drop();
     expect(".item").toHaveCount(6);
     expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
 });
@@ -475,31 +478,26 @@ test("Sorting with nesting - move left", async () => {
     expect(".item").toHaveCount(4);
     expect.verifySteps([]);
 
-    const movedEl = queryFirst(".item#dragged");
-    const { drop, moveTo } = drag(movedEl);
+    const movedEl = queryOne(".item#dragged");
+    const { drop, moveTo } = await sortableDrag(movedEl);
     // No move if distance traveled is smaller than the nest interval
-    let boundingClientRect = movedEl.getBoundingClientRect();
-    moveTo(movedEl, {
+    await moveTo(movedEl, {
         position: {
-            x: boundingClientRect.width / 2 - 10,
+            x: queryRect(movedEl).width / 2 - 10,
         },
     });
-    await animationFrame();
-    boundingClientRect = movedEl.getBoundingClientRect();
-    moveTo(movedEl, {
+    await moveTo(movedEl, {
         position: {
-            x: boundingClientRect.width / 2 - 20,
+            x: queryRect(movedEl).width / 2 - 20,
         },
     });
-    await animationFrame();
     // No move if there is one element before and one after
-    boundingClientRect = movedEl.getBoundingClientRect();
-    drop(movedEl, {
+    await moveTo(movedEl, {
         position: {
-            x: boundingClientRect.width / 2 - 40,
+            x: queryRect(movedEl).width / 2 - 40,
         },
     });
-    await animationFrame();
+    await drop();
 
     expect(".item").toHaveCount(4);
     expect.verifySteps(["start", "move", "drop", "end"]);
@@ -536,6 +534,7 @@ test("Sorting with nesting - move root down", async () => {
                 ref: useRef("root"),
                 elements: ".item",
                 nest: true,
+                touchDelay: 0,
                 onDragStart({ element }) {
                     expect.step("start");
                     expect(element).toHaveAttribute("id", "dragged");
@@ -581,13 +580,11 @@ test("Sorting with nesting - move root down", async () => {
     await mountWithCleanup(NestedSortable);
     expect.verifySteps([]);
 
-    const { drop, moveUnder } = sortableDrag(".item#dragged");
-    moveUnder(".item#noChild");
-    await animationFrame();
+    const { drop, moveUnder } = await sortableDrag(".item#dragged");
+    await moveUnder(".item#noChild");
     // Move under the content of the row, not under the rows nested inside the row
-    moveUnder(".item#parent > span");
-    await animationFrame();
-    drop();
+    await moveUnder(".item#parent > span");
+    await drop();
 
     expect(".item").toHaveCount(4);
     expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
@@ -624,6 +621,7 @@ test("Sorting with nesting - move child down", async () => {
                 ref: useRef("root"),
                 elements: ".item",
                 nest: true,
+                touchDelay: 0,
                 onDragStart({ element }) {
                     expect.step("start");
                     expect(element).toHaveAttribute("id", "dragged");
@@ -668,12 +666,10 @@ test("Sorting with nesting - move child down", async () => {
     await mountWithCleanup(NestedSortable);
     expect.verifySteps([]);
 
-    const { drop, moveUnder } = sortableDrag(".item#dragged");
-    moveUnder(".item#child");
-    await animationFrame();
-    moveUnder(".item#noChild");
-    await animationFrame();
-    drop();
+    const { drop, moveUnder } = await sortableDrag(".item#dragged");
+    await moveUnder(".item#child");
+    await moveUnder(".item#noChild");
+    await drop();
 
     expect(".item").toHaveCount(4);
     expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
@@ -754,12 +750,10 @@ test("Sorting with nesting - move root up", async () => {
     await mountWithCleanup(NestedSortable);
     expect.verifySteps([]);
 
-    const { drop, moveAbove } = sortableDrag(".item#dragged");
-    moveAbove(".item#noChild");
-    await animationFrame();
-    moveAbove(".item#child");
-    await animationFrame();
-    drop();
+    const { drop, moveAbove } = await sortableDrag(".item#dragged");
+    await moveAbove(".item#noChild");
+    await moveAbove(".item#child");
+    await drop();
 
     expect(".item").toHaveCount(4);
     expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
@@ -838,12 +832,10 @@ test("Sorting with nesting - move child up", async () => {
     await mountWithCleanup(NestedSortable);
     expect.verifySteps([]);
 
-    const { drop, moveAbove } = sortableDrag(".item#dragged");
-    moveAbove(".item#child");
-    await animationFrame();
-    moveAbove(".item#parent");
-    await animationFrame();
-    drop();
+    const { drop, moveAbove } = await sortableDrag(".item#dragged");
+    await moveAbove(".item#child");
+    await moveAbove(".item#parent");
+    await drop();
 
     expect(".item").toHaveCount(3);
     expect.verifySteps(["start", "move 1", "move 2", "drop", "end"]);
@@ -919,31 +911,26 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
 
     await mountWithCleanup(NestedSortable);
 
-    // Move the element from only 5 pixels
-    const listItem = queryFirst(".item:first-child");
-    const { drop, moveTo } = drag(listItem);
-    moveTo(listItem, {
-        position: {
-            x: listItem.getBoundingClientRect().width / 2,
-            y: listItem.getBoundingClientRect().height / 2 + 5,
-        },
+    const listItem = queryFirst(".item");
+    const { cancel, moveTo } = await sortableDrag(listItem, {
+        position: { x: 0, y: 0 }, // Move the element from only 5 pixels
         relative: true,
     });
-    await animationFrame();
-    // No drag sequence should have been initiated
+    await moveTo(listItem, {
+        position: { x: 0, y: 5 },
+        relative: true,
+    });
+
     expect.verifySteps([]);
-    // Move the element from more than 10 pixels
-    moveTo(listItem, {
-        position: {
-            x: listItem.getBoundingClientRect().width / 2,
-            y: listItem.getBoundingClientRect().height / 2 + 10,
-        },
+
+    await moveTo(listItem, {
+        position: { x: 10, y: 10 }, // Move the element from more than 10 pixels
         relative: true,
     });
-    await animationFrame();
-    // A drag sequence should have been initiated
+
     expect.verifySteps(["Initiation of the drag sequence"]);
-    drop();
+
+    await cancel();
 });
 
 test("shouldn't drag above max level", async () => {
@@ -996,11 +983,9 @@ test("shouldn't drag above max level", async () => {
     await mountWithCleanup(NestedSortable);
 
     // cant move draggable under parent
-    const draggedNode = queryFirst(".item#dragged");
-    const { drop, moveTo } = drag(draggedNode);
-    moveTo("#parent", { position: "right" });
-    await animationFrame();
-    drop();
+    await contains(".item#dragged").dragAndDrop("#parent", {
+        position: "right",
+    });
     expect.verifySteps(["start", "end"]);
 });
 
@@ -1069,35 +1054,31 @@ test("shouldn't drag outside a nest level", async () => {
 
     await mountWithCleanup(NestedSortable);
 
-    const dragged = queryFirst("#D");
+    const dragged = queryOne("#D");
     let drop, moveAbove, moveUnder;
     // Move before a sibling (success)
     dragged.id = "D1";
-    ({ drop, moveAbove } = sortableDrag("#D1"));
-    moveAbove("#C > span");
-    await animationFrame();
-    drop();
+    ({ drop, moveAbove } = await sortableDrag("#D1"));
+    await moveAbove("#C > span");
+    await drop();
     expect.verifySteps(["start", "move", "drop", "end"]);
     // Move after a sibling (success)
     dragged.id = "D2";
-    ({ drop, moveUnder } = sortableDrag("#D2"));
-    moveUnder("#E > span");
-    await animationFrame();
-    drop();
+    ({ drop, moveUnder } = await sortableDrag("#D2"));
+    await moveUnder("#E > span");
+    await drop();
     expect.verifySteps(["start", "move", "drop", "end"]);
     // Attempt to change parent by going above the current parent (fail)
     dragged.id = "D3";
-    ({ drop, moveAbove } = sortableDrag("#D3"));
-    moveAbove("#B > span");
-    await animationFrame();
-    drop();
+    ({ drop, moveAbove } = await sortableDrag("#D3"));
+    await moveAbove("#B > span");
+    await drop();
     expect.verifySteps(["start", "end"]);
     // Attempt to change parent by becoming the child of a sibling (fail)
     dragged.id = "D4";
-    ({ drop, moveUnder } = sortableDrag("#D4"));
-    moveUnder("#F > span");
-    await animationFrame();
-    drop();
+    ({ drop, moveUnder } = await sortableDrag("#D4"));
+    await moveUnder("#F > span");
+    await drop();
     expect.verifySteps(["start", "end"]);
 });
 
@@ -1153,11 +1134,9 @@ test("shouldn't drag when not allowed", async () => {
 
     await mountWithCleanup(NestedSortable);
 
-    const draggedNode = queryFirst(".item#dragged");
-    const { drop, moveTo } = drag(draggedNode);
-    moveTo("#target", { position: "right" });
-    await animationFrame();
-    drop();
+    await contains(".item#dragged").dragAndDrop("#target", {
+        position: "right",
+    });
     expect.verifySteps(["start", "allowed_check", "allowed_check", "end"]);
 });
 
@@ -1183,14 +1162,13 @@ test("placeholder and drag element have same size", async () => {
                 ref: useRef("root"),
                 elements: ".item",
                 useElementSize: true,
+                touchDelay: 0,
                 onDrop({ element, placeholder }) {
                     expect(element).toHaveAttribute("id", "dragged");
                     expect(placeholder).toHaveClass("dragged");
                     expect(placeholder).toHaveClass("o_nested_sortable_placeholder_realsize");
                     expect(placeholder).not.toHaveClass("o_nested_sortable_placeholder");
-                    expect(element.getBoundingClientRect().height).toBe(
-                        placeholder.getBoundingClientRect().height
-                    );
+                    expect(element).toHaveRect({ height: queryRect(placeholder).height });
                 },
             });
         }
@@ -1198,11 +1176,9 @@ test("placeholder and drag element have same size", async () => {
 
     await mountWithCleanup(NestedSortable);
 
-    const draggedNode = queryFirst(".item#dragged");
-    const { drop, moveTo } = drag(draggedNode);
-    moveTo("#target", { position: "right" });
-    await animationFrame();
-    drop();
+    await contains(".item#dragged").dragAndDrop("#target", {
+        position: "right",
+    });
 });
 
 test("Ignore specified elements", async () => {

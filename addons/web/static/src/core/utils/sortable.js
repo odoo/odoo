@@ -19,39 +19,44 @@ import { pick } from "@web/core/utils/objects";
  *
  * @property {boolean | (() => boolean)} [enable] whether the sortable system should
  *  be enabled.
+ * @property {number} [delay] delay before starting a sequence after a "pointerdown".
+ * @property {number} [touchDelay] same as "delay", but specific to touch environments.
  * @property {string | (() => string)} [groups] defines parent groups of sortable
  *  elements. This allows to add `onGroupEnter` and `onGroupLeave` callbacks to
  *  work on group elements during the dragging sequence.
- * @property {string | (() => string)} [handle] additional selector for when the dragging
- *  sequence must be initiated when dragging on a certain part of the element.
- * @property {string | (() => string)} [ignore] selector targetting elements that must
- *  initiate a drag.
- * @property {boolean | (() => boolean)} [connectGroups] whether elements can be dragged
- *  accross different parent groups. Note that it requires a `groups` param to work.
- * @property {string | (() => string)} [cursor] cursor style during the dragging sequence.
- * @property {Boolean} [clone] the placeholder is a clone of the drag element.
- * @property {Array} [placeholderClasses] array of classes added to the placeholder element.
- * @property {Boolean} [applyChangeOnDrop] on drop the change is applied to the DOM.
- * @property {Array} [followingElementClasses] array of classes added to the element that follow the pointer.
+ * @property {string | (() => string)} [handle] additional selector for when the
+ *  dragging sequence must be initiated when dragging on a certain part of the element.
+ * @property {string | (() => string)} [ignore] selector targetting elements that
+ *  must initiate a drag.
+ * @property {boolean | (() => boolean)} [connectGroups] whether elements can be
+ *  dragged accross different parent groups. Note that it requires a `groups` param to work.
+ * @property {string | (() => string)} [cursor] cursor style during the dragging
+ *  sequence.
+ * @property {boolean} [clone] the placeholder is a clone of the drag element.
+ * @property {string[]} [placeholderClasses] array of classes added to the placeholder
+ *  element.
+ * @property {boolean} [applyChangeOnDrop] on drop the change is applied to the DOM.
+ * @property {string[]} [followingElementClasses] array of classes added to the
+ *  element that follow the pointer.
  *
  * HANDLERS (also optional)
  *
  * @property {(params: SortableHandlerParams) => any} [onDragStart]
  *  called when a dragging sequence is initiated.
- * @property {(params: DraggableHandlerParams) => any} [onElementEnter] called when the cursor
- *  enters another sortable element.
- * @property {(params: DraggableHandlerParams) => any} [onElementLeave] called when the cursor
- *  leaves another sortable element.
- * @property {(params: SortableHandlerParams) => any} [onGroupEnter] (if a `groups` is specified):
- *  will be called when the cursor enters another group element.
- * @property {(params: SortableHandlerParams) => any} [onGroupLeave] (if a `groups` is specified):
- *  will be called when the cursor leaves another group element.
+ * @property {(params: DraggableHandlerParams) => any} [onElementEnter] called when
+ *  the cursor enters another sortable element.
+ * @property {(params: DraggableHandlerParams) => any} [onElementLeave] called when
+ *  the cursor leaves another sortable element.
+ * @property {(params: SortableHandlerParams) => any} [onGroupEnter] (if a `groups`
+ *  is specified): will be called when the cursor enters another group element.
+ * @property {(params: SortableHandlerParams) => any} [onGroupLeave] (if a `groups`
+ *  is specified): will be called when the cursor leaves another group element.
  * @property {(params: SortableHandlerParams) => any} [onDragEnd]
  *  called when the dragging sequence ends, regardless of the reason.
  * @property {(params: DropParams) => any} [onDrop] called when the dragging sequence
- *  ends on a pointerup action AND the dragged element has been moved elsewhere. The
- *  callback will be given an object with any useful element regarding the new position
- *  of the dragged element (@see DropParams ).
+ *  ends on a pointerup action AND the dragged element has been moved elsewhere.
+ *  The callback will be given an object with any useful element regarding the new
+ *  position of the dragged element (@see DropParams ).
  */
 
 /**

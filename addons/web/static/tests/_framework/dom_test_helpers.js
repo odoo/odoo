@@ -19,7 +19,8 @@ import {
     uncheck,
     waitFor,
 } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { getTag } from "@web/core/utils/xml";
 
 /**
@@ -31,6 +32,11 @@ import { getTag } from "@web/core/utils/xml";
  * @typedef {import("@odoo/hoot-dom").Position} Position
  * @typedef {import("@odoo/hoot-dom").QueryOptions} QueryOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
+ *
+ * @typedef {PointerOptions & {
+ *  initialPointerMoveDistance?: number;
+ *  pointerDownDuration: number;
+ * }} DragAndDropOptions
  *
  * @typedef {{
  *  altKey?: boolean;
@@ -60,9 +66,21 @@ import { getTag } from "@web/core/utils/xml";
 // Internal
 //-----------------------------------------------------------------------------
 
-const dragEffectDelay = async () => {
-    await advanceTime(20);
-    await animationFrame();
+/**
+ * @param {Node} node
+ * @param {number} [distance]
+ */
+const dragForTolerance = async (node, distance) => {
+    if (distance === 0) {
+        return;
+    }
+
+    const position = {
+        x: distance || 100,
+        y: distance || 100,
+    };
+    hover(node, { position, relative: true });
+    await advanceFrame();
 };
 
 /**
@@ -71,17 +89,12 @@ const dragEffectDelay = async () => {
 const getConfirmAction = (node) => (getTag(node, true) === "input" ? "enter" : "blur");
 
 /**
- * These params are used to move the pointer from an arbitrary distance in the
- * element to trigger a drag sequence (the distance required to trigger a drag
- * is defined by the `tolerance` option in the draggable hook builder).
- * @see {draggable_hook_builder.js}
+ * @param {number} [delay]
  */
-const DRAG_TOLERANCE_PARAMS = {
-    position: {
-        x: 100,
-        y: 100,
-    },
-    relative: true,
+const waitForTouchDelay = async (delay) => {
+    if (hasTouch()) {
+        await advanceTime(delay || 500);
+    }
 };
 
 //-----------------------------------------------------------------------------
@@ -151,34 +164,34 @@ export function contains(target, options) {
             await animationFrame();
         },
         /**
-         * @param {PointerOptions} [options]
+         * @param {DragAndDropOptions} [options]
          * @returns {Promise<AsyncDragHelpers>}
          */
         drag: async (options) => {
             /** @type {AsyncDragHelpers["cancel"]} */
             const asyncCancel = async () => {
                 cancel();
-                await dragEffectDelay();
+                await advanceFrame();
             };
 
             /** @type {AsyncDragHelpers["drop"]} */
             const asyncDrop = async () => {
                 drop();
-                await dragEffectDelay();
+                await advanceFrame();
             };
 
             /** @type {AsyncDragHelpers["moveTo"]} */
             const asyncMoveTo = async (to, options) => {
                 moveTo(to, options);
-                await dragEffectDelay();
+                await advanceFrame();
             };
 
             const node = await nodePromise;
             const { cancel, drop, moveTo } = drag(node, options);
-            await dragEffectDelay();
 
-            hover(node, DRAG_TOLERANCE_PARAMS);
-            await dragEffectDelay();
+            await waitForTouchDelay(options?.pointerDownDuration);
+
+            await dragForTolerance(node, options?.initialPointerMoveDistance);
 
             return {
                 cancel: asyncCancel,
@@ -188,21 +201,21 @@ export function contains(target, options) {
         },
         /**
          * @param {Target} target
-         * @param {PointerOptions} [options]
+         * @param {DragAndDropOptions} [options]
          */
         dragAndDrop: async (target, options) => {
             const [from, to] = await Promise.all([nodePromise, waitFor(target)]);
             const { drop, moveTo } = drag(from);
-            await dragEffectDelay();
 
-            hover(from, DRAG_TOLERANCE_PARAMS);
-            await dragEffectDelay();
+            await waitForTouchDelay(options?.pointerDownDuration);
+
+            await dragForTolerance(from, options?.initialPointerMoveDistance);
 
             moveTo(to, options);
-            await dragEffectDelay();
+            await advanceFrame();
 
             drop();
-            await dragEffectDelay();
+            await advanceFrame();
         },
         /**
          * @param {InputValue} value
