@@ -1209,8 +1209,6 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _onchange_product_id(self):
         product = self.product_id.with_context(lang=self._get_lang())
         self.name = product.partner_ref
-        if product:
-            self.description_picking = product._get_description(self.picking_type_id)
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):

@@ -85,7 +85,7 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', readonly=False)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
-    description_picking = fields.Text(string="Description picking")
+    description_picking = fields.Text(related='move_id.description_picking', store=True)
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
@@ -182,7 +182,6 @@ class StockMoveLine(models.Model):
         if self.product_id:
             if self.picking_id:
                 product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
-                self.description_picking = product._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
 
     @api.onchange('lot_name', 'lot_id')

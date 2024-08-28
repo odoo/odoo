@@ -1043,10 +1043,10 @@ class StockPicking(models.Model):
                 lambda m: m.picking_type_id != self.picking_type_id
             ).picking_type_id = self.picking_type_id
             (self.move_ids | self.move_ids_without_package).company_id = self.company_id
-            for move in (self.move_ids | self.move_ids_without_package):
-                if not move.product_id:
-                    continue
-                move.description_picking = move.product_id._get_description(move.picking_type_id)
+            # for move in (self.move_ids | self.move_ids_without_package):
+            #     if not move.product_id:
+            #         continue
+            #     move.description_picking = move.product_id._get_description(move.picking_type_id)
 
         if self.partner_id and self.partner_id.picking_warn:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
@@ -1118,10 +1118,10 @@ class StockPicking(models.Model):
             if vals.get('partner_id'):
                 if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
                     picking.message_subscribe([vals.get('partner_id')])
-            if vals.get('picking_type_id'):
-                for move in picking.move_ids:
-                    if not move.description_picking:
-                        move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
+        # if vals.get('picking_type_id'):
+        #     for move in picking.move_ids:
+        #         if not move.description_picking:
+        #             move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
         return pickings
 
     def write(self, vals):
