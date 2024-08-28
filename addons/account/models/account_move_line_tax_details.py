@@ -185,7 +185,7 @@ class AccountMoveLine(models.Model):
                         OR (tax.tax_exigibility = 'on_payment' AND tax.cash_basis_transition_account_id IS NOT NULL)
                     )
                     AND (
-                        NOT tax.analytic
+                        (tax.analytic IS NULL OR tax.analytic = FALSE)
                         OR (base_line.analytic_distribution IS NULL AND account_move_line.analytic_distribution IS NULL)
                         OR base_line.analytic_distribution = account_move_line.analytic_distribution
                     )
