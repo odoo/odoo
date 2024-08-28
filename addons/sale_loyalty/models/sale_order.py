@@ -9,8 +9,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_round, lazy
-from odoo.tools import str2bool
+from odoo.tools import float_round, lazy, str2bool
 
 
 def _generate_random_reward_code():
@@ -252,11 +251,19 @@ class SaleOrder(models.Model):
     def _cheapest_line(self):
         self.ensure_one()
         cheapest_line = False
+        cheapest_line_price_unit = False
         for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
-            if line.reward_id or not line.product_uom_qty or not line.price_unit:
+            line_price_unit = self._get_order_line_price(line, 'price_unit')
+            if (
+                line.reward_id
+                or line.combo_item_id
+                or not line.product_uom_qty
+                or not line_price_unit
+            ):
                 continue
-            if not cheapest_line or cheapest_line.price_unit > line.price_unit:
-                cheapest_line = line
+            if not cheapest_line or cheapest_line_price_unit > line_price_unit:
+                cheapest_line = self._get_order_lines_with_price(line)
+                cheapest_line_price_unit = line_price_unit
         return cheapest_line
 
     def _discountable_cheapest(self, reward):
@@ -269,11 +276,15 @@ class SaleOrder(models.Model):
         cheapest_line = self._cheapest_line()
         if not cheapest_line:
             return False, False
-        discountable = cheapest_line.price_total
-        discountable_per_taxes = cheapest_line.price_unit * (1 - (cheapest_line.discount or 0) / 100)
-        taxes = cheapest_line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
 
-        return discountable, {taxes: discountable_per_taxes}
+        discountable = 0
+        discountable_per_tax = defaultdict(int)
+        for line in cheapest_line:
+            discountable += line.price_total
+            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            discountable_per_tax[taxes] += line.price_unit * (1 - (line.discount or 0) / 100)
+
+        return discountable, discountable_per_tax
 
     def _get_specific_discountable_lines(self, reward):
         """
@@ -285,8 +296,12 @@ class SaleOrder(models.Model):
         discountable_lines = self.env['sale.order.line']
         for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
             domain = reward._get_discount_product_domain()
-            if not line.reward_id and line.product_id.filtered_domain(domain):
-                discountable_lines |= line
+            if (
+                not line.reward_id
+                and not line.combo_item_id
+                and line.product_id.filtered_domain(domain)
+            ):
+                discountable_lines |= self._get_order_lines_with_price(line)
         return discountable_lines
 
     def _discountable_specific(self, reward):
@@ -300,7 +315,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         assert reward.discount_applicability == 'specific'
 
-        lines_to_discount = self.env['sale.order.line']
+        lines_to_discount = self._get_specific_discountable_lines(reward).filtered(
+            lambda line: bool(line.product_uom_qty and line.price_total)
+        )
         discount_lines = defaultdict(lambda: self.env['sale.order.line'])
         order_lines = self.order_line - self._get_no_effect_on_threshold_lines()
         remaining_amount_per_line = defaultdict(int)
@@ -308,10 +325,7 @@ class SaleOrder(models.Model):
             if not line.product_uom_qty or not line.price_total:
                 continue
             remaining_amount_per_line[line] = line.price_total
-            domain = reward._get_discount_product_domain()
-            if not line.reward_id and line.product_id.filtered_domain(domain):
-                lines_to_discount |= line
-            elif line.reward_id.reward_type == 'discount':
+            if line.reward_id.reward_type == 'discount':
                 discount_lines[line.reward_identifier_code] |= line
 
         order_lines -= self.order_line.filtered("reward_id")
@@ -989,6 +1003,13 @@ class SaleOrder(models.Model):
     def _get_not_rewarded_order_lines(self):
         return self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
 
+    def _get_order_line_price(self, order_line, price_type):
+        return sum(self._get_order_lines_with_price(order_line).mapped(price_type))
+
+    @staticmethod
+    def _get_order_lines_with_price(order_line):
+        return order_line.linked_line_ids if order_line.product_type == 'combo' else order_line
+
     def _program_check_compute_points(self, programs):
         """
         Checks the program validity from the order lines aswell as computing the number of points to add.
@@ -998,7 +1019,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         # Prepare quantities
-        order_lines = self._get_not_rewarded_order_lines()
+        order_lines = self._get_not_rewarded_order_lines().filtered(
+            lambda line: not line.combo_item_id
+        )
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
@@ -1013,8 +1036,8 @@ class SaleOrder(models.Model):
         for line in self.order_line - self._get_no_effect_on_threshold_lines():
             is_discount = line.reward_id.reward_type == 'discount'
             reward_program = line.reward_id.program_id
-            # Skip lines for automatic discounts.
-            if is_discount and reward_program.trigger == 'auto':
+            # Skip lines for automatic discounts, as well as combo item lines.
+            if (is_discount and reward_program.trigger == 'auto') or line.combo_item_id:
                 continue
             for program in programs:
                 # Skip lines for the current program's discounts.
@@ -1023,7 +1046,7 @@ class SaleOrder(models.Model):
                 for rule in program.rule_ids:
                     # Skip lines to which the rule doesn't apply.
                     if line.product_id in so_products_per_rule.get(rule, []):
-                        lines_per_rule[rule] |= line
+                        lines_per_rule[rule] |= self._get_order_lines_with_price(line)
 
         result = {}
         for program in programs:
@@ -1065,10 +1088,16 @@ class SaleOrder(models.Model):
                         rule_points.extend(rule.reward_point_amount for _ in range(int(ordered_rule_products_qty)))
                     elif rule.reward_point_mode == 'money':
                         for line in self.order_line:
-                            if line.is_reward_line or line.product_id not in rule_products or line.product_uom_qty <= 0:
+                            if (
+                                line.is_reward_line
+                                or line.combo_item_id
+                                or line.product_id not in rule_products
+                                or line.product_uom_qty <= 0
+                            ):
                                 continue
+                            line_price_total = self._get_order_line_price(line, 'price_total')
                             points_per_unit = float_round(
-                                (rule.reward_point_amount * line.price_total / line.product_uom_qty),
+                                (rule.reward_point_amount * line_price_total / line.product_uom_qty),
                                 precision_digits=2, rounding_method='DOWN')
                             if not points_per_unit:
                                 continue
@@ -1084,11 +1113,15 @@ class SaleOrder(models.Model):
                         amount_paid = 0.0
                         rule_products = so_products_per_rule.get(rule, [])
                         for line in self.order_line - self._get_no_effect_on_threshold_lines():
-                            if line.reward_id.program_id.program_type in [
+                            if line.combo_item_id or line.reward_id.program_id.program_type in [
                                 'ewallet', 'gift_card', program.program_type
                             ]:
                                 continue
-                            amount_paid += line.price_total if line.product_id in rule_products else 0.0
+                            line_price_total = self._get_order_line_price(line, 'price_total')
+                            amount_paid += (
+                                line_price_total if line.product_id in rule_products
+                                else 0.0
+                            )
 
                         points += float_round(rule.reward_point_amount * amount_paid, precision_digits=2, rounding_method='DOWN')
                     elif rule.reward_point_mode == 'unit':
