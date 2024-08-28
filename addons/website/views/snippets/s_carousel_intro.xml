@@ -4,7 +4,7 @@
 <template id="s_carousel_intro" name="Carousel Intro">
     <section class="s_carousel_intro_wrapper p-0">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-        <div t-attf-id="myCarouselIntro{{uniq}}" class="s_carousel_intro s_carousel_default carousel slide carousel-dark" data-bs-interval="10000">
+        <div t-attf-id="myCarouselIntro{{uniq}}" class="s_carousel_intro s_carousel_default carousel slide carousel-dark" data-bs-ride="true" data-bs-interval="10000">
             <!-- Content -->
             <div class="carousel-inner">
                 <!-- #01 -->
