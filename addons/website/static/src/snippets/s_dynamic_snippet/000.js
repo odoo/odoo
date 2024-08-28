@@ -201,6 +201,24 @@ const DynamicSnippet = publicWidget.Widget.extend({
             $target: $templateArea,
             editableMode: this.editableMode,
         });
+        // Same as above and probably should be done automatically for any
+        // bootstrap behavior (apparently needed since BS 5.3): start potential
+        // carousel in new content (according to their data-bs-ride and other
+        // dataset attributes). Note: done here and not in dynamic carousel
+        // extension, because: why not?
+        // (TODO review + See interaction with "slider" public widget).
+        setTimeout(() => {
+            $templateArea[0].querySelectorAll('.carousel').forEach(carouselEl => {
+                if (carouselEl.dataset.bsInterval === "0") {
+                    delete carouselEl.dataset.bsRide;
+                    delete carouselEl.dataset.bsInterval;
+                }
+                window.Carousel.getInstance(carouselEl)?.dispose();
+                if (!this.editableMode) {
+                    window.Carousel.getOrCreateInstance(carouselEl);
+                }
+            });
+        }, 0);
     },
     /**
      *
