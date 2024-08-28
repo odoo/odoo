@@ -243,13 +243,12 @@
         init: function (parent, slideList, defaultSlide) {
             var result = this._super.apply(this, arguments);
             this.slideEntries = slideList;
-            this.set('slideEntry', defaultSlide);
+            this._slideEntry = defaultSlide;
             return result;
         },
-        start: function (){
+        start: function () {
             var self = this;
-            this.on('change:slideEntry', this, this._onChangeCurrentSlide);
-            return this._super.apply(this, arguments).then(function (){
+            return this._super.apply(this, arguments).then(function () {
                 $(document).keydown(self._onKeyDown.bind(self));
             });
         },
@@ -268,7 +267,7 @@
         goNext: function () {
             var currentIndex = this._getCurrentIndex();
             if (currentIndex < this.slideEntries.length-1) {
-                this.set('slideEntry', this.slideEntries[currentIndex+1]);
+                this._updateSlideEntry(this.slideEntries[currentIndex + 1]);
             }
         },
         /**
@@ -279,7 +278,7 @@
         goPrevious: function () {
             var currentIndex = this._getCurrentIndex();
             if (currentIndex >= 1) {
-                this.set('slideEntry', this.slideEntries[currentIndex-1]);
+                this._updateSlideEntry(this.slideEntries[currentIndex - 1]);
             }
         },
 
@@ -290,7 +289,7 @@
          * Get the index of the current slide entry (slide and/or quiz)
          */
         _getCurrentIndex: function () {
-            var slide = this.get('slideEntry');
+            const slide = this._slideEntry;
             var currentIndex = this.slideEntries.findIndex(entry =>{
                 return entry.id === slide.id && entry.isQuiz === slide.isQuiz;
             });
@@ -308,13 +307,13 @@
          * @private
          * @param {*} ev
          */
-        _onClickMiniQuiz: function (ev){
+        _onClickMiniQuiz: function (ev) {
             var slideID = parseInt($(ev.currentTarget).data().slide_id);
-            this.set('slideEntry',{
+            this._updateSlideEntry({
                 slideID: slideID,
                 isMiniQuiz: true
             });
-            this.trigger_up('change_slide', this.get('slideEntry'));
+            this.trigger_up('change_slide', this._slideEntry);
         },
         /**
          * Handler called when the user clicks on a normal slide tab
@@ -329,7 +328,7 @@
                 var isQuiz = $elem.data('isQuiz');
                 var slideID = parseInt($elem.data('id'));
                 var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
-                this.set('slideEntry', slide);
+                this._updateSlideEntry(slide);
             }
         },
         /**
@@ -337,14 +336,18 @@
          * the slide currently displayed
          *
          * @private
+         * @param {Object} slide
          */
-        _onChangeCurrentSlide: function () {
-            var slide = this.get('slideEntry');
+        _updateSlideEntry: function (slide) {
+            if (this._slideEntry === slide) {
+                return;
+            }
+            this._slideEntry = slide;
             this.$('.o_wslides_fs_sidebar_list_item.active').removeClass('active');
             var selector = '.o_wslides_fs_sidebar_list_item[data-id='+slide.id+'][data-is-quiz!="1"]';
 
             this.$(selector).addClass('active');
-            this.trigger_up('change_slide', this.get('slideEntry'));
+            this.trigger_up('change_slide', this._slideEntry);
         },
 
         /**
@@ -386,7 +389,7 @@
         * @param {Object} slides Contains the list of all slides of the course
         * @param {integer} defaultSlideId Contains the ID of the slide requested by the user
         */
-        init: function (parent, slides, defaultSlideId, channelData){
+        init: function (parent, slides, defaultSlideId, channelData) {
             var result = this._super.apply(this,arguments);
             this.initialSlideID = defaultSlideId;
             this.slides = this._preprocessSlideData(slides);
@@ -399,7 +402,7 @@
                 slide = this.slides[0];
             }
 
-            this.set('slide', slide);
+            this._slideValue = slide;
 
             this.sidebar = new Sidebar(this, this.slides, slide);
             return result;
@@ -407,9 +410,8 @@
         /**
          * @override
          */
-        start: function (){
+        start: function () {
             var self = this;
-            this.on('change:slide', this, this._onChangeSlide);
             this._toggleSidebar();
             const backendNavEl = document.querySelector('.o_frontend_to_backend_nav');
             if (backendNavEl) {
@@ -438,8 +440,8 @@
          *
          * @private
          */
-        _fetchHtmlContent: function (){
-            var currentSlide = this.get('slide');
+        _fetchHtmlContent: function () {
+            const currentSlide = this._slideValue;
             return rpc("/slides/slide/get_html_content", {
                 'slide_id': currentSlide.id
             }).then(function (data){
@@ -454,8 +456,8 @@
         *
         * @private
         */
-        _fetchSlideContent: function (){
-            var slide = this.get('slide');
+        _fetchSlideContent: function () {
+            const slide = this._slideValue;
             if (slide.category === 'article' && !slide.isQuiz) {
                 return this._fetchHtmlContent();
             }
@@ -513,13 +515,13 @@
          *
          * @private
          */
-        _pushUrlState: function (){
+        _pushUrlState: function () {
             var urlParts = window.location.pathname.split('/');
-            urlParts[urlParts.length-1] = this.get('slide').slug;
+            urlParts[urlParts.length - 1] = this._slideValue.slug;
             var url =  urlParts.join('/');
             this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
             var params = {'fullscreen': 1 };
-            if (this.get('slide').isQuiz){
+            if (this._slideValue.isQuiz) {
                 params.quiz = 1;
             }
             var fullscreenUrl = `${url}?${$.param(params)}`;
@@ -539,7 +541,7 @@
             if (this._renderSlideRunning) { return; }
             this._renderSlideRunning = true;
             try {
-                var slide = this.get('slide');
+                const slide = this._slideValue;
                 var $content = this.$('.o_wslides_fs_content');
                 $content.empty();
                 if (this.websiteAnimateWidget) {
@@ -580,6 +582,17 @@
                 this._renderSlideRunning = false;
             }
         },
+        /**
+         * @private
+         */
+        _updateSlideValue: function (slide) {
+            if (this._slideValue === slide) {
+                return;
+            }
+            this._slideValue = slide;
+            this._onChangeSlide();
+        },
+
         //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
@@ -595,7 +608,7 @@
          */
         _onChangeSlide: function () {
             var self = this;
-            var slide = this.get('slide');
+            const slide = this._slideValue;
             self._pushUrlState();
             return this._fetchSlideContent().then(function() { // render content
                 var websiteName = document.title.split(" | ")[1]; // get the website name from title
@@ -621,13 +634,13 @@
          *
          * @private
          */
-        _onChangeSlideRequest: function (ev){
+        _onChangeSlideRequest: function (ev) {
             var slideData = ev.data;
             var newSlide = findSlide(this.slides, {
                 id: slideData.id,
                 isQuiz: slideData.isQuiz || false,
             });
-            this.set('slide', newSlide);
+            this._updateSlideValue(newSlide);
         },
         /**
          * After a slide has been marked as completed / uncompleted, update the state
@@ -649,10 +662,10 @@
 
             fsSlides.forEach(slide => slide.completed = completed);
 
-            const currentSlide = this.get('slide');
+            const currentSlide = this._slideValue;
             if (currentSlide.id === slide.id) {
                 currentSlide.completed = completed;
-                this.set('slide', currentSlide);
+                this._updateSlideValue(currentSlide);
 
                 if ((currentSlide.hasQuestion || currentSlide.type === 'quiz') && !completed) {
                     // Reload the quiz
@@ -679,7 +692,7 @@
         },
 
         _onClickShareSlide: function (ev) {
-            const slide = this.get('slide');
+            const slide = this._slideValue;
             this.call("dialog", "add", SlideShareDialog, {
                 category: slide.category,
                 documentMaxPage: slide.category == 'document' && this.getDocumentMaxPage(),

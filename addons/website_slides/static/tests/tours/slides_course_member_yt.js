@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-function patchFullScreen(){
+function patchFullScreen() {
     /**
      * Alter this method for test purposes.
      * This will make the video start at 10 minutes.
@@ -12,9 +12,9 @@ function patchFullScreen(){
     FullScreen.include({
         _renderSlide: function () {
 
-            var slide = this.get('slide');
+            const slide = this._slideValue;
             slide.embedUrl += '&start=260';
-            this.set('slide', slide);
+            this._updateSlideValue(slide);
 
             return this._super.call(this, arguments);
         }

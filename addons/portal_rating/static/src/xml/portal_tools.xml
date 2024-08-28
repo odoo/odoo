@@ -23,22 +23,22 @@
     <t t-name="portal_rating.rating_card">
         <t t-set="two_columns" t-value="widget.options['two_columns']"/>
         <div class="row o_website_rating_card_container justify-content-center">
-            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="Object.keys(widget.get('rating_card_values') || {}).length > 0">
+            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="Object.keys(widget._ratingCardValues).length > 0">
                 <p t-if="!two_columns" class="text-center"><strong>Average</strong></p>
                 <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
-                    <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
+                    <h1><t t-esc="widget._ratingCardValues['avg']"/></h1>
                     <t t-call="portal_rating.rating_stars_static">
-                        <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
+                        <t t-set="val" t-value="widget._ratingCardValues['avg'] || 0"/>
                     </t>
                     <t t-call="portal.chatter_message_count"/>
                 </div>
             </div>
-            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-7'}" t-if="Object.keys(widget.get('rating_card_values') || {}).length > 0">
+            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-7'}" t-if="Object.keys(widget._ratingCardValues).length > 0">
                 <hr t-if="two_columns"/>
                 <p t-if="!two_columns"><strong>Details</strong></p>
-                <t t-set="selected_rating" t-value="widget.get('rating_value')"/>
+                <t t-set="selected_rating" t-value="widget._ratingValue"/>
                 <table t-attf-class="o_website_rating_table #{selected_rating and 'o_website_rating_table_has_selection' or ''}">
-                    <t t-foreach="widget.get('rating_card_values')['percent']" t-as="percent" t-key="percent_index">
+                    <t t-foreach="widget._ratingCardValues['percent']" t-as="percent" t-key="percent_index">
                         <t t-set="row_selected" t-value="percent['num'] == selected_rating"/>
                         <tr t-attf-class="o_website_rating_table_row #{row_selected ? 'o_website_rating_table_row_selected' : (selected_rating ? 'opacity-50' : '')}"
                             t-att-data-star="percent['num']">

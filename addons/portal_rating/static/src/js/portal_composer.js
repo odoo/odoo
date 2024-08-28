@@ -37,8 +37,7 @@ PortalComposer.include({
             'force_submit_url': false,
         }, this.options);
         this.user_click = false; // user has click or not
-        this.set("star_value", this.options.default_rating_value);
-        this.on("change:star_value", this, this._onChangeStarValue);
+        this._starValue = this.options.default_rating_value;
     },
     /**
      * @override
@@ -55,7 +54,7 @@ PortalComposer.include({
             }
 
             // set the default value to trigger the display of star widget and update the hidden input value.
-            self.set("star_value", self.options.default_rating_value);
+            self._updateStarValue(self.options.default_rating_value);
             self.$input.val(self.options.default_rating_value);
         });
     },
@@ -78,8 +77,8 @@ PortalComposer.include({
     /**
      * @private
      */
-    _onChangeStarValue: function () {
-        var val = this.get("star_value");
+    _updateStarValue: function (val) {
+        this._starValue = val;
         var index = Math.floor(val);
         var decimal = val - index;
         // reset the stars
@@ -95,9 +94,9 @@ PortalComposer.include({
      */
     _onClickStar: function (ev) {
         var index = this.$('.stars i').index(ev.currentTarget);
-        this.set("star_value", index + 1);
+        this._updateStarValue(index + 1);
         this.user_click = true;
-        this.$input.val(this.get("star_value"));
+        this.$input.val(this._starValue);
     },
     /**
      * @private
@@ -105,14 +104,14 @@ PortalComposer.include({
      */
     _onMoveStar: function (ev) {
         var index = this.$('.stars i').index(ev.currentTarget);
-        this.set("star_value", index + 1);
+        this._updateStarValue(index + 1);
     },
     /**
      * @private
      */
     _onMoveLeaveStar: function () {
         if (!this.user_click) {
-            this.set("star_value", parseInt(this.$input.val()));
+            this._updateStarValue(parseInt(this.$input.val()));
         }
         this.user_click = false;
     },

@@ -72,7 +72,7 @@ import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/public/minim
  * is loaded in the dom.
  * @see PublicWidget.selector
  */
-export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, {
+export const PublicWidget = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     // Backbone-ish API
     tagName: 'div',
     id: null,
@@ -152,7 +152,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @param {Object} [options]
      */
     init: function (parent, options) {
-        mixins.PropertiesMixin.init.call(this);
+        mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
         this.options = options || {};
     },
@@ -209,7 +209,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * selector property).
      */
     destroy: function () {
-        mixins.PropertiesMixin.destroy.call(this);
+        mixins.EventDispatcherMixin.destroy.call(this);
         if (this.$el) {
             this._undelegateEvents();
 
