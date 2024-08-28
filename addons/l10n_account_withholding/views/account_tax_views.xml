@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="hide_tax_exigibility" position="after">
+                <!-- Hide for argentina, it should be handled by their own module -->
+                <field name="is_withholding_tax_on_payment" invisible="type_tax_use not in ['sale', 'purchase'] or country_code == 'AR'"/>
+                <field name="withholding_sequence_id" context="{'default_name': name}" invisible="not (type_tax_use == 'purchase' and is_withholding_tax_on_payment) or country_code == 'AR'"/>
+            </field>
+            <field name="tax_exigibility" position="attributes">
+                <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
+            </field>
+            <field name="cash_basis_transition_account_id" position="attributes">
+                <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
+            </field>
+        </field>
+    </record>
+</odoo>

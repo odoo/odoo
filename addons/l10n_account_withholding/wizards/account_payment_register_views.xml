@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <group name="group1" position="inside">
+                <field name="withhold_tax" invisible="not display_withholding"/>
+            </group>
+            <footer position="before">
+                <!-- Hide for argentina, it should be handled by their own module -->
+                <notebook name="payment_register_notebook" colspan="2" invisible="not withhold_tax or not display_withholding">
+                    <page name="withholding_page" string="Withholding">
+                        <group>
+                            <field name="withholding_line_ids" nolabel="1" colspan="2">
+                                <list editable="bottom">
+                                    <field name="currency_id" column_invisible="True"/>  <!-- Required for the monetary field. -->
+                                    <field name="custom_user_currency_id" column_invisible="True"/>  <!-- Required when changing currency on a custom amount. -->
+                                    <field name="custom_user_amount" column_invisible="True"/>  <!-- Required when changing currency on a custom amount. -->
+                                    <field name="original_base_amount" column_invisible="True"/>  <!-- Required when changing currency on a default amount. -->
+                                    <field name="name" readonly="withholding_sequence_id" column_invisible="parent.hide_withholding_number_col" required="not withholding_sequence_id" width="92px"/>
+                                    <field name="base_amount"/>
+                                    <field name="tax_id" options="{'no_open': True, 'no_create': True}" width="92px"/>  <!-- Tax names tend to be short -->
+                                    <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
+                                    <field name="amount" sum="Total Withheld Amount"/>
+                                </list>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="outstanding_account_id"
+                                       required="withhold_tax and withholding_line_ids and not payment_account_id"
+                                       invisible="(not withholding_line_ids) or payment_account_id or not display_withholding"/>
+                            </group>
+                            <group>
+                                <field name="withholding_net_amount"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </footer>
+        </field>
+    </record>
+</odoo>
