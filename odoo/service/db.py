@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import base64
 import json
 import logging
@@ -16,6 +15,7 @@ from decorator import decorator
 from pytz import country_timezones
 
 import odoo
+import odoo.modules.neutralize
 import odoo.release
 import odoo.sql_db
 import odoo.tools
