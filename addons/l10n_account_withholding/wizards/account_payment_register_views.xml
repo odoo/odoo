@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <notebook name="payment_register_notebook" position="inside">
+                <page name="withholding_lines_page" string="Withholding Lines">
+                    <group>
+                        <field name="l10n_account_withholding_line_ids" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="withholding_sequence_id" column_invisible="True"/>
+                                <field name="company_id" column_invisible="True"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="tax_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="name" readonly="withholding_sequence_id"/>
+                                <field name="base_amount"/>
+                                <field name="amount"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </notebook>
+            <notebook name="payment_register_notebook" position="after">
+                <group name="withholding_net_amount" class="mt-2" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
+                    <field name="l10n_account_withholding_net_amount" colspan="2"/>
+                </group>
+            </notebook>
+            <div role="alert" position="after">
+                <div role="alert" class="alert alert-info" invisible="can_edit_wizard and (not can_group_payments or can_group_payments and group_payment)">
+                    <p>Withholding taxes cannot be registered for invoices from different partners or the same partner without grouping.</p>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Allow filtering only invoices with withholding certificates. -->
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/filter[@name='late']" position="after">
+                <separator/>
+                <filter name="has_withh_cert" string="Has Withholding Certificate" domain="[('l10n_account_withholding_certificate_ids', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Display the tax certificate in the form, because the accountant/... still needs to upload it manually for non portal users -->
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info_group']/field[@name='delivery_date']" position="after">
+                <field name="l10n_account_withholding_certificate_ids" widget="many2many_binary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Allow downloading the withholding certificates -->
+    <record id="model_account_download_withholding_certificates" model="ir.actions.server">
+        <field name="name">Download Withholding Tax Certificates</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_download_withholding_certificates()
+        </field>
+    </record>
+</odoo>

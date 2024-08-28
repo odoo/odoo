@@ -125,6 +125,10 @@
                             <field name="qr_code"/>
                         </div>
                     </group>
+                    <group>
+                        <!-- To be used in localizations requiring to add a page -->
+                        <notebook name="payment_register_notebook" colspan="2"/>
+                    </group>
                     <footer>
                         <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>
                         <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount != 1"/>

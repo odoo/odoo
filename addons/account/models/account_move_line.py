@@ -902,15 +902,23 @@ class AccountMoveLine(models.Model):
     def _get_computed_taxes(self):
         self.ensure_one()
 
-        company_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
+        filter_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
         if self.move_id.is_sale_document(include_receipts=True):
             # Out invoice.
-            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
+            filter_domain = expression.AND([
+                filter_domain,
+                [('type_tax_use', '=', 'sale')],
+            ])
+            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(filter_domain)
             tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
 
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
-            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
+            filter_domain = expression.AND([
+                filter_domain,
+                [('type_tax_use', '=', 'purchase')],
+            ])
+            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(filter_domain)
             tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
 
         else:

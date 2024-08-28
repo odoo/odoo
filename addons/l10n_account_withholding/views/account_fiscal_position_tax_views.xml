@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_position_form" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <!-- Allow to map withholding taxes -->
+            <field name="tax_src_id" position="attributes">
+                <attribute name="domain">[
+                    ('country_id', '=', parent.company_country_id),
+                    '|', ('type_tax_use', '!=', 'none'), ('l10n_account_withholding_type', '!=', False),
+                    '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)
+                ]</attribute>
+            </field>
+            <field name="tax_dest_id" position="attributes">
+                <attribute name="domain">[
+                    ('country_id', '=', parent.company_country_id),
+                    '|', ('type_tax_use', '!=', 'none'), ('l10n_account_withholding_type', '!=', False),
+                    '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)
+                ]</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
