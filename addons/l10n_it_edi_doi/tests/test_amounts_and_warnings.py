@@ -124,6 +124,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 "Pay attention, the threshold of your Declaration of Intent test 2019-threshold 1000 of 1,000.00\xa0€ is exceeded by 1,000.00\xa0€, this document included.\n"
                 "Invoiced: 0.00\xa0€; Not Yet Invoiced: 2,000.00\xa0€"
             )
+        with Form(order) as order_form:
             with order_form.order_line.edit(0) as line_form:
                 line_form.price_unit = 3000
                 line_form.save()
@@ -168,7 +169,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                     'name': 'not a declaration line',
                     'quantity': 1,
                     'price_unit': 2000.0,  # > declaration.threshold; not counted
-                    'tax_ids': False,
+                    'tax_ids': [Command.set(self.company.account_sale_tax_id.ids)],
                 }),
         ])
         # The amounts have not changed since the invoice has not been posted yet.
@@ -266,7 +267,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'name': 'none declaration line',
                 'quantity': 1,
                 'price_unit': 2000.0,  # > declaration.threshold; not counted
-                'tax_ids': False,
+                'tax_ids': [Command.set(self.company.account_sale_tax_id.ids)],
             }),
         ])
         # The amounts have not changed since the invoice has not been posted yet.
@@ -366,6 +367,11 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
 
         # The invoice just moves amount from `not_invoiced_yet` to `invoiced`.
         # It does not lower the remaining ammount.
+        # TODO: The tax does not get copied onto the created invoices.
+        #       The problem is that in 16.0 there is only 1 downpayment line and not 1 downpayment line per tax.
+        #       So the downpayment line does not have tax information.
+        #       The downpayment line (tax) is used to create the invoice line (tax).
+        #       (see function `_create_invoices` in model 'sale.advance.payment.inv')
         self.assertEqual(
             invoice.l10n_it_edi_doi_warning,
             "Pay attention, the threshold of your Declaration of Intent test 2019-threshold 1000 of 1,000.00\xa0€ is exceeded by 2,000.00\xa0€, this document included.\n"
