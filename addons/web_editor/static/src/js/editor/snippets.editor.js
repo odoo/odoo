@@ -283,7 +283,8 @@ var SnippetEditor = Widget.extend({
         // Snippets are replaceable only if they are not within another snippet.
         // (e.g., a "s_countdown" is not replaceable when it is dropped as inner
         // content)
-        if (this.$target[0].matches("[data-snippet]:not([data-snippet] *), .oe_structure > *")) {
+        if (this.$target[0].matches("[data-snippet]:not([data-snippet] *), .oe_structure > *")
+                && !this.$target[0].matches(".oe_structure_solo *")) {
             this.trigger_up('find_snippet_template', {
                 snippet: this.$target[0],
                 callback: (snippet) => {
