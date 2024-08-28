@@ -11,14 +11,14 @@ class EventEvent(models.Model):
         'sale.order.line', 'event_id',
         groups='sales_team.group_sale_salesman',
         string='All sale order lines pointing to this event')
-    sale_price_subtotal = fields.Monetary(
-        string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal',
+    sale_price_total = fields.Monetary(
+        string='Sales (Tax Included)', compute='_compute_sale_price_total',
         groups='sales_team.group_sale_salesman')
 
     @api.depends('company_id.currency_id',
-                 'sale_order_lines_ids.price_subtotal', 'sale_order_lines_ids.currency_id',
+                 'sale_order_lines_ids.price_total', 'sale_order_lines_ids.currency_id',
                  'sale_order_lines_ids.company_id', 'sale_order_lines_ids.order_id.date_order')
-    def _compute_sale_price_subtotal(self):
+    def _compute_sale_price_total(self):
         """ Takes all the sale.order.lines related to this event and converts amounts
         from the currency of the sale order to the currency of the event company.
 
@@ -29,21 +29,21 @@ class EventEvent(models.Model):
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
         event_subtotals = self.env['sale.order.line']._read_group(
-            [('event_id', 'in', self.ids), ('price_subtotal', '!=', 0), ('state', '!=', 'cancel')],
+            [('event_id', 'in', self.ids), ('price_total', '!=', 0), ('state', '!=', 'cancel')],
             ['event_id', 'currency_id'],
-            ['price_subtotal:sum'],
+            ['price_total:sum'],
         )
         event_subtotals_mapping = dict.fromkeys(self._origin, 0)
-        for event, currency, sum_price_subtotal in event_subtotals:
+        for event, currency, sum_price_total in event_subtotals:
             event_subtotals_mapping[event] += event.currency_id._convert(
-                sum_price_subtotal,
+                sum_price_total,
                 currency,
                 event.company_id or self.env.company,
                 date_now,
             )
 
         for event in self:
-            event.sale_price_subtotal = event_subtotals_mapping.get(event._origin, 0)
+            event.sale_price_total = event_subtotals_mapping.get(event._origin, 0)
 
     def action_view_linked_orders(self):
         """ Redirects to the orders linked to the current events """

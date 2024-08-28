@@ -365,6 +365,18 @@ class TestEventSale(TestEventSaleCommon):
         with self.assertRaises(ValidationError):
             editor.action_make_registration()
 
+    def test_event_sale_price_total(self):
+        """ Test that the `sale_amount_total` matches the total amount of all concerned orders.
+        """
+        self.env['sale.order.line'].create({
+            'product_id': self.event_product.id,
+            'order_id': self.sale_order.id,
+            'event_id': self.event_0.id,
+            'event_ticket_id': self.ticket.id,
+        })
+        expected_price = sum(self.event_0.sale_order_lines_ids.mapped('price_total'))
+        self.assertEqual(self.event_0.sale_price_total, expected_price)
+
     def test_ticket_price_with_currency_conversion(self):
         def _prepare_currency(self, currency_name):
             currency = self.env['res.currency'].with_context(active_test=False).search(
