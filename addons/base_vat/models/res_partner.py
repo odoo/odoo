@@ -821,10 +821,16 @@ class ResPartner(models.Model):
             if values.get('vat'):
                 country_id = values.get('country_id')
                 values['vat'] = self._fix_vat_number(values['vat'], country_id)
-        return super(ResPartner, self).create(vals_list)
+        res = super().create(vals_list)
+        if self.env.context.get('import_file'):
+            res.env.remove_to_compute(self._fields['vies_valid'], res)
+        return res
 
     def write(self, values):
         if values.get('vat') and len(self.mapped('country_id')) == 1:
             country_id = values.get('country_id', self.country_id.id)
             values['vat'] = self._fix_vat_number(values['vat'], country_id)
-        return super(ResPartner, self).write(values)
+        res = super().write(values)
+        if self.env.context.get('import_file'):
+            self.env.remove_to_compute(self._fields['vies_valid'], self)
+        return res
