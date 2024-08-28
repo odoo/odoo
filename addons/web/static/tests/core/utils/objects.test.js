@@ -182,6 +182,9 @@ test("deepMerge", () => {
     expect(deepMerge("foo", 1)).toBe(undefined);
     expect(deepMerge(null, null)).toBe(undefined);
 
+    const f = () => {};
+    expect(deepMerge({ a: undefined }, { a: f })).toEqual({ a: f });
+
     // There's no current use for arrays, support can be added if needed
     expect(deepMerge({ a: [1, 2, 3] }, { a: [4] })).toEqual({ a: [4] });
 
