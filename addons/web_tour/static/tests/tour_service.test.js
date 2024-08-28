@@ -19,7 +19,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
 import { MacroEngine } from "@web/core/macro";
 
-describe.current.tags("headless");
+describe.current.tags("desktop");
 
 class Counter extends Component {
     static props = ["*"];
