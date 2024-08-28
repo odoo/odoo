@@ -591,12 +591,17 @@ class TestChartTemplate(TransactionCase):
                 'parent': None,
             }}
 
+        # Check that company fields that should depend on CoA are reset when changing CoA
+        # (afaik there is only `anglo_saxon_accounting`)
+        self.company_1.anglo_saxon_accounting = True
+
         with (
             patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping),
             patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True)
         ):
             self.env['account.chart.template'].try_loading('other_test', company=self.company_1, install_demo=True)
         self.assertEqual(self.company_1.chart_template, 'other_test')
+        self.assertFalse(self.company_1.anglo_saxon_accounting)
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=True)
