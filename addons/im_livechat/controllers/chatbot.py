@@ -63,22 +63,35 @@ class LivechatChatbotScriptController(http.Controller):
             return None
 
         posted_message = next_step._process_step(discuss_channel)
-        return {
-            "data": Store(posted_message, for_current_user=True).get_result(),
-            'scriptStep': {
-                'id': next_step.id,
-                'answers': [{
-                    'id': answer.id,
-                    'label': answer.name,
-                    'redirectLink': answer.redirect_link,
-                } for answer in next_step.answer_ids],
-                'isLast': next_step._is_last_step(discuss_channel),
-                'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
-                'type': next_step.step_type,
+        store = Store()
+        store.add(posted_message, for_current_user=True)
+        store.add(next_step)
+        store.add(
+            "ChatbotStep",
+            {
+                "id": (next_step.id, discuss_channel.id),
+                "scriptStep": Store.one(next_step, only_id=True),
+                "message": Store.one(posted_message, only_id=True),
+                "isLast": next_step._is_last_step(discuss_channel),
+                "operatorFound": next_step.step_type == "forward_operator"
+                and len(discuss_channel.channel_member_ids) > 2,
             },
-            'operatorFound': next_step.step_type == 'forward_operator' and len(
-                discuss_channel.channel_member_ids) > 2,
-        }
+        )
+        store.add(
+            "Chatbot",
+            {
+                "id": (chatbot.id, discuss_channel.id, "discuss.channel"),
+                "script": store.one(chatbot, only_id=True),
+                "thread": store.one(discuss_channel, only_id=True),
+                "currentStep": {
+                    "id": (next_step.id, discuss_channel.id),
+                    "scriptStep": Store.one(next_step, only_id=True),
+                    "message": Store.one(posted_message, only_id=True),
+                },
+            },
+        )
+        return store.get_result()
+
 
     @http.route("/chatbot/step/validate_email", type="json", auth="public")
     @add_guest_to_context

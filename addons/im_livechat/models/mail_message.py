@@ -41,26 +41,28 @@ class MailMessage(models.Model):
                     .sudo()
                     .search([("mail_message_id", "=", message.id)], limit=1)
                 )
-                if chatbot_message.script_step_id:
+                if step := chatbot_message.script_step_id:
+                    store.add(
+                        "ChatbotStep",
+                        {
+                            "message": Store.one(message, only_id=True),
+                            "scriptStep": Store.one(chatbot_message.script_step_id, only_id=True),
+                            "selectedAnswer": Store.one(
+                                chatbot_message.user_script_answer_id, only_id=True
+                            ),
+                            "operatorFound": step.step_type == "forward_operator"
+                            and len(channel.channel_member_ids) > 2,
+                            # TSM: missing chat bot, maybe its OK, also check if
+                            # one_id returns the key if no relation is found.
+                        },
+                    )
                     store.add(
                         message,
                         {
                             "chatbotStep": {
-                                "message": Store.one_id(message),
-                                "scriptStep": Store.one_id(chatbot_message.script_step_id),
-                                "chatbot": {
-                                    "script": Store.one_id(
-                                        chatbot_message.script_step_id.chatbot_script_id
-                                    ),
-                                    "thread": Store.one_id(channel),
-                                },
-                                "selectedAnswer": Store.one_id(
-                                    chatbot_message.user_script_answer_id
-                                ),
-                                "operatorFound": channel.chatbot_current_step_id.step_type
-                                == "forward_operator"
-                                and len(channel.channel_member_ids) > 2,
-                            },
+                                "scriptStep": Store.one(chatbot_message.script_step_id, only_id=True),
+                                "message": Store.one(message, only_id=True)
+                            }
                         },
                     )
 

@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import html2plaintext, is_html_empty, email_normalize, plaintext2html
+from odoo.addons.mail.tools.discuss import Store
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -367,6 +368,25 @@ class ChatbotScriptStep(models.Model):
 
         return posted_message
 
+    def _to_store(self, store: Store, /, *, fields=None):
+        if fields is None:
+            fields = {
+                "answers": None,
+                "message": [],
+                "type": True,
+            }
+        for step in self:
+            data = self._read_format(
+                [f for f in fields if f not in {"answers", "message", "type"}], load=False
+            )[0]
+            if "answers" in fields:
+                data["answers"] = Store.many(step.answer_ids, fields=fields["answers"])
+            if "message" in fields:
+                data["message"] = plaintext2html(step.message) if not is_html_empty(step.message) else False
+            if "type" in fields:
+                data["type"] = step.step_type
+            store.add("chatbot.script.step", data)
+
     # --------------------------
     # Tooling / Misc
     # --------------------------
@@ -379,8 +399,8 @@ class ChatbotScriptStep(models.Model):
             'id': self.id,
             'answers': [{
                 'id': answer.id,
-                'label': answer.name,
-                'redirectLink': answer.redirect_link,
+                "name": answer.name,
+                "redirect_link": answer.redirect_link,
             } for answer in self.answer_ids],
             'message': plaintext2html(self.message) if not is_html_empty(self.message) else False,
             'isLast': self._is_last_step(),

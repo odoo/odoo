@@ -17,6 +17,23 @@ export class DiscussCoreWeb {
     }
 
     setup() {
+        this.sidebarCategoriesBroadcast?.addEventListener("message", ({ data: { id, open } }) => {
+            const category = this.store.DiscussAppCategory.get(id);
+            if (category) {
+                category.open = open;
+            }
+        });
+        this.busService.subscribe("discuss.channel/joined", async (payload) => {
+            const { channel, invited_by_user_id: invitedByUserId } = payload;
+            const thread = this.store.Thread.insert(channel);
+            await thread.fetchChannelInfo();
+            if (invitedByUserId && invitedByUserId !== this.store.self.userId) {
+                this.notificationService.add(
+                    _t("You have been invited to #%s", thread.displayName),
+                    { type: "info" }
+                );
+            }
+        });
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
