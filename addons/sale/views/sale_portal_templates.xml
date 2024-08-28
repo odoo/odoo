@@ -138,7 +138,23 @@
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
 
                     <t t-set="title">
-                        <h2 t-field="sale_order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
+                        <t t-set="amount_len" t-value="len(sale_order.currency_id.symbol + ' ' + '{:.2f}'.format(sale_order.amount_total))"/>
+                        <t t-if="amount_len > 23">
+                            <t t-set="font_class" t-value="'h6'"/>
+                        </t>
+                        <t t-elif="amount_len > 19">
+                            <t t-set="font_class" t-value="'h5'"/>
+                        </t>
+                        <t t-elif="amount_len > 15">
+                            <t t-set="font_class" t-value="'h4'"/>
+                        </t>
+                        <t t-elif="amount_len > 11">
+                            <t t-set="font_class" t-value="'h3'"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="font_class" t-value="'h2'"/>
+                        </t>
+                        <div t-field="sale_order.amount_total" data-id="total_amount" t-att-class="'mb-0 text-break ' + font_class"/>
                     </t>
                     <t t-set="entries">
                         <div class="d-flex flex-column gap-4 mt-3">
