@@ -37,6 +37,11 @@ import {
     startPos,
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
+import {
+    normalizeDeepCursorPosition,
+    normalizeFakeBR,
+    normalizeSelfClosingElement,
+} from "@html_editor/utils/selection";
 
 /**
  * @typedef {Object} RangeLike
@@ -45,8 +50,6 @@ import { CTYPES } from "../utils/content_types";
  * @property {Node} endContainer
  * @property {number} endOffset
  */
-
-/** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection"];
@@ -136,20 +139,114 @@ export class DeletePlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     /**
-     * @param {EditorSelection} [selection]
+     * Deletes the contents in the current selection, if any.
+     * No history step is added.
+     * Use it alongside other command to compose a step.
      */
-    deleteSelection(selection = this.shared.getEditableSelection()) {
+    deleteSelection() {
         // @todo @phoenix: handle non-collapsed selection around a ZWS
         // see collapseIfZWS
+        const range = this.getNormalizedRange();
+        if (
+            range &&
+            !range.collapsed &&
+            closestElement(range.commonAncestorContainer).isContentEditable
+        ) {
+            this.deleteNonCollapsedRange(range);
+        }
+    }
 
-        // Normalize selection
-        selection = this.shared.setSelection(selection);
-
-        if (selection.isCollapsed) {
+    /**
+     * If the selection in non-collapsed, deletes its content.
+     * Otherwise, deletes a character/word/line in the given direction.
+     * Adds a history step. Use it as a standalone command.
+     *
+     * @param {"backward"|"forward"} direction
+     * @param {"character"|"word"|"line"} granularity
+     */
+    delete(direction, granularity) {
+        const range = this.getNormalizedRange();
+        if (!range || !closestElement(range.commonAncestorContainer).isContentEditable) {
             return;
         }
 
-        let range = this.adjustRange(selection, [
+        if (!range.collapsed) {
+            this.deleteNonCollapsedRange(range);
+        } else if (direction === "backward") {
+            this.deleteBackward(range, granularity);
+        } else if (direction === "forward") {
+            this.deleteForward(range, granularity);
+        } else {
+            throw new Error("Invalid direction");
+        }
+
+        this.dispatch("ADD_STEP");
+    }
+
+    // --------------------------------------------------------------------------
+    // Selection normalization
+    // --------------------------------------------------------------------------
+
+    /**
+     * Gets the range from the current **document** selection and returns a
+     * normalized copy.
+     *
+     * Normalization steps applied:
+     * - if the cursor is inside a self-closing element (e.g. IMG), put it
+     *   after it (@see normalizeSelfClosingElement )
+     * - put the cursor in the deepest inline node around the given position
+     *   (@see normalizeDeepCursorPosition )
+     * - if the cursor is on the right of a fake line break, put it before it
+     *   (@see normalizeFakeBR )
+     *
+     * It does not use getEditableSelection from the SelectionPlugin because:
+     * - it is normalized around contenteditable=false, making it impossible to
+     *   know if the original selection was inside an uneditable zone,
+     * - it is not normalized deep.
+     * @todo @phoenix: should the SelectionPlugin change, this method can be
+     * removed.
+     *
+     * @returns {Range|null}
+     */
+    getNormalizedRange() {
+        const documentSelection = this.document.getSelection();
+        if (!documentSelection || !documentSelection.rangeCount) {
+            return null;
+        }
+        const range = documentSelection.getRangeAt(0);
+        if (!this.editable.contains(range.commonAncestorContainer)) {
+            return null;
+        }
+        let { startContainer, startOffset, endContainer, endOffset } = range;
+
+        const normalizationSteps = [
+            normalizeSelfClosingElement,
+            normalizeDeepCursorPosition,
+            normalizeFakeBR,
+        ];
+        for (const normalize of normalizationSteps) {
+            [startContainer, startOffset] = normalize(startContainer, startOffset);
+            [endContainer, endOffset] = range.collapsed
+                ? [startContainer, startOffset]
+                : normalize(endContainer, endOffset);
+        }
+
+        const normalizedRange = this.document.createRange();
+        normalizedRange.setStart(startContainer, startOffset);
+        normalizedRange.setEnd(endContainer, endOffset);
+
+        return normalizedRange;
+    }
+
+    // --------------------------------------------------------------------------
+    // Delete non-collapsed range
+    // --------------------------------------------------------------------------
+
+    /**
+     * @param {Range} normalizedRange
+     */
+    deleteNonCollapsedRange(normalizedRange) {
+        let range = this.adjustRange(normalizedRange, [
             this.expandRangeToIncludeNonEditables,
             this.includeEndOrStartBlock,
             this.fullyIncludeLinks,
@@ -165,37 +262,16 @@ export class DeletePlugin extends Plugin {
         this.setCursorFromRange(range);
     }
 
-    /**
-     * @param {"backward"|"forward"} direction
-     * @param {"character"|"word"} granularity
-     */
-    delete(direction, granularity) {
-        const selection = this.shared.getEditableSelection();
-
-        if (!selection.isCollapsed) {
-            this.deleteSelection(selection);
-        } else if (direction === "backward") {
-            this.deleteBackward(selection, granularity);
-        } else if (direction === "forward") {
-            this.deleteForward(selection, granularity);
-        } else {
-            throw new Error("Invalid direction");
-        }
-
-        this.dispatch("ADD_STEP");
-    }
-
     // --------------------------------------------------------------------------
-    // Delete backward/forward
+    // Delete collapsed range (backward/forward)
     // --------------------------------------------------------------------------
 
     /**
-     * @param {EditorSelection} selection
-     * @param {"character"|"word"} granularity
+     * @param {Range} normalizedRange
+     * @param {"character"|"word"|"line"} granularity
      */
-    deleteBackward(selection, granularity) {
-        // Normalize selection
-        const { endContainer, endOffset } = this.shared.setSelection(selection);
+    deleteBackward(normalizedRange, granularity) {
+        const { endContainer, endOffset } = normalizedRange;
 
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
@@ -220,12 +296,11 @@ export class DeletePlugin extends Plugin {
     }
 
     /**
-     * @param {EditorSelection} selection
-     * @param {"character"|"word"} granularity
+     * @param {Range} normalizedRange
+     * @param {"character"|"word"|"line"} granularity
      */
-    deleteForward(selection, granularity) {
-        // Normalize selection
-        const { startContainer, startOffset } = this.shared.setSelection(selection);
+    deleteForward(normalizedRange, granularity) {
+        const { startContainer, startOffset } = normalizedRange;
 
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
@@ -1185,10 +1260,7 @@ export class DeletePlugin extends Plugin {
 
     onBeforeInputInsertText(ev) {
         if (ev.inputType === "insertText") {
-            const selection = this.shared.getEditableSelection();
-            if (!selection.isCollapsed) {
-                this.deleteSelection();
-            }
+            this.deleteSelection();
             // Default behavior: insert text and trigger input event
         }
     }
