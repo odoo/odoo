@@ -808,10 +808,7 @@ class Message(models.Model):
         """ Unstar messages for the current partner. """
         partner = self.env.user.partner_id
         starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
-        partner.starred_message_ids -= starred_messages
-        self.env.user._bus_send(
-            "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
-        )
+        starred_messages.toggle_message_starred()
 
     def toggle_message_starred(self):
         """ Toggle messages as (un)starred. Technically, the notifications related
@@ -819,14 +816,15 @@ class Message(models.Model):
         """
         # a user should always be able to star a message they can read
         self.check_access_rule('read')
-        starred = not self.starred
-        partner = self.env.user.partner_id
-        if starred:
-            partner.starred_message_ids |= self
-        else:
-            partner.starred_message_ids -= self
-        self.env.user._bus_send(
-            "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
+        if starred := self.filtered("starred"):
+            self.env.user.partner_id.starred_message_ids -= starred
+            self.env.user._bus_send(
+                "mail.message/toggle_star", {"message_ids": starred.ids, "starred": False}
+            )
+        if unstarred := self - starred:
+            self.env.user.partner_id.starred_message_ids |= unstarred
+            self.env.user._bus_send(
+                "mail.message/toggle_star", {"message_ids": unstarred.ids, "starred": True}
         )
 
     @api.model
