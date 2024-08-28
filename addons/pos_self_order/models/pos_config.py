@@ -250,6 +250,10 @@ class PosConfig(models.Model):
                 'id': image.id,
                 'data': image.sudo().datas.decode('utf-8'),
             })
+
+            # Only one image is needed for the mobile mode
+            if self.self_ordering_mode == 'mobile':
+                break
         return encoded_images
 
     def _load_self_data_models(self):

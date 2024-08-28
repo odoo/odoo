@@ -11,7 +11,7 @@ export class PopupTable extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.state = useState({
-            selectedTable: this.selfOrder.models["restaurant.table"].getFirst()?.id,
+            selectedTable: "0",
         });
     }
 
@@ -25,11 +25,24 @@ export class PopupTable extends Component {
     }
 
     setTable() {
-        const table = this.selfOrder.models["restaurant.table"].get(this.state.selectedTable);
+        const table = this.selectedTable;
+
+        if (!table) {
+            return;
+        }
+
         this.props.selectTable(table);
     }
 
     close() {
         this.props.selectTable(null);
+    }
+
+    get validSelection() {
+        return Boolean(this.selectedTable);
+    }
+
+    get selectedTable() {
+        return this.selfOrder.models["restaurant.table"].get(this.state.selectedTable);
     }
 }

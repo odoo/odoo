@@ -10,12 +10,21 @@ export function selectTable(table) {
     return [
         {
             content: `Select table ${table}`,
-            trigger: `.self_order_popup_table select:has(option:contains("${table}"))`,
-            run: `select ${table}`,
+            trigger: `.self_order_popup_table select`,
+            run: (helpers) => {
+                // The default select (run: select 3) doesn't work here
+                const options = document.querySelectorAll(".self_order_popup_table option");
+                const targetOption = Array.from(options).find((option) =>
+                    option.textContent.includes(table)
+                );
+                const optionValue = targetOption.value;
+                helpers.anchor.value = optionValue;
+                helpers.anchor.dispatchEvent(new Event("change"));
+            },
         },
         {
             content: `Click on 'Confirm' button`,
-            trigger: `.self_order_popup_table .btn:contains('Confirm')`,
+            trigger: `.self_order_popup_table .btn:contains('Continue with table ${table}')`,
             run: "click",
         },
     ];
