@@ -114,6 +114,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     willStart: async function () {
         const _super = this._super.bind(this);
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
+        this.defaultSort = this.$target[0].closest('[data-default-sort]').dataset.defaultSort
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
         this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
         this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
@@ -308,8 +309,12 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
+        const isDefaultSortFeatured = this.defaultSort === 'website_sequence asc';
+
         if (widgetName === 'create_ribbon_opt') {
             return !this.ribbonEditMode;
+        } else if (widgetName === 'o_wsale_change_sequence_widget'){
+            return isDefaultSortFeatured;
         }
         return this._super(...arguments);
     },
