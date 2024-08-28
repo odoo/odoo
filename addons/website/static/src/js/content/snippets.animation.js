@@ -482,7 +482,8 @@ registry.slider = publicWidget.Widget.extend({
 
         // Only for carousels having the `Carousel` and `CarouselItem` options
         // (i.e. matching the `section > .carousel` selector).
-        if (this.editableMode && this.el.matches("section > .carousel")) {
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
             this.controlEls = this.el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
             // Deactivate the carousel controls to handle the slides manually in
@@ -520,7 +521,8 @@ registry.slider = publicWidget.Widget.extend({
         this.$el.off('.slider'); // TODO remove in master
         this.$('img').off('.slider');
 
-        if (this.editableMode && this.el.matches("section > .carousel")) {
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
             // Restore the carousel controls.
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
             this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
