@@ -432,14 +432,22 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // e.g. User should not be enable to change existing job application form
         // to opportunity form in 'Apply job' page.
         this.modelCantChange = this.$target.attr('hide-change-model') !== undefined;
-
-        // Get list of website_form compatible models.
-        this.models = await this.orm.call("ir.model", "get_compatible_form_models");
+        this.models = await this._fetchModels();
 
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
-        currentActionName = this.activeForm && this.activeForm.website_form_label;
+        currentActionName = this.activeForm && this.activeForm.website_form_label
 
+        this._makeSelectAction();
+        return _super(...arguments);
+    },
+
+    _fetchModels() {
+        // Get list of website_form compatible models.
+        return this.orm.call("ir.model", "get_compatible_form_models");
+    },
+
+    _makeSelectAction() {
         if (!this.modelCantChange) {
             // Create the Form Action select
             this.selectActionEl = document.createElement('we-select');
@@ -451,9 +459,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 option.dataset.selectAction = el.id;
                 this.selectActionEl.append(option);
             });
+            return this.selectActionEl;
         }
-
-        return _super(...arguments);
     },
     /**
      * @override
