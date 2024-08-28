@@ -29,3 +29,5 @@ def patch_all():
     patch_stdnum()
     from .werkzeug_urls import patch_werkzeug
     patch_werkzeug()
+    from .zeep import patch_zeep
+    patch_zeep()
