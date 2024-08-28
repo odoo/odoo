@@ -107,6 +107,7 @@
         'views/snippets/s_timeline_list.xml',
         'views/snippets/s_process_steps.xml',
         'views/snippets/s_accordion.xml',
+        'views/snippets/s_website_form_info.xml',
         'views/snippets/s_numbers_showcase.xml',
         'views/snippets/s_numbers_charts.xml',
         'views/snippets/s_accordion_image.xml',
