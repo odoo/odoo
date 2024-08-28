@@ -4,7 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
-import "@website/libs/zoomodoo/zoomodoo";
+import { zoomOdoo } from "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { rpc } from "@web/core/network/rpc";
@@ -276,12 +276,14 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             for (const image of images) {
                 const $image = $(image);
                 const callback = () => {
-                    $image.zoomOdoo({
-                        event: "mouseenter",
-                        attach: this._getProductImageContainerSelector(),
-                        preventClicks: salePage.dataset.ecomZoomClick,
-                        attachToTarget: this._getProductImageLayout() === "grid",
-                    });
+                    if (typeof zoomOdoo !== "object") {
+                        zoomOdoo($image[0], {
+                            event: "mouseenter",
+                            attach: this._getProductImageContainerSelector(),
+                            preventClicks: salePage.dataset.ecomZoomClick,
+                            attachToTarget: this._getProductImageLayout() === "grid",
+                        });
+                    }
                     image.dataset.zoom = 1;
                 };
                 image.addEventListener('load', callback);
