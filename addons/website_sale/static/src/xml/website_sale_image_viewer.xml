@@ -37,11 +37,35 @@
                             </ol>
                         </div>
                         <!-- Controls -->
-                        <div class="o_wsale_image_viewer_control o_wsale_image_viewer_previous btn btn-dark position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle" t-on-click="previousImage" title="Previous (Left-Arrow)" role="button">
-                            <span class="oi oi-chevron-left" role="img"/>
+                        <div class="o_wsale_image_viewer_control position-absolute d-flex align-items-center me-2 h-100 w-100">
+                            <a
+                                class="carousel-control-prev"
+                                t-on-click="previousImage"
+                                title="Previous (Left-Arrow)"
+                                role="button"
+                            >
+                                <i
+                                    class="oi oi-chevron-left border bg-white text-900"
+                                    role="img"
+                                    aria-label="Previous"
+                                    title="Previous"
+                                />
+                            </a>
                         </div>
-                        <div class="o_wsale_image_viewer_control o_wsale_image_viewer_next btn btn-dark position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle" t-on-click="nextImage" title="Next (Right-Arrow)" role="button">
-                            <span class="oi oi-chevron-right" role="img"/>
+                        <div class="o_wsale_image_viewer_control position-absolute d-flex align-items-center me-2 h-100 w-100">
+                            <a
+                                class="carousel-control-next"
+                                t-on-click="nextImage"
+                                title="Next (Right-Arrow)"
+                                role="button"
+                            >
+                                <i
+                                    class="oi oi-chevron-right border bg-white text-900"
+                                    role="img"
+                                    aria-label="Next"
+                                    title="Next"
+                                />
+                            </a>
                         </div>
                     </t>
                 </div>
