@@ -135,19 +135,22 @@ export const accountTaxHelpers = {
 
         for (const tax_data of batch.taxes) {
             if (batch._original_price_include) {
-                if (!special_mode) {
-                    for (const other_batch of batches_before) {
-                        add_extra_base(other_batch, tax_data, -1);
-                    }
-                } else if (special_mode === "total_excluded") {
-                    for (const other_batch of batches_after) {
-                        if (!other_batch.price_include) {
-                            add_extra_base(other_batch, tax_data, 1);
+                if (!special_mode || special_mode === "total_included") {
+                    if (!batch.include_base_amount) {
+                        for (const other_batch of batches_after) {
+                            if (other_batch._original_price_include) {
+                                add_extra_base(other_batch, tax_data, -1);
+                            }
                         }
                     }
-                } else if (special_mode === "total_included") {
                     for (const other_batch of batches_before) {
                         add_extra_base(other_batch, tax_data, -1);
+                    }
+                } else {  // special_mode === "total_excluded"
+                    for (const other_batch of batches_after) {
+                        if (!other_batch._original_price_include || batch.include_base_amount) {
+                            add_extra_base(other_batch, tax_data, 1);
+                        }
                     }
                 }
             } else if (!batch._original_price_include) {
@@ -157,11 +160,14 @@ export const accountTaxHelpers = {
                             add_extra_base(other_batch, tax_data, 1);
                         }
                     }
-                } else if (special_mode === "total_included") {
+                } else {  // special_mode === "total_included"
                     if (!batch.include_base_amount) {
-                        for (const other_batch of batches_before.concat(batches_after)) {
+                        for (const other_batch of batches_after) {
                             add_extra_base(other_batch, tax_data, -1);
                         }
+                    }
+                    for (const other_batch of batches_before) {
+                        add_extra_base(other_batch, tax_data, -1);
                     }
                 }
             }
