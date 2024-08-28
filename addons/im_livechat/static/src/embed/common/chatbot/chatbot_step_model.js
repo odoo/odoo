@@ -4,24 +4,20 @@ export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
 
     operatorFound = false;
-    scriptStep = Record.one("ChatbotScriptStep");
+    scriptStep = Record.one("chatbot.script.step");
     message = Record.one("Message", { inverse: "chatbotStep" });
-    answers = Record.many("ChatbotScriptStepAnswer", {
+    answers = Record.many("chatbot.script.answer", {
         compute() {
             return this.scriptStep?.answers;
         },
     });
-    selectedAnswer = Record.one("ChatbotScriptStepAnswer");
+    selectedAnswer = Record.one("chatbot.script.answer");
     type = Record.attr("", {
         compute() {
             return this.scriptStep?.type;
         },
     });
-    isLast = Record.attr(false, {
-        compute() {
-            return this.scriptStep.isLast;
-        },
-    });
+    isLast = false;
 
     get expectAnswer() {
         return [

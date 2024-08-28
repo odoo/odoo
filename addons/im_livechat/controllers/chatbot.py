@@ -2,7 +2,6 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import is_html_empty, plaintext2html
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -63,22 +62,33 @@ class LivechatChatbotScriptController(http.Controller):
             return None
 
         posted_message = next_step._process_step(discuss_channel)
-        return {
-            "data": Store(posted_message, for_current_user=True).get_result(),
-            'scriptStep': {
-                'id': next_step.id,
-                'answers': [{
-                    'id': answer.id,
-                    'label': answer.name,
-                    'redirectLink': answer.redirect_link,
-                } for answer in next_step.answer_ids],
-                'isLast': next_step._is_last_step(discuss_channel),
-                'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
-                'type': next_step.step_type,
+        store = Store(posted_message, for_current_user=True)
+        store.add(next_step)
+        store.add(
+            "ChatbotStep",
+            {
+                "id": (next_step.id, discuss_channel.id),
+                "isLast": next_step._is_last_step(discuss_channel),
+                "message": Store.one(posted_message, only_id=True),
+                "operatorFound": next_step.step_type == "forward_operator"
+                and len(discuss_channel.channel_member_ids) > 2,
+                "scriptStep": Store.one(next_step, only_id=True),
             },
-            'operatorFound': next_step.step_type == 'forward_operator' and len(
-                discuss_channel.channel_member_ids) > 2,
-        }
+        )
+        store.add(
+            "Chatbot",
+            {
+                "currentStep": {
+                    "id": (next_step.id, discuss_channel.id),
+                    "scriptStep": next_step.id,
+                    "message": posted_message.id,
+                },
+                "id": (chatbot.id, discuss_channel.id),
+                "script": Store.one(chatbot, only_id=True),
+                "thread": Store.one(discuss_channel, only_id=True),
+            },
+        )
+        return store.get_result()
 
     @http.route("/chatbot/step/validate_email", type="json", auth="public")
     @add_guest_to_context
