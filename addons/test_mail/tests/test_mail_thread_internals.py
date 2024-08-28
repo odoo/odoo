@@ -341,14 +341,12 @@ class TestDiscuss(MailCommon, TestRecipients):
             na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 
-    def test_set_message_done_user(self):
         with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], message_info={'content': 'Test'}):
             message = self.test_record.message_post(
                 body='Test', message_type='comment', subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.user_employee.partner_id.id])
-        message.with_user(self.user_employee).set_message_done()
+        message.with_user(self.user_employee).mark_all_as_read()
         self.assertMailNotifications(message, [{'notif': [{'partner': self.partner_employee, 'type': 'inbox', 'is_read': True}]}])
-        # TDE TODO: it seems bus notifications could be checked
 
     def test_set_star(self):
         msg = self.test_record.with_user(self.user_admin).message_post(body='My Body', subject='1')
@@ -432,7 +430,7 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(res["messages"]), 2)
 
         # first user is marking one message as done: the other message is still Inbox, while the other user still has the 2 messages in Inbox
-        message1.with_user(user1).set_message_done()
+        message1.with_user(user1).mark_all_as_read()
         res = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(res["messages"]), 1)
         self.assertEqual(res["messages"][0].id, message2.id)

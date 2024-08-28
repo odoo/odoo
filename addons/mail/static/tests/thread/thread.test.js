@@ -822,7 +822,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         step("mark-all-messages-as-read");
-        expect(args[0]).toEqual([
+        expect(args[1]).toEqual([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", channelId],
         ]);

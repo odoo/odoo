@@ -62,7 +62,7 @@ class ChannelController(http.Controller):
         )
         messages = res.pop("messages")
         if not request.env.user._is_public() and not around:
-            messages.set_message_done()
+            messages.mark_all_as_read()
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),

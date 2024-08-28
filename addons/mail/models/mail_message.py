@@ -776,42 +776,25 @@ class Message(models.Model):
     # DISCUSS API
     # ------------------------------------------------------
 
-    @api.model
     def mark_all_as_read(self, domain=None):
-        # not really efficient method: it does one db request for the
-        # search, and one for each message in the result set is_read to True in the
-        # current notifications from the relation.
         notif_domain = [
             ('res_partner_id', '=', self.env.user.partner_id.id),
             ('is_read', '=', False)]
+        messages = None
         if domain:
             messages = self.search(domain)
-            messages.set_message_done()
-            return messages.ids
+        elif self:
+            messages = self
+        if messages is not None:
+            notif_domain = expression.AND([notif_domain, [("mail_message_id", "in", messages.ids)]])
+        elif not messages:
+            return
 
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
-        notifications.write({'is_read': True})
-
-        self.env.user._bus_send(
-            "mail.message/mark_as_read",
-            {
-                "message_ids": notifications.mail_message_id.ids,
-                "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
-            },
-        )
-
-    def set_message_done(self):
-        """ Remove the needaction from messages for the current partner. """
-        partner_id = self.env.user.partner_id
-        notifications = self.env['mail.notification'].sudo().search_fetch([
-            ('mail_message_id', 'in', self.ids),
-            ('res_partner_id', '=', partner_id.id),
-            ('is_read', '=', False),
-        ], ['mail_message_id'])
         if not notifications:
             return
+
         notifications.write({'is_read': True})
-        # notifies changes in messages through the bus.
         self.env.user._bus_send(
             "mail.message/mark_as_read",
             {
