@@ -357,11 +357,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     }
                     $(elem).nextAll('.flag_validator').removeClass('d-none');
                 } else if (data.success === 'post_flagged_non_moderator') {
-                    const forumAnswer = elem.closest('.forum_answer');
                     elem.innerText = _t(' Flagged');
                     elem.prepend(child);
-                    forumAnswer.fadeIn(1000);
-                    forumAnswer.slideUp(1000);
+                    const $forumAnswer = $(elem).closest('.o_wforum_answer');
+                    if ($forumAnswer) {
+                        $forumAnswer.fadeIn(1000);
+                        $forumAnswer.slideUp(1000);
+                    }
                 }
             }
         });
