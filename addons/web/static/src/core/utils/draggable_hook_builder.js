@@ -96,6 +96,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
     edgeScrolling: [Object, Function],
     delay: [Number],
     tolerance: [Number],
+    touchDelay: [Number],
     iframeWindow: [Object, Function],
 };
 const DEFAULT_DEFAULT_PARAMS = {
@@ -398,7 +399,7 @@ function toFunction(value) {
 
 /**
  * @param {DraggableBuilderParams} hookParams
- * @returns {(params: Record<any, any>) => { dragging: boolean }}
+ * @returns {(params: Record<keyof typeof DEFAULT_ACCEPTED_PARAMS, any>) => { dragging: boolean }}
  */
 export function makeDraggableHook(hookParams) {
     hookParams = getReturnValue(hookParams);
