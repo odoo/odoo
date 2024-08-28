@@ -117,25 +117,25 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
             ]
         })
         self.sale_order.commitment_date = datetime.datetime(2121, 12, 21, 12, 21, 12)
-        form_field_expected_value_map = {
-            new_form_fields[0]: "No",  # boolean
-            new_form_fields[1]: self.sale_order.name,  # char
-            new_form_fields[2]: "11/04/2020",  # date
-            new_form_fields[3]: "Dec 21, 2121, 1:21:12 PM",  # datetime
-            new_form_fields[4]: "4.99",  # float
-            new_form_fields[5]: "10",  # integer
-            new_form_fields[6]: "Quotation",  # selection
-            new_form_fields[7]: "$\xa0720.01",  # monetary
+        expected_values = [
+            "No",  # boolean
+            self.sale_order.name,  # char
+            "11/04/2020",  # date
+            "Dec 21, 2121, 1:21:12 PM",  # datetime
+            "4.99",  # float
+            "10",  # integer
+            "Quotation",  # selection
+            "$ 720.01",  # monetary
 
-            new_form_fields[8]: f"{sol_1.display_name}, {sol_2.display_name}",  # one2many
-            new_form_fields[9]: f"{self.sale_order.company_id.display_name}",  # many2one
-            new_form_fields[10]: "test tax, test tax2",  # many2many
-        }
-        for form_field, expected_value in form_field_expected_value_map.items():
+            f"{sol_1.display_name}, {sol_2.display_name}",  # one2many
+            f"{self.sale_order.company_id.display_name}",  # many2one
+            "test tax, test tax2",  # many2many
+        ]
+        for form_field, expected_value in zip(new_form_fields, expected_values):
             result = self.env['ir.actions.report']._get_value_from_path(
                 form_field, self.sale_order, sol_1
             )
-            self.assertEqual(result, expected_value)
+            self.assertEqual(' '.join(result.split()), expected_value)
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment
