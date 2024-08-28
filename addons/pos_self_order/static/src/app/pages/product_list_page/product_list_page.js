@@ -26,10 +26,13 @@ export class ProductListPage extends Component {
 
         useEffect(
             () => {
+                if (!this.productsList.el) {
+                    return;
+                }
                 if (this.selfOrder.lastEditedProductId) {
                     this.scrollTo(this.currentProductCard, { behavior: "instant" });
                 }
-                const scrollSpyContentEl = document.getElementById("scrollspy-products");
+                const scrollSpyContentEl = this.productsList.el;
                 const currentCategId = this.selfOrder.currentCategory?.id;
                 const categ = document.querySelectorAll(`[categId="${currentCategId}"]`);
                 if (categ[0]) {

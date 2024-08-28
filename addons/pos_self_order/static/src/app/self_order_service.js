@@ -193,9 +193,7 @@ export class SelfOrder extends Reactive {
         this.availableCategories = availableCategories.filter((c) => {
             return now > c.hour_after && now < c.hour_until;
         });
-
-        this.currentCategory =
-            this.models["pos.category"].length > 0 ? [...this.categoryList][0] : null;
+        this.currentCategory = this.productCategories[0] || null;
     }
 
     isCategoryAvailable(categId) {
