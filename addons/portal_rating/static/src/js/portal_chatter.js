@@ -37,16 +37,8 @@ PortalChatter.include({
             }, this.options);
         }
         // rating card
-        this.set('rating_card_values', {});
-        this.set('rating_value', false);
-        this.on("change:rating_value", this, this._onChangeRatingDomain);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this._super.apply(this, arguments);
-        this.on("change:rating_card_values", this, this._renderRatingCard);
+        this._ratingCardValues = {};
+        this._ratingValue = false;
     },
 
     //--------------------------------------------------------------------------
@@ -117,6 +109,9 @@ PortalChatter.include({
     messageFetch: async function () {
         const result = await this._super(...arguments);
         this._updateRatingCardValues(result);
+        const $prev = this.$('.o_website_rating_card_container');
+        $prev.after(renderToElement("portal_rating.rating_card", {widget: this}));
+        $prev.remove();
         return result;
     },
     /**
@@ -142,7 +137,8 @@ PortalChatter.include({
                     percent: roundPrecision(result["rating_stats"]["percent"][rating], 0.01),
                 });
             });
-        this.set('rating_card_values', ratingData);
+
+        this._ratingCardValues = ratingData;
     },
     /**
      * @override
@@ -152,21 +148,11 @@ PortalChatter.include({
         if (this.options['display_rating']) {
             params['rating_include'] = true;
 
-            const ratingValue = this.get('rating_value');
-            if (ratingValue !== false) {
-                params['rating_value'] = ratingValue;
+            if (this._ratingValue !== false) {
+                params['rating_value'] = this._ratingValue;
             }
         }
         return params;
-    },
-
-    /**
-     * render rating card
-     *
-     * @private
-     */
-    _renderRatingCard: function () {
-        this.$('.o_website_rating_card_container').replaceWith(renderToElement("portal_rating.rating_card", {widget: this}));
     },
     /**
      * Default rating data for publisher comment qweb template
@@ -255,7 +241,7 @@ PortalChatter.include({
     _onClickStarDomain: function (ev) {
         var $tr = this.$(ev.currentTarget);
         var num = $tr.data('star');
-        this.set('rating_value', num);
+        this._updateRatingValue(num);
     },
     /**
      * @private
@@ -264,7 +250,7 @@ PortalChatter.include({
     _onClickStarDomainReset: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        this.set('rating_value', false);
+        this._updateRatingValue(false);
     },
 
     /**
@@ -375,7 +361,8 @@ PortalChatter.include({
     /**
      * @private
      */
-    _onChangeRatingDomain: function () {
+    _updateRatingValue: function (value) {
+        this._ratingValue = value;
         this._changeCurrentPage(1);
     },
 });

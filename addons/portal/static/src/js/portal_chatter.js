@@ -32,9 +32,9 @@ var PortalChatter = publicWidget.Widget.extend({
 
         this._setOptions(options);
 
-        this.set('messages', []);
-        this.set('message_count', this.options['message_count']);
-        this.set('pager', {});
+        this._messages = [];
+        this._messageCount = this.options['message_count'];
+        this._pagerData = {};
         this._currentPage = this.options['pager_start'];
     },
     /**
@@ -50,16 +50,9 @@ var PortalChatter = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        // bind events
-        this.on("change:messages", this, this._renderMessages);
-        this.on("change:message_count", this, function () {
-            this._renderMessageCount();
-            this.set('pager', this._pager(this._currentPage));
-        });
-        this.on("change:pager", this, this._renderPager);
         // set options and parameters
-        this.set('message_count', this.options['message_count']);
-        this.set('messages', this.preprocessMessages(this.result['messages']));
+        this._updateMessageCount(this.options['message_count']);
+        this._updateMessages(this.preprocessMessages(this.result['messages']));
         // bind bus event: this (portal.chatter) and 'portal.rating.composer' in portal_rating
         // are separate and sibling widgets, this event is to be triggered from portal.rating.composer,
         // hence bus event is bound to achieve usage of the event in another widget.
@@ -81,8 +74,8 @@ var PortalChatter = publicWidget.Widget.extend({
     messageFetch: function () {
         var self = this;
         return rpc('/mail/chatter_fetch', self._messageFetchPrepareParams()).then(function (result) {
-            self.set('messages', self.preprocessMessages(result['messages']));
-            self.set('message_count', result['message_count']);
+            self._updateMessages(self.preprocessMessages(result['messages']));
+            self._updateMessageCount(result['message_count']);
             return result;
         });
     },
@@ -188,7 +181,7 @@ var PortalChatter = publicWidget.Widget.extend({
         var self = this;
         return this.messageFetch().then(function () {
             var p = self._currentPage;
-            self.set('pager', self._pager(p));
+            self._updatePager(self._pager(p));
         });
     },
     _messageFetchPrepareParams: function () {
@@ -221,7 +214,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _pager: function (page) {
         page = page || 1;
-        var total = this.get('message_count');
+        var total = this._messageCount;
         var scope = this.options['pager_scope'];
         var step = this.options['pager_step'];
 
@@ -254,13 +247,18 @@ var PortalChatter = publicWidget.Widget.extend({
             "pages": pages
         };
     },
-    _renderMessages: function () {
+
+    _updateMessages: function (messages) {
+        this._messages = messages;
         this.$('.o_portal_chatter_messages').empty().append(renderToElement("portal.chatter_messages", {widget: this}));
     },
-    _renderMessageCount: function () {
+    _updateMessageCount: function (messageCount) {
+        this._messageCount = messageCount;
         this.$('.o_message_counter').replaceWith(renderToElement("portal.chatter_message_count", {widget: this}));
+        this._updatePager(this._pager(this._currentPage));
     },
-    _renderPager: function () {
+    _updatePager: function (pager) {
+        this._pagerData = pager;
         this.$('.o_portal_chatter_pager').replaceWith(renderToElement("portal.pager", {widget: this}));
     },
 
