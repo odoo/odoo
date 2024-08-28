@@ -17,16 +17,20 @@
             <Cabecera>
                 <IDVersionTBAI t-out="tbai_version"/>
             </Cabecera>
-            <Sujetos t-if="is_emission">
-                <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
-            </Sujetos>
-            <Factura t-if="is_emission">
-                <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
-            </Factura>
-            <IDFactura t-if="not is_emission">
-                <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
-                <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
-            </IDFactura>
+            <t t-if="is_emission">
+                <Sujetos>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
+                </Sujetos>
+                <Factura>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
+                </Factura>
+            </t>
+            <t t-else="">
+                <IDFactura>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
+                    <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
+                </IDFactura>
+            </t>
             <HuellaTBAI>
                 <EncadenamientoFacturaAnterior t-if="chain_prev_document">
                     <t t-set="seq_and_num" t-value="chain_prev_document._get_tbai_sequence_and_number()"/>
@@ -108,16 +112,16 @@
                 <FechaOperacion t-if="delivery_date" t-out="format_date(delivery_date)"/>
                 <DescripcionFactura t-out="origin or 'manual'"/>
                 <DetallesFactura>
-                    <IDDetalleFactura t-foreach="lines" t-as="line_values">
-                        <DescripcionDetalle t-out="line_values['description']"/>
-                        <Cantidad t-out="format_float(line_values['quantity'], precision_digits=8)"/>
-                        <ImporteUnitario t-out="format_float(line_values['unit_price'], precision_digits=8)"/>
-                        <Descuento t-out="format_float(line_values['discount'], precision_digits=8)"/>
-                        <ImporteTotal t-out="format_float(line_values['total'], precision_digits=8)"/>
+                    <IDDetalleFactura t-foreach="base_lines" t-as="base_line">
+                        <DescripcionDetalle t-out="base_line['description']"/>
+                        <Cantidad t-out="format_float(base_line['quantity'], precision_digits=8)"/>
+                        <ImporteUnitario t-out="format_float(base_line['gross_price_unit'], precision_digits=8)"/>
+                        <Descuento t-out="format_float(base_line['discount_amount'], precision_digits=8)"/>
+                        <ImporteTotal t-out="format_float(base_line['price_total'], precision_digits=8)"/>
                     </IDDetalleFactura>
                 </DetallesFactura>
-                <ImporteTotalFactura t-out="format_float(amount_total)"/>
-                <RetencionSoportada t-if="amount_retention != 0.0" t-out="format_float(amount_retention)"/>
+                <ImporteTotalFactura t-out="format_float(total_amount)"/>
+                <RetencionSoportada t-if="total_retention" t-out="format_float(-total_retention)"/>
                 <!-- <BaseImponibleACoste/> NOTE (only applicable with ClaveRegimenIvaOpTrascendencia 06, not supported yet) -->
                 <Claves>
                     <IDClave t-foreach="regime_key" t-as="key">

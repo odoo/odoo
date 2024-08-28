@@ -277,9 +277,6 @@ class SaleOrder(models.Model):
         reward.ensure_one()
         assert reward.discount_applicability == 'order'
 
-        discountable = 0
-        discountable_per_tax = defaultdict(int)
-
         if reward.program_id.is_payment_program:
             # Gift cards and eWallets are applied on the total order amount
             lines = self.order_line
@@ -287,34 +284,43 @@ class SaleOrder(models.Model):
             # Other types of programs are not expected to apply on delivery lines
             lines = self.order_line - self._get_no_effect_on_threshold_lines()
 
-        for line in lines:
-            # Ignore lines from this reward
-            if not line.product_uom_qty or not line.price_unit:
+        discountable = 0
+        discountable_per_tax = defaultdict(float)
+
+        AccountTax = self.env['account.tax']
+        order_lines = self.order_line.filtered(lambda x: not x.display_type)
+        base_lines = []
+        for line in order_lines:
+            base_line = line._prepare_base_line_for_taxes_computation()
+            base_line['discount_taxes'] = base_line['tax_ids'].flatten_taxes_hierarchy().filtered(lambda tax: tax.amount_type != 'fixed')
+            base_lines.append(base_line)
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+
+        def grouping_function(base_line, tax_data):
+            return {
+                'taxes': base_line['discount_taxes'],
+                'skip': (
+                    tax_data['tax'] not in base_line['discount_taxes']
+                    or base_line['record'] not in lines
+                ),
+            }
+
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            if grouping_key and grouping_key['skip']:
                 continue
-            discounted_price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            tax_data = line.tax_id.compute_all(
-                discounted_price_unit,
-                quantity=line.product_uom_qty,
-                product=line.product_id,
-                partner=line.order_partner_id,
-            )
-            # To compute the discountable amount we get the subtotal and add
-            # non-fixed tax totals. This way fixed taxes will not be discounted
-            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
-            discountable += tax_data['total_excluded'] + sum(
-                tax['amount'] for tax in tax_data['taxes']
-                if (
-                    tax['id'] in taxes.ids
-                    or (tax['group'] and tax['group'] in taxes)
-                )
-            )
-            line_price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100)
-            discountable_per_tax[taxes] += line_price - sum(
-                tax['amount'] for tax in tax_data['taxes']
-                if (
-                    tax['price_include']
-                    and tax['id'] not in taxes.ids
-                    and (not tax['group'] or tax['group'] not in taxes)
+
+            taxes = grouping_key['taxes'] if grouping_key else self.env['account.tax']
+            discountable += values['raw_base_amount_currency'] + values['raw_tax_amount_currency']
+            discountable_per_tax[taxes] += (
+                values['raw_base_amount_currency']
+                + sum(
+                    tax_data['raw_tax_amount_currency']
+                    for base_line, taxes_data in values['base_line_x_taxes_data']
+                    for tax_data in taxes_data
+                    if tax_data['tax'].price_include
                 )
             )
         return discountable, discountable_per_tax

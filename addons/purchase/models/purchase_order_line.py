@@ -92,37 +92,26 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'price_unit', 'taxes_id', 'discount')
     def _compute_amount(self):
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes(
-                [line._convert_to_tax_base_line_dict()],
-                line.company_id,
-            )
-            totals = next(iter(tax_results['totals'].values()))
-            amount_untaxed = totals['amount_untaxed']
-            amount_tax = totals['amount_tax']
+            base_line = line._prepare_base_line_for_taxes_computation()
+            self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
+            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
+            line.price_total = base_line['tax_details']['total_included_currency']
+            line.price_tax = line.price_total - line.price_subtotal
 
-            line.update({
-                'price_subtotal': amount_untaxed,
-                'price_tax': amount_tax,
-                'price_total': amount_untaxed + amount_tax,
-            })
-
-    def _convert_to_tax_base_line_dict(self):
+    def _prepare_base_line_for_taxes_computation(self):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
         defined on account.tax.
 
         :return: A python dictionary.
         """
         self.ensure_one()
-        return self.env['account.tax']._convert_to_tax_base_line_dict(
+        return self.env['account.tax']._prepare_base_line_for_taxes_computation(
             self,
-            partner=self.order_id.partner_id,
-            currency=self.order_id.currency_id,
-            product=self.product_id,
-            taxes=self.taxes_id,
-            price_unit=self.price_unit,
+            tax_ids=self.taxes_id,
             quantity=self.product_qty,
-            discount=self.discount,
-            price_subtotal=self.price_subtotal,
+            partner_id=self.order_id.partner_id,
+            currency_id=self.order_id.currency_id,
+            rate=self.order_id.currency_rate,
         )
 
     def _compute_tax_id(self):
