@@ -151,7 +151,9 @@ patch(PosStore.prototype, {
             if (product_unit && !product_unit.is_pos_groupable) {
                 let remaining_quantity = newLine.qty;
                 while (!this.env.utils.floatIsZero(remaining_quantity)) {
-                    const splitted_line = this.models["pos.order.line"].create(newLineValues);
+                    const splitted_line = this.models["pos.order.line"].create({
+                        ...newLineValues,
+                    });
                     splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
                     remaining_quantity -= splitted_line.qty;
                 }
