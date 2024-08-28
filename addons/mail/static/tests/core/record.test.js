@@ -11,6 +11,7 @@ import { mockService } from "@web/../tests/web_test_helpers";
 import { Record, Store, makeStore } from "@mail/core/common/record";
 import { AND, Markup } from "@mail/model/misc";
 import { registry } from "@web/core/registry";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -924,30 +925,45 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
         static id = "id";
         id;
         names = Record.attr([]);
+        due_datetime = Record.attr(undefined, { type: "datetime" });
         messages = Record.many("Message");
+        team = Record.one("Team");
     }).register(localRegistry);
     (class Message extends Record {
         static id = "body";
         body = Record.attr("");
     }).register(localRegistry);
+    (class Team extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
     const store = await start();
     const p = store.Person.insert({
         id: 1,
+        due_datetime: "2024-08-28 10:19:44",
         names: ["John", "Marc"],
         messages: [{ body: "1" }, { body: "2" }],
+        team: "Discuss",
     });
     expect(p.names).toEqual(["John", "Marc"]);
     expect(p.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
+    expect(p.team.name).toEqual("Discuss");
     expect(toRaw(store.Person.records[p.localId])).toBe(toRaw(p));
+    expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
     const data = JSON.parse(JSON.stringify(p.toData()));
     p.delete();
+    store.Message.get("1").delete();
+    store.Message.get("2").delete();
+    store.Team.get("Discuss").delete();
     expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
     const p2 = store.Person.insert(data);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
+    expect(p2.team.name).toEqual("Discuss");
     expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
+    expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
 });
 
 test("Methods are bound to records", async () => {
