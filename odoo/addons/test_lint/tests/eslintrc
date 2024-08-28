@@ -33,6 +33,10 @@
             {
                 "selector": "CallExpression[callee.name='_t'] > :first-child[value=/(.*%s){2,}/]",
                 "message": "Usage of _t function with multiple unnamed placeholders"
+            },
+            {
+                "selector": "CallExpression[callee.name=/^(UserError|ValidationError|AccessError|AccessDenied|MissingError)$/] > Literal:first-child",
+                "message": "Untranslated string literal in {{callee.name}} should be wrapped in a translation function (e.g., _t())."
             }
         ],
         "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all" }]

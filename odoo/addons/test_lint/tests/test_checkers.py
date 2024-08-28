@@ -496,7 +496,7 @@ class TestSqlLint(TestPylintChecks):
 class TestI18nChecks(TestPylintChecks):
     def check(self, test_content):
         return super().check(
-            test_content, "_odoo_checker_gettext", "gettext-variable,gettext-placeholders,gettext-repr"
+            test_content, "_odoo_checker_gettext", "missing-gettext,gettext-variable,gettext-placeholders,gettext-repr"
         )
 
     def test_gettext_variable(self):
@@ -544,3 +544,63 @@ class TestI18nChecks(TestPylintChecks):
         self.assertEqual(len(errors), 2)
         for error in errors:
             self.assertEqual(error["symbol"], "gettext-repr")
+
+    def test_missing_gettext(self):
+        """Test that missing gettext call raises 'missing-gettext'."""
+        node = """
+            UserError('This is not translated')
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]["symbol"], "missing-gettext")
+
+    def test_missing_gettext_attr(self):
+        """
+        Test that missing gettext call raises 'missing-gettext'
+        inside a function of type `astroid.Attribute`.
+        """
+        node = """
+            exceptions.UserError('This is not translated')
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]["symbol"], "missing-gettext")
+
+    def test_gettext_present(self):
+        """Test that no message is raised if gettext is present."""
+        node = """
+            raise UserError(_('This is translated'))
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 0)
+
+    def test_check_accepted_arguments(self):
+        """Test that only specific argument types are accepted in UserError."""
+        node = """
+            some_var = 'This is not translated'
+            raise UserError(some_var)
+            raise UserError(_('This is translated'))
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 0)
+
+    def test_check_not_accepted_arguments(self):
+        """Test that only specific argument types are accepted in UserError."""
+        node = """
+            raise UserError('This is not translated')
+            raise UserError(12345)
+            """
+
+        exit_code, errors = self.check(node)
+        self.assertNotEqual(exit_code, os.EX_OK)
+        self.assertEqual(len(errors), 2)
+        for error in errors:
+            self.assertEqual(error["symbol"], "missing-gettext")
