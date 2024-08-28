@@ -449,6 +449,18 @@ var Animation = publicWidget.Widget.extend({
 
 var registry = publicWidget.registry;
 
+// FIXME temporary hack: during edit mode, the carousel crashes sometimes when
+// we hover option during a carousel cycle. This patches Bootstrap to prevent
+// the crash.
+const baseSelectorEngineFind = window.SelectorEngine.find;
+window.SelectorEngine.find = function (...args) {
+    try {
+        return baseSelectorEngineFind.call(this, ...args);
+    } catch {
+        return [document.createElement('div')];
+    }
+};
+
 registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
     disabledInEditableMode: false,
@@ -462,9 +474,12 @@ registry.slider = publicWidget.Widget.extend({
     start: function () {
         this.$('img').on('load.slider', () => this._computeHeights());
         this._computeHeights();
-        // Initialize carousel and pause if in edit mode.
-        this.$el.carousel(this.editableMode ? 'pause' : undefined);
         $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));
+
+        // Initialize carousel and pause if in edit mode.
+        const options = this.editableMode ? {ride: false, pause: true} : undefined;
+        window.Carousel.getOrCreateInstance(this.el, options);
+
         if (this.editableMode) {
             // Prevent carousel slide to be an history step.
             this.$el.on("slide.bs.carousel.slider", () => {
@@ -481,16 +496,18 @@ registry.slider = publicWidget.Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this.$('img').off('.slider');
-        this.$el.carousel('pause');
-        this.$el.removeData('bs.carousel');
+
+        window.Carousel.getOrCreateInstance(this.el).dispose();
+
         this.$(".carousel-item")
             .toArray()
             .forEach((el) => {
                 $(el).css("min-height", "");
             });
+
         $(window).off('.slider');
         this.$el.off('.slider');
+        this.$('img').off('.slider');
     },
 
     //--------------------------------------------------------------------------
@@ -530,6 +547,108 @@ registry.slider = publicWidget.Widget.extend({
      */
     _onContentChanged: function (ev) {
         this._computeHeights();
+    },
+});
+
+const CAROUSEL_SLIDING_CLASS = "o_carousel_sliding";
+
+/**
+ * @param {HTMLElement} carouselEl
+ * @returns {Promise<void>}
+ */
+async function waitForCarouselToFinishSliding(carouselEl) {
+    if (!carouselEl.classList.contains(CAROUSEL_SLIDING_CLASS)) {
+        return;
+    }
+    return new Promise(resolve => {
+        carouselEl.addEventListener("slid.bs.carousel", () => resolve(), {once: true});
+    });
+}
+
+/**
+ * This class is used to fix carousel auto-slide behavior in Odoo 17.4 and up.
+ * It handles upgrade cases from lower versions.
+ * TODO find a way to get rid of this with an upgrade script?
+ */
+publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
+    // Only consider our known carousel snippets. A bootstrap carousel could
+    // have been added in an embed code snippet, or in any custom snippet. In
+    // that case, we consider that it should use the new default BS behavior,
+    // assuming the user / the developer of the custo should have updated the
+    // behavior as wanted themselves.
+    // Note: dynamic snippets are handled separately (TODO review).
+    selector: [
+        "[data-snippet='s_image_gallery'] .carousel",
+        "[data-snippet='s_carousel'] .carousel",
+        "[data-snippet='s_quotes_carousel'] .carousel",
+    ].join(", "),
+    disabledInEditableMode: false,
+    events: {
+        "slide.bs.carousel": "_onSlideCarousel",
+        "slid.bs.carousel": "_onSlidCarousel",
+    },
+    OLD_AUTO_SLIDING_SNIPPETS: ["s_image_gallery"],
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        const hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
+        if (!hasInterval && this.el.dataset.bsRide) {
+            // A bsInterval of 0 (or false or undefined) is intended to not
+            // auto-slide. With current Bootstrap version, a value of 0 will
+            // mean auto-slide without any delay (very fast). To prevent this,
+            // we remove the bsRide.
+            delete this.el.dataset.bsRide;
+            await this._destroyCarouselInstance();
+            window.Carousel.getOrCreateInstance(this.el);
+        } else if (hasInterval && !this.el.dataset.bsRide) {
+            // Re-add bsRide on carousels that don't have it but still have
+            // a bsInterval. E.g. s_image_gallery must auto-slide on load,
+            // while others only auto-slide on mouseleave.
+            //
+            // In the case of s_image_gallery that has a bsRide = "true"
+            // instead of "carousel", it's better not to change the behavior and
+            // let the user update the snippet manually to avoid making changes
+            // that they don't expect.
+            const snippetName = this.el.closest("[data-snippet]").dataset.snippet;
+            this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
+            await this._destroyCarouselInstance();
+            window.Carousel.getOrCreateInstance(this.el);
+        }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.el.classList.remove(CAROUSEL_SLIDING_CLASS);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    async _destroyCarouselInstance() {
+        await waitForCarouselToFinishSliding(this.el); // Prevent traceback
+        window.Carousel.getInstance(this.el)?.dispose();
+    },
+    /**
+     * @private
+     */
+    _onSlideCarousel(ev) {
+        ev.currentTarget.classList.add(CAROUSEL_SLIDING_CLASS);
+    },
+    /**
+     * @private
+     */
+    _onSlidCarousel(ev) {
+        ev.currentTarget.classList.remove(CAROUSEL_SLIDING_CLASS);
     },
 });
 
