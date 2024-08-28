@@ -783,43 +783,41 @@ class AccountTax(models.Model):
             if batch['_original_price_include']:
 
                 # Suppose:
+                # 1.
                 # t1: price-excluded fixed tax of 1, include_base_amount
                 # t2: price-included 10% tax
                 # On a price unit of 120, t1 is computed first since the tax amount affects the price unit.
                 # Then, t2 can be computed on 120 + 1 = 121.
                 # However, since t1 is not price-included, its base amount is computed by removing first the tax amount of t2.
-                if not special_mode:
+                # 2.
+                # t1: price-included fixed tax of 1
+                # t2: price-included 10% tax
+                # On a price unit of 122, base amount of t2 is computed as 122 - 1 = 121
+                if special_mode in (False, 'total_included'):
+                    if not batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            if other_batch['_original_price_include']:
+                                add_extra_base(other_batch, tax_data, -1)
                     for other_batch in batches_before:
                         add_extra_base(other_batch, tax_data, -1)
 
                 # Suppose:
+                # 1.
                 # t1: price-included 10% tax
                 # t2: price-excluded 10% tax
                 # If the price unit is 121, the base amount of t1 is computed as 121 / 1.1 = 110
                 # With special_mode = 'total_excluded', 110 is provided as price unit.
                 # To compute the base amount of t2, we need to add back the tax amount of t1.
-                elif special_mode == 'total_excluded':
-                    for other_batch in batches_after:
-                        if not other_batch['price_include']:
-                            add_extra_base(other_batch, tax_data, 1)
-
-                # Suppose:
-                # t1: fixed tax of 1
+                # 2.
+                # t1: price-included fixed tax of 1, include_base_amount
                 # t2: price-included 10% tax
-                # t3: price-excluded 10% tax
-                # With a price unit of 121:
-                # The tax amount of t1 is 1.
-                # The tax amount of t2 is 121 * 0.1 / 1.1 = 11.
-                # The base of t2 is 121 - 11 = 110.
-                # The base of t1 is 110 - 1 = 109.
-                # The tax amount of t3 is 121 * 0.1 = 12.1.
-                # So, the total included is 109 + 1 + 11 + 12.1 = 133.1.
-                # With special_mode = 'total_included', 133.1 is provided as price unit.
-                # When evaluating t3 and t2, we need to subtract the amount of those taxes from the base of t1.
-                # The base of t1 is 133.1 - 12.1 - 11 - 1 = 109.
-                elif special_mode == 'total_included':
-                    for other_batch in batches_before:
-                        add_extra_base(other_batch, tax_data, -1)
+                # On a price unit of 121, with t1 being include_base_amount, the base amount of t2 is 121
+                # With special_mode = 'total_excluded' 109 is provided as price unit.
+                # To compute the base amount of t2, we need to add the tax amount of t1 first
+                else:  # special_mode == 'total_excluded'
+                    for other_batch in batches_after:
+                        if not other_batch['_original_price_include'] or batch['include_base_amount']:
+                            add_extra_base(other_batch, tax_data, 1)
 
             elif not batch['_original_price_include']:
 
@@ -830,6 +828,7 @@ class AccountTax(models.Model):
                             add_extra_base(other_batch, tax_data, 1)
 
                 # Suppose:
+                # 1.
                 # t1: price-excluded 10% tax, include base amount
                 # t2: price-excluded 10% tax
                 # On a price unit of 100,
@@ -838,10 +837,18 @@ class AccountTax(models.Model):
                 # With special_mode = 'total_included', 121 is provided as price unit.
                 # The tax amount of t2 is computed like a price-included tax: 121 / 1.1 = 110.
                 # Since t1 is 'include base amount', t2 has already been subtracted from the price unit.
-                elif special_mode == 'total_included':
+                # 2.
+                # t1: price-excluded fixed tax of 1
+                # t2: price-excluded 10% tax
+                # On a price unit of 110, the tax of t2 is 110 * 1.1 = 121
+                # With special_mode = 'total_included', 122 is provided as price unit.
+                # The base amount of t2 should be computed by removing the tax amount of t1 first
+                else:  # special_mode == 'total_included'
                     if not batch['include_base_amount']:
-                        for other_batch in batches_before + batches_after:
+                        for other_batch in batches_after:
                             add_extra_base(other_batch, tax_data, -1)
+                    for other_batch in batches_before:
+                        add_extra_base(other_batch, tax_data, -1)
 
     @api.model
     def _prepare_taxes_computation(
