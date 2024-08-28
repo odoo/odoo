@@ -294,7 +294,14 @@ class AccountMove(models.Model):
             tax_withheld_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_withheld_computed]
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
+            receiver_transaction_reference = (
+                line.sale_line_ids.order_id.client_order_ref[:20]
+                if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
+                else False
+            )
+
             invoice_line_values.update({
+                'ReceiverTransactionReference': receiver_transaction_reference,
                 'FileReference': self.ref[:20] if self.ref else False,
                 'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
