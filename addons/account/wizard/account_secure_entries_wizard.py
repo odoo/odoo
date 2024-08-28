@@ -251,6 +251,8 @@ class AccountSecureEntries(models.TransientModel):
         if not self.hash_date:
             raise UserError(_("Set a date. The moves will be secured up to including this date."))
 
+        self.env['res.groups']._activate_group_account_secured()
+
         if not self.move_to_hash_ids:
             return
 

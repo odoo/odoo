@@ -6371,6 +6371,20 @@ msgid "If ticked, the accounting entry or invoice receives a hash as soon as it 
 msgstr "Wenn angekreuzt, erhält der Buchhaltungseintrag oder Rechnung einen Hash, sobald diese gebucht wird, und kann nicht mehr geändert werden."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
+#: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
+#: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
+#: model:ir.model.fields,help:account.field_account_payment__restrict_mode_hash_table
+msgid ""
+"If ticked, when an entry is posted, we retroactively hash all moves in the "
+"sequence from the entry back to the last hashed entry. The hash can also be "
+"performed on demand by the Secure Entries wizard."
+msgstr ""
+"Wenn angekreuzt werden beim Buchen eines Buchungssatzes alle Buchunssätze "
+"in der Sequenz von dem Buchungssatz bis zurück zum letzten festgeschriebenen Buchungssatz retroaktiv festgeschrieben. Der Hash kann "
+"auch manuell mit dem Assistent zum Festschreiben ausgeführt werden."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "If you check this box, you will be able to collect payments using SEPA Direct Debit mandates."
 msgstr "Wenn Sie diese Option ankreuzen, können Sie Zahlungen mit SEPA-Einzugsermächtigungen entgegennehmen."
@@ -8437,6 +8451,13 @@ msgstr "Nicht fällig"
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__not_paid
 msgid "Not Paid"
 msgstr "Nicht bezahlt"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+msgid "Not Secured"
+msgstr "Nicht festgeschrieben"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__not_done
@@ -10670,6 +10691,13 @@ msgid "Secure Journal Entries"
 msgstr "Festschreiben"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
+#: model:ir.model.fields,field_description:account.field_account_move__secured
+#: model:ir.model.fields,field_description:account.field_account_payment__secured
+msgid "Secured"
+msgstr "Festgeschrieben"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
@@ -12896,6 +12924,12 @@ msgstr "Diese Zeile und die untergeordneten werden verborgen, wenn alle ihre Spa
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
 msgid "This matching rule is used when the user is not certain of all the information of the counterpart."
 msgstr "Diese Abgleichsregel wird verwendet, wenn der Benutzer nicht alle Informationen über das Gegenstück kennt."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This journal entry has been secured."
+msgstr "Dieser Buchungssatz wurde festgeschrieben"
 
 #. module: account
 #. odoo-python

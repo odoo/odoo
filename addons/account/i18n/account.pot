@@ -7405,9 +7405,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_payment__restrict_mode_hash_table
 msgid ""
-"If ticked, when the invoice is sent, the hash chain will be computed from "
-"the last move hashed to the new move to be hashed. The hash can also be "
-"performed on demand."
+"If ticked, when an entry is posted, we retroactively hash all moves in the "
+"sequence from the entry back to the last hashed entry. The hash can also be "
+"performed on demand by the Secure Entries wizard."
 msgstr ""
 
 #. module: account
@@ -9823,6 +9823,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__not_paid
 msgid "Not Paid"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+msgid "Not Secured"
 msgstr ""
 
 #. module: account
@@ -12355,6 +12362,13 @@ msgid "Secure Journal Entries"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
+#: model:ir.model.fields,field_description:account.field_account_move__secured
+#: model:ir.model.fields,field_description:account.field_account_payment__secured
+msgid "Secured"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
@@ -14870,7 +14884,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "This move has been locked."
+msgid "This journal entry has been secured."
 msgstr ""
 
 #. module: account
