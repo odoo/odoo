@@ -3,7 +3,7 @@
 import json
 
 from odoo.http import Controller, request, route, SessionExpiredException
-from ..models.bus import channel_with_db
+from ..models.bus import channel_with_db, fetch_notifications
 from ..websocket import WebsocketConnectionHandler
 
 
@@ -39,7 +39,7 @@ class WebsocketController(Controller):
         if bus_target := request.env["ir.websocket"]._get_missed_presences_bus_target():
             subscribe_data["missed_presences"]._send_presence(bus_target=bus_target)
         channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
-        notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
+        notifications = fetch_notifications(request.env.cr, channels_with_db, subscribe_data["last"])
         return {"channels": channels_with_db, "notifications": notifications}
 
     @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')

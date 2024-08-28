@@ -23,7 +23,7 @@ from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
 from odoo import api
-from .models.bus import dispatch
+from .models.bus import dispatch, fetch_notifications
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
@@ -630,6 +630,29 @@ class Websocket:
                         exc_info=True
                     )
 
+    def _assert_session_exists(self):
+        """Ensure the session linked to `self` still exists.
+
+        :raise SessionExpiredException: if the session does not exist anymore.
+        """
+        if not root.session_store.get(self._session.sid):
+            raise SessionExpiredException()
+
+    def _assert_session_not_expired(self, cr):
+        """Ensure the session linked to `self` is not expired.
+
+        :param cr: Database cursor.
+        :raise SessionExpiredException: if the session expired.
+        """
+        session = root.session_store.get(self._session.sid)
+        if not session:
+            raise SessionExpiredException()
+        if session.uid is not None:
+            env = api.Environment(cr, session.uid, session.context)
+            if not check_session(session, env):
+                raise SessionExpiredException()
+        self._timeout_manager.acknowledge_session_checked()
+
     def _dispatch_bus_notifications(self):
         """
         Dispatch notifications related to the registered channels. If
@@ -637,16 +660,14 @@ class Websocket:
         `SESSION_EXPIRED` close code. If no cursor can be acquired,
         close the connection with the `TRY_LATER` close code.
         """
-        session = root.session_store.get(self._session.sid)
-        if not session:
-            raise SessionExpiredException()
-        with acquire_cursor(session.db) as cr:
-            env = api.Environment(cr, session.uid, session.context)
-            if session.uid is not None and not check_session(session, env):
-                raise SessionExpiredException()
+        if session_check_required := self._timeout_manager.should_check_session():
+            self._assert_session_exists()
+        with acquire_cursor(self._db) as cr:
+            if session_check_required:
+                self._assert_session_not_expired(cr)
             # Mark the notification request as processed.
             self.__notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
+            notifications = fetch_notifications(cr, self._channels, self._last_notif_sent_id)
         if not notifications:
             return
         self._last_notif_sent_id = notifications[-1]['id']
@@ -660,16 +681,22 @@ class TimeoutReason(IntEnum):
 
 class TimeoutManager:
     """
-    This class handles the Websocket timeouts. If no response to a
-    PING/CLOSE frame is received after `TIMEOUT` seconds or if the
-    connection is opened for more than `self._keep_alive_timeout` seconds,
-    the connection is considered to have timed out. To determine if the
+    This class handles the Websocket timeouts.
+    - If no response to a PING/CLOSE frame is received after `TIMEOUT` seconds
+    or if the connection is opened for more than `self._keep_alive_timeout`
+    seconds, the connection is considered to have timed out. To determine if the
     connection has timed out, use the `has_timed_out` method.
+    - If the session was not checked in the last `SESSION_CHECK_DELAY`, the next
+    outgoing message should check it. To determine if session should be checked,
+    use the `should_check_session` method.
     """
     TIMEOUT = 15
     # Timeout specifying how many seconds the connection should be kept
     # alive.
     KEEP_ALIVE_TIMEOUT = int(config['websocket_keep_alive_timeout'])
+    # Delay specifying the maximum acceptable time in seconds without any
+    # session check for outgoing messages.
+    SESSION_CHECK_INTERVAL = int(config["websocket_session_check_interval"])
 
     def __init__(self):
         super().__init__()
@@ -685,6 +712,8 @@ class TimeoutManager:
         # Start time recorded when we started awaiting an answer to a
         # PING/CLOSE frame.
         self._waiting_start_time = None
+        # Time of the last session check.
+        self._last_session_check_time = None
 
     def acknowledge_frame_receipt(self, frame):
         if self._awaited_opcode is frame.opcode:
@@ -720,6 +749,17 @@ class TimeoutManager:
             self.timeout_reason = TimeoutReason.NO_RESPONSE
             return True
         return False
+
+    def acknowledge_session_checked(self):
+        self._last_session_check_time = time.time()
+
+    def should_check_session(self):
+        """Determine if the session should be checked. The session is checked if
+        it hasn't been in the last `SESSION_CHECK_INTERVAL` seconds.
+        """
+        return self._last_session_check_time is None or (
+            time.time() - self._last_session_check_time >= self.SESSION_CHECK_INTERVAL
+        )
 
 
 # ------------------------------------------------------
@@ -768,6 +808,7 @@ class WebsocketRequest:
             raise InvalidDatabaseException() from exc
 
         with closing(acquire_cursor(self.db)) as cr:
+            self.ws._assert_session_not_expired(cr)
             self.env = api.Environment(cr, self.session.uid, self.session.context)
             threading.current_thread().uid = self.env.uid
             service_model.retrying(
@@ -821,7 +862,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "17.0-1"
+    _VERSION = "17.0-2"
 
     @classmethod
     def websocket_allowed(cls, request):

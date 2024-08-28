@@ -4,7 +4,7 @@ import gc
 import json
 import os
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
@@ -109,6 +109,16 @@ class TestWebsocketCaryall(WebsocketCase):
         timeout_manager.acknowledge_frame_receipt(Frame(Opcode.CLOSE))
         self.assertIsNone(timeout_manager._awaited_opcode)
 
+    def test_timeout_manager_should_check_session(self):
+        timeout_manager = TimeoutManager()
+        self.assertTrue(timeout_manager.should_check_session())
+        timeout_manager.acknowledge_session_checked()
+        self.assertFalse(timeout_manager.should_check_session())
+
+        outdated_dt = datetime.now() + timedelta(seconds=TimeoutManager.SESSION_CHECK_INTERVAL + 1)
+        with freeze_time(outdated_dt):
+            self.assertTrue(timeout_manager.should_check_session())
+
     def test_user_login(self):
         websocket = self.websocket_connect()
         new_test_user(self.env, login='test_user', password='Password!1')
@@ -139,9 +149,11 @@ class TestWebsocketCaryall(WebsocketCase):
         # Simulate postgres notify. The session with whom the websocket
         # connected has been deleted. WebSocket should be closed without
         # receiving the message.
-        self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
-        self.trigger_notification_dispatching(["channel1"])
-        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+        outdated_dt = datetime.now() + timedelta(seconds=TimeoutManager.SESSION_CHECK_INTERVAL + 1)
+        with freeze_time(outdated_dt):
+            self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
+            self.trigger_notification_dispatching(["channel1"])
+            self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_channel_subscription_disconnect(self):
         websocket = self.websocket_connect()
@@ -290,3 +302,41 @@ class TestWebsocketCaryall(WebsocketCase):
             ws.close(CloseCode.CLEAN)
             self.wait_remaining_websocket_connections()
             self.assertTrue(mock.called)
+
+    def test_check_session(self):
+        websocket = self.websocket_connect()
+        original_assert = Websocket._assert_session_not_expired
+        call_count = 0
+
+        def mock_assert_session_not_expired(self, *args):
+            nonlocal call_count
+            original_assert(self, *args)
+            call_count += 1
+
+        with patch.object(
+            Websocket, "_assert_session_not_expired", mock_assert_session_not_expired
+        ):
+            # Incoming messages always trigger a session check regardless of the
+            # last time we checked.
+            self.subscribe(websocket, ["my_channel"], self.env["bus.bus"]._bus_last_id())
+            self.assertEqual(call_count, 1)
+            self.subscribe(websocket, ["my_channel"], self.env["bus.bus"]._bus_last_id())
+            self.assertEqual(call_count, 2)
+            # Outgoing message does not trigger a session check since the check
+            # is done within `TimeoutManager.SESSION_CHECK_INTERVAL` seconds.
+            self.env["bus.bus"]._sendone("my_channel", "notif_type", "message")
+            self.trigger_notification_dispatching(["my_channel"])
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(call_count, 2)
+            # Last check is outdated, session check should be triggered even for
+            # ontgoing messages.
+            outdated_dt = datetime.now() + timedelta(
+                seconds=TimeoutManager.SESSION_CHECK_INTERVAL + 1
+            )
+            with freeze_time(outdated_dt):
+                self.env["bus.bus"]._sendone("my_channel", "notif_type", "message")
+                self.trigger_notification_dispatching(["my_channel"])
+                notifications = json.loads(websocket.recv())
+                self.assertEqual(1, len(notifications))
+                self.assertEqual(call_count, 3)
