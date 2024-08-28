@@ -9,12 +9,19 @@ registry.category("web_tour.tours").add('shop_sale_ewallet', {
     test: true,
     url: '/shop',
     steps: () => [
-        // Add a small drawer to the order (50$)
-        ...wsTourUtils.addToCart({productName: "TEST - Small Drawer"}),
+        // Add a $50 gift card to the order
+        ...wsTourUtils.addToCart({productName: "TEST - Gift Card"}),
         wsTourUtils.goToCart(),
         {
             trigger: 'a:contains("Pay with eWallet")',
-            run: "click",
+            run() {
+                const rewards = document.querySelectorAll('form[name="claim_reward"]');
+                if (rewards.length === 1) {
+                    this.anchor.click();
+                } else {
+                    throw new TourError(`Expected 1 claimable reward, got: ${rewards.length}`);
+                }
+            },
         },
         {
             content: 'Checkout',
