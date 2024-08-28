@@ -512,6 +512,47 @@ test("open the command palette with a searchValue already in the searchbar", asy
     expect(queryAllTexts(".o_command")).toEqual(["Command1"]);
 });
 
+test("command palette keeps the same top position when its content changes", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const action = () => {};
+    const providers = [
+        {
+            provide: () => [
+                {
+                    name: "Command1",
+                    action,
+                },
+                {
+                    name: "Command2",
+                    action,
+                },
+                {
+                    name: "Command3",
+                    action,
+                },
+                {
+                    name: "Command4",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        providers,
+    };
+    getService("dialog").add(CommandPalette, {
+        config,
+    });
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(1);
+    expect(".o_command").toHaveCount(4);
+    expect(".o_command_palette").toHaveRect({ top: 120 });
+    await contains(".o_command_palette_search input").edit("z", { confirm: false });
+    await runAllTimers();
+    expect(".o_command").toHaveCount(0);
+    expect(".o_command_palette").toHaveRect({ top: 120 });
+});
+
 test("open the command palette with a namespace already in the searchbar", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const action = () => {};
