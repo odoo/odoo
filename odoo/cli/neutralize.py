@@ -4,7 +4,9 @@ import optparse
 import sys
 from pathlib import Path
 
-import odoo
+import odoo.modules.neutralize
+import odoo.sql_db
+import odoo.tools.config
 
 from . import Command
 

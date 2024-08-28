@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Modules (also called addons) management.
@@ -11,13 +10,16 @@ import sys
 import threading
 import time
 
-import odoo
-import odoo.modules.db
-import odoo.modules.graph
-import odoo.modules.migration
-import odoo.modules.registry
-from .. import SUPERUSER_ID, api, tools
+import odoo.sql_db
+import odoo.tools.sql
+import odoo.tools.translate
+from odoo import SUPERUSER_ID, api, tools
+
+from . import db as modules_db
+from .graph import Graph
+from .migration import MigrationManager
 from .module import adapt_version, initialize_sys_path, load_openerp_module
+from .registry import Registry
 
 _logger = logging.getLogger(__name__)
 
@@ -105,7 +107,7 @@ def force_demo(env):
     """
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
-    graph = odoo.modules.graph.Graph()
+    graph = Graph()
     env.cr.execute('UPDATE ir_module_module SET demo=True')
     env.cr.execute(
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
@@ -140,7 +142,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
     processed_modules = []
     loaded_modules = []
     registry = env.registry
-    migrations = odoo.modules.migration.MigrationManager(env.cr, graph)
+    migrations = MigrationManager(env.cr, graph)
     module_count = len(graph)
     _logger.info('loading %d modules...', module_count)
 
@@ -231,7 +233,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             migrations.migrate_module(package, 'post')
 
             # Update translations for all installed languages
-            overwrite = odoo.tools.config["overwrite_existing_translations"]
+            overwrite = tools.config["overwrite_existing_translations"]
             module._update_translations(overwrite=overwrite)
 
         if package.name is not None:
@@ -388,12 +390,12 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         # connection settings are automatically reset when the connection is
         # borrowed from the pool
         cr.execute("SET SESSION lock_timeout = '15s'")
-        if not odoo.modules.db.is_initialized(cr):
+        if not modules_db.is_initialized(cr):
             if not update_module:
                 _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
                 return
             _logger.info("init db")
-            odoo.modules.db.initialize(cr)
+            modules_db.initialize(cr)
             update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
             if not tools.config['without_demo']:
@@ -403,13 +405,13 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
-        graph = odoo.modules.graph.Graph()
+        graph = Graph()
         graph.add_module(cr, 'base', force)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
-        if update_module and odoo.tools.sql.table_exists(cr, 'ir_model_fields'):
+        if update_module and tools.sql.table_exists(cr, 'ir_model_fields'):
             # determine the fields which are currently translated in the database
             cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE translate IS TRUE")
             registry._database_translated_fields = {row[0] for row in cr.fetchall()}
@@ -508,7 +510,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
 
         # STEP 3.5: execute migration end-scripts
-        migrations = odoo.modules.migration.MigrationManager(cr, graph)
+        migrations = MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
 
@@ -559,7 +561,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                registry = odoo.modules.registry.Registry.new(
+                registry = Registry.new(
                     cr.dbname, force_demo, status, update_module
                 )
                 cr.reset()

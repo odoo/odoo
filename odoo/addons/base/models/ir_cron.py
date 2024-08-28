@@ -196,10 +196,7 @@ class ir_cron(models.Model):
         if not jobs:
             raise BadModuleState()
 
-        oldest = min([
-            fields.Datetime.from_string(job['nextcall'])
-            for job in jobs
-        ])
+        oldest = min(fields.Datetime.from_string(job['nextcall']) for job in jobs)
         if datetime.now() - oldest < MAX_FAIL_TIME:
             raise BadModuleState()
 
@@ -207,7 +204,8 @@ class ir_cron(models.Model):
         # per minute for 5h) in which case we assume that the crons are stuck
         # because the db has zombie states and we force a call to
         # reset_module_states.
-        odoo.modules.reset_modules_state(cr.dbname)
+        from odoo.modules.loading import reset_modules_state  # noqa: PLC0415
+        reset_modules_state(cr.dbname)
 
     @classmethod
     def _get_all_ready_jobs(cls, cr):
