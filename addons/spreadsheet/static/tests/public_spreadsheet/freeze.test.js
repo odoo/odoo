@@ -265,7 +265,8 @@ test("spilled pivot table", async function () {
     setCellContent(model, "A10", "=PIVOT(1)");
     setCellStyle(model, "B12", { bold: true });
     const data = await freezeOdooData(model);
-    const cells = data.sheets[0].cells;
+    const sheet = data.sheets[0];
+    const cells = sheet.cells;
     expect(cells.A10.content).toBe("(#1) Partner Pivot");
     expect(cells.A11.content).toBe("");
     expect(cells.A12.content).toBe("Total");
@@ -273,5 +274,9 @@ test("spilled pivot table", async function () {
     expect(cells.B11.content).toBe("Probability");
     expect(cells.B12.content).toBe("131");
     expect(data.formats[cells.B12.format]).toBe("#,##0.00");
-    expect(data.styles[cells.B12.style]).toEqual({ bold: true }, { message: "style is preserved" });
+    expect(sheet.styles).toEqual({ B12: 1 });
+    expect(data.styles[sheet.styles["B12"]]).toEqual(
+        { bold: true },
+        { message: "style is preserved" }
+    );
 });
