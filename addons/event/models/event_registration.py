@@ -325,6 +325,9 @@ class EventRegistration(models.Model):
     # MAILING / GATEWAY
     # ------------------------------------------------------------
 
+    def _mail_get_timezone(self):
+        return self.event_id.date_tz or super()._mail_get_timezone()
+
     def _message_compute_subject(self):
         if self.name:
             return _(
