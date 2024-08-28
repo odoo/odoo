@@ -1036,7 +1036,7 @@
                                     <span class="o_form_label mx-3 oe_edit_only"
                                           invisible="state != 'draft' or invoice_payment_term_id"> or </span>
                                     <field name="invoice_payment_term_id"
-                                           context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}"
+                                           context="{'example_date': invoice_date, 'example_amount': tax_totals['total_amount_currency']}"
                                            placeholder="Payment Terms"
                                            options="{'no_quick_create':True}" readonly="state in ['cancel', 'posted']"/>
                                 </div>

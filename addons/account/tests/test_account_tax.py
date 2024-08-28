@@ -37,10 +37,10 @@ class TestAccountTax(AccountTestInvoicingCommon):
         # Create two lines after creating the move so that those lines are not used in the move
         self.company_data['default_tax_sale'].write({
             'invoice_repartition_line_ids': [
-                Command.create({'repartition_type': 'tax'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 0.0}),
             ],
             'refund_repartition_line_ids': [
-                Command.create({'repartition_type': 'tax'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 0.0}),
             ],
         })
 
@@ -102,21 +102,21 @@ class TestAccountTax(AccountTestInvoicingCommon):
 
         self.company_data['default_tax_sale'].write({
             'invoice_repartition_line_ids': [
-                Command.create({'repartition_type': 'tax'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
             ],
             'refund_repartition_line_ids': [
-                Command.create({'repartition_type': 'tax'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
             ],
         })
         self.flush_tracking()
 
         previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
         self.assertIn(
-            "New Invoice repartition line 4: 100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "New Invoice repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
             previews
         )
         self.assertIn(
-            "New Refund repartition line 4: 100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "New Refund repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
             previews
         )
 
@@ -125,19 +125,21 @@ class TestAccountTax(AccountTestInvoicingCommon):
 
         self.set_up_and_use_tax()
 
-        last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
-        last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
+        last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
+        last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
 
         self.company_data['default_tax_sale'].write({
             "invoice_repartition_line_ids": [
                 Command.update(last_invoice_rep_line.id, {
-                    'factor_percent': -50,
+                    'factor_percent': -100,
                     'tag_ids': [Command.create({'name': 'TaxTag12345'})]
                 }),
             ],
             "refund_repartition_line_ids": [
                 Command.update(last_refund_rep_line.id, {
-                    'factor_percent': -50,
+                    'factor_percent': -100,
                     'account_id': self.company_data['default_account_tax_purchase'].id,
                 }),
             ],
@@ -145,28 +147,32 @@ class TestAccountTax(AccountTestInvoicingCommon):
         self.flush_tracking()
 
         previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
-        self.assertIn("Invoice repartition line 3: 100.0 -50.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
-        self.assertIn("Refund repartition line 3: 100.0 -50.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
+        self.assertIn("Invoice repartition line 3: 0.0 -100.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
+        self.assertIn("Refund repartition line 3: 0.0 -100.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
 
     def test_logging_of_repartition_lines_reordering_when_tax_is_used(self):
         """ Reordering repartition lines in a used tax should be logged. """
 
         self.set_up_and_use_tax()
 
-        before_last_invoice_rep_line, last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids.sorted(key=lambda r: r.sequence)[-2:]
+        last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
+        last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
 
         self.company_data['default_tax_sale'].write({
             "invoice_repartition_line_ids": [
-                Command.update(before_last_invoice_rep_line.id, {
-                    'sequence': last_invoice_rep_line.sequence + 1,
-                }),
+                Command.update(last_invoice_rep_line.id, {'sequence': 0}),
+            ],
+            "refund_repartition_line_ids": [
+                Command.update(last_refund_rep_line.id, {'sequence': 0}),
             ],
         })
         self.flush_tracking()
 
         previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
-        self.assertIn("Invoice repartition line 2: 251000 Tax Received None (Account) True False (Use in tax closing)", previews)
-        self.assertIn("Invoice repartition line 3: None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
+        self.assertIn("Invoice repartition line 1: 100.0 0.0 (Factor Percent)", previews)
+        self.assertIn("Invoice repartition line 3: 0.0 100.0 (Factor Percent) None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
 
     def test_logging_of_repartition_lines_removal_when_tax_is_used(self):
         """ Deleting repartition lines in a used tax should be logged. """
@@ -188,11 +194,11 @@ class TestAccountTax(AccountTestInvoicingCommon):
 
         previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
         self.assertIn(
-            "Removed Invoice repartition line 3: 100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "Removed Invoice repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
             previews
         )
         self.assertIn(
-            "Removed Refund repartition line 3: 100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            "Removed Refund repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
             previews
         )
 

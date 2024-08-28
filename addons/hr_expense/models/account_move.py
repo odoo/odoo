@@ -63,6 +63,13 @@ class AccountMove(models.Model):
                     }
                 }
 
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        # EXTENDS 'account'
+        results = super()._prepare_product_base_line_for_taxes_computation(product_line)
+        if product_line.expense_id:
+            results['special_mode'] = 'total_included'
+        return results
+
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # EXTENDS account
         own_expense_moves = self.filtered(lambda move: move.expense_sheet_id.payment_mode == 'own_account')
