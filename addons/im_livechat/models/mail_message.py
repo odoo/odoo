@@ -41,27 +41,20 @@ class MailMessage(models.Model):
                     .sudo()
                     .search([("mail_message_id", "=", message.id)], limit=1)
                 )
-                if chatbot_message.script_step_id:
+                if step := chatbot_message.script_step_id:
+                    step_data = {
+                        "id": (step.id, channel.id),
+                        "message": Store.one(message, only_id=True),
+                        "scriptStep": Store.one(step, only_id=True),
+                        "operatorFound": step.step_type == "forward_operator"
+                        and len(channel.channel_member_ids) > 2,
+                    }
+                    if answer := chatbot_message.user_script_answer_id:
+                        step_data["selectedAnswer"] = Store.one(answer, only_id=True)
+                    store.add("ChatbotStep", step_data)
                     store.add(
                         message,
-                        {
-                            "chatbotStep": {
-                                "message": Store.one_id(message),
-                                "scriptStep": Store.one_id(chatbot_message.script_step_id),
-                                "chatbot": {
-                                    "script": Store.one_id(
-                                        chatbot_message.script_step_id.chatbot_script_id
-                                    ),
-                                    "thread": Store.one_id(channel),
-                                },
-                                "selectedAnswer": Store.one_id(
-                                    chatbot_message.user_script_answer_id
-                                ),
-                                "operatorFound": channel.chatbot_current_step_id.step_type
-                                == "forward_operator"
-                                and len(channel.channel_member_ids) > 2,
-                            },
-                        },
+                        {"chatbotStep": {"scriptStep": step.id, "message": message.id}},
                     )
 
     def _author_to_store(self, store: Store):

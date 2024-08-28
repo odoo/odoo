@@ -11,7 +11,7 @@
             <ul class="p-0 m-0" t-if="props.message.chatbotStep?.answers and !props.message.chatbotStep.selectedAnswer">
                 <li
                     t-foreach="props.message.chatbotStep?.answers" t-as="answer" t-key="answer.id"
-                    t-esc="answer.label" t-on-click="() => this.answerChatbot(answer)"
+                    t-esc="answer.name" t-on-click="() => this.answerChatbot(answer)"
                     class="btn btn-outline-primary d-block mt-2 py-2"
                 />
             </ul>

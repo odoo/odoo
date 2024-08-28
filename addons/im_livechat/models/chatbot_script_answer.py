@@ -3,6 +3,7 @@
 
 from odoo import api, models, fields
 from odoo.osv import expression
+from odoo.addons.mail.tools.discuss import Store
 
 import textwrap
 
@@ -56,3 +57,8 @@ class ChatbotScriptAnswer(models.Model):
             domain = expression.AND([domain, [('chatbot_script_id', '=', force_domain_chatbot_script_id)]])
 
         return self._search(domain, limit=limit, order=order)
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        if fields is None:
+            fields = ["name", "redirect_link"]
+        store.add("chatbot.script.answer", self._read_format(fields, load=False))
