@@ -26,6 +26,7 @@ test("inserted value from dynamic placeholder should contain the data-oe-t-inlin
             dynamicPlaceholderResModel: "res.users",
         },
     });
+    onRpc("/web/dataset/call_kw/res.users/mail_get_partner_fields", () => ['partner_id']);
 
     await insertText(editor, "/dynamicplaceholder");
     await press("Enter");
