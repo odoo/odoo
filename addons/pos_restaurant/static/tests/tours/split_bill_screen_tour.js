@@ -24,6 +24,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             ProductScreen.addOrderline("Coca-Cola", "1", "2", "2.0"),
+            ProductScreen.clickReview(),
             ProductScreen.clickControlButton("Split"),
 
             // Check if the screen contains all the orderlines

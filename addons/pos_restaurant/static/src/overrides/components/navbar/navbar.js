@@ -38,7 +38,6 @@ patch(Navbar.prototype, {
         return true;
     },
     setFloatingOrder(floatingOrder) {
-        this.pos.selectedTable = null;
         this.pos.set_order(floatingOrder);
 
         const props = {};
