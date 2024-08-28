@@ -1,0 +1,579 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_account_withholding
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.4a1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-12 02:39+0000\n"
+"PO-Revision-Date: 2025-06-12 15:59+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/product_template.py:0
+msgid "%(amount)s Excl. Taxes"
+msgstr "%(amount)s Sebelum Pajak"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/product_template.py:0
+msgid "%(amount)s Incl. Taxes"
+msgstr "%(amount)s Termasuk Pajak"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/product_template.py:0
+msgid "%(amount)s Tax Withheld"
+msgstr "%(amount)s Pajak Dipotong"
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.report_payment_receipt_document
+msgid "<span>Amount</span>"
+msgstr "<span>Jumlah</span>"
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.report_payment_receipt_document
+msgid "<span>Base</span>"
+msgstr "<span>Pokok</span>"
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.report_payment_receipt_document
+msgid "<span>Tax</span>"
+msgstr "<span>Pajak</span>"
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.report_payment_receipt_document
+msgid "<span>Withholding number</span>"
+msgstr "<span>Angka pemotongan</span>"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__account_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__account_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__account_id
+msgid "Account"
+msgstr "Akun"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/wizards/account_payment_register_withholding_line.py:0
+msgid "All withholding lines in self must have the same payment register."
+msgstr "Semua baris pemotongan harus memiliki daftar pembayaran yang sama."
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_payment_withholding_line.py:0
+msgid "All withholding lines in self must have the same payment."
+msgstr "Semua baris pemotongan harus memiliki pembayaran yang sama."
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__analytic_distribution
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__analytic_distribution
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribusi Analitik"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__analytic_precision
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__analytic_precision
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "Ketepatan Analitik"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__comodel_currency_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__comodel_currency_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__comodel_currency_id
+msgid "Comodel Currency"
+msgstr "Mata Uang Comodel"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__comodel_date
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__comodel_date
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__comodel_date
+msgid "Comodel Date"
+msgstr "Tanggal Comodel"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__comodel_payment_type
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__comodel_payment_type
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__comodel_payment_type
+msgid "Comodel Payment Type"
+msgstr "Tipe Pembayaran Comodel"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__comodel_percentage_paid_factor
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__comodel_percentage_paid_factor
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__comodel_percentage_paid_factor
+msgid "Comodel Percentage Paid Factor"
+msgstr "Faktor Persentase Pembayaran Comodel"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_res_company
+msgid "Companies"
+msgstr "Perusahaan-Perusahaan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__company_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__company_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__create_uid
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__create_date
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__comodel_company_currency_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__comodel_company_currency_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__comodel_company_currency_id
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__withholding_default_account_id
+msgid "Default Account"
+msgstr "Akun Default"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__display_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__display_withholding
+msgid "Display Withholding"
+msgstr "Tampilan Pemotongan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Akun Distribusi Analitik"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__placeholder_type__given_by_name
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__previous_placeholder_type__given_by_name
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__placeholder_type__given_by_name
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__previous_placeholder_type__given_by_name
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__placeholder_type__given_by_name
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__previous_placeholder_type__given_by_name
+msgid "Given By the Name"
+msgstr "Diberikan Berdasarkan Nama"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__placeholder_type__given_by_sequence
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__previous_placeholder_type__given_by_sequence
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__placeholder_type__given_by_sequence
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__previous_placeholder_type__given_by_sequence
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__placeholder_type__given_by_sequence
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__previous_placeholder_type__given_by_sequence
+msgid "Given By the Sequence"
+msgstr "Diberikan Berdasarkan Urutan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_tax__is_withholding_tax_on_payment
+msgid ""
+"If enabled, this tax will not affect your accounts until the registration of"
+" payments."
+msgstr ""
+"Bila diaktifkan, pajak ini tidak akan berdampak ke akun Anda sampai pendaftaran "
+"pembayaran."
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__write_uid
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diupdate oleh"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__write_date
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diupdate pada"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__withholding_net_amount
+msgid "Net Amount"
+msgstr "Jumlah Bersih"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_payment_register__withholding_net_amount
+msgid "Net amount after deducting the withholding lines"
+msgstr "Jumlah bersih setelah dikurangi baris pemotongan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__placeholder_type__not_defined
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__previous_placeholder_type__not_defined
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__placeholder_type__not_defined
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__previous_placeholder_type__not_defined
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__placeholder_type__not_defined
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__previous_placeholder_type__not_defined
+msgid "Not defined"
+msgstr "Tidak didefinisikan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__original_base_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__original_base_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__original_base_amount
+msgid "Original Base Amount"
+msgstr "Jumlah Pokok Awal"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__original_tax_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__original_tax_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__original_tax_amount
+msgid "Original Tax Amount"
+msgstr "Jumlah Pajak Awal"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__outstanding_account_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__withholding_outstanding_account_id
+msgid "Outstanding Account"
+msgstr "Akun Piutang"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_account_payment_register
+msgid "Pay"
+msgstr "Bayar"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__payment_id
+msgid "Payment"
+msgstr "Pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__withholding_payment_account_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__withholding_payment_account_id
+msgid "Payment Account"
+msgstr "Akun Pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__payment_register_id
+msgid "Payment Register"
+msgstr "Daftar Pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_account_payment_register_withholding_line
+msgid "Payment register withholding line"
+msgstr "Baris pemotongan daftar pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_account_payment_withholding_line
+msgid "Payment withholding line"
+msgstr "Baris pemotongan pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_account_payment
+msgid "Payments"
+msgstr "Pembayaran-Pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__placeholder_type
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__placeholder_type
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__placeholder_type
+msgid "Placeholder Type"
+msgstr "Tipe Placeholder"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__placeholder_value
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__placeholder_value
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__placeholder_value
+msgid "Placeholder Value"
+msgstr "Nilai Placeholder"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_withholding_line.py:0
+msgid "Please enter the withholding number for the tax %(tax_name)s"
+msgstr "Silakan masukkan angka pemotongan untuk pajak %(tax_name)s"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_payment_register_withholding_line__placeholder_value
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_payment_withholding_line__placeholder_value
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_withholding_line__placeholder_value
+msgid "Populated by the comodel during edition of the line."
+msgstr "Silakan masukkan angka pemotongan untuk pajak %(tax_name)s."
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__previous_placeholder_type
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__previous_placeholder_type
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__previous_placeholder_type
+msgid "Previous Placeholder Type"
+msgstr "Tipe Placeholder Sebelumnya"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_product_template
+msgid "Product"
+msgstr "Produk"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__comodel_payment_type__inbound
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__comodel_payment_type__inbound
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__comodel_payment_type__inbound
+msgid "Receive Money"
+msgstr "Terima Uang"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_register_withholding_line__comodel_payment_type__outbound
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_payment_withholding_line__comodel_payment_type__outbound
+#: model:ir.model.fields.selection,name:l10n_account_withholding.selection__account_withholding_line__comodel_payment_type__outbound
+msgid "Send Money"
+msgstr "Kirim Uang"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__name
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__name
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_form
+msgid "Sequence Number"
+msgstr "Nomor Urut"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__source_base_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__source_base_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__source_base_amount
+msgid "Source Base Amount"
+msgstr "Jumlah Pokok Sumber"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__source_base_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__source_base_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__source_base_amount_currency
+msgid "Source Base Amount Currency"
+msgstr "Mata Uang Jumlah Pokok Sumber"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__source_currency_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__source_currency_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__source_currency_id
+msgid "Source Currency"
+msgstr "Mata Uang Sumber"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__source_tax_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__source_tax_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__source_tax_id
+msgid "Source Tax"
+msgstr "Pajak Sumber"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__source_tax_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__source_tax_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__source_tax_amount
+msgid "Source Tax Amount"
+msgstr "Jumlah Pajak Sumber"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__source_tax_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__source_tax_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__source_tax_amount_currency
+msgid "Source Tax Amount Currency"
+msgstr "Mata Uang Jumlah Pajak Sumber"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_account_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__tax_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__tax_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__tax_id
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_form
+msgid "Tax"
+msgstr "Pajak"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_withholding_line.py:0
+msgid "The account \"%(account_name)s\" is not valid to use on withholding lines."
+msgstr ""
+"Akun \"%(account_name)s\" tidak valid untuk digunakan pada baris pemotongan."
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_withholding_line.py:0
+msgid "The base amount of a withholding tax line must be above 0."
+msgstr "Jumlah pokok baris pemotongan pajak harus di atas 0."
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/wizards/account_payment_register.py:0
+msgid "The withholding net amount cannot be negative."
+msgstr "Jumlah bersih pemotongan tidak bisa negatif."
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,help:l10n_account_withholding.field_res_company__withholding_tax_base_account_id
+#: model:ir.model.fields,help:l10n_account_withholding.field_res_config_settings__withholding_tax_base_account_id
+msgid "This account will be set on withholding tax base lines."
+msgstr "Akun ini akan ditetapkan pada baris pokok pemotongan pajak."
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_payment_register_withholding_line__withholding_sequence_id
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_payment_withholding_line__withholding_sequence_id
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_tax__withholding_sequence_id
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_withholding_line__withholding_sequence_id
+msgid ""
+"This sequence will be used to generate default numbers on payment "
+"withholding lines."
+msgstr ""
+"Urutan ini akan digunakan untuk membuat angka-angka default di baris pemotongan "
+"pembayaran."
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_form
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_register_form
+msgid "Total Withheld Amount"
+msgstr "Jumlah Total Pemotongan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__type_tax_use
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__type_tax_use
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__type_tax_use
+msgid "Type Tax Use"
+msgstr "Tipe Pajak yang Digunakan"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_withholding_line.py:0
+msgid "WH Base Counterpart: %(names)s"
+msgstr "Counterpart Pokok Pemotongan: %(names)s"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_withholding_line.py:0
+msgid "WH Base: %(names)s"
+msgstr "Pokok Pemotongan: %(names)s"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_withholding_line.py:0
+msgid "WH Tax: %(name)s"
+msgstr "Pemotongan Pajak: %(name)s"
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_form
+msgid "Withheld Amount"
+msgstr "Jumlah yang Dipotong"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_tax__is_withholding_tax_on_payment
+msgid "Withhold On Payment"
+msgstr "Potong Pada Pembayaran"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__should_withhold_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__should_withhold_tax
+msgid "Withhold Tax Amounts"
+msgstr "Jumlah Pajak yang Dipotong"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,help:l10n_account_withholding.field_account_payment__should_withhold_tax
+msgid "Withhold tax amounts from the payment amount."
+msgstr "Jumlah pajak yang dipotong dari jumlah pembayaran."
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_form
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.view_account_payment_register_form
+msgid "Withholding"
+msgstr "Pemotongan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__withholding_hide_tax_base_account
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__withholding_hide_tax_base_account
+msgid "Withholding Hide Tax Base Account"
+msgstr "Sembunyikan Akun Pokok Pemotongan Pajak"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment__withholding_line_ids
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register__withholding_line_ids
+msgid "Withholding Lines"
+msgstr "Baris-Baris Pemotongan"
+
+#. module: l10n_account_withholding
+#. odoo-python
+#: code:addons/l10n_account_withholding/models/account_tax.py:0
+msgid ""
+"Withholding On Payment taxes cannot use the 'Group of Taxes' or the "
+"'Percentage Tax Included' computations."
+msgstr ""
+"Pajak Pemotongan Pada Pembayaran tidak dapat menggunakan komputasi 'Kelompok "
+"Pajak-Pajak' atau 'Termasuk Persentase Pajak'."
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__withholding_sequence_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__withholding_sequence_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_tax__withholding_sequence_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__withholding_sequence_id
+msgid "Withholding Sequence"
+msgstr "Urutan Pemotongan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_res_company__withholding_tax_base_account_id
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_res_config_settings__withholding_tax_base_account_id
+msgid "Withholding Tax Base"
+msgstr "Pokok Pemotongan Pajak"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__amount
+msgid "Withholding amount"
+msgstr "Jumlah pemotongan"
+
+#. module: l10n_account_withholding
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_register_withholding_line__base_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_payment_withholding_line__base_amount
+#: model:ir.model.fields,field_description:l10n_account_withholding.field_account_withholding_line__base_amount
+msgid "Withholding base"
+msgstr "Pokok pemotongan"
+
+#. module: l10n_account_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding.res_config_settings_form
+msgid "Withholding:"
+msgstr "Pemotongan:"
+
+#. module: l10n_account_withholding
+#: model:ir.model,name:l10n_account_withholding.model_account_withholding_line
+msgid "withholding line"
+msgstr "baris pemotongan"
