@@ -338,7 +338,8 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
     /**
      * @override
      */
-    cleanForSave() {
+    async cleanForSave() {
+        await this._super(...arguments);
         if (this.$target.hasClass('slideshow')) {
             this.$target.removeAttr('style');
         }

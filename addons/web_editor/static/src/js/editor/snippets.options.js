@@ -9848,6 +9848,38 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
  */
 registry.CarouselHandler = registry.GalleryHandler.extend({
 
+    /**
+     * @override
+     */
+    async onFocus() {
+        await this._super(...arguments);
+
+        // Neutralize carousel (stop it from auto sliding)
+        const carouselEl = this._getCarouselElement();
+        if (carouselEl && carouselEl.dataset.bsRide) {
+            carouselEl.dataset.previousBsRide = carouselEl.dataset.bsRide;
+            delete carouselEl.dataset.bsRide;
+            this._recreateCarouselInstance();
+        }
+    },
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        await this._super(...arguments);
+
+        // Restore carousel
+        const carouselEl = this._getCarouselElement();
+        if (carouselEl) {
+            const hasInterval = ![undefined, "false", "0"].includes(carouselEl.dataset.bsInterval);
+            if (hasInterval && carouselEl.dataset.previousBsRide) {
+                carouselEl.dataset.bsRide = carouselEl.dataset.previousBsRide;
+                delete carouselEl.dataset.previousBsRide;
+                this._recreateCarouselInstance();
+            }
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -9875,6 +9907,24 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
         carouselEl.classList.add("slide");
         // Prevent the carousel from automatically sliding afterwards.
         $(carouselEl).carousel("pause");
+    },
+    /**
+     * @private
+     */
+    _getCarouselElement() {
+        const el = this.$target[0];
+        return el.matches(".carousel") ? el : el.querySelector(".carousel");
+    },
+    /**
+     * @private
+     */
+    _recreateCarouselInstance() {
+        const carouselEl = this._getCarouselElement();
+        if (carouselEl) {
+            const iframeWindow = this.ownerDocument.defaultView;
+            iframeWindow.Carousel.getInstance(carouselEl)?.dispose();
+            iframeWindow.Carousel.getOrCreateInstance(carouselEl);
+        }
     },
 });
 
