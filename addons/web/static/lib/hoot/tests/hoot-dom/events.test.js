@@ -24,9 +24,8 @@ import {
     setInputRange,
     uncheck,
 } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { mockUserAgent } from "../../mock/navigator";
-import { advanceTime, animationFrame } from "../../mock/time";
 import { parseUrl, waitForIframes } from "../local_helpers";
 
 /**
@@ -143,10 +142,16 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("click", async () => {
+        mockTouch(false);
+
         await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
-        click("button");
+        const events = click("button");
+        const clickEvent = events.find((ev) => ev.type === "click");
+
+        expect(clickEvent.pointerId).toBeGreaterThan(0);
+        expect(clickEvent.pointerType).toBe("mouse");
 
         expect.verifySteps([
             // Hover
