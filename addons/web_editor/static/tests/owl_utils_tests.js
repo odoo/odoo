@@ -1,7 +1,7 @@
 import { attachComponent } from "@web_editor/js/core/owl_utils";
 
 import { getFixture } from "@web/../tests/helpers/utils";
-import Widget from "@web_editor/js/core/widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import {
     Component,
     onMounted,
@@ -31,7 +31,7 @@ QUnit.module("Owl Compatibility", function () {
             }
         }
 
-        const CustomWidget = Widget.extend({
+        const CustomWidget = publicWidget.Widget.extend({
             async start() {
                 this.el.id = "widget";
                 this.component = await attachComponent(this, this.el, CustomComponent, { text: "Hello" });

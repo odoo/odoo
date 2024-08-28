@@ -4,7 +4,7 @@ import { clamp } from "@web/core/utils/numbers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService, useBus } from "@web/core/utils/hooks";
 import dom from "@web/legacy/js/core/dom";
-import Widget from "@web_editor/js/core/widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
 import options from "@web_editor/js/editor/snippets.options";
 import weUtils from "@web_editor/js/common/utils";
@@ -185,7 +185,7 @@ function scrollTo(el, options = {}) {
 /**
  * Management of the overlay and option list for a snippet.
  */
-var SnippetEditor = Widget.extend({
+var SnippetEditor = publicWidget.Widget.extend({
     template: 'web_editor.snippet_overlay',
     events: {
         'click .oe_snippet_remove': '_onRemoveClick',
@@ -206,7 +206,7 @@ var SnippetEditor = Widget.extend({
 
     /**
      * @constructor
-     * @param {Widget} parent
+     * @param {PublicWidget} parent
      * @param {Element} target
      * @param {Object} templateOptions
      * @param {jQuery} $editable
