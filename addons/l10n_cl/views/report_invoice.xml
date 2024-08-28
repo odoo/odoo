@@ -104,10 +104,6 @@
                 <span t-out="o.invoice_date_due" t-options='{"widget": "date"}'/>
                 <br/>
 
-                <strong>Payment Terms:</strong>
-                <span t-out="o.invoice_payment_term_id.name or ''"/>
-
-
                 <t t-if="o.invoice_incoterm_id">
                     <br/>
                     <strong>Incoterm:</strong>
@@ -213,6 +209,10 @@
                 <div name="transferable-legend" class="col-6 text-end"/>
             </div>
         </xpath>
+
+        <!-- Disable the recap of tax totals in company currency at the bottom right of the invoice
+        to prevent duplicate info since it's already present in our custom tax totals-->
+        <xpath expr="//div[@id='right-elements']/t[@t-call='account.document_tax_totals_company_currency_template']" position="replace"/>
 
         <xpath expr="//span[@t-field='line.name']" position="replace">
             <t t-set="all_taxes" t-value="'all_taxes'"/>
