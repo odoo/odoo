@@ -1,6 +1,6 @@
-import { expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
+import { expect, mountOnFixture, test } from "@odoo/hoot";
 import { drag, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, advanceFrame, runAllTimers } from "@odoo/hoot-mock";
+import { advanceFrame, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
@@ -337,9 +337,11 @@ test("draggable area contains overflowing visible elements", async () => {
                 elements: ".item",
                 groups: ".list",
                 connectGroups: true,
+                touchDelay: 0,
             });
         }
     }
+
     await mountWithCleanup(List);
 
     const controller = queryFirst(".controller");
@@ -352,32 +354,23 @@ test("draggable area contains overflowing visible elements", async () => {
     expect(renderer.getBoundingClientRect().width).toBe(600);
     expect(renderer).toHaveProperty("scrollWidth", 900);
     expect(".item.o_dragged").toHaveCount(0);
-    const { cancel, moveTo } = drag(".item11");
+
+    const { cancel, moveTo } = await contains(".item11").drag();
 
     // Drag first record of first group to the right
-    moveTo(queryFirst(".list3 .item"));
-
-    // Next frame (normal time delta)
-    await animationFrame();
+    await moveTo(".list3 .item:first");
 
     // Verify that there is no scrolling
     expect(content).toHaveProperty("scrollLeft", 0);
     expect(".item.o_dragged").toHaveCount(1);
 
-    const dragged = queryFirst(".item.o_dragged");
-    const sibling = queryFirst(".list3 .item");
     // Verify that the dragged element is allowed to go inside the
     // overflowing part of the draggable container.
-    expect(dragged.getBoundingClientRect().right).toBe(
-        900 + getFixture().getBoundingClientRect().x
-    );
-    expect(sibling.getBoundingClientRect().right).toBe(
-        900 + getFixture().getBoundingClientRect().x
-    );
+    expect(".item.o_dragged").toHaveRect({ right: 900 });
+    expect(".list3 .item:first").toHaveRect({ right: 900 });
 
-    // Cancel drag: press "Escape"
-    cancel();
-    await animationFrame();
+    // Cancel drag
+    await cancel();
 
     expect(".item.o_dragged").toHaveCount(0);
 });
@@ -452,29 +445,27 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
 
     await mountWithCleanup(List);
 
-    async function dnd(listItem, position) {
-        const { drop, moveTo } = drag(listItem);
-        moveTo(listItem, { position, relative: true });
-        await animationFrame();
-        drop();
-    }
-    const listItem = queryFirst(".item:first-child");
-
-    // Move the element from only 5 pixels
-    await dnd(listItem, {
-        x: listItem.getBoundingClientRect().width / 2,
-        y: listItem.getBoundingClientRect().height / 2 + 5,
+    const listItem = queryFirst(".item");
+    const { cancel, moveTo } = await contains(listItem).drag({
+        initialPointerMoveDistance: 0,
+        position: { x: 0, y: 0 }, // Move the element from only 5 pixels
+        relative: true,
     });
-    // No drag sequence should have been initiated
+    await moveTo(listItem, {
+        position: { x: 0, y: 5 },
+        relative: true,
+    });
+
     expect.verifySteps([]);
 
-    // Move the element from more than 10 pixels
-    await dnd(listItem, {
-        x: listItem.getBoundingClientRect().width / 2 + 10,
-        y: listItem.getBoundingClientRect().height / 2 + 10,
+    await moveTo(listItem, {
+        position: { x: 10, y: 10 }, // Move the element from more than 10 pixels
+        relative: true,
     });
-    // A drag sequence should have been initiated
+
     expect.verifySteps(["Initiation of the drag sequence"]);
+
+    await cancel();
 });
 
 test("Ignore specified elements", async () => {
