@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_website_form_info" name="Form Info">
+    <section class="s_website_form_info pb24 pt24 o_cc o_cc2">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="12">
+                <div class="o_grid_item o_grid_item_image g-col-lg-5 g-height-4 col-lg-5 col-12" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 16px; grid-area: 1 / 1 / 5 / 6; z-index: 1;">
+                    <img class="img img-fluid" src="/web/image/website.s_website_form_info_default_image" alt=""/>
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-4 col-lg-5 col-12" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 0px; grid-area: 5 / 1 / 9 / 6; z-index: 2;">
+                    <h2 style="text-align: left;">Contact Us</h2>
+                    <p style="text-align: left;">We'd love to hear from you! Whether you have questions, feedback, or need support, our team is here to help. Simply fill out the form below, and we aim to respond to all inquiries within 24 hours. Thank you for getting in touch!</p>
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-3 col-lg-5 col-12" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 8px; grid-area: 10 / 1 / 13 / 6; z-index: 3;">
+                    <i class="fa fa-fw fa-envelope o_not-animable" role="img"/>
+                    &#160;&#160;yourcompany@example.com
+                    <br/>
+                    <br/>
+                    <i class="fa fa-fw fa-phone o_not-animable" role="img"/>
+                    &#160;&#160; +32(0)499 123 456
+                    <br/>
+                    <br/>
+                    <i class="fa fa-fw fa-map-marker o_not-animable" role="img"/>
+                    &#160;&#160;Brussels, Belgium
+                </div>
+                <div class="o_grid_item g-col-lg-6 g-height-12 col-lg-6 col-12" style="--grid-item-padding-x: 0px; grid-area: 1 / 7 / 13 / 13; z-index: 4;">
+                    <t t-snippet-call="website.s_website_form"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
