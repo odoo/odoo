@@ -946,7 +946,7 @@ class ChromeBrowser():
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
-        self.window_size = window_size
+        self.window_size = window_size.replace('x', ',')
         self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
