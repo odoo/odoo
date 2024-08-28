@@ -70,7 +70,7 @@ export class WebsiteSwitcherSystray extends Component {
                     }
                 }
             },
-            class: website.id === this.websiteService.currentWebsite.id ? 'active' : '',
+            class: website.id === this.websiteService.currentWebsite.id ? 'text-truncate active' : 'text-truncate',
         }));
     }
 }

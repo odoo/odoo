@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 <t t-name="website.WebsiteSwitcherSystray">
     <div class="o_menu_systray_item o_website_switcher_container">
-        <Dropdown>
+        <Dropdown menuClass="{'mw-100': false}">
             <button data-hotkey="w" class="mx-1 border-0">
-                <div class="d-none d-md-block">
-                    <span t-esc="websiteService.currentWebsite.name" class="me-2"/>
+                <div class="d-none d-md-flex align-items-md-center">
+                    <span t-esc="websiteService.currentWebsite.name" class="me-2 text-truncate" style="max-width: 200px"/>
                     <i class="fa fa-caret-down"/>
                 </div>
                 <div class="d-md-none">
