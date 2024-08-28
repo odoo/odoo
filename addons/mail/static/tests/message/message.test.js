@@ -88,6 +88,34 @@ test("Edit message (mobile)", async () => {
     await contains(".o-mail-Message-content", { text: "edited message" });
 });
 
+test("Editing message keeps the mentioned channels", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong", { text: "#other" });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o_channel_redirect", { count: 1, text: "#other" });
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", {
+        value: "#other",
+    });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "#other bye" });
+    await click(".o_channel_redirect", { text: "#other" });
+    await contains(".o-mail-Discuss-threadName", { value: "other" });
+});
+
 test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
