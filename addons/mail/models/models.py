@@ -105,6 +105,9 @@ class Base(models.AbstractModel):
             ]
         return partner_fnames
 
+    def mail_get_partner_fields(self):
+        return self._mail_get_partner_fields()
+
     def _mail_get_partners(self, introspect_fields=False):
         """ Give the default partners (customers) associated to customers.
 
