@@ -202,12 +202,16 @@
                     </table>
                 </we-row>
             </div>
-            <we-row string="Re-order" data-no-preview="true">
+            <we-button-group
+                data-name="o_wsale_change_sequence_widget"
+                string="Re-order"
+                data-no-preview="true"
+            >
                 <we-button title="Push to top" data-change-sequence="top" class="fa fa-fw fa-angle-double-left"/>
-                <we-button title="Push up" data-change-sequence="up" class="fa fa-fw fa-angle-left"/>
-                <we-button title="Push down" data-change-sequence="down" class="fa fa-fw fa-angle-right"/>
+                <we-button title="Push up" data-change-sequence="up" class="fa fa-fw fa-angle-left ms-1"/>
+                <we-button title="Push down" data-change-sequence="down" class="fa fa-fw fa-angle-right mx-1"/>
                 <we-button title="Push to bottom" data-change-sequence="bottom" class="fa fa-fw fa-angle-double-right"/>
-            </we-row>
+            </we-button-group>
 
             <we-row>
                 <we-select string="Ribbon" class="o_wsale_ribbon_select">
