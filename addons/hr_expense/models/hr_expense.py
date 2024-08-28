@@ -313,10 +313,12 @@ class HrExpense(models.Model):
 
     @api.depends('quantity', 'price_unit', 'tax_ids')
     def _compute_total_amount_currency(self):
+        AccountTax = self.env['account.tax']
         for expense in self.filtered('product_has_cost'):
-            base_lines = [expense._convert_to_tax_base_line_dict(price_unit=expense.price_unit, quantity=expense.quantity)]
-            taxes_totals = self.env['account.tax']._compute_taxes(base_lines, expense.company_id)['totals'][expense.currency_id]
-            expense.total_amount_currency = taxes_totals['amount_untaxed'] + taxes_totals['amount_tax']
+            base_line = expense._prepare_base_line_for_taxes_computation(price_unit=expense.price_unit, quantity=expense.quantity)
+            AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
+            AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
+            expense.total_amount_currency = base_line['tax_details']['total_included_currency']
 
     @api.onchange('total_amount_currency')
     def _inverse_total_amount_currency(self):
@@ -337,27 +339,35 @@ class HrExpense(models.Model):
         'quantity',
     )
     def _compute_total_amount(self):
+        AccountTax = self.env['account.tax']
         for expense in self:
             if expense.is_multiple_currency:
-                base_lines = [expense._convert_to_tax_base_line_dict(
+                base_line = expense._prepare_base_line_for_taxes_computation(
                     price_unit=expense.total_amount_currency * expense.currency_rate,
-                    currency=expense.company_currency_id,
-                )]
-                taxes_totals = self.env['account.tax']._compute_taxes(base_lines, expense.company_id)['totals'][expense.company_currency_id]
-                expense.total_amount = taxes_totals['amount_untaxed'] + taxes_totals['amount_tax']
+                    quantity=1.0,
+                    currency_id=expense.company_currency_id,
+                    rate=1.0,
+                )
+                AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
+                AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
+                expense.total_amount = base_line['tax_details']['total_included_currency']
             else:  # Mono-currency case computation shortcut
                 expense.total_amount = expense.total_amount_currency
 
     def _inverse_total_amount(self):
         """ Allows to set a custom rate on the expense, and avoid the override when it makes no sense """
+        AccountTax = self.env['account.tax']
         for expense in self:
             if expense.is_multiple_currency:
-                base_lines = [expense._convert_to_tax_base_line_dict(
+                base_line = expense._prepare_base_line_for_taxes_computation(
                     price_unit=expense.total_amount,
+                    quantity=1.0,
                     currency=expense.company_currency_id,
-                )]
-                taxes_totals = self.env['account.tax']._compute_taxes(base_lines, expense.company_id)['totals'][expense.company_currency_id]
-                expense.tax_amount = taxes_totals['amount_tax']
+                )
+                AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
+                AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
+                tax_details = base_line['tax_details']
+                expense.tax_amount = tax_details['total_included_currency'] - tax_details['total_excluded_currency']
             else:
                 expense.total_amount_currency = expense.total_amount
                 expense.tax_amount = expense.tax_amount_currency
@@ -377,11 +387,17 @@ class HrExpense(models.Model):
              Note: as total_amount_currency can be set directly by the user (for product without cost)
              or needs to be computed (for product with cost), `untaxed_amount_currency` can't be computed in the same method as `total_amount_currency`.
         """
+        AccountTax = self.env['account.tax']
         for expense in self:
-            base_lines = [expense._convert_to_tax_base_line_dict(price_unit=expense.total_amount_currency)]
-            taxes_totals = self.env['account.tax']._compute_taxes(base_lines, expense.company_id)['totals'][expense.currency_id]
-            expense.tax_amount_currency = taxes_totals['amount_tax']
-            expense.untaxed_amount_currency = taxes_totals['amount_untaxed']
+            base_line = expense._prepare_base_line_for_taxes_computation(
+                price_unit=expense.total_amount_currency,
+                quantity=1.0,
+            )
+            AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
+            AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
+            tax_details = base_line['tax_details']
+            expense.tax_amount_currency = tax_details['total_included_currency'] - tax_details['total_excluded_currency']
+            expense.untaxed_amount_currency = tax_details['total_excluded_currency']
 
     @api.depends('total_amount', 'currency_rate', 'tax_ids', 'is_multiple_currency')
     def _compute_tax_amount(self):
@@ -389,14 +405,18 @@ class HrExpense(models.Model):
              Note: as total_amount can be set directly by the user when the currency_rate is overriden,
              the tax must be computed after the total_amount.
         """
+        AccountTax = self.env['account.tax']
         for expense in self:
             if expense.is_multiple_currency:
-                base_lines = [expense._convert_to_tax_base_line_dict(
+                base_line = expense._prepare_base_line_for_taxes_computation(
                     price_unit=expense.total_amount,
+                    quantity=1.0,
                     currency=expense.company_currency_id,
-                )]
-                taxes_totals = self.env['account.tax']._compute_taxes(base_lines, expense.company_id)['totals'][expense.company_currency_id]
-                expense.tax_amount = taxes_totals['amount_tax']
+                )
+                AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
+                AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
+                tax_details = base_line['tax_details']
+                expense.tax_amount = tax_details['total_included_currency'] - tax_details['total_excluded_currency']
             else:  # Mono-currency case computation shortcut
                 expense.tax_amount = expense.tax_amount_currency
 
@@ -519,18 +539,16 @@ class HrExpense(models.Model):
     def _check_payment_mode(self):
         self.sheet_id._check_payment_mode()
 
-    def _convert_to_tax_base_line_dict(self, base_line=None, currency=None, price_unit=None, quantity=None, account=None):
+    def _prepare_base_line_for_taxes_computation(self, **kwargs):
         self.ensure_one()
-        return self.env['account.tax']._convert_to_tax_base_line_dict(
-            base_line,
-            currency=currency or self.currency_id,
-            product=self.product_id,
-            taxes=self.tax_ids,
-            price_unit=price_unit or self.total_amount,
-            quantity=quantity if quantity is not None else 1,
-            account=account or self.account_id,
-            analytic_distribution=self.analytic_distribution,
-            extra_context={'force_price_include': True},
+        return self.env['account.tax']._prepare_base_line_for_taxes_computation(
+            self,
+            **{
+                'partner_id': self.vendor_id,
+                'special_mode': 'total_included',
+                'rate': self.currency_rate,
+                **kwargs,
+            },
         )
 
     def attach_document(self, **kwargs):
@@ -872,48 +890,48 @@ class HrExpense(models.Model):
         payment_method_line = self.sheet_id.payment_method_line_id
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
-        move_lines = []
-        tax_data = self.env['account.tax']._compute_taxes(
-            [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id, account=self._get_base_account())],
-            self.company_id,
-            include_caba_tags=(self.payment_mode == 'company_account')
+
+        AccountTax = self.env['account.tax']
+        rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 0.0
+        base_line = self._prepare_base_line_for_taxes_computation(
+            price_unit=self.total_amount_currency,
+            quantity=1.0,
+            account_id=self._get_base_account(),
+            rate=rate,
         )
-        rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 1.0
-        base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
-        amount_currency = to_update['price_subtotal']
-        base_move_line = {
-            'name': self._get_move_line_name(),
-            'account_id': base_line_data['account'].id,
-            'product_id': base_line_data['product'].id,
-            'analytic_distribution': base_line_data['analytic_distribution'],
-            'expense_id': self.id,
-            'tax_ids': [Command.set(self.tax_ids.ids)],
-            'tax_tag_ids': to_update['tax_tag_ids'],
-            'amount_currency': amount_currency,
-            'currency_id': self.currency_id.id,
-            'partner_id': self.vendor_id.id,
-        }
-        move_lines.append(base_move_line)
-        total_tax_line_balance = 0.0
-        for tax_line_data in tax_data['tax_lines_to_add']:  # Add tax lines
-            tax_line_balance = self.company_currency_id.round(tax_line_data['tax_amount_currency'] / rate)
-            total_tax_line_balance += tax_line_balance
-            tax_line = {
-                'name': self.env['account.tax'].browse(tax_line_data['tax_id']).name,
-                'account_id': tax_line_data['account_id'],
-                'analytic_distribution': tax_line_data['analytic_distribution'],
+        base_lines = [base_line]
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, self.company_id, include_caba_tags=self.payment_mode == 'company_account')
+        tax_results = AccountTax._prepare_tax_lines(base_lines, self.company_id)
+
+        # Base line.
+        move_lines = []
+        for base_line, to_update in tax_results['base_lines_to_update']:
+            base_move_line = {
+                'name': self._get_move_line_name(),
+                'account_id': base_line['account_id'].id,
+                'product_id': base_line['product_id'].id,
+                'analytic_distribution': base_line['analytic_distribution'],
                 'expense_id': self.id,
-                'tax_tag_ids': tax_line_data['tax_tag_ids'],
-                'balance': tax_line_balance,
-                'amount_currency': tax_line_data['tax_amount_currency'],
-                'tax_base_amount': self.company_currency_id.round(tax_line_data['base_amount'] / rate),
-                'currency_id': self.currency_id.id,
-                'tax_repartition_line_id': tax_line_data['tax_repartition_line_id'],
+                'tax_ids': [Command.set(base_line['tax_ids'].ids)],
+                'tax_tag_ids': to_update['tax_tag_ids'],
+                'amount_currency': to_update['amount_currency'],
+                'balance': to_update['balance'],
+                'currency_id': base_line['currency_id'].id,
                 'partner_id': self.vendor_id.id,
             }
+            move_lines.append(base_move_line)
+
+        # Tax lines.
+        total_tax_line_balance = 0.0
+        for tax_line in tax_results['tax_lines_to_add']:
+            total_tax_line_balance += tax_line['balance']
             move_lines.append(tax_line)
         base_move_line['balance'] = self.total_amount - total_tax_line_balance
-        move_lines.append({  # Add outstanding payment line
+
+        # Outstanding payment line.
+        move_lines.append({
             'name': self._get_move_line_name(),
             'account_id': self.sheet_id._get_expense_account_destination(),
             'balance': -self.total_amount,

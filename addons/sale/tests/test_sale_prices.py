@@ -1012,7 +1012,7 @@ class TestSalePrices(SaleCommon):
         expected_price_subtotal = line.currency_id.round(
             line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision))
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
-        self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))
+        self.assertEqual(order.amount_total, order.tax_totals.get('total_amount_currency'))
 
     def test_show_discount(self):
         """

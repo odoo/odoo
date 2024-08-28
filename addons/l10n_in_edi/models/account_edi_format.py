@@ -558,12 +558,12 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False, filter_invl_to_apply=None):
-        def l10n_in_grouping_key_generator(base_line, tax_values):
+        def l10n_in_grouping_key_generator(base_line, tax_data):
             invl = base_line['record']
-            tax = tax_values['tax_repartition_line'].tax_id
-            tags = tax_values['tax_repartition_line'].tag_ids
+            tax = tax_data['tax']
+            tags = tax.invoice_repartition_line_ids.tag_ids
             line_code = "other"
-            if not invl.currency_id.is_zero(tax_values['tax_amount_currency']):
+            if not invl.currency_id.is_zero(tax_data['tax_amount_currency']):
                 if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_cess")):
                     if tax.amount_type != "percent":
                         line_code = "cess_non_advol"

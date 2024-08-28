@@ -25,7 +25,6 @@ export class TestsSharedJsPython extends Component {
                 product: params.product,
                 precision_rounding: params.precision_rounding,
                 rounding_method: params.rounding_method,
-                round_price_include: false,
             };
             const results = {
                 results: accountTaxHelpers.get_tax_details(
@@ -61,13 +60,43 @@ export class TestsSharedJsPython extends Component {
                 )
             }
         }
+        if (params.test === "tax_totals_summary") {
+            const document = this.populateDocument(params.document);
+            const taxTotals = accountTaxHelpers.get_tax_totals_summary(
+                document.lines,
+                document.currency,
+                document.company,
+                {cash_rounding: document.cash_rounding}
+            );
+            return {tax_totals: taxTotals};
+        }
+        if (params.test === "tax_total") {
+            const document = this.populateDocument(params.document);
+            const taxTotals = accountTaxHelpers.get_tax_totals_summary(
+                document.lines,
+                document.currency,
+                document.company,
+                {cash_rounding: document.cash_rounding}
+            );
+            return {tax_amount_currency: taxTotals.tax_amount_currency};
+        }
     }
 
     async processTests() {
         const tests = this.props.tests || [];
-        const results = tests.map(this.processTest);
+        const results = tests.map(this.processTest.bind(this));
         await rpc("/account/post_tests_shared_js_python", { results: results });
         this.state.done = true;
+    }
+
+    populateDocument(document) {
+        const base_lines = document.lines.map(line => accountTaxHelpers.prepare_base_line_for_taxes_computation(null, line));
+        accountTaxHelpers.add_tax_details_in_base_lines(base_lines, document.company);
+        accountTaxHelpers.round_base_lines_tax_details(base_lines, document.company);
+        return {
+            ...document,
+            lines: base_lines,
+        }
     }
 }
 

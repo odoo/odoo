@@ -124,8 +124,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'display_type': 'epd',             'balance': -100.0},
             {'display_type': 'epd',             'balance': 100.0},
             {'display_type': 'product',         'balance': -1000.0},
-            {'display_type': 'tax',             'balance': -150},
-            {'display_type': 'tax',             'balance': 15.0},
+            {'display_type': 'tax',             'balance': -135},
             {'display_type': 'tax',             'balance': -0.05},
             {'display_type': 'payment_term',    'balance': 1135.05},
         ], {
@@ -454,29 +453,27 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-
-            self.assert_tax_totals(invoice.tax_totals, invoice.currency_id, {
-                'amount_untaxed': 1000.0,
-                'amount_total': 1090.0,
-                'display_tax_base': True,
-                'groups_by_subtotal': {
-                    'Untaxed Amount': [
-                        {
-                            'tax_group_name': tax.tax_group_id.name,
-                            'tax_group_label': tax.tax_group_id.pos_receipt_label,
-                            'tax_group_amount': 90.0,
-                            'tax_group_base_amount': 900.0,
-                            'tax_group_id': tax.tax_group_id.id,
-                        },
-                    ],
-                },
+            self._assert_tax_totals_summary(invoice.tax_totals, {
+                'same_tax_base': True,
+                'currency_id': self.env.company.currency_id.id,
+                'base_amount_currency': 1000.0,
+                'tax_amount_currency': 90.0,
+                'total_amount_currency': 1090.0,
                 'subtotals': [
                     {
                         'name': "Untaxed Amount",
-                        'amount': 1000.0,
-                    }
+                        'base_amount_currency': 1000.0,
+                        'tax_amount_currency': 90.0,
+                        'tax_groups': [
+                            {
+                                'id': tax.tax_group_id.id,
+                                'base_amount_currency': 900.0,
+                                'tax_amount_currency': 90.0,
+                                'display_base_amount_currency': 900.0,
+                            },
+                        ],
+                    },
                 ],
-                'subtotals_order': ["Untaxed Amount"],
             })
 
     def test_intracomm_bill_with_early_payment_included(self):
@@ -645,28 +642,27 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-            self.assert_tax_totals(invoice.tax_totals, invoice.currency_id, {
-                'amount_untaxed': 100,
-                'amount_total': 120.58,
-                'display_tax_base': True,
-                'groups_by_subtotal': {
-                    'Untaxed Amount': [
-                        {
-                            'tax_group_name': tax.tax_group_id.name,
-                            'tax_group_label': tax.tax_group_id.pos_receipt_label,
-                            'tax_group_amount': 20.58,
-                            'tax_group_base_amount': 98,
-                            'tax_group_id': tax.tax_group_id.id,
-                        },
-                    ],
-                },
+            self._assert_tax_totals_summary(invoice.tax_totals, {
+                'same_tax_base': True,
+                'currency_id': self.env.company.currency_id.id,
+                'base_amount_currency': 100.0,
+                'tax_amount_currency': 20.58,
+                'total_amount_currency': 120.58,
                 'subtotals': [
                     {
                         'name': "Untaxed Amount",
-                        'amount': 100,
-                    }
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 20.58,
+                        'tax_groups': [
+                            {
+                                'id': tax.tax_group_id.id,
+                                'base_amount_currency': 98.0,
+                                'tax_amount_currency': 20.58,
+                                'display_base_amount_currency': 98.0,
+                            },
+                        ],
+                    },
                 ],
-                'subtotals_order': ["Untaxed Amount"],
             })
 
     def test_mixed_epd_with_tax_no_duplication(self):
@@ -681,11 +677,11 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
-        self.assertEqual(len(inv.line_ids), 6) # 1 prod, 1 tax, 2 epd, 1 epd tax discount, 1 payment terms
+        self.assertEqual(len(inv.line_ids), 5)  # 1 prod, 1 tax, 1 epd, 1 epd tax discount, 1 payment terms
         inv.write({'invoice_payment_term_id': self.pay_terms_a.id})
-        self.assertEqual(len(inv.line_ids), 3) # 1 prod, 1 tax, 1 payment terms
+        self.assertEqual(len(inv.line_ids), 3)  # 1 prod, 1 tax, 1 payment terms
         inv.write({'invoice_payment_term_id': self.early_pay_10_percents_10_days.id})
-        self.assertEqual(len(inv.line_ids), 6)
+        self.assertEqual(len(inv.line_ids), 5)
 
     def test_mixed_epd_with_tax_deleted_line(self):
         self.early_pay_10_percents_10_days.write({'early_pay_discount_computation': 'mixed'})
@@ -709,10 +705,10 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
-        self.assertEqual(len(inv.line_ids), 10) # 2 prod, 2 tax, 3 epd, 2 epd tax discount, 1 payment terms
+        self.assertEqual(len(inv.line_ids), 8)  # 2 prod, 2 tax, 1 epd, 2 epd tax discount, 1 payment terms
         inv.invoice_line_ids[1].unlink()
-        self.assertEqual(len(inv.line_ids), 6) # 1 prod, 1 tax, 2 epd, 1 epd tax discount, 1 payment terms
-        self.assertEqual(inv.amount_tax, 9.00) # $100.0 @ 10% tax (-10% epd)
+        self.assertEqual(len(inv.line_ids), 5)  # 1 prod, 1 tax, 1 epd, 1 epd tax discount, 1 payment terms
+        self.assertEqual(inv.amount_tax, 9.00)  # $100.0 @ 10% tax (-10% epd)
 
     def test_mixed_epd_with_rounding_issue(self):
         """
@@ -905,13 +901,8 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 'display_type': 'epd',
             },
             {
-                'balance': -15.0,
-                'tax_base_amount': 100.0,
-                'display_type': 'tax',
-            },
-            {
-                'balance': 1.5,
-                'tax_base_amount': -10.0,
+                'balance': -13.5,
+                'tax_base_amount': 90.0,
                 'display_type': 'tax',
             },
             {

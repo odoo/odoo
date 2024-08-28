@@ -22,29 +22,23 @@ class PurchaseOrder(models.Model):
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
-    @api.depends('order_line.price_total', 'currency_id')
+    @api.depends('order_line.price_subtotal', 'company_id')
     def _amount_all(self):
+        AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-
-            if order.company_id.tax_calculation_rounding_method == 'round_globally':
-                tax_results = self.env['account.tax']._compute_taxes(
-                    [
-                        line._convert_to_tax_base_line_dict()
-                        for line in order_lines
-                    ],
-                    order.company_id,
-                )
-                totals = tax_results['totals']
-                amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
-                amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
-            else:
-                amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-                amount_tax = sum(order_lines.mapped('price_tax'))
-
-            order.amount_untaxed = amount_untaxed
-            order.amount_tax = amount_tax
-            order.amount_total = order.amount_untaxed + order.amount_tax
+            base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
+            AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
+            tax_totals = AccountTax._get_tax_totals_summary(
+                base_lines=base_lines,
+                currency=order.currency_id or order.company_id.currency_id,
+                company=order.company_id,
+            )
+            order.amount_untaxed = tax_totals['base_amount_currency']
+            order.amount_tax = tax_totals['tax_amount_currency']
+            order.amount_total = tax_totals['total_amount_currency']
+            order.amount_total_cc = tax_totals['total_amount']
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -125,7 +119,7 @@ class PurchaseOrder(models.Model):
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
-    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_compute_amount_total_cc", currency_field="company_currency_id")
+    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
@@ -148,7 +142,13 @@ class PurchaseOrder(models.Model):
     company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     company_price_include = fields.Selection(related='company_id.account_price_include')
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
+    currency_rate = fields.Float(
+        string="Currency Rate",
+        compute='_compute_currency_rate',
+        digits=0,
+        store=True,
+        precompute=True,
+    )
 
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
@@ -184,10 +184,15 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.date_calendar_start = order.date_approve if (order.state in ['purchase', 'done']) else order.date_order
 
-    @api.depends('date_order', 'currency_id', 'company_id', 'company_id.currency_id')
+    @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(
+                from_currency=order.company_id.currency_id,
+                to_currency=order.currency_id,
+                company=order.company_id,
+                date=(order.date_order or fields.Datetime.now()).date(),
+            )
 
     @api.depends('amount_total', 'currency_rate')
     def _compute_amount_total_cc(self):
@@ -222,17 +227,19 @@ class PurchaseOrder(models.Model):
             order.reminder_date_before_receipt = order.partner_id.with_company(order.company_id).reminder_date_before_receipt
 
     @api.depends_context('lang')
-    @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
     def _compute_tax_totals(self):
+        AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
-                [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id or order.company_id.currency_id,
-                order.company_id,
+            base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
+            AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
+            order.tax_totals = AccountTax._get_tax_totals_summary(
+                base_lines=base_lines,
+                currency=order.currency_id or order.company_id.currency_id,
+                company=order.company_id,
             )
-            if order.currency_id != order.company_currency_id:
-                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, self.amount_total_cc, currency_obj=self.company_currency_id)})"
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):

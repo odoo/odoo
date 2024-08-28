@@ -18,6 +18,5 @@ from . import test_sale_order_down_payment
 from . import test_sale_prices
 from . import test_sale_product_attribute_value_config
 from . import test_sale_refund
-from . import test_sale_tax_totals
 from . import test_sale_to_invoice
 from . import test_sale_report
