@@ -32,6 +32,7 @@ _DEFAULT_MANIFEST = {
     'author': 'Odoo S.A.',
     'auto_install': False,
     'category': 'Uncategorized',
+    'cloc_exclude': [],
     'configurator_snippets': {},  # website themes
     'countries': [],
     'data': [],

@@ -5,6 +5,7 @@ import json
 import logging
 import lxml
 import os
+import pathlib
 import requests
 import sys
 import zipfile
@@ -112,6 +113,11 @@ class IrModule(models.Model):
             mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
+        exclude_list = set()
+        base_dir = pathlib.Path(path)
+        for pattern in terp.get('cloc_exclude', []):
+            exclude_list.update(str(p.relative_to(base_dir)) for p in base_dir.glob(pattern) if p.is_file())
+
         kind_of_files = ['data', 'init_xml', 'update_xml']
         if with_demo:
             kind_of_files.append('demo')
@@ -134,6 +140,13 @@ class IrModule(models.Model):
                         convert_sql_import(self.env, fp)
                     elif ext == '.xml':
                         convert_xml_import(self.env, module, fp, idref, mode, noupdate)
+                        if filename in exclude_list:
+                            self.env['ir.model.data'].create([{
+                                'name': f"cloc_exclude_{key}",
+                                'model': self.env['ir.model.data']._xmlid_lookup(f"{module}.{key}")[0],
+                                'module': "__cloc_exclude__",
+                                'res_id': value,
+                            } for key, value in idref.items()])
 
         path_static = opj(path, 'static')
         IrAttachment = self.env['ir.attachment']
@@ -169,6 +182,13 @@ class IrModule(models.Model):
                             'module': module,
                             'res_id': attachment.id,
                         })
+                        if str(pathlib.Path(full_path).relative_to(base_dir)) in exclude_list:
+                            self.env['ir.model.data'].create({
+                                'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
+                                'model': 'ir.attachment',
+                                'module': "__cloc_exclude__",
+                                'res_id': attachment.id,
+                            })
 
         IrAsset = self.env['ir.asset']
         assets_vals = []
