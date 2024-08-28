@@ -2310,8 +2310,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 {
                     **self.tax_line_vals_1,
                     'currency_id': self.other_currency.id,
-                    'amount_currency': -180.0,
-                    'credit': 90.0,
+                    'amount_currency': -200.0,
+                    'credit': 100.0,
                 },
                 {
                     **self.tax_line_vals_2,
@@ -2323,8 +2323,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     **self.term_line_vals_1,
                     'name': move.name,
                     'currency_id': self.other_currency.id,
-                    'amount_currency': 1410.0,
-                    'debit': 705.0,
+                    'amount_currency': 1430.0,
+                    'debit': 715.0,
                     'date_maturity': frozen_today,
                     'account_id': self.company_data['default_account_receivable'].id,
                 },
@@ -2335,8 +2335,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'date': frozen_today,
                 'invoice_date': frozen_today,
                 'invoice_date_due': frozen_today,
-                'amount_tax': 210.0,
-                'amount_total': 1410.0,
+                'amount_tax': 230.0,
+                'amount_total': 1430.0,
             })
 
     @freeze_time('2017-01-15')

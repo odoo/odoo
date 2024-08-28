@@ -651,7 +651,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 48098.24,    # 20000 * 2.82 / 1.1726
-            'credit': 10100.63,             # tax_base_amount * 0.21
+            'credit': 10100.64,             # tax_base_amount * 0.21
         }])
 
     def test_ensure_no_unbalanced_entry(self):
@@ -733,3 +733,61 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'credit': 10.0,
             'debit': 0,
         }])
+
+    def test_tax_repartition_lines_dispatch_amount_1(self):
+        """ Ensure the tax amount is well dispatched to the repartition lines and the rounding errors are well managed.
+        The 5% tax is applied on 1 so the total tax amount should be 0.05.
+        However, there are 10 tax repartition lines of 0.05 * 0.1 = 0.005 that will be rounded to 0.01.
+        The test checks the tax amount doesn't become 10 * 0.01 = 0.1 instead of 0.05.
+        """
+        base_tax_rep = Command.create({'repartition_type': 'base', 'factor_percent': 100.0})
+        tax_reps = [Command.create({'repartition_type': 'tax', 'factor_percent': 10.0})] * 10
+        tax = self.env['account.tax'].create({
+            'name': "test_tax_repartition_lines_dispatch_amount_1",
+            'amount_type': 'percent',
+            'amount': 5.0,
+            'invoice_repartition_line_ids': [base_tax_rep] + tax_reps,
+            'refund_repartition_line_ids': [base_tax_rep] + tax_reps,
+        })
+        invoice = self._create_invoice([(1, tax)])
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 1.0,
+            'amount_tax': 0.05,
+            'amount_total': 1.05,
+        }])
+        self.assertRecordValues(
+            invoice.line_ids.filtered('tax_line_id').sorted('balance'),
+            [{'balance': -0.01}] * 5,
+        )
+
+    def test_tax_repartition_lines_dispatch_amount_2(self):
+        """ Ensure the tax amount is well dispatched to the repartition lines and the rounding errors are well managed.
+        The 5% tax is applied on 1 so the total tax amount should be 0.05 but the distribution is 100 - 100 = 0%.
+        So at the end, the tax amount is 0.
+        However, there are 10 positive tax repartition lines of 0.05 * 0.1 = 0.005 that will be rounded to 0.01
+        and one negative repartition line of 50% and 2 of 25% that will give respectively 0.025 ~= 0.03 and 0.0125 ~= 0.01.
+        The test checks the tax amount is still zero at the end.
+        """
+        base_tax_rep = Command.create({'repartition_type': 'base', 'factor_percent': 100.0})
+        plus_tax_reps = [Command.create({'repartition_type': 'tax', 'factor_percent': 10.0})] * 10
+        neg_tax_reps = [
+            Command.create({'repartition_type': 'tax', 'factor_percent': percent})
+            for percent in (-50, -25, -25)
+        ]
+        tax = self.env['account.tax'].create({
+            'name': "test_tax_repartition_lines_dispatch_amount_2",
+            'amount_type': 'percent',
+            'amount': 5.0,
+            'invoice_repartition_line_ids': [base_tax_rep] + plus_tax_reps + neg_tax_reps,
+            'refund_repartition_line_ids': [base_tax_rep] + plus_tax_reps + neg_tax_reps,
+        })
+        invoice = self._create_invoice([(1, tax)], inv_type='out_refund')
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 1.0,
+            'amount_tax': 0.0,
+            'amount_total': 1.0,
+        }])
+        self.assertRecordValues(
+            invoice.line_ids.filtered('tax_line_id').sorted('balance'),
+            [{'balance': -0.03}] + [{'balance': -0.01}] * 2 + [{'balance': 0.01}] * 5,
+        )

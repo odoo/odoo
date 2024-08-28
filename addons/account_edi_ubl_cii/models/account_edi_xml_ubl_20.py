@@ -296,7 +296,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'currency_dp': self._get_currency_decimal_places(line.currency_id),
                         'charge_indicator': 'true',
                         'allowance_charge_reason_code': 'AEO',
-                        'allowance_charge_reason': tax_details['tax_name'],
+                        'allowance_charge_reason': grouping_key['tax_name'],
                         'amount': tax_details['tax_amount_currency'],
                     })
 
@@ -435,8 +435,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_to_discount[tax.amount] += line.amount_currency
         return tax_to_discount
 
-    def _get_tax_grouping_key(self, base_line, tax_values):
-        tax = tax_values['tax_repartition_line'].tax_id
+    def _get_tax_grouping_key(self, base_line, tax_data):
+        tax = tax_data['tax']
         customer = base_line['record'].move_id.commercial_partner_id
         supplier = base_line['record'].move_id.company_id.partner_id.commercial_partner_id
         tax_category_vals = self._get_tax_category_list(customer, supplier, tax)[0]
@@ -461,6 +461,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             grouping_key_generator=self._get_tax_grouping_key,
             filter_tax_values_to_apply=self._apply_invoice_tax_filter,
             filter_invl_to_apply=self._apply_invoice_line_filter,
+            round_from_tax_lines=True,
         )
 
         # Fixed Taxes: filter them on the document level, and adapt the totals

@@ -822,6 +822,7 @@ class PosSession(models.Model):
         # E.g. `combine_receivables_bank` is derived from pos.payment records
         # in the self.order_ids with group key of the `payment_method_id`
         # field of the pos.payment record.
+        AccountTax = self.env['account.tax']
         amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0}
         tax_amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0, 'base_amount': 0.0, 'base_amount_converted': 0.0}
         split_receivables_bank = defaultdict(amounts)
@@ -891,23 +892,29 @@ class PosSession(models.Model):
                         combine_receivables_pay_later[payment_method] = self._update_amounts(combine_receivables_pay_later[payment_method], {'amount': amount}, date)
 
             if not order_is_invoiced:
-                base_lines = order._prepare_tax_base_line_values(sign=1)
-                tax_results = self.env['account.tax']._compute_taxes(base_lines, order.company_id)
+                base_lines = order._prepare_tax_base_line_values()
+                AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
+                AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
+                AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id)
+                tax_results = AccountTax._prepare_tax_lines(base_lines, order.company_id)
                 for base_line, to_update in tax_results['base_lines_to_update']:
                     # Combine sales/refund lines
                     sale_key = (
                         # account
-                        base_line['account'].id,
+                        base_line['account_id'].id,
                         # sign
                         -1 if base_line['is_refund'] else 1,
                         # for taxes
                         tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
-                        tuple(to_update['tax_tag_ids'][0][2]),
-                        base_line['product'].id if self.config_id.is_closing_entry_by_product else False,
+                        tuple(base_line['tax_tag_ids'].ids),
+                        base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
                     )
                     sales[sale_key] = self._update_amounts(
                         sales[sale_key],
-                        {'amount': to_update['price_subtotal']},
+                        {
+                            'amount': to_update['amount_currency'],
+                            'amount_converted': to_update['balance'],
+                        },
                         order.date_order,
                     )
                     if self.config_id.is_closing_entry_by_product:
@@ -922,7 +929,11 @@ class PosSession(models.Model):
                     )
                     taxes[tax_key] = self._update_amounts(
                         taxes[tax_key],
-                        {'amount': -tax_line['tax_amount_currency'], 'base_amount': -tax_line['base_amount_currency']},
+                        {
+                            'amount': tax_line['amount_currency'],
+                            'amount_converted': tax_line['balance'],
+                            'base_amount': tax_line['tax_base_amount']
+                        },
                         order.date_order,
                     )
 
@@ -1373,17 +1384,20 @@ class PosSession(models.Model):
             'tax_tag_ids': [(6, 0, base_tag_ids)],
             'product_id': product_id,
             'display_type': 'product',
-            'product_uom_id': product_uom
+            'product_uom_id': product_uom,
+            'currency_id': self.currency_id.id,
+            'amount_currency': amount,
+            'balance': amount_converted,
         }
         if partial_vals.get('product_id'):
             partial_vals['quantity'] = sale_vals.get('quantity') or 1
-        return self._credit_amounts(partial_vals, amount, amount_converted)
+        return partial_vals
 
     def _get_tax_vals(self, key, amount, amount_converted, base_amount_converted):
         account_id, repartition_line_id, tag_ids = key
         tax_rep = self.env['account.tax.repartition.line'].browse(repartition_line_id)
         tax = tax_rep.tax_id
-        partial_args = {
+        return {
             'name': tax.name,
             'account_id': account_id,
             'move_id': self.move_id.id,
@@ -1391,8 +1405,10 @@ class PosSession(models.Model):
             'tax_repartition_line_id': repartition_line_id,
             'tax_tag_ids': [(6, 0, tag_ids)],
             'display_type': 'tax',
+            'currency_id': self.currency_id.id,
+            'amount_currency': amount,
+            'balance': amount_converted,
         }
-        return self._debit_amounts(partial_args, amount, amount_converted)
 
     def _get_stock_expense_vals(self, exp_account, amount, amount_converted):
         partial_args = {'account_id': exp_account.id, 'move_id': self.move_id.id}

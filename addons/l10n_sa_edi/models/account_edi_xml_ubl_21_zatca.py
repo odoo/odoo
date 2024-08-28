@@ -371,10 +371,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
 
-        def grouping_key_generator(base_line, tax_values):
+        def grouping_key_generator(base_line, tax_data):
+            tax = tax_data['tax']
             customer = line.move_id.commercial_partner_id
             supplier = line.move_id.company_id.partner_id.commercial_partner_id
-            tax = tax_values['tax_repartition_line'].tax_id
             tax_category_vals = next(iter(self._get_tax_category_list(customer, supplier, tax)), {})
             grouping_key = {
                 'tax_category_id': tax_category_vals.get('id'),

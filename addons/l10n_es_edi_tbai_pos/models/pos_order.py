@@ -153,6 +153,11 @@ class PosOrder(models.Model):
     def _l10n_es_tbai_get_values(self):
         self.ensure_one()
 
+        base_lines = self.lines._prepare_tax_base_line_values()
+        for base_line in base_lines:
+            base_line['name'] = base_line['record'].name
+        self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id)
+
         return {
             'is_sale': True,
             'partner': self.partner_id,
@@ -163,7 +168,7 @@ class PosOrder(models.Model):
             'invoice_origin': False,
             'taxes': self.lines.tax_ids,
             'rate': self.currency_rate,
-            'base_lines': [line._convert_to_tax_base_line_dict() | {'name': line.name} for line in self.lines],
+            'base_lines': base_lines,
         }
 
     def _l10n_es_tbai_get_attachment_values(self):

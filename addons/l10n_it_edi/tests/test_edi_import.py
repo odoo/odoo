@@ -285,7 +285,7 @@ class TestItEdiImport(TestItEdi):
             </xpath>
 
             <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale" position="replace">
-                <PrezzoTotale>1.50</PrezzoTotale>
+                <PrezzoTotale>1.50000000</PrezzoTotale>
             </xpath>
         """
 

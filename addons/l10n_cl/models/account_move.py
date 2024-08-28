@@ -141,35 +141,18 @@ class AccountMove(models.Model):
     def _l10n_cl_get_invoice_totals_for_report(self):
         self.ensure_one()
         include_sii = self._l10n_cl_include_sii()
+        tax_totals = self.tax_totals
+        if not include_sii:
+            return tax_totals
 
-        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
-
-        base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
-        if include_sii:
-            for vals in base_line_vals_list:
-                vals['taxes'] = vals['taxes'].flatten_taxes_hierarchy().filtered(lambda tax: tax.l10n_cl_sii_code != 14)
-
-        tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
-        if include_sii:
-            tax_line_vals_list = [x for x in tax_line_vals_list if x['tax_repartition_line'].tax_id.l10n_cl_sii_code != 14]
-
-        tax_totals = self.env['account.tax']._prepare_tax_totals(
-            base_line_vals_list,
-            self.currency_id,
-            self.company_id,
-            tax_lines=tax_line_vals_list,
-        )
-
-        if include_sii:
-            tax_totals['amount_total'] = self.amount_total
-            tax_totals['amount_untaxed'] = self.currency_id.round(
-                tax_totals['amount_total'] - sum([x['tax_amount'] for x in tax_line_vals_list if 'tax_amount' in x]))
-            tax_totals['formatted_amount_total'] = formatLang(self.env, tax_totals['amount_total'], currency_obj=self.currency_id)
-            tax_totals['formatted_amount_untaxed'] = formatLang(self.env, tax_totals['amount_untaxed'], currency_obj=self.currency_id)
-            if tax_totals['subtotals']:
-                tax_totals['subtotals'][0]['formatted_amount'] = tax_totals['formatted_amount_untaxed']
-
+        tax_group_ids = {
+            tax_group['id']
+            for subtotal in tax_totals['subtotals']
+            for tax_group in subtotal['tax_groups']
+        }
+        tax_group_ids_to_exclude = self.env['account.tax.group'].browse(tax_group_ids).filtered(lambda x: x.l10n_cl_sii_code == 14).ids
+        if tax_group_ids_to_exclude:
+            return self.env['account.tax']._exclude_tax_group_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
         return tax_totals
 
     def _l10n_cl_include_sii(self):
@@ -279,3 +262,12 @@ class AccountMove(models.Model):
 
     def _float_repr_float_round(self, value, decimal_places):
         return float_repr(float_round(value, decimal_places), decimal_places)
+
+    def _compute_tax_totals(self):
+        # OVERRIDE 'account'
+        super()._compute_tax_totals()
+        for move in self:
+            if move.tax_totals and move._get_name_invoice_report() == 'l10n_cl.report_invoice_document':
+                # Disable the recap of tax totals in company currency at the bottom right of the invoice,
+                # since this info is already present in our custom tax totals grid.
+                move.tax_totals['display_in_company_currency'] = False

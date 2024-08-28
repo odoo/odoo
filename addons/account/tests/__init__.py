@@ -6,7 +6,6 @@ from . import test_account_move_in_invoice
 from . import test_account_move_in_refund
 from . import test_account_move_entry
 from . import test_account_move_date_algorithm
-from . import test_invoice_tax_totals
 from . import test_account_inalterable_hash
 from . import test_account_journal
 from . import test_account_account
@@ -30,6 +29,7 @@ from . import test_fiscal_position
 from . import test_sequence_mixin
 from . import test_tax
 from . import test_taxes_computation
+from . import test_taxes_tax_totals_summary
 from . import test_invoice_taxes
 from . import test_account_move_send
 from . import test_account_all_l10n

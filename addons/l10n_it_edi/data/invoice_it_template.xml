@@ -3,42 +3,45 @@
     <data>
 
 <template id="account_invoice_line_it_FatturaPA">
+                <t t-set="it_values" t-value="base_line['it_values']"/>
+                <t t-set="line" t-value="base_line['record']"/>
+                <t t-set="product" t-value="base_line['product_id']"/>
                 <DettaglioLinee>
-                    <NumeroLinea t-out="line_dict['line_number']"/>
-                    <CodiceArticolo t-if="line.product_id.barcode">
+                    <NumeroLinea t-out="it_values['numero_linea']"/>
+                    <CodiceArticolo t-if="product.barcode">
                         <CodiceTipo t-translation="off">EAN</CodiceTipo>
-                        <CodiceValore t-out="format_alphanumeric(line.product_id.barcode, 35)"/>
+                        <CodiceValore t-out="format_alphanumeric(product.barcode, 35)"/>
                     </CodiceArticolo>
-                    <CodiceArticolo t-elif="line.product_id.default_code">
+                    <CodiceArticolo t-elif="product.default_code">
                         <CodiceTipo t-translation="off">INTERNAL</CodiceTipo>
-                        <CodiceValore t-out="format_alphanumeric(line.product_id.default_code, 35)"/>
+                        <CodiceValore t-out="format_alphanumeric(product.default_code, 35)"/>
                     </CodiceArticolo>
-                    <Descrizione t-out="format_alphanumeric(line_dict['description'], 1000)"/>
-                    <Quantita t-out="format_numbers(abs(line.quantity))"/>
+                    <Descrizione t-out="format_alphanumeric(it_values['descrizione'], 1000)"/>
+                    <Quantita t-out="format_float(it_values['quantita'], it_values['quantita_pd'])"/>
                     <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"
                                  t-out="format_alphanumeric(line.product_uom_id.name, 10)"/>
-                    <PrezzoUnitario t-out="'%.06f' % (line_dict['unit_price'])"/>
-                    <ScontoMaggiorazione t-if="line.discount != 0">
-                        <Tipo t-out="format_alphanumeric(line_dict['discount_type'])"/>
-                        <Percentuale t-out="format_numbers(abs(line.discount))"/>
+                    <PrezzoUnitario t-out="format_float(it_values['prezzo_unitario'], 8)"/>
+                    <ScontoMaggiorazione t-foreach="it_values['sconto_maggiorazione_list']" t-as="sconto_maggiorazione">
+                        <Tipo t-out="format_alphanumeric(sconto_maggiorazione['tipo'])"/>
+                        <Percentuale t-if="sconto_maggiorazione['percentuale']"
+                                     t-out="format_float(sconto_maggiorazione['percentuale'], 2)"/>
+                        <Importo t-if="sconto_maggiorazione['importo']"
+                                 t-out="format_float(sconto_maggiorazione['importo'], 8)"/>
                     </ScontoMaggiorazione>
-                    <ScontoMaggiorazione t-if="line_dict['discount_amount'] != 0">
-                        <Tipo t-out="'SC'"/>
-                        <Importo t-out="format_numbers(abs(line_dict['discount_amount']))"/>
-                    </ScontoMaggiorazione>
-                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price_eur'], currency)"/>
-                    <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
-                    <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
-                    <Natura t-if="vat_tax.l10n_it_exempt_reason" t-out="vat_tax.l10n_it_exempt_reason"/>
-                    <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato t-translation="off">DIVISA</TipoDato>
-                        <RiferimentoTesto t-out="format_alphanumeric(record.currency_id.name)"/>
-                        <RiferimentoNumero t-out="'%.06f' % line_dict['subtotal_price']"/>
-                    </AltriDatiGestionali>
-                    <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato t-translation="off">CAMBIO</TipoDato>
-                        <RiferimentoNumero t-out="conversion_rate"/>
-                        <RiferimentoData t-out="format_date(record.invoice_date)"/>
+                    <PrezzoTotale t-out="format_float(it_values['prezzo_totale'], 8)"/>
+                    <AliquotaIVA t-foreach="it_values['aliquota_iva_list']"
+                                 t-as="aliquota_iva"
+                                 t-out="format_float(aliquota_iva, 2)"/>
+                    <Ritenuta t-if="it_values['ritenuta']" t-out="it_values['ritenuta']"/>
+                    <Natura t-if="it_values['natura']" t-out="it_values['natura']"/>
+                    <AltriDatiGestionali t-foreach="it_values['altri_dati_gestionali_list']" t-as="altri_dati_gestionali">
+                        <TipoDato t-out="altri_dati_gestionali['tipo_dato']"/>
+                        <RiferimentoTesto t-if="altri_dati_gestionali['riferimento_testo']"
+                                          t-out="format_alphanumeric(altri_dati_gestionali['riferimento_testo'])"/>
+                        <RiferimentoNumero t-if="altri_dati_gestionali['riferimento_numero']"
+                                           t-out="format_float(altri_dati_gestionali['riferimento_numero'], 8)"/>
+                        <RiferimentoData t-if="altri_dati_gestionali['riferimento_data']"
+                                         t-out="format_date(altri_dati_gestionali['riferimento_data'])"/>
                     </AltriDatiGestionali>
                 </DettaglioLinee>
 </template>
@@ -142,7 +145,7 @@
                     <BolloVirtuale t-translation="off">SI</BolloVirtuale>
                     <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
-                <ImportoTotaleDocumento t-out="format_monetary(document_total, currency)"/>
+                <ImportoTotaleDocumento t-out="format_monetary(importo_totale_documento, currency)"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
@@ -170,28 +173,21 @@
             </DatiDDT>
         </DatiGenerali>
         <DatiBeniServizi>
-            <t t-foreach="invoice_lines" t-as="line_dict">
-                <t t-set="line" t-value="line_dict['line']"/>
-                <t t-set="vat_tax" t-value="line_dict['vat_tax']"/>
+            <t t-foreach="base_lines" t-as="base_line">
                 <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
             </t>
             <t t-foreach="tax_lines" t-as="tax_line">
-                <t t-set="tax" t-value="tax_line['tax']"/>
-                <t t-set="exempt_reason" t-value="tax.l10n_it_exempt_reason"/>
                 <DatiRiepilogo>
-                    <AliquotaIVA t-out="format_numbers(tax.amount)"/>
-                    <Natura t-if="exempt_reason" t-out="exempt_reason"/>
-                    <Arrotondamento t-if="tax_line.get('rounding')" t-out="format_numbers(-tax_line['rounding'])"/>
-                    <t t-if="rc_refund">
-                        <ImponibileImporto t-out="format_monetary(balance_multiplicator * tax_line['base_amount'], currency)"/>
-                        <Imposta t-out="format_monetary(balance_multiplicator * tax_line['tax_amount'], currency)"/>
-                    </t>
-                    <t t-else="">
-                        <ImponibileImporto t-out="format_monetary(tax_line['base_amount'], currency)"/>
-                        <Imposta t-out="format_monetary(tax_line['tax_amount'], currency)"/>
-                    </t>
-                    <EsigibilitaIVA t-out="tax_line['exigibility_code']"/>
-                    <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-out="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
+                    <AliquotaIVA t-out="format_float(tax_line['aliquota_iva'], 2)"/>
+                    <Natura t-if="tax_line['natura']"
+                            t-out="tax_line['natura']"/>
+                    <Arrotondamento t-if="tax_line['arrotondamento']"
+                                    t-out="format_float(tax_line['arrotondamento'], 8)"/>
+                    <ImponibileImporto t-out="format_float(tax_line['imponibile_importo'], 2)"/>
+                    <Imposta t-out="format_float(tax_line['imposta'], 2)"/>
+                    <EsigibilitaIVA t-out="tax_line['esigibilita_iva']"/>
+                    <RiferimentoNormativo t-if="tax_line['riferimento_normativo']"
+                                          t-out="format_alphanumeric(tax_line['riferimento_normativo'][:100])"/>
                 </DatiRiepilogo>
             </t>
         </DatiBeniServizi>

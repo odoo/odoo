@@ -68,8 +68,8 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_edi_get_invoices_tax_details_info(self, invoice, filter_invl_to_apply=None):
 
-        def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
+        def grouping_key_generator(base_line, tax_data):
+            tax = tax_data['tax']
             return {
                 'applied_tax_amount': tax.amount,
                 'l10n_es_type': tax.l10n_es_type,
@@ -77,11 +77,13 @@ class AccountEdiFormat(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
             }
 
-        def filter_to_apply(base_line, tax_values):
+        def filter_to_apply(base_line, tax_data):
             # For intra-community, we do not take into account the negative repartition line
-            return (tax_values['tax_repartition_line'].factor_percent > 0.0
-                    and tax_values['tax_repartition_line'].tax_id.amount != -100.0
-                    and tax_values['tax_repartition_line'].tax_id.l10n_es_type != 'ignore')
+            return (
+                not tax_data['is_reverse_charge']
+                and tax_data['tax'].amount != -100.0
+                and tax_data['tax'].l10n_es_type != 'ignore'
+            )
 
         def full_filter_invl_to_apply(invoice_line):
             if all(t == 'ignore' for t in invoice_line.tax_ids.flatten_taxes_hierarchy().mapped('l10n_es_type')):
@@ -100,20 +102,24 @@ class AccountEdiFormat(models.Model):
         # Detect for which is the main tax for 'recargo'. Since only a single combination tax + recargo is allowed
         # on the same invoice, this can be deduced globally.
 
-        recargo_tax_details = {} # Mapping between main tax and recargo tax details
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))
-        if filter_invl_to_apply:
-            invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
-        for line in invoice_lines:
+        recargo_tax_details = defaultdict(list)  # Mapping between main tax and recargo tax details
+        for base_line in tax_details['base_lines']:
+            line = base_line['record']
             taxes = line.tax_ids.flatten_taxes_hierarchy()
-            recargo_tax = [t for t in taxes if t.l10n_es_type == 'recargo']
+            recargo_tax = taxes.filtered(lambda t: t.l10n_es_type == 'recargo')[:1]
             if recargo_tax and taxes:
                 recargo_main_tax = taxes.filtered(lambda x: x.l10n_es_type in ('sujeto', 'sujeto_isp'))[:1]
+                aggregated_values = tax_details['tax_details_per_record'][line]
                 if not recargo_tax_details.get(recargo_main_tax):
-                    recargo_tax_details[recargo_main_tax] = [
-                        x for x in tax_details['tax_details'].values()
-                        if x['group_tax_details'][0]['tax_repartition_line'].tax_id == recargo_tax[0]
-                    ][0]
+                    recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount] = next(iter(
+                        values
+                        for values in aggregated_values['tax_details'].values()
+                        if (
+                            values['grouping_key']
+                            and values['grouping_key']['l10n_es_type'] == recargo_tax.l10n_es_type
+                            and values['grouping_key']['applied_tax_amount'] == recargo_tax.amount
+                        )
+                    ))
 
         tax_amount_deductible = 0.0
         tax_amount_retention = 0.0
@@ -122,6 +128,7 @@ class AccountEdiFormat(models.Model):
         tax_subject_info_list = []
         tax_subject_isp_info_list = []
         for tax_values in tax_details['tax_details'].values():
+            recargo = recargo_tax_details.get((tax_values['l10n_es_type'], tax_values['applied_tax_amount']))
             if invoice.is_sale_document():
                 # Customer invoices
 
@@ -135,7 +142,6 @@ class AccountEdiFormat(models.Model):
                         'CuotaRepercutida': float_round(math.copysign(tax_values['tax_amount'], base_amount), 2),
                     }
 
-                    recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_repartition_line'].tax_id)
                     if recargo:
                         tax_info['CuotaRecargoEquivalencia'] = float_round(sign * recargo['tax_amount'], 2)
                         tax_info['TipoRecargoEquivalencia'] = recargo['applied_tax_amount']
@@ -186,7 +192,6 @@ class AccountEdiFormat(models.Model):
                         })
                     if tax_values['l10n_es_bien_inversion']:
                         tax_info['BienInversion'] = 'S'
-                    recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_repartition_line'].tax_id)
                     if recargo:
                         tax_info['CuotaRecargoEquivalencia'] = float_round(sign * recargo['tax_amount'], 2)
                         tax_info['TipoRecargoEquivalencia'] = recargo['applied_tax_amount']

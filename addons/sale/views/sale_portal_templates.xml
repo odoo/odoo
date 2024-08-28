@@ -655,8 +655,10 @@
 
     <template id="sale_order_portal_content_totals_table">
         <table class="table table-sm" name="sale_order_totals_table">
-            <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
-            <t t-call="#{sale_order._get_name_tax_totals_view()}"/>
+            <t t-call="#{sale_order._get_name_tax_totals_view()}">
+                <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
+                <t t-set="currency" t-value="sale_order.currency_id"/>
+            </t>
         </table>
     </template>
 </odoo>

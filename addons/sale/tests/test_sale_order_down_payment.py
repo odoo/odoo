@@ -674,11 +674,11 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # down payment
             [self.revenue_account.id,    tax_21_a.ids, 82.64,     100.0        ],
             [self.revenue_account.id,    tax_21_b.ids, 82.64,     100.0        ],
+            # receivable
+            [self.receivable_account.id, [],           -200,      0.0          ],
             # taxes
             [self.tax_account.id,        [],           17.36,     0.0          ],
             [self.tax_account.id,        [],           17.36,     0.0          ],
-            # receivable
-            [self.receivable_account.id, [],           -200,      0.0          ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
         self.assertEqual(downpayment.amount_invoiced, 200.0, "Amount invoiced is not equal to downpayment amount")
@@ -778,11 +778,11 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # down payment
             [self.revenue_account.id,    tax_24_a.ids, 80.65,     100.0        ],
             [self.revenue_account.id,    tax_24_b.ids, 80.65,     100.0        ],
+            # receivable
+            [self.receivable_account.id, [],           -200,      0.0          ],
             # taxes
             [self.tax_account.id,        [],           19.35,     0.0          ],
             [self.tax_account.id,        [],           19.35,     0.0          ],
-            # receivable
-            [self.receivable_account.id, [],           -200,      0.0          ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
         self.assertEqual(downpayment.amount_invoiced, 200.0, "Amount invoiced is not equal to downpayment amount")

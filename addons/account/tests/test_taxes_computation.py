@@ -618,12 +618,6 @@ class TestTaxesComputation(TestTaxCommon):
         tax5 = self.division_tax(15)
 
         # Same of tax4/tax5 except the amount is based on 32% of the base amount.
-        tax4_32 = self.division_tax(9)
-        tax5_32 = self.division_tax(15)
-        (tax4_32 + tax5_32).invoice_repartition_line_ids\
-            .filtered(lambda x: x.repartition_type == 'tax')\
-            .factor_percent = 32
-
         self.assert_taxes_computation(
             tax1 + tax2 + tax3 + tax4 + tax5,
             32.33,
@@ -640,24 +634,8 @@ class TestTaxesComputation(TestTaxCommon):
             },
             rounding_method='round_globally',
         )
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3 + tax4_32 + tax5_32,
-            836.7,
-            {
-                'total_included': 1000.0,
-                'total_excluded': 836.7,
-                'taxes_data': (
-                    (836.7, 50.0),
-                    (836.7, 30.0),
-                    (836.7, 6.5),
-                    (836.7, 28.8),
-                    (836.7, 48.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
 
-        (tax1 + tax2 + tax3 + tax4 + tax5 + tax4_32 + tax5_32).price_include_override = 'tax_included'
+        (tax1 + tax2 + tax3 + tax4 + tax5).price_include_override = 'tax_included'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3 + tax4 + tax5,
             48.0,
@@ -670,22 +648,6 @@ class TestTaxesComputation(TestTaxCommon):
                     (32.328, 0.312),
                     (32.328, 4.32),
                     (32.328, 7.2),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3 + tax4_32 + tax5_32,
-            1000.0,
-            {
-                'total_included': 1000.0,
-                'total_excluded': 836.7,
-                'taxes_data': (
-                    (836.7, 50.0),
-                    (836.7, 30.0),
-                    (836.7, 6.5),
-                    (836.7, 28.8),
-                    (836.7, 48.0),
                 ),
             },
             rounding_method='round_globally',

@@ -210,10 +210,6 @@
             </div>
         </xpath>
 
-        <!-- Disable the recap of tax totals in company currency at the bottom right of the invoice
-        to prevent duplicate info since it's already present in our custom tax totals-->
-        <xpath expr="//div[@id='right-elements']/t[@t-call='account.document_tax_totals_company_currency_template']" position="replace"/>
-
         <xpath expr="//span[@t-field='line.name']" position="replace">
             <t t-set="all_taxes" t-value="'all_taxes'"/>
             <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
@@ -236,7 +232,7 @@
     </template>
 
     <template id="tax_totals_widget" inherit_id="account.document_tax_totals" primary="True">
-        <t t-foreach="tax_totals.get('subtotals')" t-as="subtotal" position="replace">
+        <t t-foreach="tax_totals['subtotals']" t-as="subtotal" position="replace">
             <t t-set="subtotal_amounts" t-value="o._l10n_cl_get_amounts()"/>
             <t t-set="withholdings" t-value="o._l10n_cl_get_withholdings()"/>
             <t t-if="subtotal_amounts['subtotal_amount_taxable'] != 0.0">

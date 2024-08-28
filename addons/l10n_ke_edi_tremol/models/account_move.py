@@ -196,10 +196,10 @@ class AccountMove(models.Model):
             percentage = 0
             item_code = line.tax_ids[0].l10n_ke_item_code_id
             for tax in tax_details['tax_details_per_record'][line]['tax_details']:
-                if tax['tax'].amount in (16, 8, 0): # This should only occur once
+                if tax.amount in (16, 8, 0):  # This should only occur once
                     line_tax_details = tax_details['tax_details_per_record'][line]['tax_details'][tax]
                     price_total = abs(line_tax_details['base_amount_currency']) + abs(line_tax_details['tax_amount_currency'])
-                    percentage = tax['tax'].amount
+                    percentage = tax.amount
             price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate
             price = ('%.5f' % price).rstrip('0').rstrip('.')
             uom = line.product_uom_id and line.product_uom_id.name or ''

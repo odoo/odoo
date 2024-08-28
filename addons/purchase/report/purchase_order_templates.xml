@@ -126,8 +126,10 @@
             <div id="total" class="row justify-content-end mt-n3">
                 <div class="col-4">
                     <table class="o_total_table table table-borderless">
-                        <t t-set="tax_totals" t-value="o.tax_totals"/>
-                        <t t-call="purchase.document_tax_totals"/>
+                        <t t-call="purchase.document_tax_totals">
+                            <t t-set="tax_totals" t-value="o.tax_totals"/>
+                            <t t-set="currency" t-value="o.currency_id"/>
+                        </t>
                     </table>
                 </div>
             </div>

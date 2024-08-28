@@ -335,39 +335,19 @@ class AccountMove(models.Model):
     def _l10n_ar_get_invoice_totals_for_report(self):
         """If the invoice document type indicates that vat should not be detailed in the printed report (result of _l10n_ar_include_vat()) then we overwrite tax_totals field so that includes taxes in the total amount, otherwise it would be showing amount_untaxed in the amount_total"""
         self.ensure_one()
+        tax_totals = self.tax_totals
         include_vat = self._l10n_ar_include_vat()
-        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        if not include_vat:
+            return tax_totals
 
-        # Base lines.
-        base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
-        if include_vat:
-            for vals in base_line_vals_list:
-                vals['taxes'] = vals['taxes']\
-                    .flatten_taxes_hierarchy()\
-                    .filtered(lambda tax: not tax.tax_group_id.l10n_ar_vat_afip_code)
-
-        # Tax lines.
-        tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
-        if include_vat:
-            tax_line_vals_list = [
-                x
-                for x in tax_line_vals_list
-                if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
-            ]
-
-        tax_totals = self.env['account.tax']._prepare_tax_totals(
-            base_line_vals_list,
-            self.currency_id,
-            self.company_id,
-            tax_lines=tax_line_vals_list,
-        )
-
-        if include_vat:
-            temp = self.tax_totals
-            tax_totals['amount_total'] = temp['amount_total']
-            tax_totals['formatted_amount_total'] = temp['formatted_amount_total']
-
+        tax_group_ids = {
+            tax_group['id']
+            for subtotal in tax_totals['subtotals']
+            for tax_group in subtotal['tax_groups']
+        }
+        tax_group_ids_to_exclude = self.env['account.tax.group'].browse(tax_group_ids).filtered('l10n_ar_vat_afip_code').ids
+        if tax_group_ids_to_exclude:
+            return self.env['account.tax']._exclude_tax_group_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
         return tax_totals
 
     def _l10n_ar_include_vat(self):

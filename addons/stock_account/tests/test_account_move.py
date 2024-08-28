@@ -167,33 +167,9 @@ class TestAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(invoice.amount_tax, 15)
 
         # simulate manual tax edit via widget
-        vals = {
-            'tax_totals': {
-                'amount_untaxed': 100,
-                'amount_total': 114,
-                'formatted_amount_total': '$\xa0114.00',
-                'formatted_amount_untaxed': '$\xa0100.00',
-                'groups_by_subtotal': {
-                    'Untaxed Amount': [{
-                        'group_key': 2,
-                        'tax_group_id': invoice.invoice_line_ids.tax_ids.tax_group_id.id,
-                        'tax_group_name': 'Tax 15%',
-                        'tax_group_amount': 14,
-                        'tax_group_base_amount': 100,
-                        'formatted_tax_group_amount': '$\xa014.00',
-                        'formatted_tax_group_base_amount': '$\xa0100.00'
-                    }]
-                },
-                'subtotals': [{
-                    'name': 'Untaxed Amount',
-                    'amount': 100,
-                    'formatted_amount': '$\xa0100.00'
-                }],
-                'subtotals_order': ['Untaxed Amount'],
-                'display_tax_base': False,
-            }
-        }
-        invoice.write(vals)
+        tax_totals = invoice.tax_totals
+        tax_totals['subtotals'][0]['tax_groups'][0]['tax_amount_currency'] = 14.0
+        invoice.tax_totals = tax_totals
 
         self.assertEqual(len(invoice.mapped("line_ids")), 3)
         self.assertEqual(invoice.amount_total, 114)
