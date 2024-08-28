@@ -22,3 +22,17 @@ class GroupsView(models.Model):
         if group_account_basic and group_account_basic.category_id.xml_id == 'base.module_category_hidden':
             domain += [('id', '!=', group_account_basic.id)]
         return super().get_application_groups(domain)
+
+    @api.model
+    def _activate_group_account_secured(self):
+        group_account_secured = self.env.ref('account.group_account_secured', raise_if_not_found=False)
+        if not group_account_secured:
+            return
+        groups_with_access = [
+            'account.group_account_readonly',
+            'account.group_account_invoice',
+        ]
+        for group_name in groups_with_access:
+            group = self.env.ref(group_name, raise_if_not_found=False)
+            if group:
+                group.sudo()._apply_group(group_account_secured)

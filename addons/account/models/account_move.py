@@ -282,6 +282,11 @@ class AccountMove(models.Model):
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
     secure_sequence_number = fields.Integer(string="Inalterability No Gap Sequence #", readonly=True, copy=False, index=True)
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False, index='btree_not_null')
+    secured = fields.Boolean(
+        compute="_compute_secured",
+        search='_search_secured',
+        help="The entry is secured with an inalterable hash."
+    )
 
     # ==============================================================================================
     #                                          INVOICE
@@ -890,6 +895,18 @@ class AccountMove(models.Model):
 
         for record in self:
             record.type_name = type_name_mapping[record.move_type]
+
+    @api.depends('inalterable_hash')
+    def _compute_secured(self):
+        for move in self:
+            move.secured = bool(move.inalterable_hash)
+
+    def _search_secured(self, operator, value):
+        if operator not in ['=', '!='] or value not in [True, False]:
+            raise UserError(_('Operation not supported'))
+
+        want_secured = (operator == '=') == value
+        return [('inalterable_hash', '!=' if want_secured else '=', False)]
 
     @api.depends('line_ids.account_id.account_type')
     def _compute_always_tax_exigible(self):
@@ -3481,7 +3498,7 @@ class AccountMove(models.Model):
             move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
             for move, move_hash in move_hashes.items():
                 move.inalterable_hash = move_hash
-            chain['moves']._message_log_batch(bodies={m.id: _("This move has been locked.") for m in chain['moves']})
+            chain['moves']._message_log_batch(bodies={m.id: _("This journal entry has been secured.") for m in chain['moves']})
 
     def _get_chain_info(self, force_hash=False, include_pre_last_hash=False, early_stop=False):
         """All records in `self` must belong to the same journal and sequence_prefix
