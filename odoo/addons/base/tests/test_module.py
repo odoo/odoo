@@ -42,6 +42,7 @@ class TestModuleManifest(BaseCase):
             'auto_install': False,
             'bootstrap': False,
             'category': 'Uncategorized',
+            'cloc_exclude': [],
             'configurator_snippets': {},
             'countries': [],
             'data': [],
