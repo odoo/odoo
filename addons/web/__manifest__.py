@@ -527,6 +527,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/tests/legacy/views/calendar/helpers.js'),
             'web/static/tests/legacy/webclient/**/*.js',
             ('remove', 'web/static/tests/legacy/webclient/**/helpers.js'),
+            'web/static/tests/legacy/public/**/*.js',
 
             # Legacy
             'web/static/tests/legacy/legacy_tests/**/*.js',
