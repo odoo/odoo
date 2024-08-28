@@ -122,6 +122,7 @@ class HrEmployeePrivate(models.Model):
     ], 'Home-Work Distance unit', tracking=True, groups="hr.group_hr_user", default='kilometers', required=True)
     employee_type = fields.Selection([
             ('employee', 'Employee'),
+            ('worker', 'Worker'),
             ('student', 'Student'),
             ('trainee', 'Trainee'),
             ('contractor', 'Contractor'),
