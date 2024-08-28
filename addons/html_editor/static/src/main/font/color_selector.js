@@ -53,7 +53,9 @@ export class ColorSelector extends Component {
         this.colorWrapperEl = useRef("colorsWrapper");
         this.selectedColors = useState(this.props.getSelectedColors());
         this.defaultColor = this.selectedColors[this.mode];
-        this.currentCustomColor = useState({ color: undefined });
+        this.currentCustomColor = useState({ color: this.selectedColors[this.mode] });
+
+        this.usedCustomColors = this.props.getUsedCustomColors();
     }
 
     setTab(tab) {
@@ -69,6 +71,7 @@ export class ColorSelector extends Component {
     }
 
     applyColor(color) {
+        this.currentCustomColor.color = color;
         this.props.dispatch("APPLY_COLOR", { color: color || "", mode: this.mode });
     }
 

@@ -136,16 +136,45 @@ test("select hex color and apply it", async () => {
 
     edit("#017E84"); // === rgb(1, 126, 132)
     await animationFrame();
-    expect("button[data-color='rgb(1, 126, 132)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(1, 126, 132)']").style.backgroundColor).toBe(
-        "rgb(1, 126, 132)"
-    );
+    expect("button[data-color='#017E84']").toHaveCount(1);
+    expect(queryOne("button[data-color='#017E84']").style.backgroundColor).toBe("rgb(1, 126, 132)");
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
 
     click(".odoo-editor-editable");
     await animationFrame();
     expect(".o_font_color_selector").toHaveCount(0);
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test("always show the current custom color", async () => {
+    await setupEditor(`<p>[test]</p>`);
+    await waitFor(".o-we-toolbar");
+    click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+
+    click(".btn:contains('Custom')");
+    await animationFrame();
+    click(".o_hex_input");
+    await animationFrame();
+    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(1);
+    expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
+        "rgb(55, 65, 81)",
+        { message: "backgroundColor is the default black" }
+    );
+
+    edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(1);
+    expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
+        "rgb(1, 126, 132)"
+    );
+
+    hover(".o_colorpicker_section:nth-of-type(2) button:first");
+    await animationFrame();
+    expect(".o_colorpicker_section:first button").toHaveCount(1);
+    expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
+        "rgb(1, 126, 132)"
+    );
 });
 
 test("Can reset a color", async () => {

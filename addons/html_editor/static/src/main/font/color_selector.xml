@@ -59,9 +59,10 @@
                         <t t-if="state.activeTab==='custom'">
                             <div class="p-1">
                                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
-                                    <t t-foreach="this.props.getUsedCustomColors()" t-as="color" t-key="color_index">
+                                    <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
                                         <button class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                                     </t>
+                                    <button class="o_color_button btn selected" t-att-data-color="this.currentCustomColor.color" t-attf-style="background-color: {{this.currentCustomColor.color}}"/>
                                 </div>
                                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
                                     <button data-color="black" class="btn o_color_button bg-black"></button>
