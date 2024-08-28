@@ -440,47 +440,6 @@ a.no-decoration {
         }
     }
 
-
-    .carousel-control-prev .fa {
-        padding-right: 2px;
-    }
-    .carousel-control-next .fa {
-        padding-left: 2px;
-    }
-
-    .carousel-control-prev, .carousel-control-next {
-        top: auto;
-        bottom: auto;
-        opacity: 0.5;
-        cursor: pointer;
-        transition: opacity 0.8s;
-
-        &:focus {
-            opacity: 0.65;
-        }
-        &:hover {
-            opacity: 0.8;
-        }
-        > span {
-            width: 2.5rem;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            color: map-get($grays, '900');
-            background: white;
-            @include font-size(1.15rem);
-            border: 1px solid map-get($grays, '400');
-            border-radius: 50%;
-        }
-        @include media-breakpoint-down(lg) {
-            > span {
-                width: 2rem;
-                height: 2rem;
-                line-height: 2rem;
-                font-size: 1rem;
-            }
-        }
-    }
-
     @include media-breakpoint-up(xl) {
         &:not(:hover) {
             .carousel-control-prev, .carousel-control-next {
@@ -570,6 +529,41 @@ a.no-decoration {
                 &:not(:first-child) {
                     margin-top: 10px;
                 }
+            }
+        }
+    }
+}
+
+#o-carousel-product, .o_wsale_image_viewer {
+    .carousel-control-prev, .carousel-control-next {
+        top: auto;
+        bottom: auto;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.8s;
+
+        &:focus {
+            opacity: 0.65;
+        }
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+        > i {
+            width: 2.5rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            @include font-size(1.15rem);
+            border-radius: var(--btn-border-radius);
+        }
+
+        @include media-breakpoint-down(lg) {
+            > i {
+                width: 2rem;
+                height: 2rem;
+                line-height: 2rem;
+                font-size: 1rem;
             }
         }
     }
