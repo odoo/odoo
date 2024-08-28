@@ -1964,7 +1964,7 @@ class AccountTax(models.Model):
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_detail['display_base_amount_currency'], currency_obj=currency),
                 'display_formatted_tax_group_base_amount': not all(x['tax'].amount_type == 'fixed' for x in tax_detail['group_tax_details']),
             })
-            encountered_base_amounts.add(tax_detail['display_base_amount_currency'])
+            encountered_base_amounts.add(currency.round(tax_detail['display_base_amount_currency']))
 
         # Compute amounts.
         subtotals = []
