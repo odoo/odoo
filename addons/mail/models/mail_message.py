@@ -498,7 +498,7 @@ class Message(models.Model):
             author_ids = [mid for mid, message in message_values.items() if message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.items()
-                          if not self.is_thread_message(message)]
+                          if not self._is_thread_message(message)]
 
         messages_to_check = self.ids
         messages_to_check = set(messages_to_check).difference(set(author_ids))
@@ -698,7 +698,7 @@ class Message(models.Model):
                 if other_cmd:
                     message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-            if message.is_thread_message(values):
+            if message._is_thread_message(values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
 
         return messages
@@ -1228,7 +1228,7 @@ class Message(models.Model):
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None
-        if self.is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
+        if self._is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
@@ -1238,7 +1238,7 @@ class Message(models.Model):
     def _get_message_id(self, values):
         if values.get('reply_to_force_new', False) is True:
             message_id = tools.mail.generate_tracking_message_id('reply_to')
-        elif self.is_thread_message(values):
+        elif self._is_thread_message(values):
             message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
             message_id = tools.mail.generate_tracking_message_id('private')
@@ -1248,7 +1248,7 @@ class Message(models.Model):
     def _get_search_domain_share(self):
         return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
 
-    def is_thread_message(self, vals=None):
+    def _is_thread_message(self, vals=None):
         if vals:
             res_id = vals.get('res_id')
             model = vals.get('model')
