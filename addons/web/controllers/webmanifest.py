@@ -82,7 +82,7 @@ class WebManifest(http.Controller):
         return response
 
     def _get_service_worker_content(self):
-        """ Returns a ServiceWorker javascript file scoped for the backend (aka. '/web')
+        """ Returns a ServiceWorker javascript file scoped for the backend (aka. '/odoo')
         """
         with file_open('web/static/src/service_worker.js') as f:
             body = f.read()

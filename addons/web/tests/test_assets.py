@@ -112,7 +112,7 @@ class TestLoad(HttpCase):
             return attachment
 
         with patch('odoo.addons.base.models.assetsbundle.AssetsBundle.save_attachment', save_attachment):
-            self.url_open('/web').raise_for_status()
+            self.url_open('/odoo').raise_for_status()
             self.url_open('/').raise_for_status()
 
 

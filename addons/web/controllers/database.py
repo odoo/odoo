@@ -82,7 +82,7 @@ class Database(http.Controller):
             credential = {'login': post['login'], 'password': password, 'type': 'password'}
             request.session.authenticate(name, credential)
             request.session.db = name
-            return request.redirect('/web')
+            return request.redirect('/odoo')
         except Exception as e:
             _logger.exception("Database creation error.")
             error = "Database creation error: %s" % (str(e) or repr(e))

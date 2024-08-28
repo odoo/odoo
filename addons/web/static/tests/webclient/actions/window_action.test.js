@@ -1857,7 +1857,7 @@ test.tags("desktop")(
 );
 
 test.tags("desktop")("destroy action with lazy loaded controller", async () => {
-    redirect("/web#action=3&id=2&view_type=form");
+    redirect("/odoo/action-3/2");
 
     await mountWithCleanup(WebClient);
     await animationFrame(); // blank component

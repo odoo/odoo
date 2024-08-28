@@ -95,7 +95,7 @@ class TestDatabaseOperations(BaseCase):
             'phone': '',
         }, allow_redirects=False)
         self.assertEqual(res.status_code, 303)
-        self.assertIn('/web', res.headers['Location'])
+        self.assertIn('/odoo', res.headers['Location'])
         self.assertDbs([test_db_name])
 
         # delete the created database

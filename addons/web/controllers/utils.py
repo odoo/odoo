@@ -269,7 +269,7 @@ def _get_login_redirect_url(uid, redirect=None):
     fully logged and can proceed to the requested URL
     """
     if request.session.uid:  # fully logged
-        return redirect or ('/web' if is_user_internal(request.session.uid)
+        return redirect or ('/odoo' if is_user_internal(request.session.uid)
                             else '/web/login_successful')
 
     # partial session (MFA)

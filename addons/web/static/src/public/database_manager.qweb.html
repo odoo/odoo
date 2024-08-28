@@ -48,7 +48,7 @@
 
                         <t t-foreach="databases" t-as="db">
                             <div class="list-group-item d-flex align-items-center">
-                                <a t-attf-href="/web?db={{ db }}" class="d-block flex-grow-1">
+                                <a t-attf-href="/odoo?db={{ db }}" class="d-block flex-grow-1">
                                     <t t-if="db in incompatible_databases">
                                         <i class="icon fa fa-warning float-end text-warning" title="This database may not be compatible"></i>
                                     </t>
