@@ -90,6 +90,10 @@
             'point_of_sale/static/src/app/models/data_service_options.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/services/data_service.js',
+            # for numpad.test.js',
+            'point_of_sale/static/src/app/components/numpad/numpad.js',
+            'point_of_sale/static/src/app/components/numpad/numpad.xml',
+            'point_of_sale/static/tests/generic_helpers/numpad_util.js',
             'point_of_sale/static/tests/unit/**/*',
         ],
 

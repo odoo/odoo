@@ -5,6 +5,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selecti
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -33,6 +34,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             PosLoyalty.hasRewardLine("on the cheapest product", "-2.88"),
             PosLoyalty.orderTotalIs("16.32"),
             PosLoyalty.removeRewardLine("90% on the cheapest product"),
+            Order.doesNotHaveLine({ productName: "90% on the cheapest product" }),
             PosLoyalty.orderTotalIs("19.2"),
             PosLoyalty.finalizeOrder("Cash", "20"),
 
@@ -47,6 +49,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             Notification.has("invalid_code"),
             PosLoyalty.enterCode("1234"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-15.30"),
+            Order.doesNotHaveLine({ productName: "90% on the cheapest product" }),
             PosLoyalty.finalizeOrder("Cash", "50"),
 
             // Use coupon but eventually remove the reward

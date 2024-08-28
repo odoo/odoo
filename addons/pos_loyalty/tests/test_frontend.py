@@ -143,7 +143,9 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
-        self.start_pos_tour("PosLoyaltyTour1")
+        self.start_pos_tour("PosLoyaltyTour1", debug=True, step_delay=1000, error_checker=lambda x: False)
+        # self.start_pos_tour("PosLoyaltyTour1", debug=True,  error_checker=lambda x: False)
+        # self.start_pos_tour("PosLoyaltyTour1")
 
         # check coupon usage
         self.assertEqual(self.coupon1.points, 0, 'The coupon should have consumed its points.')
