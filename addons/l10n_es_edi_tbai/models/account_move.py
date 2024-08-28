@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
-from re import sub as regex_sub
 
 from markupsafe import Markup
 from psycopg2.errors import LockNotAvailable
@@ -277,17 +275,20 @@ class AccountMove(models.Model):
 
     def _l10n_es_tbai_get_invoice_values(self, cancel=False):
         self.ensure_one()
+        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
+        for base_line in base_lines:
+            base_line['name'] = base_line['record'].name
+        tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id, tax_lines=tax_lines)
 
         return {
             **self._l10n_es_tbai_get_credit_note_values(),
             'origin': self.invoice_origin,
-            'taxes': self.invoice_line_ids.tax_ids,
+            'taxes': self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy(),
             'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
-            'base_lines': [
-                line._convert_to_tax_base_line_dict() | {'name': line.name}
-                for line in self.invoice_line_ids
-                if line.display_type not in ('line_section', 'line_note') and not line._l10n_es_tbai_is_ignored()
-            ],
+            'base_lines': base_lines,
             **({'post_doc': self.l10n_es_tbai_post_document_id} if cancel else {}),
         }
 
@@ -311,7 +312,7 @@ class AccountMove(models.Model):
         # Check if intracom
         mod_303_10 = self.env.ref('l10n_es.mod_303_casilla_10_balance')._get_matching_tags()
         mod_303_11 = self.env.ref('l10n_es.mod_303_casilla_11_balance')._get_matching_tags()
-        tax_tags = self.invoice_line_ids.tax_ids.repartition_line_ids.tag_ids
+        tax_tags = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy().repartition_line_ids.tag_ids
         intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
         values['regime_key'] = ['09'] if intracom else ['01']
         # Credit notes (factura rectificativa)

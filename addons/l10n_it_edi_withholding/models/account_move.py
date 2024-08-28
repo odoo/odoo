@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import namedtuple
 from markupsafe import Markup
 from odoo import _, api, fields, models
 
@@ -30,85 +29,141 @@ class AccountMove(models.Model):
             move.l10n_it_amount_pension_fund_signed = totals['pension_fund']
             move.l10n_it_amount_before_withholding_signed = move.amount_untaxed_signed + totals['vat'] + totals['pension_fund']
 
-    def _l10n_it_edi_filter_tax_details(self, line, tax_values):
-        """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
-        repartition_line = tax_values['tax_repartition_line']
-        repartition_line_vat = repartition_line.tax_id._l10n_it_filter_kind('vat')
-        return repartition_line.factor_percent >= 0 and repartition_line_vat and repartition_line_vat.amount >= 0
+    @api.model
+    def _l10n_it_edi_grouping_function_base_lines(self, base_line, tax_data):
+        # EXTENDS 'l10n_it_edi'
+        grouping_key = super()._l10n_it_edi_grouping_function_base_lines(base_line, tax_data)
+        tax = tax_data['tax']
+        is_withholding = tax._l10n_it_filter_kind('withholding')
+        is_pension_fund = tax._l10n_it_filter_kind('pension_fund')
+        grouping_key['skip'] = grouping_key['skip'] or is_withholding or is_pension_fund
+        return grouping_key
+
+    @api.model
+    def _l10n_it_edi_grouping_function_tax_lines(self, base_line, tax_data):
+        # EXTENDS 'l10n_it_edi'
+        grouping_key = super()._l10n_it_edi_grouping_function_tax_lines(base_line, tax_data)
+        tax = tax_data['tax']
+        is_withholding = tax._l10n_it_filter_kind('withholding')
+        is_pension_fund = tax._l10n_it_filter_kind('pension_fund')
+        grouping_key['skip'] = grouping_key['skip'] or is_withholding or is_pension_fund
+        return grouping_key
+
+    @api.model
+    def _l10n_it_edi_grouping_function_total(self, base_line, tax_data):
+        # EXTENDS 'l10n_it_edi'
+        skip = not super()._l10n_it_edi_grouping_function_total(base_line, tax_data)
+        tax = tax_data['tax']
+        is_withholding = tax._l10n_it_filter_kind('withholding')
+        is_pension_fund = tax._l10n_it_filter_kind('pension_fund')
+        return not (skip or is_withholding or is_pension_fund)
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
-        """Add withholding and pension_fund features."""
+        # EXTENDS 'l10n_it_edi'
         template_values = super()._l10n_it_edi_get_values(pdf_values)
+        base_lines = template_values['base_lines']
 
-        # Withholding tax data
-        WithholdingTaxData = namedtuple('TaxData', ['tax', 'tax_amount'])
-        withholding_lines = self.line_ids.filtered(lambda x: x.tax_line_id._l10n_it_filter_kind('withholding'))
-        withholding_values = [WithholdingTaxData(x.tax_line_id, abs(x.balance)) for x in withholding_lines]
+        # Withholding tax amounts.
 
-        # Eventually fix the total as it must be computed before applying the Withholding.
-        # Withholding amount is negatively signed, so we need to subtract it
-        document_total = template_values['document_total']
-        document_total -= self.l10n_it_amount_withholding_signed
+        def grouping_function_withholding(base_line, tax_data):
+            tax = tax_data['tax']
+            return {
+                'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
+                'l10n_it_withholding_type': tax.l10n_it_withholding_type,
+                'l10n_it_withholding_reason': tax.l10n_it_withholding_reason,
+                'skip': not tax._l10n_it_filter_kind('withholding'),
+            }
 
-        # Pension fund tax data, I need the base amount so I have to sum the amounts of the lines with the tax
-        PensionFundTaxData = namedtuple('TaxData', ['tax', 'base_amount', 'tax_amount', 'vat_tax', 'withholding_tax'])
-        pension_fund_lines = self.line_ids.filtered(lambda line: line.tax_line_id._l10n_it_filter_kind('pension_fund'))
-        pension_fund_mapping = {}
-        for line in self.line_ids:
-            pension_fund_tax = line.tax_ids._l10n_it_filter_kind('pension_fund')
-            if pension_fund_tax:
-                pension_fund_mapping[pension_fund_tax.id] = (line.tax_ids._l10n_it_filter_kind('vat'), line.tax_ids._l10n_it_filter_kind('withholding'))
-
-        # Pension fund taxes in the XML must have a reference to their VAT tax (Aliquota tag)
-        pension_fund_values = []
-        enasarco_taxes = []
-        for line in pension_fund_lines:
-            # Enasarco must be treated separately
-            if line.tax_line_id.l10n_it_pension_fund_type == 'TC07':
-                enasarco_taxes.append(line.tax_line_id)
+        AccountTax = self.env['account.tax']
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_withholding)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        withholding_values = []
+        for values in values_per_grouping_key.values():
+            grouping_key = values['grouping_key']
+            if not grouping_key or grouping_key['skip']:
                 continue
-            pension_fund_tax = line.tax_line_id
-            # Here we are supposing that the same pension_fund is always associated to the same VAT and Withholding taxes
-            # That's also what the "Aliquota" tag seems to imply in the XML.
-            vat_tax, withholding_tax = pension_fund_mapping[pension_fund_tax.id]
-            pension_fund_values.append(PensionFundTaxData(pension_fund_tax, line.tax_base_amount, abs(line.balance), vat_tax, withholding_tax))
 
-        # Pension fund must be expressed in the AltriDatiGestionali at the line detail level
-        pension_fund_by_line_id = {}
-        if pension_fund_values:
-            base_lines = [
-                line._convert_to_tax_base_line_dict()
-                for line in self.line_ids.filtered(lambda line: line.display_type == 'product')
-            ]
-            for base_line in base_lines:
-                for pension_fund in pension_fund_values:
-                    if pension_fund.tax.id in base_line['taxes'].ids:
-                        pension_fund_by_line_id[base_line['record'].id] = pension_fund.tax
+            withholding_values.append({
+                'tipo_ritenuta': grouping_key['l10n_it_withholding_type'],
+                'importo_ritenuta': -values['tax_amount'],
+                'aliquota_ritenuta': -grouping_key['tax_amount_field'],
+                'causale_pagamento': grouping_key['l10n_it_withholding_reason'],
+            })
 
-        # Enasarco pension fund must be expressed in the AltriDatiGestionali at the line detail level
-        enasarco_values = False
-        if enasarco_taxes:
-            enasarco_values = {}
-            enasarco_details = self._prepare_invoice_aggregated_taxes(
-                    filter_tax_values_to_apply=lambda line, tax_values: tax_values['tax'].l10n_it_pension_fund_type == 'TC07'
-            )
-            for detail in enasarco_details['tax_details_per_record'].values():
-                for subdetail in detail['tax_details'].values():
-                    # Withholdings are removed from the total, we have to re-add them
-                    document_total += abs(subdetail['tax_amount'])
-                    line = subdetail['records'].pop()
-                    enasarco_values[line.id] = {
-                        'amount': subdetail['tax'].amount,
-                        'tax_amount': abs(subdetail['tax_amount']),
-                    }
+        # Pension fund.
+
+        def grouping_function_pension_funds(base_line, tax_data):
+            tax = tax_data['tax']
+            flatten_taxes = base_line['tax_ids'].flatten_taxes_hierarchy()
+            vat_tax = flatten_taxes.filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0)[:1]
+            withholding_tax = flatten_taxes.filtered(lambda t: t._l10n_it_filter_kind('withholding') and t.sequence > tax.sequence)[:1]
+            return {
+                'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
+                'vat_tax_amount_field': -23.0 if vat_tax.amount == -11.5 else vat_tax.amount,
+                'has_withholding': bool(withholding_tax),
+                'l10n_it_pension_fund_type': tax.l10n_it_pension_fund_type,
+                'l10n_it_exempt_reason': vat_tax.l10n_it_exempt_reason,
+                'description': vat_tax.description,
+                'skip': not tax._l10n_it_filter_kind('pension_fund') or tax.l10n_it_pension_fund_type == 'TC07',
+            }
+
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_pension_funds)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        pension_fund_values = []
+        for values in values_per_grouping_key.values():
+            grouping_key = values['grouping_key']
+            if not grouping_key or grouping_key['skip']:
+                continue
+
+            pension_fund_values.append({
+                'tipo_cassa': grouping_key['l10n_it_pension_fund_type'],
+                'al_cassa': grouping_key['tax_amount_field'],
+                'importo_contributo_cassa': values['tax_amount'],
+                'imponibile_cassa': values['base_amount'],
+                'aliquota_iva': grouping_key['vat_tax_amount_field'],
+                'ritenuta': 'SI' if grouping_key['has_withholding'] else None,
+                'natura': grouping_key['l10n_it_exempt_reason'],
+                'riferimento_amministrazione': grouping_key['description'],
+            })
+
+        # Enasarco values.
+        for base_line in base_lines:
+            taxes_data = base_line['tax_details']['taxes_data']
+            it_values = base_line['it_values']
+            other_data_list = it_values['altri_dati_gestionali_list']
+
+            # Withholding
+            if any(x for x in taxes_data if x['tax']._l10n_it_filter_kind('withholding')):
+                it_values['ritenuta'] = 'SI'
+
+            # Enasarco
+            enasarco_taxes_data = [x for x in taxes_data if x['tax'].l10n_it_pension_fund_type == 'TC07']
+            for enasarco_tax_data in enasarco_taxes_data:
+                percentage_str = round(abs(enasarco_tax_data['tax'].amount), 1)
+                other_data_list.append({
+                    'tipo_dato': 'CASSA-PREV',
+                    'riferimento_testo': f'TC07 - ENASARCO ({percentage_str}%)',
+                    'riferimento_numero': -enasarco_tax_data['tax_amount'],
+                    'riferimento_data': None,
+                })
+
+            # Pension Fund
+            if not enasarco_taxes_data:
+                pension_fund_taxes_data = [x for x in taxes_data if x['tax']._l10n_it_filter_kind('pension_fund')]
+                for pension_fund_tax_data in pension_fund_taxes_data:
+                    pension_type = pension_fund_tax_data['tax'].l10n_it_pension_fund_type
+                    percentage_str = round(abs(pension_fund_tax_data['tax'].amount))
+                    other_data_list.append({
+                        'tipo_dato': 'AswCassPre',
+                        'riferimento_testo': f'{pension_type} ({percentage_str}%)',
+                        'riferimento_numero': None,
+                        'riferimento_data': None,
+                    })
 
         # Update the template_values that will be read while rendering
         template_values.update({
             'withholding_values': withholding_values,
             'pension_fund_values': pension_fund_values,
-            'pension_fund_by_line_id': pension_fund_by_line_id,
-            'enasarco_values': enasarco_values,
-            'document_total': document_total,
         })
         return template_values
 
