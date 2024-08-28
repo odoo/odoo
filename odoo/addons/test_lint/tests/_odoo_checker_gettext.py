@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 
 import astroid
 import pylint.interfaces
@@ -49,10 +50,32 @@ class OdooBaseChecker(BaseChecker):
             'gettext-repr',
             'Don\'t use %r to automatically insert quotes in translation strings. Quotes can be different depending on the language: they must be part of the translated string.',
         ),
+        'E8507': (
+            'Static string passed to %s without gettext call.',
+            'missing-gettext',
+            'Ensure that all static strings passed to certain constructs are wrapped in a gettext call.',
+        ),
     }
 
-    @only_required_for_messages('gettext-variable', 'gettext-placeholders', 'gettext-repr')
+    errors_requiring_gettext = ['UserError', 'ValidationError', 'AccessError', 'AccessDenied', 'MissingError']
+
+    @only_required_for_messages('missing-gettext', 'gettext-variable', 'gettext-placeholders', 'gettext-repr')
     def visit_call(self, node):
+        file_path = Path(self.linter.current_file).as_posix()
+        if "/test_" in file_path or "/tests/" in file_path:
+            return
+
+        node_name = ""
+        if isinstance(node.func, astroid.Name):
+            node_name = node.func.name
+        elif isinstance(node.func, astroid.Attribute):
+            node_name = node.func.attrname
+        if node_name in self.errors_requiring_gettext and len(node.args) > 0:
+            first_arg = node.args[0]
+            if not is_whitelisted_argument(first_arg):
+                self.add_message("missing-gettext", node=node, args=(node_name,))
+                return
+
         if isinstance(node.func, astroid.Name):
             # direct function call to _
             node_name = node.func.name
@@ -75,3 +98,19 @@ class OdooBaseChecker(BaseChecker):
 
 def register(linter):
     linter.register_checker(OdooBaseChecker(linter))
+
+
+def is_whitelisted_argument(arg):
+    if isinstance(arg, (astroid.Name, astroid.Attribute)):
+        return True
+    if isinstance(arg, astroid.Subscript):  # ex: errors[0]
+        return True
+    if isinstance(arg, astroid.Call):  # Assumption: any call inside Error call would return a translated string.
+        return True
+    if isinstance(arg, astroid.IfExp):  # ex: UserError(_("string_1") if condition else _("string_2"))
+        return is_whitelisted_argument(arg.body) and is_whitelisted_argument(arg.orelse)
+    if isinstance(arg, astroid.BoolOp):  # ex: UserError(_("string_1") and errors[0] or errors_list.get("msg"))
+        return all(is_whitelisted_argument(node) for node in arg.values)
+    if isinstance(arg, astroid.BinOp):  # ex: UserError(a + b)
+        return is_whitelisted_argument(arg.right) or is_whitelisted_argument(arg.left)
+    return False

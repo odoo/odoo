@@ -168,7 +168,7 @@ class PaymentProvider(models.Model):
         if response_content.get('error'):  # An exception was raised on the proxy side.
             error_message = response_content['error']['data']['message']
             _logger.exception("Request forwarded with error: %s", error_message)
-            raise ValidationError(f"Razorpay Proxy: {error_message}")
+            raise ValidationError(f"Razorpay Proxy: {error_message}")  # pylint: disable=missing-gettext
 
         return response_content['result']
 

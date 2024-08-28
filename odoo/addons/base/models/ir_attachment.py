@@ -794,7 +794,7 @@ class IrAttachment(models.Model):
         attachment_sudo = self.sudo().with_context(prefetch_fields=False)
         if access_token:
             if not consteq(attachment_sudo.access_token or "", access_token):
-                raise AccessError("Invalid access token")
+                raise AccessError("Invalid access token")  # pylint: disable=missing-gettext
             return True
         if attachment_sudo.public:
             return True
