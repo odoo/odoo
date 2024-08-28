@@ -1825,7 +1825,7 @@ describe("internal links", () => {
         });
         const fixture = getFixture();
         const link = document.createElement("a");
-        link.href = "/web#action=114&active_id=1&id=22";
+        link.href = "/odoo/1/action-114/22";
         fixture.appendChild(link);
 
         expect(router.current).toEqual({});
