@@ -254,8 +254,4 @@ export class ClosePosPopup extends Component {
             this.pos.redirectToBackend();
         }
     }
-    getMovesTotalAmount() {
-        const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
-        return amounts.reduce((acc, x) => acc + x, 0);
-    }
 }
