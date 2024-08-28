@@ -4,7 +4,7 @@
 <template id="s_quotes_carousel" name="Quotes">
     <section class="s_quotes_carousel_wrapper" data-vxml="001" data-vcss="001">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-        <div t-attf-id="myQuoteCarousel{{uniq}}" class="s_quotes_carousel s_carousel_default carousel slide o_cc o_cc2" data-bs-interval="10000">
+        <div t-attf-id="myQuoteCarousel{{uniq}}" class="s_quotes_carousel s_carousel_default carousel slide o_cc o_cc2" data-bs-ride="true" data-bs-interval="10000">
             <!-- Indicators -->
             <ol class="carousel-indicators">
                 <li t-attf-data-bs-target="#myQuoteCarousel{{uniq}}" data-bs-slide-to="0" class="active"/>
