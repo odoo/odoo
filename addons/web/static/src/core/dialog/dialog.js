@@ -90,21 +90,24 @@ export class Dialog extends Component {
         );
         this.id = `dialog_${this.data.id}`;
         useChildSubEnv({ inDialog: true, dialogId: this.id });
-        this.position = useState({ left: 0, top: 0 });
-        useDialogDraggable({
-            enable: () => !this.env.isSmall,
-            ref: this.modalRef,
-            elements: ".modal-content",
-            handle: ".modal-header",
-            ignore: "button, input",
-            edgeScrolling: { enabled: false },
-            onDrop: ({ top, left }) => {
-                this.position.left += left;
-                this.position.top += top;
-            },
-        });
-        const throttledResize = throttleForAnimation(this.onResize.bind(this));
-        useExternalListener(window, "resize", throttledResize);
+        this.isMovable = this.props.header;
+        if (this.isMovable) {
+            this.position = useState({ left: 0, top: 0 });
+            useDialogDraggable({
+                enable: () => !this.env.isSmall,
+                ref: this.modalRef,
+                elements: ".modal-content",
+                handle: ".modal-header",
+                ignore: "button, input",
+                edgeScrolling: { enabled: false },
+                onDrop: ({ top, left }) => {
+                    this.position.left += left;
+                    this.position.top += top;
+                },
+            });
+            const throttledResize = throttleForAnimation(this.onResize.bind(this));
+            useExternalListener(window, "resize", throttledResize);
+        }
         onWillDestroy(() => {
             if (this.env.isSmall) {
                 this.data.scrollToOrigin();
@@ -117,7 +120,10 @@ export class Dialog extends Component {
     }
 
     get contentStyle() {
-        return `top: ${this.position.top}px; left: ${this.position.left}px;`;
+        if (this.isMovable) {
+            return `top: ${this.position.top}px; left: ${this.position.left}px;`;
+        }
+        return "";
     }
 
     onResize() {
