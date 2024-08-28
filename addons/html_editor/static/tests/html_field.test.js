@@ -1,6 +1,8 @@
 import { HtmlField } from "@html_editor/fields/html_field";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
+import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import { parseHTML } from "@html_editor/utils/html";
+import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     click,
@@ -13,6 +15,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import {
+    clickSave,
     contains,
     defineModels,
     defineParams,
@@ -1065,6 +1068,49 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
 
     undo(htmlEditor);
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hellofirst </p>");
+});
+
+test("edit and save a html field in collaborative should keep the same wysiwyg", async () => {
+    patchWithCleanup(Wysiwyg.prototype, {
+        setup() {
+            super.setup();
+            expect.step("Setup Wysiwyg");
+        },
+    });
+
+    onRpc("partner", "web_save", ({ args }) => {
+        const txt = args[1].txt;
+        expect(stripHistoryIds(txt)).toBe("<p>Hello first</p>");
+        expect.step("web_save");
+        args[1].txt = txt.replace(
+            /\sdata-last-history-steps="[^"]*?"/,
+            ' data-last-history-steps="12345"'
+        );
+    });
+    onRpc("/html_editor/get_ice_servers", () => {
+        return [];
+    });
+    onRpc("/html_editor/bus_broadcast", (params) => {
+        return { id: 10 };
+    });
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'collaborative': true}"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+    insertText(htmlEditor, "Hello ");
+    expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
+    expect.verifySteps(["Setup Wysiwyg"]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
 });
 
 describe("sandbox", () => {
