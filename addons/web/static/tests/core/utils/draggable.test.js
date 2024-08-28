@@ -1,24 +1,10 @@
 import { expect, test } from "@odoo/hoot";
-import { drag, queryRect } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { queryRect } from "@odoo/hoot-dom";
+import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { useDraggable } from "@web/core/utils/draggable";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-/**
- * @param {import("@odoo/hoot-dom").Target} source
- * @param {import("@odoo/hoot-dom").Target} target
- * @param {number} [delay]
- */
-const dragAndDrop = async (source, target, delay) => {
-    const { drop, moveTo } = drag(source);
-    if (delay) {
-        advanceTime(delay);
-    }
-    moveTo(target);
-    await animationFrame();
-    drop();
-};
+import { useDraggable } from "@web/core/utils/draggable";
 
 test("Parameters error handling", async () => {
     expect.assertions(2);
@@ -75,7 +61,7 @@ test("Parameters error handling", async () => {
 });
 
 test("Simple dragging in single group", async () => {
-    expect.assertions(12);
+    expect.assertions(11);
 
     class List extends Component {
         static template = xml`
@@ -91,10 +77,6 @@ test("Simple dragging in single group", async () => {
                 elements: ".item",
                 onDragStart({ element }) {
                     expect.step("start");
-                    expect(element).toHaveText("1");
-                },
-                onDrag({ element }) {
-                    expect.step("drag");
                     expect(element).toHaveText("1");
                 },
                 onDragEnd({ element }) {
@@ -118,11 +100,11 @@ test("Simple dragging in single group", async () => {
     expect.verifySteps([]);
 
     // First item after 2nd item
-    await dragAndDrop(".item:first-child", ".item:nth-child(2)");
+    await contains(".item:first-child").dragAndDrop(".item:nth-child(2)");
 
     expect(".item").toHaveCount(3);
     expect(".o_dragged").toHaveCount(0);
-    expect.verifySteps(["start", "drag", "drop", "end"]);
+    expect.verifySteps(["start", "drop", "end"]);
 });
 
 test("Dynamically disable draggable feature", async () => {
@@ -155,7 +137,7 @@ test("Dynamically disable draggable feature", async () => {
     expect.verifySteps([]);
 
     // First item before last item
-    await dragAndDrop(".item:first-child", ".item:last-child");
+    await contains(".item:first-child").dragAndDrop(".item:last-child");
 
     // Drag should have occurred
     expect.verifySteps(["start"]);
@@ -164,7 +146,7 @@ test("Dynamically disable draggable feature", async () => {
     await animationFrame();
 
     // First item before last item
-    await dragAndDrop(".item:first-child", ".item:last-child");
+    await contains(".item:first-child").dragAndDrop(".item:last-child");
 
     // Drag shouldn't have occurred
     expect.verifySteps([]);
@@ -190,7 +172,7 @@ test("Ignore specified elements", async () => {
                 elements: ".item",
                 ignore: ".ignored",
                 onDragStart() {
-                    expect.step("drag");
+                    expect.step("start");
                 },
             });
         }
@@ -201,17 +183,17 @@ test("Ignore specified elements", async () => {
     expect.verifySteps([]);
 
     // Drag root item element
-    await dragAndDrop(".item:first-child", ".item:nth-child(2)");
+    await contains(".item:first-child").dragAndDrop(".item:nth-child(2)");
 
-    expect.verifySteps(["drag"]);
+    expect.verifySteps(["start"]);
 
     // Drag ignored element
-    await dragAndDrop(".item:first-child .not-ignored", ".item:nth-child(2)");
+    await contains(".item:first-child .not-ignored").dragAndDrop(".item:nth-child(2)");
 
-    expect.verifySteps(["drag"]);
+    expect.verifySteps(["start"]);
 
     // Drag non-ignored element
-    await dragAndDrop(".item:first-child .ignored", ".item:nth-child(2)");
+    await contains(".item:first-child .ignored").dragAndDrop(".item:nth-child(2)");
 
     expect.verifySteps([]);
 });
@@ -243,7 +225,7 @@ test("Ignore specific elements in a nested draggable", async () => {
                 elements: ".item",
                 preventDrag: (el) => el.classList.contains("ignored"),
                 onDragStart() {
-                    expect.step("drag");
+                    expect.step("start");
                 },
             });
         }
@@ -254,26 +236,28 @@ test("Ignore specific elements in a nested draggable", async () => {
     expect.verifySteps([]);
 
     // Drag ignored under non-ignored -> block
-    await dragAndDrop(
-        ".not-ignored.parent .ignored.child",
+    await contains(".not-ignored.parent .ignored.child").dragAndDrop(
         ".not-ignored.parent .not-ignored.child"
     );
     expect.verifySteps([]);
 
     // Drag not-ignored-under not-ignored -> succeed
-    await dragAndDrop(
-        ".not-ignored.parent .not-ignored.child",
+    await contains(".not-ignored.parent .not-ignored.child").dragAndDrop(
         ".not-ignored.parent .ignored.child"
     );
-    expect.verifySteps(["drag"]);
+    expect.verifySteps(["start"]);
 
     // Drag ignored under ignored -> block
-    await dragAndDrop(".ignored.parent .ignored.child", ".ignored.parent .not-ignored.child");
+    await contains(".ignored.parent .ignored.child").dragAndDrop(
+        ".ignored.parent .not-ignored.child"
+    );
     expect.verifySteps([]);
 
     // Drag not-ignored under ignored -> succeed
-    await dragAndDrop(".ignored.parent .not-ignored.child", ".ignored.parent .ignored.child");
-    expect.verifySteps(["drag"]);
+    await contains(".ignored.parent .not-ignored.child").dragAndDrop(
+        ".ignored.parent .ignored.child"
+    );
+    expect.verifySteps(["start"]);
 });
 
 test("Dragging element with touch event", async () => {
@@ -295,9 +279,6 @@ test("Dragging element with touch event", async () => {
                     expect.step("start");
                     expect(".item.o_dragged").toHaveCount(1);
                 },
-                onDrag() {
-                    expect.step("drag");
-                },
                 onDragEnd() {
                     expect.step("end");
                 },
@@ -309,13 +290,16 @@ test("Dragging element with touch event", async () => {
     }
 
     await mountWithCleanup(List);
+
     expect.verifySteps([]);
-    await dragAndDrop(".item:first-child", ".item:nth-child(2)");
+
+    // Should DnD, if the timing value is higher then the default delay value (300ms)
+    await contains(".item:first-child").dragAndDrop(".item:nth-child(2)");
+
     expect(".item.o_touch_bounce").toHaveCount(0, {
         message: "element no longer has the animation class applied",
     });
-    // Should DnD, if the timing value is higher then the default delay value (300ms)
-    expect.verifySteps(["start", "drag", "drop", "end"]);
+    expect.verifySteps(["start", "drop", "end"]);
 });
 
 test("Dragging element with touch event: initiation delay can be overrided", async () => {
@@ -334,23 +318,29 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
                 delay: 1000,
                 elements: ".item",
                 onDragStart() {
-                    expect.step("drag");
+                    expect.step("start");
                 },
             });
         }
     }
 
     await mountWithCleanup(List);
-    await dragAndDrop(".item:first-child", ".item:nth-child(2)", 700);
+    await contains(".item:first-child").dragAndDrop(".item:nth-child(2)", {
+        pointerDownDuration: 700,
+    });
+
     // Shouldn't DnD, if the timing value is below then the delay value (1000ms)
     expect.verifySteps([]);
 
-    await dragAndDrop(".item:first-child", ".item:nth-child(2)", 1200);
+    await contains(".item:first-child").dragAndDrop(".item:nth-child(2)", {
+        pointerDownDuration: 1200,
+    });
+
     // Should DnD, if the timing value is higher then the delay value (1000ms)
-    expect.verifySteps(["drag"]);
+    expect.verifySteps(["start"]);
 });
 
-test("Elements are confined within their container", async () => {
+test.tags("desktop")("Elements are confined within their container", async () => {
     class List extends Component {
         static template = xml`
             <div t-ref="root" class="root">
@@ -373,7 +363,10 @@ test("Elements are confined within their container", async () => {
 
     const containerRect = queryRect(".root");
 
-    const { moveTo, drop } = drag(".item:first");
+    const { moveTo, drop } = await contains(".item:first").drag({
+        initialPointerMoveDistance: 0,
+        position: { x: 0, y: 0 },
+    });
 
     expect(".item:first").toHaveRect({
         x: containerRect.x,
@@ -381,35 +374,32 @@ test("Elements are confined within their container", async () => {
         width: containerRect.width / 2,
     });
 
-    moveTo(".item:last-child", {
-        position: { y: 9999 },
+    await moveTo(".item:last-child", {
+        position: { x: 0, y: 9999 },
     });
-    await animationFrame();
 
     expect(".item:first").toHaveRect({
         x: containerRect.x,
         y: containerRect.y + containerRect.height - queryRect(".item:first").height,
     });
 
-    moveTo(".item:last-child", {
+    await moveTo(".item:last-child", {
         position: { x: 9999, y: 9999 },
     });
-    await animationFrame();
 
     expect(".item:first").toHaveRect({
         x: containerRect.x + containerRect.width - queryRect(".item:first").width,
         y: containerRect.y + containerRect.height - queryRect(".item:first").height,
     });
 
-    moveTo(".item:last-child", {
+    await moveTo(".item:last-child", {
         position: { x: -9999, y: -9999 },
     });
-    await animationFrame();
 
     expect(".item:first").toHaveRect({
         x: containerRect.x,
         y: containerRect.y,
     });
 
-    drop();
+    await drop();
 });
