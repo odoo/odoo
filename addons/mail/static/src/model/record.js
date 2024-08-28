@@ -13,6 +13,7 @@ import {
     isRelation,
     modelRegistry,
 } from "./misc";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./misc").RecordField} RecordField */
@@ -427,9 +428,17 @@ export class Record {
                 });
             } else if (isOne(Model, name)) {
                 const otherRecord = toRaw(record._proxyInternal[name])?._raw;
-                data[name] = otherRecord?.toIdData.call(record._proxyInternal);
+                data[name] = otherRecord?.toIdData.call(otherRecord._proxyInternal);
             } else {
-                data[name] = recordProxy[name]; // Record.attr()
+                // Record.attr()
+                const value = recordProxy[name];
+                if (Model._.fieldsType.get(name) === "datetime" && value) {
+                    data[name] = serializeDateTime(value);
+                } else if (Model._.fieldsType.get(name) === "date" && value) {
+                    data[name] = serializeDate(value);
+                } else {
+                    data[name] = value;
+                }
             }
         }
         delete data._;
