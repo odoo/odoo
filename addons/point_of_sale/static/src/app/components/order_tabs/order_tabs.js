@@ -21,7 +21,6 @@ export class OrderTabs extends Component {
         this.dialog = useService("dialog");
     }
     async newFloatingOrder() {
-        this.pos.selectedTable = null;
         const order = await this.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
         this.dialog.closeAll();
@@ -29,7 +28,6 @@ export class OrderTabs extends Component {
     }
     selectFloatingOrder(order) {
         this.pos.set_order(order);
-        this.pos.selectedTable = null;
         const previousOrderScreen = order.get_screen_data();
 
         const props = {};
