@@ -846,6 +846,34 @@ class Message(models.Model):
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
 
+    @api.model
+    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
+        res = {}
+        if search_term:
+            # we replace every space by a % to avoid hard spacing matching
+            search_term = search_term.replace(" ", "%")
+            domain = expression.AND([domain, expression.OR([
+                # sudo: access to attachment is allowed if you have access to the parent model
+                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+                [("body", "ilike", search_term)],
+                [("subject", "ilike", search_term)],
+                [("subtype_id.description", "ilike", search_term)],
+            ])])
+            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
+            res["count"] = self.search_count(domain)
+        if around is not None:
+            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
+            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
+            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
+        if before:
+            domain = expression.AND([domain, [('id', '<', before)]])
+        if after:
+            domain = expression.AND([domain, [('id', '>', after)]])
+        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        if after:
+            res["messages"] = res["messages"].sorted('id', reverse=True)
+        return res
+
     def _message_reaction(self, content, action):
         self.ensure_one()
         partner, guest = self.env["res.partner"]._get_current_persona()
@@ -886,31 +914,8 @@ class Message(models.Model):
         )
 
     # ------------------------------------------------------
-    # MESSAGE READ / FETCH / FAILURE API
+    # STORE / NOTIFICATIONS
     # ------------------------------------------------------
-
-    def _records_by_model_name(self):
-        ids_by_model = defaultdict(OrderedSet)
-        prefetch_ids_by_model = defaultdict(OrderedSet)
-        prefetch_messages = self | self.browse(self._prefetch_ids)
-        for message in prefetch_messages.filtered(lambda m: m.model and m.res_id):
-            target = ids_by_model if message in self else prefetch_ids_by_model
-            target[message.model].add(message.res_id)
-        return {
-            model_name: self.env[model_name]
-            .browse(ids)
-            .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
-            for model_name, ids in ids_by_model.items()
-        }
-
-    def _record_by_message(self):
-        records_by_model_name = self._records_by_model_name()
-        return {
-            message: self.env[message.model]
-            .browse(message.res_id)
-            .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
-            for message in self.filtered(lambda m: m.model and m.res_id)
-        }
 
     def _to_store(
         self,
@@ -1104,34 +1109,6 @@ class Message(models.Model):
     def _extras_to_store(self, store: Store, format_reply):
         pass
 
-    @api.model
-    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
-        res = {}
-        if search_term:
-            # we replace every space by a % to avoid hard spacing matching
-            search_term = search_term.replace(" ", "%")
-            domain = expression.AND([domain, expression.OR([
-                # sudo: access to attachment is allowed if you have access to the parent model
-                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
-                [("body", "ilike", search_term)],
-                [("subject", "ilike", search_term)],
-                [("subtype_id.description", "ilike", search_term)],
-            ])])
-            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
-            res["count"] = self.search_count(domain)
-        if around is not None:
-            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
-            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
-        if before:
-            domain = expression.AND([domain, [('id', '<', before)]])
-        if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
-            res["messages"] = res["messages"].sorted('id', reverse=True)
-        return res
-
     def _message_notifications_to_store(self, store: Store):
         """Returns the current messages and their corresponding notifications in
         the format expected by the web client.
@@ -1267,6 +1244,10 @@ class Message(models.Model):
             message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
+    @api.model
+    def _get_search_domain_share(self):
+        return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
+
     def is_thread_message(self, vals=None):
         if vals:
             res_id = vals.get('res_id')
@@ -1289,5 +1270,25 @@ class Message(models.Model):
             if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
 
-    def _get_search_domain_share(self):
-        return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
+    def _records_by_model_name(self):
+        ids_by_model = defaultdict(OrderedSet)
+        prefetch_ids_by_model = defaultdict(OrderedSet)
+        prefetch_messages = self | self.browse(self._prefetch_ids)
+        for message in prefetch_messages.filtered(lambda m: m.model and m.res_id):
+            target = ids_by_model if message in self else prefetch_ids_by_model
+            target[message.model].add(message.res_id)
+        return {
+            model_name: self.env[model_name]
+            .browse(ids)
+            .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
+            for model_name, ids in ids_by_model.items()
+        }
+
+    def _record_by_message(self):
+        records_by_model_name = self._records_by_model_name()
+        return {
+            message: self.env[message.model]
+            .browse(message.res_id)
+            .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
+            for message in self.filtered(lambda m: m.model and m.res_id)
+        }
