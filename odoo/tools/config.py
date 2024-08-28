@@ -79,6 +79,7 @@ class configmanager(object):
             'reportgz': False,
             'root_path': None,
             'websocket_keep_alive_timeout': 3600,
+            'websocket_session_check_interval': 1800,  # 30 minutes
             'websocket_rate_limit_burst': 10,
             'websocket_rate_limit_delay': 0.2,
         }
