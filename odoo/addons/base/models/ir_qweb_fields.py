@@ -734,6 +734,8 @@ class BarcodeConverter(models.AbstractModel):
     def value_to_html(self, value, options=None):
         if not value:
             return ''
+        if not bool(re.match(r'^[\x00-\x7F]+$', value)):
+            return nl2br(value)
         barcode_symbology = options.get('symbology', 'Code128')
         barcode = self.env['ir.actions.report'].barcode(
             barcode_symbology,
