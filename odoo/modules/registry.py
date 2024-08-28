@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Models registries.
@@ -22,17 +21,22 @@ from operator import attrgetter
 import psycopg2
 
 import odoo
-from odoo.modules.db import FunctionStatus
-from .. import SUPERUSER_ID
+from odoo import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
-    config, lazy_classproperty,
-    lazy_property, sql, OrderedSet, SQL,
+    SQL,
+    OrderedSet,
+    config,
+    lazy_classproperty,
+    lazy_property,
     remove_accents,
+    sql,
 )
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
+
+from .db import FunctionStatus
 
 if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
@@ -127,10 +131,11 @@ class Registry(Mapping):
         try:
             registry.setup_signaling()
             # This should be a method on Registry
+            from .loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
-                odoo.modules.load_modules(registry, force_demo, status, update_module)
+                load_modules(registry, force_demo, status, update_module)
             except Exception:
-                odoo.modules.reset_modules_state(db_name)
+                reset_modules_state(db_name)
                 raise
         except Exception:
             _logger.error('Failed to load registry')

@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.modules.loading import force_demo
 from odoo.addons.base.models.ir_module import assert_log_admin_access
 
 
@@ -13,7 +11,8 @@ class IrDemo(models.TransientModel):
 
     @assert_log_admin_access
     def install_demo(self):
-        force_demo(self.env)
+        import odoo.modules.loading  # noqa: PLC0415
+        odoo.modules.loading.force_demo(self.env)
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
