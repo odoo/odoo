@@ -3117,12 +3117,7 @@ describe("onDrop", () => {
         const textNode = pElement.firstChild;
 
         patchWithCleanup(document, {
-            caretRangeFromPoint: () => {
-                const range = document.createRange();
-                range.setStart(textNode, 3);
-                range.setEnd(textNode, 3);
-                return range;
-            },
+            caretPositionFromPoint: () => ({ offsetNode: textNode, offset: 3 }),
         });
 
         const dropData = new DataTransfer();
@@ -3138,12 +3133,7 @@ describe("onDrop", () => {
         const textNode = pElement.firstChild;
 
         patchWithCleanup(document, {
-            caretRangeFromPoint: () => {
-                const range = document.createRange();
-                range.setStart(textNode, 3);
-                range.setEnd(textNode, 3);
-                return range;
-            },
+            caretPositionFromPoint: () => ({ offsetNode: textNode, offset: 3 }),
         });
 
         const dropData = new DataTransfer();
@@ -3160,12 +3150,7 @@ describe("onDrop", () => {
         const textNode = pElement.firstChild;
 
         patchWithCleanup(document, {
-            caretRangeFromPoint: () => {
-                const range = document.createRange();
-                range.setStart(textNode, 3);
-                range.setEnd(textNode, 3);
-                return range;
-            },
+            caretPositionFromPoint: () => ({ offsetNode: textNode, offset: 3 }),
         });
 
         const base64Image =
@@ -3192,12 +3177,7 @@ describe("onDrop", () => {
         const bcTextNode = pElement.childNodes[2];
 
         patchWithCleanup(document, {
-            caretRangeFromPoint: () => {
-                const range = document.createRange();
-                range.setStart(bcTextNode, 1);
-                range.setEnd(bcTextNode, 1);
-                return range;
-            },
+            caretPositionFromPoint: () => ({ offsetNode: bcTextNode, offset: 1 }),
         });
 
         const dragdata = new DataTransfer();
