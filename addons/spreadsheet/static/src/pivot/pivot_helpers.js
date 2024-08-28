@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { sprintf } from "@web/core/utils/strings";
 
-const { isDateField } = helpers;
+const { isDateOrDatetimeField } = helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").Token} Token
@@ -77,7 +77,7 @@ export function parseGroupField(allFields, groupFieldString) {
     if (field === undefined) {
         throw new EvaluationError(sprintf(_t("Field %s does not exist"), fieldName));
     }
-    if (isDateField(field)) {
+    if (isDateOrDatetimeField(field)) {
         granularity = granularity || "month";
     }
     const dimensionWithGranularity = granularity ? `${fieldName}:${granularity}` : fieldName;
