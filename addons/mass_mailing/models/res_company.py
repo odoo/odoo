@@ -15,4 +15,5 @@ class ResCompany(models.Model):
             'social_twitter': self.social_twitter,
             'social_instagram': self.social_instagram,
             'social_tiktok': self.social_tiktok,
+            'social_threads': self.social_threads,
         }
