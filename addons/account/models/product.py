@@ -151,7 +151,7 @@ class ProductTemplate(models.Model):
         """ Get the product sales price from a public price based on taxes defined on the product """
         self.ensure_one()
         if not self.taxes_id:
-            return self.super._get_list_price(price)
+            return super()._get_list_price(price)
         computed_price = self.taxes_id.compute_all(price, self.currency_id)
         total_included = computed_price["total_included"]
 
