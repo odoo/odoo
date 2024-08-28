@@ -879,7 +879,7 @@ class Message(models.Model):
         group_command = "ADD" if reactions else "DELETE"
         group_values = {
             "content": content,
-            "count": count,
+            "count": len(reactions),
             "personas": Store.many_ids(guest or partner, "ADD" if action == "add" else "DELETE"),
             "message": Store.one_id(self),
         }
