@@ -329,7 +329,11 @@ test("Clicking on unpin button unpins the channel", async () => {
     });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
+    await click("[title='Channel settings']", {
+        parent: [".o-mail-DiscussSidebarChannel"],
+    });
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Unpin Conversation']");
     await contains(".o_notification", { text: "You unpinned your conversation with Visitor 11" });
 });
 
@@ -393,9 +397,11 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
-    await click("[title='Unpin Conversation']", {
+    await click("[title='Channel settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
     });
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });

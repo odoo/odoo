@@ -80,6 +80,8 @@ test("bus subscription is refreshed when channel is left", async () => {
     await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
     await openDiscuss();
     await assertSteps([]);
+    await click("[title='Channel settings']");
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
     await click("[title='Leave this channel']");
     await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
 });

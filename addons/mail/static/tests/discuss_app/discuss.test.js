@@ -547,13 +547,11 @@ test("sidebar: basic channel rendering", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
-    await contains(
+    await click(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
     );
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave this channel']"
-    );
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await contains("[title='Leave this channel']");
 });
 
 test("channel become active", async () => {
@@ -1900,6 +1898,8 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await click("[title='Channel settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "General" }],
     });
+    await contains(".o-mail-DiscussSidebar-commandsPopover");
+    await click("[title='Channel Info']");
     await contains(".o_breadcrumb", { text: "GeneralGeneral" });
 });
 

@@ -4,15 +4,14 @@ import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
 import { ChannelSelector } from "@mail/discuss/core/web/channel_selector";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { cleanTerm } from "@mail/utils/common/format";
-
 import { Component, useState } from "@odoo/owl";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
-
+import { usePopover } from "@web/core/popover/popover_hook";
+import { DiscussSidebarChannelCommands } from "./discuss_sidebar_channel_commands";
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
     "mail.discuss_sidebar_channel_indicators"
 );
@@ -35,26 +34,35 @@ export class DiscussSidebarCategories extends Component {
             quickSearchVal: "",
         });
         this.actionService = useService("action");
-        this.dialogService = useService("dialog");
         this.orm = useService("orm");
         onExternalClick("selector", () => {
             this.state.editing = false;
         });
+        this.popover = usePopover(DiscussSidebarChannelCommands, {
+            position: "right-start",
+            onClose: () => (this.currentThread.settingsVisibility = false),
+            popoverClass: "o-mail-DiscussSidebar-commandsPopover",
+        });
+    }
+
+    onClickCommands(event, thread) {
+        this.currentThread = thread;
+        this.currentThread.settingsVisibility = true;
+        const { isOpen, open, close } = this.popover;
+        const targetElement = event.target.closest(".o-mail-DiscussSidebarChannel-commands");
+        if (!isOpen) {
+            open(targetElement, {
+                thread,
+                close: close,
+            });
+        } else {
+            this.currentThread.settingsVisibility = false;
+            close();
+        }
     }
 
     addToCategory(category) {
         this.state.editing = category.id;
-    }
-
-    askConfirmation(body) {
-        return new Promise((resolve) => {
-            this.dialogService.add(ConfirmationDialog, {
-                body: body,
-                confirmLabel: _t("Leave Conversation"),
-                confirm: resolve,
-                cancel: () => {},
-            });
-        });
     }
 
     get channelIndicators() {
@@ -79,25 +87,6 @@ export class DiscussSidebarCategories extends Component {
         );
     }
 
-    /**
-     * @param {import("models").Thread} thread
-     */
-    async leaveChannel(thread) {
-        if (thread.channel_type !== "group" && thread.create_uid === thread.store.self.userId) {
-            await this.askConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
-            );
-        }
-        if (thread.channel_type === "group") {
-            await this.askConfirmation(
-                _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
-            );
-        }
-        thread.leave();
-    }
-
     openCategory(category) {
         if (category.id === "channels") {
             this.actionService.doAction({
@@ -109,21 +98,6 @@ export class DiscussSidebarCategories extends Component {
                     [false, "form"],
                 ],
                 domain: [["channel_type", "=", "channel"]],
-            });
-        }
-    }
-
-    /**
-     * @param {import("models").Thread} thread
-     */
-    openSettings(thread) {
-        if (thread.channel_type === "channel") {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                res_model: "discuss.channel",
-                res_id: thread.id,
-                views: [[false, "form"]],
-                target: "current",
             });
         }
     }
