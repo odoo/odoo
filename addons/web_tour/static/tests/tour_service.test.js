@@ -1447,3 +1447,36 @@ test("check rainbowManMessage", async () => {
     expect(rainbowMan.getBoundingClientRect().height).toBe(400);
     expect(".o_reward_msg_content").toHaveText("Congratulations !");
 });
+
+test("check alternative trigger that appear after the initial trigger", async () => {
+    registry.category("web_tour.tours").add("rainbow_tour", {
+        sequence: 87,
+        steps: () => [
+            {
+                trigger: ".button0, .button1",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0">Button 0</button></div>
+                    <div class="p-3 add_button"></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+    const otherButton = document.createElement("button");
+    otherButton.classList.add("button1");
+    queryFirst(".add_button").appendChild(otherButton);
+    await contains(".button1").click();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
