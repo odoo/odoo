@@ -26,12 +26,12 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
                 'transaction_id': razorpay_status_response.get('txnId'),
                 'payment_status': razorpay_status_response.get('status'),
                 'pos_order_id': order.id,
-                'razorpay_authcode': razorpay_status_response.get('authCode'),
-                'razorpay_card_scheme': razorpay_status_response.get('paymentCardBrand'),
-                'razorpay_issuer_bank': razorpay_status_response.get('acquirerCode'),
-                'razorpay_issuer_card_no': razorpay_status_response.get('cardLastFourDigit'),
-                'razorpay_payment_method': razorpay_status_response.get('paymentMode'),
-                'razorpay_reference_no': razorpay_status_response.get('externalRefNumber'),
+                'payment_method_authcode': razorpay_status_response.get('authCode'),
+                'card_brand': razorpay_status_response.get('paymentCardBrand'),
+                'payment_method_issuer_bank': razorpay_status_response.get('acquirerCode'),
+                'card_no': razorpay_status_response.get('cardLastFourDigit'),
+                'payment_method_payment_mode': razorpay_status_response.get('paymentMode'),
+                'payment_ref_no': razorpay_status_response.get('externalRefNumber'),
                 'razorpay_reverse_ref_no': razorpay_status_response.get('reverseReferenceNumber'),
             })
 
