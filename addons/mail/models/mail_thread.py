@@ -90,6 +90,7 @@ class MailThread(models.AbstractModel):
     _mail_post_access = 'write'  # access required on the document to post on it
     _primary_email = 'email'  # Must be set for the models that can be created by alias
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
+    _partner_unfollow_enabled = True
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
