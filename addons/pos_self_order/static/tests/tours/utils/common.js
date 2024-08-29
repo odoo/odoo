@@ -39,3 +39,18 @@ export function checkIsDisabledBtn(buttonName) {
         trigger: `button.disabled:contains("${buttonName}")`,
     };
 }
+
+export function checkLanguageIsAvailable(language) {
+    return {
+        content: `Check that the language is available`,
+        trigger: `.self_order_language_popup .btn:contains(${language})`,
+    };
+}
+
+export function openLanguageSelector() {
+    return {
+        content: `Click on language selector`,
+        trigger: `.self_order_language_selector`,
+        run: "click",
+    };
+}
