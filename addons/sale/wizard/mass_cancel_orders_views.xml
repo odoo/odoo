@@ -11,16 +11,14 @@
                 <field name="has_confirmed_order" invisible="1"/>
                 <div invisible="not has_confirmed_order">
                     <p class="alert alert-warning fw-bold" role="alert">
-                        Some confirmed sale orders are selected. Their related documents might be
-                        affected by the cancellation.
+                        You are about to cancel confirmed sales. Invoices &amp; deliveries might be cancelled too.
                     </p>
                 </div>
                 <div invisible="sale_orders_count &gt; 1">
                     Are you sure you want to cancel the selected quotation?
                 </div>
                 <div invisible="sale_orders_count == 1">
-                    Are you sure you want to cancel the <field name="sale_orders_count"/> selected
-                    quotations?
+                    So, are you sure you want to cancel those <field name="sale_orders_count"/> quotations?
                 </div>
                 <footer>
                     <button class="btn-primary"

@@ -957,7 +957,7 @@ class AccountPaymentRegister(models.TransientModel):
 
             # Check.
             if not available_lines:
-                raise UserError(_("You can't register a payment because there is nothing left to pay on the selected journal items."))
+                raise UserError(_("There's nothing left to pay on those selected journal items, so no payment registration is necessary. You've got your finances under control like a boss!"))
             if len(lines.company_id.root_id) > 1:
                 raise UserError(_("You can't create payments for entries belonging to different companies."))
             if len(set(available_lines.mapped('account_type'))) > 1:

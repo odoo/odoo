@@ -99,10 +99,10 @@ def _as_validation_error(env, exc):
 
         case errors.ForeignKeyViolation():
             return ValidationError(_(
-                "The operation cannot be completed: another model requires "
-                "the record being deleted. If possible, archive it instead.\n\n"
-                "Model: %(model_name)s (%(model_tech_name)s)\n"
-                "Constraint: %(constraint)s\n",
+                "Another model is using the record you are trying to delete.\n\n"
+                "Our troublemaker is: %(model_name)s (%(model_tech_name)s)\n"
+                "Blame the following constraint: %(constraint)s\n\n"
+                "How about archiving the record instead?",
                 model_name=model._description,
                 model_tech_name=model._name,
                 constraint=exc.diag.constraint_name,

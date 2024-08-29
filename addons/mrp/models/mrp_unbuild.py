@@ -185,12 +185,16 @@ class MrpUnbuild(models.Model):
 
         finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
         consume_moves -= finished_moves
+        error_message = _(
+            "Please specify a manufacturing order.\n"
+            "It will allows us to retrieve the lots/serial numbers of the components."
+        )
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
-            raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
+            raise UserError(error_message)
 
         if any(consume_move.has_tracking != 'none' and not self.mo_id for consume_move in consume_moves):
-            raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))
+            raise UserError(error_message)
 
         for finished_move in finished_moves:
             finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)

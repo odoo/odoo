@@ -10,7 +10,8 @@
                         Among the <t t-esc="props.nbRecords"/> selected records,
                         <t t-esc="props.nbValidRecords"/> are valid for this update.<br/>
                     </t>
-                    Are you sure you want to perform the following update on those <t t-esc="props.nbValidRecords"/> records?
+                    Are you sure you want to update <b><t t-esc="props.nbValidRecords"/> records</b>?
+                    <div class="text-muted"><i>Enjoy how well designed Odoo is :)</i></div>
                 </p>
                 <div class="table-responsive">
                     <table class="o_modal_changes">
@@ -33,7 +34,7 @@
             </main>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_confirm" t-ref="autofocus">
-                Confirm
+                Update All
                 </button>
                 <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">
                 Cancel

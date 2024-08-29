@@ -142,7 +142,8 @@ class Contract(models.Model):
             if self.search_count(domain):
                 raise ValidationError(
                     _(
-                        'An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n\nEmployee: %(employee_name)s',
+                        'No matter how stellar an employee might be, they\'re limited to just one contract at a time '
+                        '(unless we\'re talking about draft or canceled contracts – those don\'t count!).\n\nEmployee: %(employee_name)s',
                         employee_name=contract.employee_id.name
                     )
                 )

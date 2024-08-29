@@ -254,7 +254,7 @@ class LunchOrder(models.Model):
         self.env.flush_all()
         for line in self:
             if self.env['lunch.cashmove'].get_wallet_balance(line.user_id) < 0:
-                raise ValidationError(_('Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager.'))
+                raise ValidationError(_('Oh no! You don’t have enough money in your wallet to order that food! Contact your lunch manager to add some money in your wallet.'))
 
     def action_order(self):
         for order in self:
