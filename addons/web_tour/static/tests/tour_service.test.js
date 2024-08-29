@@ -347,7 +347,7 @@ test("a failing tour with disabled element", async () => {
             `Element has been found. The error seems to be with step.run.`,
             `Element can't be disabled when you want to click on it.`,
             `Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
-        ].join('\n'),
+        ].join("\n"),
         `error: FAILED: [3/3] Tour tour3 → Step .button2.\nThe cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
         `error: tour not succeeded`,
     ];
@@ -357,7 +357,7 @@ test("a failing tour with disabled element", async () => {
 
 test("a failing tour logs the step that failed", async () => {
     patchWithCleanup(browser.console, {
-        dir: (s) => expect.step(`runbot: ${s.replace(/[\s-]*/g, '')}`),
+        dir: (s) => expect.step(`runbot: ${s.replace(/[\s-]*/g, "")}`),
         log: (s) => expect.step(`log: ${s}`),
         warn: (s) => expect.step(`warn: ${s.replace(/[\s-]*/gi, "")}`),
         error: (s) => expect.step(`error: ${s}`),
@@ -1439,4 +1439,37 @@ test("check rainbowManMessage", async () => {
     expect(rainbowMan.getBoundingClientRect().width).toBe(400);
     expect(rainbowMan.getBoundingClientRect().height).toBe(400);
     expect(".o_reward_msg_content").toHaveText("Congratulations !");
+});
+
+test("check alternative trigger that appear after the initial trigger", async () => {
+    registry.category("web_tour.tours").add("rainbow_tour", {
+        sequence: 87,
+        steps: () => [
+            {
+                trigger: ".button0, .button1",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0">Button 0</button></div>
+                    <div class="p-3 add_button"></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+    const otherButton = document.createElement("button");
+    otherButton.classList.add("button1");
+    queryFirst(".add_button").appendChild(otherButton);
+    await contains(".button1").click();
+    expect(".o_tour_pointer").toHaveCount(0);
 });
