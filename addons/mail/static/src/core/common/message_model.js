@@ -181,6 +181,19 @@ export class Message extends Record {
         return this.store.self.isAdmin || this.isSelfAuthored;
     }
 
+    get bubbleColor() {
+        if (!this.isSelfAuthored && !this.is_note && !this.isHighlightedFromMention) {
+            return "blue";
+        }
+        if (this.isSelfAuthored && !this.is_note && !this.isHighlightedFromMention) {
+            return "green";
+        }
+        if (this.isHighlightedFromMention) {
+            return "orange";
+        }
+        return undefined;
+    }
+
     get editable() {
         if (!this.allowsEdition) {
             return false;

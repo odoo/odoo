@@ -17,7 +17,6 @@
                 t-ref="root"
                 t-if="message.exists()"
             >
-                <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-start justify-content-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
@@ -72,10 +71,11 @@
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'border': state.isEditing and !message.is_note,
-                                                    'o-blue border border-info': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
-                                                    'o-green border border-success': message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
-                                                    'o-orange border border-warning': message.isHighlightedFromMention,
+                                                    'o-blue border border-info': message.bubbleColor === 'blue',
+                                                    'o-green border border-success': message.bubbleColor === 'green',
+                                                    'o-orange border border-warning': message.bubbleColor === 'orange',
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
+                                                <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
                                                             'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
