@@ -257,6 +257,13 @@ class StockMove(models.Model):
         return self._create_dropshipped_svl(forced_quantity=forced_quantity)
 
     def _action_done(self, cancel_backorder=False):
+        origin_returned_moves = self.browse()
+        for move in self:
+            if move._is_out():
+                origin_returned_moves |= move.origin_returned_move_id
+        if origin_returned_moves:
+            self = self.with_context(origin_returned_moves=origin_returned_moves)
+
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:

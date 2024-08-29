@@ -3979,6 +3979,76 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(move.stock_valuation_layer_ids.value, 10)
         self.assertEqual(move.stock_valuation_layer_ids.account_move_id.amount_total, 10)
 
+    def test_fifo_receipt_return(self):
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        receipt1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'owner_id': self.env.company.partner_id.id,
+            'state': 'draft',
+        })
+
+        move = self.env['stock.move'].create({
+            'picking_id': receipt1.id,
+            'name': 'IN 1 @ 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 10.0,
+        })
+        receipt1.action_confirm()
+        move.quantity = 1.0
+        move.picked = True
+        receipt1.button_validate()
+        self.assertEqual(move.stock_valuation_layer_ids.value, 10.0)
+
+        receipt2 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'owner_id': self.env.company.partner_id.id,
+            'state': 'draft',
+        })
+
+        move = self.env['stock.move'].create({
+            'picking_id': receipt2.id,
+            'name': 'IN 2 @ 20',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 20.0,
+        })
+        receipt2.action_confirm()
+        move.quantity = 1.0
+        move.picked = True
+        receipt2.button_validate()
+        self.assertEqual(move.stock_valuation_layer_ids.value, 20.0)
+
+        return_receipt_wizard_form = Form(
+            self.env["stock.return.picking"].with_context(
+                active_ids=receipt2.ids,
+                active_id=receipt2.id,
+                active_model="stock.picking",
+            )
+        )
+        return_receipt_wizard = return_receipt_wizard_form.save()
+        return_receipt_wizard.product_return_moves.write({"quantity": 1.0})
+        return_receipt_wizard_action = return_receipt_wizard.action_create_returns()
+        return_picking = self.env["stock.picking"].browse(
+            return_receipt_wizard_action["res_id"]
+        )
+        return_move = return_picking.move_ids
+        return_move.move_line_ids.quantity = 1.0
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
+        self.assertEqual(abs(return_move.stock_valuation_layer_ids.value), 20.0)
+
     def test_create_svl_different_uom(self):
         """
         Create a transfer and use in the move a different unit of measure than

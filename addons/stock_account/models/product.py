@@ -334,7 +334,16 @@ class ProductProduct(models.Model):
 
     def _get_fifo_candidates(self, company):
         candidates_domain = self._get_fifo_candidates_domain(company)
-        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
+        candidates = self.env["stock.valuation.layer"].sudo().search(candidates_domain)
+        returned_moves = self.env.context.get("origin_returned_moves")
+        if not returned_moves:
+            return candidates
+        returned_moves = returned_moves.filtered(lambda x: x.product_id == self)
+        origin_svl = returned_moves.stock_valuation_layer_ids.filtered(
+            lambda x: x.remaining_qty > 0.0
+        )
+        candidates = origin_svl | candidates
+        return candidates
 
     def _run_fifo(self, quantity, company):
         self.ensure_one()

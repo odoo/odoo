@@ -562,8 +562,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         return_pick.move_ids[0].picked = True
         return_pick.button_validate()
 
-        # valuation of product1 should be 200 as the first items will be sent out
-        self.assertEqual(self.product1.value_svl, 200)
+        # valuation of product1 should be 100 as the second receipt is returned
+        self.assertEqual(self.product1.value_svl, 100)
         # create a credit note for po2
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
         move_form.invoice_date = move_form.date
@@ -586,7 +586,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         price_diff_entry = self.env['account.move.line'].search([
             ('account_id', '=', self.stock_valuation_account.id),
             ('move_id.stock_move_id', '=', return_pick.move_ids[0].id)])
-        self.assertEqual(price_diff_entry.credit, 100)
+        self.assertEqual(price_diff_entry.credit, 200)
 
     def test_anglosaxon_valuation(self):
         self.env.company.anglo_saxon_accounting = True
@@ -3367,9 +3367,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
             # Receive 1 @ 25
             {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
-            # Return it (10 with valo, 15 with expense)
-            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
-            {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
+            # Return it (25 with valo)
+            {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
             # Receive all on the backorder (-> all based on PO price, we will not get the value of the returned one)
             {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
             # Bill it
@@ -3412,14 +3411,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
             # Receive 1 @ 25
             {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
-            # Return it (10 with valo, 15 with expense)
-            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
-            {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
+            # Return it (25 with valo)
+            {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
             # Receive it again
             # The "return of a return" ignores the POL price and uses the value of the returned product
-            # So, same: 10 with valo, 15 with expense
-            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
-            {'debit': 0.0, 'credit': 15.0, 'reconciled': True},
+            # So, same: 25 with valo
+            {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
             # Bill it
             {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
         ])
@@ -3462,9 +3459,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
             # Bill
             {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
-            # Return (10 with valo, 15 with expense)
-            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
-            {'debit': 15.0, 'credit': 0.0, 'reconciled': True},
+            # Return (25 with valo)
+            {'debit': 25.0, 'credit': 0.0, 'reconciled': True},
             # Refund
             {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
         ])

@@ -752,7 +752,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         move4 = self._make_return(move3, 1)
         move5 = self._make_return(move4, 1)
 
-        self.assertEqual(self.product1.value_svl, 10)
+        self.assertEqual(self.product1.value_svl, 20)
         self.assertEqual(self.product1.quantity_svl, 1)
 
     def test_dropship_1(self):
