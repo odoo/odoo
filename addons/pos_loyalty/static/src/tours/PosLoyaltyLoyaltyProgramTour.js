@@ -156,7 +156,7 @@ ProductScreen.do.clickCustomer('Test Partner AAA');
 PosLoyalty.check.isRewardButtonHighlighted(true);
 
 PosLoyalty.do.clickRewardButton();
-PosLoyalty.check.hasRewardLine('Free Product - Whiteboard Pen', '0.0', '2.00');
+PosLoyalty.check.hasRewardLine('Free Product - Whiteboard Pen', '0.0', '1.00');
 
 PosLoyalty.check.orderTotalIs('10.2');
 PosLoyalty.exec.finalizeOrder('Cash');

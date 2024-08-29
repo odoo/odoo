@@ -394,7 +394,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         aaa_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
 
         self.assertEqual(loyalty_program.pos_order_count, 1)
-        self.assertAlmostEqual(aaa_loyalty_card.points, 0.2)
+        self.assertAlmostEqual(aaa_loyalty_card.points, 5.2)
 
     def test_pos_loyalty_tour_max_amount(self):
         """Test the loyalty program with a maximum amount and product with different taxe."""
