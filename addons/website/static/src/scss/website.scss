@@ -791,6 +791,34 @@ table.table_desc tr td {
     overflow: hidden;
 }
 
+// "Dots" elements: normally used as "entries indicators", see timeline snippets.
+.o_dot {
+    width: var(--o-timeline-dot-size, 24px);
+    height: var(--o-timeline-dot-size, 24px);
+    left: var(--o-dot-left);
+
+    &:before, &:after {
+        position: absolute;
+        border-radius: $border-radius-pill;
+        background-color: currentColor;
+        content: '';
+    }
+
+    &:before {
+        inset: 0;
+        opacity: .1;
+    }
+
+    &:after {
+        inset: 8px;
+    }
+}
+
+.o_dot_line {
+    margin-top: calc(var(--o-timeline-dot-size, 24px) + #{map-get($spacers, 1)});
+    left: var(--o-dot-line-left);
+}
+
 //
 // Snippets
 //

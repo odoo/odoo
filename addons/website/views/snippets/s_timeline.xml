@@ -2,7 +2,7 @@
 <odoo>
 
 <template name="Timeline" id="s_timeline">
-    <section class="s_timeline pt48 pb48" data-vcss="001">
+    <section class="s_timeline pt48 pb48" data-vcss="002">
         <div class="o_container_small">
             <div class="row">
                 <div class="col-lg-12 pb24 text-center" data-name="Heading">
@@ -12,8 +12,8 @@
             </div>
             <div class="position-relative pt-3">
                 <div class="s_timeline_row position-relative d-flex gap-md-5 flex-column flex-md-row pb-4" data-name="Milestone">
-                    <div class="s_timeline_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
-                    <span class="s_timeline_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
                     <div class="s_timeline_content w-100 ps-4 ps-md-0">
                         <div class="s_timeline_card s_card card my-0 ms-auto text-md-end" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
                             <div class="card-body">
@@ -25,9 +25,9 @@
                     </div>
                     <div class="s_timeline_content w-0 w-md-100 h-0"/>
                 </div>
-                <div class="s_timeline_row position-relative d-flex gap-md-5 flex-column flex-md-row pb-4" data-name="Milestone">
-                    <div class="s_timeline_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
-                    <span class="s_timeline_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                <div class="s_timeline_row position-relative d-flex gap-md-5 flex-column flex-md-row-reverse pb-4" data-name="Milestone">
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
                     <div class="s_timeline_content w-100 ps-4 ps-md-0">
                         <div class="s_timeline_card s_card card my-0 me-auto text-md-end" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
                             <div class="card-body">
@@ -48,9 +48,8 @@
                     </div>
                 </div>
                 <div class="s_timeline_row position-relative d-flex flex-column flex-md-row gap-md-5 pb-4" data-name="Milestone">
-                    <div class="s_timeline_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
-                    <span class="s_timeline_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
-                    <div class="s_timeline_content w-0 w-md-100 h-0"/>
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
                     <div class="s_timeline_content w-100 ps-4 ps-md-0">
                         <div class="s_timeline_card s_card card my-0 ms-auto" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
                             <div class="card-body">
@@ -81,12 +80,6 @@
         <div data-js="Timeline" data-selector=".s_timeline_card">
             <we-button data-timeline-card="" data-no-preview="true" class="o_we_overlay_opt"><i class="fa fa-fw fa-angle-left"/><i class="fa fa-fw fa-angle-right"/></we-button>
         </div>
-        <div data-selector=".s_timeline">
-            <we-colorpicker string="Line Color" data-select-style="true" data-css-property="border-color" data-color-prefix="border-" data-apply-to=".s_timeline_line"/>
-        </div>
-        <div data-selector=".s_timeline_row">
-            <we-colorpicker string="Dot Color" data-select-style="true" data-css-property="color" data-color-prefix="text-" data-apply-to=".s_timeline_dot"/>
-        </div>
     </xpath>
     <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
         <attribute name="data-selector" add=".s_timeline_row" separator=","/>
@@ -104,6 +97,13 @@
     <field name="name">Timeline 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_timeline/001.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_timeline_002_scss" model="ir.asset">
+    <field name="name">Timeline 002 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_timeline/002.scss</field>
 </record>
 
 </odoo>
