@@ -1684,6 +1684,17 @@
         </we-select>
     </div>
 
+    <!-- Indicators: '.o_dot' and '.o_dot_line' -->
+    <t t-set="o_dot_color_selector" t-valuef=".s_timeline .s_timeline_row"/>
+    <t t-set="o_dot_line_color_selector" t-valuef=".s_timeline"/>
+
+    <div t-att-data-selector="o_dot_color_selector">
+        <we-colorpicker string="Dot Color" data-select-style="true" data-css-property="color" data-color-prefix="text-" data-apply-to=".o_dot"/>
+    </div>
+    <div t-att-data-selector="o_dot_line_color_selector">
+        <we-colorpicker string="Dot Lines Color" data-select-style="true" data-css-property="border-color" data-color-prefix="border-" data-apply-to=".o_dot_line"/>
+    </div>
+
     <!-- Website Animate -->
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
