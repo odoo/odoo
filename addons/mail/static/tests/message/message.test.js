@@ -16,7 +16,7 @@ import {
     hover,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
+import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { leave, press } from "@odoo/hoot-dom";
 import {
     Command,
@@ -791,12 +791,8 @@ test.skip("squashed transient message should not have date in the sidebar", asyn
     });
 });
 
-test.skip("message comment of same author within 1min. should be squashed", async () => {
-    // messages are squashed when "close", e.g. less than 1 minute has elapsed
-    // from messages of same author and same thread. Note that this should
-    // be working in non-mailboxes
-    // FIXME: timezone mocking does not work somehow...
-    mockTimeZone(0); // so it matches server timezone
+test("message comment of same author within 5min. should be squashed", async () => {
+    mockDate("2024-03-26 10:00:00", 0);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -812,7 +808,7 @@ test.skip("message comment of same author within 1min. should be squashed", asyn
         {
             author_id: partnerId,
             body: "<p>body2</p>",
-            date: "2019-04-20 10:00:30",
+            date: "2019-04-20 10:02:30",
             message_type: "comment",
             model: "discuss.channel",
             res_id: channelId,
@@ -839,7 +835,7 @@ test.skip("message comment of same author within 1min. should be squashed", asyn
     await contains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content", { text: "body2" }],
-            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "12:00" }], // FIXME: should be 10:00 (mockTimeZone)
+            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02" }],
         ],
     });
 });
