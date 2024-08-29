@@ -34,9 +34,6 @@ patch(PosOrder.prototype, {
             },
         };
     },
-    setBooked(booked) {
-        this.uiState.booked = booked;
-    },
     getName() {
         if (this.config.module_pos_restaurant && this.getTable()) {
             const table = this.getTable();

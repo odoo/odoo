@@ -57,6 +57,7 @@
                     <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
                     <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="state == 'invoiced'"/>
                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                    <field name="tip_amount" />
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
@@ -287,14 +288,15 @@
             <list string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
-                <field name="session_id"  readonly="state != 'draft'"/>
+                <field name="session_id"  readonly="state != 'draft'" optional="hide"/>
                 <field name="date_order"/>
-                <field name="config_id" />
-                <field name="pos_reference"/>
-                <field name="tracking_number" optional="hide"/>
+                <field name="config_id" optional="hide"/>
+                <field name="pos_reference" optional="hide"/>
+                <field name="tracking_number"/>
                 <field name="partner_id"/>
-                <field name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']" optional="hide"/>
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
+                <field name="tip_amount" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
                 <field name="is_edited" readonly="1" optional="hide"/>
             </list>
@@ -414,8 +416,11 @@
                 <field name="session_id"/>
                 <field name="config_id"/>
                 <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
-                <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
                 <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
+                <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter string="Refundable" name="refundable" domain="[('state', 'in', ['paid', 'done', 'invoiced'])]"/>
                 <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
