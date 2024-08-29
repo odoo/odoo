@@ -32,6 +32,7 @@ from odoo.exceptions import AccessDenied
 from odoo.http import request, Response, ROUTING_KEYS
 from odoo.modules.registry import Registry
 from odoo.service import security
+from odoo.tools.json import json_default
 from odoo.tools.misc import get_lang, submap
 from odoo.tools.translate import code_translations
 
@@ -384,7 +385,7 @@ class IrHttp(models.AbstractModel):
             'lang': lang,
             'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
         }
-        return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()
+        return hashlib.sha1(json.dumps(translation_cache, sort_keys=True, default=json_default).encode()).hexdigest()
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):

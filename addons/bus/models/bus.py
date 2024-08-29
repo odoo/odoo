@@ -13,7 +13,7 @@ from psycopg2 import InterfaceError
 import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
-from odoo.tools import date_utils, SQL
+from odoo.tools import json_default, SQL
 from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 # Bus
 # ---------------------------------------------------------
 def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=date_utils.json_default)
+    return json.dumps(v, separators=(',', ':'), default=json_default)
 
 def hashable(key):
     if isinstance(key, list):

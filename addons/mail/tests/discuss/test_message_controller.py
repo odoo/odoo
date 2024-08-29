@@ -3,7 +3,7 @@
 import json
 
 import odoo
-from odoo.tools import mute_logger, date_utils
+from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http import STATIC_CACHE_LONG
 from odoo import Command, fields, http
