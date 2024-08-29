@@ -374,7 +374,7 @@ export class FormatPlugin extends Plugin {
         delete element.dataset.oeZwsEmptyInline;
         if (!allWhitespaceRegex.test(element.textContent)) {
             // The element has some meaningful text. Remove the ZWS in it.
-            this.cleanZWS(element);
+            this.cleanZWS(element, { preserveSelection: false });
             return;
         }
         if (this.resources.isUnremovable.some((predicate) => predicate(element))) {
@@ -392,13 +392,13 @@ export class FormatPlugin extends Plugin {
         restore();
     }
 
-    cleanZWS(element) {
+    cleanZWS(element, { preserveSelection = true } = {}) {
         const textNodes = descendants(element).filter(isTextNode);
-        const cursors = this.shared.preserveSelection();
+        const cursors = preserveSelection ? this.shared.preserveSelection() : null;
         for (const node of textNodes) {
             cleanTextNode(node, "\u200B", cursors);
         }
-        cursors.restore();
+        cursors?.restore();
     }
 
     insertText(selection, content) {
