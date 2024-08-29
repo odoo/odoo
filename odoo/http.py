@@ -197,7 +197,7 @@ from .exceptions import UserError, AccessError, AccessDenied
 from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
-from .tools import (config, consteq, date_utils, file_path, get_lang,
+from .tools import (config, consteq, file_path, get_lang, json_default,
                     parse_version, profiler, unique, exception_to_unicode)
 from .tools.func import filter_kwargs, lazy_property
 from .tools.misc import submap
@@ -1719,7 +1719,7 @@ class Request:
         :param collections.abc.Mapping cookies: cookies to set on the client
         :rtype: :class:`~odoo.http.Response`
         """
-        data = json.dumps(data, ensure_ascii=False, default=date_utils.json_default)
+        data = json.dumps(data, ensure_ascii=False, default=json_default)
 
         headers = werkzeug.datastructures.Headers(headers)
         headers['Content-Length'] = len(data)

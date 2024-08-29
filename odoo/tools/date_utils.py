@@ -205,21 +205,6 @@ def subtract(value: D, *args, **kwargs) -> D:
     """
     return value - relativedelta(*args, **kwargs)
 
-def json_default(obj):
-    """
-    Properly serializes date and datetime objects.
-    """
-    from odoo import fields
-    if isinstance(obj, datetime):
-        return fields.Datetime.to_string(obj)
-    if isinstance(obj, date):
-        return fields.Date.to_string(obj)
-    if isinstance(obj, lazy):
-        return obj._value
-    if isinstance(obj, bytes):
-        return obj.decode()
-    return str(obj)
-
 
 def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) -> Iterator[datetime]:
     """Date range generator with a step interval.
