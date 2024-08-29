@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
-from odoo.tools import split_every
+from odoo.exceptions import UserError
 
 
 class StockWarehouse(models.Model):
@@ -279,25 +278,3 @@ class StockWarehouse(models.Model):
             if warehouse.manufacture_pull_id and name:
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
-
-class Orderpoint(models.Model):
-    _inherit = "stock.warehouse.orderpoint"
-
-    @api.constrains('product_id')
-    def check_product_is_not_kit(self):
-        domain = [
-            '|', ('product_id', 'in', self.product_id.ids),
-                 '&', ('product_id', '=', False),
-                      ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
-            ('type', '=', 'phantom'),
-        ]
-        if self.env['mrp.bom'].search_count(domain, limit=1):
-            raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))
-
-    def _get_orderpoint_products(self):
-        non_kit_ids = []
-        for products in split_every(2000, super()._get_orderpoint_products().ids, self.env['product.product'].browse):
-            kit_ids = set(k.id for k in self.env['mrp.bom']._bom_find(products, bom_type='phantom').keys())
-            non_kit_ids.extend(id_ for id_ in products.ids if id_ not in kit_ids)
-            products.invalidate_recordset()
-        return self.env['product.product'].browse(non_kit_ids)

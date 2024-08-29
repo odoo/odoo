@@ -114,10 +114,7 @@ class ReturnPicking(models.TransientModel):
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
-    show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
-    supplier_id = fields.Many2one(
-        'product.supplierinfo', string='Supplier', check_company=True,
-        domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    supplier_id = fields.Many2one(domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor", store=True)
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
@@ -156,14 +153,6 @@ class Orderpoint(models.Model):
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.days_to_order = orderpoint.company_id.days_to_purchase
         return res
-
-    @api.depends('route_id')
-    def _compute_show_suppplier(self):
-        buy_route = []
-        for res in self.env['stock.rule'].search_read([('action', '=', 'buy')], ['route_id']):
-            buy_route.append(res['route_id'][0])
-        for orderpoint in self:
-            orderpoint.show_supplier = orderpoint.route_id.id in buy_route
 
     def action_view_purchase(self):
         """ This function returns an action that display existing

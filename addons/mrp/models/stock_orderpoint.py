@@ -2,17 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import split_every
 from odoo.tools.float_utils import float_is_zero
 from odoo.osv.expression import AND
-from dateutil.relativedelta import relativedelta
 
 
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'
 
-    show_bom = fields.Boolean('Show BoM column', compute='_compute_show_bom')
     bom_id = fields.Many2one(
-        'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
@@ -38,14 +37,6 @@ class StockWarehouseOrderpoint(models.Model):
                 }
             }
         return super()._get_replenishment_order_notification()
-
-    @api.depends('route_id')
-    def _compute_show_bom(self):
-        manufacture_route = []
-        for res in self.env['stock.rule'].search_read([('action', '=', 'manufacture')], ['route_id']):
-            manufacture_route.append(res['route_id'][0])
-        for orderpoint in self:
-            orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
 
     def _compute_visibility_days(self):
         res = super()._compute_visibility_days()
@@ -155,3 +146,22 @@ class StockWarehouseOrderpoint(models.Model):
             ('state', '=', 'draft'),
         ]).action_confirm()
         return super()._post_process_scheduler()
+
+    @api.constrains('product_id')
+    def check_product_is_not_kit(self):
+        domain = [
+            '|', ('product_id', 'in', self.product_id.ids),
+            '&', ('product_id', '=', False),
+            ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
+            ('type', '=', 'phantom'),
+        ]
+        if self.env['mrp.bom'].search_count(domain, limit=1):
+            raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))
+
+    def _get_orderpoint_products(self):
+        non_kit_product_ids = []
+        for products in split_every(2000, super()._get_orderpoint_products().ids, self.env['product.product'].browse):
+            kit_product_ids = {k.id for k in self.env['mrp.bom']._bom_find(products, bom_type='phantom')}
+            non_kit_product_ids.extend(id_ for id_ in products.ids if id_ not in kit_product_ids)
+            products.invalidate_recordset()
+        return self.env['product.product'].browse(non_kit_product_ids)
