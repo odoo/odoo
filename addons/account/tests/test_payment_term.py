@@ -194,7 +194,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         self.pay_term_a.early_pay_discount_computation = 'included'
         computed_term_a = self.pay_term_a._compute_terms(
                 fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
-                150.0, 150.0, 1000.0, 1000.0, 1.0,
+                150.0, 150.0, 1.0, 1000.0, 1000.0,
             )
         self.assertDictEqual(
             {
@@ -209,7 +209,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 'line_ids': [{
                     'date': datetime.date(2016, 1, 3),
                     'company_amount': 1150.0,
-                    'foreign_amount': 151.0,
+                    'foreign_amount': 1150.0,
                 }],
             },
         )
@@ -217,7 +217,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
     def test_payment_term_compute_method_without_cash_discount(self):
         computed_term_b = self.pay_term_b._compute_terms(
             fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
-            150.0, 150.0, 1000.0, 1000.0, 1.0,
+            150.0, 150.0, 1.0, 1000.0, 1000.0,
         )
         self.assertDictEqual(
             {
@@ -232,11 +232,11 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 'line_ids': [{
                     'date': datetime.date(2016, 1, 3),
                     'company_amount': 575.0,
-                    'foreign_amount': 75.5,
+                    'foreign_amount': 575.0,
                 }, {
                     'date': datetime.date(2016, 1, 5),
                     'company_amount': 575.0,
-                    'foreign_amount': 75.5,
+                    'foreign_amount': 575.0,
                 }],
             },
         )
@@ -245,7 +245,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         self.pay_term_a.early_pay_discount_computation = 'excluded'
         computed_term_a = self.pay_term_a._compute_terms(
             fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
-            150.0, 150.0, 1000.0, 1000.0, 1.0,
+            150.0, 150.0, 1.0, 1000.0, 1000.0,
         )
 
         self.assertDictEqual(
@@ -261,7 +261,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 'line_ids': [{
                     'date': datetime.date(2016, 1, 3),
                     'company_amount': 1150.0,
-                    'foreign_amount': 151.0,
+                    'foreign_amount': 1150.0,
                 }],
             },
         )
