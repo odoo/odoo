@@ -246,9 +246,30 @@ patch(PosStore.prototype, {
         }
         return super.getDefaultSearchDetails();
     },
+    async removeDoneOrders(table) {
+        // Orders with integer ids can be found in the server.
+        const syncedOrderIds = table["<-pos.order.table_id"]
+            .map((o) => o.id)
+            .filter((id) => typeof id === "number");
+
+        const ordersStatus =
+            syncedOrderIds.length > 0
+                ? await this.data.read("pos.order", syncedOrderIds, ["state"])
+                : [];
+
+        // cancelled, posted, paid and invoiced orders can be removed
+        const ordersToRemove = ordersStatus
+            .filter((order) => order.state !== "draft")
+            .map((o) => this.models["pos.order"].get(o.id));
+
+        for (const order of ordersToRemove) {
+            this.models["pos.order"].delete(order);
+        }
+    },
     async setTable(table, orderUuid = null) {
         this.selectedTable = table;
         try {
+            await this.removeDoneOrders(table);
             this.loadingOrderState = true;
             await this.syncAllOrders();
         } finally {
