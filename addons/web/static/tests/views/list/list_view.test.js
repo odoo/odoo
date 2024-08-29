@@ -10987,6 +10987,10 @@ test(`list view move to previous page when all records from last page archive/un
 });
 
 test(`list should ask to scroll to top on page changes`, async () => {
+    // add records to be able to scroll
+    for (let i = 5; i < 55; i++) {
+        Foo._records.push({ id: i, foo: "foo" });
+    }
     patchWithCleanup(ListController.prototype, {
         onPageChangeScroll() {
             super.onPageChangeScroll(...arguments);
@@ -11007,16 +11011,21 @@ test(`list should ask to scroll to top on page changes`, async () => {
 
     // change the limit (should not ask to scroll)
     await contains(`.o_pager_value`).click();
-    await contains(`.o_pager_value`).edit("1-2");
+    await contains(`.o_pager_value`).edit("1-25");
     await animationFrame();
-    expect(getPagerValue()).toEqual([1, 2]);
+    expect(getPagerValue()).toEqual([1, 25]);
     // should not ask to scroll when changing the limit
     expect.verifySteps([]);
+
+    await contains(".o_list_renderer").scroll({ top: 250 });
+    expect(".o_list_renderer").toHaveProperty("scrollTop", 250);
 
     // switch pages again (should still ask to scroll)
     await pagerNext();
     // this is still working after a limit change
     expect.verifySteps(["scroll"]);
+    // Should effectively reset the scroll position
+    expect(".o_list_renderer").toHaveProperty("scrollTop", 0);
 });
 
 test(`list with handle field, override default_get, bottom when inline`, async () => {
