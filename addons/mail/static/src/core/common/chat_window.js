@@ -118,7 +118,7 @@ export class ChatWindow extends Component {
     }
 
     onClickHeader() {
-        if (this.ui.isSmall || this.state.editingName) {
+        if (this.ui.isSmall || this.state.editingName || !this.thread) {
             return;
         }
         this.toggleFold();
