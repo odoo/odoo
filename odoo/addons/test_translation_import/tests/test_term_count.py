@@ -276,11 +276,11 @@ class TestTranslationFlow(common.TransactionCase):
             def filter_func_for_javascript(row):
                 return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
             new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = {
-                "messages": [
+                "messages": tuple(
                     {"id": src, "string": value}
                     for src, value in CodeTranslations._read_code_translations_file(
                         po_file, filter_func_for_javascript).items()
-                ]
+                )
             }
 
         old_python = code_translations.get_python_translations('test_translation_import', 'fr_FR')
