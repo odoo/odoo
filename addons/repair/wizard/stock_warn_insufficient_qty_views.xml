@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.stock_warn_insufficient_qty_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='description']" position="after">
-                Do you confirm you want to repair <strong><field name="quantity" readonly="True"/></strong><field name="product_uom_name" readonly="True" class="mx-1"/>from location <strong><field name="location_id" readonly="True"/></strong>? This may lead to inconsistencies in your inventory.
+                <br/>You can still confirm the repair of <strong><field name="quantity" readonly="True"/></strong><field name="product_uom_name" readonly="True" class="mx-1"/>from <strong><field name="location_id" readonly="True"/></strong>, but get ready to have an adventure taking inventory to fix the negative stock quantity!
             </xpath>
         </field>
     </record>

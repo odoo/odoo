@@ -9379,7 +9379,7 @@ test(`editable list view: multi edition`, async () => {
 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
-    expect(queryOne(".modal-body").innerText.includes("those 2 records")).toBe(true, {
+    expect(queryOne(".modal-body").innerText.includes("update 2 records")).toBe(true, {
         message: "the number of records should be correctly displayed",
     });
 
@@ -10265,7 +10265,7 @@ test(`non editable list view: multi edition`, async () => {
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
     expect(`.modal`).toHaveCount(1, { message: "there should be an opened modal" });
-    expect(queryOne(".modal").innerText.includes("those 2 records")).toBe(true, {
+    expect(queryOne(".modal").innerText.includes("update 2 records")).toBe(true, {
         message: "the number of records should be correctly displayed",
     });
 

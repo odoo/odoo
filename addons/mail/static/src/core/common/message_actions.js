@@ -158,7 +158,7 @@ messageActionsRegistry
                 discussComponentRegistry.get("MessageConfirmDialog"),
                 {
                     message,
-                    prompt: _t("Are you sure you want to delete this message?"),
+                    prompt: _t("Are you sure you want to bid farewell to this message forever?"),
                     onConfirm: () => {
                         def.resolve(true);
                         message.remove();

@@ -46,7 +46,7 @@ try:
                 else:
                     raise UserError(_('Impossible number %s: too many digits.', number))
             else:
-                raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
+                raise UserError(_("The format of the number %s is incorrect unless you're dialing aliens! Let's fix it.", number))
         if not phonenumbers.is_valid_number(phone_nbr):
             # Force format with international to force metadata to apply
             formatted_intl = phonenumbers.format_number(phone_nbr, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
