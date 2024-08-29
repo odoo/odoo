@@ -1,9 +1,6 @@
 import re
-from collections import defaultdict
 
 from odoo import api, models
-from odoo.addons.web.models.models import lazymapping
-
 
 CARD_IMAGE_URL = re.compile(r'(src=".*)(/web/image/card.campaign/)([0-9]+)/image_preview"')
 CARD_PREVIEW_URL = re.compile(r'(href=".*/cards)/([0-9]+)/preview"')
@@ -20,27 +17,20 @@ class MailComposeMessage(models.TransientModel):
 
         :return: processed bodies in the order they were received
         """
-        campaign_tokens = lazymapping(
-            lambda campaign_res_id:
-                self.env['card.campaign'].browse(campaign_res_id[0])._generate_card_hash_token(campaign_res_id[1])
-        )
         bodies = []
         for res_id, body in res_id_body_pairs:
             if body:
                 def fill_card_image_url(match):
-                    campaign_id = int(match[3])
-                    return f'{match[1]}/cards/{campaign_id}/{res_id}/{campaign_tokens[(campaign_id, res_id)]}/card.jpg"'
+                    card = self.env['card.card'].browse(int(match[3]))
+                    return 'href="' + card._get_path('card.jpg') + '"'
 
                 def fill_card_preview_url(match):
-                    campaign_id = int(match[2])
-                    return f'{match[1]}/{campaign_id}/{res_id}/{campaign_tokens[(campaign_id, res_id)]}/preview"'
+                    card = self.env['card.card'].browse(int(match[2]))
+                    return 'href="' + card._get_path('preview') + '"'
 
                 body = re.sub(CARD_IMAGE_URL, fill_card_image_url, body)
                 body = re.sub(CARD_PREVIEW_URL, fill_card_preview_url, body)
             bodies.append(body)
-
-        self._create_cards_if_not_exists(list(campaign_tokens))
-
         return bodies
 
     def _prepare_mail_values(self, res_ids):
@@ -57,15 +47,3 @@ class MailComposeMessage(models.TransientModel):
                 mail_values['body_html'] = body
 
         return mail_values_all
-
-    def _create_cards_if_not_exists(self, campaign_res_id_pairs):
-        """Batch create new cards from multiple different campaigns."""
-        if not campaign_res_id_pairs:
-            return
-
-        res_ids_from_campaign_id = defaultdict(list)
-        for campaign_id, res_id in campaign_res_id_pairs:
-            res_ids_from_campaign_id[campaign_id].append(res_id)
-
-        for campaign_id, res_ids in res_ids_from_campaign_id.items():
-            self.env['card.campaign'].browse(campaign_id).sudo()._get_or_create_cards_from_res_ids(res_ids)

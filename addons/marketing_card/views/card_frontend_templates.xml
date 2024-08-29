@@ -9,12 +9,13 @@
             <t t-set="no_livechat" t-value="1"/>
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <div class="mb-5 d-flex flex-column align-items-center justify-content-center">
-                    <h1 class="mb-5">Share this design with your community!</h1>
+                    <h1 t-out="campaign_id.request_title">Share with your community!</h1>
+                    <p t-out="campaign_id.request_description or None" class="mb-5"/>
                     <a t-att-href="image_url" class="border border-3"
                        style="max-width: 80%; height: auto; max-height: 80%;">
                         <img t-att-src="image_url" class="w-100"/>
                     </a>
-                    <a t-att-href="share_url"><small>Where does this link to?</small></a>
+                    <a t-att-href="share_url" target="_blank"><small>Where does this link to?</small></a>
                 </div>
                 <div class="d-flex flex-column align-items-center">
                     <h4>Select where to share</h4>

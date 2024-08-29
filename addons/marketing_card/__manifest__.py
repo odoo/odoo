@@ -11,7 +11,6 @@
         'data/card_template_data.xml',
         'views/card_card_views.xml',
         'views/card_campaign_views.xml',
-        'views/card_campaign_element_views.xml',
         'views/card_frontend_templates.xml',
         'views/card_template_views.xml',
         'views/card_menus.xml',
@@ -23,7 +22,6 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'marketing_card/static/src/card_campaign_element_field_selector/*',
             'marketing_card/static/src/scss/*',
         ],
     },

@@ -17,9 +17,7 @@
                 font-size: 1em;
                 background: <t t-out="card_campaign.card_template_id.primary_color"/>;
                 color: <t t-out="card_campaign.card_template_id.primary_text_color"/>;
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position: center center;
+                background-size: cover;
                 background-attachment: fixed;
                 display: -webkit-box;
                 display: flex;
@@ -33,29 +31,24 @@
                 color: <t t-out="card_campaign.card_template_id.secondary_text_color"/>;
             }
             .header {
-                -webkit-line-clamp: 2;
-                max-height: 2.5em;
                 line-height: 1.2em;
             }
             .header, .subheader, .cta_button h1 {
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
-                overflow: hidden;
             }
-            .header, .subheader, .cta_button h1 {
+            .header, .subheader, .cta_button h1, .cta_button h2 {
                 margin: 0.1em;
             }
             .subheader, .cta_button h1{
-                -webkit-line-clamp: 1;
-                max-height: 2em;
                 line-height: 1.2em;
             }
             .cta_button {
                 text-align: center;
                 width: fit-content;
                 min-width: 30%;
-                max-width: 50%;
-                padding: 0.2rem 0.5rem;
+                max-width: 70%;
+                padding: 0.2rem 0.2rem;
             }
             .rounded_button {
                 border-radius: 50px;
@@ -98,13 +91,11 @@
             }
             .profile_section .text_section .text_subsections {
                 font-size: 1rem;
-                margin-left: 0.5rem;
             }
             </style>
         </head>
-        <t t-set="elements" t-value="card_campaign.card_element_ids.grouped('card_element_role')"/>
-        <t t-set="role_values" t-value="card_campaign._get_card_element_values(object, preview_values)"/>
-        <body>
+        <t t-set="values" t-value="card_campaign._get_card_element_values(object, preview_values)"/>
+        <body t-attf-style="background-image: url('data:image/png;base64,{{card_campaign.content_background or card_campaign.card_template_id.default_background}}');">
         </body>
     </html>
 </template>
@@ -152,44 +143,43 @@
         }
     </style>
     </xpath>
-    <xpath expr="//html/body" position="replace">
-    <body t-attf-style="background-image: url('data:image/png;base64,{{role_values['background']}}');">
+    <xpath expr="//html/body" position="inside">
         <div class="center_column">
             <div class="title">
-                <h1 class="header" t-out="role_values['header']" t-att-style="'color: %s;' % elements['header'].text_color"></h1>
-                <h2 class="subheader" t-out="role_values['subheader']" t-att-style="'color: %s;' % elements['subheader'].text_color"></h2>
+                <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"></h1>
+                <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"></h2>
             </div>
-            <div class="button_background rounded_button cta_button" t-if="role_values['button']">
-                <h1 t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color">button text</h1>
+            <div class="button_background rounded_button cta_button" t-if="card_campaign.content_button">
+                <h1 t-out="card_campaign.content_button">Button</h1>
             </div>
         </div>
         <div class="footer">
             <div class="profile_section">
                 <img
-                t-attf-src="data:image/png;base64,{{role_values['image_1']}}"
+                t-attf-src="data:image/png;base64,{{values['image1']}}"
                 alt="Profile Picture"
                 width="64px"
                 height="64px"
-                t-if="role_values['image_1']"
+                style="margin-right: 10px"
+                t-if="values['image1']"
                 />
                 <div t-else=""></div>
                 <div class="text_section">
-                    <span t-out="role_values['section_1'] if role_values['subsection_1'] or role_values['subsection_2'] else ''" t-att-style="'color: %s;' % elements['section_1'].text_color"/>
+                    <span t-out="values['section']"/>
                     <div class="text_subsections">
-                        <span t-out="role_values['subsection_1']" t-att-style="'color: %s;' % elements['subsection_1'].text_color"/>
-                        <span t-out="role_values['subsection_2']" t-att-style="'color: %s;' % elements['subsection_2'].text_color"/>
+                        <span t-out="values['sub_section1']"/>
+                        <span t-out="values['sub_section2']"/>
                     </div>
                 </div>
             </div>
             <img
-                t-attf-src="data:image/png;base64,{{role_values['image_2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2']}}"
                 alt="Profile Picture"
                 height="auto"
                 class="logo"
-                t-if="role_values['image_2']"
+                t-if="values['image2']"
             />
         </div>
-    </body>
     </xpath>
 </template>
 
@@ -245,43 +235,41 @@
         }
     </style>
     </xpath>
-    <xpath expr="//html/body" position="replace">
-    <body t-attf-style="background-image: url('data:image/png;base64,{{role_values['background']}}');">
+    <xpath expr="//html/body" position="inside">
         <div class="logo_line">
             <img
-                t-attf-src="data:image/png;base64,{{role_values['image_2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2']}}"
                 alt="Profile Picture"
                 class="logo"
-                t-if="role_values['image_2']"
+                t-if="values['image2']"
             />
         </div>
         <div class="title">
-            <h1 class="header" t-out="role_values['header']" t-att-style="'color: %s;' % elements['header'].text_color"></h1>
-            <h2 class="subheader" t-out="role_values['subheader']" t-att-style="'color: %s;' % elements['subheader'].text_color"></h2>
+            <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"/>
+            <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"/>
         </div>
         <div class="footer">
             <div class="profile_section">
                 <img
-                    t-attf-src="data:image/png;base64,{{role_values['image_1']}}"
+                    t-attf-src="data:image/png;base64,{{values['image1']}}"
                     alt="Profile Picture"
                     width="64px"
                     height="64px"
-                    t-if="role_values['image_1']"
+                    t-if="values['image1']"
                 />
                 <div t-else=""></div>
                 <div class="text_section">
-                    <span t-out="role_values['section_1'] if role_values['subsection_1'] or role_values['subsection_2'] else ''" t-att-style="'color: %s;' % elements['section_1'].text_color"/>
+                    <span t-out="values['section']"/>
                     <div class="text_subsections">
-                        <span t-out="role_values['subsection_1']" t-att-style="'color: %s;' % elements['subsection_1'].text_color"/>
-                        <span t-out="role_values['subsection_2']" t-att-style="'color: %s;' % elements['subsection_2'].text_color"/>
+                        <span t-out="values['sub_section1']"/>
+                        <span t-out="values['sub_section2']"/>
                     </div>
                 </div>
             </div>
-            <div class="button_background rounded_button cta_button" t-if="role_values['button']">
-                <h1 t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color">button text</h1>
+            <div class="button_background rounded_button cta_button" t-if="card_campaign.content_button">
+                <h1 t-out="card_campaign.content_button">button text</h1>
             </div>
         </div>
-    </body>
     </xpath>
 </template>
 
@@ -302,10 +290,9 @@
             height: 50%;
         }
         .cta_button {
-            text-align: center;
-            width: 100%;
+            text-align: left
             max-width: 100%;
-            max-height: 3rem;
+            margin-top: 20px;
         }
         .profile_image {
             object-fit: cover;
@@ -338,42 +325,40 @@
         }
     </style>
     </xpath>
-    <xpath expr="//html/body" position="replace">
-    <body t-attf-style="background-image: url('data:image/png;base64,{{role_values['background']}}');">
+    <xpath expr="//html/body" position="inside">
         <img
-            t-attf-src="data:image/png;base64,{{role_values['image_2']}}"
+            t-attf-src="data:image/png;base64,{{values['image2']}}"
             alt="Profile Picture"
             class="logo"
-            t-if="role_values['image_2']"
+            t-if="values['image2']"
         />
         <div class="title">
-            <h2 class="subheader" t-out="role_values['subheader']" t-att-style="'color: %s;' % elements['subheader'].text_color"></h2>
-            <h1 class="header" t-out="role_values['header']" t-att-style="'color: %s;' % elements['header'].text_color"></h1>
+            <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"></h2>
+            <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"></h1>
         </div>
         <div class="footer">
-            <div class="cta_section">
+            <div>
                 <div class="text_section">
-                    <span t-out="role_values['section_1'] if role_values['subsection_1'] or role_values['subsection_2'] else ''" t-att-style="'color: %s;' % elements['section_1'].text_color"/>
+                    <span t-out="values['section']"/>
                     <div class="text_subsections">
-                        <span t-out="role_values['subsection_1']" t-att-style="'color: %s;' % elements['subsection_1'].text_color"/>
-                        <t t-if="role_values['subsection_1'] and role_values['subsection_2']">-</t>
-                        <span t-out="role_values['subsection_2']" t-att-style="'color: %s;' % elements['subsection_2'].text_color"/>
+                        <span t-out="values['sub_section1']"/>
+                        <t t-if="values['sub_section1'] and values['sub_section2']">-</t>
+                        <span t-out="values['sub_section2']"/>
                     </div>
                 </div>
-                <div class="button_background rounded_rectangle_button cta_button" t-if="role_values['button']">
-                    <h1 t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color">button text</h1>
+                <div class="button_background rounded_rectangle_button cta_button" t-if="card_campaign.content_button">
+                    <h2 t-out="card_campaign.content_button">button text</h2>
                 </div>
             </div>
             <img
                 class="profile_image"
-                t-attf-src="data:image/png;base64,{{role_values['image_1']}}"
+                t-attf-src="data:image/png;base64,{{values['image1']}}"
                 alt="Profile Picture"
                 width="106px"
                 height="106px"
-                t-if="role_values['image_1']"
+                t-if="values['image1']"
             />
         </div>
-    </body>
     </xpath>
 </template>
 
@@ -426,6 +411,7 @@
         }
         .cta_button {
             width: fit-content;
+            margin-top: 30px;
         }
         .logo_line {
             width: 100%;
@@ -444,48 +430,47 @@
             width: auto;
         }
         .profile_image {
+            background-size: cover;
             position: absolute;
             right: 35px;
             top: 35px;
         }
     </style>
     </xpath>
-    <xpath expr="//html/body">
-    <body t-attf-style="background-image: url('data:image/png;base64,{{role_values['background']}}');">
+    <xpath expr="//html/body" position="inside">
         <div class="logo_line">
             <img
-                t-attf-src="data:image/png;base64,{{role_values['image_2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2']}}"
                 alt="Profile Picture"
                 class="logo"
-                t-if="role_values['image_2']"
+                t-if="values['image2']"
             />
         </div>
         <img
             class="profile_image"
-            t-attf-src="data:image/png;base64,{{role_values['image_1']}}"
+            t-attf-src="data:image/png;base64,{{values['image1']}}"
             alt="Profile Picture"
             width="106px"
             height="106px"
-            t-if="role_values['image_1']"
+            t-if="values['image1']"
         />
         <div class="title">
-            <h2 class="subheader" t-out="role_values['subheader']" t-att-style="'color: %s;' % elements['subheader'].text_color"></h2>
-            <h1 class="header" t-out="role_values['header']" t-att-style="'color: %s;' % elements['header'].text_color"></h1>
+            <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"></h2>
+            <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"></h1>
         </div>
         <div class="footer">
             <div class="text_section">
-                <span t-out="role_values['section_1'] if role_values['subsection_1'] or role_values['subsection_2'] else ''" t-att-style="'color: %s;' % elements['section_1'].text_color"/>
+                <span t-out="values['section']"/>
                 <div class="text_subsections">
-                    <span t-out="role_values['subsection_1']" t-att-style="'color: %s;' % elements['subsection_1'].text_color"/>
-                    <t t-if="role_values['subsection_1'] and role_values['subsection_2']">-</t>
-                    <span t-out="role_values['subsection_2']" t-att-style="'color: %s;' % elements['subsection_2'].text_color"/>
+                    <span t-out="values['sub_section1']"/>
+                    <t t-if="values['sub_section1'] and values['sub_section2']">-</t>
+                    <span t-out="values['sub_section2']"/>
                 </div>
             </div>
-            <div class="button_background rounded_button cta_button" t-if="role_values['button']">
-                <h1 t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color">button text</h1>
+            <div class="button_background rounded_button cta_button" t-if="card_campaign.content_button">
+                <h1 t-out="card_campaign.content_button">button text</h1>
             </div>
         </div>
-    </body>
     </xpath>
 </template>
 
@@ -495,17 +480,12 @@
         body {
             height: 100%;
         }
-        .title {
-            line-height: 2rem;
-            width: 80%;
-        }
         .footer {
             margin-top: 5%;
             height: 40%;
         }
         .cta_button {
             text-align: center;
-            max-height: 3rem;
         }
         .profile_image {
             object-fit: cover;
@@ -525,6 +505,7 @@
         }
         .text_subsections {
             height: 100%;
+            width: 100%;
             font-size: 0.85rem;
         }
         .cta_button {
@@ -550,44 +531,42 @@
         }
     </style>
     </xpath>
-    <xpath expr="//html/body">
-    <body t-attf-style="background-image: url('data:image/png;base64,{{role_values['background']}}');">
+    <xpath expr="//html/body" position="inside">
         <div class="logo_line">
             <img
                 class="profile_image"
-                t-attf-src="data:image/png;base64,{{role_values['image_1']}}"
+                t-attf-src="data:image/png;base64,{{values['image1']}}"
                 alt="Profile Picture"
                 width="60px"
                 height="60px"
-                t-if="role_values['image_1']"
+                t-if="values['image1']"
             />
             <!--spacing filler in case there is no image-->
-            <div t-if="not role_values['image_1']"></div>
-            <div class="button_background rounded_button cta_button" t-if="role_values['button']">
-                <h1 t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color">button text</h1>
+            <div t-if="not values['image1']"></div>
+            <div class="button_background rounded_button cta_button" t-if="card_campaign.content_button">
+                <h1 t-out="card_campaign.content_button">button text</h1>
             </div>
         </div>
         <div class="title">
-            <h2 class="subheader" t-out="role_values['subheader']" t-att-style="'color: %s;' % elements['subheader'].text_color"></h2>
-            <h1 class="header" t-out="role_values['header']" t-att-style="'color: %s;' % elements['header'].text_color"></h1>
+            <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"></h2>
+            <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"></h1>
         </div>
         <div class="footer">
             <div class="text_section">
-                <span t-out="role_values['section_1'] if role_values['subsection_1'] or role_values['subsection_2'] else ''" t-att-style="'color: %s;' % elements['section_1'].text_color"/>
+                <span t-out="values['section']"/>
                 <div class="text_subsections">
-                    <span t-out="role_values['subsection_1']" t-att-style="'color: %s;' % elements['subsection_1'].text_color"/>
-                    <t t-if="role_values['subsection_1'] and role_values['subsection_2']">-</t>
-                    <span t-out="role_values['subsection_2']" t-att-style="'color: %s;' % elements['subsection_2'].text_color"/>
+                    <span t-out="values['sub_section1']"/>
+                    <t t-if="values['sub_section1'] and values['sub_section2']">-</t>
+                    <span t-out="values['sub_section2']"/>
                 </div>
             </div>
             <img
-                t-attf-src="data:image/png;base64,{{role_values['image_2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2']}}"
                 alt="Profile Picture"
                 class="logo"
-                t-if="role_values['image_2']"
+                t-if="values['image2']"
             />
         </div>
-    </body>
     </xpath>
 </template>
 </odoo>
