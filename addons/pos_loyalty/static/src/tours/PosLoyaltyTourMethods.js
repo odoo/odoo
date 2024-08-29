@@ -174,7 +174,7 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
             return [
                 {
                     content: 'loyalty points awarded ' + points_str,
-                    trigger: '.loyalty-points-won .value:contains("' + points_str + '")',
+                    trigger: '.loyalty-points-won.value:contains("' + points_str + '")',
                     run: function () {}, // it's a check
                 },
             ];

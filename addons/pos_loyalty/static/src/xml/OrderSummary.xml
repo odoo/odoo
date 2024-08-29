@@ -10,16 +10,19 @@
                             <div class='loyalty-points-title'>
                                 <t t-esc="_loyaltyStat.points.name"/>
                             </div>
-                            <t t-if='_loyaltyStat.points.won'>
-                                <div class="loyalty-points-won">
-                                    <span class='value'>+<t t-esc='_loyaltyStat.points.won'/></span>
+                            <t t-if='_loyaltyStat.points.balance'>
+                                <div class="loyalty-points-balance">
+                                    <span class='value'><t t-esc='_loyaltyStat.points.balance'/></span>
                                 </div>
                             </t>
-                            <t t-if='_loyaltyStat.points.spent'>
-                                <div class="loyalty-points-spent">
-                                    <span class='value'>-<t t-esc='_loyaltyStat.points.spent'/></span>
-                                </div>
-                            </t>
+                            <div>
+                                <t t-if='_loyaltyStat.points.won'>
+                                    <span class="value loyalty-points-won">+<t t-esc='_loyaltyStat.points.won'/></span>
+                                </t>
+                                <t t-if='_loyaltyStat.points.spent'>
+                                    <span class="value loyalty-points-spent">-<t t-esc='_loyaltyStat.points.spent'/></span>
+                                </t>
+                            </div>
                             <div class='loyalty-points-total'>
                                 <span class='value'><t t-esc='_loyaltyStat.points.total'/></span>
                             </div>
