@@ -34,6 +34,7 @@ import { RPCError } from "@web/core/network/rpc";
 import { ColumnLayoutMixin } from "@web_editor/js/common/column_layout_mixin";
 import { Tooltip as OdooTooltip } from "@web/core/tooltip/tooltip";
 import { AddSnippetDialog } from "@web_editor/js/editor/add_snippet_dialog";
+import { getScrollingElement } from "@web/core/utils/scrolling";
 
 let cacheSnippetTemplate = {};
 
@@ -110,6 +111,7 @@ function scrollFixedOffset(doc = document) {
  *      offset used instead of the automatic one (extraOffset will be
  *      ignored too)
  * @param {HTMLElement} [options.scrollable] the element to scroll
+ * @param {number} [options.duration] the scroll duration in ms
  * @return {Promise}
  */
 function scrollTo(el, options = {}) {
@@ -124,7 +126,7 @@ function scrollTo(el, options = {}) {
     const scrollDocument = scrollable.ownerDocument;
     const isInOneDocument = isTopOrBottomHidden || scrollDocument === el.ownerDocument;
     const iframe = !isInOneDocument && Array.from(scrollable.querySelectorAll('iframe')).find(node => node.contentDocument.contains(el));
-    const topLevelScrollable = scrollDocument.scrollingElement;
+    const topLevelScrollable = getScrollingElement(scrollDocument);
 
     function _computeScrollTop() {
         if (el.id === 'top') {
@@ -143,7 +145,7 @@ function scrollTo(el, options = {}) {
             el.classList.add('d-none');
         }
         const isDocScrollingEl = scrollable === el.ownerDocument.scrollingElement;
-        let elPosition = offsetTop - (scrollable.getBoundingClientRect().top - (isDocScrollingEl ? 0 : scrollable.scrollTop));
+        let elPosition = offsetTop - (scrollable.getBoundingClientRect().top + window.scrollY - (isDocScrollingEl ? 0 : scrollable.scrollTop));
         if (!isInOneDocument && iframe) {
             elPosition += iframe.getBoundingClientRect().top + window.scrollY;
         }
@@ -154,11 +156,8 @@ function scrollTo(el, options = {}) {
         return Math.max(0, elPosition - offset);
     }
 
-    const originalScrollTop = _computeScrollTop();
-
     return new Promise(resolve => {
         const start = scrollable.scrollTop;
-        const change = originalScrollTop - start;
         const duration = options.duration || 600;
         const startTime = performance.now();
 
@@ -166,6 +165,9 @@ function scrollTo(el, options = {}) {
             const elapsedTime = currentTime - startTime;
             const progress = Math.min(elapsedTime / duration, 1);
             const easeInOutQuad = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+            // Recompute the scroll destination every time, to adapt to any
+            // occurring change that would modify the scroll offset.
+            const change = _computeScrollTop() - start;
             const newScrollTop = start + change * easeInOutQuad;
 
             scrollable.scrollTop = newScrollTop;
