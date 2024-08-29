@@ -3,6 +3,7 @@
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
+from odoo import Command
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -57,3 +58,16 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_order_price_null")
+
+    def test_self_order_language_changes(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.pos_config.write({
+            'self_ordering_available_language_ids': [Command.link(lang.id) for lang in self.env['res.lang'].search([])],
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each'
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_order_language_changes")
