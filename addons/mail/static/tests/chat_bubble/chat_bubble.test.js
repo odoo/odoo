@@ -52,10 +52,7 @@ test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await contains(".o-mail-ChatWindow", { count: 1 });
-    await click(".o-mail-ChatWindow-command[title='Fold']");
-    await contains(".o-mail-ChatBubble", { count: 0 }); // folded 'new message' is equivalent to close
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu button", { text: "New Message" });
+    await contains("[title='Fold']", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "John");
     await click(".o-discuss-ChannelSelector-suggestion");
     triggerHotkey("Enter");

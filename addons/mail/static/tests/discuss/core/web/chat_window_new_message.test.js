@@ -21,8 +21,7 @@ test("basic rendering", async () => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatWindow-header", { text: "New message" });
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command", { count: 2 });
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Fold']");
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command", { count: 1 });
     await contains(
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title*='Close Chat Window']"
     );
@@ -42,16 +41,6 @@ test("close", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
-});
-
-test("fold", async () => {
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button", { text: "New Message" });
-    await contains(".o-discuss-ChannelSelector");
-    await click(".o-mail-ChatWindow-command[title='Fold']");
-    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
