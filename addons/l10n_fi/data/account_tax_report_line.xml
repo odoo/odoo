@@ -10,13 +10,21 @@
         <field name="sequence">0</field>
         <field name="report_id" ref="vat_report"/>
     </record>
-    <record id="tax_report_sales_25_5" model="account.tax.report.line">
-        <field name="name">25.5 %:n vero (+ 24 %:n vero)</field>
-        <field name="code">sale_25_5</field>
-        <field name="tag_name">fi_320 + fi_301</field>
-        <field name="sequence">10</field>
+    <record id="tax_report_sales_25_5_and_24" model="account.tax.report.line">
+        <field name="name">25.5 %:n vero + 24 %:n vero</field>
+        <field name="code">sale_25_5_and_24</field>
+        <field name="formula">sale_25_5 + sale_24</field>
+        <field name="sequence">5</field>
         <field name="report_id" ref="vat_report"/>
         <field name="parent_id" ref="tax_report_sales_title"/>
+    </record>
+    <record id="tax_report_sales_25_5" model="account.tax.report.line">
+        <field name="name">25.5 %:n vero</field>
+        <field name="code">sale_25_5</field>
+        <field name="tag_name">fi_320</field>
+        <field name="sequence">10</field>
+        <field name="report_id" ref="vat_report"/>
+        <field name="parent_id" ref="tax_report_sales_25_5_and_24"/>
     </record>
     <record id="tax_report_sales_24" model="account.tax.report.line">
         <field name="name">24 %:n vero</field>
@@ -24,7 +32,7 @@
         <field name="tag_name">fi_301</field>
         <field name="sequence">20</field>
         <field name="report_id" ref="vat_report"/>
-        <field name="parent_id" ref="tax_report_sales_title"/>
+        <field name="parent_id" ref="tax_report_sales_25_5_and_24"/>
     </record>
     <record id="tax_report_sales_14" model="account.tax.report.line">
         <field name="name">14 %:n vero</field>
@@ -85,8 +93,8 @@
     </record>
     <record id="tax_report_tax_payable" model="account.tax.report.line">
         <field name="name">Maksettava vero / Palautukseen oikeuttava vero (-)</field>
-        <!-- "sale_25_5" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
-        <field name="formula">sale_25_5 + sale_14 + sale_10 + goods_eu + service_eu + goods_no_eu + construct - deductible</field>
+        <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
+        <field name="formula">sale_25_5_and_24 + sale_14 + sale_10 + goods_eu + service_eu + goods_no_eu + construct - deductible</field>
         <field name="sequence">110</field>
         <field name="report_id" ref="vat_report"/>
     </record>
