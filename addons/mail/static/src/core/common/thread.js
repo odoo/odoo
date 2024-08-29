@@ -548,7 +548,7 @@ export class Thread extends Component {
         if (msg.parentMessage) {
             return false;
         }
-        return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
+        return msg.datetime.ts - prevMsg.datetime.ts < 5 * 60 * 1000;
     }
 
     scrollToHighlighted() {
