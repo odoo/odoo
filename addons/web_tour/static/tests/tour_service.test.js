@@ -52,6 +52,12 @@ beforeEach(() => {
             macroEngines.push(this);
         },
     });
+    patchWithCleanup(console, {
+        error: () => {},
+        warn: () => {},
+        log: () => {},
+        dir: () => {},
+    });
     macroEngines.forEach((e) => e.stop());
     macroEngines = [];
     onRpc("/web/dataset/call_kw/web_tour.tour/consume", async () => {
@@ -347,7 +353,7 @@ test("a failing tour with disabled element", async () => {
             `Element has been found. The error seems to be with step.run.`,
             `Element can't be disabled when you want to click on it.`,
             `Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
-        ].join('\n'),
+        ].join("\n"),
         `error: FAILED: [3/3] Tour tour3 → Step .button2.\nThe cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
         `error: tour not succeeded`,
     ];
@@ -357,7 +363,7 @@ test("a failing tour with disabled element", async () => {
 
 test("a failing tour logs the step that failed", async () => {
     patchWithCleanup(browser.console, {
-        dir: (s) => expect.step(`runbot: ${s.replace(/[\s-]*/g, '')}`),
+        dir: (s) => expect.step(`runbot: ${s.replace(/[\s-]*/g, "")}`),
         log: (s) => expect.step(`log: ${s}`),
         warn: (s) => expect.step(`warn: ${s.replace(/[\s-]*/gi, "")}`),
         error: (s) => expect.step(`error: ${s}`),
