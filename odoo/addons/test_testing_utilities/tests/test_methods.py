@@ -39,6 +39,13 @@ class TestBasic(common.TransactionCase):
         with self.assertRaises(AssertionError):
             self.assertRecordValues(records, [Y3, X1])
 
+    def test_assertRecordValues_floats(self):
+        r = self.env['test_testing_utilities.onchange_line'].create({
+            'dummy': 42,
+        })
+
+        self.assertRecordValues(r, [{'dummy': 42}])
+
     def test_assertRaises_rollbacks(self):
         """Checks that a "correctly" executing assertRaises (where the expected
         exception has been raised and caught) will properly rollback.
