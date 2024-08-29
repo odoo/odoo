@@ -10,7 +10,7 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero, float_round, float_repr, float_compare
+from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
 import base64
@@ -273,6 +273,7 @@ class PosOrder(models.Model):
         help="Employee who uses the cash register.",
         default=lambda self: self.env.uid,
     )
+    amount_difference = fields.Float(string='Difference', digits=0, readonly=True)
     amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)
     amount_total = fields.Float(string='Total', digits=0, readonly=True, required=True)
     amount_paid = fields.Float(string='Paid', digits=0, required=True)
@@ -315,7 +316,7 @@ class PosOrder(models.Model):
         comodel_name='account.fiscal.position', string='Fiscal Position',
         readonly=False,
     )
-    payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
+    payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments')
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
     shipping_date = fields.Date('Shipping Date')
@@ -333,6 +334,7 @@ class PosOrder(models.Model):
     is_edited = fields.Boolean(string='Edited', compute='_compute_is_edited')
     has_deleted_line = fields.Boolean(string='Has Deleted Line')
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
+    available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
 
     def _search_tracking_number(self, operator, value):
         #search is made over the pos_reference field
@@ -422,6 +424,9 @@ class PosOrder(models.Model):
 
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
+        self._compute_prices()
+
+    def _compute_prices(self):
         for order in self:
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
@@ -429,8 +434,8 @@ class PosOrder(models.Model):
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
-            amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
-            order.amount_total = order.amount_tax + amount_untaxed
+            order.amount_total = order.amount_tax + currency.round(sum(line.price_subtotal for line in order.lines))
+            order.amount_difference = order.amount_paid - order.amount_total
 
     def _compute_batch_amount_all(self):
         """
@@ -495,7 +500,87 @@ class PosOrder(models.Model):
                         country=order.partner_id.country_id or self.env.company.country_id)
             if vals.get('has_deleted_line') is not None and self.has_deleted_line:
                 del vals['has_deleted_line']
-        return super(PosOrder, self).write(vals)
+
+        list_line = self._create_pm_change_log(vals)
+        res = super().write(vals)
+        for order in self:
+            if vals.get('payment_ids'):
+                order._compute_prices()
+                totally_paid_or_more = float_compare(order.amount_paid, order.amount_total, precision_rounding=order.currency_id.rounding)
+                if totally_paid_or_more < 0 and order.state in ['paid', 'done', 'invoiced']:
+                    raise UserError(_('The paid amount is different from the total amount of the order.'))
+                elif totally_paid_or_more > 0 and order.state == 'paid':
+                    list_line.append(_("Warning, the paid amount is higher than the total amount. (Difference: %s)", formatLang(self.env, order.amount_paid - order.amount_total, currency_obj=order.currency_id)))
+
+        if len(list_line) > 0:
+            body = _("Payment changes:")
+            body += self._markup_list_message(list_line)
+            for order in self:
+                if vals.get('payment_ids'):
+                    order.message_post(body=body)
+
+        return res
+
+    def _create_pm_change_log(self, vals):
+        if not vals.get('payment_ids'):
+            return []
+
+        message_list = []
+        new_pms = vals.get('payment_ids', [])
+        for new_pm in new_pms:
+            orm_command = new_pm[0]
+
+            if orm_command == 0:
+                payment_method_id = self.env['pos.payment.method'].browse(new_pm[2].get('payment_method_id'))
+                amount = formatLang(self.env, new_pm[2].get('amount'), currency_obj=self.currency_id)
+                message_list.append(_("Added %(payment_method)s with %(amount)s",
+                    payment_method=payment_method_id.name,
+                    amount=amount))
+            elif orm_command == 1:
+                pm_id = self.env['pos.payment'].browse(new_pm[1])
+                old_pm = pm_id.payment_method_id.name
+                old_amount = formatLang(self.env, pm_id.amount, currency_obj=pm_id.currency_id)
+                new_amount = False
+                new_payment_method = False
+
+                if new_pm[2].get('payment_method_id'):
+                    new_payment_method = self.env['pos.payment.method'].browse(new_pm[2].get('payment_method_id'))
+                if new_pm[2].get('amount'):
+                    new_amount = formatLang(self.env, new_pm[2].get('amount'), currency_obj=pm_id.currency_id)
+
+                if new_payment_method and new_amount:
+                    message_list.append(_("%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s",
+                        old_pm=old_pm,
+                        new_pm=new_payment_method.name,
+                        old_amount=old_amount,
+                        new_amount=new_amount))
+                elif new_payment_method:
+                    message_list.append(_("%(old_pm)s changed to %(new_pm)s for %(old_amount)s",
+                        old_pm=old_pm,
+                        new_pm=new_payment_method.name,
+                        old_amount=old_amount))
+                elif new_amount:
+                    message_list.append(_("Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s",
+                        old_amount=old_amount,
+                        new_amount=new_amount,
+                        old_pm=old_pm))
+            elif orm_command == 2:
+                pm_id = self.env['pos.payment'].browse(new_pm[1])
+                amount = formatLang(self.env, pm_id.amount, currency_obj=pm_id.currency_id)
+                message_list.append(_("Removed %(payment_method)s with %(amount)s",
+                    payment_method=pm_id.payment_method_id.name,
+                    amount=amount))
+
+        return message_list
+
+    def _markup_list_message(self, message):
+        body = Markup("<ul>")
+        for line in message:
+            body += Markup("<li>")
+            body += line
+            body += Markup("</li>")
+        body += Markup("</ul>")
+        return body
 
     def _compute_order_name(self):
         if self.refunded_order_id.exists():

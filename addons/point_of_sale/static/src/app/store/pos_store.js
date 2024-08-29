@@ -31,6 +31,7 @@ import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { DateTime } = luxon;
 
@@ -1443,6 +1444,18 @@ export class PosStore extends Reactive {
                 },
             }
         );
+    }
+    async orderDetails(order) {
+        this.dialog.add(FormViewDialog, {
+            resModel: "pos.order",
+            resId: order.id,
+            onRecordSaved: (record) => {
+                this.data.read("pos.order", [record.evalContext.id]);
+                this.action.doAction({
+                    type: "ir.actions.act_window_close",
+                });
+            },
+        });
     }
     async closePos() {
         // If pos is not properly loaded, we just go back to /web without
