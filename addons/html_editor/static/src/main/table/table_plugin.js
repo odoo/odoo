@@ -71,7 +71,7 @@ export class TablePlugin extends Plugin {
                 this.deleteTable(payload);
                 break;
             case "CLEAN":
-                // TODO @phoenix: evaluate if this should be cleanforsave instead
+            case "CLEAN_FOR_SAVE":
                 this.deselectTable(payload.root);
                 break;
         }

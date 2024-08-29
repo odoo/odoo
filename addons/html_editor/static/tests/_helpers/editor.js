@@ -174,9 +174,7 @@ export async function testEditor(config) {
     }
     if (contentAfter) {
         const content = editor.getContent();
-        editor.dispatch("CLEAN", { root: el });
         editor.dispatch("CLEAN_FOR_SAVE", { root: el });
-        editor.dispatch("MERGE_ADJACENT_NODE", { node: el });
         compareFunction(getContent(el), contentAfter, "Editor content, after clean");
         compareFunction(content, el.innerHTML, "Value from editor.getContent()");
     }

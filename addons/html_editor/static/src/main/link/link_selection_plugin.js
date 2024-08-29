@@ -65,9 +65,8 @@ export class LinkSelectionPlugin extends Plugin {
             case "NORMALIZE":
                 this.normalize(payload.node || this.editable);
                 break;
-            case "CLEAN":
-                // TODO @phoenix: evaluate if this should be cleanforsave instead
-                this.clean(payload.root);
+            case "CLEAN_FOR_SAVE":
+                this.cleanForSave(payload.root);
                 break;
         }
     }
@@ -83,7 +82,7 @@ export class LinkSelectionPlugin extends Plugin {
     /**
      * @param {Element} root
      */
-    clean(root) {
+    cleanForSave(root) {
         this.removeFEFFs(root);
         this.clearLinkInSelectionClass(root);
     }
