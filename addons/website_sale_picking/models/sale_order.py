@@ -22,3 +22,8 @@ class SaleOrder(models.Model):
             if self.fiscal_position_id != fpos_before:
                 self._recompute_taxes()
         return res
+
+    def _remove_delivery_line(self):
+        if self.carrier_id.delivery_type == 'onsite' and self.carrier_id.warehouse_id:
+            self.env.add_to_compute(self._fields['partner_shipping_id'], self)
+        super()._remove_delivery_line()
