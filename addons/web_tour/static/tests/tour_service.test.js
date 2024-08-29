@@ -249,7 +249,7 @@ test("next step with new anchor at same position", async () => {
 test("a failing tour logs the step that failed in run", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => expect.step(`log: ${s}`),
-        warn: (s) => {},
+        dir: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
     class Root extends Component {
@@ -303,7 +303,7 @@ test("a failing tour logs the step that failed in run", async () => {
 test("a failing tour with disabled element", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => {},
-        warn: (s) => {},
+        dir: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
     class Root extends Component {
@@ -876,7 +876,7 @@ test("scroller pointer to reach next step", async () => {
 
 test("automatic tour with invisible element", async () => {
     patchWithCleanup(browser.console, {
-        warn: (s) => {},
+        dir: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
     await makeMockEnv();
@@ -929,7 +929,7 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
         log: (s) => {
             s.includes("tour succeeded") ? expect.step(`succeeded`) : false;
         },
-        warn: (s) => {},
+        dir: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
     await makeMockEnv();
