@@ -150,6 +150,7 @@ test("should not display the resizeCursor if the table element isContentEditable
 
 test("list of table commands in first column", async () => {
     const { el } = await setupEditor(`
+        <p><br></p>
         <table>
             <tbody>
             <tr><td class="a">1[]</td><td class="b">2</td><td class="c">3</td></tr>
