@@ -83,6 +83,7 @@ class TestEventCrm(TestEventFullCommon):
         public_partner = self.env.ref('base.public_partner')
         public_so = self.env['sale.order'].create({
             'partner_id': public_partner.id,
+            'user_id': self.user_sales_salesman.id,
             'order_line': [
                 (0, 0, {
                     'event_id': self.test_event.id,

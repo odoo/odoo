@@ -61,6 +61,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
         # Step 4: Same test as salesman
         salesman_sale_order = self.env['sale.order'].with_user(self.user_salesman).create({
             'partner_id': self.user_portal.partner_id.id,
+            'user_id': self.user_salesman.id,
             'order_line': [
                 (0, 0, {
                     'name': self.course_product.name,
