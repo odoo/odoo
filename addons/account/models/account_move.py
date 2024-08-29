@@ -1596,7 +1596,7 @@ class AccountMove(models.Model):
             move.partner_credit_warning = ''
             show_warning = move.state == 'draft' and \
                            move.move_type == 'out_invoice' and \
-                           self.env.company.account_use_credit_limit
+                           move.company_id.account_use_credit_limit
             if show_warning:
                 total_field = 'amount_total' if move.currency_id == move.company_currency_id else 'amount_total_company_currency'
                 current_amount = move.tax_totals[total_field]
