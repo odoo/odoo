@@ -956,6 +956,39 @@ test.tags("desktop")("execute_action of type object: disable buttons (2)", async
     });
 });
 
+test.tags("desktop")("view button: block ui attribute", async () => {
+    Partner._views["form,false"] = `
+            <form>
+                <header>
+                    <button name="4" string="Execute action" type="action" block-ui="1"/>
+                </header>
+            </form>`;
+
+    const def = new Deferred();
+    // delay the action
+    onRpc("onchange", () => def);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+
+    // open first record in form view
+    await contains(".o_list_view .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o-main-components-container .o_blockUI").toHaveCount(0);
+
+    // click on 'Execute action', to execute action 4
+    await contains('.o_form_view button[name="4"]').click();
+    expect(".o-main-components-container .o_blockUI").toHaveCount(1, {
+        message: "interface should be blocked during loading",
+    });
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o-main-components-container .o_blockUI").toHaveCount(0);
+});
+
 test("execute_action of type object raises error: re-enables buttons", async () => {
     expect.errors(1);
 
