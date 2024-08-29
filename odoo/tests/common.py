@@ -9,7 +9,6 @@ from __future__ import annotations
 import base64
 import concurrent.futures
 import contextlib
-import difflib
 import importlib
 import inspect
 import itertools
@@ -18,7 +17,6 @@ import logging
 import os
 import pathlib
 import platform
-import pprint
 import re
 import shutil
 import signal
@@ -32,20 +30,21 @@ import unittest
 import warnings
 from collections import defaultdict, deque
 from concurrent.futures import Future, CancelledError, wait
-from typing import Callable
+from contextlib import contextmanager, ExitStack
+from datetime import datetime
+from functools import lru_cache, partial
+from itertools import zip_longest as izip_longest
+from passlib.context import CryptContext
+from typing import Optional, Iterable
+from unittest.mock import patch, _patch, Mock
+from xmlrpc import client as xmlrpclib
 
 try:
     from concurrent.futures import InvalidStateError
 except ImportError:
     InvalidStateError = NotImplementedError
-from contextlib import contextmanager, ExitStack
-from datetime import datetime
-from functools import lru_cache
-from itertools import zip_longest as izip_longest
-from passlib.context import CryptContext
-from unittest.mock import patch, _patch, Mock
-from xmlrpc import client as xmlrpclib
 
+import freezegun
 import requests
 import werkzeug.urls
 from lxml import etree, html
@@ -54,13 +53,12 @@ from urllib3.util import Url, parse_url
 
 import odoo
 from odoo import api
-from odoo.models import BaseModel
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
-from odoo.tools import float_compare, mute_logger, profiler, SQL, DotDict
+from odoo.tools import mute_logger, profiler, SQL, DotDict, float_compare
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
@@ -573,110 +571,71 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 self.env.flush_all()
                 self.env.cr.flush()
 
-    def assertRecordValues(self, records, expected_values):
+    def assertRecordValues(
+            self,
+            records: odoo.models.BaseModel,
+            expected_values: list[dict],
+            *,
+            field_names: Optional[Iterable[str]] = None,
+    ) -> None:
         ''' Compare a recordset with a list of dictionaries representing the expected results.
         This method performs a comparison element by element based on their index.
         Then, the order of the expected values is extremely important.
 
-        Note that:
-          - Comparison between falsy values is supported: False match with None.
-          - Comparison between monetary field is also treated according the currency's rounding.
-          - Comparison between x2many field is done by ids. Then, empty expected ids must be [].
-          - Comparison between many2one field id done by id. Empty comparison can be done using any falsy value.
+        .. note::
 
-        :param records:               The records to compare.
-        :param expected_values:       List of dicts expected to be exactly matched in records
+            - ``None`` expected values can be used for empty fields.
+            - x2many fields are expected by ids (so the expected value should be
+              a ``list[int]``
+            - many2one fields are expected by id (so the expected value should
+              be an ``int``
+
+        :param records: The records to compare.
+        :param expected_values: Items to check the ``records`` against.
+        :param field_names: list of fields to check during comparison, if
+                            unspecified all expected_values must have the same
+                            keys and all are checked
         '''
+        if not field_names:
+            field_names = expected_values[0].keys()
+            for i, v in enumerate(expected_values):
+                self.assertEqual(
+                    v.keys(), field_names,
+                    f"All expected values must have the same keys, found differences between records 0 and {i}",
+                )
 
-        def _compare_candidate(record, candidate, field_names):
-            ''' Compare all the values in `candidate` with a record.
-            :param record:      record being compared
-            :param candidate:   dict of values to compare
-            :return:            A dictionary will encountered difference in values.
-            '''
-            diff = {}
+        expected_reformatted = []
+        for vs in expected_values:
+            r = {}
+            for f in field_names:
+                if records._fields[f].type in ('one2many', 'many2many'):
+                    r[f] = sorted(vs[f])
+                elif vs[f] is None:
+                    r[f] = False
+                else:
+                    r[f] = vs[f]
+            expected_reformatted.append(r)
+
+        record_reformatted = []
+        for record in records:
+            r = {}
             for field_name in field_names:
                 record_value = record[field_name]
-                field = record._fields[field_name]
-                field_type = field.type
-                if field_type == 'monetary':
-                    # Compare monetary field.
-                    currency_field_name = record._fields[field_name].get_currency_field(record)
-                    record_currency = record[currency_field_name]
-                    if field_name not in candidate:
-                        diff[field_name] = (record_value, None)
-                    elif record_currency:
-                        if record_currency.compare_amounts(candidate[field_name], record_value):
-                            diff[field_name] = (record_value, record_currency.round(candidate[field_name]))
-                    elif candidate[field_name] != record_value:
-                        diff[field_name] = (record_value, candidate[field_name])
-                elif field_type == 'float' and field.get_digits(record.env):
-                    prec = field.get_digits(record.env)[1]
-                    if float_compare(candidate[field_name], record_value, precision_digits=prec) != 0:
-                        diff[field_name] = (record_value, candidate[field_name])
-                elif field_type in ('one2many', 'many2many'):
-                    # Compare x2many relational fields.
-                    # Empty comparison must be an empty list to be True.
-                    if field_name not in candidate:
-                        diff[field_name] = (sorted(record_value.ids), None)
-                    elif set(record_value.ids) != set(candidate[field_name]):
-                        diff[field_name] = (sorted(record_value.ids), sorted(candidate[field_name]))
-                elif field_type == 'many2one':
-                    # Compare many2one relational fields.
-                    # Every falsy value is allowed to compare with an empty record.
-                    if field_name not in candidate:
-                        diff[field_name] = (record_value.id, None)
-                    elif (record_value or candidate[field_name]) and record_value.id != candidate[field_name]:
-                        diff[field_name] = (record_value.id, candidate[field_name])
-                else:
-                    # Compare others fields if not both interpreted as falsy values.
-                    if field_name not in candidate:
-                        diff[field_name] = (record_value, None)
-                    elif (candidate[field_name] or record_value) and record_value != candidate[field_name]:
-                        diff[field_name] = (record_value, candidate[field_name])
-            return diff
+                match (field := record._fields[field_name]).type:
+                    case 'many2one':
+                        record_value = record_value.id
+                    case 'one2many' | 'many2many':
+                        record_value = sorted(record_value.ids)
+                    case 'float' if digits := field.get_digits(record.env):
+                        record_value = Approx(record_value, digits[1])
+                    case 'monetary' if currency_field_name := field.get_currency_field(record):
+                        # don't round if there's no currency set
+                        if c := record[currency_field_name]:
+                            record_value = Approx(record_value, c)
+                r[field_name] = record_value
+            record_reformatted.append(r)
 
-        # Compare records with candidates.
-        different_values = []
-        field_names = list(expected_values[0].keys())
-        for index, record in enumerate(records):
-            is_additional_record = index >= len(expected_values)
-            candidate = {} if is_additional_record else expected_values[index]
-            diff = _compare_candidate(record, candidate, field_names)
-            if diff:
-                different_values.append((index, 'additional_record' if is_additional_record else 'regular_diff', diff))
-        for index in range(len(records), len(expected_values)):
-            diff = {}
-            for field_name in field_names:
-                diff[field_name] = (None, expected_values[index][field_name])
-            different_values.append((index, 'missing_record', diff))
-
-        # Build error message.
-        if not different_values:
-            return
-
-        errors = ['The records and expected_values do not match.']
-        if len(records) != len(expected_values):
-            errors.append('Wrong number of records to compare: %d records versus %d expected values.' % (len(records), len(expected_values)))
-
-        for index, diff_type, diff in different_values:
-            if diff_type == 'regular_diff':
-                errors.append('\n==== Differences at index %s ====' % index)
-                record_diff = ['%s:%s' % (k, v[0]) for k, v in diff.items()]
-                candidate_diff = ['%s:%s' % (k, v[1]) for k, v in diff.items()]
-                errors.append('\n'.join(difflib.unified_diff(record_diff, candidate_diff)))
-            elif diff_type == 'additional_record':
-                errors += [
-                    '\n==== Additional record ====',
-                    pprint.pformat(dict((k, v[0]) for k, v in diff.items())),
-                ]
-            elif diff_type == 'missing_record':
-                errors += [
-                    '\n==== Missing record ====',
-                    pprint.pformat(dict((k, v[1]) for k, v in diff.items())),
-                ]
-
-        self.fail('\n'.join(errors))
+        self.assertEqual(expected_reformatted, record_reformatted)
 
     # turns out this thing may not be quite as useful as we thought...
     def assertItemsEqual(self, a, b, msg=None):
@@ -772,6 +731,31 @@ class Like:
 
     def __repr__(self):
         return repr(self.pattern)
+
+
+class Approx:  # noqa: PLW1641
+    """A wrapper for approximate float comparisons. Uses float_compare under
+    the hood.
+
+    Most of the time, :meth:`TestCase.assertAlmostEqual` is more useful, but it
+    doesn't work for all helpers.
+    """
+    def __init__(self, value: float, rounding: int | float | odoo.addons.base.models.res_currency.Currency, /) -> None:  # noqa: PYI041
+        self.value = value
+        if isinstance(rounding, int):
+            self.cmp = partial(float_compare, precision_digits=rounding)
+        elif isinstance(rounding, float):
+            self.cmp = partial(float_compare, precision_rounding=rounding)
+        else:
+            self.cmp = rounding.compare_amounts
+
+    def __repr__(self) -> str:
+        return f"~{self.value!r}"
+
+    def __eq__(self, other: object) -> bool | NotImplemented:
+        if not isinstance(other, (float, int)):
+            return NotImplemented
+        return self.cmp(self.value, other) == 0
 
 
 savepoint_seq = itertools.count()
