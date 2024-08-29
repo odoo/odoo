@@ -938,7 +938,6 @@ class TestSaleToInvoice(TestSaleCommon):
         """ Testing creating two SOs with the same customer and invoicing them together. We have to ensure
             that the amount to invoice is correct for each SO.
         """
-        self.env.company.account_use_credit_limit = True
         sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -977,7 +976,6 @@ class TestSaleToInvoice(TestSaleCommon):
         """ Testing creating two SOs linked to the same invoice line. Drawback: the substracted
             amount to the amount_total will take both sale order into account.
         """
-        self.env.company.account_use_credit_limit = True
         sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -1020,7 +1018,6 @@ class TestSaleToInvoice(TestSaleCommon):
         We check that the 'amount_to_invoice' relies only on the posted invoice quantity,
         and is not affected by price changes that occurred during invoice creation.
         """
-        self.env.company.account_use_credit_limit = True
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
