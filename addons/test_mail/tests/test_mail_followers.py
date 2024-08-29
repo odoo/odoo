@@ -1107,17 +1107,6 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
             unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
             self.assertFalse(unfollow_url)
 
-    @mute_logger('odoo.models')
-    def test_unfollow_partner_with_no_user(self):
-        """ External partner must not receive an unfollow URL. """
-        test_partner = self.partner_without_user
-        test_record = self.test_record
-
-        test_record._message_subscribe(partner_ids=test_partner.ids)
-        with self.subTest('External partner must not receive an unfollow URL'):
-            unfollow_url = self._post_message_and_get_unfollow_urls(test_record, test_partner)[0]
-            self.assertFalse(unfollow_url)
-
     @mute_logger('odoo.addons.mail.controllers.mail', 'odoo.models', 'odoo.http')
     def test_unfollow_partner_without_access_on_record_unfollow_enabled(self):
         """ Partner without access must receive an unfollow URL for message
@@ -1145,19 +1134,9 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
 
     def test_unfollow_partner_multi_recipients_multi_messages(self):
         """ Test most of the cases above but with multiple recipients and messages. """
-        # On a record with unfollow attribute disabled.
         test_record = self.test_record
         partners = self.partner_without_user + self.partner_portal + self.partner_employee
-        test_record._message_subscribe(partner_ids=partners.ids)
-        urls = self._post_message_and_get_unfollow_urls(test_record, partners)
-        url_partner_without_user, url_partner_portal, url_employee = urls[0], urls[1], urls[2]
 
-        self.assertFalse(url_partner_without_user)
-        self.assertFalse(url_partner_portal)
-        self.assertTrue(url_employee)
-        self._test_unfollow_url(test_record, url_employee, self.partner_employee)
-
-        # On a record with unfollow attribute enabled.
         test_record = self.test_record_unfollow
         test_record._message_subscribe(partner_ids=partners.ids)
         urls = self._post_message_and_get_unfollow_urls(test_record, partners)

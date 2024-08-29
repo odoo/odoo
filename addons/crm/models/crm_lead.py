@@ -1928,9 +1928,10 @@ class Lead(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        if self.date_deadline:
+        if self.date_deadline and render_context.get('is_portal'):
             render_context['subtitles'].append(
                 _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
+
         return render_context
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):

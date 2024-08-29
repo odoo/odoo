@@ -738,7 +738,7 @@ class MailComposer(models.TransientModel):
                     raise UserError(_("No recipient found."))
                 messages += message
             else:
-                messages += ActiveModel.browse(res_id).message_post(**post_values)
+                messages += ActiveModel.browse(res_id).message_post(**{**post_values, 'show_footer': True})
         return messages
 
     def _action_send_mail_mass_mail(self, res_ids, auto_commit=False):

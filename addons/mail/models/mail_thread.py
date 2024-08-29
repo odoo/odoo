@@ -90,6 +90,7 @@ class MailThread(models.AbstractModel):
     _mail_post_access = 'write'  # access required on the document to post on it
     _primary_email = 'email'  # Must be set for the models that can be created by alias
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
+    _partner_unfollow_enabled = True
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
@@ -3016,6 +3017,8 @@ class MailThread(models.AbstractModel):
             'send_after_commit',
             'skip_existing',
             'subtitles',
+            'show_footer',
+            'show_header'
         }
 
     @api.model
@@ -3289,6 +3292,7 @@ class MailThread(models.AbstractModel):
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
             subtitles=subtitles,
+            show_footer=kwargs.get('show_footer'),
         ):
             # generate notification email content
             mail_body = self._notify_by_email_render_layout(
@@ -3358,7 +3362,7 @@ class MailThread(models.AbstractModel):
     def _notify_get_classified_recipients_iterator(
             self, message, recipients_data, msg_vals=False,
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
-            subtitles=None):
+            subtitles=None, show_footer=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
         of recipients informations. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
@@ -3428,6 +3432,7 @@ class MailThread(models.AbstractModel):
                 model_description=lang_model_description,
                 force_email_company=force_email_company,
                 force_email_lang=lang,
+                show_footer=show_footer,
             ) # 10 queries
             if subtitles:
                 render_values['subtitles'] = subtitles
@@ -3438,7 +3443,7 @@ class MailThread(models.AbstractModel):
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
                                                    model_description=False,
                                                    force_email_company=False,
-                                                   force_email_lang=False):
+                                                   force_email_lang=False, show_footer=None):
         """ Prepare rendering context for notification email.
 
         Signature: if asked a default signature is computed based on author. Either
@@ -3524,6 +3529,8 @@ class MailThread(models.AbstractModel):
         subtype_id = msg_vals.get('subtype_id') if msg_vals and 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
+        is_portal = self.env.ref('base.group_portal') in self.partner_id.user_ids.groups_id
+        show_header = True if is_portal else False
         return {
             # message
             'is_discussion': is_discussion,
@@ -3541,6 +3548,8 @@ class MailThread(models.AbstractModel):
             'lang': lang,
             'signature': signature,
             'website_url': website_url,
+            'show_header': show_header,
+            'show_footer': show_footer,
             # tools
             'is_html_empty': is_html_empty,
         }
