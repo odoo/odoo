@@ -295,6 +295,9 @@
                 <t t-snippet="website.s_company_team_detail" string="Team Detail" group="people">
                     <keywords>organization, company, people, members, staffs, profiles, bios, roles, personnel, crew, patterned, trendy, social</keywords>
                 </t>
+                <t t-snippet="website.s_company_team_spotlight" string="Team Spotlight" group="people">
+                    <keywords>organization, company, people, members, staffs, profiles, bios, roles, personnel, crew, patterned</keywords>
+                </t>
                 <t t-snippet="website.s_references" string="References" group="people">
                     <keywords>customers, clients, sponsors, partners, supporters, case-studies, collaborators, associations, associates, testimonials, endorsements</keywords>
                 </t>
@@ -751,7 +754,7 @@
              which the s_card options should be bound (instead of the s_card).
              Note: defined here to be set above all the other options that might
              need it. -->
-        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div'"/>
+        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div'"/>
 
         <!-- Binding the option on the snippet if it is not a s_card with a
              handler parent -->
