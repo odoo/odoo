@@ -103,11 +103,8 @@
                 <attribute name="invisible">mailing_type != 'mail' or state in ('draft', 'test')</attribute>
             </xpath>
             <!-- Form -->
-            <xpath expr="//label[@for='subject']" position="attributes">
+            <xpath expr="//field[@name='subject']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
-            </xpath>
-            <xpath expr="//label[@for='subject']" position="after">
-                <label for="sms_subject" invisible="mailing_type != 'sms'"/>
             </xpath>
             <xpath expr="//field[@name='subject']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>

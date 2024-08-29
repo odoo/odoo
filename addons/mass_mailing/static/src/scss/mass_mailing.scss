@@ -26,22 +26,6 @@
 }
 
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
-    .o_mass_mailing_subject {
-        // Place the favorite button without breaking the emoji widget
-        .o_field_char_emojis {
-            .o_field_char_buttons {
-                right: 30px;
-            }
-            input {
-                padding-right: 65px;
-            }
-        }
-    }
-    .o_mass_mailing_subject {
-        .fa-star {
-            color: $o-main-favorite-color;
-        }
-    }
     // Align the model / domain container with subject field in large devices
     // and provide better tap area to the filter
     @include media-breakpoint-up(md) {
@@ -57,14 +41,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-    }
-}
-
-.o_xxs_form_view.o_mass_mailing_mailing_form {
-    .o_mass_mailing_subject {
-        span.o_field_char {
-            max-width: 90vw!important;
         }
     }
 }
