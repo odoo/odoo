@@ -54,7 +54,7 @@ odoo.define('payment_adyen.payment_form', require => {
          * @param {object} error - The error in the drop-in
          * @return {undefined}
          */
-        _dropinOnError: function (error) {
+        _dropinOnError: function (error='') {
             this._displayError(
                 _t("Incorrect Payment Details"),
                 _t("Please verify your payment details."),
@@ -165,6 +165,9 @@ odoo.define('payment_adyen.payment_form', require => {
                         onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
                         onError: this._dropinOnError.bind(this),
                         onSubmit: this._dropinOnSubmit.bind(this),
+                        paymentMethodsConfiguration: {
+                            card: {hasHolderName: true, holderNameRequired: true},
+                        }
                     };
                     const checkout = new AdyenCheckout(configuration);
                     this.adyenDropin = checkout.create(
@@ -237,7 +240,10 @@ odoo.define('payment_adyen.payment_form', require => {
                     _t("Server Error"), _t("We are not able to process your payment.")
                 );
             } else {
-                return await this.adyenDropin.submit();
+                await this.adyenDropin.submit();
+                if (!this.adyenDropin.isValid) {
+                    this._dropinOnError();
+                }
             }
         },
 
