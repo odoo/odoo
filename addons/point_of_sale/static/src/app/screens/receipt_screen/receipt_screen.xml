@@ -10,7 +10,10 @@
                             <div class="d-flex flex-column align-items-center p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
                                 <i t-if="!ui.isSmall" class="fa fa-fw fa-2x fa-check-circle"/>
                                 <span class="fs-3 fw-bolder">Payment Successful</span>
-                                <span class="fs-4 fw-bold"><t t-esc="orderAmountPlusTip" /></span>
+                                <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
+                                    <span t-esc="orderAmountPlusTip" />
+                                    <span class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.pos.get_order())">Edit payment</span>
+                                </div>
                             </div>
                             <hr />
                             <div class="receipt-options d-flex flex-column gap-2">

@@ -18,7 +18,7 @@ class PosPayment(models.Model):
 
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True)
-    amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', readonly=True, help="Total amount of the payment.")
+    amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.")
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
     currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')
@@ -53,6 +53,12 @@ class PosPayment(models.Model):
                 payment.display_name = f'{payment.name} {formatLang(self.env, payment.amount, currency_obj=payment.currency_id)}'
             else:
                 payment.display_name = formatLang(self.env, payment.amount, currency_obj=payment.currency_id)
+
+    @api.constrains('amount')
+    def _check_amount(self):
+        for payment in self:
+            if payment.pos_order_id.state in ['invoiced', 'done']:
+                raise ValidationError(_('You cannot edit a payment for a posted order.'))
 
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):
