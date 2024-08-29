@@ -73,19 +73,54 @@ class PagePropertiesBase(models.TransientModel):
     def _compute_can_publish(self):
         for record in self:
             target = record.target_model_id
-            record.can_publish = 'can_publish' in target._fields and target.can_publish
+            if target._name == 'ir.ui.view':
+                # Check we are in a non-custom state to avoid messing with
+                # manually set values.
+                record.can_publish = self._is_ir_ui_view_published(target) or self._is_ir_ui_view_unpublished(target)
+            elif 'can_publish' in target._fields:
+                record.can_publish = target.can_publish
+            else:
+                record.can_publish = False
 
     @api.depends('target_model_id')
     def _compute_is_published(self):
         for record in self:
             target = record.target_model_id
-            record.is_published = target and 'is_published' in target._fields and target.is_published
+            if target._name == 'ir.ui.view':
+                record.is_published = self._is_ir_ui_view_published(target)
+            elif 'is_published' in target._fields:
+                record.is_published = target.is_published
+            else:
+                record.is_published = False
 
     def _inverse_is_published(self):
         self.ensure_one()
         target = self.target_model_id
-        if target and 'is_published' in target._fields:
+        if target._name == 'ir.ui.view':
+            if self.can_publish:
+                if self.is_published:
+                    # Publish
+                    target.visibility = ''
+                    target.groups_id -= self._get_ir_ui_view_unpublish_group()
+                else:
+                    # Unpublish
+                    target.visibility = 'restricted_group'
+                    target.groups_id += self._get_ir_ui_view_unpublish_group()
+                self.env.registry.clear_cache('templates')
+        elif 'is_published' in target._fields:
             target.is_published = self.is_published
+
+    def _get_ir_ui_view_unpublish_group(self):
+        return self.env.ref('base.group_user')
+
+    def _is_ir_ui_view_unpublished(self, view):
+        view.ensure_one()
+        return (view.visibility == 'restricted_group' and
+                self._get_ir_ui_view_unpublish_group() in view.groups_id)
+
+    def _is_ir_ui_view_published(self, view):
+        view.ensure_one()
+        return not view.visibility
 
 
 class PageProperties(models.TransientModel):
