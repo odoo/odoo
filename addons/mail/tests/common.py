@@ -1462,10 +1462,15 @@ class MailCommon(common.TransactionCase, MailCase):
             cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish Model Description'
 
         # Translate some code strings used in mailing
-        code_translations.python_translations[('test_mail', 'es_ES')]['NotificationButtonTitle'] = 'SpanishButtonTitle'
-        cls.addClassCleanup(code_translations.python_translations[('test_mail', 'es_ES')].pop, 'NotificationButtonTitle')
-        code_translations.python_translations[('mail', 'es_ES')]['View %s'] = 'SpanishView %s'
-        cls.addClassCleanup(code_translations.python_translations[('mail', 'es_ES')].pop, 'View %s')
+        code_translations.python_translations[('test_mail', 'es_ES')] = {
+            **code_translations.python_translations[('test_mail', 'es_ES')],
+            'NotificationButtonTitle': 'SpanishButtonTitle'
+        }
+        code_translations.python_translations[('mail', 'es_ES')] = {
+            **code_translations.python_translations[('mail', 'es_ES')],
+            'View %s': 'SpanishView %s'
+        }
+        cls.addClassCleanup(code_translations.python_translations.clear)
 
         # Prepare some translated value for template if given
         if test_template:

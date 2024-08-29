@@ -37,7 +37,7 @@ from psycopg2.extras import Json
 import odoo
 from odoo.exceptions import UserError
 from .config import config
-from .misc import file_open, file_path, get_iso_codes, OrderedSet, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, get_iso_codes, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
 
 __all__ = [
     "_",
@@ -1678,15 +1678,17 @@ class CodeTranslations:
         def filter_func(row):
             return row.get('value') and PYTHON_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.python_translations[(module_name, lang)] = translations
+        self.python_translations[(module_name, lang)] = ReadonlyDict(translations)
 
     def _load_web_translations(self, module_name, lang):
         def filter_func(row):
             return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.web_translations[(module_name, lang)] = {
-            "messages": [{"id": src, "string": value} for src, value in translations.items()]
-        }
+        self.web_translations[(module_name, lang)] = ReadonlyDict({
+            "messages": tuple(
+                ReadonlyDict({"id": src, "string": value})
+                for src, value in translations.items())
+        })
 
     def get_python_translations(self, module_name, lang):
         if (module_name, lang) not in self.python_translations:
