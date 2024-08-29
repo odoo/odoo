@@ -11,11 +11,15 @@
                 <div t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent" class="w-100 border-top mt-auto fw-bolder d-flex flex-column px-3 py-2 bg-200">
                     <div t-esc="_loyaltyStat.points.name" class="loyalty-points-title text-center mb-1" />
                     <div class="d-flex justify-content-around gap-2 mt-1">
+                        <div t-if='_loyaltyStat.points.balance' class="loyalty-points-balance d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded bg-300 px-3 py-2" >
+                            <span class="text-muted">Points Balance</span>
+                            <span class='value'><t t-esc='_loyaltyStat.points.balance'/></span>
+                        </div>
                         <div t-if='_loyaltyStat.points.won' class="loyalty-points-won d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded bg-300 px-3 py-2" >
                             <span class="text-muted">Points Won</span>
                             <span class='value text-success '>+<t t-esc='_loyaltyStat.points.won'/></span>
                         </div>
-                        <div t-if='_loyaltyStat.points.spent' class="loyalty-points-won d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded bg-300 px-3 py-2" >
+                        <div t-if='_loyaltyStat.points.spent' class="loyalty-points-spent d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded bg-300 px-3 py-2" >
                             <span class="text-muted">Points Spent</span>
                             <span class='value text-danger'>-<t t-esc='_loyaltyStat.points.spent'/></span>
                         </div>
