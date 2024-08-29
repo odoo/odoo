@@ -82,18 +82,20 @@
             <t t-call="web.internal_layout">
                 <div class="page">
                     <t t-foreach="docs" t-as="doc">
-                        <div class="oe_structure"/>
-                        <div class="mt8">
-                            <h1>
-                                <t t-out="title"/>: <t t-out="doc.name"/>
-                            </h1>
-                            <t t-set="lines" t-value="doc.timesheet_ids if from_project else timesheets_per_task.get(doc, doc.env['account.analytic.line'])"/>
-                            <t t-call="hr_timesheet.timesheet_table"/>
-                            <t t-if="not from_project">
-                                <t t-set="task_id" t-value="doc.id"/>
-                                <t t-call="hr_timesheet.timesheet_report_subtask"/>
-                            </t>
-                        </div>
+                        <t t-set="lines" t-value="doc.timesheet_ids if from_project else timesheets_per_task.get(doc, doc.env['account.analytic.line'])"/>
+                        <t t-if="lines">
+                            <div class="oe_structure"/>
+                            <div class="mt8">
+                                <h1>
+                                    <t t-out="title"/>: <t t-out="doc.name"/>
+                                </h1>
+                                <t t-call="hr_timesheet.timesheet_table"/>
+                                <t t-if="not from_project">
+                                    <t t-set="task_id" t-value="doc.id"/>
+                                    <t t-call="hr_timesheet.timesheet_report_subtask"/>
+                                </t>
+                            </div>
+                        </t>
                     </t>
                 </div>
             </t>
