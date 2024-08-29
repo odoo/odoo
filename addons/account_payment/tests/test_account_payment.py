@@ -11,6 +11,15 @@ from odoo.tests import tagged
 @tagged('-at_install', 'post_install')
 class TestAccountPayment(AccountPaymentCommon):
 
+    def test_no_amount_available_for_refund_when_no_tx(self):
+        payment = self.env['account.payment'].create({'amount': 10})
+        self.assertEqual(
+            payment.amount_available_for_refund,
+            0,
+            msg="The value of `amount_available_for_refund` should be 0 when the payment was not"
+                " created by a transaction."
+        )
+
     def test_no_amount_available_for_refund_when_not_supported(self):
         self.provider.support_refund = 'none'
         tx = self._create_transaction('redirect', state='done')
