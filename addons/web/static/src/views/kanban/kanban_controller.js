@@ -162,9 +162,12 @@ export class KanbanController extends Component {
                     offset: offset,
                     limit: limit,
                     total: count,
-                    onUpdate: async ({ offset, limit }) => {
+                    onUpdate: async ({ offset, limit }, hasNavigated) => {
                         await this.model.root.load({ offset, limit });
                         await this.onUpdatedPager();
+                        if (hasNavigated) {
+                            this.onPageChangeScroll();
+                        }
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
                 };
@@ -310,6 +313,16 @@ export class KanbanController extends Component {
                 l.records.find((r) => r.id === record.id)
             );
             this.progressBarState?.updateCounts(group);
+        }
+    }
+
+    onPageChangeScroll() {
+        if (this.rootRef && this.rootRef.el) {
+            if (this.env.isSmall) {
+                this.rootRef.el.scrollTop = 0;
+            } else {
+                this.rootRef.el.querySelector(".o_content").scrollTop = 0;
+            }
         }
     }
 
