@@ -15,10 +15,13 @@
                 <div t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent" class="d-flex justify-content-between mt-2 px-3 py-2 rounded-3 bg-white">
                     <div t-esc="_loyaltyStat.points.name" class="loyalty-points-title fs-4 fw-bolder"/>
                     <div class="d-flex gap-1 fw-bold">
+                        <div t-if='_loyaltyStat.points.balance' class="loyalty-points loyalty-points-balance">
+                            <span class='value'><t t-esc='_loyaltyStat.points.balance'/></span>
+                        </div>
                         <div t-if='_loyaltyStat.points.won' class="loyalty-points loyalty-points-won">
                             <span class='value text-success'>+<t t-esc='_loyaltyStat.points.won'/></span>
                         </div>
-                        <div t-if='_loyaltyStat.points.spent' class="loyalty-points loyalty-points-won">
+                        <div t-if='_loyaltyStat.points.spent' class="loyalty-points loyalty-points-spent">
                             <span class='value text-danger'>-<t t-esc='_loyaltyStat.points.spent'/></span>
                         </div>
                         =
