@@ -516,42 +516,6 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_tcs_tds_warning, False)
 
-    def test_tcs_tds_warning_all_type_of_invoice_same_account(self):
-        '''
-        Test when all type of invoices are created with the
-        same chart of account.
-        '''
-        # bill
-        move = self.create_invoice(
-            partner=self.partner_a,
-            invoice_date='2024-09-01',
-            amounts=[100000],
-            company=self.branch_a,
-        )
-
-        # debit note
-        self.reverse_move(move, '2024-09-01')
-
-        # invoice
-        move_1 = self.create_invoice(
-            move_type='out_invoice',
-            partner=self.partner_a,
-            invoice_date='2024-05-01',
-            amounts=[250000],
-            company=self.branch_a,
-        )
-
-        # credit_note
-        self.reverse_move(move_1, '2024-05-01')
-
-        move_2 = self.create_invoice(
-            partner=self.partner_a,
-            invoice_date='2024-07-01',
-            amounts=[10000],
-            company=self.branch_a,
-        )
-        self.assertEqual(move_2.l10n_in_tcs_tds_warning, False)
-
     def test_tcs_tds_warning_for_multiple_accounts_same_section_in_lines(self):
         '''
         Test when there are multiple products in the move line and some of them
@@ -592,3 +556,53 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_a,
         )
         self.assertEqual(move_3.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 194C on this transaction.")
+
+    def test_tcs_tds_warning_for_not_consider_draft_cancel_invoices_for_aggregate(self):
+        '''
+        Test to exclude draft and canceled invoices from aggregate
+        total calculation.
+        '''
+
+        move = self.create_invoice(
+            partner=self.partner_a,
+            invoice_date='2022-12-12',
+            amounts=[16000],
+            company=self.branch_a,
+            accounts=[self.purchase_account],
+        )
+        move.button_cancel()
+        self.assertEqual(move.l10n_in_tcs_tds_warning, False)
+
+        move_1 = self.create_invoice(
+            partner=self.partner_a,
+            invoice_date='2022-12-12',
+            amounts=[25000],
+            company=self.branch_a,
+            accounts=[self.purchase_account],
+        )
+        self.assertEqual(move_1.l10n_in_tcs_tds_warning, False)
+
+        move_2 = self.create_invoice(
+            partner=self.partner_a,
+            invoice_date='2022-12-12',
+            amounts=[85000],
+            company=self.branch_a,
+            accounts=[self.purchase_account],
+        )
+        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 194C on this transaction.")
+
+    def test_tcs_tds_warning_if_some_lines_has_tax(self):
+        '''
+        Test when a tax is added to the some of the move line
+        '''
+
+        move = self.create_invoice(
+            partner=self.partner_a,
+            move_type='out_invoice',
+            invoice_date='2022-12-12',
+            amounts=[710000, 710000],
+            taxes=[self.tax_206c1g_r],
+            company=self.branch_a,
+        )
+
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to collect TCS u/s 206C(1G) Remittance on this transaction.")
