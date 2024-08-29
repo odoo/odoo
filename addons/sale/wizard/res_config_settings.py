@@ -116,11 +116,12 @@ class ResConfigSettings(models.TransientModel):
     #=== CRUD METHODS ===#
 
     def set_values(self):
+        had_discount_group = self.default_get(['group_discount_per_so_line'])['group_discount_per_so_line']
         super().set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
 
-        if not self.group_discount_per_so_line:
+        if had_discount_group and not self.group_discount_per_so_line:
             self.env['product.pricelist'].search([
                 ('discount_policy', '=', 'without_discount')
             ]).write({'discount_policy': 'with_discount'})
