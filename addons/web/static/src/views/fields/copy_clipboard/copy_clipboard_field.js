@@ -55,7 +55,7 @@ export class CopyClipboardCharField extends CopyClipboardField {
     static components = { Field: CharField, CopyButton };
 
     get copyButtonIcon() {
-        return "fa-clone";
+        return "fa-clipboard";
     }
 }
 
