@@ -2164,6 +2164,40 @@
                     'account_id': ref('l10n_ec.ec_purchase_vat_zero'),
                 })]"/>
         </record>
+        <!--IVA 0% (No Objeto de IVA)-->
+        <record id="tax_vat_541_sup_02_dividend" model="account.tax.template">
+            <!-- Adquisiciones no objeto de IVA -->
+            <field name="name">No Objeto IVA 0% (541, 10 Dividendos)</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">40</field>
+            <field name="amount">0.0</field>
+            <field name="description">IVA 0%</field>
+            <field name="l10n_ec_code_base">541</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_vat_not_charged"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_ec.tax_report_line_104_531_tag'), ref('l10n_ec.tax_report_line_104_541_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_purchase_vat_zero'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_ec.tax_report_line_104_541_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ec_purchase_vat_zero'),
+                })]"/>
+        </record>
         <record id="tax_vat_510_08_sup_01" model="account.tax.template">
             <field name="name">IVA 8% (510, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>

@@ -2347,5 +2347,456 @@
                     'account_id': ref('l10n_ec.ec_sale_profit_withhold'),
                 })]"/>
         </record>
+
+        <!-- dividents withholds -->
+
+        <record id="tax_withhold_profit_325" model="account.tax.template">
+            <field name="name">325 22% Anticipo dividendos a residentes o establecidos en el Ecuador</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-22.0</field>
+            <field name="description">325</field>
+            <field name="l10n_ec_code_applied">375</field>
+            <field name="l10n_ec_code_base">325</field>
+            <field name="l10n_ec_code_ats">325</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_325_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_375_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_325_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_375_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_325A" model="account.tax.template">
+            <field name="name">325A 22% Dividendos anticipados prestamos accionistas, beneficiarios o partìcipes a residentes o establecidos en el Ecuador</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-22.0</field>
+            <field name="description">325</field>
+            <field name="l10n_ec_code_applied">375</field>
+            <field name="l10n_ec_code_base">325</field>
+            <field name="l10n_ec_code_ats">325A</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_325_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_375_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_325_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_375_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_327" model="account.tax.template">
+            <field name="name">327 13% Dividendos distribuidos a personas naturales residentes (1% al 13%)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-13.0</field>
+            <field name="description">327</field>
+            <field name="l10n_ec_code_applied">377</field>
+            <field name="l10n_ec_code_base">327</field>
+            <field name="l10n_ec_code_ats">327</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_327_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_377_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_327_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_377_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_328" model="account.tax.template">
+            <field name="name">328 0% Dividendos distribuidos a sociedades residentes</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">0.0</field>
+            <field name="description">328</field>
+            <field name="l10n_ec_code_applied">378</field>
+            <field name="l10n_ec_code_base">328</field>
+            <field name="l10n_ec_code_ats">328</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_328_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_378_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_328_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_378_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_329" model="account.tax.template">
+            <field name="name">329 0% Dividendos distribuidos a fideicomisos residentes</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">0.0</field>
+            <field name="description">329</field>
+            <field name="l10n_ec_code_applied">379</field>
+            <field name="l10n_ec_code_base">329</field>
+            <field name="l10n_ec_code_ats">329</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_329_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_379_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_329_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_379_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_331" model="account.tax.template">
+            <field name="name">331 0% Dividendos exentos distribuidos en acciones (reinversión de utilidades con derecho a reducción tarifa ir)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">0.0</field>
+            <field name="description">331</field>
+            <field name="l10n_ec_code_base">331</field>
+            <field name="l10n_ec_code_ats">331</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_331_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_331_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504E_404" model="account.tax.template">
+            <field name="name">504E-404 22% Pago al exterior - anticipo dividendos (excepto paraísos fiscales o de regimen de menor imposición) (con convenio de doble tributación)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-22.0</field>
+            <field name="description">404</field>
+            <field name="l10n_ec_code_applied">454</field>
+            <field name="l10n_ec_code_base">404</field>
+            <field name="l10n_ec_code_ats">504E</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_404_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_454_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_404_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_454_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504_405" model="account.tax.template">
+            <field name="name">504-405 25% Pago al exterior- dividendos distribuidos a personas naturales (con convenio de doble tributación)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-25.0</field>
+            <field name="description">405</field>
+            <field name="l10n_ec_code_base">405</field>
+            <field name="l10n_ec_code_ats">504</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_405_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_405_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504A_406" model="account.tax.template">
+            <field name="name">504A-406 25% Pago al exterior - Dividendos distribuidos a sociedades (con convenio de doble tributación)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-25.0</field>
+            <field name="description">406</field>
+            <field name="l10n_ec_code_applied">456</field>
+            <field name="l10n_ec_code_base">406</field>
+            <field name="l10n_ec_code_ats">504A</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_406_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_456_tag')],
+                })]"/>
+                <!-- TODO: Crear a mano los tax_report_line -->
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_406_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_456_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504E_415" model="account.tax.template">
+            <field name="name">504E-415 22% Pago al exterior - anticipo dividendos (excepto paraisos fiscales o de regimen de menor imposicion) (sin convenio de doble tributación)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-22.0</field>
+            <field name="description">415</field>
+            <field name="l10n_ec_code_base">415</field>
+            <field name="l10n_ec_code_applied">465</field>
+            <field name="l10n_ec_code_ats">504E</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_415_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_465_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_415_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_22x100'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_465_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504_416" model="account.tax.template">
+            <field name="name">504-416 25% Pago al exterior - dividendos distribuidos a personas naturales (sin convenio de doble tributación)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-25.0</field>
+            <field name="description">416</field>
+            <field name="l10n_ec_code_base">416</field>
+            <field name="l10n_ec_code_ats">504</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_416_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_416_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504A_417" model="account.tax.template">
+            <field name="name">504A-417 25% Pago al exterior - Dividendos distribuidos a sociedades (sin convenio de doble tributación)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-25.0</field>
+            <field name="description">417</field>
+            <field name="l10n_ec_code_applied">467</field>
+            <field name="l10n_ec_code_base">417</field>
+            <field name="l10n_ec_code_ats">504A</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_417_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_467_tag')],
+                })]"/>
+                <!-- TODO: Crear a mano los tax_report_line -->
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_417_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_467_tag')],
+                })]"/>
+        </record>
+        <record id="tax_withhold_profit_504E_425" model="account.tax.template">
+            <field name="name">504E-425 22% Pago al exterior - anticipo dividendos (en paraísos fiscales o regímenes fiscales preferentes)</field>
+            <field name="type_tax_use">none</field>
+            <field name="amount_type">percent</field>
+            <field name="sequence">70</field>
+            <field name="amount">-22.0</field>
+            <field name="description">425</field>
+            <field name="l10n_ec_code_base">425</field>
+            <field name="l10n_ec_code_applied">475</field>
+            <field name="l10n_ec_code_ats">504E</field>
+            <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
+            <field name="tax_group_id" ref="tax_group_withhold_income_purchase"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_103_425_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'plus_report_expression_ids': [ref('tax_report_line_103_475_tag')],
+                })]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_line_103_425_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_ec.ret_ir_others'),
+                    'minus_report_expression_ids': [ref('tax_report_line_103_475_tag')],
+                })]"/>
+        </record>
     </data>
 </odoo>

@@ -7,12 +7,17 @@ ec110203,110203,Activos financieros mantenidos hasta su vencimiento,FALSE,asset_
 ec110204,110204,Provision por deterioro,FALSE,asset_current,l10n_ec_ifrs
 ec1102050101,1102050101,Cuentas por cobrar clientes no relacionados locales,TRUE,asset_receivable,l10n_ec_ifrs
 ec1102050102,1102050102,Cuentas por cobrar clientes no relacionados extranjeros,TRUE,asset_receivable,l10n_ec_ifrs
+ec1102050103,1102050103,Cuentas por cobrar clientes para punto de venta,TRUE,asset_receivable,l10n_ec_ifrs
+ec1102050201,1102050201,Cheques de cliente por depositar,FALSE,asset_current,l10n_ec_ifrs
+ec1102050202,1102050202,Cheques protestados,TRUE,asset_receivable,l10n_ec_ifrs
 ec11020601,11020601,Documentos y cuentas por cobrar cliente relacionados locales,TRUE,asset_receivable,l10n_ec_ifrs
 ec11020602,11020602,Documentos y cuentas por cobrar cliente relacionados extranjeros,TRUE,asset_receivable,l10n_ec_ifrs
 ec11020701,11020701,Anticipo sueldos,TRUE,asset_current,l10n_ec_ifrs
 ec11020702,11020702,Anticipo décimo tercer sueldo,TRUE,asset_current,l10n_ec_ifrs
 ec11020703,11020703,Anticipo décimo cuarto sueldo,TRUE,asset_current,l10n_ec_ifrs
 ec11020704,11020704,Anticipo utilidades,TRUE,asset_current,l10n_ec_ifrs
+ec11020705,11020705,Prestamos Empleados,TRUE,asset_current,l10n_ec_ifrs
+ec11020706,11020706,Anticipo por sobregiro en Rol,TRUE,asset_current,l10n_ec_ifrs
 ec110208,110208,Otras cuentas por cobrar relacionadas,TRUE,asset_receivable,l10n_ec_ifrs
 ec110209,110209,Otras cuentas por cobrar,TRUE,asset_receivable,l10n_ec_ifrs
 ec110210,110210,Provision por cuentas incobrables,FALSE,asset_current,l10n_ec_ifrs
@@ -36,13 +41,17 @@ ec_purchase_vat_goods_imports,11050104,IVA pagado en importacion de bienes,FALSE
 ec_purchase_vat_assets_imports,11050105,IVA pagado en importacion de activos fijos,FALSE,asset_current,l10n_ec_ifrs
 ec_sale_vat_outstanding_withholds,11050106,IVA pagado en retenciones de la fuente,FALSE,asset_current,l10n_ec_ifrs
 ec_purchase_vat_zero,11050107,IVA en compras 0%,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat_credit_cards,11050108,IVA pagado en retenciones de la fuente de tarjetas de crédito,FALSE,asset_current,l10n_ec_ifrs
 ec_profit_tax_credit,11050201,Crédito tributario por Impuesto a la Renta,FALSE,asset_current,l10n_ec_ifrs
 ec_vat_tax_credit,11050202,Crédito tributario de IVA,FALSE,asset_current,l10n_ec_ifrs
 ec_withhold_tax_credit,11050203,Crédito tributario por Retenciones IVA,FALSE,asset_current,l10n_ec_ifrs
 ec_isd_tax_credit,11050204,Crédito tributario por ISD,FALSE,asset_current,l10n_ec_ifrs
-ec_others_tax_credit,11050205,Credito Tributario por otros conceptos,FALSE,asset_current,l10n_ec_ifrs
+ec_bank_withhold,11050205,Cuenta Transitoria Retenciones Bancarias por Conciliar,FALSE,asset_current,l10n_ec_ifrs
+ec_others_tax_credit,11050206,Crédito Tributario por otros conceptos,FALSE,asset_current,l10n_ec_ifrs
 ec110503,110503,Anticipo de impuesto a la renta,FALSE,asset_current,l10n_ec_ifrs
 ec_sale_profit_withhold,110504,Retenciones en la fuente pagadas,FALSE,asset_current,l10n_ec_ifrs
+ec110505,110505,Retenciones en la fuente pagadas de tarjetas de crédito,FALSE,asset_current,l10n_ec_ifrs
+ec_sale_withhold_tax_base,110506,Base Imponible de Retenciones en Ventas,FALSE,asset_current,l10n_ec_ifrs
 ec1106,1106,Activos no corrientes mantenidos para la venta y operaciones discontinuadas,FALSE,asset_current,l10n_ec_ifrs
 ec1107,1107,Construcciones en proceso (nic 11 y secc.23 pymes),FALSE,asset_current,l10n_ec_ifrs
 ec1108,1108,Otros activos corrientes,FALSE,asset_current,l10n_ec_ifrs
@@ -151,13 +160,13 @@ ret_ir_1x100,2114010201,Retenciones de la fuente 1%,FALSE,liability_current,l10n
 ret_ir_1_75x100,2114010202,Retenciones de la fuente 1.75%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_2x100,2114010203,Retenciones de la fuente 2%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_2_75x100,2114010204,Retenciones de la fuente 2.75%,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_5x100,2114010205,Retenciones de la fuente 5%,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_8x100,2114010206,Retenciones de la fuente 8%,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_10x100,2114010207,Retenciones de la fuente 10%,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_15x100,2114010208,Retenciones de la fuente 15%,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_22x100,2114010209,Retenciones de la fuente 22%,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_others,2114010210,Otras retenciones,FALSE,liability_current,l10n_ec_ifrs
-ret_ir_3x100,2114010211,Retenciones de la fuente 3%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_3x100,2114010205,Retenciones de la fuente 3%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_5x100,2114010206,Retenciones de la fuente 5%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_8x100,2114010207,Retenciones de la fuente 8%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_10x100,2114010208,Retenciones de la fuente 10%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_15x100,2114010209,Retenciones de la fuente 15%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_22x100,2114010210,Retenciones de la fuente 22%,FALSE,liability_current,l10n_ec_ifrs
+ret_ir_others,2114010211,Otras retenciones,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_10,2114010301,Retenciones de IVA 10%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_20,2114010302,Retenciones de IVA 20%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_30,2114010303,Retenciones de IVA 30%,FALSE,liability_current,l10n_ec_ifrs
@@ -165,6 +174,7 @@ ec_vat_withhold_50,2114010304,Retenciones de IVA 50%,FALSE,liability_current,l10
 ec_vat_withhold_70,2114010305,Retenciones de IVA 70%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_100,2114010306,Retenciones de IVA 100%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_others,2114010307,Otras retenciones,FALSE,liability_current,l10n_ec_ifrs
+ec_purchase_withhold_tax_base,21140104,Base Imponible de Retenciones en Compras,FALSE,liability_current,l10n_ec_ifrs
 ec2201,2201,Pasivos por contratos de arrendamiento financiero,TRUE,liability_current,l10n_ec_ifrs
 ec220201,220201,Cuentas y documentos por pagar locales,TRUE,liability_payable,l10n_ec_ifrs
 ec220202,220202,Cuentas y documentos por pagar del exterior,TRUE,liability_payable,l10n_ec_ifrs
@@ -387,6 +397,7 @@ ec52020404,52020404,Alimentacion,FALSE,expense,l10n_ec_ifrs
 ec52020405,52020405,Otros gastos de planes de beneficios a empleados,FALSE,expense,l10n_ec_ifrs
 ec5202040501,5202040501,Impuesto a la renta empleados asumido por la empresa,FALSE,expense,l10n_ec_ifrs
 ec5202040502,5202040502,Transporte,FALSE,expense,l10n_ec_ifrs
+ec5202040503,5202040503,Aporte de IESS personal asumido por la empresa,FALSE,expense,l10n_ec_ifrs
 ec520205,520205,"Honorarios, comisiones y dietas a personas naturales",FALSE,expense,l10n_ec_ifrs
 ec520206,520206,Remuneraciones a otros trabajadores autonomos,FALSE,expense,l10n_ec_ifrs
 ec520207,520207,Honorarios a extranjeros por servicios ocasionales,FALSE,expense,l10n_ec_ifrs
@@ -404,6 +415,7 @@ ec52021801,52021801,Agua potable,FALSE,expense,l10n_ec_ifrs
 ec52021802,52021802,Energia electrica,FALSE,expense,l10n_ec_ifrs
 ec52021803,52021803,Telefonia fija,FALSE,expense,l10n_ec_ifrs
 ec52021804,52021804,Telefonia movil,FALSE,expense,l10n_ec_ifrs
+ec52011805,52011805,Comisiones de tarjetas de crédito,FALSE,expense,l10n_ec_ifrs
 ec520219,520219,Notarios y registradores de la propiedad o mercantiles,FALSE,expense,l10n_ec_ifrs
 ec52022001,52022001,Patente municipal,FALSE,expense,l10n_ec_ifrs
 ec52022002,52022002,1.5x mil activos totales,FALSE,expense,l10n_ec_ifrs

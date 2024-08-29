@@ -1759,27 +1759,54 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_parent_line_report_178" model="account.report.line">
-                                <field name="name">Compras al Comercializador: de Bienes de Origen Bioacuático, Forestal y los Descritos el Art.27.1 de LRTI</field>
+                                    <field name="name">Compras al Comercializador: de Bienes de Origen Bioacuático, Forestal y los Descritos el Art.27.1 de LRTI</field>
+                                    <field name="children_ids">
+                                        <record id="tax_report_line_103_3121" model="account.report.line">
+                                            <field name="name">Base imponible(3121)</field>
+                                            <field name="code">c3121</field>
+                                            <field name="expression_ids">
+                                                <record id="tax_report_line_103_3121_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">3121 (Reporte 103)</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="tax_report_line_103_3621" model="account.report.line">
+                                            <field name="name">Valor retenido(3621)</field>
+                                            <field name="code">c3621</field>
+                                            <field name="expression_ids">
+                                                <record id="tax_report_line_103_3621_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">3621 (Reporte 103)</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                            <record id="tax_report_line_parent_line_report_179" model="account.report.line">
+                                <field name="name">Compra de bienes de origen agrícola, avícola, pecuario, apícola, cunícula, bioacuático, forestal y carnes en estado natural </field>
                                 <field name="children_ids">
-                                    <record id="tax_report_line_103_3121" model="account.report.line">
-                                        <field name="name">Base imponible(3121)</field>
-                                        <field name="code">c3121</field>
+                                    <record id="tax_report_line_103_3210" model="account.report.line">
+                                        <field name="name">Base imponible(3210)</field>
+                                        <field name="code">c3210</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_line_103_3121_tag" model="account.report.expression">
+                                            <record id="tax_report_line_103_3210_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">3121 (Reporte 103)</field>
+                                                <field name="formula">3210 (Reporte 103)</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_line_103_3621" model="account.report.line">
-                                        <field name="name">Valor retenido(3621)</field>
-                                        <field name="code">c3621</field>
+                                    <record id="tax_report_line_103_3620" model="account.report.line">
+                                        <field name="name">Valor retenido(3620)</field>
+                                        <field name="code">c3620</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_line_103_3621_tag" model="account.report.expression">
+                                            <record id="tax_report_line_103_3620_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">3621 (Reporte 103)</field>
+                                                <field name="formula">3620 (Reporte 103)</field>
                                             </record>
                                         </field>
                                     </record>
@@ -2647,6 +2674,75 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="tax_report_line_parent_line_report_277" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a personas naturales</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_405" model="account.report.line">
+                                        <field name="name">Base imponible(405)</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_405_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">405 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- TODO: Revisar los xmls_ids de donde saco el id -->
+                            <record id="tax_report_line_parent_line_report_280" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a sociedades</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_406" model="account.report.line">
+                                        <field name="name">Base imponible(406)</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_406_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">406 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_456" model="account.report.line">
+                                        <field name="name">Valor retenido(456)</field>
+                                        <field name="code">c456</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_456_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">456 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- TODO: Revisar los xmls_ids de donde saco el id -->
+                            <record id="tax_report_line_parent_line_report_286" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a fideicomisos</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_407" model="account.report.line">
+                                        <field name="name">Base imponible(407)</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_407_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">407 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_457" model="account.report.line">
+                                        <field name="name">Valor retenido(457)</field>
+                                        <field name="code">c457</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_457_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">457 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="tax_report_line_parent_line_report_278" model="account.report.line">
                                 <field name="name">Dividendos sin beneficiario efectivo persona natural residente en Ecuador</field>
                                 <field name="children_ids">
@@ -2931,6 +3027,74 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="tax_report_line_parent_line_report_309" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a personas naturales</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_416" model="account.report.line">
+                                        <field name="name">Base imponible(416)</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_416_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">416 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <!-- TODO: Revisar los xmls_ids de donde saco el id -->
+                            <record id="tax_report_line_parent_line_report_310" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a sociedades</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_417" model="account.report.line">
+                                        <field name="name">Base imponible(417)</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_417_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">417 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_467" model="account.report.line">
+                                        <field name="name">Valor retenido(467)</field>
+                                        <field name="code">c467</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_467_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">467 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_parent_line_report_319" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a fideicomisos</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_418" model="account.report.line">
+                                        <field name="name">Base imponible(418)</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_418_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">418 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_468" model="account.report.line">
+                                        <field name="name">Valor retenido(468)</field>
+                                        <field name="code">c468</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_468_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">468 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="tax_report_line_parent_line_report_311" model="account.report.line">
                                 <field name="name">Dividendos sin beneficiario efectivo persona natural residente en Ecuador</field>
                                 <field name="children_ids">
@@ -3185,6 +3349,87 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">475 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_parent_line_report_339" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a personas naturales</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_426" model="account.report.line">
+                                        <field name="name">Base imponible(426)</field>
+                                        <field name="code">c426</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_426_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">426 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_476" model="account.report.line">
+                                        <field name="name">Valor retenido(476)</field>
+                                        <field name="code">c476</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_476_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">476 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_parent_line_report_340" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a personas naturales</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_427" model="account.report.line">
+                                        <field name="name">Base imponible(427)</field>
+                                        <field name="code">c427</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_427_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">427 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_477" model="account.report.line">
+                                        <field name="name">Valor retenido(477)</field>
+                                        <field name="code">c477</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_477_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">477 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_parent_line_report_343" model="account.report.line">
+                                <field name="name">Dividendos distribuidos a fideicomisos</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_103_428" model="account.report.line">
+                                        <field name="name">Base imponible(428)</field>
+                                        <field name="code">c428</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_428_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">428 (Reporte 103)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103_478" model="account.report.line">
+                                        <field name="name">Valor retenido(478)</field>
+                                        <field name="code">c478</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_478_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">478 (Reporte 103)</field>
                                             </record>
                                         </field>
                                     </record>

@@ -2,7 +2,7 @@
 <odoo>
     <record id="fp_local" model="account.fiscal.position.template">
         <field name="sequence">10</field>
-        <field name="chart_template_id" ref="l10n_ec_ifrs"/>
+        <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
         <field name="name">Régimen nacional</field>
         <field name="auto_apply" eval="True"/>
         <field name="vat_required" eval="True"/>
@@ -10,7 +10,7 @@
     </record>
     <record id="fp_foreign" model="account.fiscal.position.template">
         <field name="sequence">20</field>
-        <field name="chart_template_id" ref="l10n_ec_ifrs"/>
+        <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
         <field name="name">Régimen extranjero</field>
         <field name="auto_apply" eval="True"/>
         <field name="vat_required" eval="True"/>

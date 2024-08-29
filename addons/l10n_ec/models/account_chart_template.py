@@ -11,6 +11,7 @@ class AccountChartTemplate(models.Model):
         # EXTENDS account to setup taxes groups accounts configuration
         res = super()._load(company)
         self._l10n_ec_configure_ecuadorian_tax_groups_accounts(company)
+        self._l10n_ec_configure_default_company_taxes(company)
         return res
 
     def _l10n_ec_configure_ecuadorian_tax_groups_accounts(self, companies):
@@ -35,8 +36,8 @@ class AccountChartTemplate(models.Model):
             ('tax_group_withhold_vat_purchase', '21070102', '11050203'),
             ('tax_group_withhold_income_sale', '21070103', '11050201'),
             ('tax_group_withhold_income_purchase', '21070103', '11050201'),
-            ('tax_group_outflows', '21070106', '11050205'),
-            ('tax_group_others', '21070106', '11050205'),
+            ('tax_group_outflows', '21070106', '11050206'),
+            ('tax_group_others', '21070106', '11050206'),
         ]
         for tax_group_xml_id, payable_account_code, receivable_account_code in _TAX_GROUPS_ACCOUNTS_LIST:
             for company in companies.filtered(lambda company: company.account_fiscal_country_id.code == 'EC' and
@@ -49,6 +50,14 @@ class AccountChartTemplate(models.Model):
                 # set accounts in tax groups by company
                 self.env.ref(f'l10n_ec.{tax_group_xml_id}').with_company(company).property_tax_payable_account_id = payable_account_id
                 self.env.ref(f'l10n_ec.{tax_group_xml_id}').with_company(company).property_tax_receivable_account_id = receivable_account_id
+    
+    def _l10n_ec_configure_default_company_taxes(self, companies):
+        # From 01 april, the default taxes for sale and purchase are 15%
+        for company in companies.filtered(lambda company: company.account_fiscal_country_id.code == 'EC' and
+                                                              company.chart_template_id == self.env.ref('l10n_ec.l10n_ec_ifrs')):
+            # Default tax for new companies will change periodically, better to have a method than to re-write all xml and csv changing the tax sequences
+            company.account_sale_tax_id = self.env.ref(f'l10n_ec.{company.id}_tax_vat_15_411_goods')
+            company.account_purchase_tax_id = self.env.ref(f'l10n_ec.{company.id}_tax_vat_15_510_sup_01')
 
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         res = super()._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
