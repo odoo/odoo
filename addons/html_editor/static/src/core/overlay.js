@@ -17,6 +17,7 @@ export class EditorOverlay extends Component {
         props: { type: Object, optional: true },
         editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         bus: Object,
+        getContainer: Function,
     };
 
     setup() {
@@ -50,7 +51,12 @@ export class EditorOverlay extends Component {
         }
         const positionConfig = {
             position: "bottom-start",
-            ...omit(this.props.config, "hasAutofocus"),
+            container: this.props.getContainer,
+            ...omit(this.props.config, "hasAutofocus", "onPositioned"),
+            onPositioned: (el, solution) => {
+                this.props.config.onPositioned?.(el, solution);
+                this.updateVisibility(el, solution);
+            },
         };
         position = usePosition("root", getTarget, positionConfig);
     }
@@ -92,5 +98,15 @@ export class EditorOverlay extends Component {
             focusNode.getBoundingClientRect = () => rect;
         }
         return focusNode;
+    }
+
+    updateVisibility(overlayElement, solution) {
+        // @todo: mobile tests rely on a visible (yet overflowing) toolbar
+        // Remove this once the mobile toolbar is fixed?
+        if (this.env.isSmall) {
+            return;
+        }
+        const containerRect = this.props.getContainer().getBoundingClientRect();
+        overlayElement.style.visibility = solution.top > containerRect.top ? "visible" : "hidden";
     }
 }

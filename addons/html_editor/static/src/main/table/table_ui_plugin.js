@@ -55,19 +55,28 @@ export class TableUIPlugin extends Plugin {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.colMenu = this.shared.createOverlay(TableMenu, {
             position: "top-fit",
+            onPositioned: (el, solution) => {
+                // Only accept top position as solution.
+                if (solution.direction !== "top") {
+                    el.style.display = "none"; // avoid glitch
+                    this.colMenu.close();
+                }
+            },
         });
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.rowMenu = this.shared.createOverlay(TableMenu, {
             position: "left-fit",
         });
         this.addDomListener(this.document, "pointermove", this.onMouseMove);
-        this.addDomListener(this.document, "click", () => {
+        const closeMenus = () => {
             if (this.isMenuOpened) {
                 this.isMenuOpened = false;
                 this.colMenu.close();
                 this.rowMenu.close();
             }
-        });
+        };
+        this.addDomListener(this.document, "click", closeMenus);
+        this.addDomListener(this.document, "scroll", closeMenus, true);
     }
 
     handleCommand(command) {
