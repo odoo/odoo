@@ -383,7 +383,7 @@
                     <ul class="navbar-nav gap-2 mt-3 w-100">
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_btn_class" t-valuef="btn nav-link d-flex align-items-center w-100 px-2"/>
+                            <t t-set="_btn_class" t-valuef="nav-link d-flex align-items-center w-100 px-2"/>
                             <t t-set="_txt_class" t-valuef="me-auto small"/>
                             <t t-set="_flag_class" t-valuef="me-2"/>
                             <t t-set="_div_classes" t-valuef="dropup"/>
@@ -1235,14 +1235,14 @@
                         <t t-call="portal.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="dropdown position-relative d-flex align-items-center"/>
-                            <t t-set="_link_class" t-valuef="btn nav-link border-0"/>
+                            <t t-set="_link_class" t-valuef="nav-link border-0"/>
                             <t t-set="_user_name_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
                             <t t-set="_div_classes" t-valuef="position-relative"/>
-                            <t t-set="_btn_class" t-valuef="btn nav-link"/>
+                            <t t-set="_btn_class" t-valuef="nav-link"/>
                             <t t-set="_txt_class" t-valuef="small"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
