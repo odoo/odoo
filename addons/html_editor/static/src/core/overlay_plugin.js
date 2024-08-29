@@ -1,6 +1,7 @@
 import { markRaw, EventBus } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { EditorOverlay } from "./overlay";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 /**
  * Provide the following feature:
@@ -12,7 +13,22 @@ export class OverlayPlugin extends Plugin {
 
     overlays = [];
 
+    setup() {
+        this.container = this.document.documentElement;
+        const onScroll = (ev) => {
+            // Update container to the scrolled element if it is an ancestor of
+            // the editable
+            const scrolledElement =
+                ev.target.nodeType === Node.DOCUMENT_NODE ? ev.target.documentElement : ev.target;
+            if (scrolledElement.contains(this.editable)) {
+                this.container = scrolledElement;
+            }
+        };
+        this.throttledOnScroll = throttleForAnimation(onScroll);
+        this.addDomListener(this.document, "scroll", this.throttledOnScroll, true);
+    }
     destroy() {
+        this.throttledOnScroll.cancel();
         super.destroy();
         for (const overlay of this.overlays) {
             overlay.close();
@@ -20,14 +36,14 @@ export class OverlayPlugin extends Plugin {
     }
 
     createOverlay(Component, config = {}) {
-        const overlay = new Overlay(this, Component, config);
+        const overlay = new Overlay(this, Component, () => this.container, config);
         this.overlays.push(overlay);
         return overlay;
     }
 }
 
 export class Overlay {
-    constructor(plugin, C, config) {
+    constructor(plugin, C, getContainer, config) {
         this.plugin = plugin;
         this.C = C;
         this.config = config;
@@ -35,6 +51,7 @@ export class Overlay {
         this._remove = null;
         this.component = null;
         this.bus = new EventBus();
+        this.getContainer = getContainer;
     }
 
     /**
@@ -53,7 +70,6 @@ export class Overlay {
             if (selection && selection.type !== "None") {
                 initialSelection = {
                     range: selection.getRangeAt(0),
-                    focusNode: selection.focusNode,
                 };
             }
             this._remove = this.plugin.services.overlay.add(
@@ -66,6 +82,7 @@ export class Overlay {
                     target,
                     initialSelection,
                     bus: this.bus,
+                    getContainer: this.getContainer,
                 }),
                 {
                     sequence: this.config.sequence || 50,
