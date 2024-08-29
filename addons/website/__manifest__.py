@@ -73,6 +73,7 @@
         'views/snippets/s_call_to_action.xml',
         'views/snippets/s_references.xml',
         'views/snippets/s_references_social.xml',
+        'views/snippets/s_references_grid.xml',
         'views/snippets/s_popup.xml',
         'views/snippets/s_faq_list.xml',
         'views/snippets/s_faq_collapse.xml',
