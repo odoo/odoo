@@ -68,6 +68,7 @@ class AccountMove(models.Model):
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
             ('move_id.move_type', '!=', 'entry'),
             ('company_id', 'child_of', self.company_id.root_id.id),
+            ('parent_state', '=', 'posted')
         ]
         if commercial_partner_id.l10n_in_pan:
             default_domain += [('move_id.commercial_partner_id.l10n_in_pan', '=', commercial_partner_id.l10n_in_pan)]
@@ -82,8 +83,8 @@ class AccountMove(models.Model):
             query = self.env['account.move.line']._where_calc(default_domain + frequency_domain)
             result = self.env.execute_query_dict(SQL(
                 """
-                SELECT sum(account_move_line.balance) as balance,
-                       sum(account_move_line.price_total * am.invoice_currency_rate) as price_total
+                SELECT COALESCE(sum(account_move_line.balance), 0) as balance,
+                       COALESCE(sum(account_move_line.price_total * am.invoice_currency_rate), 0) as price_total
                   FROM %s
                   JOIN account_move AS am ON am.id = account_move_line.move_id
                  WHERE %s
@@ -102,7 +103,9 @@ class AccountMove(models.Model):
             case 'tds':
                 return (
                     self.journal_id.type == 'purchase'
-                    and section_id not in self.l10n_in_withhold_move_ids.mapped('line_ids.tax_ids.l10n_in_section_id')
+                    and section_id not in self.l10n_in_withhold_move_ids.filtered(lambda m:
+                        m.state == 'posted'
+                    ).mapped('line_ids.tax_ids.l10n_in_section_id')
                 )
             case _:
                 return False
@@ -113,23 +116,26 @@ class AccountMove(models.Model):
             group_by_lines = {}
             for line in invoice_lines:
                 group_key = line.account_id.l10n_in_tds_tcs_section_id
-                if group_key and not line.company_currency_id.is_zero(line.balance):
+                if group_key and not line.company_currency_id.is_zero(line.price_total):
                     group_by_lines.setdefault(group_key, [])
                     group_by_lines[group_key].append(line)
             return group_by_lines
 
         def _is_section_applicable(section_alert, threshold_sums, invoice_currency_rate, lines):
+            lines_total = sum(
+                    (line.price_total * invoice_currency_rate) if section_alert.consider_amount == 'total_amount' else line.balance
+                    for line in lines
+                )
             if section_alert.is_aggregate_limit:
                 aggregate_period_key = section_alert.consider_amount == 'total_amount' and 'price_total' or 'balance'
                 aggregate_total = threshold_sums.get(section_alert.aggregate_period, {}).get(aggregate_period_key)
+                if move.state == 'draft':
+                    aggregate_total += lines_total
                 if aggregate_total > section_alert.aggregate_limit:
                     return True
             return (
                 section_alert.is_per_transaction_limit
-                and sum(
-                    (line.price_total * invoice_currency_rate) if section_alert.consider_amount == 'total_amount' else line.balance
-                    for line in lines
-                ) > section_alert.per_transaction_limit
+                and lines_total > section_alert.per_transaction_limit
             )
 
         for move in self:
@@ -139,7 +145,8 @@ class AccountMove(models.Model):
                 existing_section = (self.l10n_in_withhold_move_ids.line_ids + move.line_ids).tax_ids.l10n_in_section_id
                 for section_alert, lines in _group_by_section_alert(move.invoice_line_ids).items():
                     if (
-                        section_alert not in existing_section
+                        (section_alert not in existing_section
+                        or [line for line in lines if section_alert not in line.tax_ids.l10n_in_section_id])
                         and move._l10n_in_is_warning_applicable(section_alert)
                         and _is_section_applicable(
                             section_alert,
