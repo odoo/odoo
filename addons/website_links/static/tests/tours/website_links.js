@@ -23,7 +23,6 @@ function fillSelect2(inputID, search) {
         {
             content: "Check that select2 is properly filled",
             trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} .select2-chosen:contains("/^${search}$/")`,
-            run: () => null,
         },
     ];
 }
@@ -68,7 +67,6 @@ registry.category("web_tour.tours").add('website_links_tour', {
         {
             content: "Check that select2 is properly filled",
             trigger: ".o_website_links_utm_forms div.select2-container#s2id_campaign-select .select2-chosen:contains(/^Create 'Some new campaign'$/)",
-            run: () => null,
         },
         // Then proceed by using existing ones
         ...fillSelect2('campaign-select', campaignValue),

@@ -13,7 +13,6 @@ const goToFrontendSteps = [{
 }, {
     content: "Check we are in the frontend",
     trigger: 'body:not(:has(.o_website_preview)) #test_contact_FE',
-    run: () => null, // it's a check
 }];
 const goToBackendSteps = [{
     content: "Go to the backend",
@@ -24,13 +23,11 @@ const goToBackendSteps = [{
 }, {
     content: "Check we are in the backend",
     trigger: '.o_website_preview',
-    run: () => null, // it's a check
 }];
 const checkEditorSteps = [{
     content: "Check that the editor is loaded",
     trigger: ':iframe body.editor_enable',
     timeout: 30000,
-    run: () => null, // it's a check
 }, {
     content: "exit edit mode",
     trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
@@ -38,7 +35,6 @@ const checkEditorSteps = [{
 }, {
     content: "wait for editor to close",
     trigger: ':iframe body:not(.editor_enable)',
-    run: () => null, // It's a check
 }];
 
 registry.category("web_tour.tours").add('client_action_redirect', {

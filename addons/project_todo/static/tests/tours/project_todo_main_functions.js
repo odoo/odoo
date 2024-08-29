@@ -79,7 +79,6 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     run: "click",
 }, {
     trigger: "a:contains('Set Cover Image')",
-    run: () => {}, // is a check
 }, {
     trigger: ".o_kanban_record:first",//:contains(Send message)
     content: "Open the first todo record",

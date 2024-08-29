@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     {
         content: "Verify that the customize panel is not empty.",
         trigger: '.o_we_customize_panel .snippet-option-DesignTab',
-        run: () => null, // it's a check
     },
     {
         content: "Click on the style tab.",
@@ -55,7 +54,6 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     {
         content: "Verify that the customize panel is not empty.",
         trigger: '.o_we_customize_panel .snippet-option-DesignTab',
-        run: () => null, // it's a check
     },
     ...stepUtils.discardForm(),
 ]});

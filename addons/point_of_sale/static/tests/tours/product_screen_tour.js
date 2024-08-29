@@ -287,7 +287,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             ProductScreen.clickInfoProduct("product_a"),
             {
                 trigger: ".section-financials :contains('Margin')",
-                run: () => {},
             },
         ].flat(),
 });

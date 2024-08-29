@@ -214,7 +214,6 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Check that 'Conditional Visibility Check 2' is not in the list of the visibility selector of Conditional Visibility Check 1",
         trigger: "we-select[data-name='hidden_condition_opt']:not(:has(we-button[data-set-visibility-dependency='Conditional Visibility Check 2']))",
-        run: () => null,
     },
     ...addCustomField("char", "text", "Conditional Visibility Check 3", false),
     ...addCustomField("char", "text", "Conditional Visibility Check 4", false),
@@ -229,7 +228,6 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Check that the conditional visibility of the renamed field is removed",
         trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select:contains('Visibility'):has(we-toggler:contains('Always Visible'))",
-        run: () => null,
     },
     ...addCustomField("char", "text", "Conditional Visibility Check 5", false),
     ...addCustomField("char", "text", "Conditional Visibility Check 6", false),
@@ -243,7 +241,6 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
         trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select[data-name='hidden_condition_opt']:not(:has(we-button:contains('Conditional Visibility Check 5')))",
-        run: () => null,
     },
     ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
     {
@@ -968,7 +965,6 @@ registerWebsitePreviewTour("website_form_editable_content", {
     {
         content: "Check that the new text value was correctly set",
         trigger: ":iframe section.s_website_form h3:contains(/^ABC$/)",
-        run: () => null, // it's a check
     },
     {   content: "Remove the dropped column",
         trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",

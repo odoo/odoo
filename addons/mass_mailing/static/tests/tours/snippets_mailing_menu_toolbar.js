@@ -35,7 +35,6 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     {
         content: "Make sure the empty template is an option on non-mobile devices.",
         trigger: ':iframe #empty',
-        run: () => null,
     },
     {
         content: "Click on the default 'welcome' template.",
@@ -51,12 +50,10 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     {
         content: "Make sure the snippets menu is not hidden",
         trigger: '#oe_snippets:not(.d-none)',
-        run: () => null,
     },
     {
         content: "Wait for .s_text_block to be populated",
         trigger: ':iframe .s_text_block p',
-        run: () => null,
     },
     {
         content: "Click and select p block inside the editor",
@@ -76,7 +73,6 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     {
         content: "Make sure the toolbar is there",
         trigger: '#oe_snippets .o_we_customize_panel #toolbar',
-        run: () => null,
     },
     ...stepUtils.discardForm(),
     ],
