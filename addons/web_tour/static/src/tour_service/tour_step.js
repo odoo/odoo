@@ -1,6 +1,29 @@
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
 import * as hoot from "@odoo/hoot-dom";
+import { pick } from "@web/core/utils/objects";
+
+export class Step {
+    constructor(data) {
+        Object.assign(this, data);
+    }
+
+    get stringify() {
+        return (
+            JSON.stringify(
+                pick(this, "isActive", "content", "trigger", "run", "tooltipPosition", "timeout"),
+                (_key, value) => {
+                    if (typeof value === "function") {
+                        return "[function]";
+                    } else {
+                        return value;
+                    }
+                },
+                2
+            ) + ","
+        );
+    }
+}
 
 /**
  * @typedef TourStep
@@ -12,11 +35,10 @@ import * as hoot from "@odoo/hoot-dom";
  * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
- * @property {string} [title]
  */
-export class TourStep {
+export class TourStep extends Step {
     constructor(data, tour) {
-        Object.assign(this, data);
+        super(data);
         this.tour = tour;
         if (!this.tour) {
             throw new Error(`TourStep instance must have a tour`);
