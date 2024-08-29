@@ -163,7 +163,7 @@ describe("with strikeThrough", () => {
                 underline(editor);
                 insertText(editor, "C");
             },
-            contentAfterEdit: `<p>ab<u><s>cd</s></u><s>A<u>B</u></s><s>C[]</s><u><s>ef</s></u></p>`,
+            contentAfterEdit: `<p>ab<u><s>cd</s></u><s>A<u>B</u>C[]</s><u><s>ef</s></u></p>`,
         });
     });
 

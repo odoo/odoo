@@ -12,11 +12,8 @@ import {
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
-    areSimilarElements,
     getDeepestPosition,
-    isEditorTab,
     isEmptyBlock,
-    isProtecting,
     isSelfClosingElement,
     isShrunkBlock,
     paragraphRelatedElements,
@@ -28,7 +25,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
-    static dependencies = ["selection", "split", "delete"];
+    static dependencies = ["selection", "split"];
     static shared = ["domInsert", "copyAttributes"];
     static resources = () => ({
         powerboxItems: {
@@ -54,18 +51,11 @@ export class DomPlugin extends Plugin {
             case "INSERT_SEPARATOR":
                 this.insertSeparator();
                 break;
-            case "CLEAN": {
-                for (const node of [payload.root, ...descendants(payload.root)]) {
-                    if (node.classList && !node.classList.length) {
-                        node.removeAttribute("class");
-                    }
-                    if (node.style && !node.style.length) {
-                        node.removeAttribute("style");
-                    }
-                }
+            case "CLEAN":
+                this.removeEmptyClassAndStyleAttributes(payload.root);
                 break;
-            }
             case "CLEAN_FOR_SAVE": {
+                this.removeEmptyClassAndStyleAttributes(payload.root);
                 for (const el of payload.root.querySelectorAll("hr[contenteditable]")) {
                     el.removeAttribute("contenteditable");
                 }
@@ -91,12 +81,6 @@ export class DomPlugin extends Plugin {
                         );
                     }
                 }
-
-                this.mergeAdjacentNodes(payload.node);
-                break;
-            }
-            case "MERGE_ADJACENT_NODE": {
-                this.mergeAdjacentNodes(payload.node);
                 break;
             }
         }
@@ -454,49 +438,14 @@ export class DomPlugin extends Plugin {
         this.dispatch("ADD_STEP");
     }
 
-    mergeAdjacentNodes(node) {
-        let selection = null;
-        let toMerge = [];
-        for (const el of descendants(node)) {
-            if (this.shouldBeMerged(el)) {
-                toMerge.push(el);
+    removeEmptyClassAndStyleAttributes(root) {
+        for (const node of [root, ...descendants(root)]) {
+            if (node.classList && !node.classList.length) {
+                node.removeAttribute("class");
+            }
+            if (node.style && !node.style.length) {
+                node.removeAttribute("style");
             }
         }
-        while (toMerge.length) {
-            selection = selection || this.shared.getEditableSelection({ deep: true });
-            for (const el of toMerge) {
-                const destinationEl = el.previousSibling;
-                const fragment = document.createDocumentFragment();
-                while (el.hasChildNodes()) {
-                    fragment.appendChild(el.firstChild);
-                }
-                destinationEl.appendChild(fragment);
-                el.remove();
-            }
-            toMerge = [];
-            for (const el of descendants(node)) {
-                if (this.shouldBeMerged(el)) {
-                    toMerge.push(el);
-                }
-            }
-        }
-
-        if (selection) {
-            this.shared.setSelection(selection);
-        }
-    }
-
-    shouldBeMerged(node) {
-        return (
-            areSimilarElements(node, node.previousSibling) &&
-            !this.shared.isUnmergeable(node) &&
-            !isEditorTab(node) &&
-            !(
-                node.attributes?.length === 1 &&
-                node.hasAttribute("data-oe-zws-empty-inline") &&
-                (node.textContent === "\u200B" || node.previousSibling.textContent === "\u200B")
-            ) &&
-            !isProtecting(node)
-        );
     }
 }

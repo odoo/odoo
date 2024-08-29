@@ -168,7 +168,7 @@ describe("popover should edit,copy,remove the link", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
         // ZWNBSPs make space at the end of the paragraph to be visible
         expect(getContent(el)).toBe("<p>this is a \ufeff[]\ufeff</p>");
-        editor.dispatch("CLEAN", { root: el });
+        editor.dispatch("CLEAN_FOR_SAVE", { root: el });
         expect(getContent(el)).toBe("<p>this is a&nbsp;[]</p>");
     });
 });

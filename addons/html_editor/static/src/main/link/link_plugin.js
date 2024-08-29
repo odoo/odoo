@@ -206,8 +206,7 @@ export class LinkPlugin extends Plugin {
             case "NORMALIZE":
                 this.normalizeLink();
                 break;
-            case "CLEAN":
-                // TODO @phoenix: evaluate if this should be cleanforsave instead
+            case "CLEAN_FOR_SAVE":
                 this.removeEmptyLinks(payload.root);
                 break;
             case "REMOVE_LINK_FROM_SELECTION":
@@ -476,7 +475,7 @@ export class LinkPlugin extends Plugin {
 
     removeEmptyLinks(root) {
         // @todo: check for unremovables
-        // @todo: preserve cursor and spaces
+        // @todo: preserve spaces
         for (const link of root.querySelectorAll("a")) {
             if ([...link.childNodes].some(isVisible)) {
                 continue;

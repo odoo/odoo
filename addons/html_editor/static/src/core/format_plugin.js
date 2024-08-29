@@ -2,7 +2,15 @@ import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
 import { cleanTextNode, unwrapContents } from "../utils/dom";
-import { isContentEditable, isTextNode, isVisibleTextNode, isZWS } from "../utils/dom_info";
+import {
+    areSimilarElements,
+    isContentEditable,
+    isEditorTab,
+    isProtecting,
+    isTextNode,
+    isVisibleTextNode,
+    isZWS,
+} from "../utils/dom_info";
 import { closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
@@ -32,7 +40,7 @@ function hasFormat(formatPlugin) {
 
 export class FormatPlugin extends Plugin {
     static name = "format";
-    static dependencies = ["selection", "split"];
+    static dependencies = ["selection", "split", "delete"];
     static shared = ["isSelectionFormat", "insertAndSelectZws"];
     /** @type { (p: FormatPlugin) => Record<string, any> } */
     static resources = (p) => ({
@@ -127,9 +135,8 @@ export class FormatPlugin extends Plugin {
             case "FORMAT_REMOVE_FORMAT":
                 this.removeFormat();
                 break;
-            case "CLEAN":
-                // TODO @phoenix: evaluate if this should be cleanforsave instead
-                this.clean(payload.root);
+            case "CLEAN_FOR_SAVE":
+                this.cleanForSave(payload.root);
                 break;
             case "NORMALIZE":
                 this.normalize(payload.node);
@@ -346,8 +353,8 @@ export class FormatPlugin extends Plugin {
         }
     }
 
-    normalize(element) {
-        for (const el of selectElements(element, "[data-oe-zws-empty-inline]")) {
+    normalize(root) {
+        for (const el of selectElements(root, "[data-oe-zws-empty-inline]")) {
             if (!allWhitespaceRegex.test(el.textContent)) {
                 // The element has some meaningful text. Remove the ZWS in it.
                 delete el.dataset.oeZwsEmptyInline;
@@ -362,12 +369,12 @@ export class FormatPlugin extends Plugin {
                 }
             }
         }
+        this.mergeAdjacentNodes(root);
     }
 
-    clean(root) {
-        for (const el of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
-            this.cleanElement(el);
-        }
+    cleanForSave(root) {
+        root.querySelectorAll("[data-oe-zws-empty-inline]").forEach((el) => this.cleanElement(el));
+        this.mergeAdjacentNodes(root);
     }
 
     cleanElement(element) {
@@ -460,6 +467,55 @@ export class FormatPlugin extends Plugin {
                 this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
             }
         }
+    }
+
+    mergeAdjacentNodes(node) {
+        let selection = null;
+        let toMerge = [];
+        for (const el of descendants(node)) {
+            if (this.shouldBeMerged(el)) {
+                toMerge.push(el);
+            }
+        }
+        while (toMerge.length) {
+            // @todo: preserve selection properly
+            selection = selection || this.shared.getEditableSelection({ deep: true });
+            for (const el of toMerge) {
+                const destinationEl = el.previousSibling;
+                // @todo: no need for all for this. Simply `destinalionEl.append(...el.childNodes)`
+                const fragment = document.createDocumentFragment();
+                while (el.hasChildNodes()) {
+                    fragment.appendChild(el.firstChild);
+                }
+                destinationEl.appendChild(fragment);
+                el.remove();
+            }
+            toMerge = [];
+            for (const el of descendants(node)) {
+                if (this.shouldBeMerged(el)) {
+                    toMerge.push(el);
+                }
+            }
+        }
+
+        // @todo: preserve selection properly
+        if (selection) {
+            this.shared.setSelection(selection);
+        }
+    }
+
+    shouldBeMerged(node) {
+        return (
+            areSimilarElements(node, node.previousSibling) &&
+            !this.shared.isUnmergeable(node) &&
+            !isEditorTab(node) &&
+            !(
+                node.attributes?.length === 1 &&
+                node.hasAttribute("data-oe-zws-empty-inline") &&
+                (node.textContent === "\u200B" || node.previousSibling.textContent === "\u200B")
+            ) &&
+            !isProtecting(node)
+        );
     }
 }
 
