@@ -631,9 +631,7 @@ patch(Order.prototype, {
             for (const line of rewardLines) {
                 const reward = this.pos.models["loyalty.reward"].get(line.reward_id);
                 if (this._validForPointsCorrection(reward, line, rule)) {
-                    if (rule.reward_point_mode === "order") {
-                        res += rule.reward_point_amount;
-                    } else if (rule.reward_point_mode === "money") {
+                    if (rule.reward_point_mode === "money") {
                         res -= roundPrecision(
                             rule.reward_point_amount * line.get_price_with_tax(),
                             0.01
@@ -657,6 +655,11 @@ patch(Order.prototype, {
     _validForPointsCorrection(reward, line, rule) {
         // Check if the reward type is free product
         if (reward.reward_type !== "product") {
+            return false;
+        }
+
+        // Check if the rule's reward point mode is order then not valid for correction
+        if (rule.reward_point_mode === "order") {
             return false;
         }
 
@@ -1506,10 +1509,9 @@ patch(Order.prototype, {
                 // Compute the correction points once even if there are multiple reward lines.
                 // This is because _getPointsCorrection is taking into account all the lines already.
                 const claimedPoints = line ? this._getPointsCorrection(reward.program_id) : 0;
-                return Math.floor(
-                    ((remainingPoints - claimedPoints) / reward.required_points) *
-                        reward.reward_product_qty
-                );
+                return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
+                    ? reward.reward_product_qty
+                    : 0;
             } else {
                 return Math.floor(
                     (remainingPoints / reward.required_points) * reward.reward_product_qty
