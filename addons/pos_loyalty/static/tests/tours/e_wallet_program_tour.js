@@ -84,7 +84,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
             PosLoyalty.finalizeOrder("Cash", "20"),
             // - Refund order.
             ...ProductScreen.clickRefund(),
-            TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("-0004"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),

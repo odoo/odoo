@@ -60,6 +60,12 @@ class PosController(PortalAccount):
         session_info['user_companies'] = {'current_company': company.id, 'allowed_companies': {company.id: session_info['user_companies']['allowed_companies'][company.id]}}
         session_info['nomenclature_id'] = pos_session.company_id.nomenclature_id.id
         session_info['fallback_nomenclature_id'] = pos_session._get_pos_fallback_nomenclature_id()
+        session_info = {
+            **session_info,
+            'view_ids': {
+                'view_pos_order_filter': request.env.ref('point_of_sale.view_pos_order_filter').id,
+            }
+        }
         context = {
             'session_info': session_info,
             'login_number': pos_session.login(),

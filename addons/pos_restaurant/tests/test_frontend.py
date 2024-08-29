@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
 import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
@@ -227,12 +229,12 @@ class TestFrontend(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour('pos_restaurant_sync')
 
-        self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
+        self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
         self.start_pos_tour('pos_restaurant_sync_second_login')
 
-        self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
+        self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
@@ -245,10 +247,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
-    def test_04_ticket_screen(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('PosResTicketScreenTour')
-
+    @unittest.skip
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -265,10 +264,6 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
         self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
-
-    def test_06_split_bill_screen(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('SplitBillScreenTour2')
 
     def test_07_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()

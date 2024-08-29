@@ -2,7 +2,6 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
 
@@ -87,8 +86,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             PaymentScreen.totalIs("2.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test", "-1"),
             ProductScreen.clickPayButton(),
@@ -109,8 +107,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             PaymentScreen.totalIs("1.95"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test", "-1"),
             ProductScreen.clickPayButton(),
@@ -131,8 +128,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.totalIs("1.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test 1.25", "1"),
             ProductScreen.clickPayButton(),
@@ -140,8 +136,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.totalIs("1.5"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test 1.4", "1"),
             ProductScreen.clickPayButton(),
@@ -149,8 +144,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.totalIs("1.5"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test 1.2", "1"),
             ProductScreen.clickPayButton(),

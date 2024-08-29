@@ -2,7 +2,6 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { ListContainer } from "@point_of_sale/app/generic_components/list_container/list_container";
-
 export class OrderTabs extends Component {
     static template = "point_of_sale.OrderTabs";
     static components = {
@@ -22,15 +21,14 @@ export class OrderTabs extends Component {
     }
     newFloatingOrder() {
         this.pos.selectedTable = null;
-        const order = this.pos.add_new_order();
-        order.setBooked(true);
+        this.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
         this.dialog.closeAll();
     }
     selectFloatingOrder(order) {
         this.pos.set_order(order);
         this.pos.selectedTable = null;
-        this.pos.showScreen("ProductScreen");
+        this.pos.showScreen(order.get_screen_data().name);
         this.dialog.closeAll();
     }
     get orders() {

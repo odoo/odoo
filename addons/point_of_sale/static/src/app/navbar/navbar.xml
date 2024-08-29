@@ -45,7 +45,7 @@
                                 <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
                                     Install App
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
+                                <DropdownItem onSelected="() => this.pos.showScreen('TicketScreen')">
                                     Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
                                 </DropdownItem>
                                 <DropdownItem t-if="showCashMoveButton" onSelected="() => this.onCashMoveButtonClick()">

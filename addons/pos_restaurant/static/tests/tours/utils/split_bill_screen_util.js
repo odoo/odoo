@@ -12,7 +12,7 @@ export function clickBack() {
         },
     ];
 }
-export function clickPay() {
+export function clickSplit() {
     return [
         {
             content: "click pay button",

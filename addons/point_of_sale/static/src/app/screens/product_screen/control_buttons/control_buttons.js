@@ -106,14 +106,14 @@ export class ControlButtons extends Component {
 
     clickRefund() {
         const order = this.pos.get_order();
-        const partner = order.get_partner();
-        const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
         this.pos.showScreen("TicketScreen", {
-            stateOverride: {
-                filter: "SYNCED",
-                search: searchDetails,
-                destinationOrder: order,
+            context: {
+                search_default_partner_id: order.get_partner()?.id,
+                search_default_paid: 1,
+                search_default_done: 1,
+                search_default_invoiced: 1,
             },
+            destinationOrder: order,
         });
     }
     get internalNoteLabel() {

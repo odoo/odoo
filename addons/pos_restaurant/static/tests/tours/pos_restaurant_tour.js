@@ -9,7 +9,6 @@ import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
@@ -100,8 +99,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -151,37 +149,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
-            // Create another draft order and go back to floor
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
+            Order.doesNotHaveLine(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),
-
-            // At floor screen, there should be 2 synced draft orders
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
-
-            // Delete the first order then go back to floor
-            FloorScreen.clickTable("5"),
-            ProductScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
-            // The order ref ends with -0002 because it is actually the 2nd order made in the session.
-            // The first order made in the session is a floating order.
-            TicketScreen.deleteOrder("-0002"),
-            Dialog.confirm(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
-            Chrome.isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0005"),
-            TicketScreen.loadSelectedOrder(),
-            ProductScreen.isShown(),
-            Chrome.clickPlanButton(),
-
-            // There should be 1 synced draft order.
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
         ].flat(),
 });
 
@@ -194,7 +167,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
     steps: () =>
         [
             // There is one draft synced order from the previous tour
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("2"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order
