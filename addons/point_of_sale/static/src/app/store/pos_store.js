@@ -736,7 +736,7 @@ export class PosStore extends Reactive {
             values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
         }
 
-        if (values.price_extra > 0) {
+        if (values.price_extra) {
             const price = values.product_id.get_price(
                 order.pricelist_id,
                 values.qty,
