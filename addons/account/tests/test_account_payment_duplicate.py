@@ -255,3 +255,24 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({})
 
         self.assertRecordValues(payment_1, [{'duplicate_move_ids': [self.payment_in.move_id.id]}])
+
+    def test_bulk_copy_payments(self):
+        """ Ensure that bulk copying of multiple payments correctly identifies duplicates for both
+        inbound and outbound payment types.
+        """
+        payment_in_1 = self.payment_in
+        payment_out_1 = self.payment_out
+
+        copied_payments = (payment_in_1 + payment_out_1).copy()
+
+        # Check that the copied payments are separate instances with new IDs
+        self.assertNotEqual(copied_payments[0].id, payment_in_1.id, "The copied inbound payment should have a different ID")
+        self.assertNotEqual(copied_payments[1].id, payment_out_1.id, "The copied outbound payment should have a different ID")
+
+        # Check that each copied payment correctly identifies the original as a duplicate
+        self.assertRecordValues(copied_payments[0], [{
+            'duplicate_move_ids': [payment_in_1.move_id.id],
+        }])
+        self.assertRecordValues(copied_payments[1], [{
+            'duplicate_move_ids': [payment_out_1.move_id.id],
+        }])
