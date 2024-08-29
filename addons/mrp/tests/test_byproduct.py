@@ -93,7 +93,7 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(consume_move_c.product_uom_qty, 4, "Wrong consumed quantity of product c.")
         self.assertEqual(by_product_move.product_uom_qty, 2, "Wrong produced quantity of sub product.")
 
-        mnf_product_a._post_inventory()
+        mnf_product_a.button_mark_done()
 
         # I see that stock moves of External Hard Disk including Headset USB are done now.
         self.assertFalse(any(move.state != 'done' for move in moves), 'Moves are not done!')
@@ -339,7 +339,7 @@ class TestMrpByProduct(common.TransactionCase):
         mo_form.qty_producing = 2.00
         mo = mo_form.save()
 
-        mo._post_inventory()
+        mo.button_mark_done()
         byproduct_move_line = mo.move_byproduct_ids.move_line_ids
         finished_move_line = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_a).move_line_ids
         self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
@@ -493,6 +493,7 @@ class TestMrpByProduct(common.TransactionCase):
         })
         mo.action_confirm()
         mo.move_byproduct_ids.quantity = 1.0
+        mo.move_byproduct_ids.picked = True
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         picking = mo.picking_ids.filtered(lambda p: p.location_dest_id == self.warehouse.lot_stock_id)

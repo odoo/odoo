@@ -63,6 +63,13 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         """Test the amount on analytic line will change when consumed qty of the
         component changed.
         """
+        def _set_move_picked(mo_form, val):
+            """Changing the qty_producing will not mark the picked automatically,
+            we need do it manually
+            """
+            with mo_form.move_raw_ids.edit(0) as move:
+                move.picked = val
+            mo_form.save()
         # create a mo
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
@@ -76,13 +83,16 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # increase qty_producing to 5.0
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
         # increase qty_producing to 10.0
         mo_form = Form(mo)
+        _set_move_picked(mo_form, False)
         mo_form.qty_producing = 10.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         mo.workorder_ids.button_finish()
         self.assertEqual(mo.state, 'to_close')
@@ -96,6 +106,13 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
     def test_mo_analytic_backorder(self):
         """Test the analytic lines are correctly posted when backorder.
         """
+        def _set_move_picked(mo_form, val):
+            """Changing the qty_producing will not mark the picked automatically,
+            we need do it manually
+            """
+            with mo_form.move_raw_ids.edit(0) as move:
+                move.picked = val
+            mo_form.save()
         # create a mo
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
@@ -110,6 +127,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # increase qty_producing to 5.0
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
@@ -344,6 +362,14 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
             f"{ac1C.id},{ac2C.id}": 33.33,
         }
 
+        def _set_move_picked(mo_form, val):
+            """Changing the qty_producing will not mark the picked automatically,
+            we need do it manually
+            """
+            with mo_form.move_raw_ids.edit(0) as move:
+                move.picked = val
+            mo_form.save()
+
         # create a mo
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
@@ -357,15 +383,18 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # increase qty_producing to 5.0
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
         aals = mo.move_raw_ids.analytic_account_line_ids
         self.assertEqual(len(aals), 3)
         self.assertEqual(sum(aals.mapped('amount')), -50.00)
 
+        _set_move_picked(mo_form, False)
         # increase qty_producing to 10.0
         mo_form = Form(mo)
         mo_form.qty_producing = 10.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         mo.workorder_ids.button_finish()
         aals = mo.move_raw_ids.analytic_account_line_ids
@@ -413,6 +442,14 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         location = self.env.ref('stock.stock_location_stock')
         self.env['stock.quant']._update_available_quantity(self.component, location, 10)
 
+        def _set_move_picked(mo_form, val):
+            """Changing the qty_producing will not mark the picked automatically,
+            we need do it manually
+            """
+            with mo_form.move_raw_ids.edit(0) as move:
+                move.picked = val
+            mo_form.save()
+
         # create a mo
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
@@ -427,13 +464,16 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # increase qty_producing to 5.0
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(self.analytic_account.balance, -50.0)
 
         # decrease qty_producing to 0.0
         mo_form = Form(mo)
+        _set_move_picked(mo_form, False)
         mo_form.qty_producing = 0.0
+        _set_move_picked(mo_form, True)
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(self.analytic_account.balance, 0.0)
