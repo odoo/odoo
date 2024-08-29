@@ -25,7 +25,7 @@ export class LinkPopoverWidget {
                 <div class="d-flex">
                     <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1 text-truncate" title="${_t('Open in a new tab')}"></a>
                     <a href="#" class="mx-1 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="${_t('Copy Link')}">
-                        <i class="fa fa-clone"></i>
+                        <i class="fa fa-clipboard"></i>
                     </a>
                     <a href="#" class="mx-1 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="${_t('Edit Link')}">
                         <i class="fa fa-edit"></i>
