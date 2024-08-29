@@ -178,7 +178,7 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
 
         vals = {
             'name': product.name,
-            'description': product.description,
+            'description': order_line.name,
             'standard_item_identification': product.barcode,
             'classified_tax_category_vals': self._get_tax_category_vals(order, order_line)
         }
