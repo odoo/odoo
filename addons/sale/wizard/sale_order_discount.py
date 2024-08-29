@@ -68,7 +68,7 @@ class SaleOrderDiscount(models.TransientModel):
         self.ensure_one()
         discount_product = self.company_id.sale_discount_product_id
         if not discount_product:
-            self.company_id.sale_discount_product_id = self.env['product.product'].create(
+            self.company_id.sudo().sale_discount_product_id = self.env['product.product'].sudo().create(
                 self._prepare_discount_product_values()
             )
             discount_product = self.company_id.sale_discount_product_id
