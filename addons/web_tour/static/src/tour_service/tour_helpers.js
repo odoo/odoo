@@ -264,6 +264,24 @@ export class TourHelpers {
     }
 
     /**
+     * Ensures that the given {@link Selector} is unchecked.
+     * @description
+     * If it is checked, a click is triggered on the input.
+     * If the input is still checked after the click, an error is thrown.
+     *
+     * @param {string|Node} selector
+     * @example
+     *  run: "uncheck", // Unchecks the action element
+     * @example
+     *  run: "uncheck input[type=checkbox]", // Unchecks the selector
+     */
+    uncheck(selector) {
+        const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "uncheck");
+        hoot.uncheck(element);
+    }
+
+    /**
      * Get Node for **{@link Selector}**
      * @param {Selector} selector
      * @returns {Node}
