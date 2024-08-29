@@ -17,7 +17,7 @@ const { DEFAULT_LOCALE } = constants;
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  */
 
-export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
+export const NO_RECORD_AT_THIS_POSITION = "__NO_RECORD_AT_THIS_POSITION__";
 
 /**
  * This class is an extension of PivotModel with some additional information
@@ -215,7 +215,9 @@ export class OdooPivotModel extends PivotModel {
         const cols = this._getSpreadsheetCols();
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
-        const measures = this.getDefinition().measures.map((measure) => measure.id);
+        const measures = this.getDefinition()
+            .measures.filter((measure) => !measure.isHidden)
+            .map((measure) => measure.id);
         /** @type {Record<string, string | undefined>} */
         const fieldsType = {};
         for (const columns of this.getDefinition().columns) {
@@ -429,7 +431,8 @@ export class OdooPivotModel extends PivotModel {
     _getSpreadsheetCols() {
         const colGroupBys = this.metaData.fullColGroupBys;
         const height = colGroupBys.length;
-        const measureCount = this.getDefinition().measures.length;
+        const measures = this.getDefinition().measures.filter((measure) => !measure.isHidden);
+        const measureCount = measures.length;
         const leafCounts = this._getLeafCounts(this.data.colGroupTree);
 
         const headers = new Array(height).fill(0).map(() => []);
@@ -461,7 +464,7 @@ export class OdooPivotModel extends PivotModel {
 
         if (hasColGroupBys) {
             headers[headers.length - 1].forEach((cell) => {
-                this.getDefinition().measures.forEach((measure) => {
+                measures.forEach((measure) => {
                     const measureCell = {
                         fields: [...cell.fields, "measure"],
                         values: [...cell.values, measure.id],
@@ -471,7 +474,7 @@ export class OdooPivotModel extends PivotModel {
                 });
             });
         }
-        this.getDefinition().measures.forEach((measure) => {
+        measures.forEach((measure) => {
             const measureCell = {
                 fields: ["measure"],
                 values: [measure.id],
@@ -487,7 +490,7 @@ export class OdooPivotModel extends PivotModel {
         headers[headers.length - 2].push({
             fields: [],
             values: [],
-            width: this.getDefinition().measures.length,
+            width: measures.length,
         });
 
         return headers;
@@ -499,18 +502,20 @@ export class OdooPivotModel extends PivotModel {
      * @return {string[]}
      */
     _getMeasureSpecs() {
-        return this.getDefinition().measures.map((measure) => {
-            if (measure.type === "many2one" && !measure.aggregator) {
-                return `${measure.fieldName}:count_distinct`;
-            }
-            if (measure.fieldName === "__count") {
-                // Remove aggregator that is not supported by python
-                return "__count";
-            }
-            return measure.aggregator
-                ? `${measure.fieldName}:${measure.aggregator}`
-                : measure.fieldName;
-        });
+        return this.getDefinition()
+            .measures.filter((measure) => !measure.computedBy)
+            .map((measure) => {
+                if (measure.type === "many2one" && !measure.aggregator) {
+                    return `${measure.fieldName}:count_distinct`;
+                }
+                if (measure.fieldName === "__count") {
+                    // Remove aggregator that is not supported by python
+                    return "__count";
+                }
+                return measure.aggregator
+                    ? `${measure.fieldName}:${measure.aggregator}`
+                    : measure.fieldName;
+            });
     }
 
     /**
