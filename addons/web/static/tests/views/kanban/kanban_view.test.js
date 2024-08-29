@@ -50,6 +50,7 @@ import {
     mountWithCleanup,
     onRpc,
     pagerNext,
+    pagerPrevious,
     patchWithCleanup,
     quickCreateKanbanColumn,
     quickCreateKanbanRecord,
@@ -10173,6 +10174,95 @@ test.tags("desktop")("keynav: kanban with global_click", async () => {
     press("ArrowDown");
     expect(queryFirst(".o_kanban_record")).toBeFocused();
     press("Enter");
+});
+
+test.tags("desktop")(`kanban should ask to scroll to top on page changes`, async () => {
+    // add records to be able to scroll
+    for (let i = 5; i < 200; i++) {
+        Partner._records.push({ id: i, foo: "foo" });
+    }
+    patchWithCleanup(KanbanController.prototype, {
+        onPageChangeScroll() {
+            super.onPageChangeScroll(...arguments);
+            expect.step("scroll");
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    // switch pages (should ask to scroll)
+    await pagerNext();
+    await pagerPrevious();
+    // should ask to scroll when switching pages
+    expect.verifySteps(["scroll", "scroll"]);
+
+    // change the limit (should not ask to scroll)
+    await contains(`.o_pager_value`).click();
+    await contains(`.o_pager_value`).edit("1-100");
+    await animationFrame();
+    expect(getPagerValue()).toEqual([1, 100]);
+    // should not ask to scroll when changing the limit
+    expect.verifySteps([]);
+
+    await contains(".o_content").scroll({ top: 250 });
+    expect(".o_content").toHaveProperty("scrollTop", 250);
+
+    // switch pages again (should still ask to scroll)
+    await pagerNext();
+    // this is still working after a limit change
+    expect.verifySteps(["scroll"]);
+    // Should effectively reset the scroll position
+    expect(".o_content").toHaveProperty("scrollTop", 0);
+});
+
+test.tags("mobile")(`kanban should ask to scroll to top on page changes (mobile)`, async () => {
+    // add records to be able to scroll
+    for (let i = 5; i < 200; i++) {
+        Partner._records.push({ id: i, foo: "foo" });
+    }
+    patchWithCleanup(KanbanController.prototype, {
+        onPageChangeScroll() {
+            super.onPageChangeScroll(...arguments);
+            expect.step("scroll");
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    // switch pages (should ask to scroll)
+    await pagerNext();
+    await pagerPrevious();
+    // should ask to scroll when switching pages
+    expect.verifySteps(["scroll", "scroll"]);
+
+    await contains(".o_kanban_view").scroll({ top: 250 });
+    expect(".o_kanban_view").toHaveProperty("scrollTop", 250);
+
+    // switch pages again (should still ask to scroll)
+    await pagerNext();
+    expect.verifySteps(["scroll"]);
+    // Should effectively reset the scroll position
+    expect(".o_kanban_view").toHaveProperty("scrollTop", 0);
 });
 
 test.tags("desktop")("set cover image", async () => {
