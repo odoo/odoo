@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models
 
 
-class Attachment(models.Model):
+class Media(models.Model):
 
-    _inherit = "ir.attachment"
+    _inherit = "html_editor.media"
 
     def _can_bypass_rights_on_media_dialog(self, **attachment_data):
         # Bypass the attachment create ACL and let the user create the image

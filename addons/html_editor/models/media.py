@@ -109,3 +109,12 @@ class Media(models.Model):
         )[0]
         attachment_id = media_info['attachment_id'].pop('id')
         return media_info | media_info['attachment_id'] | {'attachment_id': attachment_id}
+
+    def _can_bypass_rights_on_media_dialog(self, **attachment_data):
+        """ This method is meant to be overridden, for instance to allow to
+        create image attachment despite the user not allowed to create
+        attachment, eg:
+        - Portal user uploading an image on the forum (bypass acl)
+        - Non admin user uploading an unsplash image (bypass binary/url check)
+        """
+        return False
