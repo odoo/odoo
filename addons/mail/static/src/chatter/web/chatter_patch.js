@@ -1,26 +1,23 @@
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { BaseRecipientsList } from "@mail/core/web/base_recipients_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
-import { RecipientList } from "@mail/core/web/recipient_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 
-import { markup, useEffect } from "@odoo/owl";
+import { useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { escape } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export const DELAY_FOR_SPINNER = 1000;
@@ -28,6 +25,7 @@ export const DELAY_FOR_SPINNER = 1000;
 Object.assign(Chatter.components, {
     Activity,
     AttachmentList,
+    BaseRecipientsList,
     Dropdown,
     FileUploader,
     FollowerList,
@@ -74,7 +72,6 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.orm = useService("orm");
         this.mailPopoutService = useService("mail.popout");
-        this.recipientsPopover = usePopover(RecipientList);
         Object.assign(this.state, {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
@@ -201,33 +198,6 @@ patch(Chatter.prototype, {
         ];
     },
 
-    /**
-     * @returns {string}
-     */
-    get toRecipientsText() {
-        if (this.state.thread?.recipients.length === 0) {
-            return undefined;
-        }
-        const recipients = [...(this.state.thread?.recipients ?? [])]
-            .slice(0, 5)
-            .map(({ partner }) => {
-                const text = partner.email ? partner.emailWithoutDomain : partner.name;
-                return `<span class="text-muted" title="${escape(
-                    partner.email || _t("no email address")
-                )}">${escape(text)}</span>`;
-            });
-        if (this.state.thread && this.state.thread.recipients.length > 5) {
-            recipients.push(
-                escape(
-                    _t("%(recipientCount)s more", {
-                        recipientCount: this.state.thread.recipients.length - 5,
-                    })
-                )
-            );
-        }
-        return markup(formatList(recipients));
-    },
-
     get unfollowText() {
         return _t("Unfollow");
     },
@@ -294,13 +264,6 @@ patch(Chatter.prototype, {
             this.onThreadCreated = this._follow;
             await this.props.saveRecord?.();
         }
-    },
-
-    onClickRecipientList(ev) {
-        if (this.recipientsPopover.isOpen) {
-            return this.recipientsPopover.close();
-        }
-        this.recipientsPopover.open(ev.target, { thread: this.state.thread });
     },
 
     onClickSearch() {
