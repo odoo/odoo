@@ -185,3 +185,31 @@ class StockMoveLine(TestStockCommon):
             (move_line1 | move_line2).lot_id = self.lot
         with self.assertRaises(UserError):
             (move_line1 | move_line2).quant_id = quant_productA
+
+    def test_tracked_product_write_quantity_without_lot(self):
+        """ In the mobile detailed operation view, each field is populated individually rather than
+        selecting a specific lot. If we write some  quantity, we should try to find a lot with
+        enough available quantity as precised on the line (if possible).
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, 20, lot_id=self.lot)
+        internal_transfer = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_internal,
+            'location_id': self.shelf1.id,
+            'location_dest_id': self.stock_location,
+            'move_ids': [(0, 0, {
+                'name': 'TTPWQWL move',
+                'product_id': self.product.id,
+                'location_id': self.shelf1.id,
+                'location_dest_id': self.stock_location,
+                'product_uom_qty': 20,
+            })],
+        })
+        internal_transfer.action_confirm()
+
+        internal_transfer.move_line_ids.write({
+            'quantity': 0,
+            'lot_id': False,
+        })
+        internal_transfer.move_line_ids.quantity = 20
+
+        self.assertEqual(internal_transfer.move_line_ids.lot_id, self.lot)

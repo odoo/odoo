@@ -421,6 +421,7 @@ class StockMoveLine(models.Model):
         # the quants). If the new charateristics are not available on the quants, we chose to
         # reserve the maximum possible.
         if updates or 'quantity' in vals:
+            lots_qty_assigned = defaultdict(float)
             for ml in self:
                 if ml.product_id.type != 'product' or ml.state == 'done':
                     continue
@@ -431,6 +432,27 @@ class StockMoveLine(models.Model):
                     # Make sure `reserved_uom_qty` is not negative.
                     if float_compare(new_reserved_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
+                    # Try to find a lot_id: E.g., on the mobile view for detailed operations, the
+                    # user does not actually set a lot but instead sets the quantity, lot, etc.
+                    # values individually
+                    product = ml.product_id or vals.get('product_id')
+                    if (new_reserved_qty != ml.quantity == 0 and
+                        product.tracking != 'none' and
+                        not vals.get('lot')
+                    ):
+                        def can_use_lot(lot, lots_qty):
+                            return (self.env['stock.quant']._get_available_quantity(lot.product_id, lot.location_id, lot_id=lot) - lots_qty[lot] >= new_reserved_qty)
+                        candidate_lots = self.env['stock.quant'].search([
+                            ('product_id', '=', product.id),
+                            ('lot_id', '!=', False)
+                        ], order='id').lot_id
+                        autofill_lot = next(
+                            (lot for lot in candidate_lots if can_use_lot(lot, lots_qty_assigned)),
+                            False
+                        )
+                        if autofill_lot:
+                            vals['lot_id'] = autofill_lot
+                            lots_qty_assigned[autofill_lot] += new_reserved_qty
                 else:
                     new_reserved_qty = ml.quantity_product_uom
 
