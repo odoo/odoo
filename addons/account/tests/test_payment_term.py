@@ -220,7 +220,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         def assert_payment_term_values(expected_values_list):
             res = pay_term._compute_terms(
                 fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
-                150, 150, 1000, 1000, 1,
+                150, 150, 1, 1000, 1000,
             )
             self.assertEqual(len(res), len(expected_values_list))
             for values, (company_amount, discount_balance) in zip(res, expected_values_list):
@@ -282,3 +282,118 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             (230.0, 0.0),
             (575.0, 475.0),
         ])
+
+    def test_payment_term_compute_method_cash_rounding(self):
+        """Test that the payment terms are computed correctly in case we apply cash rounding.
+        We check the amounts in document and company currency.
+        We check that the cash rounding does not change the totals in document or company curreny.
+        """
+        def assert_payment_term_values(expected_values_list):
+            foreign_currency = self.currency_data['currency']
+            rate = self.env['res.currency']._get_conversion_rate(foreign_currency, self.env.company.currency_id, self.env.company, '2017-01-01')
+            self.assertEqual(rate, 0.5)
+            res = pay_term._compute_terms(
+                fields.Date.from_string('2017-01-01'), foreign_currency, self.env.company,
+                75, 150, 1, 359.18, 718.35, cash_rounding=self.cash_rounding_a
+            )
+            self.assertEqual(len(res), len(expected_values_list))
+
+            keys = ['company_amount', 'discount_balance', 'foreign_amount', 'discount_amount_currency']
+            for index, (values, expected_values) in enumerate(zip(res, expected_values_list)):
+                for key in keys:
+                    with self.subTest(index=index, key=key):
+                        self.assertAlmostEqual(values[key], expected_values[key])
+
+            total_company_amount = sum(value['company_amount'] for value in res)
+            total_foreign_amount = sum(value['foreign_amount'] for value in res)
+            self.assertAlmostEqual(total_company_amount, 434.18)
+            self.assertAlmostEqual(total_foreign_amount, 868.35)
+
+        pay_term = self.env['account.payment.term'].create({
+            'name': "turlututu",
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 10,
+                    'days': 2,
+                    'discount_percentage': 10,
+                    'discount_days': 1,
+                }),
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 20,
+                    'days': 4,
+                    'discount_percentage': 20,
+                    'discount_days': 3,
+                }),
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 20,
+                    'days': 6,
+                }),
+                Command.create({
+                    'value': 'balance',
+                    'days': 8,
+                    'discount_percentage': 20,
+                    'discount_days': 7,
+                }),
+            ],
+        })
+
+        with self.subTest(test='included'):
+            self.env.company.early_pay_discount_computation = 'included'
+            assert_payment_term_values([
+                {
+                    'company_amount': 43.43,
+                    'discount_balance': 39.11,
+                    'foreign_amount': 86.85,
+                    'discount_amount_currency': 78.20,
+                },
+                {
+                    'company_amount': 86.86,
+                    'discount_balance': 69.51,
+                    'foreign_amount': 173.70,
+                    'discount_amount_currency': 139.00,
+                },
+                {
+                    'company_amount': 86.86,
+                    'discount_balance': 0,
+                    'foreign_amount': 173.70,
+                    'discount_amount_currency': 0.00,
+                },
+                {
+                    'company_amount': 217.03,
+                    'discount_balance': 173.63,
+                    'foreign_amount': 434.10,
+                    'discount_amount_currency': 347.30,
+                },
+               ])
+
+        with self.subTest(test='excluded'):
+            self.env.company.early_pay_discount_computation = 'excluded'
+            assert_payment_term_values([
+                {
+                    'company_amount': 43.43,
+                    'discount_balance': 39.86,
+                    'foreign_amount': 86.85,
+                    'discount_amount_currency': 79.70,
+                },
+                {
+                    'company_amount': 86.86,
+                    'discount_balance': 72.51,
+                    'foreign_amount': 173.70,
+                    'discount_amount_currency': 145.00,
+                },
+                {
+                    'company_amount': 86.86,
+                    'discount_balance': 0,
+                    'foreign_amount': 173.70,
+                    'discount_amount_currency': 0.00,
+                },
+                {
+                    'company_amount': 217.03,
+                    'discount_balance': 181.13,
+                    'foreign_amount': 434.10,
+                    'discount_amount_currency': 362.30,
+                },
+            ])

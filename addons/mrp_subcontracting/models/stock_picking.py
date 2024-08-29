@@ -73,12 +73,13 @@ class StockPicking(models.Model):
             len_amounts = len(amounts)
             # _split_production can set the qty_done, but not split it.
             # Remove the qty_done potentially set by a previous split to prevent any issue.
-            production.move_line_raw_ids.filtered(lambda l: l.state == 'assigned').write({'qty_done': 0})
+            production.move_line_raw_ids.filtered(lambda sml: sml.state not in ['done', 'cancel']).write({'qty_done': 0})
             productions = production._split_productions({production: amounts}, set_consumed_qty=True)
             for production, move_line in zip(productions, move.move_line_ids):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id
                 production.qty_producing = production.product_qty
+                production._set_qty_producing()
             productions[:len_amounts].subcontracting_has_been_recorded = True
 
         for picking in self:
