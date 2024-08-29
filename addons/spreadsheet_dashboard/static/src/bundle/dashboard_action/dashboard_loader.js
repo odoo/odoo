@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { Model } from "@odoo/o-spreadsheet";
-import { createDefaultCurrencyFormat } from "@spreadsheet/currency/helpers";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
+import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
 
 /**
  * @type {{
@@ -198,17 +198,14 @@ export class DashboardLoader {
      * @param {object} [defaultCurrency]
      * @returns {Model}
      */
-    _createSpreadsheetModel(snapshot, revisions = [], defaultCurrency) {
+    _createSpreadsheetModel(snapshot, revisions = [], currency) {
         const odooDataProvider = new OdooDataProvider(this.env);
-        const defaultCurrencyFormat = defaultCurrency
-            ? createDefaultCurrencyFormat(defaultCurrency)
-            : undefined;
         const model = new Model(
             snapshot,
             {
                 custom: { env: this.env, orm: this.orm, odooDataProvider },
                 mode: "dashboard",
-                defaultCurrencyFormat,
+                defaultCurrency: createDefaultCurrency(currency),
             },
             revisions
         );
