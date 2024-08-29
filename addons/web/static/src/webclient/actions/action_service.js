@@ -30,6 +30,7 @@ import { downloadReport, getReportUrl } from "./reports/utils";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { zip } from "@web/core/utils/arrays";
 import { session } from "@web/session";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
@@ -1384,6 +1385,10 @@ export function makeActionManager(env, router = _router) {
         // determine the action to execute according to the params
         let action;
         const context = makeContext([params.context, params.buttonContext]);
+        const blockUi = exprToBoolean(params["block-ui"]);
+        if (blockUi) {
+            env.services.ui.block();
+        }
         if (params.special) {
             action = { type: "ir.actions.act_window_close", infos: { special: true } };
         } else if (params.type === "object") {
@@ -1421,6 +1426,9 @@ export function makeActionManager(env, router = _router) {
             context.active_model = params.resModel;
             action = await keepLast.add(_loadAction(params.name, context));
         } else {
+            if (blockUi) {
+                env.services.ui.unblock();
+            }
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
         }
         // filter out context keys that are specific to the current action, because:
@@ -1446,6 +1454,9 @@ export function makeActionManager(env, router = _router) {
         await doAction(action, options);
         if (params.close) {
             await _executeCloseAction();
+        }
+        if (blockUi) {
+            env.services.ui.unblock();
         }
         if (effect) {
             env.services.effect.add(effect);
