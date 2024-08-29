@@ -16,11 +16,13 @@ class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
             'order_line': [
                 (0, 0, {
                     'product_id': self.product_a.id,
+                    'name': 'Product A description',
                     'product_qty': 10.0,
                     'price_unit': 50.0,
                 }),
                 (0, 0, {
                     'product_id': self.product_a.id,
+                    'name': 'Product A description',
                     'product_qty': 1.0,
                     'price_unit': 10.0,
                 }),
