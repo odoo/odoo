@@ -12,7 +12,7 @@ import pytz
 import uuid
 
 from odoo import api, fields, models, Command
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import (
@@ -695,7 +695,43 @@ class Meeting(models.Model):
             # display public and confidential events
             domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
             return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        result = super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby,
+                                                 lazy=lazy)
+        final_res = []
+
+        # Check for dynamic fields in grouped_fields
+        for field_prefix in ['stop_date', 'start_date']:
+            if field_prefix in grouped_fields:
+                # Read the grouped data dynamically based on prefix and suffix
+                field_suffix = next(
+                    suffix for suffix in [':month', ':year', ':week', ':day', ':quarter'] if
+                    any(f'{field_prefix}{suffix}' in d for d in result)
+                )
+
+                # Dynamically create the lookup dictionary
+                lookup = defaultdict(dict, {
+                    d[f'{field_prefix}{field_suffix}']: d for d in result
+                })
+
+                result2 = super(Meeting, self).read_group(domain, fields,
+                                                          [f'{field_prefix.replace("_date", "")}{field_suffix}'],
+                                                          offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+                for dic in result2:
+                    val = dic.get(f'{field_prefix.replace("_date", "")}{field_suffix}')
+                    if val in lookup:
+                        lookup[val]['__domain'] = OR([lookup[val]['__domain'], dic['__domain']])
+                    else:
+                        lookup[val]['__domain'] = dic['__domain']
+                        dic['__range'][f'{field_prefix}{field_suffix}'] = dic['__range'].pop(
+                            f'{field_prefix.replace("_date", "")}{field_suffix}')
+                        lookup[val]['__range'] = dic['__range']
+                    lookup[val][f'{field_prefix}_count'] = dic[f'{field_prefix.replace("_date", "")}_count']
+                    lookup[val][f'{field_prefix}{field_suffix}'] = dic[f'{field_prefix.replace("_date", "")}{field_suffix}']
+                    lookup[val]['duration'] = dic['duration']
+                    final_res.append(lookup[val])
+
+        return final_res or result
 
     def unlink(self):
         if not self:
