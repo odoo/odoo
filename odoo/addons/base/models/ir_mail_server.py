@@ -666,13 +666,15 @@ class IrMailServer(models.Model):
             mail_servers = self.sudo().search([], order='sequence')
 
         # 1. Try to find a mail server for the right mail from
-        mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)
-        if mail_server:
-            return mail_server[0], email_from
+        # Skip if passed email_from is False (example Odoobot has no email address)
+        if email_from:
+            mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)
+            if mail_server:
+                return mail_server[0], email_from
 
-        mail_server = mail_servers.filtered(lambda m: email_domain_normalize(m.from_filter) == email_from_domain)
-        if mail_server:
-            return mail_server[0], email_from
+            mail_server = mail_servers.filtered(lambda m: email_domain_normalize(m.from_filter) == email_from_domain)
+            if mail_server:
+                return mail_server[0], email_from
 
         # 2. Try to find a mail server for <notifications@domain.com>
         if notifications_email:
