@@ -35,9 +35,9 @@
                         <!-- visible wizard -->
                         <field name="email_from"
                             invisible="composition_mode != 'mass_mail'"/>
-                        <label for="partner_ids" string="Recipients" invisible="composition_mode != 'comment' or subtype_is_log"/>
+                        <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
-                            <span name="document_followers_text" invisible="not model or composition_mode == 'mass_mail'">Followers of the document and</span>
+                            <widget invisible="not model or composition_mode == 'mass_mail'" name="mail_composer_recipient_list"/>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>

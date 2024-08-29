@@ -75,17 +75,24 @@
             </div>
             <t t-if="state.composerType">
                 <t t-if="state.composerType === 'message'">
-                    <div class="d-flex flex-shrink-0 pt-3 text-truncate small mb-2 ms-5">
-                        <span class="fw-bold">To:</span> <span t-if="toRecipientsText" t-out="toRecipientsText" class="ps-1"/>
-                        <SuggestedRecipientsList t-elif="state.thread.suggestedRecipients.length > 0" className="'ps-2'" thread="state.thread" onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
-                        <span t-else="" class="ps-1">No recipient</span>
-                        <button t-if="state.thread.recipients.length > 0" class="o-mail-Chatter-recipientListButton btn btn-link badge rounded-pill border-0 p-1 ms-1" title="Show all recipients" t-on-click="onClickRecipientList">
-                            <i class="fa fa-caret-down"/>
-                        </button>
+                    <div class="d-flex flex-shrink-0 pt-3 text-truncate small mb-2 ms-5 gap-1">
+                        <span class="fw-bold">To: </span>
+                        <BaseRecipientsList
+                            t-if="state.thread.recipients.length > 0"
+                            thread="state.thread"/>
+                        <SuggestedRecipientsList
+                            t-elif="state.thread.suggestedRecipients.length > 0"
+                            thread="state.thread"
+                            onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
+                        <span t-else="" class="fst-italic">No recipient</span>
                     </div>
                 </t>
                 <t t-set="type" t-value="state.composerType === 'message' ? 'message' : 'note'"/>
-                <SuggestedRecipientsList t-if="state.composerType !== 'note' and toRecipientsText" styleString="'margin-left:48px;'" thread="state.thread" onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
+                <SuggestedRecipientsList
+                    t-if="state.composerType !== 'note' and state.thread.recipients.length > 0"
+                    styleString="'margin-left:48px;'"
+                    thread="state.thread"
+                    onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
                 <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
             </t>
         </div>
