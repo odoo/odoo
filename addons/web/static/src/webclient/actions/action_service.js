@@ -68,6 +68,8 @@ const actionRegistry = registry.category("actions");
  * @property {CallableFunction} [onClose]
  * @property {Object} [props]
  * @property {ViewType} [viewType]
+ * @property {"replaceCurrentAction" | "replacePreviousAction"} [stackPosition]
+ * @property {number} [index]
  */
 
 export async function clearUncommittedChanges(env) {
@@ -744,10 +746,7 @@ export function makeActionManager(env, router = _router) {
 
     /**
      * Computes the position of the controller in the nextStack according to options
-     * @param {Object} options
-     * @param {boolean} [options.clearBreadcrumbs=false]
-     * @param {'replaceLast' | 'replaceLastAction'} [options.stackPosition]
-     * @param {number} [options.index]
+     * @param {ActionOptions} options
      */
     function _computeStackIndex(options) {
         if (options.clearBreadcrumbs) {
