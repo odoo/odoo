@@ -156,6 +156,9 @@
                         <div class="pads">
                             <t t-if="isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">
+                                    <button class="edit-order-payment control-button btn btn-light btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.orderDetails(_selectedSyncedOrder)">
+                                        <i class="fa fa-pencil-square-o me-1" /> Details
+                                    </button>
                                     <InvoiceButton
                                         onInvoiceOrder.bind="onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
@@ -163,7 +166,7 @@
                                 </div>
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
-                                    <ActionpadWidget 
+                                    <ActionpadWidget
                                         partner="getSelectedOrder()?.get_partner()"
                                         actionName.translate="Refund"
                                         actionToTrigger.bind="onDoRefund"

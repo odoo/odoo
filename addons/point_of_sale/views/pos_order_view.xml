@@ -150,18 +150,23 @@
                         <div class="clearfix"/>
                     </page>
                     <page string="Payments" name="payments">
-                        <field name="payment_ids" colspan="4" nolabel="1">
-                            <tree string="Payments">
+                        <field name="payment_ids" colspan="4" nolabel="1" readonly="state in ['invoiced', 'done']">
+                            <tree string="Payments" create="1" editable="bottom">
                                 <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
-                                <field name="payment_method_id"/>
+                                <field name="payment_method_id" domain="[('id', 'in', parent.available_payment_method_ids)]" />
+                                <field name="amount"/>
                                 <field name="payment_method_payment_mode" optional="hide"/>
                                 <field name="card_no" invisible="not card_no"/>
                                 <field name="card_brand" string="Card's Brand" invisible="not card_brand or not card_no"/>
                                 <field name="cardholder_name" invisible="not cardholder_name or not card_no"/>
-                                <field name="amount"/>
                             </tree>
                         </field>
+                        <group class="oe_subtotal_footer" colspan="2" name="order_total">
+                            <field name="amount_total" class="h3" widget="monetary"/>
+                            <field name="amount_paid" widget="monetary" class="h3" readonly="1" />
+                            <field name="amount_difference" widget="monetary" force_save="1" />
+                        </group>
                     </page>
                     <page name="extra" string="Extra Info">
                         <group >
