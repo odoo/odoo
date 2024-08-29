@@ -516,6 +516,7 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CD_CREDIT.balance - CD_REPAYMENT_ASKED.balance</field>
                                 <field name="subformula">if_above(CDF(0))</field>
+                                <field name="carryover_target" eval="False"/>
                             </record>
                             <record id="account_tax_report_line_cd_calculation_credit_reportable_carryover" model="account.report.expression">
                                 <field name="label">_carryover_balance</field>

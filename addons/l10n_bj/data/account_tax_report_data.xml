@@ -215,6 +215,7 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_VAT_DEDUCTIBLE.balance - BJ_GROSS.balance</field>
                                 <field name="subformula">if_above(XOF(0))</field>
+                                <field name="carryover_target" eval="False"/>
                             </record>
                             <record id="account_tax_report_line_bj_credit_to_report_carryover" model="account.report.expression">
                                 <field name="label">_carryover_balance</field>

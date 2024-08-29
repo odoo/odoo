@@ -284,6 +284,7 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TG_VAT_DEDUCT.tax - TG_SALES.tax</field>
                                 <field name="subformula">if_above(XOF(0))</field>
+                                <field name="carryover_target" eval="False"/>
                             </record>
                             <record id="account_tax_report_line_tg_to_report_tax_carryover" model="account.report.expression">
                                 <field name="label">_carryover_tax</field>
