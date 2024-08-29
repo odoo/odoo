@@ -1,10 +1,10 @@
 import { beforeEach, expect, onError, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
-import { clearRegistry, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { clearRegistry, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, onWillStart, useState, xml } from "@odoo/owl";
 
 const mainComponentsRegistry = registry.category("main_components");
 
@@ -138,6 +138,30 @@ test("MainComponentsContainer re-renders when the registry changes", async () =>
         static props = ["*"];
     }
     mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
+    await animationFrame();
+    expect(".myMainComponent").toHaveCount(1);
+});
+
+test("Should be possible to add a new component when MainComponentContainer is not mounted yet", async () => {
+    const defer = new Deferred();
+    patchWithCleanup(MainComponentsContainer.prototype, {
+        setup() {
+            super.setup();
+            onWillStart(async () => {
+                await defer;
+            });
+        },
+    });
+    mountWithCleanup(MainComponentsContainer);
+    class MyMainComponent extends Component {
+        static template = xml`<div class="myMainComponent" />`;
+        static props = ["*"];
+    }
+    // Wait for the setup of MainComponentsContainer to be completed
+    await animationFrame();
+    mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
+    // Release the component mounting
+    defer.resolve();
     await animationFrame();
     expect(".myMainComponent").toHaveCount(1);
 });

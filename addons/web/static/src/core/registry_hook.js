@@ -1,14 +1,8 @@
-import { useState } from "@odoo/owl";
-import { useBus } from "@web/core/utils/hooks";
+import { useState, onWillStart, onWillDestroy } from "@odoo/owl";
 
-/**
- * Get the entries of a registry and update the state when the registry is updated.
- * @param {import('./registry').Registry} registry
- * @returns {{ entries: [string, any][] }} the entries of the registry, as a reactive state
- */
 export function useRegistry(registry) {
     const state = useState({ entries: registry.getEntries() });
-    useBus(registry, "UPDATE", ({ detail }) => {
+    const listener = ({ detail }) => {
         const index = state.entries.findIndex(([k]) => k === detail.key);
         if (detail.operation === "add" && index === -1) {
             // push the new entry at the right place
@@ -23,6 +17,9 @@ export function useRegistry(registry) {
         } else if (detail.operation === "delete" && index >= 0) {
             state.entries.splice(index, 1);
         }
-    });
+    };
+
+    onWillStart(() => registry.addEventListener("UPDATE", listener));
+    onWillDestroy(() => registry.removeEventListener("UPDATE", listener));
     return state;
 }
