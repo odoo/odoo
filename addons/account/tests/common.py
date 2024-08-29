@@ -497,8 +497,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
             return lines.sorted(lambda line: (line.sequence, not bool(line.tax_line_id), line.name or line.product_id.display_name or '', line.balance))
-        self.assertRecordValues(sort_lines(move.line_ids.sorted()), expected_lines_values)
-        self.assertRecordValues(move, [expected_move_values])
+        self.assertRecordValues(sort_lines(move.line_ids.sorted()), expected_lines_values, field_names=expected_lines_values[0].keys())
+        self.assertRecordValues(move, [expected_move_values], field_names=expected_move_values.keys())
 
     def assert_tax_totals(self, tax_totals, currency, expected_values):
         main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
