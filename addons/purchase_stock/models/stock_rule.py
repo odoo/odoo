@@ -109,6 +109,7 @@ class StockRule(models.Model):
                     # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
                     # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                    po._post_run_buy(positive_values)
             else:
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
@@ -280,7 +281,6 @@ class StockRule(models.Model):
         partner = values['supplier'].partner_id
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
-
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
                 (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False

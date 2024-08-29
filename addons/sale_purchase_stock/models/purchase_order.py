@@ -9,11 +9,22 @@ class PurchaseOrder(models.Model):
 
     @api.depends('order_line.move_dest_ids.group_id.sale_id', 'order_line.move_ids.move_dest_ids.group_id.sale_id')
     def _compute_sale_order_count(self):
-        super(PurchaseOrder, self)._compute_sale_order_count()
+        super()._compute_sale_order_count()
 
     def _get_sale_orders(self):
-        return super(PurchaseOrder, self)._get_sale_orders() | self.order_line.move_dest_ids.group_id.sale_id | self.order_line.move_ids.move_dest_ids.group_id.sale_id
+        so_linked_moves = self.order_line.move_dest_ids.group_id.sale_id | self.order_line.move_ids.move_dest_ids.group_id.sale_id
+        so_proc_group = self.group_id.sale_id
+        return super()._get_sale_orders() | so_linked_moves | so_proc_group
 
+    def _post_run_buy(self, procurements):
+        self.ensure_one()
+        for procurement in procurements:
+            group = procurement.get('group_id')
+            if group and group.sale_id:
+                self.group_id.sale_id = group.sale_id
+                group.purchase_order_id = self
+                break
+        return super()._post_run_buy(procurements)
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

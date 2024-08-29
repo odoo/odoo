@@ -9,7 +9,9 @@ class SaleOrder(models.Model):
 
     @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id')
     def _compute_purchase_order_count(self):
-        super(SaleOrder, self)._compute_purchase_order_count()
+        super()._compute_purchase_order_count()
 
     def _get_purchase_orders(self):
-        return super(SaleOrder, self)._get_purchase_orders() | self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id | self.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id
+        po_linked_moves = self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id | self.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id
+        po_proc_group = self.procurement_group_id.purchase_order_id
+        return super()._get_purchase_orders() | po_linked_moves | po_proc_group

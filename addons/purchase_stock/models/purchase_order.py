@@ -88,6 +88,15 @@ class PurchaseOrder(models.Model):
     # CRUD
     # --------------------------------------------------
 
+    def create(self, vals_list):
+        purchases = super().create(vals_list)
+        procurement_group_vals_list = []
+        for purchase in purchases:
+            if not purchase.group_id:
+                procurement_group_vals_list.append(purchase._prepare_procurement_group())
+        self.env['procurement.group'].create(procurement_group_vals_list)
+        return purchases
+
     def write(self, vals):
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
@@ -245,12 +254,18 @@ class PurchaseOrder(models.Model):
             picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return picking_type[:1]
 
+    def _post_run_buy(self, procurements):
+        self.ensure_one()
+        return True
+
+    def _prepare_procurement_group(self):
+        return {
+            'name': self.name,
+            'purchase_order_id': self.ids,
+        }
+
     def _prepare_picking(self):
-        if not self.group_id:
-            self.group_id = self.group_id.create({
-                'name': self.name,
-                'partner_id': self.partner_id.id
-            })
+        self.group_id.partner_id = self.partner_id
         if not self.partner_id.property_stock_supplier.id:
             raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
         return {
