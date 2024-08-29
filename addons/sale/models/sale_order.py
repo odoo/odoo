@@ -648,11 +648,8 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.amount_to_invoice')
     def _compute_amount_to_invoice(self):
-        if not self.env.company.account_use_credit_limit:
-            self.amount_to_invoice = 0.0
-        else:
-            for order in self:
-                order.amount_to_invoice = sum(order.order_line.mapped('amount_to_invoice'))
+        for order in self:
+            order.amount_to_invoice = sum(order.order_line.mapped('amount_to_invoice'))
 
     @api.depends('order_line.amount_invoiced')
     def _compute_amount_invoiced(self):
@@ -665,7 +662,7 @@ class SaleOrder(models.Model):
             order.with_company(order.company_id)
             order.partner_credit_warning = ''
             show_warning = order.state in ('draft', 'sent') and \
-                           self.env.company.account_use_credit_limit
+                           order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order,

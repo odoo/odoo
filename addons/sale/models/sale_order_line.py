@@ -1062,8 +1062,6 @@ class SaleOrderLine(models.Model):
 
     @api.depends('discount', 'price_total', 'product_uom_qty', 'qty_delivered', 'qty_invoiced_posted')
     def _compute_amount_to_invoice(self):
-        if not self.company_id.account_use_credit_limit:
-            self.amount_to_invoice = 0.0
         for line in self:
             if line.product_uom_qty:
                 uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty

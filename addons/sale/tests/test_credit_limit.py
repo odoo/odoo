@@ -48,14 +48,13 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             'order_line': [Command.create({
                 'product_id': self.company_data_2['product_order_no'].id,
                 'price_unit': 1000.0,
-            })]
+            })],
         })
 
-        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
+        self.assertEqual(self.partner_a.with_company(company2).credit_to_invoice, 0.0)
         sale_order.action_confirm()
 
         self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
         self.assertEqual(self.partner_a.with_company(company2).credit_to_invoice, 1000.0)
         partner_a_multi_company = self.partner_a.with_context(allowed_company_ids=[self.env.company.id, company2.id])
         self.assertEqual(partner_a_multi_company.credit_to_invoice, 0.0)
