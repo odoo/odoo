@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import SUPERUSER_ID, _, _lt, api, fields, models, tools
@@ -427,10 +426,18 @@ class Website(models.Model):
                 order="date_order desc, id desc",
             )
             if last_sale_order:
-                if last_sale_order.partner_shipping_id.active:  # first = me
-                    addr['delivery'] = last_sale_order.partner_shipping_id.id
-                if last_sale_order.partner_invoice_id.active:
-                    addr['invoice'] = last_sale_order.partner_invoice_id.id
+                partner_shipping = last_sale_order.partner_shipping_id
+                if (
+                    partner_shipping.active
+                    and partner_shipping.commercial_partner_id == partner_sudo
+                ):
+                    addr['delivery'] = partner_shipping.id
+                partner_invoice = last_sale_order.partner_invoice_id
+                if (
+                    partner_invoice.active
+                    and partner_invoice.commercial_partner_id == partner_sudo
+                ):
+                    addr['invoice'] = partner_invoice.id
 
         affiliate_id = request.session.get('affiliate_id')
         salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()
