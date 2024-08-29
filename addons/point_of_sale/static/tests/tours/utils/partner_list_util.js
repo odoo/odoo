@@ -25,12 +25,10 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
         {
             content: `Check partner "${name}" from partner list screen`,
             trigger: `.partner-list .partner-info:contains("${name}")`,
-            run: () => {},
         },
         {
             content: `Check address "${address}" for partner "${name}"`,
             trigger: `.partner-list .partner-info:contains("${name}") .partner-line-adress:contains("${address}")`,
-            run: () => {},
         },
     ];
 
@@ -38,7 +36,6 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
         steps.push({
             content: `Check phone number "${phone}" for partner "${name}"`,
             trigger: `.partner-list .partner-info:contains("${name}") .partner-line-email:contains("${phone}")`,
-            run: () => {},
         });
     }
 
@@ -46,7 +43,6 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
         steps.push({
             content: `Check mobile number "${mobile}" for partner "${name}"`,
             trigger: `.partner-list .partner-info:contains("${name}") .partner-line-email:contains("${mobile}")`,
-            run: () => {},
         });
     }
 
@@ -54,7 +50,6 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
         steps.push({
             content: `Check email address "${email}" for partner "${name}"`,
             trigger: `.partner-list .partner-info:contains("${name}") .partner-line-email .email-field:contains("${email}")`,
-            run: () => {},
         });
     }
 
@@ -77,7 +72,6 @@ export function searchCustomerValue(val) {
         {
             content: `Check "${val}" is shown`,
             trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
-            run: () => {},
         },
     ];
 }

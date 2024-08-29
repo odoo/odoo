@@ -69,7 +69,6 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "wait for the page to be loaded",
         trigger: ".o_website_preview[data-view-xmlid='website.contactus']",
-        run: () => null, // it"s a check
     },
     ...clickOnEditAndWaitEditMode(),
     ...dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),

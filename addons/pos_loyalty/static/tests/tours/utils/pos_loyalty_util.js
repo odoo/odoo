@@ -99,7 +99,6 @@ export function pointsAwardedAre(points_str) {
         {
             content: "loyalty points awarded " + points_str,
             trigger: '.loyalty-points-won:contains("' + points_str + '")',
-            run: function () {}, // it's a check
         },
     ];
 }

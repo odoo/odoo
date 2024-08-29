@@ -16,7 +16,6 @@ const clickOnImgAndWaitForLoad = [
     {
         content: "Check that the snippet editor of the clicked image has been loaded",
         trigger: "we-customizeblock-options:has(we-title:contains('Re-order'))",
-        run: () => null,
     },
 ];
 const enterEditModeOfTestProduct = () => [
@@ -40,7 +39,6 @@ const removeImg = [
     {
         content: "Check that the snippet editor is not visible",
         trigger: ".o_we_customize_panel:not(:has(we-customizeblock-options:has(we-title:contains('Re-order'))))",
-        run: () => null,
     },
 ];
 
@@ -62,7 +60,6 @@ registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
     {
         content: "Check that the snippet editor of the clicked image has been loaded",
         trigger: "we-customizeblock-options:has(we-title:contains('Re-order'))",
-        run: () => null,
     },
     ...removeImg,
 ]);

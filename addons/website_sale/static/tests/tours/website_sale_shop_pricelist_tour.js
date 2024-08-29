@@ -11,7 +11,6 @@ registry.category("web_tour.tours").add(
             {
                 content: "Check pricelist",
                 trigger: ".o_pricelist_dropdown .dropdown-toggle:not(:contains('User Pricelist'))",
-                run: function() {} // Check
             },
             {
                 content: "Go to login page",
@@ -31,7 +30,6 @@ registry.category("web_tour.tours").add(
             {
                 content: "Check pricelist",
                 trigger: ".o_pricelist_dropdown .dropdown-toggle:contains('User Pricelist')",
-                run: function() {} // Check
             },
         ]
     }
