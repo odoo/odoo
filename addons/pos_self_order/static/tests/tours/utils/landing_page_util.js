@@ -19,3 +19,17 @@ export function isOpened() {
         trigger: `body:not(:has(.o-self-closed))`,
     };
 }
+
+export function checkLanguageSelected(language) {
+    return {
+        content: `Check what the current language is`,
+        trigger: `.self_order_language_selector:contains("${language}")`,
+    };
+}
+
+export function checkCountryFlagShown(country_code) {
+    return {
+        content: `Check what the current flag is`,
+        trigger: `.self_order_language_selector > img[src*=${country_code}]`,
+    };
+}
