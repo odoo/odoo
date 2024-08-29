@@ -88,6 +88,8 @@ class IrModule(models.Model):
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
             values['latest_version'] = adapt_version(terp['version'])
+        if self.env.context.get('data_module'):
+            values['module_type'] = 'industries'
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
