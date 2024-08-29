@@ -136,6 +136,12 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assertEqual(mail_server, self.server_notification, 'Should take the notification email')
         self.assertEqual(mail_from, 'notifications@test.com')
 
+        # test if notification server is selected if email_from = False
+        mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from=False)
+        self.assertEqual(mail_server, self.server_notification,
+                         'Should select the notification email server if passed FROM address was False')
+        self.assertEqual(mail_from, 'notifications@test.com')
+
         # remove the notifications email to simulate a mis-configured Odoo database
         # so we do not have the choice, we have to spoof the FROM
         # (otherwise we can not send the email)
