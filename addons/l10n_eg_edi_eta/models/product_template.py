@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 from odoo import api, fields, models
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     l10n_eg_eta_code = fields.Char('ETA Item code', compute='_compute_l10n_eg_eta_code',
                                    inverse='_set_l10n_eg_eta_code',
@@ -39,8 +39,7 @@ class ProductTemplate(models.Model):
         return templates
 
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
 
     l10n_eg_eta_code = fields.Char('ETA Code', copy=False,
                                    help="This can be an EGS or GS1 product code, which is needed for the e-invoice.  "

@@ -7,7 +7,6 @@ from odoo import fields, models
 # Like : 'At creation' and 'When reaching X points'
 
 class LoyaltyMail(models.Model):
-    _name = 'loyalty.mail'
     _description = 'Loyalty Communication'
 
     active = fields.Boolean(default=True)

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from odoo import api, models
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     @api.onchange('service_tracking')
     def _onchange_service_tracking(self):

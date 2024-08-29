@@ -105,7 +105,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
             })
         else:
             action.update({
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'domain': [('id', 'in', payments.ids)],
             })
         return action

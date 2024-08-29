@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website_slides
 
 from collections import defaultdict
 
@@ -6,8 +7,7 @@ from odoo import models
 from odoo.tools import populate
 
 
-class SlideChannelPartner(models.Model):
-    _inherit = 'slide.channel.partner'
+class SlideChannelPartner(models.Model, website_slides.SlideChannelPartner):
     _populate_dependencies = ['res.partner', 'slide.channel']
     # 50% more than partners, so supports 0 to N courses per partner.
     _populate_sizes = {'small': 150, 'medium': 3_000, 'large': 150_000}

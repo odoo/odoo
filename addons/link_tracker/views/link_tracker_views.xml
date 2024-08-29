@@ -59,10 +59,10 @@
         </record>
 
         <record id="link_tracker_view_tree" model="ir.ui.view">
-            <field name="name">link.tracker.view.tree</field>
+            <field name="name">link.tracker.view.list</field>
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
-                <tree string="Links" sample="1">
+                <list string="Links" sample="1">
                     <field name="create_date"/>
                     <field name="title"/>
                     <field name="label"/>
@@ -70,7 +70,7 @@
                     <field name="short_url" optional="hide"/>
                     <field name="count"/>
                     <button name="action_visit_page" type="object" string="Visit Page" icon="fa-external-link"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -88,7 +88,7 @@
         <record id="link_tracker_action" model="ir.actions.act_window">
             <field name="name">Link Tracker</field>
             <field name="res_model">link.tracker</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">list,form,graph</field>
             <field name="view_id" ref="link_tracker_view_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -132,14 +132,14 @@
         </record>
 
         <record id="link_tracker_click_view_tree" model="ir.ui.view">
-            <field name="name">link.tracker.click.view.tree</field>
+            <field name="name">link.tracker.click.view.list</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <tree string="Links Clicks">
+                <list string="Links Clicks">
                     <field name="link_id"/>
                     <field name="ip"/>
                     <field name="country_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -158,7 +158,7 @@
         <record id="link_tracker_click_action_statistics" model="ir.actions.act_window">
             <field name="name">Click Statistics</field>
             <field name="res_model">link.tracker.click</field>
-            <field name="view_mode">graph,tree,form</field>
+            <field name="view_mode">graph,list,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_groupby_country_id': 1}</field>
             <field name="help" type="html">
@@ -171,7 +171,7 @@
         <record id="link_tracker_action_campaign" model="ir.actions.act_window">
             <field name="name">Statistics of Clicks</field>
             <field name="res_model">link.tracker</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">list,form,graph</field>
             <field name="view_id" ref="link_tracker.link_tracker_view_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

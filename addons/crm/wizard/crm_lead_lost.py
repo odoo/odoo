@@ -7,7 +7,6 @@ from odoo.tools.mail import is_html_empty
 
 
 class CrmLeadLost(models.TransientModel):
-    _name = 'crm.lead.lost'
     _description = 'Get Lost Reason'
 
     lead_ids = fields.Many2many('crm.lead', string='Leads')

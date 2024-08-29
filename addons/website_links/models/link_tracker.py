@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import link_tracker
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
@@ -6,8 +7,7 @@ from odoo import models, _
 from werkzeug import urls
 
 
-class LinkTracker(models.Model):
-    _inherit = ['link.tracker']
+class LinkTracker(models.Model, link_tracker.LinkTracker):
 
     def action_visit_page_statistics(self):
         return {

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import fleet
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class FleetVehicleAssignationLog(models.Model):
-    _inherit = 'fleet.vehicle.assignation.log'
+class FleetVehicleAssignationLog(models.Model, fleet.FleetVehicleAssignationLog):
 
     driver_employee_id = fields.Many2one('hr.employee', string='Driver (Employee)', compute='_compute_driver_employee_id', store=True, readonly=False)
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')

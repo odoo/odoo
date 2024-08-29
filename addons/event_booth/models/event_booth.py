@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event_booth, mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class EventBooth(models.Model):
-    _name = 'event.booth'
+class EventBooth(models.Model, event_booth.EventTypeBooth, portal.MailThread, mail.MailActivityMixin):
     _description = 'Event Booth'
-    _inherit = [
-        'event.type.booth',
-        'mail.thread',
-        'mail.activity.mixin'
-    ]
 
     # owner
     event_type_id = fields.Many2one(ondelete='set null', required=False)

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import l10n_latam_invoice_document
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields
 
 
-class L10nLatamDocumentType(models.Model):
+class L10nLatamDocumentType(models.Model, l10n_latam_invoice_document.L10nLatamDocumentType):
 
-    _inherit = 'l10n_latam.document.type'
+    _name = "l10n_latam.document.type"
+
 
     internal_type = fields.Selection(
         selection_add=[

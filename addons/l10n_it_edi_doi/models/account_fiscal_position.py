@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = 'account.fiscal.position'
+class AccountFiscalPosition(models.Model, account.AccountFiscalPosition):
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_declaration_of_intent_fiscal_position(self):

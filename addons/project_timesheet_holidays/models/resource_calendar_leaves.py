@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import resource
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -7,8 +8,7 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class ResourceCalendarLeaves(models.Model, resource.ResourceCalendarLeaves):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'global_leave_id', string="Analytic Lines", export_string_translation=False)
 

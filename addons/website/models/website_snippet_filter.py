@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 
 from ast import literal_eval
 from collections import OrderedDict
@@ -12,9 +13,7 @@ from random import randint
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteSnippetFilter(models.Model):
-    _name = 'website.snippet.filter'
-    _inherit = ['website.published.multi.mixin']
+class WebsiteSnippetFilter(models.Model, website.WebsitePublishedMultiMixin):
     _description = 'Website Snippet Filter'
     _order = 'name ASC'
 

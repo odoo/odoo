@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import point_of_sale
 
 from odoo import fields, models, api
 
 
-class PosDailyReportPerEmployee(models.TransientModel):
-    _inherit = 'pos.daily.sales.reports.wizard'
+class PosDailySalesReportsWizard(models.TransientModel, point_of_sale.PosDailySalesReportsWizard):
 
     add_report_per_employee = fields.Boolean(string='Add a report per each employee', default=True)
     employee_ids = fields.Many2many('hr.employee', compute='_compute_employee_ids')

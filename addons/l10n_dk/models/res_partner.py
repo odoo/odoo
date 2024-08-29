@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import base
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     @api.depends('vat', 'country_id')
     def _compute_company_registry(self):

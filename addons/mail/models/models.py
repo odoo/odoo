@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -13,8 +14,9 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class BaseModel(models.AbstractModel):
-    _inherit = 'base'
+class BaseModel(models.AbstractModel, base.Model):
+    _name = "base"
+
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'

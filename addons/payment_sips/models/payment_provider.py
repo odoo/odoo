@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 # Original Copyright 2015 Eezee-It, modified and maintained by Odoo.
 
 from hashlib import sha256
@@ -8,8 +9,7 @@ from odoo import fields, models
 from odoo.addons.payment_sips import const
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('sips', "Sips")], ondelete={'sips': 'set default'})

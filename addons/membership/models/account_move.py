@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -6,8 +7,7 @@ from odoo import api, fields, models
 from datetime import date
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     def button_draft(self):
         # OVERRIDE to update the cancel date.
@@ -39,8 +39,7 @@ class AccountMove(models.Model):
         return res
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     def write(self, vals):
         # OVERRIDE

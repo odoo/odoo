@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -6,8 +7,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
-class AccountJournal(models.Model):
-    _inherit = "account.journal"
+class AccountJournal(models.Model, account.AccountJournal):
 
     def _default_outbound_payment_methods(self):
         res = super()._default_outbound_payment_methods()

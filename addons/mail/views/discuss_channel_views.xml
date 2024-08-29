@@ -69,11 +69,11 @@
                             </page>
                             <page string="Members" name="members">
                                 <field name="channel_type" invisible="1"/>
-                                <field name="channel_member_ids" mode="tree" context="{'active_test': False}" readonly="channel_type == 'chat'">
-                                    <tree string="Members" editable="bottom">
+                                <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
+                                    <list string="Members" editable="bottom">
                                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
                                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                             <page string="Integrations" invisible="1" name="discuss_channel_integrations"></page>
@@ -84,13 +84,13 @@
         </record>
 
         <record id="mail.discuss_channel_view_tree" model="ir.ui.view">
-            <field name="name">discuss.channel.tree</field>
+            <field name="name">discuss.channel.list</field>
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <tree string="Groups">
+                <list string="Groups">
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -109,7 +109,7 @@
         <record id="mail.discuss_channel_action_view" model="ir.actions.act_window">
             <field name="name">Join a group</field>
             <field name="res_model">discuss.channel</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="discuss_channel_view_search"/>
         </record>
 

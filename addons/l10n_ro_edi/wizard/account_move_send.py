@@ -1,8 +1,8 @@
 from odoo import api, fields, models, _
+from odoo.addons import account
 
 
-class AccountMoveSend(models.TransientModel):
-    _inherit = 'account.move.send'
+class AccountMoveSend(models.TransientModel, account.AccountMoveSend):
 
     l10n_ro_edi_send_enable = fields.Boolean(compute='_compute_l10n_ro_edi_send_enable')
     l10n_ro_edi_send_readonly = fields.Boolean(compute='_compute_l10n_ro_edi_send_readonly')

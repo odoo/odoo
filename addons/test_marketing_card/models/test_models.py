@@ -1,12 +1,11 @@
 
+from odoo.addons import mass_mailing
 from odoo import fields, models
 
 
-class MarketingCardEventPerformance(models.Model):
+class CardTestEventPerformance(models.Model, mass_mailing.MailThread):
     """ Model that may be used in marketing cards """
     _description = 'Marketing Card Test Event Performance'
-    _name = 'card.test.event.performance'
-    _inherit = 'mail.thread'
 
     name = fields.Char()
     event_id = fields.Many2one('card.test.event')
@@ -20,20 +19,18 @@ class MarketingCardEventPerformance(models.Model):
         ]
 
 
-class MarketingCardEvent(models.Model):
+class CardTestEvent(models.Model):
     """ Model that may be used in marketing cards """
     _description = 'Marketing Card Test Event'
-    _name = 'card.test.event'
 
     name = fields.Char()
     location_id = fields.Many2one('card.test.event.location')
     image = fields.Image()
 
 
-class MarketingCardEventLocation(models.Model):
+class CardTestEventLocation(models.Model):
     """ Model that may be used in marketing cards """
     _description = 'Marketing Card Test Event Location'
-    _name = 'card.test.event.location'
 
     name = fields.Char()
     manager_email = fields.Char()
@@ -58,9 +55,8 @@ class MarketingCardEventLocation(models.Model):
         return ['secret']
 
 
-class MarketingCardEventLocationTags(models.Model):
+class CardTestEventLocationTag(models.Model):
     """ Model that may be used in marketing cards """
     _description = 'Marketing Card Test Event Location Tag'
-    _name = 'card.test.event.location.tag'
 
     name = fields.Char('Name')

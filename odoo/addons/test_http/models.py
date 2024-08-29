@@ -7,7 +7,7 @@ MILKY_WAY_REGIONS = ['P3X', 'P4X', 'P2X', 'P5C']
 PEGASUS_REGIONS = ['M4R', 'P3Y', 'M6R']
 
 
-class Stargate(models.Model):
+class TestHttpStargate(models.Model):
     _name = 'test_http.stargate'
     _description = 'Stargate'
 
@@ -61,7 +61,7 @@ class Stargate(models.Model):
             gate.glyph_compute = gate.glyph_attach
 
 
-class Galaxy(models.Model):
+class TestHttpGalaxy(models.Model):
     _name = 'test_http.galaxy'
     _description = 'Galaxy'
 

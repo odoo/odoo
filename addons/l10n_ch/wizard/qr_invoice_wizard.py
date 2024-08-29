@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class QrInvoiceWizard(models.TransientModel):
+class L10nChQrInvoiceWizard(models.TransientModel):
     '''
     Wizard :
     When multiple invoices are selected to be printed in the QR-Iban format,
@@ -86,7 +86,7 @@ class QrInvoiceWizard(models.TransientModel):
             })
         else:
             action_vals.update({
-                'view_mode': 'tree',
+                'view_mode': 'list',
                 'domain': [('id', 'in', faulty_invoices.ids)],
             })
         return action_vals

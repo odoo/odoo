@@ -11,10 +11,10 @@ QUnit.module("Sale Project Task List View", (hooks) => {
             type: "list",
             resModel: "project.task",
             arch: `
-                <tree multi_edit="1" js_class="project_task_list">
+                <list multi_edit="1" js_class="project_task_list">
                     <field name="partner_id"/>
                     <field name="sale_line_id"/>
-                </tree>
+                </list>
             `,
             serverData: {
                 models: {

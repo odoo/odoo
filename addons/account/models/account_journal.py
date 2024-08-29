@@ -1,4 +1,5 @@
 from ast import literal_eval
+from odoo.addons import mail, portal
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -12,7 +13,6 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountJournalGroup(models.Model):
-    _name = 'account.journal.group'
     _description = "Account Journal Group"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
@@ -27,15 +27,9 @@ class AccountJournalGroup(models.Model):
         ('uniq_name', 'unique(company_id, name)', 'A Ledger group name must be unique per company.'),
     ]
 
-class AccountJournal(models.Model):
-    _name = "account.journal"
+class AccountJournal(models.Model, portal.PortalMixin, mail.MailAliasMixinOptional, portal.MailThread, mail.MailActivityMixin):
     _description = "Journal"
     _order = 'sequence, type, code'
-    _inherit = ['portal.mixin',
-                'mail.alias.mixin.optional',
-                'mail.thread',
-                'mail.activity.mixin',
-               ]
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
     _rec_names_search = ['name', 'code']
@@ -963,7 +957,7 @@ class AccountJournal(models.Model):
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
+         :return: A action redirecting to account.move list/form view.
         """
         invoices = self._create_document_from_attachment(attachment_ids)
         action_vals = {

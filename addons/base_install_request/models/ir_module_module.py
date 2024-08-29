@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 
 
-class IrModuleModule(models.Model):
-    _inherit = 'ir.module.module'
+class IrModuleModule(models.Model, base.IrModuleModule):
 
     def action_open_install_request(self):
         self.ensure_one()

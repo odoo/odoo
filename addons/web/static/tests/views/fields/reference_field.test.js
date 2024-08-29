@@ -191,10 +191,10 @@ test("ReferenceField in modal readonly mode", async () => {
         </form>
     `;
     Partner._views[["list", false]] = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
             <field name="reference" />
-        </tree>
+        </list>
     `;
 
     await mountView({
@@ -238,10 +238,10 @@ test("ReferenceField in modal write mode", async () => {
         </form>
     `;
     Partner._views[["list", false]] = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
             <field name="reference" />
-        </tree>
+        </list>
     `;
 
     await mountView({
@@ -393,7 +393,7 @@ test("reference in form view", async () => {
 test("Many2One 'Search more...' updates on resModel change", async () => {
     onRpc("has_group", () => true);
 
-    Product._views[["list", false]] = /* xml */ `<tree><field name="display_name"/></tree>`;
+    Product._views[["list", false]] = /* xml */ `<list><field name="display_name"/></list>`;
     Product._views[["search", false]] = /* xml */ `<search/>`;
 
     await mountView({
@@ -566,9 +566,9 @@ test("default_get a reference field in a x2m", async () => {
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree>
+                        <list>
                             <field name="turtle_ref" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -632,9 +632,9 @@ test("reference and list navigation", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="reference" />
-            </tree>
+            </list>
         `,
     });
 
@@ -753,10 +753,10 @@ test("Reference field with default value in list view", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree string="Test" editable="top">
+            <list string="Test" editable="top">
                 <field name="reference"/>
                 <field name="name"/>
-            </tree>
+            </list>
         `,
     });
     click(".o_control_panel_main_buttons .o_list_button_add");
@@ -780,11 +780,11 @@ test("ReferenceField with model_field option (tree list in form view)", async ()
         arch: /* xml */ `
             <form>
                 <field name="partner_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="model_id" />
                         <field name="reference" options="{'model_field': 'model_id'}" class="reference_field" />
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -820,11 +820,11 @@ test("edit a record containing a ReferenceField with model_field option (list in
         arch: /* xml */ `
             <form>
                 <field name="partner_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="model_id" />
                         <field name="reference" options='{"model_field": "model_id"}'/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -858,11 +858,11 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
         arch: /* xml */ `
             <form>
                 <field name="partner_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="model_id"/>
                         <field name="reference" required="true" options="{'model_field': 'model_id'}" class="reference_field" />
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,

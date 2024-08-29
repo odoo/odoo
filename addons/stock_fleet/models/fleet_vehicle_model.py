@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import fleet
 
 from odoo import _, fields, models
 from odoo.tools import format_list
 
 
-class FleetVehicleModelCategory(models.Model):
-    _inherit = 'fleet.vehicle.model.category'
+class FleetVehicleModelCategory(models.Model, fleet.FleetVehicleModelCategory):
 
     weight_capacity = fields.Float(string="Payload Capacity")
     weight_capacity_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_capacity_uom_name')

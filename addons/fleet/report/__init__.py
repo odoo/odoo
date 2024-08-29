@@ -1,1 +1,1 @@
-from . import fleet_report
+from .fleet_report import FleetVehicleCostReport

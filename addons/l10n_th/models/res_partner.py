@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
+class ResPartner(models.Model, base.ResPartner):
 
     l10n_th_branch_name = fields.Char(compute="_compute_l10n_th_branch_name")
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,8 +7,7 @@ from odoo import fields, models
 from odoo.tools import float_compare, float_is_zero
 
 
-class ProductLabelLayout(models.TransientModel):
-    _inherit = 'product.label.layout'
+class ProductLabelLayout(models.TransientModel, product.ProductLabelLayout):
 
     move_ids = fields.Many2many('stock.move')
     move_quantity = fields.Selection([

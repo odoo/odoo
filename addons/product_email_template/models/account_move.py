@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 
 from odoo import api, models, SUPERUSER_ID
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     def invoice_validate_send_email(self):
         if self.env.su:

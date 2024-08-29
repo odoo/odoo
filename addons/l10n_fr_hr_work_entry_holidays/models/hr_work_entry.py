@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_work_entry
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
-class HrWorkEntry(models.Model):
-    _inherit = 'hr.work.entry'
+class HrWorkEntry(models.Model, hr_work_entry.HrWorkEntry):
 
     def _filter_french_part_time_entries(self):
         french_part_time_work_entries = self.filtered(lambda w:

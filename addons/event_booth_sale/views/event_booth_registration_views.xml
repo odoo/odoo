@@ -27,17 +27,17 @@
     </record>
 
     <record id="event_booth_registration_view_tree" model="ir.ui.view">
-        <field name="name">event.booth.registration.view.tree</field>
+        <field name="name">event.booth.registration.view.list</field>
         <field name="model">event.booth.registration</field>
         <field name="arch" type="xml">
-            <tree string="Booth Registration">
+            <list string="Booth Registration">
                 <field name="partner_id"/>
                 <field name="event_booth_id"/>
                 <field name="sale_order_line_id"/>
                 <field name="contact_name" optional="hide"/>
                 <field name="contact_email" optional="hide"/>
                 <field name="contact_phone" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 

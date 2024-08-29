@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta, datetime, time
@@ -7,8 +8,7 @@ from collections import defaultdict
 from odoo import api, fields, models
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     purchase_line_ids = fields.One2many('purchase.order.line', 'partner_id', string="Purchase Lines")
     on_time_rate = fields.Float(

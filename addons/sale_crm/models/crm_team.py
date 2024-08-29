@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sales_team
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models,fields, api, _
 from odoo.tools import SQL
 
 
-class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+class CrmTeam(models.Model, sales_team.CrmTeam):
 
     def _compute_dashboard_button_name(self):
         super(CrmTeam, self)._compute_dashboard_button_name()

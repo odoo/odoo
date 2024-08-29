@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,8 +7,7 @@ from odoo import models, tools, _
 from odoo.exceptions import UserError
 
 
-class PosSession(models.Model):
-    _inherit = 'pos.session'
+class PosSession(models.Model, point_of_sale.PosSession):
 
     def _accumulate_amounts(self, data):
         data = super()._accumulate_amounts(data)

@@ -1,4 +1,5 @@
 import datetime
+from odoo.addons import base
 import string
 import re
 import stdnum
@@ -85,8 +86,7 @@ _region_specific_vat_codes = {
 }
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     vies_valid = fields.Boolean(
         string="Intra-Community Valid",

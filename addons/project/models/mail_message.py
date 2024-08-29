@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import models
 from odoo.tools.sql import create_index
 
 
-class MailMessage(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model, mail.MailMessage):
 
     def init(self):
         super().init()

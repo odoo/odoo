@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
@@ -7,8 +8,7 @@ from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "['&', ('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
-class ProductCategory(models.Model):
-    _inherit = "product.category"
+class ProductCategory(models.Model, product.ProductCategory):
 
     property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
@@ -26,8 +26,7 @@ class ProductCategory(models.Model):
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id',
         string="Sales Taxes",
@@ -163,8 +162,7 @@ class ProductTemplate(models.Model):
         return included_computed_price['total_excluded']
 
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
 
     tax_string = fields.Char(compute='_compute_tax_string')
 

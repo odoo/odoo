@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import _lt, fields, models, api
 
@@ -40,8 +41,7 @@ _DEFAULT_TAX_REASONS = {
 }
 
 
-class AccountTax(models.Model):
-    _inherit = 'account.tax'
+class AccountTax(models.Model, account.AccountTax):
 
     l10n_hu_tax_type = fields.Selection(
         _SELECTION_TAX_TYPE,

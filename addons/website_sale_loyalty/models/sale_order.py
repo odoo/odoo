@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sale
 
 from collections import defaultdict
 from datetime import timedelta
@@ -9,8 +10,7 @@ from odoo.http import request
 from odoo.osv import expression
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     # List of disabled rewards for automatic claim
     disabled_auto_rewards = fields.Many2many("loyalty.reward", relation="sale_order_disabled_auto_rewards_rel")

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -7,8 +8,7 @@ from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
 
 
-class Project(models.Model):
-    _inherit = "project.project"
+class ProjectProject(models.Model, project.ProjectProject):
 
     purchase_orders_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_orders_count', groups='purchase.group_purchase_user', export_string_translation=False)
 
@@ -35,7 +35,7 @@ class Project(models.Model):
             'name': _('Purchase Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
-            'views': [[False, 'tree'], [False, 'form']],
+            'views': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', purchase_orders.ids)],
             'context': {
                 'project_id': self.id,
@@ -52,7 +52,7 @@ class Project(models.Model):
                 'name': _('Purchase Order Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'purchase.order.line',
-                'views': [[False, 'tree'], [False, 'form']],
+                'views': [[False, 'list'], [False, 'form']],
                 'domain': domain,
                 'context': {
                     'create': False,
@@ -76,7 +76,7 @@ class Project(models.Model):
     # ----------------------------
 
     def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
+        buttons = super()._get_stat_buttons()
         if self.env.user.has_group('purchase.group_purchase_user'):
             self_sudo = self.sudo()
             buttons.append({

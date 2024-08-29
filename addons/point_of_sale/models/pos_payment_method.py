@@ -1,12 +1,11 @@
 from odoo import api, fields, models, _
+from odoo.addons import point_of_sale
 from odoo.exceptions import UserError, ValidationError
 
 
-class PosPaymentMethod(models.Model):
-    _name = "pos.payment.method"
+class PosPaymentMethod(models.Model, point_of_sale.PosLoadMixin):
     _description = "Point of Sale Payment Methods"
     _order = "sequence, id"
-    _inherit = ['pos.load.mixin']
 
     def _get_payment_terminal_selection(self):
         return []

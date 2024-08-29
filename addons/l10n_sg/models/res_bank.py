@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     proxy_type = fields.Selection(selection_add=[('mobile', 'Mobile Number'), ('uen', 'UEN')],
                                   ondelete={'mobile': 'set default', 'uen': 'set default'})

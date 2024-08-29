@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from base64 import b64encode
 from datetime import datetime
@@ -49,8 +50,7 @@ def get_datetime(tree, xpath):
     return False
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_it_edi_state = fields.Selection(
         string="SDI State",

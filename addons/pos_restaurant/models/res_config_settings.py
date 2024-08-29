@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import fields, models, api
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', readonly=False)
     pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)

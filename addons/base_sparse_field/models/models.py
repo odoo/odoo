@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from collections import defaultdict
 
@@ -6,15 +7,13 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class Base(models.AbstractModel):
-    _inherit = 'base'
+class Base(models.AbstractModel, base.Model):
 
     def _valid_field_parameter(self, field, name):
         return name == 'sparse' or super()._valid_field_parameter(field, name)
 
 
-class IrModelFields(models.Model):
-    _inherit = 'ir.model.fields'
+class IrModelFields(models.Model, base.IrModelFields):
 
     ttype = fields.Selection(selection_add=[
         ('serialized', 'serialized'),
@@ -89,7 +88,7 @@ class IrModelFields(models.Model):
         return attrs
 
 
-class TestSparse(models.TransientModel):
+class SparseFieldsTest(models.TransientModel):
     _name = 'sparse_fields.test'
     _description = 'Sparse fields Test'
 

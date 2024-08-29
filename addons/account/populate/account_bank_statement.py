@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 """Classes defining the populate factory for Bank Statements and related models."""
 
 from odoo import models, Command
@@ -11,10 +12,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AccountBankStatement(models.Model):
+class AccountBankStatement(models.Model, account.AccountBankStatement):
     """Populate factory part for account.bank.statements."""
 
-    _inherit = "account.bank.statement"
     _populate_dependencies = ['account.bank.statement.line']
 
     def _populate(self, size):
@@ -52,10 +52,9 @@ class AccountBankStatement(models.Model):
         return self.env['account.bank.statement'].create(bank_statement_vals_list)
 
 
-class AccountBankStatementLine(models.Model):
+class AccountBankStatementLine(models.Model, account.AccountBankStatementLine):
     """Populate factory part for account.bank.statements.line."""
 
-    _inherit = "account.bank.statement.line"
 
     _populate_sizes = {
         'small': 100,

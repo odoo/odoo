@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -17,10 +18,8 @@ SPLIT_METHOD = [
 ]
 
 
-class StockLandedCost(models.Model):
-    _name = 'stock.landed.cost'
+class StockLandedCost(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = 'Stock Landed Cost'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
     def _default_account_journal_id(self):
@@ -313,8 +312,7 @@ class StockLandedCost(models.Model):
         return True
 
 
-class StockLandedCostLine(models.Model):
-    _name = 'stock.landed.cost.lines'
+class StockLandedCostLines(models.Model):
     _description = 'Stock Landed Cost Line'
 
     name = fields.Char('Description')
@@ -344,8 +342,7 @@ class StockLandedCostLine(models.Model):
         self.account_id = accounts_data['stock_input']
 
 
-class AdjustmentLines(models.Model):
-    _name = 'stock.valuation.adjustment.lines'
+class StockValuationAdjustmentLines(models.Model):
     _description = 'Valuation Adjustment Lines'
 
     name = fields.Char(

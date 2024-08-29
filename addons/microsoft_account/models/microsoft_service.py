@@ -21,7 +21,6 @@ DEFAULT_MICROSOFT_GRAPH_ENDPOINT = 'https://graph.microsoft.com'
 RESOURCE_NOT_FOUND_STATUSES = (204, 404)
 
 class MicrosoftService(models.AbstractModel):
-    _name = 'microsoft.service'
     _description = 'Microsoft Service'
 
     def _get_calendar_scope(self):

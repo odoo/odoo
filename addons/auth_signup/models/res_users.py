@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import contextlib
 import logging
@@ -17,8 +18,7 @@ from odoo.addons.auth_signup.models.res_partner import SignupError
 
 _logger = logging.getLogger(__name__)
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])

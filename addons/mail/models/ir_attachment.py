@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import contextlib
 
@@ -9,8 +10,7 @@ from odoo.tools import consteq
 from odoo.addons.mail.tools.discuss import Store
 
 
-class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
 
     def _check_attachments_access(self, attachment_tokens):
         """This method relies on access rules/rights and therefore it should not be called from a sudo env."""

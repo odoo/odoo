@@ -18,18 +18,18 @@
     </record>
 
     <record id="crm_team_member_view_tree" model="ir.ui.view">
-        <field name="name">crm.team.member.view.tree</field>
+        <field name="name">crm.team.member.view.list</field>
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
-            <tree string="Sales Men" sample="1">
+            <list string="Sales Men" sample="1">
                 <field name="crm_team_id"/>
                 <field name="user_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="crm_team_member_view_tree_from_team" model="ir.ui.view">
-        <field name="name">crm.team.member.view.tree.from.team</field>
+        <field name="name">crm.team.member.view.list.from.team</field>
         <field name="model">crm.team.member</field>
         <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
         <field name="mode">primary</field>
@@ -148,7 +148,7 @@
     <record id="crm_team_member_action" model="ir.actions.act_window">
         <field name="name">Team Members</field>
         <field name="res_model">crm.team.member</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new salesman

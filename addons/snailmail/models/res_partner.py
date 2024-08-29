@@ -1,4 +1,5 @@
 
+from odoo.addons import base
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
@@ -6,8 +7,7 @@ from odoo import api, models
 from odoo.addons.snailmail.country_utils import SNAILMAIL_COUNTRIES
 
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
+class ResPartner(models.Model, base.ResPartner):
 
     def write(self, vals):
         letter_address_vals = {}

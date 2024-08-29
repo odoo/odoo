@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class IrAsset(models.Model):
-    _inherit = 'ir.asset'
+class IrAsset(models.Model, base.IrAsset):
 
     key = fields.Char(copy=False) # used to resolve multiple assets in a multi-website environment
     website_id = fields.Many2one('website', ondelete='cascade')

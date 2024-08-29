@@ -1,2 +1,2 @@
-from . import template_ml
-from . import template_ml_syscebnl
+from .template_ml import AccountChartTemplate
+from .template_ml_syscebnl import AccountChartTemplate

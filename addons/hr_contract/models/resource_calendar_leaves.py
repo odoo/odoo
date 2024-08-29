@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import resource
 
 from datetime import datetime
 from pytz import timezone, utc
@@ -6,8 +7,7 @@ from pytz import timezone, utc
 from odoo import models
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = 'resource.calendar.leaves'
+class ResourceCalendarLeaves(models.Model, resource.ResourceCalendarLeaves):
 
     def _compute_calendar_id(self):
         def date2datetime(date, tz):

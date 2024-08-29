@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,9 +9,7 @@ from odoo.exceptions import UserError
 from odoo.tools import groupby
 
 
-class AccountAnalyticAccount(models.Model):
-    _name = 'account.analytic.account'
-    _inherit = ['mail.thread']
+class AccountAnalyticAccount(models.Model, mail.MailThread):
     _description = 'Analytic Account'
     _order = 'plan_id, name asc'
     _check_company_auto = True

@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = 'account.tax'
+class AccountTax(models.Model, account.AccountTax):
 
     l10n_in_tds_tax_type = fields.Selection([
         ('sale', 'Sale'),

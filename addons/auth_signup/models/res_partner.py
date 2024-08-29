@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
@@ -21,8 +22,7 @@ def now(**kwargs):
     return datetime.now() + timedelta(**kwargs)
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
 

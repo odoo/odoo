@@ -46,10 +46,10 @@
     </record>
 
     <record id="fleet_vechicle_costs_report_view_tree" model="ir.ui.view">
-        <field name="name">fleet.vehicle.cost.report.view.tree</field>
+        <field name="name">fleet.vehicle.cost.report.view.list</field>
         <field name="model">fleet.vehicle.cost.report</field>
         <field name="arch" type="xml">
-            <tree string="Fleet Costs Analysis" create="0">
+            <list string="Fleet Costs Analysis" create="0">
                 <field name="name"/>
                 <field name="driver_id" optional="show"/>
                 <field name="fuel_type" optional="hide"/>
@@ -57,7 +57,7 @@
                 <field name="cost" optional="show" sum="Sum of Cost"/>
                 <field name="cost_type" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 import re
 
 from odoo import models, fields, api, _
@@ -7,8 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_repr
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     proxy_type = fields.Selection(
         selection_add=[

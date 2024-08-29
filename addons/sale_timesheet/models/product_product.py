@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 import threading
 
@@ -6,8 +7,7 @@ from odoo import api, models, tools, _
 from odoo.exceptions import ValidationError
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     @tools.ormcache()
     def _get_default_uom_id(self):

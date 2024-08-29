@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar, microsoft_calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class RecurrenceRule(models.Model):
-    _name = 'calendar.recurrence'
-    _inherit = ['calendar.recurrence', 'microsoft.calendar.sync']
+class CalendarRecurrence(models.Model, calendar.CalendarRecurrence, microsoft_calendar.MicrosoftCalendarSync):
 
 
     # Don't sync by default. Sync only when the recurrence is applied

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import float_compare
 
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     def _compute_is_dropship(self):
         dropship_subcontract_pickings = self.filtered(lambda p: p.location_dest_id.is_subcontracting_location and p.location_id.usage == 'supplier')

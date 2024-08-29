@@ -200,10 +200,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 `,
                 mockRPC(route, args) {
                     assert.step(args.method);
@@ -240,10 +240,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree multi_edit="1">
+                <list multi_edit="1">
                     <field name="foo"/>
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
@@ -279,10 +279,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="datetime"/>
                     <field name="text"/>
-                </tree>`,
+                </list>`,
         });
 
         const initialTextWidth = target.querySelectorAll('th[data-name="text"]')[0].offsetWidth;
@@ -307,10 +307,10 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo" required="1"/>
                         <field name="int_field"/>
-                    </tree>`,
+                    </list>`,
             });
 
             assert.containsN(target, ".o_list_record_selector input:enabled", 5);
@@ -369,9 +369,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
-                    </tree>`,
+                    </list>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
                 },
@@ -413,9 +413,9 @@ QUnit.module("Views", (hooks) => {
             await makeView({
                 type: "list",
                 arch: `
-                    <tree multi_edit="1">
+                    <list multi_edit="1">
                         <field name="foo" required="1"/>
-                    </tree>`,
+                    </list>`,
                 serverData,
                 resModel: "foo",
             });
@@ -450,7 +450,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+                arch: '<list editable="top"><field name="foo"/><field name="bar"/></list>',
                 groupBy: ["bar"],
             });
 
@@ -482,7 +482,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            arch: '<list editable="bottom"><field name="foo"/></list>',
             mockRPC(route, args) {
                 assert.step(args.method || route);
             },
@@ -544,9 +544,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="foo" required="1"/>
-                </tree>`,
+                </list>`,
             groupBy: ["bar"],
         });
 
@@ -814,11 +814,11 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="foo"/>
                     <field name="bar"/>
                     <field name="reference" optional="hide"/>
-                </tree>`,
+                </list>`,
         });
 
         // Target handle
@@ -854,9 +854,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="int_field"/>
-                </tree>`,
+                </list>`,
             });
 
             const initialRowCount = $(".o_data_cell[name=int_field]").length;

@@ -12,7 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.account.tools.certificate import load_key_and_certificates
 
 
-class Certificate(models.Model):
+class L10nEsEdiCertificate(models.Model):
     _name = 'l10n_es_edi.certificate'
     _description = 'Personal Digital Certificate'
     _order = 'date_start desc, id desc'

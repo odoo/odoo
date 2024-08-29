@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 import re
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     org_number = fields.Char(compute='_compute_org_number')
 

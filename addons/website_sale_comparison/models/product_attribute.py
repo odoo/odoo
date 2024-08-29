@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from odoo import fields, models
 
 
-class ProductAttribute(models.Model):
-    _inherit = 'product.attribute'
+class ProductAttribute(models.Model, product.ProductAttribute):
     _order = 'category_id, sequence, id'
 
     category_id = fields.Many2one(

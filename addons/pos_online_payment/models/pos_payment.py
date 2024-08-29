@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -8,8 +9,7 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class PosPayment(models.Model):
-    _inherit = 'pos.payment'
+class PosPayment(models.Model, point_of_sale.PosPayment):
 
     online_account_payment_id = fields.Many2one('account.payment', string='Online accounting payment', readonly=True) # One2one
 

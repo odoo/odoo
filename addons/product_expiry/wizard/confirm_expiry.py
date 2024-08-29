@@ -4,8 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class ConfirmExpiry(models.TransientModel):
-    _name = 'expiry.picking.confirmation'
+class ExpiryPickingConfirmation(models.TransientModel):
     _description = 'Confirm Expiry'
 
     lot_ids = fields.Many2many('stock.lot', readonly=True, required=True)

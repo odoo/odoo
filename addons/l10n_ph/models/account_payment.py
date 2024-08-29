@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import _, models
 from odoo.exceptions import UserError
 
 
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
+class AccountPayment(models.Model, account.AccountPayment):
 
     def action_open_l10n_ph_2307_wizard(self):
         self.ensure_one()

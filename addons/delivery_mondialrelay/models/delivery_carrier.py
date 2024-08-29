@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import delivery
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 
-class DeliveryCarrierMondialRelay(models.Model):
-    _inherit = 'delivery.carrier'
+class DeliveryCarrier(models.Model, delivery.DeliveryCarrier):
 
     is_mondialrelay = fields.Boolean(compute='_compute_is_mondialrelay', search='_search_is_mondialrelay')
     mondialrelay_brand = fields.Char(string='Brand Code', default='BDTEST  ')

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     margin = fields.Float(
         "Margin", compute='_compute_margin',

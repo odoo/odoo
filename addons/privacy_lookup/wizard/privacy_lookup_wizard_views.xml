@@ -42,10 +42,10 @@
     </record>
 
     <record id="privacy_lookup_wizard_line_view_tree" model="ir.ui.view">
-        <field name="name">privacy.lookup.wizard.line.view.tree</field>
+        <field name="name">privacy.lookup.wizard.line.view.list</field>
         <field name="model">privacy.lookup.wizard.line</field>
         <field name="arch" type="xml">
-            <tree create="0">
+            <list create="0">
                 <field name="res_model_id"/>
                 <field name="res_name" column_invisible="True"/>
                 <field name="res_model" column_invisible="True"/>
@@ -57,7 +57,7 @@
                 <field name="is_active" widget="boolean_toggle" invisible="is_unlinked or not has_active"/>
                 <field name="is_unlinked" column_invisible="True"/>
                 <button name="action_unlink" string="Delete" type="object" icon="fa-trash" invisible="is_unlinked" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -81,7 +81,7 @@
     <record id="action_privacy_lookup_wizard_line" model="ir.actions.act_window">
         <field name="name">Privacy Lookup Line</field>
         <field name="res_model">privacy.lookup.wizard.line</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="privacy_lookup_wizard_line_view_tree"/>
         <field name="context">{'search_default_group_by_res_model_id': 1, 'no_create_edit': True}</field>
         <field name="target">current</field>

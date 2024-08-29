@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import float_is_zero
 
-class ReportMoOverview(models.AbstractModel):
-    _inherit = 'report.mrp.report_mo_overview'
+class ReportMrpReportMoOverview(models.AbstractModel, mrp.ReportMrpReportMoOverview):
+    _name = "report.mrp.report_mo_overview"
+
 
     def _get_unit_cost(self, move):
         valuation_layers = move.sudo().stock_valuation_layer_ids

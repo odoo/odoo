@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr
 
 from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
@@ -8,9 +9,8 @@ from odoo.osv import expression
 import ast
 
 
-class Department(models.Model):
+class HrDepartment(models.Model, hr.HrDepartment):
 
-    _inherit = 'hr.department'
 
     absence_of_today = fields.Integer(
         compute='_compute_leave_count', string='Absence by Today')

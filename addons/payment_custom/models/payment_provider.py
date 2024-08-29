@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
@@ -6,8 +7,7 @@ from odoo.osv.expression import AND
 from odoo.addons.payment_custom import const
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     _sql_constraints = [(
         'custom_providers_setup',

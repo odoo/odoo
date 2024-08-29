@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
@@ -6,9 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 
 
-class FleetVehicleLogContract(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _name = 'fleet.vehicle.log.contract'
+class FleetVehicleLogContract(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = 'Vehicle Contract'
     _order = 'state desc,expiration_date'
 

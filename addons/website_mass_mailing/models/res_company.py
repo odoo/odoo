@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model, base.ResCompany):
 
     def _get_social_media_links(self):
         social_media_links = super()._get_social_media_links()

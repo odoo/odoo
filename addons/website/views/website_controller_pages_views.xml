@@ -52,7 +52,7 @@
     <field name="model">website.controller.page</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree>
+        <list>
             <field name="name" string="Page Title"/>
             <!-- website_id should be shown only in multi website environment
             when the group is enabled, but we need the field to be there all the
@@ -63,7 +63,7 @@
             <field name="url_demo"/>
             <field name="page_type"/>
             <field name="is_published" widget="boolean_toggle"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -114,7 +114,7 @@
 <record id="action_website_controller_pages_list" model="ir.actions.act_window">
     <field name="name">Website Model Pages</field>
     <field name="res_model">website.controller.page</field>
-    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_mode">list,kanban,form</field>
 </record>
 
 <menuitem id="menu_website_controller_pages_list"

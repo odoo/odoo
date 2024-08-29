@@ -64,8 +64,8 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<tree><field name="display_name"/></tree>`,
-        "list,2": `<tree limit="3"><field name="display_name"/></tree>`,
+        "list,false": `<list><field name="display_name"/></list>`,
+        "list,2": `<list limit="3"><field name="display_name"/></list>`,
         "search,false": `<search/>`,
     };
 }
@@ -79,7 +79,7 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": '<tree><field name="name"/></tree>',
+        "list,false": '<list><field name="name"/></list>',
         "form,false": `<form><field name="name"/></form>`,
         "search,false": `<search/>`,
     };
@@ -502,7 +502,7 @@ test.tags("desktop")('executing an action with target != "new" closes all dialog
     Partner._views["form,false"] = `
         <form>
             <field name="o2m">
-                <tree><field name="display_name"/></tree>
+                <list><field name="display_name"/></list>
                 <form><field name="display_name"/></form>
             </field>
         </form>`;
@@ -522,7 +522,7 @@ test.tags("desktop")('executing an action with target "new" does not close dialo
     Partner._views["form,false"] = `
         <form>
             <field name="o2m">
-                <tree><field name="display_name"/></tree>
+                <list><field name="display_name"/></list>
                 <form><field name="display_name"/></form>
             </field>
         </form>`;

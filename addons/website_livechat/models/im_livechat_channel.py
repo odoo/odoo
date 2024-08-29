@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import im_livechat
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 
 
-class ImLivechatChannel(models.Model):
-    _inherit = 'im_livechat.channel'
+class ImLivechatChannel(models.Model, im_livechat.ImLivechatChannel):
+    _name = "im_livechat.channel"
+
 
     def _get_livechat_discuss_channel_vals(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None):
         discuss_channel_vals = super(ImLivechatChannel, self)._get_livechat_discuss_channel_vals(

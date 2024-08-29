@@ -1,12 +1,12 @@
 #  -*- coding: utf-8 -*-
+from odoo.addons import analytic
 #  Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import float_compare, float_is_zero, float_round
 
 
-class AccountAnalyticPlan(models.Model):
-    _inherit = 'account.analytic.plan'
+class AccountAnalyticPlan(models.Model, analytic.AccountAnalyticPlan):
 
     def _calculate_distribution_amount(self, amount, percentage, total_percentage, distribution_on_each_plan):
         """
@@ -30,8 +30,7 @@ class AccountAnalyticPlan(models.Model):
         return calculated_amount
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+class AccountAnalyticAccount(models.Model, analytic.AccountAnalyticAccount):
 
     def _perform_analytic_distribution(self, distribution, amount, unit_amount, lines, obj, additive=False):
         """

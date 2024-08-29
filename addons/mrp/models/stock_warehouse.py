@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,8 +7,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
 
 
-class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+class StockWarehouse(models.Model, stock.StockWarehouse):
 
     manufacture_to_resupply = fields.Boolean(
         'Manufacture to Resupply', default=True,
@@ -280,8 +280,7 @@ class StockWarehouse(models.Model):
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
-class Orderpoint(models.Model):
-    _inherit = "stock.warehouse.orderpoint"
+class StockWarehouseOrderpoint(models.Model, stock.StockWarehouseOrderpoint):
 
     @api.constrains('product_id')
     def check_product_is_not_kit(self):

@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import base
 
 
-class MergePartnerAutomatic(models.TransientModel):
-    _inherit = 'base.partner.merge.automatic.wizard'
+class BasePartnerMergeAutomaticWizard(models.TransientModel, base.BasePartnerMergeAutomaticWizard):
 
     def _get_summable_fields(self):
         """Add to summable fields list, fields created in this module.

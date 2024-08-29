@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product, mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import datetime
@@ -15,9 +16,7 @@ from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
 
-class PurchaseOrder(models.Model):
-    _name = "purchase.order"
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
+class PurchaseOrder(models.Model, portal.PortalMixin, product.ProductCatalogMixin, portal.MailThread, mail.MailActivityMixin):
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'

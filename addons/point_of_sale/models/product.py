@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product, uom, point_of_sale
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
@@ -8,8 +9,7 @@ from datetime import date
 from odoo.osv.expression import AND
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
@@ -71,9 +71,7 @@ class ProductTemplate(models.Model):
         return res
 
 
-class ProductProduct(models.Model):
-    _name = 'product.product'
-    _inherit = ['product.product', 'pos.load.mixin']
+class ProductProduct(models.Model, product.ProductProduct, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -231,18 +229,14 @@ class ProductProduct(models.Model):
         }
 
 
-class ProductAttribute(models.Model):
-    _name = 'product.attribute'
-    _inherit = ['product.attribute', 'pos.load.mixin']
+class ProductAttribute(models.Model, product.ProductAttribute, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids', 'create_variant']
 
 
-class ProductAttributeCustomValue(models.Model):
-    _name = 'product.attribute.custom.value'
-    _inherit = ["product.attribute.custom.value", "pos.load.mixin"]
+class ProductAttributeCustomValue(models.Model, product.ProductAttributeCustomValue, point_of_sale.PosLoadMixin):
 
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
 
@@ -255,18 +249,14 @@ class ProductAttributeCustomValue(models.Model):
         return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id']
 
 
-class ProductTemplateAttributeLine(models.Model):
-    _name = 'product.template.attribute.line'
-    _inherit = ['product.template.attribute.line', 'pos.load.mixin']
+class ProductTemplateAttributeLine(models.Model, product.ProductTemplateAttributeLine, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['display_name', 'attribute_id', 'product_template_value_ids']
 
 
-class ProductTemplateAttributeValue(models.Model):
-    _name = 'product.template.attribute.value'
-    _inherit = ['product.template.attribute.value', 'pos.load.mixin']
+class ProductTemplateAttributeValue(models.Model, product.ProductTemplateAttributeValue, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -277,9 +267,7 @@ class ProductTemplateAttributeValue(models.Model):
         return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image']
 
 
-class ProductPackaging(models.Model):
-    _name = 'product.packaging'
-    _inherit = ['product.packaging', 'pos.load.mixin']
+class ProductPackaging(models.Model, product.ProductPackaging, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -290,9 +278,7 @@ class ProductPackaging(models.Model):
         return ['id', 'name', 'barcode', 'product_id', 'qty']
 
 
-class UomCateg(models.Model):
-    _name = 'uom.category'
-    _inherit = ['uom.category', 'pos.load.mixin']
+class UomCategory(models.Model, uom.UomCategory, point_of_sale.PosLoadMixin):
 
     is_pos_groupable = fields.Boolean(string='Group Products in POS',
         help="Check if you want to group products of this category in point of sale orders")
@@ -306,9 +292,7 @@ class UomCateg(models.Model):
         return ['id', 'name', 'uom_ids']
 
 
-class Uom(models.Model):
-    _name = 'uom.uom'
-    _inherit = ['uom.uom', 'pos.load.mixin']
+class UomUom(models.Model, uom.UomUom, point_of_sale.PosLoadMixin):
 
     is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', readonly=False)
 
@@ -325,9 +309,7 @@ class Uom(models.Model):
         }
 
 
-class ProductPricelist(models.Model):
-    _name = 'product.pricelist'
-    _inherit = ['product.pricelist', 'pos.load.mixin']
+class ProductPricelist(models.Model, product.ProductPricelist, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -339,9 +321,7 @@ class ProductPricelist(models.Model):
         return ['id', 'name', 'display_name', 'item_ids']
 
 
-class ProductPricelistItem(models.Model):
-    _name = 'product.pricelist.item'
-    _inherit = ['product.pricelist.item', 'pos.load.mixin']
+class ProductPricelistItem(models.Model, product.ProductPricelistItem, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -361,9 +341,7 @@ class ProductPricelistItem(models.Model):
                 'fixed_price', 'percent_price', 'base_pricelist_id', 'base', 'categ_id', 'min_quantity']
 
 
-class ProductCategory(models.Model):
-    _name = 'product.category'
-    _inherit = ['product.category', 'pos.load.mixin']
+class ProductCategory(models.Model, product.ProductCategory, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import format_date
 
 
-class ReceptionReport(models.AbstractModel):
-    _inherit = 'report.stock.report_reception'
+class ReportStockReportReception(models.AbstractModel, stock.ReportStockReportReception):
+    _name = "report.stock.report_reception"
+
 
     def _get_docs(self, docids):
         if self.env.context.get('default_production_ids'):

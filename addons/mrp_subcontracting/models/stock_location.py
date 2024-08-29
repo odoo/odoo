@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class StockLocation(models.Model):
-    _inherit = 'stock.location'
+class StockLocation(models.Model, stock.StockLocation):
 
     is_subcontracting_location = fields.Boolean(
         "Is a Subcontracting Location?",

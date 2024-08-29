@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models
 
 
-class IrModel(models.Model):
-    _inherit = 'ir.model'
+class IrModel(models.Model, base.IrModel):
 
     def _get_model_definitions(self, model_names_to_fetch):
         model_definitions = {}

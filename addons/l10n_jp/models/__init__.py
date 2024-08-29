@@ -1,2 +1,2 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import template_jp
+from .template_jp import AccountChartTemplate

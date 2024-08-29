@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 from odoo.tools import groupby
 
 
-class IrModelField(models.Model):
-    _inherit = 'ir.model.fields'
+class IrModelFields(models.Model, base.IrModelFields):
 
     tracking = fields.Integer(
         string="Enable Ordered Tracking",
@@ -17,7 +17,7 @@ class IrModelField(models.Model):
         """ Tracking value can be either a boolean enabling tracking mechanism
         on field, either an integer giving the sequence. Default sequence is
         set to 100. """
-        vals = super(IrModelField, self)._reflect_field_params(field, model_id)
+        vals = super()._reflect_field_params(field, model_id)
         tracking = getattr(field, 'tracking', None)
         if tracking is True:
             tracking = 100
@@ -27,7 +27,7 @@ class IrModelField(models.Model):
         return vals
 
     def _instanciate_attrs(self, field_data):
-        attrs = super(IrModelField, self)._instanciate_attrs(field_data)
+        attrs = super()._instanciate_attrs(field_data)
         if attrs and field_data.get('tracking'):
             attrs['tracking'] = field_data['tracking']
         return attrs

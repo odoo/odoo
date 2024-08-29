@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_loyalty_products(self):

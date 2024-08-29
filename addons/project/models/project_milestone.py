@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import rating
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,10 +9,8 @@ from odoo.tools import format_date
 
 from .project_task import CLOSED_STATES
 
-class ProjectMilestone(models.Model):
-    _name = 'project.milestone'
+class ProjectMilestone(models.Model, rating.MailThread):
     _description = "Project Milestone"
-    _inherit = ['mail.thread']
     _order = 'deadline, is_reached desc, name'
 
     def _get_default_project_id(self):

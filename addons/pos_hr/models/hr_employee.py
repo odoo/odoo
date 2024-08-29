@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
@@ -7,8 +8,7 @@ from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import format_list
 
-class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model, hr.HrEmployee):
 
     @api.model
     def _load_pos_data_domain(self, data):

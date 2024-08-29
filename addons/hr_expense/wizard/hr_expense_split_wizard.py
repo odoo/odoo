@@ -4,7 +4,6 @@ from odoo import fields, models, api, _
 
 
 class HrExpenseSplitWizard(models.TransientModel):
-    _name = 'hr.expense.split.wizard'
     _description = 'Expense Split Wizard'
 
     expense_id = fields.Many2one(comodel_name='hr.expense', string='Expense', required=True)
@@ -64,7 +63,7 @@ class HrExpenseSplitWizard(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'hr.expense',
             'name': _('Split Expenses'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'target': 'current',
             'domain': [('id', 'in', (copied_expenses | self.expense_split_line_ids.expense_id).ids)],
         }

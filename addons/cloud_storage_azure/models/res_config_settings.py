@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import requests
 from datetime import datetime, timedelta, timezone
@@ -7,7 +8,7 @@ from odoo import models, fields, _
 from odoo.exceptions import ValidationError, UserError
 
 
-class CloudStorageSettings(models.TransientModel):
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
     """
     Instructions:
     cloud_storage_azure_account_name, cloud_storage_azure_container_name:
@@ -18,7 +19,6 @@ class CloudStorageSettings(models.TransientModel):
         invalidate the cached value for
         get_cloud_storage_azure_user_delegation_key
     """
-    _inherit = 'res.config.settings'
 
     cloud_storage_provider = fields.Selection(selection_add=[('azure', 'Azure Cloud Storage')])
 

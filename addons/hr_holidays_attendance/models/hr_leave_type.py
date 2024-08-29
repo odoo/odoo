@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tools.misc import format_duration
 from odoo import _, api, fields, models
 
 
-class HRLeaveType(models.Model):
-    _inherit = 'hr.leave.type'
+class HRLeaveType(models.Model, hr_holidays.HrLeaveType):
 
     hr_attendance_overtime = fields.Boolean(compute='_compute_hr_attendance_overtime')
     overtime_deductible = fields.Boolean(

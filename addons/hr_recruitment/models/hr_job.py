@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr, mail
 
 import ast
 from collections import defaultdict
@@ -6,9 +7,7 @@ from collections import defaultdict
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools import SQL
 
-class Job(models.Model):
-    _name = "hr.job"
-    _inherit = ["mail.alias.mixin", "hr.job"]
+class HrJob(models.Model, mail.MailAliasMixin, hr.HrJob):
     _order = "sequence, name asc"
 
     @api.model
@@ -304,9 +303,9 @@ class Job(models.Model):
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'views': [
-                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree')
+                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'list')
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
             'domain': ['|',

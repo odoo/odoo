@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, Command, fields, models
@@ -6,8 +7,7 @@ from odoo.osv import expression
 from odoo.exceptions import ValidationError
 
 
-class StockPickingType(models.Model):
-    _inherit = "stock.picking.type"
+class StockPickingType(models.Model, stock.StockPickingType):
 
     count_picking_batch = fields.Integer(compute='_compute_picking_count')
     count_picking_wave = fields.Integer(compute='_compute_picking_count')
@@ -59,8 +59,7 @@ class StockPickingType(models.Model):
                 raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
 
 
-class StockPicking(models.Model):
-    _inherit = "stock.picking"
+class StockPicking(models.Model, stock.StockPicking):
 
     batch_id = fields.Many2one(
         'stock.picking.batch', string='Batch Transfer',
@@ -97,7 +96,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'list',
             'view': view,
-            'views': [(view.id, 'tree')],
+            'views': [(view.id, 'list')],
             'res_model': 'stock.move.line',
             'target': 'new',
             'domain': [

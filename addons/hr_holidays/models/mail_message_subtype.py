@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -8,8 +9,7 @@ from odoo import api, models
 _logger = logging.getLogger(__name__)
 
 
-class MailMessageSubtype(models.Model):
-    _inherit = 'mail.message.subtype'
+class MailMessageSubtype(models.Model, mail.MailMessageSubtype):
 
     def _get_department_subtype(self):
         return self.search([

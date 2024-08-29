@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import collections
@@ -18,8 +19,7 @@ OPERATORS = {
     '!=': py_operator.ne
 }
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
@@ -111,8 +111,7 @@ class ProductTemplate(models.Model):
         return super()._get_backend_root_menu_ids() + [self.env.ref('mrp.menu_mrp_root').id]
 
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
 
     variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')

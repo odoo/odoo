@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import populate
 
 
-class ProductAttribute(models.Model):
-    _inherit = "product.attribute"
+class ProductAttribute(models.Model, product.ProductAttribute):
 
     def _populate_factories(self):
 
@@ -15,8 +15,7 @@ class ProductAttribute(models.Model):
         ]
 
 
-class ProductAttributeValue(models.Model):
-    _inherit = "product.attribute.value"
+class ProductAttributeValue(models.Model, product.ProductAttributeValue):
 
     def _populate_factories(self):
         attribute_ids = self.env.registry.populated_models["product.attribute"]

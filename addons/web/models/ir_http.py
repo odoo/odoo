@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import hashlib
 import json
@@ -27,8 +28,7 @@ comma (eg: 'tests, assets').
 ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests', 'disable-t-cache']
 
 
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram"]
 

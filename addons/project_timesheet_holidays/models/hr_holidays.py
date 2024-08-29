@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class HolidaysType(models.Model):
-    _inherit = "hr.leave.type"
+class HrLeaveType(models.Model, hr_holidays.HrLeaveType):
 
     timesheet_generate = fields.Boolean(
         'Generate Timesheets', compute='_compute_timesheet_generate', store=True, readonly=False,
@@ -50,8 +50,7 @@ class HolidaysType(models.Model):
                     "leave the internal project and task empty.", holiday_status.name))
 
 
-class Holidays(models.Model):
-    _inherit = "hr.leave"
+class HrLeave(models.Model, hr_holidays.HrLeave):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'holiday_id', string="Analytic Lines")
 
@@ -130,7 +129,7 @@ class Holidays(models.Model):
 
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """
-        result = super(Holidays, self).action_refuse()
+        result = super().action_refuse()
         timesheets = self.sudo().mapped('timesheet_ids')
         timesheets.write({'holiday_id': False})
         timesheets.unlink()

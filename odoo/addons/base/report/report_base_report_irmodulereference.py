@@ -4,7 +4,7 @@
 from odoo import api, models
 
 
-class IrModelReferenceReport(models.AbstractModel):
+class ReportBaseReportIrmodulereference(models.AbstractModel):
     _name = 'report.base.report_irmodulereference'
     _description = 'Module Reference Report (base)'
 

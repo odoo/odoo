@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
 
 
-class CalendarEvent(models.Model):
-    _inherit = 'calendar.event'
+class CalendarEvent(models.Model, calendar.CalendarEvent):
 
     @api.model
     def default_get(self, fields):

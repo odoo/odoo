@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product, mail, utm, portal
 
 from collections import defaultdict
 from datetime import timedelta
@@ -30,9 +31,7 @@ SALE_ORDER_STATE = [
 ]
 
 
-class SaleOrder(models.Model):
-    _name = 'sale.order'
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+class SaleOrder(models.Model, portal.PortalMixin, product.ProductCatalogMixin, portal.MailThread, mail.MailActivityMixin, utm.UtmMixin):
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <record id="mailing_trace_report_view_tree" model="ir.ui.view">
-            <field name="name">mailing.trace.report.view.tree</field>
+            <field name="name">mailing.trace.report.view.list</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailing Statistics" sample="1">
+                <list string="Mass Mailing Statistics" sample="1">
                     <field name="name"/>
                     <field name="campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="mailing_type" column_invisible="True"/>
@@ -21,7 +21,7 @@
                     <field name="canceled" optional="hide"/>
                     <field name="error" optional="hide"/>
                     <field name="bounced" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -88,7 +88,7 @@
            <field name="name">Mass Mailing Analysis</field>
            <field name="res_model">mailing.trace.report</field>
            <field name="domain">[('mailing_type', '=', 'mail')]</field>
-           <field name="view_mode">graph,pivot,tree</field>
+           <field name="view_mode">graph,pivot,list</field>
            <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No Mailing Data yet!

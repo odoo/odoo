@@ -11,7 +11,6 @@ class MailActivityType(models.Model):
     kind of activity e.g. call, mail, meeting. An activity can be generic i.e.
     available for all models using activities; or specific to a model in which
     case res_model field should be used. """
-    _name = 'mail.activity.type'
     _description = 'Activity Type'
     _rec_name = 'name'
     _order = 'sequence, id'

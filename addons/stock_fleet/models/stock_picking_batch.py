@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock_picking_batch
 
 from odoo import fields, models, api
 
 
-class StockPickingBatch(models.Model):
-    _inherit = 'stock.picking.batch'
+class StockPickingBatch(models.Model, stock_picking_batch.StockPickingBatch):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
     vehicle_category_id = fields.Many2one(

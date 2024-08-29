@@ -6,7 +6,6 @@ from odoo.addons.iap.tools import iap_tools
 
 
 class IapEnrichAPI(models.AbstractModel):
-    _name = 'iap.enrich.api'
     _description = 'IAP Lead Enrichment API'
     _DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 

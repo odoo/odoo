@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import fleet
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 
-class FleetVehicleLogContract(models.Model):
-    _inherit = 'fleet.vehicle.log.contract'
+class FleetVehicleLogContract(models.Model, fleet.FleetVehicleLogContract):
 
     purchaser_employee_id = fields.Many2one(
         related='vehicle_id.driver_employee_id',

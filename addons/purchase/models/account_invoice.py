@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import difflib
 import logging
@@ -12,8 +13,7 @@ _logger = logging.getLogger(__name__)
 TOLERANCE = 0.02  # tolerance applied to the total when searching for a matching purchase order
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     purchase_vendor_bill_id = fields.Many2one('purchase.bill.union', store=False, readonly=False,
         string='Auto-complete',
@@ -490,9 +490,8 @@ class AccountMove(models.Model):
 
 
 
-class AccountMoveLine(models.Model):
+class AccountMoveLine(models.Model, account.AccountMoveLine):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
-    _inherit = 'account.move.line'
 
     is_downpayment = fields.Boolean()
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)

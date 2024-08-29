@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import collections
@@ -11,8 +12,7 @@ from odoo.tools import SQL
 _logger = logging.getLogger(__name__)
 
 
-class ProductCategory(models.Model):
-    _inherit = "product.category"
+class ProductCategory(models.Model, product.ProductCategory):
     _populate_sizes = {"small": 50, "medium": 500, "large": 5_000}
 
     def _populate_factories(self):
@@ -44,8 +44,7 @@ class ProductCategory(models.Model):
                 _logger.info('Setting parent: %s/%s', count + 1, len(parent_childs))
             children.write({'parent_id': parent})
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
     _populate_sizes = {"small": 150, "medium": 5_000, "large": 50_000}
     _populate_dependencies = ["product.category"]
 
@@ -90,8 +89,7 @@ class ProductProduct(models.Model):
         ] + self._populate_get_product_factories()
 
 
-class SupplierInfo(models.Model):
-    _inherit = 'product.supplierinfo'
+class ProductSupplierinfo(models.Model, product.ProductSupplierinfo):
 
     _populate_sizes = {'small': 450, 'medium': 15_000, 'large': 180_000}
     _populate_dependencies = ['res.partner', 'product.product', 'product.template']

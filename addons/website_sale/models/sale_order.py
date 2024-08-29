@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sale
 
 import random
 
@@ -14,8 +15,7 @@ from odoo.osv import expression
 from odoo.tools import float_is_zero
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     website_id = fields.Many2one(
         help="Website through which this order was placed for eCommerce orders.",

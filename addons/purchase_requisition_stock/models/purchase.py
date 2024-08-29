@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     on_time_rate_perc = fields.Float(string="OTD", compute="_compute_on_time_rate_perc")
 
@@ -24,7 +24,6 @@ class PurchaseOrder(models.Model):
             self.picking_type_id = self.requisition_id.picking_type_id.id
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+class PurchaseOrderLine(models.Model, purchase.PurchaseOrderLine):
 
     on_time_rate_perc = fields.Float(string="OTD", related="order_id.on_time_rate_perc")

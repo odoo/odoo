@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
 
-class AccountTax(models.Model):
-    _inherit = "account.tax"
+class AccountTax(models.Model, account.AccountTax):
 
     l10n_it_exempt_reason = fields.Selection(
         selection=[

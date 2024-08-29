@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -8,11 +9,9 @@ from odoo import fields, models
 _logger = logging.getLogger(__name__)
 
 
-class AliasMixin(models.AbstractModel):
+class MailAliasMixin(models.AbstractModel, mail.MailAliasMixinOptional):
     """ A mixin for models that inherits mail.alias to have a one-to-one relation
     between the model and its alias. """
-    _name = 'mail.alias.mixin'
-    _inherit = 'mail.alias.mixin.optional'
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'
 

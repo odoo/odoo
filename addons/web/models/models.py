@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 from __future__ import annotations
 
 import babel.dates
@@ -37,8 +38,7 @@ DISPLAY_DATE_FORMATS = {
 }
 
 
-class Base(models.AbstractModel):
-    _inherit = 'base'
+class Base(models.AbstractModel, base.Model):
 
     @api.model
     @api.readonly
@@ -1050,8 +1050,7 @@ class Base(models.AbstractModel):
 
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     @api.model_create_multi
     def create(self, vals_list):

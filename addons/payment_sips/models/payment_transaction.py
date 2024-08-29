@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 # Original Copyright 2015 Eezee-It, modified and maintained by Odoo.
 
 import json
@@ -16,8 +17,7 @@ from odoo.addons.payment_sips.controllers.main import SipsController
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):

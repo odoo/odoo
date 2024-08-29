@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class Website(models.Model):
-    _inherit = "website"
+class Website(models.Model, website.Website):
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)

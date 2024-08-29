@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.addons.web_editor.tools import handle_history_divergence
 
 
-class Job(models.Model):
-    _name = "hr.job"
+class HrJob(models.Model, mail.MailThread):
     _description = "Job Position"
-    _inherit = ['mail.thread']
     _order = 'sequence'
 
     active = fields.Boolean(default=True)
@@ -44,7 +43,7 @@ class Job(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """ We don't want the current user to be follower of all created job """
-        return super(Job, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        return super(HrJob, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -53,4 +52,4 @@ class Job(models.Model):
     def write(self, vals):
         if len(self) == 1:
             handle_history_divergence(self, 'description', vals)
-        return super(Job, self).write(vals)
+        return super().write(vals)

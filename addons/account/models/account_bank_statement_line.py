@@ -1,4 +1,5 @@
 from odoo import api, Command, fields, models, _
+from odoo.addons import account
 from odoo.exceptions import UserError, ValidationError
 
 from xmlrpc.client import MAXINT
@@ -7,7 +8,6 @@ from odoo.tools import create_index, SQL
 
 
 class AccountBankStatementLine(models.Model):
-    _name = "account.bank.statement.line"
     _inherits = {'account.move': 'move_id'}
     _description = "Bank Statement Line"
     _order = "internal_index desc"
@@ -833,8 +833,6 @@ class AccountBankStatementLine(models.Model):
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves
 # a lot of SQL queries
-class AccountMove(models.Model):
-    _name = "account.move"
-    _inherit = ['account.move']
+class AccountMove(models.Model, account.AccountMove):
 
     statement_line_ids = fields.One2many('account.bank.statement.line', 'move_id', string='Statements')

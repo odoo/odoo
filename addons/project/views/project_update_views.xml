@@ -102,24 +102,24 @@
     </record>
 
     <record id="project_update_view_tree" model="ir.ui.view">
-        <field name="name">project.update.view.tree</field>
+        <field name="name">project.update.view.list</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <tree sample="1" js_class="project_update_list">
+            <list sample="1" js_class="project_update_list">
                 <field name="name"/>
                 <field name="user_id" widget="many2one_avatar_user" class="fw-bold" optional="show"/>
                 <field name="date" optional="show"/>
                 <field name="progress" string="Progress" widget="progressbar" optional="show"/>
                 <field name="color" column_invisible="True"/>
                 <field name="status" widget="status_with_color"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="project_update_all_action" model="ir.actions.act_window">
         <field name="name">Project Updates</field>
         <field name="res_model">project.update</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('project_id', '=', active_id)]</field>
         <field name="search_view_id" ref="project_update_view_search"/>
         <field name="help" type="html">

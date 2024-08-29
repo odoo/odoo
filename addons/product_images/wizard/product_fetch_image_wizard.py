@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 
 
 class ProductFetchImageWizard(models.TransientModel):
-    _name = 'product.fetch.image.wizard'
     _description = "Fetch product images from Google Images based on the product's barcode number."
 
     _session = requests.Session()

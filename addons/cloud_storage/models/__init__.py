@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_attachment
-from . import ir_http
-from . import res_config_settings
+from .ir_attachment import IrAttachment
+from .ir_http import IrHttp
+from .res_config_settings import ResConfigSettings

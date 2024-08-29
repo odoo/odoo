@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ConfirmStockSms(models.TransientModel):
-    _name = 'confirm.stock.sms'
     _description = 'Confirm Stock SMS'
 
     pick_ids = fields.Many2many('stock.picking', 'stock_picking_sms_rel')

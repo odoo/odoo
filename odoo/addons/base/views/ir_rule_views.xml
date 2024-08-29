@@ -55,7 +55,7 @@
         <record id="view_rule_tree" model="ir.ui.view">
             <field name="model">ir.rule</field>
             <field name="arch" type="xml">
-                <tree string="Record Rules" decoration-info="not groups">
+                <list string="Record Rules" decoration-info="not groups">
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
@@ -64,7 +64,7 @@
                     <field name="perm_write" width="85px"/>
                     <field name="perm_create" width="85px"/>
                     <field name="perm_unlink" width="85px"/>
-                </tree>
+                </list>
             </field>
         </record>
 

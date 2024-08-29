@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -17,9 +18,8 @@ from odoo.tools.json import scriptsafe as json_safe
 logger = logging.getLogger(__name__)
 
 
-class SeoMetadata(models.AbstractModel):
+class WebsiteSeoMetadata(models.AbstractModel):
 
-    _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
     is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized')
@@ -156,7 +156,6 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
 
 class WebsiteMultiMixin(models.AbstractModel):
 
-    _name = 'website.multi.mixin'
     _description = 'Multi Website Mixin'
 
     website_id = fields.Many2one(
@@ -178,7 +177,6 @@ class WebsiteMultiMixin(models.AbstractModel):
 
 class WebsitePublishedMixin(models.AbstractModel):
 
-    _name = "website.published.mixin"
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
@@ -234,10 +232,8 @@ class WebsitePublishedMixin(models.AbstractModel):
         return _("You do not have the rights to publish/unpublish")
 
 
-class WebsitePublishedMultiMixin(WebsitePublishedMixin):
+class WebsitePublishedMultiMixin(models.AbstractModel, WebsitePublishedMixin, WebsiteMultiMixin, website.WebsitePublishedMixin, website.WebsiteMultiMixin):
 
-    _name = 'website.published.multi.mixin'
-    _inherit = ['website.published.mixin', 'website.multi.mixin']
     _description = 'Multi Website Published Mixin'
 
     website_published = fields.Boolean(compute='_compute_website_published',
@@ -292,7 +288,6 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
 
 class WebsiteSearchableMixin(models.AbstractModel):
     """Mixin to be inherited by all models that need to searchable through website"""
-    _name = 'website.searchable.mixin'
     _description = 'Website Searchable Mixin'
 
     @api.model

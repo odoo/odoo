@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from markupsafe import Markup
 
 from odoo import models, fields, _
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     odoobot_state = fields.Selection(
         [

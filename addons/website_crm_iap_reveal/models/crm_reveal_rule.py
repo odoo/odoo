@@ -20,7 +20,6 @@ DEFAULT_REVEAL_BATCH_LIMIT = 25
 DEFAULT_REVEAL_MONTH_VALID = 6
 
 class CRMRevealRule(models.Model):
-    _name = 'crm.reveal.rule'
     _description = 'CRM Lead Generation Rules'
     _order = 'sequence'
 

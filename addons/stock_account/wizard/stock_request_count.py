@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class StockRequestCount(models.TransientModel):
-    _inherit = 'stock.request.count'
+class StockRequestCount(models.TransientModel, stock.StockRequestCount):
 
     accounting_date = fields.Date('Accounting Date')
 

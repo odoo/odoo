@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class MailRenderMixin(models.AbstractModel):
-    _inherit = "mail.render.mixin"
+class MailRenderMixin(models.AbstractModel, mail.MailRenderMixin):
 
     @api.model
     def _render_template_postprocess(self, rendered):

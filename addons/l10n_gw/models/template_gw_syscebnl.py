@@ -1,9 +1,9 @@
 from odoo import models, _
+from odoo.addons import account
 from odoo.addons.account.models.chart_template import template
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = 'account.chart.template'
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     @template('gw_syscebnl')
     def _get_gw_syscebnl_template_data(self):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
-class AccountPaymentMethodLine(models.Model):
-    _inherit = "account.payment.method.line"
+class AccountPaymentMethodLine(models.Model, account.AccountPaymentMethodLine):
 
     payment_provider_id = fields.Many2one(
         comodel_name='payment.provider',

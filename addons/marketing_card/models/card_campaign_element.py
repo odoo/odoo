@@ -4,7 +4,6 @@ from odoo import _, api, exceptions, fields, models
 
 
 class CardCampaignElement(models.Model):
-    _name = 'card.campaign.element'
     _description = 'Marketing Card Campaign Element'
 
     res_model = fields.Selection(related="campaign_id.res_model", precompute=True, readonly=True, store=True)

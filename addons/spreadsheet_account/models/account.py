@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
@@ -10,8 +11,7 @@ from odoo.osv import expression
 from odoo.tools import date_utils
 
 
-class AccountMove(models.Model):
-    _inherit = "account.account"
+class AccountAccount(models.Model, account.AccountAccount):
 
     @api.model
     def _get_date_period_boundaries(self, date_period, company):

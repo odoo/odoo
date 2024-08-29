@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 
 
-class MrpWorkorder(models.Model):
-    _inherit = 'mrp.production'
+class MrpProduction(models.Model, mrp.MrpProduction):
 
     def pre_button_mark_done(self):
         confirm_expired_lots = self._check_expired_lots()

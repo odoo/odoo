@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     @api.model
     def get_password_policy(self):

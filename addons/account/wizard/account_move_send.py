@@ -9,7 +9,6 @@ from odoo.tools.misc import get_lang
 
 
 class AccountMoveSend(models.TransientModel):
-    _name = 'account.move.send'
     _description = "Account Move Send"
 
     @api.model

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from lxml import etree
 
@@ -20,8 +21,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'default_order'
 }
 
-class View(models.Model):
-    _inherit = 'ir.ui.view'
+class IrUiView(models.Model, base.IrUiView):
 
     type = fields.Selection(selection_add=[('hierarchy', "Hierarchy")])
 

@@ -4,7 +4,6 @@ from odoo import fields, models
 
 
 class ProductRibbon(models.Model):
-    _name = 'product.ribbon'
     _description = "Product ribbon"
 
     name = fields.Char(string="Ribbon Name", required=True, translate=True, size=20)

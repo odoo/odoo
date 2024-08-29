@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 from odoo import models
 
 
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
+class StockRule(models.Model, stock.StockRule):
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)

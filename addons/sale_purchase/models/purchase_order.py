@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class PurchaseOrder(models.Model):
-    _inherit = "purchase.order"
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     sale_order_count = fields.Integer(
         "Number of Source Sale",
@@ -33,7 +33,7 @@ class PurchaseOrder(models.Model):
             action.update({
                 'name': _('Sources Sale Orders %s', self.name),
                 'domain': [('id', 'in', sale_order_ids)],
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             })
         return action
 
@@ -67,8 +67,7 @@ class PurchaseOrder(models.Model):
             })
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+class PurchaseOrderLine(models.Model, purchase.PurchaseOrderLine):
 
     sale_order_id = fields.Many2one(related='sale_line_id.order_id', string="Sale Order", store=True, readonly=True)
     sale_line_id = fields.Many2one('sale.order.line', string="Origin Sale Item", index='btree_not_null', copy=False)

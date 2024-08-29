@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sale
 
 import itertools
 import random
@@ -17,8 +18,7 @@ def _generate_random_reward_code():
     return str(random.getrandbits(32))
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     # Contains how much points should be given to a coupon upon validating the order
     applied_coupon_ids = fields.Many2many(

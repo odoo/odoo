@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import test_populate
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
@@ -6,8 +7,7 @@ from odoo import models, fields, api
 from odoo.tools import populate, pycompat
 
 
-class TestPopulateModel(models.Model):
-    _name = 'test.populate'
+class TestPopulate(models.Model):
     _description = 'Test Populate'
 
     name = fields.Char(default='Foo')
@@ -57,8 +57,7 @@ class TestPopulateModel(models.Model):
             ('sequence', populate.randint(1, 10))
         ]
 
-class TestPopulateDependencyModel(models.Model):
-    _name = 'test.populate.category'
+class TestPopulateCategory(models.Model):
     _description = 'Test Populate Category'
 
     _populate_sizes = {
@@ -75,9 +74,7 @@ class TestPopulateDependencyModel(models.Model):
             ('name', populate.cartesian(['Cat1', 'Cat2', 'Cat3'])),
         ]
 
-class TestNoPopulateModelInherit(models.Model):
-    _name = 'test.populate.inherit'
-    _inherit = 'test.populate'
+class TestPopulateInherit(models.Model, test_populate.TestPopulate):
 
     _description = 'Test populate inherit'
 
@@ -89,8 +86,7 @@ class TestNoPopulateModelInherit(models.Model):
         ]
 
 
-class TestNoPopulateModel(models.Model):
-    _name = 'test.no.populate'
+class TestNoPopulate(models.Model):
     _description = 'A model with no populate method and a required field, should not crash'
 
     name = fields.Char(required=True)

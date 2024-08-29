@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import loyalty
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
 
 
-class LoyaltyProgram(models.Model):
-    _inherit = 'loyalty.program'
+class LoyaltyProgram(models.Model, loyalty.LoyaltyProgram):
 
     @api.model
     def _program_type_default_values(self):

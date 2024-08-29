@@ -9,7 +9,7 @@ from odoo.osv.expression import AND
 from odoo.tools import SQL
 
 
-class ReportSaleDetails(models.AbstractModel):
+class ReportPointOfSaleReportSaledetails(models.AbstractModel):
 
     _name = 'report.point_of_sale.report_saledetails'
     _description = 'Point of Sale Details'

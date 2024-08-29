@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _, Command
@@ -10,11 +11,9 @@ from odoo.tools.misc import clean_context
 from collections import defaultdict
 
 
-class MrpBom(models.Model):
+class MrpBom(models.Model, portal.MailThread, product.ProductCatalogMixin):
     """ Defines bills of material for a product or a product template """
-    _name = 'mrp.bom'
     _description = 'Bill of Material'
-    _inherit = ['mail.thread', 'product.catalog.mixin']
     _rec_name = 'product_tmpl_id'
     _rec_names_search = ['product_tmpl_id', 'code']
     _order = "sequence, id"
@@ -516,7 +515,6 @@ class MrpBom(models.Model):
 
 
 class MrpBomLine(models.Model):
-    _name = 'mrp.bom.line'
     _order = "sequence, id"
     _rec_name = "product_id"
     _description = 'Bill of Material Line'
@@ -652,7 +650,7 @@ class MrpBomLine(models.Model):
             'domain': domain,
             'res_model': 'product.document',
             'type': 'ir.actions.act_window',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'target': 'current',
             'help': _('''<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
@@ -692,8 +690,7 @@ class MrpBomLine(models.Model):
         }
 
 
-class MrpByProduct(models.Model):
-    _name = 'mrp.bom.byproduct'
+class MrpBomByproduct(models.Model):
     _description = 'Byproduct'
     _rec_name = "product_id"
     _check_company_auto = True

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class SupplierInfo(models.Model):
-    _inherit = 'product.supplierinfo'
+class ProductSupplierinfo(models.Model, product.ProductSupplierinfo):
 
     is_subcontractor = fields.Boolean('Subcontracted', compute='_compute_is_subcontractor', help="Choose a vendor of type subcontractor if you want to subcontract the product")
 
@@ -17,8 +17,7 @@ class SupplierInfo(models.Model):
             supplier.is_subcontractor = supplier.partner_id in boms.subcontractor_ids
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     def _prepare_sellers(self, params=False):
         if params and params.get('subcontractor_ids'):

@@ -6,7 +6,6 @@ from odoo.tools.date_utils import add
 
 
 class StockOrderpointSnooze(models.TransientModel):
-    _name = 'stock.orderpoint.snooze'
     _description = 'Snooze Orderpoint'
 
     orderpoint_ids = fields.Many2many('stock.warehouse.orderpoint')

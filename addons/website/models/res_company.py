@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class Company(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model, base.ResCompany):
 
     website_id = fields.Many2one('website', compute='_compute_website_id', store=True)
 

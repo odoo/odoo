@@ -50,7 +50,7 @@ class CompletionStatus:  # inherit from enum.StrEnum in 3.11
     FAILED = 'failed'
 
 
-class ir_cron(models.Model):
+class IrCron(models.Model):
     """ Model describing cron jobs (also called actions or tasks).
     """
 
@@ -59,7 +59,6 @@ class ir_cron(models.Model):
     # loaded yet or was already unloaded (e.g. 'force_db_wakeup' or something)
     # See also odoo.cron
 
-    _name = "ir.cron"
     _order = 'cron_name'
     _description = 'Scheduled Actions'
     _allow_sudo_commands = False
@@ -108,7 +107,7 @@ class ir_cron(models.Model):
         # only 'code' state is supported for cron job so set it as default
         if not self._context.get('default_state'):
             self = self.with_context(default_state='code')
-        return super(ir_cron, self).default_get(fields_list)
+        return super().default_get(fields_list)
 
     def method_direct_trigger(self):
         self.ensure_one()
@@ -601,11 +600,11 @@ class ir_cron(models.Model):
         self._try_lock()
         if ('nextcall' in vals or vals.get('active')) and os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self._cr.postcommit.add(self._notifydb)
-        return super(ir_cron, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         self._try_lock(lockfk=True)
-        return super(ir_cron, self).unlink()
+        return super().unlink()
 
     def try_write(self, values):
         try:
@@ -619,7 +618,7 @@ class ir_cron(models.Model):
         except psycopg2.OperationalError:
             pass
         else:
-            return super(ir_cron, self).write(values)
+            return super().write(values)
         return False
 
     @api.model
@@ -696,7 +695,7 @@ class ir_cron(models.Model):
     def _notifydb(self):
         """ Wake up the cron workers
         The ODOO_NOTIFY_CRON_CHANGES environment variable allows to force the notifydb on both
-        ir_cron modification and on trigger creation (regardless of call_at)
+        IrCron modification and on trigger creation (regardless of call_at)
         """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
             cr.execute(SQL("SELECT %s('cron_trigger', %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), self.env.cr.dbname))
@@ -739,8 +738,7 @@ class ir_cron(models.Model):
         })
 
 
-class ir_cron_trigger(models.Model):
-    _name = 'ir.cron.trigger'
+class IrCronTrigger(models.Model):
     _description = 'Triggered actions'
     _rec_name = 'cron_id'
     _allow_sudo_commands = False
@@ -753,8 +751,7 @@ class ir_cron_trigger(models.Model):
         self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
 
 
-class ir_cron_progress(models.Model):
-    _name = 'ir.cron.progress'
+class IrCronProgress(models.Model):
     _description = 'Progress of Scheduled Actions'
     _rec_name = 'cron_id'
 

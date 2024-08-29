@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import fields, models
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     l10n_es_edi_certificate_ids = fields.One2many(related='company_id.l10n_es_edi_certificate_ids', readonly=False)
     l10n_es_edi_tax_agency = fields.Selection(related='company_id.l10n_es_edi_tax_agency', readonly=False)

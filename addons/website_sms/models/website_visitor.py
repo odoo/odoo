@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from odoo.exceptions import UserError
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+class WebsiteVisitor(models.Model, website.WebsiteVisitor):
 
     def _check_for_sms_composer(self):
         """ Purpose of this method is to actualize visitor model prior to contacting

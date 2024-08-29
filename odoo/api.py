@@ -22,7 +22,6 @@ from contextlib import contextmanager
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
-from typing import TYPE_CHECKING
 
 try:
     from decorator import decoratorx as decorator
@@ -34,11 +33,16 @@ from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, 
 from .tools.translate import _
 from odoo.tools.misc import StackMap
 
-if TYPE_CHECKING:
+import typing
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
     from odoo.sql_db import Cursor, TestCursor
     from odoo.models import BaseModel
+    T = typing.TypeVar('T')
+
 
 _logger = logging.getLogger(__name__)
+
 
 # The following attributes are used, and reflected on wrapping methods:
 #  - method._constrains: set by @constrains, specifies constraint dependencies
@@ -103,7 +107,7 @@ def propagate(method1, method2):
     return method2
 
 
-def constrains(*args):
+def constrains(*args: str) -> Callable[[T], T]:
     """Decorate a constraint checker.
 
     Each argument must be a field name used in the check::
@@ -249,7 +253,7 @@ def onchange(*args):
     return attrsetter('_onchange', args)
 
 
-def depends(*args):
+def depends(*args: str) -> Callable[[T], T]:
     """ Return a decorator that specifies the field dependencies of a "compute"
         method (for new-style function fields). Each argument must be a string
         that consists in a dot-separated sequence of field names::
@@ -362,7 +366,7 @@ def autovacuum(method):
     return method
 
 
-def model(method):
+def model(method: T) -> T:
     """ Decorate a record-style method where ``self`` is a recordset, but its
         contents is not relevant, only the model is. Such a method::
 
@@ -376,7 +380,8 @@ def model(method):
     method._api = 'model'
     return method
 
-def readonly(method):
+
+def readonly(method: T) -> T:
     """ Decorate a record-style method where ``self.env.cr`` can be a
         readonly cursor when called trough a rpc call.
 
@@ -401,7 +406,7 @@ def _model_create_single(create, self, arg):
     return self.browse().concat(*(create(self, vals) for vals in arg))
 
 
-def model_create_single(method):
+def model_create_single(method: T) -> T:
     """ Decorate a method that takes a dictionary and creates a single record.
         The method may be called with either a single dict or a list of dicts::
 
@@ -422,7 +427,7 @@ def _model_create_multi(create, self, arg):
     return create(self, arg)
 
 
-def model_create_multi(method):
+def model_create_multi(method: T) -> T:
     """ Decorate a method that takes a list of dictionaries and creates multiple
         records. The method may be called with either a single dict or a list of
         dicts::
@@ -560,7 +565,7 @@ class Environment(Mapping):
         :param cr: optional database cursor to change the current cursor
         :type cursor: :class:`~odoo.sql_db.Cursor`
         :param user: optional user/user id to change the current user
-        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.Users>`
+        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context
         :param bool su: optional boolean to change the superuser mode
         :returns: environment with specified args (new or existing one)
@@ -612,7 +617,7 @@ class Environment(Mapping):
         """Return the current user (as an instance).
 
         :returns: current user - sudoed
-        :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.Users>`"""
+        :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`"""
         return self(su=True)['res.users'].browse(self.uid)
 
     @lazy_property

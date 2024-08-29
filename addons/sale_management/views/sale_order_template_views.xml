@@ -86,7 +86,7 @@
                                     </page>
                                 </notebook>
                             </form>
-                            <tree string="Quotation Template Lines" editable="bottom">
+                            <list string="Quotation Template Lines" editable="bottom">
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
@@ -104,19 +104,19 @@
                                     name="product_uom_id"
                                     groups="uom.group_uom"
                                     required="not display_type"/>
-                            </tree>
+                            </list>
                         </field>
                     </page>
                     <page string="Optional Products" name="optional_products">
                         <field name="sale_order_template_option_ids">
-                          <tree string="Quotation Template Lines" editable="bottom">
+                          <list string="Quotation Template Lines" editable="bottom">
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="quantity"/>
                             <field name="product_uom_category_id" column_invisible="True"/>
                             <field name="uom_id" groups="uom.group_uom"/>
                             <field name="company_id" column_invisible="True"/>
-                          </tree>
+                          </list>
                         </field>
                     </page>
                         <page string="Terms &amp; Conditions" name="terms_and_conditions">
@@ -130,21 +130,21 @@
     </record>
 
     <record id="sale_order_template_view_tree" model="ir.ui.view">
-        <field name="name">sale.order.template.tree</field>
+        <field name="name">sale.order.template.list</field>
         <field name="model">sale.order.template</field>
         <field name="arch" type="xml">
-            <tree string="Quotation Template">
+            <list string="Quotation Template">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="sale_order_template_action" model="ir.actions.act_window">
         <field name="name">Quotation Templates</field>
         <field name="res_model">sale.order.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your quotation template

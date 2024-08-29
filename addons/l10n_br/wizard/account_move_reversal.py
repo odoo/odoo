@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = "account.move.reversal"
+class AccountMoveReversal(models.TransientModel, account.AccountMoveReversal):
 
     def _compute_document_type(self):
         """ If a l10n_latam_document_type_id was set, change it in the case of Brazil to be

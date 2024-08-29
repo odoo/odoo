@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -15,8 +16,7 @@ except ImportError:
     vobject = None
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     def _build_vcard(self):
         """ Build the partner's vCard.

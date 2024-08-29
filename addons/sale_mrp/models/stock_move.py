@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
@@ -15,8 +15,7 @@ class StockMove(models.Model):
         return res
 
 
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     def _compute_sale_price(self):
         kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom')

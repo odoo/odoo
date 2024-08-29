@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -79,8 +80,7 @@ PENSION_FUND_TYPE_SELECTION = [
 ]
 
 
-class AccountTax(models.Model):
-    _inherit = 'account.tax'
+class AccountTax(models.Model, account.AccountTax):
 
     l10n_it_withholding_type = fields.Selection(WITHHOLDING_TYPE_SELECTION, string="Withholding tax type (Italy)", help="Withholding tax type. Only for Italian accounting EDI.")
     l10n_it_withholding_reason = fields.Selection(WITHHOLDING_REASON_SELECTION, string="Withholding tax reason (Italy)", help="Withholding tax reason. Only for Italian accounting EDI.")

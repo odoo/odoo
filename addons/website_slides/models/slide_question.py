@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError
 
 
 class SlideQuestion(models.Model):
-    _name = "slide.question"
     _rec_name = "question"
     _description = "Content Quiz Question"
     _order = "sequence"
@@ -59,7 +58,6 @@ class SlideQuestion(models.Model):
             ) if not correct or correct == question.answer_ids else ''
 
 class SlideAnswer(models.Model):
-    _name = "slide.answer"
     _rec_name = "text_value"
     _description = "Slide Question's Answer"
     _order = 'question_id, sequence, id'

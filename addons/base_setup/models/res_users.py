@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
 from odoo.tools.misc import str2bool
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     @api.model
     def web_create_users(self, emails):

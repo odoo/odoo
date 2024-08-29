@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
-class AccountJournal(models.Model):
+class AccountJournal(models.Model, account.AccountJournal):
 
-    _inherit = "account.journal"
 
     l10n_ar_afip_pos_system = fields.Selection(
         selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System',

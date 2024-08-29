@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import enum
 import stdnum
@@ -46,9 +47,8 @@ class PartnerIdTypeEc(enum.Enum):
                 return cls.OUT_PASSPORT
 
 
-class ResPartner(models.Model):
+class ResPartner(models.Model, base.ResPartner):
 
-    _inherit = "res.partner"
 
     l10n_ec_vat_validation = fields.Char(
         string="VAT Error message validation",

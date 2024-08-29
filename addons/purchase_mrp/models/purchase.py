@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -7,8 +8,7 @@ from odoo import api, fields, models, _
 from odoo.tools import OrderedSet
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     mrp_production_count = fields.Integer(
         "Count of MO Source",
@@ -39,13 +39,12 @@ class PurchaseOrder(models.Model):
             action.update({
                 'name': _("Manufacturing Source of %s", self.name),
                 'domain': [('id', 'in', mrp_production_ids)],
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             })
         return action
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+class PurchaseOrderLine(models.Model, purchase.PurchaseOrderLine):
 
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']

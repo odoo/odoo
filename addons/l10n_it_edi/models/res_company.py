@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -24,9 +25,7 @@ TAX_SYSTEM = [
     ("RF19", "[RF19] Regime forfettario (art.1, c.54-89, L. 190/2014)"),
 ]
 
-class ResCompany(models.Model):
-    _name = 'res.company'
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16, related='partner_id.l10n_it_codice_fiscale',
         store=True, readonly=False, help="Fiscal code of your company")

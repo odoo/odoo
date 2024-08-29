@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="privacy_log_view_list" model="ir.ui.view">
-        <field name="name">privacy.log.view.tree</field>
+        <field name="name">privacy.log.view.list</field>
         <field name="model">privacy.log</field>
         <field name="arch" type="xml">
-            <tree string="Privacy Logs">
+            <list string="Privacy Logs">
                 <field name="date" />
                 <field name="anonymized_name"/>
                 <field name="anonymized_email"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="execution_details"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -47,7 +47,7 @@
     <record id="privacy_log_action" model="ir.actions.act_window">
         <field name="name">Privacy Logs</field>
         <field name="res_model">privacy.log</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'create': False}</field>
     </record>
 

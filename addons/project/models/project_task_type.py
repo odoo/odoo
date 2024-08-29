@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 
 
 class ProjectTaskType(models.Model):
-    _name = 'project.task.type'
     _description = 'Task Stage'
     _order = 'sequence, id'
 

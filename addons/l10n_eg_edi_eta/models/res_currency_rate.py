@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -6,8 +7,7 @@ from odoo import models, api, _
 from odoo.tools import float_compare
 
 
-class ResCurrencyRate(models.Model):
-    _inherit = 'res.currency.rate'
+class ResCurrencyRate(models.Model, base.ResCurrencyRate):
 
     @api.onchange('company_rate')
     def _onchange_rate_warning(self):

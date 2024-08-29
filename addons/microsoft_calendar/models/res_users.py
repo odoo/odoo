@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -16,8 +17,7 @@ from odoo.tools import str2bool
 _logger = logging.getLogger(__name__)
 
 
-class User(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     microsoft_calendar_sync_token = fields.Char(related='res_users_settings_id.microsoft_calendar_sync_token', groups='base.group_system')
     microsoft_synchronization_stopped = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_stopped', readonly=False, groups='base.group_system')

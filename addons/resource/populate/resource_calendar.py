@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import resource
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 from odoo.tools import populate
 
 
-class ResourceCalendar(models.Model):
-    _inherit = "resource.calendar"
+class ResourceCalendar(models.Model, resource.ResourceCalendar):
     _populate_dependencies = ["res.company"]  # multi-company setup
     _populate_sizes = {
         "small": 10,  # 1-2 per company

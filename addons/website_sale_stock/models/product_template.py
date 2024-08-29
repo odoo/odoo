@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from odoo import fields, models
 from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
 

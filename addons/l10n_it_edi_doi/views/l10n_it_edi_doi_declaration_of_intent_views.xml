@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="view_l10n_it_edi_doi_tree" model="ir.ui.view">
-        <field name="name">l10n_it_edi_doi.declaration_of_intent.tree</field>
+        <field name="name">l10n_it_edi_doi.declaration_of_intent.list</field>
         <field name="model">l10n_it_edi_doi.declaration_of_intent</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'"
+            <list decoration-info="state == 'draft'"
                   decoration-muted="state == 'terminated'"
                   decoration-danger="state == 'revoked'">
                 <control>
@@ -24,7 +24,7 @@
                 <field name="invoiced" optional="hidden"/>
                 <field name="remaining"/>
                 <field name="state"/>
-            </tree>
+            </list>
         </field>
     </record>
 

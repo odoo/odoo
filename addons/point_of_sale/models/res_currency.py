@@ -1,9 +1,8 @@
 from odoo import models, api
+from odoo.addons import point_of_sale, base
 
 
-class ResCurrency(models.Model):
-    _name = 'res.currency'
-    _inherit = ['res.currency', 'pos.load.mixin']
+class ResCurrency(models.Model, base.ResCurrency, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):

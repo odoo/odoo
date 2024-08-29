@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail, portal
 
 from collections import defaultdict
 
@@ -8,10 +9,8 @@ from odoo.tools import float_compare, float_round
 from odoo.tools.misc import clean_context
 
 
-class MrpUnbuild(models.Model):
-    _name = "mrp.unbuild"
+class MrpUnbuild(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = "Unbuild Order"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,8 +7,7 @@ from odoo.exceptions import RedirectWarning, UserError
 from odoo.osv import expression
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+class AccountAnalyticLine(models.Model, analytic.AccountAnalyticLine):
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request', copy=False, index='btree_not_null', export_string_translation=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", index='btree_not_null', ondelete='cascade', export_string_translation=False)

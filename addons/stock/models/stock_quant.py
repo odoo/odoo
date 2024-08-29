@@ -17,7 +17,6 @@ _logger = logging.getLogger(__name__)
 
 
 class StockQuant(models.Model):
-    _name = 'stock.quant'
     _description = 'Quants'
     _rec_name = 'product_id'
     _rec_names_search = ['location_id', 'lot_id', 'package_id', 'owner_id']
@@ -1305,7 +1304,7 @@ class StockQuant(models.Model):
         })
         if extend:
             action.update({
-                'view_mode': 'tree,form,pivot,graph',
+                'view_mode': 'list,form,pivot,graph',
                 'views': [
                     (action['view_id'], 'list'),
                     (form_view, 'form'),
@@ -1516,9 +1515,8 @@ class StockQuant(models.Model):
         moves._action_done()
 
 
-class QuantPackage(models.Model):
+class StockQuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
-    _name = "stock.quant.package"
     _description = "Packages"
     _order = 'name'
 

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
 from odoo.osv import expression
 
 
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
+class StockRule(models.Model, stock.StockRule):
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
@@ -16,8 +16,7 @@ class StockRule(models.Model):
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_groupby(procurement)
 
 
-class ProcurementGroup(models.Model):
-    _inherit = "procurement.group"
+class ProcurementGroup(models.Model, stock.ProcurementGroup):
 
     @api.model
     def _get_rule_domain(self, location, values):
@@ -26,8 +25,7 @@ class ProcurementGroup(models.Model):
             domain = expression.AND([domain, [('company_id', '=', values['company_id'].id)]])
         return domain
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     is_dropship = fields.Boolean("Is a Dropship", compute='_compute_is_dropship')
 
@@ -40,8 +38,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         return super()._is_to_external_location() or self.is_dropship
 
-class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
+class StockPickingType(models.Model, stock.StockPickingType):
 
     code = fields.Selection(
         selection_add=[('dropship', 'Dropship')], ondelete={'dropship': lambda recs: recs.write({'code': 'outgoing', 'active': False})})
@@ -73,8 +70,7 @@ class StockPickingType(models.Model):
                 record.show_picking_type = True
 
 
-class StockLot(models.Model):
-    _inherit = 'stock.lot'
+class StockLot(models.Model, stock.StockLot):
 
     def _compute_last_delivery_partner_id(self):
         super()._compute_last_delivery_partner_id()

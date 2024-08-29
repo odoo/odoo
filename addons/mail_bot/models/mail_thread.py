@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+class MailThread(models.AbstractModel, mail.MailThread):
 
     def _message_post_after_hook(self, message, msg_vals):
         self.env['mail.bot']._apply_logic(self, msg_vals)

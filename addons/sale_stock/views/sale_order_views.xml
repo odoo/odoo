@@ -46,14 +46,14 @@
                 <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_distribution']" position="before">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_distribution']" position="after">
+                <xpath expr="//field[@name='order_line']/list/field[@name='analytic_distribution']" position="after">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
                 </xpath>
            </field>
         </record>
 
         <record id="sale_order_tree" model="ir.ui.view">
-            <field name="name">sale.order.tree.inherit.sale.stock</field>
+            <field name="name">sale.order.list.inherit.sale.stock</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.sale_order_tree"/>
             <field name="arch" type="xml">
@@ -67,7 +67,7 @@
         </record>
 
         <record id="view_order_tree" model="ir.ui.view">
-            <field name="name">sale.order.tree.inherit.sale.stock</field>
+            <field name="name">sale.order.list.inherit.sale.stock</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
@@ -100,7 +100,7 @@
         </record>
 
         <record id="view_order_line_tree_inherit_sale_stock" model="ir.ui.view">
-            <field name="name">sale.order.line.tree.sale.stock.location</field>
+            <field name="name">sale.order.line.list.sale.stock.location</field>
             <field name="inherit_id" ref="sale.view_order_line_tree"/>
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
@@ -111,7 +111,7 @@
         </record>
 
         <record id="view_order_form_inherit_sale_stock_qty" model="ir.ui.view">
-            <field name="name">sale.order.line.tree.sale.stock.qty</field>
+            <field name="name">sale.order.line.list.sale.stock.qty</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
@@ -129,7 +129,7 @@
                     <field name="display_qty_widget" invisible="1"/>
                     <widget name="qty_at_date_widget"/>
                 </xpath>
-                <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
+                <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_delivered']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
                     <field name="virtual_available_at_date" column_invisible="True"/>
                     <field name="qty_available_today" column_invisible="True"/>

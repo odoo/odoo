@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import product
 
 
-class Product(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     @api.onchange('service_tracking')
     def _onchange_type_event_booth(self):

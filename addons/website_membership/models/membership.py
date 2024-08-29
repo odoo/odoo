@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import membership
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
-class MembershipLine(models.Model):
+class MembershipMembershipLine(models.Model, membership.MembershipMembershipLine):
 
-    _inherit = 'membership.membership_line'
+    _name = "membership.membership_line"
+
 
     def _get_published_companies(self, limit=None):
         if not self.ids:

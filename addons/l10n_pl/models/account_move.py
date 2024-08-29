@@ -1,9 +1,9 @@
 from odoo import fields, models, _
+from odoo.addons import account
 from odoo.exceptions import ValidationError
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_pl_vat_b_spv = fields.Boolean(
         string='B_SPV',

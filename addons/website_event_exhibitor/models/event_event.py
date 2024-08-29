@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class EventEvent(models.Model):
-    _inherit = "event.event"
+class EventEvent(models.Model, event.EventEvent):
 
     # sponsors
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')

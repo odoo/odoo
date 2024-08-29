@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 """Classes defining the populate factory for Accounting Journals and related models."""
 import logging
 
@@ -7,10 +8,9 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class AccountJournal(models.Model):
+class AccountJournal(models.Model, account.AccountJournal):
     """Populate factory part for account.journal."""
 
-    _inherit = "account.journal"
     _populate_sizes = {
         'small': 10,
         'medium': 30,

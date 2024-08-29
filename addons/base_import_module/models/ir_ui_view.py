@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from operator import itemgetter
 from odoo import api, models
 
-class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+class IrUiView(models.Model, base.IrUiView):
 
     @api.model
     def _validate_custom_views(self, model):

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import models
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+class MailActivitySchedule(models.TransientModel, mail.MailActivitySchedule):
 
     def _compute_plan_department_filterable(self):
         super()._compute_plan_department_filterable()

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     product_add_mode = fields.Selection(
         selection=[

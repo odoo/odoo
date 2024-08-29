@@ -34,7 +34,7 @@
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
-                <tree string="Scheduled Actions" decoration-muted="(not active)">
+                <list string="Scheduled Actions" decoration-muted="(not active)">
                     <field name="priority"/>
                     <field name="name"/>
                     <field name="model_id"/>
@@ -42,7 +42,7 @@
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="active"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -82,7 +82,7 @@
             <field name="name">Scheduled Actions</field>
             <field name="res_model">ir.cron</field>
             <field name="path">crons</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">list,form,calendar</field>
             <field name="context">{'search_default_all': 1}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>

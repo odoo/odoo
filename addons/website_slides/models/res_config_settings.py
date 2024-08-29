@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     website_slide_google_app_key = fields.Char(related='website_id.website_slide_google_app_key', readonly=False)
     module_website_sale_slides = fields.Boolean(string="Sell on eCommerce")

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, _
@@ -7,8 +8,7 @@ from odoo.exceptions import UserError
 from collections import defaultdict
 
 
-class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+class AccountJournal(models.Model, account.AccountJournal):
 
     edi_format_ids = fields.Many2many(comodel_name='account.edi.format',
                                       string='Electronic invoicing',

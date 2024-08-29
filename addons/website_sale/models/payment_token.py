@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from odoo import models
 
 
-class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+class PaymentToken(models.Model, payment.PaymentToken):
 
     def _get_available_tokens(self, *args, is_express_checkout=False, **kwargs):
         """ Override of `payment` not to return the tokens in case of express checkout.

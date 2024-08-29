@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import hashlib
 
@@ -7,8 +8,7 @@ from odoo import fields, models
 from odoo.addons.payment_payulatam.const import DEFAULT_PAYMENT_METHOD_CODES
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('payumoney', "PayUmoney")], ondelete={'payumoney': 'set default'})

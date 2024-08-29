@@ -2,7 +2,6 @@ from odoo import fields, models
 
 
 class ExportAggregator(models.Model):
-    _name = 'export.aggregator'
     _description = 'Export Aggregator'
 
     int_sum = fields.Integer(aggregator='sum')
@@ -19,8 +18,7 @@ class ExportAggregator(models.Model):
     active = fields.Boolean(default=True)
 
 
-class ExportAggregatorO2M(models.Model):
-    _name = 'export.aggregator.one2many'
+class ExportAggregatorOne2many(models.Model):
     _description = 'Export Aggregator One2Many'
 
     parent_id = fields.Many2one('export.aggregator')

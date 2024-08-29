@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_work_entry
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
@@ -11,8 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
 
 
-class HrWorkEntry(models.Model):
-    _inherit = 'hr.work.entry'
+class HrWorkEntry(models.Model, hr_work_entry.HrWorkEntry):
 
     contract_id = fields.Many2one('hr.contract', string="Contract", required=True)
     employee_id = fields.Many2one(domain=[('contract_ids.state', 'in', ('open', 'pending'))])
@@ -185,8 +185,7 @@ class HrWorkEntry(models.Model):
         return self.browse(chain.from_iterable(recs.ids for start, end, recs in intervals))
 
 
-class HrWorkEntryType(models.Model):
-    _inherit = 'hr.work.entry.type'
+class HrWorkEntryType(models.Model, hr_work_entry.HrWorkEntryType):
     _description = 'HR Work Entry Type'
 
     is_leave = fields.Boolean(

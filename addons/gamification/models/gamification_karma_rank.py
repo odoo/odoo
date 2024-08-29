@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
 
-class KarmaRank(models.Model):
-    _name = 'gamification.karma.rank'
+class GamificationKarmaRank(models.Model, base.ImageMixin):
     _description = 'Rank based on karma'
-    _inherit = 'image.mixin'
     _order = 'karma_min'
 
     name = fields.Text(string='Rank Name', translate=True, required=True)
@@ -33,7 +32,7 @@ class KarmaRank(models.Model):
 
     @api.model_create_multi
     def create(self, values_list):
-        res = super(KarmaRank, self).create(values_list)
+        res = super().create(values_list)
         if any(res.mapped('karma_min')) > 0:
             users = self.env['res.users'].sudo().search([('karma', '>=', max(min(res.mapped('karma_min')), 1))])
             if users:
@@ -46,7 +45,7 @@ class KarmaRank(models.Model):
             low = min(vals['karma_min'], min(self.mapped('karma_min')))
             high = max(vals['karma_min'], max(self.mapped('karma_min')))
 
-        res = super(KarmaRank, self).write(vals)
+        res = super().write(vals)
 
         if 'karma_min' in vals:
             after_ranks = self.env['gamification.karma.rank'].search([], order="karma_min DESC").ids

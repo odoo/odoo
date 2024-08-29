@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import bus, base
 
 from odoo import fields, models
 
 
-class ResUsers(models.Model):
-    _name = "res.users"
-    _inherit = ["res.users", "bus.listener.mixin"]
+class ResUsers(models.Model, base.ResUsers, bus.BusListenerMixin):
 
     im_status = fields.Char("IM Status", compute="_compute_im_status")
 

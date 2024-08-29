@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 
 from odoo import api, fields, models, _
 
 
-class AccountMoveSend(models.TransientModel):
-    _inherit = 'account.move.send'
+class AccountMoveSend(models.TransientModel, account.AccountMoveSend):
 
     enable_send_by_post = fields.Boolean(compute='_compute_enable_send_by_post')
     checkbox_send_by_post = fields.Boolean(

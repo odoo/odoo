@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 
 
-class StockPicking(models.Model):
-    _inherit = "stock.picking"
+class StockPicking(models.Model, stock.StockPicking):
 
     def _pre_action_done_hook(self):
         res = super()._pre_action_done_hook()

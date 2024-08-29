@@ -4,12 +4,12 @@
         <field name="name">card.card.view.list</field>
         <field name="model">card.card</field>
         <field name="arch" type="xml">
-            <tree string="Share Card">
+            <list string="Share Card">
                 <field name="res_model" readonly="1" optional="hidden"/>
                 <field name="record_ref" readonly="1"/>
                 <field name="campaign_id" readonly="1" optional="hidden"/>
                 <field name="share_status" readonly="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -38,7 +38,7 @@
         <field name="res_model">card.card</field>
         <field name="search_view_id" ref="card_card_view_search"></field>
         <field name="context">{'search_default_by_campaign': True, 'search_default_filter_visited': True}</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a Card Campaign to send cards to your partners

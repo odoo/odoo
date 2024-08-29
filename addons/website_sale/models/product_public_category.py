@@ -1,17 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website, base
 
 from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
 
 
-class ProductPublicCategory(models.Model):
-    _name = 'product.public.category'
-    _inherit = [
-        'website.seo.metadata',
-        'website.multi.mixin',
-        'website.searchable.mixin',
-        'image.mixin',
-    ]
+class ProductPublicCategory(models.Model, website.WebsiteSeoMetadata, website.WebsiteMultiMixin, website.WebsiteSearchableMixin, base.ImageMixin):
     _description = "Website Product Category"
     _parent_store = True
     _order = 'sequence, name, id'

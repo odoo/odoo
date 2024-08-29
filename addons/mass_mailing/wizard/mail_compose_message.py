@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -7,8 +8,7 @@ from odoo import fields, models
 from odoo.tools.misc import file_open
 
 
-class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
+class MailComposeMessage(models.TransientModel, mail.MailComposeMessage):
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
     campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign', ondelete='set null')

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id')
     def _compute_purchase_order_count(self):

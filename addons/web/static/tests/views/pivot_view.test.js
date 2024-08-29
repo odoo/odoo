@@ -2132,7 +2132,7 @@ test("correctly group data after flip (1)", async () => {
     Partner._views[
         "search,false"
     ] = `<search><filter name="bayou" string="Bayou" domain="[(1,'=',1)]"/></search>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
     await mountWithCleanup(WebClient);
@@ -2161,7 +2161,7 @@ test("correctly group data after flip (2)", async () => {
     Partner._views[
         "search,false"
     ] = `<search><filter name="bayou" string="Bayou" domain="[(1,'=',1)]"/></search>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
     await mountWithCleanup(WebClient);
@@ -3118,7 +3118,7 @@ test.tags("desktop")("Navigation list view for a group and back with breadcrumbs
     Partner._views["search,false"] = `<search>
 			<filter name="bayou" string="Bayou" domain="[('foo','=', 12)]"/>
 		</search>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
     let readGroupCount = 0;
@@ -3634,7 +3634,7 @@ test.tags("desktop")("pivot is reloaded when leaving and coming back", async () 
 		<field name="customer" type="row"/>
 	</pivot>`;
     Partner._views["search,false"] = `<search/>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
 
     onRpc(({ method, model }) => {
         if (model === "partner") {
@@ -3680,7 +3680,7 @@ test.tags("desktop")("expanded groups are kept when leaving and coming back", as
 		<field name="customer" type="row"/>
 	</pivot>`;
     Partner._views["search,false"] = `<search/>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -3719,7 +3719,7 @@ test.tags("desktop")("sorted rows are kept when leaving and coming back", async 
 		<field name="product_id" type="row"/>
 	</pivot>`;
     Partner._views["search,false"] = `<search/>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -3758,7 +3758,7 @@ test.tags("desktop")("correctly handle concurrent reloads", async () => {
 		<field name="product_id" type="row"/>
 	</pivot>`;
     Partner._views["search,false"] = `<search/>`;
-    Partner._views["list,false"] = `<tree><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list><field name="foo"/></list>`;
 
     let def;
     let readGroupCount = 0;

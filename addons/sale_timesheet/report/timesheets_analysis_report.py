@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_timesheet
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
@@ -6,8 +7,7 @@ from odoo import fields, models, api
 from odoo.addons.sale_timesheet.models.hr_timesheet import TIMESHEET_INVOICE_TYPES
 
 
-class TimesheetsAnalysisReport(models.Model):
-    _inherit = "timesheets.analysis.report"
+class TimesheetsAnalysisReport(models.Model, hr_timesheet.TimesheetsAnalysisReport):
 
     order_id = fields.Many2one("sale.order", string="Sales Order", readonly=True)
     so_line = fields.Many2one("sale.order.line", string="Sales Order Item", readonly=True)

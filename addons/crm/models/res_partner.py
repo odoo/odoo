@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -6,16 +7,14 @@ from odoo.osv import expression
 
 
 
-class Partner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
     opportunity_count = fields.Integer("Opportunity", compute='_compute_opportunity_count')
 
     @api.model
     def default_get(self, fields):
-        rec = super(Partner, self).default_get(fields)
+        rec = super().default_get(fields)
         active_model = self.env.context.get('active_model')
         if active_model == 'crm.lead' and len(self.env.context.get('active_ids', [])) <= 1:
             lead = self.env[active_model].browse(self.env.context.get('active_id')).exists()

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -12,9 +13,7 @@ _logger = logging.getLogger(__name__)
 emails_split = re.compile(r"[;,\n\r]+")
 
 
-class SlideChannelInvite(models.TransientModel):
-    _name = 'slide.channel.invite'
-    _inherit = 'mail.composer.mixin'
+class SlideChannelInvite(models.TransientModel, mail.MailComposerMixin):
     _description = 'Channel Invitation Wizard'
 
     # composer content

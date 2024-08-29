@@ -61,10 +61,10 @@
     </record>
 
     <record id="view_production_lot_tree" model="ir.ui.view">
-        <field name="name">stock.production.lot.tree</field>
+        <field name="name">stock.production.lot.list</field>
         <field name="model">stock.lot</field>
         <field name="arch" type="xml">
-            <tree string="Lots/Serial Numbers" multi_edit="1">
+            <list string="Lots/Serial Numbers" multi_edit="1">
                 <field name="name" decoration-bf="1"/>
                 <field name="ref" optional="show"/>
                 <field name="product_id" readonly="1"/>
@@ -74,7 +74,7 @@
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="lot_properties" optional="hide"/>
                 <field name="product_qty" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -140,7 +140,7 @@
         <field name="path">lots</field>
         <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_production_lot_tree')}),
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_production_lot_kanban')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
@@ -162,7 +162,7 @@
         <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_production_lot_kanban')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_production_lot_tree')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_production_lot_form')})]"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
         <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0]}</field>

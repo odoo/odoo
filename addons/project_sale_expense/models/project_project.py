@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -7,8 +8,7 @@ from odoo import models, fields
 from collections import defaultdict
 
 
-class Project(models.Model):
-    _inherit = 'project.project'
+class ProjectProject(models.Model, project.ProjectProject):
 
     def _get_expenses_profitability_items(self, with_action=True):
         expenses_read_group = self.env['hr.expense']._read_group(

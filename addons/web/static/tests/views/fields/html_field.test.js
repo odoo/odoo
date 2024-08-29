@@ -82,7 +82,7 @@ test("html fields are correctly rendered in list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree editable="top"><field name="txt"/></tree>`,
+        arch: /* xml */ `<list editable="top"><field name="txt"/></list>`,
     });
     expect(".o_data_row [name='txt']").toHaveText("some text");
     expect(".o_data_row [name='txt'] .kek").toHaveStyle({ color: "rgb(255, 0, 0)" });
@@ -101,7 +101,7 @@ test("html field displays an empty string for the value false in list view", asy
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree editable="top"><field name="txt"/></tree>`,
+        arch: /* xml */ `<list editable="top"><field name="txt"/></list>`,
     });
 
     expect(".o_data_row [name='txt']").toHaveText("");

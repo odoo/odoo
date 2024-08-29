@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock
 
 from markupsafe import Markup
 import json
@@ -7,8 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()

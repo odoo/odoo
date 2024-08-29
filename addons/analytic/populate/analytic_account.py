@@ -1,9 +1,9 @@
 from odoo import models
+from odoo.addons import analytic
 from odoo.tools import populate
 
 
-class AnalyticAccount(models.Model):
-    _inherit = "account.analytic.account"
+class AccountAnalyticAccount(models.Model, analytic.AccountAnalyticAccount):
     _populate_sizes = {
         'small': 100,
         'medium': 1_000,

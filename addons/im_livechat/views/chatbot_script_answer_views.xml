@@ -17,15 +17,15 @@
     </record>
 
     <record id="chatbot_script_answer_view_tree" model="ir.ui.view">
-        <field name="name">chatbot.script.answer.view.tree</field>
+        <field name="name">chatbot.script.answer.view.list</field>
         <field name="model">chatbot.script.answer</field>
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="script_step_id"/>
                 <field name="name"/>
                 <field name="redirect_link" string="Optional Link"/>
-            </tree>
+            </list>
         </field>
     </record>
 

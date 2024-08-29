@@ -21,8 +21,8 @@
                     </group>
                     <notebook>
                         <page string="Operations" name="operations">
-                            <field name="move_ids_without_package" mode="tree">
-                                <tree no_open="1">
+                            <field name="move_ids_without_package" mode="list">
+                                <list no_open="1">
                                     <field name="id" readonly="1" column_invisible="True"/>
                                     <field name="product_id" readonly="1"/>
                                     <field name="show_details_visible" column_invisible="True"/>
@@ -39,7 +39,7 @@
                                     <field name="show_subcontracting_details_visible" column_invisible="True"/>
                                     <button name="action_show_subcontract_details" string="Register components for subcontracted product" type="object" icon="fa-sitemap"
                                         invisible="not show_subcontracting_details_visible"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models, fields, api, _
 from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
@@ -7,9 +8,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, account.AccountMove):
 
-    _inherit = 'account.move'
 
     @api.model
     def _l10n_ar_get_document_number_parts(self, document_number, document_type_code):

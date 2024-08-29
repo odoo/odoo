@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr_recruitment
 
 from datetime import timedelta
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
-class Applicant(models.Model):
-    _inherit = "hr.applicant"
+class HrApplicant(models.Model, hr_recruitment.HrApplicant):
 
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_ids = fields.One2many('survey.user_input', 'applicant_id', string="Responses")

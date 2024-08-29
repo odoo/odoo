@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
-class StockPicking(models.Model):
-    _inherit = "stock.picking"
+class StockPicking(models.Model, stock.StockPicking):
 
     l10n_in_ewaybill_id = fields.One2many('l10n.in.ewaybill', 'picking_id', string='Ewaybill')
 

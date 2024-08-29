@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sales_team
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -12,8 +13,7 @@ from odoo.tools import float_round
 _logger = logging.getLogger(__name__)
 
 
-class TeamMember(models.Model):
-    _inherit = 'crm.team.member'
+class CrmTeamMember(models.Model, sales_team.CrmTeamMember):
 
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")

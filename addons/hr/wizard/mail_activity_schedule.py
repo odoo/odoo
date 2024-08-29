@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from markupsafe import Markup
 
@@ -6,8 +7,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+class MailActivitySchedule(models.TransientModel, mail.MailActivitySchedule):
 
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     plan_department_filterable = fields.Boolean(compute='_compute_plan_department_filterable')

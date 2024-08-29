@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.addons.payment_demo import const
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(selection_add=[('demo', 'Demo')], ondelete={'demo': 'set default'})
 

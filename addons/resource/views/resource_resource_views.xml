@@ -54,10 +54,10 @@
     </record>
 
     <record id="resource_resource_tree" model="ir.ui.view">
-        <field name="name">resource.resource.tree</field>
+        <field name="name">resource.resource.list</field>
         <field name="model">resource.resource</field>
         <field name="arch" type="xml">
-            <tree string="Resources" multi_edit="1" default_order="name">
+            <list string="Resources" multi_edit="1" default_order="name">
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" />
                 <field name="user_id" />
@@ -66,14 +66,14 @@
                 <field name="tz" optional="hide" />
                 <field name="resource_type" optional="show" />
                 <field name="time_efficiency"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="action_resource_resource_tree" model="ir.actions.act_window">
         <field name="name">Resources</field>
         <field name="res_model">resource.resource</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="view_resource_resource_search"/>
         <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
@@ -82,7 +82,7 @@
     <record id="resource_resource_action_from_calendar" model="ir.actions.act_window">
         <field name="name">Resources</field>
         <field name="res_model">resource.resource</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{
             'default_calendar_id': active_id,
             'search_default_calendar_id': active_id}</field>

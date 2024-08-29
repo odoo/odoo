@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -11,16 +12,8 @@ from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
 
 
-class Blog(models.Model):
-    _name = 'blog.blog'
+class BlogBlog(models.Model, portal.MailThread, website.WebsiteSeoMetadata, website.WebsiteMultiMixin, website.WebsiteCoverPropertiesMixin, website.WebsiteSearchableMixin):
     _description = 'Blog'
-    _inherit = [
-        'mail.thread',
-        'website.seo.metadata',
-        'website.multi.mixin',
-        'website.cover_properties.mixin',
-        'website.searchable.mixin',
-    ]
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
@@ -36,7 +29,7 @@ class Blog(models.Model):
             record.blog_post_count = len(record.blog_post_ids)
 
     def write(self, vals):
-        res = super(Blog, self).write(vals)
+        res = super().write(vals)
         if 'active' in vals:
             # archiving/unarchiving a blog does it on its posts, too
             post_ids = self.env['blog.post'].with_context(active_test=False).search([
@@ -56,7 +49,7 @@ class Blog(models.Model):
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_blog.mt_blog_blog_published'):
                 subtype_id = self.env.ref('mail.mt_note').id
-        return super(Blog, self).message_post(parent_id=parent_id, subtype_id=subtype_id, **kwargs)
+        return super().message_post(parent_id=parent_id, subtype_id=subtype_id, **kwargs)
 
     def all_tags(self, join=False, min_limit=1):
         BlogTag = self.env['blog.tag']
@@ -122,7 +115,6 @@ class Blog(models.Model):
         return results_data
 
 class BlogTagCategory(models.Model):
-    _name = 'blog.tag.category'
     _description = 'Blog Tag Category'
     _order = 'name'
 
@@ -134,10 +126,8 @@ class BlogTagCategory(models.Model):
     ]
 
 
-class BlogTag(models.Model):
-    _name = 'blog.tag'
+class BlogTag(models.Model, website.WebsiteSeoMetadata):
     _description = 'Blog Tag'
-    _inherit = ['website.seo.metadata']
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -150,11 +140,8 @@ class BlogTag(models.Model):
     ]
 
 
-class BlogPost(models.Model):
-    _name = "blog.post"
+class BlogPost(models.Model, portal.MailThread, website.WebsiteSeoMetadata, website.WebsitePublishedMultiMixin, website.WebsiteCoverPropertiesMixin, website.WebsiteSearchableMixin):
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
-        'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 

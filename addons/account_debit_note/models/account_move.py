@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     debit_origin_id = fields.Many2one('account.move', 'Original Invoice Debited', readonly=True, copy=False, index='btree_not_null')
     debit_note_ids = fields.One2many('account.move', 'debit_origin_id', 'Debit Notes',
@@ -25,7 +25,7 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Debit Notes'),
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('debit_origin_id', '=', self.id)],
         }
 

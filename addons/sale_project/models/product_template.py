@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     @api.model
     def _selection_service_policy(self):

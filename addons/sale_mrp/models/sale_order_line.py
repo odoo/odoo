@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 from odoo.tools import float_compare
 
 
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
     def _compute_qty_to_deliver(self):

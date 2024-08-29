@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import stdnum
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     _sii_taxpayer_types = [
         ('1', _('VAT Affected (1st Category)')),

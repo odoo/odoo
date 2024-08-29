@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 import re
 
@@ -45,8 +46,7 @@ def validate_iban(iban):
         raise ValidationError(_("This IBAN does not pass the validation check, please verify it."))
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     @api.model
     def _get_supported_account_types(self):

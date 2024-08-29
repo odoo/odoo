@@ -63,13 +63,13 @@
     </record>
 
     <record id="sms_template_view_tree" model="ir.ui.view">
-        <field name="name">sms.template.view.tree</field>
+        <field name="name">sms.template.view.list</field>
         <field name="model">sms.template</field>
         <field name="arch" type="xml">
-            <tree string="SMS Templates">
+            <list string="SMS Templates">
                 <field name="name"/>
                 <field name="model_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -87,7 +87,7 @@
     <record id="sms_template_action" model="ir.actions.act_window">
         <field name="name">Templates</field>
         <field name="res_model">sms.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem id="sms_template_menu"

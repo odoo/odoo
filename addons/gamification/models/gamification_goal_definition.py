@@ -7,14 +7,13 @@ from odoo.tools.safe_eval import safe_eval
 DOMAIN_TEMPLATE = "[('store', '=', True), '|', ('model_id', '=', model_id), ('model_id', 'in', model_inherited_ids)%s]"
 
 
-class GoalDefinition(models.Model):
+class GamificationGoalDefinition(models.Model):
     """Goal definition
 
     A goal definition contains the way to evaluate an objective
     Each module wanting to be able to set goals to the users needs to create
     a new gamification_goal_definition
     """
-    _name = 'gamification.goal.definition'
     _description = 'Gamification Goal Definition'
 
     name = fields.Char("Goal Definition", required=True, translate=True)
@@ -122,7 +121,7 @@ class GoalDefinition(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        definitions = super(GoalDefinition, self).create(vals_list)
+        definitions = super().create(vals_list)
         definitions.filtered_domain([
             ('computation_mode', 'in', ['count', 'sum']),
         ])._check_domain_validity()
@@ -132,7 +131,7 @@ class GoalDefinition(models.Model):
         return definitions
 
     def write(self, vals):
-        res = super(GoalDefinition, self).write(vals)
+        res = super().write(vals)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
             self._check_domain_validity()
         if vals.get('field_id') or vals.get('model_id') or vals.get('batch_mode'):

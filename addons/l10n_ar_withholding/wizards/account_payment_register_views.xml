@@ -8,7 +8,7 @@
             <page name="latam_checks_page" position="after">
                 <page name="withholdings_page" string="Withholdings" invisible="country_code != 'AR'">
                     <field name="l10n_ar_withholding_ids" nolabel="1" colspan="2">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="withholding_sequence_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
@@ -16,7 +16,7 @@
                             <field name="name" readonly="withholding_sequence_id"/>
                             <field name="base_amount"/>
                             <field name="amount"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </page>

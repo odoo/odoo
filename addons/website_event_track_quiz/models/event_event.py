@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class Event(models.Model):
-    _inherit = "event.event"
+class EventEvent(models.Model, event.EventEvent):
 
     @api.depends("event_type_id", "website_menu", "community_menu")
     def _compute_community_menu(self):

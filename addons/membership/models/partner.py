@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
@@ -7,8 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 from . import membership
 
 
-class Partner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
         help="A member with whom you want to associate your membership."

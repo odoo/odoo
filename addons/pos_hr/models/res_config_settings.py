@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import fields, models, api
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     # pos.config fields
     pos_basic_employee_ids = fields.Many2many(related='pos_config_id.basic_employee_ids', readonly=False,

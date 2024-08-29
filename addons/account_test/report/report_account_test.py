@@ -9,7 +9,7 @@ from odoo.tools.safe_eval import safe_eval
 #
 
 
-class ReportAssertAccount(models.AbstractModel):
+class ReportAccountTestReportAccounttest(models.AbstractModel):
     _name = 'report.account_test.report_accounttest'
     _description = 'Account Test Report'
 

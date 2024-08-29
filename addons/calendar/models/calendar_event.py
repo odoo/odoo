@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -13,7 +14,7 @@ import uuid
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.calendar.models.calendar_attendee import Attendee
+from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
 from odoo.addons.calendar.models.calendar_recurrence import (
     weekday_to_field,
     RRULE_TYPE_SELECTION,
@@ -64,18 +65,16 @@ def get_weekday_occurence(date):
     return occurence_in_month
 
 
-class Meeting(models.Model):
-    _name = 'calendar.event'
+class CalendarEvent(models.Model, mail.MailThread):
     _description = "Calendar Event"
     _order = "start desc"
-    _inherit = ["mail.thread"]
     _systray_view = 'calendar'
 
     DISCUSS_ROUTE = 'calendar/join_videocall'
 
     @api.model
     def get_state_selections(self):
-        return Attendee.STATE_SELECTION
+        return CalendarAttendee.STATE_SELECTION
 
     @api.model
     def default_get(self, fields):
@@ -85,7 +84,7 @@ class Meeting(models.Model):
                 default_res_model_id=self.env['ir.model']._get_id(self.env.context['default_res_model'])
             )
 
-        defaults = super(Meeting, self).default_get(fields)
+        defaults = super().default_get(fields)
 
         # support active_model / active_id as replacement of default_* if not already given
         if 'res_model_id' not in defaults and 'res_model_id' in fields and \
@@ -596,7 +595,7 @@ class Meeting(models.Model):
 
     def _compute_field_value(self, field):
         if field.compute_sudo:
-            return super(Meeting, self.with_context(prefetch_fields=False))._compute_field_value(field)
+            return super(CalendarEvent, self.with_context(prefetch_fields=False))._compute_field_value(field)
         return super()._compute_field_value(field)
 
     def _fetch_query(self, query, fields):
@@ -757,7 +756,7 @@ class Meeting(models.Model):
         """ Hide private events' name for events which don't belong to the current user. """
         hidden = self.filtered(lambda event: event._check_private_event_conditions())
         hidden.display_name = _('Busy')
-        super(Meeting, self - hidden)._compute_display_name()
+        super(CalendarEvent, self - hidden)._compute_display_name()
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -774,8 +773,8 @@ class Meeting(models.Model):
                 '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
                 '&', ('privacy', '=', False), ('user_id.calendar_default_privacy', '!=', 'private')
             ]])
-            return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+            return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):
         if not self:

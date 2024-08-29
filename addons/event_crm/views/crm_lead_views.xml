@@ -3,7 +3,7 @@
     <record id="event_registration_action_from_lead" model="ir.actions.act_window">
         <field name="name">Event registrations</field>
         <field name="res_model">event.registration</field>
-        <field name="view_mode">tree,kanban,form,calendar,graph</field>
+        <field name="view_mode">list,kanban,form,calendar,graph</field>
         <field name="domain">[('lead_ids', '=', active_id)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
@@ -34,7 +34,7 @@
     <record id="crm_lead_action_from_registration" model="ir.actions.act_window">
         <field name="name">Leads</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_mode">tree,kanban,graph,pivot,calendar,form,activity</field>
+        <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
         <field name="domain">[('registration_ids', 'in', active_id)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
@@ -47,7 +47,7 @@
     <record id="crm_lead_action_from_event" model="ir.actions.act_window">
         <field name="name">Leads</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_mode">tree,kanban,graph,pivot,calendar,form,activity</field>
+        <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">

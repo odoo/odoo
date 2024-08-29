@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 from odoo import models, api, _
 from odoo.exceptions import UserError
 
 
-class ResPartner(models.Model):
+class ResPartner(models.Model, base.ResPartner):
 
-    _inherit = 'res.partner'
 
     @api.ondelete(at_uninstall=False)
     def _ar_unlink_except_master_data(self):

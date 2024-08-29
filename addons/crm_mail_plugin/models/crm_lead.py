@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import crm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class Lead(models.Model):
-    _inherit = 'crm.lead'
+class CrmLead(models.Model, crm.CrmLead):
 
     @api.model
     def _form_view_auto_fill(self):

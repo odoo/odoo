@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import re
 from stdnum import get_cc_module, ean
@@ -46,8 +47,7 @@ PEPPOL_ENDPOINT_SANITIZERS = {
 }
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     account_peppol_contact_email = fields.Char(
         string='Primary contact email',

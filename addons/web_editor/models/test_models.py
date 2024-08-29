@@ -4,7 +4,7 @@
 from odoo import models, fields
 
 
-class ConverterTest(models.Model):
+class WebEditorConverterTest(models.Model):
     _name = 'web_editor.converter.test'
     _description = 'Web Editor Converter Test'
 
@@ -30,7 +30,7 @@ class ConverterTest(models.Model):
     text = fields.Text()
 
 
-class ConverterTestSub(models.Model):
+class WebEditorConverterTestSub(models.Model):
     _name = 'web_editor.converter.test.sub'
     _description = 'Web Editor Converter Subtest'
 

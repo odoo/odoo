@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import test_mail_models_mail
+from .test_mail_models_mail import MailTestPortalNoPartner, MailTestPortal, MailTestRating, MailTestRatingThread

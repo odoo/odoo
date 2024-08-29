@@ -6,7 +6,6 @@ from odoo.tools.misc import clean_context
 
 
 class MailingContactImport(models.TransientModel):
-    _name = 'mailing.contact.import'
     _description = 'Mailing Contact Import'
 
     mailing_list_ids = fields.Many2many('mailing.list', string='Lists')

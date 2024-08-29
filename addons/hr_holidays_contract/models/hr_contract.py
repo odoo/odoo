@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr_contract
 
 from datetime import date
 from odoo import api, models, _
 from odoo.exceptions import ValidationError
 
 
-class HrContract(models.Model):
-    _inherit = 'hr.contract'
+class HrContract(models.Model, hr_contract.HrContract):
     _description = 'Employee Contract'
 
     @api.constrains('date_start', 'date_end', 'state')

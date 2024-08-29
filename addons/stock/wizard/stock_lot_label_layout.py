@@ -5,8 +5,7 @@ from collections import defaultdict
 from odoo import fields, models
 
 
-class ProductLabelLayout(models.TransientModel):
-    _name = 'lot.label.layout'
+class LotLabelLayout(models.TransientModel):
     _description = 'Choose the sheet layout to print lot labels'
 
     move_line_ids = fields.Many2many('stock.move.line')

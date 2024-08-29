@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class SaleOrderCancel(models.TransientModel):
-    _name = 'sale.order.cancel'
-    _inherit = 'mail.composer.mixin'
+class SaleOrderCancel(models.TransientModel, mail.MailComposerMixin):
     _description = "Sales Order Cancel"
 
     @api.model

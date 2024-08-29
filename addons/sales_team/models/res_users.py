@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     crm_team_ids = fields.Many2many(
         'crm.team', 'crm_team_member', 'user_id', 'crm_team_id', string='Sales Teams',

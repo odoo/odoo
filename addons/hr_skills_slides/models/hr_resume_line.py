@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_skills
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class ResumeLine(models.Model):
-    _inherit = 'hr.resume.line'
+class HrResumeLine(models.Model, hr_skills.HrResumeLine):
 
     display_type = fields.Selection(selection_add=[('course', 'Course')])
     channel_id = fields.Many2one('slide.channel', string="Course", readonly=True, index='btree_not_null')

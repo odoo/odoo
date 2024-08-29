@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -11,8 +12,7 @@ import werkzeug.urls
 from odoo import api, fields, models
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     event_count = fields.Integer(
         '# Events', compute='_compute_event_count', groups='event.group_event_registration_desk')

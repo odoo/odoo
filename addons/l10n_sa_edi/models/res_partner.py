@@ -1,8 +1,8 @@
 from odoo import fields, models, api
+from odoo.addons import base
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     l10n_sa_edi_building_number = fields.Char("Building Number")
     l10n_sa_edi_plot_identification = fields.Char("Plot Identification")

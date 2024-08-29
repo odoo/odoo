@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -24,9 +25,7 @@ VAT_COUNTRY_MAPPING = {
     'XI': 'GB',  # United Kingdom (Northern Ireland)
 }
 
-class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     partner_gid = fields.Integer('Company database ID')
     additional_info = fields.Char('Additional info')

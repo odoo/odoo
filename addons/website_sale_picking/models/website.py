@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class Website(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     picking_site_ids = fields.Many2many('delivery.carrier', string='Picking sites',
                                         compute='_compute_picking_sites')

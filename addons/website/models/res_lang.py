@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models, tools, _
 from odoo.addons.base.models.res_lang import LangDataDict, LangData
@@ -6,14 +7,13 @@ from odoo.exceptions import UserError
 from odoo.http import request
 
 
-class Lang(models.Model):
-    _inherit = "res.lang"
+class ResLang(models.Model, base.ResLang):
 
     def write(self, vals):
         if 'active' in vals and not vals['active']:
             if self.env['website'].search_count([('language_ids', 'in', self._ids)], limit=1):
                 raise UserError(_("Cannot deactivate a language that is currently used on a website."))
-        return super(Lang, self).write(vals)
+        return super().write(vals)
 
     @tools.ormcache_context(keys=("website_id",))
     def _get_frontend(self) -> LangDataDict:

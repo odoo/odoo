@@ -1,12 +1,11 @@
 import json
+from odoo.addons import spreadsheet
 
 from odoo import _, fields, models
 
 
-class SpreadsheetDashboard(models.Model):
-    _name = 'spreadsheet.dashboard'
+class SpreadsheetDashboard(models.Model, spreadsheet.SpreadsheetMixin):
     _description = 'Spreadsheet Dashboard'
-    _inherit = "spreadsheet.mixin"
     _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)

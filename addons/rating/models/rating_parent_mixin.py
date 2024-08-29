@@ -11,7 +11,6 @@ from odoo.tools.float_utils import float_compare
 
 
 class RatingParentMixin(models.AbstractModel):
-    _name = 'rating.parent.mixin'
     _description = "Rating Parent Mixin"
     _rating_satisfaction_days = False  # Number of last days used to compute parent satisfaction. Set to False to include all existing rating.
 

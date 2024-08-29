@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from odoo.exceptions import UserError
 
 
-class SaleOrderMondialRelay(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     def action_confirm(self):
         unmatch = self.filtered(lambda so: so.carrier_id.is_mondialrelay != so.partner_shipping_id.is_mondialrelay)

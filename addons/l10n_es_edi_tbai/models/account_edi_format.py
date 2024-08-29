@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import gzip
@@ -28,8 +29,7 @@ from odoo.tools.float_utils import float_repr, float_round
 from odoo.tools.xml_utils import cleanup_xml_node
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+class AccountEdiFormat(models.Model, account_edi.AccountEdiFormat):
 
     # -------------------------------------------------------------------------
     # OVERRIDES & EXTENSIONS

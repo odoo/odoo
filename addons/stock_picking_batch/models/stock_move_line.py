@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,8 +9,7 @@ from odoo import Command
 from odoo.tools.float_utils import float_is_zero
 
 
-class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     batch_id = fields.Many2one(related='picking_id.batch_id', store=True)
 

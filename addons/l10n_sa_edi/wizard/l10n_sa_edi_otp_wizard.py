@@ -2,7 +2,7 @@ from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 
 
-class RequestZATCAOtp(models.TransientModel):
+class L10nSaEdiOtpWizard(models.TransientModel):
     _name = 'l10n_sa_edi.otp.wizard'
     _description = 'Request ZATCA OTP'
 

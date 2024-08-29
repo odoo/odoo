@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,8 +7,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     event_booth_ids = fields.One2many('event.booth', 'sale_order_id', string='Booths')
     event_booth_count = fields.Integer(string='Booth Count', compute='_compute_event_booth_count')

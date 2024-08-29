@@ -1648,14 +1648,14 @@ class PropertiesCase(TestPropertiesMixin):
         values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
-        with patch('odoo.addons.test_new_api.models.test_new_api.MultiTag.check_access_rights', _mocked_check_access_rights):
+        with patch('odoo.addons.test_new_api.models.test_new_api.TestNewApiMultiTag.check_access_rights', _mocked_check_access_rights):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
         # a user read a properties with a many2one to a record
         # but doesn't have access to its parent
         self.env.invalidate_all()
-        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access_rights', _mocked_check_access_rights):
+        with patch('odoo.addons.test_new_api.models.test_new_api.TestNewApiDiscussion.check_access_rights', _mocked_check_access_rights):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
@@ -1677,7 +1677,7 @@ class PropertiesCase(TestPropertiesMixin):
             return False
 
         self.env.invalidate_all()
-        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access_rights', _mocked_check_access_rights):
+        with patch('odoo.addons.test_new_api.models.test_new_api.TestNewApiDiscussion.check_access_rights', _mocked_check_access_rights):
             message = self.env['test_new_api.message'].create({
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import portal
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
@@ -23,7 +24,6 @@ TYPE_TAX_USE = [
 
 
 class AccountTaxGroup(models.Model):
-    _name = 'account.tax.group'
     _description = 'Tax Group'
     _order = 'sequence asc, id'
     _check_company_auto = True
@@ -84,9 +84,7 @@ class AccountTaxGroup(models.Model):
         ], limit=1))
 
 
-class AccountTax(models.Model):
-    _name = 'account.tax'
-    _inherit = ['mail.thread']
+class AccountTax(models.Model, portal.MailThread):
     _description = 'Tax'
     _order = 'sequence,id'
     _check_company_auto = True
@@ -2113,7 +2111,6 @@ class AccountTax(models.Model):
 
 
 class AccountTaxRepartitionLine(models.Model):
-    _name = "account.tax.repartition.line"
     _description = "Tax Repartition Line"
     _order = 'document_type, repartition_type, sequence, id'
     _check_company_auto = True

@@ -12,7 +12,6 @@ from odoo.osv import expression
 
 
 class MailActivitySchedule(models.TransientModel):
-    _name = 'mail.activity.schedule'
     _description = 'Activity schedule plan Wizard'
     _batch_size = 500
 
@@ -255,7 +254,7 @@ class MailActivitySchedule(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': self.res_model,
             'name': _('Launch Plans'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'target': 'current',
             'domain': [('id', 'in', applied_on.ids)],
         }

@@ -7,8 +7,7 @@ from odoo.exceptions import ValidationError
 from .diff_utils import apply_patch, generate_comparison, generate_patch
 
 
-class HtmlFieldHistory(models.AbstractModel):
-    _name = "html.field.history.mixin"
+class HtmlFieldHistoryMixin(models.AbstractModel):
     _description = "Field html History"
     _html_field_history_size_limit = 300
 

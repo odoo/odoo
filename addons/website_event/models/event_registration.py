@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import event
 
 from odoo import fields, models
 
 
-class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+class EventRegistration(models.Model, event.EventRegistration):
 
     visitor_id = fields.Many2one('website.visitor', string='Visitor', ondelete='set null')
 

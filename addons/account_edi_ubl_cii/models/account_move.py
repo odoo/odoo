@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 from odoo import _, api, fields, models
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     ubl_cii_xml_id = fields.Many2one(
         comodel_name='ir.attachment',

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import json
@@ -10,8 +11,7 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_ke_cu_datetime = fields.Datetime(string='CU Signing Date and Time', copy=False)
     l10n_ke_cu_serial_number = fields.Char(string='CU Serial Number', copy=False)

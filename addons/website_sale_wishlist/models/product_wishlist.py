@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product, base
 from datetime import datetime, timedelta
 from odoo import api, fields, models
 from odoo.http import request
 
 
 class ProductWishlist(models.Model):
-    _name = 'product.wishlist'
     _description = 'Product Wishlist'
     _sql_constraints = [
         ("product_unique_partner_id",
@@ -74,22 +74,19 @@ class ProductWishlist(models.Model):
         ]).unlink()
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     wishlist_ids = fields.One2many('product.wishlist', 'partner_id', string='Wishlist', domain=[('active', '=', True)])
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     def _is_in_wishlist(self):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     def _is_in_wishlist(self):
         self.ensure_one()

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
@@ -6,8 +7,7 @@ from odoo import models
 from collections import defaultdict
 
 
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     def _get_invoiced_qty_per_product(self):
         # Replace the kit-type products with their components

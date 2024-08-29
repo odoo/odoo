@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_debit_note
 from odoo import models
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
 
-class AccountDebitNote(models.TransientModel):
-    _inherit = 'account.debit.note'
+class AccountDebitNote(models.TransientModel, account_debit_note.AccountDebitNote):
 
     def create_debit(self):
         self.ensure_one()

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     def _compute_l10n_latam_document_type(self):
         """ Override for debit notes. This sets the same document type as the one on the origin. Cannot

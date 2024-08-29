@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website
 
 from odoo import SUPERUSER_ID, _, _lt, api, fields, models, tools
 from odoo.http import request
 from odoo.osv import expression
 
 
-class Website(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     #=== DEFAULT METHODS ===#
 

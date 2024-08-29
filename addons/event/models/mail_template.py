@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 from odoo.osv import expression
 
 
-class MailTemplate(models.Model):
-    _inherit = 'mail.template'
+class MailTemplate(models.Model, mail.MailTemplate):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

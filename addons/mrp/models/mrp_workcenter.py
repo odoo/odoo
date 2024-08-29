@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import resource
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil import relativedelta
@@ -13,11 +14,9 @@ from odoo.addons.resource.models.utils import make_aware, Intervals
 from odoo.tools.float_utils import float_compare
 
 
-class MrpWorkcenter(models.Model):
-    _name = 'mrp.workcenter'
+class MrpWorkcenter(models.Model, resource.ResourceMixin):
     _description = 'Work Center'
     _order = "sequence, id"
-    _inherit = ['resource.mixin']
     _check_company_auto = True
 
     # resource
@@ -326,8 +325,7 @@ class MrpWorkcenter(models.Model):
         return capacity.time_start + capacity.time_stop if capacity else self.time_start + self.time_stop
 
 
-class WorkcenterTag(models.Model):
-    _name = 'mrp.workcenter.tag'
+class MrpWorkcenterTag(models.Model):
     _description = 'Add tag for the workcenter'
     _order = 'name'
 
@@ -344,7 +342,6 @@ class WorkcenterTag(models.Model):
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
-    _name = "mrp.workcenter.productivity.loss.type"
     _description = 'MRP Workorder productivity losses'
     _rec_name = 'loss_type'
 
@@ -364,7 +361,6 @@ class MrpWorkcenterProductivityLossType(models.Model):
 
 
 class MrpWorkcenterProductivityLoss(models.Model):
-    _name = "mrp.workcenter.productivity.loss"
     _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
@@ -390,7 +386,6 @@ class MrpWorkcenterProductivityLoss(models.Model):
         return round(duration, 2)
 
 class MrpWorkcenterProductivity(models.Model):
-    _name = "mrp.workcenter.productivity"
     _description = "Workcenter Productivity Log"
     _order = "id desc"
     _rec_name = "loss_id"
@@ -496,8 +491,7 @@ class MrpWorkcenterProductivity(models.Model):
             underperformance_timers.write({'loss_id': underperformance_type.id})
 
 
-class MrpWorkCenterCapacity(models.Model):
-    _name = 'mrp.workcenter.capacity'
+class MrpWorkcenterCapacity(models.Model):
     _description = 'Work Center Capacity'
     _check_company_auto = True
 

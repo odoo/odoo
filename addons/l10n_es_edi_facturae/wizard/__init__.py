@@ -1,2 +1,2 @@
-from . import account_move_reversal
-from . import account_move_send
+from .account_move_reversal import AccountMoveReversal
+from .account_move_send import AccountMoveSend

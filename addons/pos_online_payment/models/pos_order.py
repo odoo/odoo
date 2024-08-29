@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, tools
 
 
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     online_payment_method_id = fields.Many2one('pos.payment.method', compute="_compute_online_payment_method_id")
     next_online_payment_amount = fields.Float(string='Next online payment amount to pay', digits=0, required=False) # unlimited precision

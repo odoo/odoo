@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,8 +7,7 @@ from odoo import _, models
 from odoo.tools import float_compare
 import base64
 
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     def validate_coupon_programs(self, point_changes, new_codes):
         """

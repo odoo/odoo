@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 
 
-class MailMessage(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model, mail.MailMessage):
 
     rating_ids = fields.One2many("rating.rating", "message_id", string="Related ratings")
     rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id")

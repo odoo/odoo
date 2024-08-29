@@ -32,7 +32,7 @@
                         placeholder="This text is included at the end of the email sent to new portal users."
                         class="mb-3"/>
                     <field name="user_ids" class="o_portal_wizard_user_one2many" widget="portal_wizard_user_one2many">
-                        <tree string="Contacts" editable="bottom" create="false" delete="false">
+                        <list string="Contacts" editable="bottom" create="false" delete="false">
                             <field name="partner_id" force_save="1"/>
                             <field name="email" readonly="is_internal"/>
                             <field name="email_state" column_invisible="True"/>
@@ -53,7 +53,7 @@
                                 invisible="not is_portal or is_internal or email_state != 'ok'"/>
                             <button string="Internal User" invisible="not is_internal"
                                 disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
-                        </tree>
+                        </list>
                     </field>
                     <footer>
                         <button string="Close" class="btn-primary" special="save" data-hotkey="v" />

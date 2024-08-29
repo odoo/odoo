@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import logging
 from odoo import models
@@ -30,8 +31,7 @@ inside of #99667 is to use the request.borrow_request context manager to
 temporary hide the incoming http request.
 """
 
-class IrQweb(models.AbstractModel):
-    _inherit = "ir.qweb"
+class IrQweb(models.AbstractModel, base.IrQweb):
 
     def _prepare_environment(self, values):
         irQweb = super()._prepare_environment(values)

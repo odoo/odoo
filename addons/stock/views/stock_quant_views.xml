@@ -108,11 +108,11 @@
 
     <!-- Location Report view -->
     <record model="ir.ui.view" id="view_stock_quant_tree_editable">
-        <field name="name">stock.quant.tree.editable</field>
+        <field name="name">stock.quant.list.editable</field>
         <field name="model">stock.quant</field>
         <field eval="5" name="priority"/>
         <field name="arch" type="xml">
-            <tree editable="bottom"
+            <list editable="bottom"
                   create="1" edit="1" js_class="inventory_report_list"
                   sample="1" duplicate="0">
                 <header>
@@ -150,16 +150,16 @@
                 <field name="lot_properties" optional="hide"/>
                 <button name="action_view_stock_moves" string="History" type="object" class="btn-link" icon="fa-history"/>
                 <button name="action_view_orderpoints" string="Replenishment" type="object" context="{'default_product_id': product_id, 'search_default_location_id': location_id}" class="btn-link" icon="fa-refresh"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record model="ir.ui.view" id="view_stock_quant_tree_simple">
-        <field name="name">stock.quant.tree</field>
+        <field name="name">stock.quant.list</field>
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="product_id" column_invisible="context.get('single_product', False)"/>
                 <field name="location_id" column_invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"
@@ -171,18 +171,18 @@
                 <field name="available_quantity" string="Available"/>
                 <field name="product_uom_id" groups="uom.group_uom" string="Unit"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hidden"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record model="ir.ui.view" id="view_stock_quant_tree">
-        <field name="name">stock.quant.tree</field>
+        <field name="name">stock.quant.list</field>
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="stock.view_stock_quant_tree_simple"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="js_class">inventory_report_list</attribute>
                 <attribute name="create">0</attribute>
                 <attribute name="delete">0</attribute>
@@ -291,12 +291,12 @@
                     </group>
                     <separator string="Content"/>
                     <field name="quant_ids">
-                        <tree>
+                        <list>
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
-                        </tree>
+                        </list>
                         <kanban class="o_kanban_mobile">
                             <templates>
                                 <t t-name="kanban-box">
@@ -330,16 +330,16 @@
     </record>
 
     <record model="ir.ui.view" id="view_quant_package_tree">
-        <field name="name">stock.quant.package.tree</field>
+        <field name="name">stock.quant.package.list</field>
         <field name="model">stock.quant.package</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Package" sample="1">
+            <list string="Package" sample="1">
                 <field name="display_name"/>
                 <field name="package_type_id"/>
                 <field name="location_id" options="{'no_create': True}"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -370,7 +370,7 @@
     <record model="ir.actions.act_window" id="action_package_view">
         <field name="name">Packages</field>
         <field name="res_model">stock.quant.package</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{
             'search_default_location': True,
             'search_default_internal': True,
@@ -430,11 +430,11 @@ in this location. That leads to a negative stock.
 
     <!-- Inventory Adjustments + Update Quantity (via product) view -->
     <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable">
-        <field name="name">stock.quant.inventory.tree.editable</field>
+        <field name="name">stock.quant.inventory.list.editable</field>
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" sample="1">
+            <list default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" sample="1">
                 <header>
                     <button name="action_apply_all" string="Apply All" type="object"
                             class="btn btn-secondary"
@@ -483,7 +483,7 @@ in this location. That leads to a negative stock.
                 <button name="action_apply_inventory" type="object" string="Apply" class="btn btn-link" icon="fa-save" invisible="not inventory_quantity_set"/>
                 <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" invisible="inventory_quantity_set"/>
                 <button name="action_clear_inventory_quantity" type="object" string="Clear" class="btn text-warning" icon="fa-times" invisible="not inventory_quantity_set"/>
-            </tree>
+            </list>
         </field>
     </record>
 

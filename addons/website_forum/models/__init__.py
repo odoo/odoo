@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from . import forum_forum
-from . import forum_post
-from . import forum_post_reason
-from . import forum_post_vote
-from . import forum_tag
-from . import gamification_challenge
-from . import gamification_karma_tracking
-from . import ir_attachment
-from . import res_users
-from . import website
+from .forum_forum import ForumForum
+from .forum_post import ForumPost
+from .forum_post_reason import ForumPostReason
+from .forum_post_vote import ForumPostVote
+from .forum_tag import ForumTag
+from .gamification_challenge import GamificationChallenge
+from .gamification_karma_tracking import GamificationKarmaTracking
+from .ir_attachment import IrAttachment
+from .res_users import ResUsers
+from .website import Website

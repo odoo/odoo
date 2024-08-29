@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 
 from datetime import datetime, timedelta
 from odoo import api, Command, models
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data_move(self, company=False):

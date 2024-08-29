@@ -10,10 +10,10 @@
                 </p>
                 <field name="show_lots" invisible="1"/>
                 <field name="lot_ids" invisible="not show_lots">
-                    <tree string="Expired Lot(s)">
+                    <list string="Expired Lot(s)">
                         <field name="product_id"/>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
                 <footer>
                     <button name="process"

@@ -1,9 +1,9 @@
 
+from odoo.addons import marketing_card
 from odoo import fields, models
 
 
-class CampaignElement(models.Model):
-    _inherit = 'card.campaign.element'
+class CardCampaignElement(models.Model, marketing_card.CardCampaignElement):
 
     card_element_role = fields.Selection(selection_add=[
         ('unused', 'Unused Testing Role'),

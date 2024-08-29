@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import logging
 
@@ -15,8 +16,7 @@ from odoo.addons.payment_asiapay.controllers.main import AsiaPayController
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):

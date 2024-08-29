@@ -22,11 +22,11 @@
         <field name="name">Sponsor Levels</field>
         <field name="model">event.sponsor.type</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" string="Event Sponsor Level">
+            <list editable="bottom" string="Event Sponsor Level">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="display_ribbon_style"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -143,10 +143,10 @@
     </record>
 
     <record id="event_sponsor_view_tree" model="ir.ui.view">
-        <field name="name">event.sponsor.view.tree</field>
+        <field name="name">event.sponsor.view.list</field>
         <field name="model">event.sponsor</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1" sample="1">
+            <list multi_edit="1" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="name"/>
@@ -157,7 +157,7 @@
                 <field name="sponsor_type_id"/>
                 <field name="is_published" optional="show"/>
                 <field name="exhibitor_type"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -198,7 +198,7 @@
     <record id="event_sponsor_action" model="ir.actions.act_window">
         <field name="name">Event Sponsors</field>
         <field name="res_model">event.sponsor</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
 <p class="o_view_nocontent_smiling_face">
     Create a Sponsor / Exhibitor
@@ -212,7 +212,7 @@
     <record id="event_sponsor_action_from_event" model="ir.actions.act_window">
         <field name="name">Event Sponsors</field>
         <field name="res_model">event.sponsor</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         <field name="help" type="html">
 <p class="o_view_nocontent_smiling_face">

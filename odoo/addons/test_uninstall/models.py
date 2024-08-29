@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
 
-class test_uninstall_model(models.Model):
+class TestUninstallModel(models.Model):
     """
     This model uses different types of columns to make it possible to test
     the uninstall feature of Odoo.
@@ -19,8 +20,7 @@ class test_uninstall_model(models.Model):
         ('name_uniq', 'unique (name)', 'Each name must be unique.'),
     ]
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     _sql_constraints = [
         ('test_uninstall_res_user_unique_constraint', 'unique (password)', 'Test uninstall unique constraint'),

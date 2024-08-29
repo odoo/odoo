@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import contextlib
 import requests
@@ -15,8 +16,7 @@ TIMEOUT = 10
 NON_PEPPOL_FORMAT = (False, 'facturx', 'oioubl_201', 'ciusro')
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     peppol_verification_state = fields.Selection(
         selection=[

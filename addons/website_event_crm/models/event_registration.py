@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from markupsafe import Markup
 
 
-class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+class EventRegistration(models.Model, event.EventRegistration):
 
     def _get_lead_description_registration(self, line_suffix=''):
         """Add the questions and answers linked to the registrations into the description of the lead."""

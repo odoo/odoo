@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -9,8 +10,7 @@ from odoo.tools import format_amount
 from odoo.tools.sql import column_exists, create_column
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     qty_delivered_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
     project_id = fields.Many2one(

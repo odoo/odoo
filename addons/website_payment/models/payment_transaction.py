@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import payment
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
 from odoo import _, fields, models
 
 
-class PaymentTransaction(models.Model):
-    _inherit = "payment.transaction"
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     is_donation = fields.Boolean(string="Is donation")
 

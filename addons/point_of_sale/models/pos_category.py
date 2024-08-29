@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from typing import List, Tuple
@@ -8,10 +9,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
 
-class PosCategory(models.Model):
-    _name = "pos.category"
+class PosCategory(models.Model, point_of_sale.PosLoadMixin):
     _description = "Point of Sale Category"
-    _inherit = ['pos.load.mixin']
     _order = "sequence, name"
 
     @api.constrains('parent_id')

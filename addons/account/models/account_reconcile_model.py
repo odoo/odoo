@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic, portal
 
 from odoo import api, fields, models, Command, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -9,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 
 
 class AccountReconcileModelPartnerMapping(models.Model):
-    _name = 'account.reconcile.model.partner.mapping'
     _description = 'Partner mapping for reconciliation models'
     _check_company_auto = True
 
@@ -36,9 +36,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
                 raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s", current_regex))
 
 
-class AccountReconcileModelLine(models.Model):
-    _name = 'account.reconcile.model.line'
-    _inherit = 'analytic.mixin'
+class AccountReconcileModelLine(models.Model, analytic.AnalyticMixin):
     _description = 'Rules for the reconciliation model'
     _order = 'sequence, id'
     _check_company_auto = True
@@ -171,10 +169,8 @@ class AccountReconcileModelLine(models.Model):
                     raise UserError(_('The regex is not valid'))
 
 
-class AccountReconcileModel(models.Model):
-    _name = 'account.reconcile.model'
+class AccountReconcileModel(models.Model, portal.MailThread):
     _description = 'Preset to create journal entries during a invoices and payments matching'
-    _inherit = ['mail.thread']
     _order = 'sequence, id'
     _check_company_auto = True
 

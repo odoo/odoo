@@ -7,7 +7,7 @@ from odoo import _, api, models
 from odoo.tools import float_compare, float_is_zero, format_date
 
 
-class ReceptionReport(models.AbstractModel):
+class ReportStockReportReception(models.AbstractModel):
     _name = 'report.stock.report_reception'
     _description = "Stock Reception Report"
 

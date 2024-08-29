@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -14,10 +15,8 @@ from odoo.tools.safe_eval import safe_eval, time
 _logger = logging.getLogger(__name__)
 
 
-class MailTemplate(models.Model):
+class MailTemplate(models.Model, mail.MailRenderMixin, mail.TemplateResetMixin):
     "Templates for sending email"
-    _name = "mail.template"
-    _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'Email Templates'
     _order = 'user_id,name,id'
 
@@ -224,7 +223,7 @@ class MailTemplate(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
                 'context': repr(context),
-                'view_mode': 'form,tree',
+                'view_mode': 'form,list',
                 'view_id': view.id,
                 'target': 'new',
                 'binding_model_id': template.model_id.id,

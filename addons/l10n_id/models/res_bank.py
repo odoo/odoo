@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 import requests
 import pytz
 from urllib.parse import urljoin
@@ -24,8 +25,7 @@ def _l10n_id_make_qris_request(endpoint, params):
     return response
 
 
-class ResBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system")
     l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system")

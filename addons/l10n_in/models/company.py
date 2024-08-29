@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from stdnum.in_ import pan, gstin
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     l10n_in_upi_id = fields.Char(string="UPI Id")
     l10n_in_hsn_code_digit = fields.Selection(

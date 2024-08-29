@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = "account.journal"
+class AccountJournal(models.Model, account.AccountJournal):
 
     l10n_ec_require_emission = fields.Boolean(
         string='Require Emission',

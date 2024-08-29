@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from lxml.builder import E
 
@@ -7,9 +8,8 @@ from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
 
 
-class AnalyticPlanFields(models.AbstractModel):
+class AnalyticPlanFieldsMixin(models.AbstractModel):
     """ Add one field per analytic plan to the model """
-    _name = 'analytic.plan.fields.mixin'
     _description = 'Analytic Plan Fields'
 
     account_id = fields.Many2one(
@@ -102,9 +102,7 @@ class AnalyticPlanFields(models.AbstractModel):
         return arch, view
 
 
-class AccountAnalyticLine(models.Model):
-    _name = 'account.analytic.line'
-    _inherit = 'analytic.plan.fields.mixin'
+class AccountAnalyticLine(models.Model, analytic.AnalyticPlanFieldsMixin):
     _description = 'Analytic Line'
     _order = 'date desc, id desc'
     _check_company_auto = True

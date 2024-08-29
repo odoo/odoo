@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
 
 
-class Users(models.Model):
-    _inherit = ['res.users']
+class ResUsers(models.Model, base.ResUsers):
 
     property_warehouse_id = fields.Many2one('stock.warehouse', string='Default Warehouse', company_dependent=True, check_company=True)
 

@@ -4,7 +4,7 @@
     <record id="stock_move_per_sale_order_line_action" model="ir.actions.act_window">
         <field name="name">Transfers</field>
         <field name="res_model">stock.move</field>
-        <field name="view_mode">tree,kanban,pivot,graph,form</field>
+        <field name="view_mode">list,kanban,pivot,graph,form</field>
         <field name="domain">[('sale_line_id', '=', active_id)]</field>
         <field name="context">{}</field>
         <field name="help" type="html">

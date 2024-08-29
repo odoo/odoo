@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
-class IrConfigParameter(models.Model):
-    _inherit = 'ir.config_parameter'
+class IrConfigParameter(models.Model, base.IrConfigParameter):
+    _name = "ir.config_parameter"
+
 
     def write(self, vals):
         result = super(IrConfigParameter, self).write(vals)

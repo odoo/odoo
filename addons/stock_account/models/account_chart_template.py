@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)

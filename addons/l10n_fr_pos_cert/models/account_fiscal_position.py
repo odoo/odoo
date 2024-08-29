@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 
 from odoo import _, models
 from odoo.exceptions import UserError
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = "account.fiscal.position"
+class AccountFiscalPosition(models.Model, account.AccountFiscalPosition):
 
     def write(self, vals):
         if "tax_ids" in vals:

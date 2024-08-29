@@ -122,9 +122,9 @@ test("image fields in x2many list are loaded correctly", async () => {
         arch: /* xml */ `
             <form>
                 <field name="timmy" widget="many2many">
-                    <tree>
+                    <list>
                         <field name="image" widget="image_url"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,

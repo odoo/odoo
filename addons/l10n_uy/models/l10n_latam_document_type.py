@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import l10n_latam_invoice_document
 from odoo import _, models
 from odoo.exceptions import UserError
 import re
 
 
-class L10nAccountDocumentType(models.Model):
+class L10nLatamDocumentType(models.Model, l10n_latam_invoice_document.L10nLatamDocumentType):
 
-    _inherit = 'l10n_latam.document.type'
+    _name = "l10n_latam.document.type"
+
 
     def _format_document_number(self, document_number):
         """ format and validate the document_number"""

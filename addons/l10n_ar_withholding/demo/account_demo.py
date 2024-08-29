@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 from odoo import models
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     def _post_load_demo_data(self, company=False):
         result = super()._post_load_demo_data(company)

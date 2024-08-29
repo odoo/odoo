@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="product_uom_tree_view" model="ir.ui.view">
-        <field name="name">uom.uom.tree</field>
+        <field name="name">uom.uom.list</field>
         <field name="model">uom.uom</field>
         <field name="arch" type="xml">
-            <tree string="Units of Measure" create="false">
+            <list string="Units of Measure" create="false">
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="uom_type"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -97,7 +97,7 @@
                     <notebook>
                         <page string="Units of Measure" name="uom_lines">
                             <field name="uom_ids" force_save="1" context="{'default_uom_type': 'smaller', 'default_category_id': id}">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="name" decoration-bf="uom_type == 'reference'"/>
                                     <field name="uom_type" decoration-bf="uom_type == 'reference'"/>
                                     <field name="factor" column_invisible="True"/>
@@ -105,7 +105,7 @@
                                     <field name="ratio" string="Ratio" readonly="uom_type == 'reference'" digits="[42,5]"/>
                                     <field name="active"/>
                                     <field name="rounding" digits="[42, 5]"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -115,13 +115,13 @@
     </record>
 
     <record id="product_uom_categ_tree_view" model="ir.ui.view">
-        <field name="name">uom.category.tree</field>
+        <field name="name">uom.category.list</field>
         <field name="model">uom.category</field>
         <field name="arch" type="xml">
-            <tree string="Units of Measure categories">
+            <list string="Units of Measure categories">
                 <field name="name"/>
                 <field name="uom_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -139,7 +139,7 @@
     <record id="product_uom_categ_form_action" model="ir.actions.act_window">
         <field name="name">Units of Measure Categories</field>
         <field name="res_model">uom.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'allow_to_change_reference': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

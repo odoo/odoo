@@ -9,10 +9,10 @@
             <notebook position="inside">
                 <page string="Product Page Extra Fields" name="page_product_page_extra_fields" groups="base.group_no_one">
                     <field name="shop_extra_field_ids" context="{'default_website_id': id}">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="field_id" required="1" options="{'no_create': True}"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </notebook>

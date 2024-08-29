@@ -1608,17 +1608,17 @@ QUnit.module("MockServer", (hooks) => {
     QUnit.test("List View: invisible on processed Arch", async function (assert) {
         data.views = {
             "bar,10001,list": `
-                <tree>
+                <list>
                     <field name="bool" column_invisible="1"/>
                     <field name="foo"/>
-                </tree>
+                </list>
             `,
             "bar,10001,search": `<search></search>`,
         };
-        const expectedList = `<tree>
+        const expectedList = `<list>
                     <field name="bool" column_invisible="True"/>
                     <field name="foo"/>
-                </tree>`;
+                </list>`;
         const mockServer = new MockServer(data);
         const { views } = mockServer.mockGetViews("bar", { views: [[10001, "list"]], options: {} });
         assert.deepEqual(views.list.arch, expectedList);

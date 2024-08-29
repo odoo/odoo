@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
 class StockWarnInsufficientQty(models.AbstractModel):
-    _name = 'stock.warn.insufficient.qty'
     _description = 'Warn Insufficient Quantity'
 
     product_id = fields.Many2one('product.product', 'Product', required=True)
@@ -31,9 +31,7 @@ class StockWarnInsufficientQty(models.AbstractModel):
         raise NotImplementedError()
 
 
-class StockWarnInsufficientQtyScrap(models.TransientModel):
-    _name = 'stock.warn.insufficient.qty.scrap'
-    _inherit = 'stock.warn.insufficient.qty'
+class StockWarnInsufficientQtyScrap(models.TransientModel, stock.StockWarnInsufficientQty):
     _description = 'Warn Insufficient Scrap Quantity'
 
     scrap_id = fields.Many2one('stock.scrap', 'Scrap')

@@ -1,10 +1,10 @@
 from odoo import models
+from odoo.addons import base
 from odoo.exceptions import AccessDenied
 from odoo.http import Controller, route
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     @classmethod
     def _auth_method_thing(cls):

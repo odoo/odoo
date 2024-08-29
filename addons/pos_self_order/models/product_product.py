@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 from __future__ import annotations
 from typing import List, Dict
 from odoo import api, models, fields
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     self_order_available = fields.Boolean(
         string="Available in Self Order",
@@ -32,8 +32,7 @@ class ProductTemplate(models.Model):
                     product._send_availability_status()
         return res
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

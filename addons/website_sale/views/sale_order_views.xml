@@ -68,7 +68,7 @@
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="view_mode">list,form,kanban,activity</field>
         <field name="domain">[]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
@@ -83,7 +83,7 @@
     <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="view_mode">list,form,kanban,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
@@ -122,7 +122,7 @@
     <record id="sale_order_action_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="domain">[('state', '=', 'sale'), ('order_line', '!=', False), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
@@ -149,7 +149,7 @@
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">list,kanban,form,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="view_id" ref="sale.view_quotation_tree"/>
@@ -166,7 +166,7 @@
     <record id="action_view_abandoned_tree" model="ir.actions.act_window">
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">list,kanban,form,activity</field>
         <field name="domain">[('is_abandoned_cart', '=', 1)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
@@ -203,7 +203,7 @@
     </record>
 
     <record id="sale_order_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree.inherit.website.sale</field>
+        <field name="name">sale.order.list.inherit.website.sale</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">

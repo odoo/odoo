@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event_booth
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class EventBoothCategory(models.Model):
-    _inherit = 'event.booth.category'
+class EventBoothCategory(models.Model, event_booth.EventBoothCategory):
 
     @api.model
     def _get_exhibitor_type(self):

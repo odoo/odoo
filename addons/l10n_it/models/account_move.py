@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import models
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=False):
         if self.message_main_attachment_id.mimetype == "application/pkcs7-mime":

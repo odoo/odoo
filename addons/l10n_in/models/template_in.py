@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models, fields, _
 from odoo.addons.account.models.chart_template import template
 from odoo import Command
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = 'account.chart.template'
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     @template('in')
     def _get_in_template_data(self):

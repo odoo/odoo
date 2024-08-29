@@ -1,1 +1,1 @@
-from . import hr_timesheet
+from .hr_timesheet import AccountAnalyticLine

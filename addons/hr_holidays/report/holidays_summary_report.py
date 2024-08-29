@@ -26,7 +26,7 @@ COLORS_MAP = {
 }
 
 
-class HrHolidaySummaryReport(models.AbstractModel):
+class ReportHrHolidaysReportHolidayssummary(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
     _description = 'Holidays Summary Report'
 

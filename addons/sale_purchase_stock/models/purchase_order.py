@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     @api.depends('order_line.move_dest_ids.group_id.sale_id', 'order_line.move_ids.move_dest_ids.group_id.sale_id')
     def _compute_sale_order_count(self):
@@ -15,8 +15,7 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self)._get_sale_orders() | self.order_line.move_dest_ids.group_id.sale_id | self.order_line.move_ids.move_dest_ids.group_id.sale_id
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+class PurchaseOrderLine(models.Model, purchase.PurchaseOrderLine):
 
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)

@@ -58,7 +58,7 @@ def _prepare_data(env, docids, data):
     }
 
 
-class ReportProductTemplateLabel2x7(models.AbstractModel):
+class ReportProductReportProducttemplatelabel2x7(models.AbstractModel):
     _name = 'report.product.report_producttemplatelabel2x7'
     _description = 'Product Label Report 2x7'
 
@@ -66,7 +66,7 @@ class ReportProductTemplateLabel2x7(models.AbstractModel):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabel4x7(models.AbstractModel):
+class ReportProductReportProducttemplatelabel4x7(models.AbstractModel):
     _name = 'report.product.report_producttemplatelabel4x7'
     _description = 'Product Label Report 4x7'
 
@@ -74,7 +74,7 @@ class ReportProductTemplateLabel4x7(models.AbstractModel):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabel4x12(models.AbstractModel):
+class ReportProductReportProducttemplatelabel4x12(models.AbstractModel):
     _name = 'report.product.report_producttemplatelabel4x12'
     _description = 'Product Label Report 4x12'
 
@@ -82,7 +82,7 @@ class ReportProductTemplateLabel4x12(models.AbstractModel):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabel4x12NoPrice(models.AbstractModel):
+class ReportProductReportProducttemplatelabel4x12noprice(models.AbstractModel):
     _name = 'report.product.report_producttemplatelabel4x12noprice'
     _description = 'Product Label Report 4x12 No Price'
 
@@ -90,7 +90,7 @@ class ReportProductTemplateLabel4x12NoPrice(models.AbstractModel):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabelDymo(models.AbstractModel):
+class ReportProductReportProducttemplatelabelDymo(models.AbstractModel):
     _name = 'report.product.report_producttemplatelabel_dymo'
     _description = 'Product Label Report'
 

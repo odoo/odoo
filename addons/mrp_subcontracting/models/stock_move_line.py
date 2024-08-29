@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 from odoo import _, api, models
 
 
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):

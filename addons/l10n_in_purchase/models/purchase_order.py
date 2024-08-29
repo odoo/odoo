@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class PurchaseOrder(models.Model):
-    _inherit = "purchase.order"
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),

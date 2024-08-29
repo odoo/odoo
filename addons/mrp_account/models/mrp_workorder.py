@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 
 
-class MrpWorkorder(models.Model):
-    _inherit = 'mrp.workorder'
+class MrpWorkorder(models.Model, mrp.MrpWorkorder):
 
     mo_analytic_account_line_ids = fields.Many2many('account.analytic.line', 'mrp_workorder_mo_analytic_rel', copy=False)
     wc_analytic_account_line_ids = fields.Many2many('account.analytic.line', 'mrp_workorder_wc_analytic_rel', copy=False)

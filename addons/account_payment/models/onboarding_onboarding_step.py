@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import onboarding
 
 from odoo import api, models
 
 
-class OnboardingStep(models.Model):
-    _inherit = 'onboarding.onboarding.step'
+class OnboardingOnboardingStep(models.Model, onboarding.OnboardingOnboardingStep):
 
     @api.model
     def action_open_step_payment_provider(self):

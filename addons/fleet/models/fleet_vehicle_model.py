@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -17,9 +18,7 @@ FUEL_TYPES = [
     ('electric', 'Electric'),
 ]
 
-class FleetVehicleModel(models.Model):
-    _name = 'fleet.vehicle.model'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'avatar.mixin']
+class FleetVehicleModel(models.Model, mail.MailThread, mail.MailActivityMixin, base.AvatarMixin):
     _description = 'Model of a vehicle'
     _order = 'name asc'
 
@@ -94,7 +93,7 @@ class FleetVehicleModel(models.Model):
         self.ensure_one()
         context = {'default_model_id': self.id}
         if self.vehicle_count:
-            view_mode = 'kanban,tree,form'
+            view_mode = 'kanban,list,form'
             name = _('Vehicles')
             context['search_default_model_id'] = self.id
         else:

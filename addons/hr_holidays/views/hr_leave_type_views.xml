@@ -124,10 +124,10 @@
     </record>
 
     <record id="view_holiday_status_normal_tree" model="ir.ui.view">
-        <field name="name">hr.leave.type.normal.tree</field>
+        <field name="name">hr.leave.type.normal.list</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Type" multi_edit="1">
+            <list string="Time Off Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
@@ -136,14 +136,14 @@
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="open_view_holiday_status" model="ir.actions.act_window">
         <field name="name">Time Off Types</field>
         <field name="res_model">hr.leave.type</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
     </record>
 
 </odoo>

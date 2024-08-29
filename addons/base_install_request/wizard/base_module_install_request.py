@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 
 
 class BaseModuleInstallRequest(models.TransientModel):
-    _name = "base.module.install.request"
     _description = "Module Activation Request"
     _rec_name = "module_id"
 
@@ -45,7 +44,6 @@ class BaseModuleInstallRequest(models.TransientModel):
 
 
 class BaseModuleInstallReview(models.TransientModel):
-    _name = "base.module.install.review"
     _description = "Module Activation Review"
     _rec_name = "module_id"
 

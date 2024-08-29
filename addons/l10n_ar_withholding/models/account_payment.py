@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models
 
 
-class AccountPayment(models.Model):
+class AccountPayment(models.Model, account.AccountPayment):
 
-    _inherit = 'account.payment'
 
     def _synchronize_to_moves(self, changed_fields):
         ''' If we change a payment with withholdings, delete all withholding lines as the synchronization mechanism is not

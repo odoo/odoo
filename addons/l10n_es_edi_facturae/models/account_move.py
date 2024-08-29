@@ -1,4 +1,5 @@
 import re
+from odoo.addons import account
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -41,8 +42,7 @@ COUNTRY_CODE_MAP = {
 }
 REVERSED_COUNTRY_CODE = {v: k for k, v in COUNTRY_CODE_MAP.items()}
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_es_edi_facturae_xml_id = fields.Many2one(
         comodel_name='ir.attachment',

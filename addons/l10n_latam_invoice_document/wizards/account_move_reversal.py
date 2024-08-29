@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = "account.move.reversal"
+class AccountMoveReversal(models.TransientModel, account.AccountMoveReversal):
 
     l10n_latam_use_documents = fields.Boolean(compute='_compute_documents_info')
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False, store=True)

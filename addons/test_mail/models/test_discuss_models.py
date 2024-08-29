@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class MailTestProperties(models.Model):
+class MailTestProperties(models.Model, mail.MailThread):
     _description = 'Mail Test Properties'
-    _name = 'mail.test.properties'
-    _inherit = ['mail.thread']
 
     name = fields.Char('Name')
     parent_id = fields.Many2one('mail.test.properties', string='Parent')

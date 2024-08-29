@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account, point_of_sale, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from datetime import datetime
@@ -19,9 +20,7 @@ import base64
 _logger = logging.getLogger(__name__)
 
 
-class PosOrder(models.Model):
-    _name = "pos.order"
-    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
+class PosOrder(models.Model, portal.PortalMixin, point_of_sale.PosBusMixin, point_of_sale.PosLoadMixin, portal.MailThread):
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
@@ -531,7 +530,7 @@ class PosOrder(models.Model):
     def action_view_refund_orders(self):
         return {
             'name': _('Refund Orders'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'pos.order',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
@@ -1072,10 +1071,10 @@ class PosOrder(models.Model):
                 order._prepare_refund_values(current_session)
             )
             for line in order.lines:
-                PosOrderLineLot = self.env['pos.pack.operation.lot']
+                PosPackOperationLot = self.env['pos.pack.operation.lot']
                 for pack_lot in line.pack_lot_ids:
-                    PosOrderLineLot += pack_lot.copy()
-                line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
+                    PosPackOperationLot += pack_lot.copy()
+                line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
             refund_orders |= refund_order
         return refund_orders
 
@@ -1186,11 +1185,9 @@ class PosOrder(models.Model):
     def _post_chatter_message(self, body):
         self.message_post(body=body)
 
-class PosOrderLine(models.Model):
-    _name = "pos.order.line"
+class PosOrderLine(models.Model, point_of_sale.PosLoadMixin):
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
-    _inherit = ['pos.load.mixin']
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
@@ -1259,15 +1256,15 @@ class PosOrderLine(models.Model):
         for orderline in self:
             orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
 
-    def _prepare_refund_data(self, refund_order, PosOrderLineLot):
+    def _prepare_refund_data(self, refund_order, PosPackOperationLot):
         """
         This prepares data for refund order line. Inheritance may inject more data here
 
         @param refund_order: the pre-created refund order
         @type refund_order: pos.order
 
-        @param PosOrderLineLot: the pre-created Pack operation Lot
-        @type PosOrderLineLot: pos.pack.operation.lot
+        @param PosPackOperationLot: the pre-created Pack operation Lot
+        @type PosPackOperationLot: pos.pack.operation.lot
 
         @return: dictionary of data which is for creating a refund order line from the original line
         @rtype: dict
@@ -1279,7 +1276,7 @@ class PosOrderLine(models.Model):
             'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
-            'pack_lot_ids': PosOrderLineLot,
+            'pack_lot_ids': PosPackOperationLot,
             'is_total_cost_computed': False,
             'refunded_orderline_id': self.id,
         }
@@ -1549,11 +1546,9 @@ class PosOrderLine(models.Model):
         return original_price - self.price_subtotal_incl
 
 
-class PosOrderLineLot(models.Model):
-    _name = "pos.pack.operation.lot"
+class PosPackOperationLot(models.Model, point_of_sale.PosLoadMixin):
     _description = "Specify product lot/serial number in pos order line"
     _rec_name = "lot_name"
-    _inherit = ['pos.load.mixin']
 
     pos_order_line_id = fields.Many2one('pos.order.line')
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
@@ -1568,9 +1563,7 @@ class PosOrderLineLot(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['lot_name', 'pos_order_line_id']
 
-class AccountCashRounding(models.Model):
-    _name = 'account.cash.rounding'
-    _inherit = ['account.cash.rounding', 'pos.load.mixin']
+class AccountCashRounding(models.Model, account.AccountCashRounding, point_of_sale.PosLoadMixin):
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):

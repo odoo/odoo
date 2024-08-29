@@ -1,4 +1,5 @@
 import uuid
+from odoo.addons import account
 import json
 from markupsafe import Markup
 from odoo import _, fields, models, api
@@ -11,8 +12,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_sa_uuid = fields.Char(string='Document UUID (SA)', copy=False, help="Universally unique identifier of the Invoice")
 
@@ -211,8 +211,7 @@ class AccountMove(models.Model):
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     def _apply_retention_tax_filter(self, tax_values):
         return not tax_values['tax_id'].l10n_sa_is_retention

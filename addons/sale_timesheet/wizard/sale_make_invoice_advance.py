@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class SaleAdvancePaymentInv(models.TransientModel):
-    _inherit = 'sale.advance.payment.inv'
+class SaleAdvancePaymentInv(models.TransientModel, sale.SaleAdvancePaymentInv):
 
     date_start_invoice_timesheet = fields.Date(
         string="Start Date",

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import crm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -8,8 +9,7 @@ from odoo.tools import populate
 from odoo.addons.crm.populate import tools
 
 
-class CrmLead(models.Model):
-    _inherit = 'crm.lead'
+class CrmLead(models.Model, crm.CrmLead):
     _populate_dependencies = [
         'res.partner',  # customer
     ]

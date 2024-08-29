@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -8,9 +9,7 @@ from odoo.exceptions import UserError
 from odoo.osv.expression import AND
 from odoo.tools import float_is_zero, format_list
 
-class StockPickingBatch(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _name = "stock.picking.batch"
+class StockPickingBatch(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = "Batch Transfer"
     _order = "name desc"
 

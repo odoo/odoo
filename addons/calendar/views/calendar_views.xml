@@ -6,9 +6,9 @@
         <field name="name">calendar.event.type</field>
         <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
-            <tree string="Meeting Types" sample="1" editable="bottom">
+            <list string="Meeting Types" sample="1" editable="bottom">
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -20,15 +20,15 @@
 
     <!-- Calendar Alarm : -->
     <record id="view_calendar_alarm_tree" model="ir.ui.view">
-        <field name="name">calendar.alarm.tree</field>
+        <field name="name">calendar.alarm.list</field>
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
-            <tree string="Calendar Alarm" sample="1">
+            <list string="Calendar Alarm" sample="1">
                 <field name="name" column_invisible="True"/>
                 <field name="alarm_type"/>
                 <field name="duration"/>
                 <field name="interval"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -63,16 +63,16 @@
     <record id="action_calendar_alarm" model="ir.actions.act_window">
         <field name="name">Calendar Alarm</field>
         <field name="res_model">calendar.alarm</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_calendar_alarm_tree"/>
     </record>
 
     <!-- Calendar Events : Views and Actions  -->
     <record id="view_calendar_event_tree" model="ir.ui.view">
-        <field name="name">calendar.event.tree</field>
+        <field name="name">calendar.event.list</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" sample="1" multi_edit="1" js_class="calendar_list_view">
+            <list string="Meetings" sample="1" multi_edit="1" js_class="calendar_list_view">
                 <header>
                     <button name="action_open_composer" type="object" context="{'default_composition_mode':'mass_mail'}"
                             string="Send Mail"/>
@@ -92,7 +92,7 @@
                 <field name="description" optional="hide" readonly="recurrency"/>
                 <field name="allday" column_invisible="True"/>
                 <field name="message_needaction" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -246,8 +246,8 @@
                     <notebook>
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one" invisible="not user_can_edit">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
-                            <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
-                                <tree string="Invitation details" editable="top" create="false" delete="false">
+                            <field name="attendee_ids" widget="one2many" mode="list,kanban" readonly="1">
+                                <list string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
                                     <field name="email" widget="email"/>
                                     <field name="phone" widget="phone"/>
@@ -255,7 +255,7 @@
                                     <button name="do_tentative" invisible="state not in ('needsAction', 'declined', 'accepted')" string="Uncertain" type="object" icon="fa-asterisk"/>
                                     <button name="do_accept" string="Accept" invisible="state not in ('needsAction', 'tentative', 'declined')" type="object" icon="fa-check text-success"/>
                                     <button name="do_decline" string="Decline" invisible="state not in ('needsAction', 'tentative', 'accepted')" type="object" icon="fa-times-circle text-danger"/>
-                                </tree>
+                                </list>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
 
                                     <templates>
@@ -406,7 +406,7 @@
         <field name="name">Meetings</field>
         <field name="path">calendar</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_mode">calendar,list,form</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
@@ -445,7 +445,7 @@
     <record id="action_view_calendar_event_tree" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="2"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_calendar_event_tree"/>
     </record>
 

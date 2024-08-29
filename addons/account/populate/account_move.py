@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 """Classes defining the populate factory for Journal Entries, Invoices and related models."""
 from odoo import models, fields, Command
 from odoo.tools import populate
@@ -11,14 +12,13 @@ from dateutil.relativedelta import relativedelta
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, account.AccountMove):
     """Populate factory part for account.move.
 
     Because of the complicated nature of the interraction of account.move and account.move.line,
     both models are actualy generated in the same factory.
     """
 
-    _inherit = "account.move"
 
     _populate_sizes = {
         'small': 1000,

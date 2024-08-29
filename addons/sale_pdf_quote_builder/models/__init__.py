@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_actions_report
-from . import product_document
-from . import quotation_document
-from . import sale_order
-from . import sale_order_line
-from . import sale_order_template
-from . import sale_pdf_form_field
+from .ir_actions_report import IrActionsReport
+from .product_document import ProductDocument
+from .quotation_document import QuotationDocument
+from .sale_order import SaleOrder
+from .sale_order_line import SaleOrderLine
+from .sale_order_template import SaleOrderTemplate
+from .sale_pdf_form_field import SalePdfFormField

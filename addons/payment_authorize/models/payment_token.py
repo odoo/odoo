@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import logging
 import pprint
@@ -11,8 +12,7 @@ from .authorize_request import AuthorizeAPI
 _logger = logging.getLogger(__name__)
 
 
-class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+class PaymentToken(models.Model, payment.PaymentToken):
 
     authorize_profile = fields.Char(
         string="Authorize.Net Profile ID",

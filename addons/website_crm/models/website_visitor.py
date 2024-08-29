@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 from odoo.osv import expression
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+class WebsiteVisitor(models.Model, website.WebsiteVisitor):
 
     lead_ids = fields.Many2many('crm.lead', string='Leads', groups="sales_team.group_sale_salesman")
     lead_count = fields.Integer('# Leads', compute="_compute_lead_count", groups="sales_team.group_sale_salesman")

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -7,8 +8,7 @@ import stdnum.de.stnr
 import stdnum.exceptions
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     l10n_de_stnr = fields.Char(
         string="St.-Nr.",

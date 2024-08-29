@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from urllib.parse import quote
 
@@ -17,9 +18,8 @@ SUPPORTED_IMAGE_MIMETYPES = {
 }
 
 
-class IrAttachment(models.Model):
+class IrAttachment(models.Model, base.IrAttachment):
 
-    _inherit = "ir.attachment"
 
     local_url = fields.Char("Attachment URL", compute='_compute_local_url')
     image_src = fields.Char(compute='_compute_image_src')

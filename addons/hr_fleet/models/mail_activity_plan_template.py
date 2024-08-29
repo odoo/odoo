@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo import exceptions
 
 
-class MailActivityPlanTemplate(models.Model):
-    _inherit = 'mail.activity.plan.template'
+class MailActivityPlanTemplate(models.Model, mail.MailActivityPlanTemplate):
 
     responsible_type = fields.Selection(
         selection_add=[('fleet_manager', "Fleet Manager")],

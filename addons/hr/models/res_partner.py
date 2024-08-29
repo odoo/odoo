@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 from odoo import fields, models, _
 
 
-class Partner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(models.Model, base.ResPartner):
 
     employee_ids = fields.One2many(
         'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",

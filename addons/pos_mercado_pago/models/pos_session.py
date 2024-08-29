@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import point_of_sale
 from odoo import models
 
 
-class PosSession(models.Model):
-    _inherit = 'pos.session'
+class PosSession(models.Model, point_of_sale.PosSession):
 
     def _loader_params_pos_payment_method(self):
         result = super()._loader_params_pos_payment_method()

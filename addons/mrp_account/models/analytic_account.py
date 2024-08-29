@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+class AccountAnalyticAccount(models.Model, analytic.AccountAnalyticAccount):
     _description = 'Analytic Account'
 
     production_ids = fields.Many2many('mrp.production')
@@ -37,7 +37,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "mrp.production",
             "domain": [['id', 'in', self.production_ids.ids]],
             "name": _("Manufacturing Orders"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             "context": {'default_analytic_account_id': self.id},
         }
         if len(self.production_ids) == 1:
@@ -52,7 +52,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "mrp.bom",
             "domain": [['id', 'in', self.bom_ids.ids]],
             "name": _("Bills of Materials"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             "context": {'default_analytic_account_id': self.id},
         }
         if self.bom_count == 1:
@@ -68,18 +68,16 @@ class AccountAnalyticAccount(models.Model):
             "domain": [['id', 'in', (self.workcenter_ids.order_ids | self.production_ids.workorder_ids).ids]],
             "context": {"create": False},
             "name": _("Work Orders"),
-            'view_mode': 'tree',
+            'view_mode': 'list',
         }
         return result
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+class AccountAnalyticLine(models.Model, analytic.AccountAnalyticLine):
 
     category = fields.Selection(selection_add=[('manufacturing_order', 'Manufacturing Order')])
 
-class AccountAnalyticApplicability(models.Model):
-    _inherit = 'account.analytic.applicability'
+class AccountAnalyticApplicability(models.Model, analytic.AccountAnalyticApplicability):
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(

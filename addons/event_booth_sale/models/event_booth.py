@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event_booth
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class EventBooth(models.Model):
-    _inherit = 'event.booth'
+class EventBooth(models.Model, event_booth.EventBooth):
 
     # registrations
     event_booth_registration_ids = fields.One2many('event.booth.registration', 'event_booth_id')

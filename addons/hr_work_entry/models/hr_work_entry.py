@@ -13,7 +13,6 @@ from odoo.osv import expression
 
 
 class HrWorkEntry(models.Model):
-    _name = 'hr.work.entry'
     _description = 'HR Work Entry'
     _order = 'conflict desc,state,date_start'
 
@@ -241,7 +240,6 @@ class HrWorkEntry(models.Model):
 
 
 class HrWorkEntryType(models.Model):
-    _name = 'hr.work.entry.type'
     _description = 'HR Work Entry Type'
 
     name = fields.Char(required=True, translate=True)
@@ -258,10 +256,9 @@ class HrWorkEntryType(models.Model):
     ]
 
 
-class Contacts(models.Model):
+class HrUserWorkEntryEmployee(models.Model):
     """ Personnal calendar filter """
 
-    _name = 'hr.user.work.entry.employee'
     _description = 'Work Entries Employees'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user, ondelete='cascade')

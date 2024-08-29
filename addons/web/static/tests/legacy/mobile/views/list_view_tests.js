@@ -46,10 +46,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>
+                </list>
             `,
             loadActionMenus: true,
         });
@@ -100,10 +100,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree limit="3">
+                <list limit="3">
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>
+                </list>
             `,
             loadActionMenus: true,
         });
@@ -153,10 +153,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>
+                </list>
             `,
         });
 
@@ -170,9 +170,9 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             resModel: "foo",
             serverData,
             arch: `
-                <tree>
+                <list>
                     <field name="foo" />
-                </tree>
+                </list>
             `,
         });
 
@@ -191,10 +191,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             resModel: "foo",
             serverData,
             arch: `
-                    <tree>
+                    <list>
                         <field name="foo" />
                         <field name="bar" optional="hide" />
-                    </tree>
+                    </list>
                 `,
         });
         assert.containsOnce(fixture, "table .o_optional_columns_dropdown_toggle");
@@ -211,10 +211,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 resModel: "foo",
                 serverData,
                 arch: `
-                    <tree>
+                    <list>
                         <field name="foo" />
                         <field name="bar" />
-                    </tree>
+                    </list>
                 `,
             });
 

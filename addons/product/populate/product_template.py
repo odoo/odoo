@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from collections import defaultdict
@@ -10,8 +11,7 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class ProductAttribute(models.Model):
-    _inherit = "product.attribute"
+class ProductAttribute(models.Model, product.ProductAttribute):
     _populate_sizes = {"small": 20, "medium": 150, "large": 750}
 
     def _populate(self, size):
@@ -31,8 +31,7 @@ class ProductAttribute(models.Model):
         ]
 
 
-class ProductAttributeValue(models.Model):
-    _inherit = "product.attribute.value"
+class ProductAttributeValue(models.Model, product.ProductAttributeValue):
     _populate_dependencies = ["product.attribute"]
     _populate_sizes = {"small": 100, "medium": 1_000, "large": 10_000}
 
@@ -46,8 +45,7 @@ class ProductAttributeValue(models.Model):
         ]
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplate(models.Model, product.ProductTemplate):
     _populate_sizes = {"small": 150, "medium": 5_000, "large": 50_000}
     _populate_dependencies = ["product.attribute.value", "product.category"]
 
@@ -129,8 +127,7 @@ class ProductTemplate(models.Model):
         ] + self.env['product.product']._populate_get_product_factories()
 
 
-class ProductTemplateAttributeExclusion(models.Model):
-    _inherit = "product.template.attribute.exclusion"
+class ProductTemplateAttributeExclusion(models.Model, product.ProductTemplateAttributeExclusion):
     _populate_dependencies = ["product.template"]
     _populate_sizes = {"small": 200, "medium": 1_000, "large": 5_000}
 
@@ -170,8 +167,7 @@ class ProductTemplateAttributeExclusion(models.Model):
         ]
 
 
-class ProductTemplateAttributeValue(models.Model):
-    _inherit = "product.template.attribute.value"
+class ProductTemplateAttributeValue(models.Model, product.ProductTemplateAttributeValue):
     _populate_dependencies = ["product.template"]
 
     def _populate(self, size):

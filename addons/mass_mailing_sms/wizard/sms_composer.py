@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sms
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.urls
@@ -6,8 +7,7 @@ import werkzeug.urls
 from odoo import _, Command, fields, models
 
 
-class SMSComposer(models.TransientModel):
-    _inherit = 'sms.composer'
+class SMSComposer(models.TransientModel, sms.SMSComposer):
 
     # mass mode with mass sms
     mass_sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)

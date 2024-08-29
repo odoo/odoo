@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -6,9 +7,7 @@ import json
 from odoo import api, fields, models, modules, _
 
 
-class Users(models.Model):
-    _name = 'res.users'
-    _inherit = ['res.users']
+class ResUsers(models.Model, base.ResUsers):
 
     @api.model
     def _get_activity_groups(self):

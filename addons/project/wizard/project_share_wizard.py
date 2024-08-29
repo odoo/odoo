@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import portal
 
 import operator
 
 from odoo import Command, api, fields, models, _
 
 
-class ProjectShareWizard(models.TransientModel):
-    _name = 'project.share.wizard'
-    _inherit = 'portal.share'
+class ProjectShareWizard(models.TransientModel, portal.PortalShare):
     _description = 'Project Sharing'
 
     @api.model

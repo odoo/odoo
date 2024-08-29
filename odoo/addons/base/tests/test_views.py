@@ -242,9 +242,9 @@ class TestViewInheritance(ViewCase):
         self.a22 = self.makeView("A22", self.a2.id)
         self.makeView("A221", self.a22.id)
 
-        self.b = self.makeView('B', arch=self.arch_for("B", 'tree'))
-        self.makeView('B1', self.b.id, arch=self.arch_for("B1", 'tree', parent=self.b))
-        self.c = self.makeView('C', arch=self.arch_for("C", 'tree'))
+        self.b = self.makeView('B', arch=self.arch_for("B", 'list'))
+        self.makeView('B1', self.b.id, arch=self.arch_for("B1", 'list', parent=self.b))
+        self.c = self.makeView('C', arch=self.arch_for("C", 'list'))
         self.c.write({'priority': 1})
 
     def test_get_inheriting_views(self):
@@ -269,8 +269,8 @@ class TestViewInheritance(ViewCase):
         default = self.View.default_view(model=self.model, view_type='form')
         self.assertEqual(default, self.view_ids['A'].id)
 
-        default_tree = self.View.default_view(model=self.model, view_type='tree')
-        self.assertEqual(default_tree, self.view_ids['C'].id)
+        default_list = self.View.default_view(model=self.model, view_type='list')
+        self.assertEqual(default_list, self.view_ids['C'].id)
 
     def test_no_default_view(self):
         self.assertFalse(self.View.default_view(model='no_model.exist', view_type='form'))
@@ -1623,9 +1623,9 @@ class TestViews(ViewCase):
             model=model,
             priority=1,
             arch_db="""<?xml version="1.0"?>
-                        <tree string="view">
+                        <list string="view">
                           <field name="url"/>
-                        </tree>
+                        </list>
                     """,
         )
         self.assertTrue(validate())     # single view
@@ -1856,10 +1856,10 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name"/>
                 <field name="inherit_children_ids">
-                    <tree name="Children">
+                    <list name="Children">
                         <field name="name"/>
                         <field name="not_a_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """
@@ -1948,9 +1948,9 @@ class TestViews(ViewCase):
                             </form>
                         </field>
                     </form>
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """
@@ -2173,10 +2173,10 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name"/>
                 <field name="inherit_children_ids">
-                    <tree string="Children"%s>
+                    <list string="Children"%s>
                         <field name="name"/>
                         <field name="inherit_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """
@@ -2186,7 +2186,7 @@ class TestViews(ViewCase):
 
         view = self.assertValid(arch % ' editable="bottom"')
         view_arch = view.get_views([(view.id, 'form')])['views']['form']['arch']
-        self.assertTrue(etree.fromstring(view_arch).xpath('//field/tree/field[@name="model"][@column_invisible][@readonly]'))
+        self.assertTrue(etree.fromstring(view_arch).xpath('//field/list/field[@name="model"][@column_invisible][@readonly]'))
 
     def test_domain_on_readonly_field_in_view(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
@@ -2404,9 +2404,9 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_system"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_system" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, valid=True, parent=True)
@@ -2417,9 +2417,9 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_system" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, valid=True, parent=True)
@@ -2487,9 +2487,9 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_erp_manager"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_system" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, valid=True, parent=True)
@@ -2549,9 +2549,9 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_system"/>
                 <field name="inherit_children_ids" groups="base.group_system">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, valid=True, parent=True)
@@ -2563,9 +2563,9 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_erp_manager"/>
                 <field name="inherit_children_ids" groups="base.group_system">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, valid=True, parent=True)
@@ -2911,23 +2911,23 @@ class TestViews(ViewCase):
 
     def test_tree(self):
         arch = """
-            <tree>
+            <list>
                 <field name="name"/>
                 <button type='object' name="action_archive"/>
                 %s
-            </tree>
+            </list>
         """
         self.assertValid(arch % '')
-        self.assertInvalid(arch % '<group/>', "Tree child can only have one of field, button, control, groupby, widget, header tag (not group)")
+        self.assertInvalid(arch % '<group/>', "List child can only have one of field, button, control, groupby, widget, header tag (not group)")
 
     def test_tree_groupby(self):
         arch = """
-            <tree>
+            <list>
                 <field name="name"/>
                 <groupby name="%s">
                     <button type="object" name="action_archive"/>
                 </groupby>
-            </tree>
+            </list>
         """
         self.assertValid(arch % ('model_data_id'))
         self.assertInvalid(arch % ('type'), "Field 'type' found in 'groupby' node can only be of type many2one, found selection")
@@ -2935,14 +2935,14 @@ class TestViews(ViewCase):
 
     def test_tree_groupby_many2one(self):
         arch = """
-            <tree>
+            <list>
                 <field name="name"/>
                 %s
                 <groupby name="model_data_id">
                     %s
                     <button type="object" name="action_archive" invisible="noupdate" string="Button1"/>
                 </groupby>
-            </tree>
+            </list>
         """
         view = self.assertValid(arch % ('', '<field name="noupdate"/>'))
         view_arch = view.get_views([(view.id, 'form')])['views']['form']['arch']
@@ -4598,7 +4598,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
         module_log_views = defaultdict(list)
         module_error_views = defaultdict(list)
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
-        views = self.env['ir.ui.view'].search([('type', 'in', ('tree', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
+        views = self.env['ir.ui.view'].search([('type', 'in', ('list', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
         for view in views:
             for field, _val, comment in re.findall(uncommented_regexp, view.arch_db):
                 if (not comment or not comment.startswith('<!--')) and view.model_data_id:
@@ -4717,9 +4717,9 @@ class ViewModifiers(ViewCase):
             {"company_id", "field_1"},
         )
 
-        # fields in a tree view
+        # fields in a list view
         tree = etree.fromstring('''
-            <tree>
+            <list>
                 <header>
                     <button name="a" invisible="1"/>
                 </header>
@@ -4728,7 +4728,7 @@ class ViewModifiers(ViewCase):
                 <field name="a" column_invisible="1"/>
                 <field name="a" invisible="b == 'c'"/>
                 <field name="a" invisible="(b == 'c')"/>
-            </tree>
+            </list>
         ''')
         _test_modifiers(tree[0][0], set())
         _test_modifiers(tree[1], set())
@@ -4775,13 +4775,13 @@ class ViewModifiers(ViewCase):
         view = self.assertValid("""
             <form string="View">
                 <field name="type" invisible="1"/>
-                <field name="name" invisible="context.get('foo') and type == 'tree'"/>
+                <field name="name" invisible="context.get('foo') and type == 'list'"/>
             </form>
         """)
         for type_value, context, expected in [
-            ('tree', {}, False),
+            ('list', {}, False),
             ('form', {}, False),
-            ('tree', {'foo': True}, True),
+            ('list', {'foo': True}, True),
             ('form', {'foo': True}, False),
         ]:
             arch = self.View.with_context(**context).get_view(view.id)['arch']
@@ -5055,9 +5055,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_allow_export"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups='', parent=True)
@@ -5067,9 +5067,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_allow_export"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_allow_export" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups=False, parent=True)
@@ -5078,9 +5078,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_allow_export" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups=False, parent=True)
@@ -5166,9 +5166,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_erp_manager"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_multi_company" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups=False, parent=True)
@@ -5185,9 +5185,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_allow_export"/>
                 <field name="inherit_children_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" groups="base.group_multi_company" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups="'base.group_multi_company'", parent=True)
@@ -5257,9 +5257,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_allow_export"/>
                 <field name="inherit_children_ids" groups="base.group_allow_export">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups=False, parent=True)
@@ -5268,9 +5268,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_erp_manager"/>
                 <field name="inherit_children_ids" groups="base.group_allow_export">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups=False, parent=True)
@@ -5279,9 +5279,9 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name" groups="base.group_allow_export"/>
                 <field name="inherit_children_ids" groups="base.group_multi_company">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="inherit_id" %(attrs)s/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         """, add_field_with_groups="'base.group_multi_company'", parent=True)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -9,8 +10,7 @@ from odoo.tools import html2plaintext, plaintext2html
 _logger = logging.getLogger(__name__)
 
 
-class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+class MailThread(models.AbstractModel, mail.MailThread):
 
     message_has_sms_error = fields.Boolean(
         'SMS Delivery error', compute='_compute_message_has_sms_error', search='_search_message_has_sms_error',

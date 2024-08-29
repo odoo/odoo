@@ -1,1 +1,1 @@
-from . import sale_order_cancel
+from .sale_order_cancel import SaleOrderCancel

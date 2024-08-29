@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event, website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class EventTag(models.Model):
-    _name = 'event.tag'
-    _inherit = ['event.tag', 'website.published.multi.mixin']
+class EventTag(models.Model, event.EventTag, website.WebsitePublishedMultiMixin):
 
     def default_get(self, fields_list):
         result = super().default_get(fields_list)

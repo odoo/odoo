@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -7,9 +8,7 @@ from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import clean_context
 
 
-class StockScrap(models.Model):
-    _name = 'stock.scrap'
-    _inherit = ['mail.thread']
+class StockScrap(models.Model, portal.MailThread):
     _order = 'id desc'
     _description = 'Scrap'
 

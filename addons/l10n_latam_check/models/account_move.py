@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, account.AccountMove):
 
-    _inherit = 'account.move'
 
     def button_draft(self):
         super().button_draft()

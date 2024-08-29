@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 from odoo import models
 
 
-class AccountEdiXmlUBLDE(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
+class AccountEdiXmlUblDe(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUblBis3):
     _name = 'account.edi.xml.ubl_de'
     _description = "BIS3 DE (XRechnung)"
 

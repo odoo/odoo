@@ -1,12 +1,12 @@
 import time
+from odoo.addons import account
 from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection
 
 
-class AccountMoveSend(models.TransientModel):
-    _inherit = 'account.move.send'
+class AccountMoveSend(models.TransientModel, account.AccountMoveSend):
 
     l10n_hu_edi_enable_nav_30 = fields.Boolean(
         compute='_compute_l10n_hu_edi_enable_nav_30'

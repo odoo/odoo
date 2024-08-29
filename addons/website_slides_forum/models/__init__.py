@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import forum_forum
-from . import slide_channel
+from .forum_forum import ForumForum
+from .slide_channel import SlideChannel

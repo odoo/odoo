@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, models
 from ..websocket import WebsocketConnectionHandler
 
 
-class Http(models.AbstractModel):
-    _inherit = "ir.http"
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     @api.model
     def get_frontend_session_info(self):

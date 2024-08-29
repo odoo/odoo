@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import gamification
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
 
 
-class GamificationBadgeUserWizard(models.TransientModel):
-    _inherit = 'gamification.badge.user.wizard'
+class GamificationBadgeUserWizard(models.TransientModel, gamification.GamificationBadgeUserWizard):
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=False)
     user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id',

@@ -559,7 +559,7 @@ class TestCommonCustomFields(common.TransactionCase):
         return self.env['ir.ui.view'].create({
             'name': 'yet another view',
             'model': self.MODEL,
-            'arch': '<tree string="X"><field name="%s"/></tree>' % name,
+            'arch': '<list string="X"><field name="%s"/></list>' % name,
         })
 
 
@@ -734,7 +734,7 @@ class TestCustomFields(TestCommonCustomFields):
         #
         # Add a custom field equivalent to the following definition:
         #
-        # class Partner(models.Model)
+        # class ResPartner(models.Model)
         #     _inherit = 'res.partner'
         #     x_oh_boy = fields.Char(related="country_id.code", store=True)
         #

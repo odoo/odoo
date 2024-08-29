@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -14,9 +15,7 @@ _logger = logging.getLogger(__name__)
 emails_split = re.compile(r"[;,\n\r]+")
 
 
-class SurveyInvite(models.TransientModel):
-    _name = 'survey.invite'
-    _inherit = 'mail.composer.mixin'
+class SurveyInvite(models.TransientModel, mail.MailComposerMixin):
     _description = 'Survey Invitation Wizard'
 
     @api.model

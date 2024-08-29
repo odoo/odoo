@@ -1,1 +1,1 @@
-from . import models
+from .models import TestTranslationImportModel2, TestTranslationImportModel1

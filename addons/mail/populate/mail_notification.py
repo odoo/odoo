@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 import logging
 
@@ -8,8 +9,7 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class MailNotification(models.Model):
-    _inherit = "mail.notification"
+class MailNotification(models.Model, mail.MailNotification):
     _populate_dependencies = ["res.partner", "mail.message"]
 
     def _populate(self, size):

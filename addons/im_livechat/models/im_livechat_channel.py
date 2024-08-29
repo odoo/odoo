@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import rating
 
 from datetime import timedelta
 import random
@@ -9,7 +10,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
-class ImLivechatChannel(models.Model):
+class ImLivechatChannel(models.Model, rating.RatingParentMixin):
     """ Livechat Channel
         Define a communication channel, which can be accessed with 'script_external' (script tag to put on
         external website), 'script_internal' (code to be integrated with odoo website) or via 'web_page' link.
@@ -17,7 +18,6 @@ class ImLivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
-    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
 

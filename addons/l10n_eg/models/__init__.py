@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import template_eg
-from . import account_tax
+from .template_eg import AccountChartTemplate
+from .account_tax import AccountTax

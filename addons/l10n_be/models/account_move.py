@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
@@ -14,8 +15,7 @@ account.move object: add support for Belgian structured communication
 """
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     def _get_invoice_reference_be_partner(self):
         """ This computes the reference based on the belgian national standard

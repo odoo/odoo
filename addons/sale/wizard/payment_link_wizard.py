@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import payment
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug import urls
@@ -7,8 +8,7 @@ from odoo import _, api, fields, models
 from odoo.tools import format_amount
 
 
-class PaymentLinkWizard(models.TransientModel):
-    _inherit = 'payment.link.wizard'
+class PaymentLinkWizard(models.TransientModel, payment.PaymentLinkWizard):
     _description = 'Generate Sales Payment Link'
 
     amount_paid = fields.Monetary(string="Already Paid", readonly=True)

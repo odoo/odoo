@@ -1,10 +1,10 @@
 from werkzeug import urls
+from odoo.addons import base
 
 from odoo import models, api
 
 
-class Image(models.AbstractModel):
-    _inherit = 'ir.qweb.field.image'
+class IrQwebFieldImage(models.AbstractModel, base.IrQwebFieldImage):
 
     @api.model
     def from_html(self, model, field, element):
@@ -27,4 +27,4 @@ class Image(models.AbstractModel):
                 ], limit=1)
                 return attachment.datas
 
-        return super(Image, self).from_html(model, field, element)
+        return super().from_html(model, field, element)

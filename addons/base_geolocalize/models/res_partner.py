@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, fields, models, _
 from odoo.tools import config
 
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
+class ResPartner(models.Model, base.ResPartner):
 
     date_localization = fields.Date(string='Geolocation Date')
 

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
 from odoo.tools.misc import format_date
 
 
-class IrMailServer(models.Model):
+class IrMailServer(models.Model, base.IrMailServer):
     _name = 'ir.mail_server'
-    _inherit = ['ir.mail_server']
 
     active_mailing_ids = fields.One2many(
         comodel_name='mailing.mailing',

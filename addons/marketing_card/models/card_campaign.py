@@ -1,4 +1,5 @@
 import base64
+from odoo.addons import link_tracker, portal, mail
 from lxml import html
 from itertools import count
 
@@ -8,10 +9,8 @@ from odoo.tools.misc import hmac
 from .card_template import TEMPLATE_DIMENSIONS
 
 
-class CardCampaign(models.Model):
-    _name = 'card.campaign'
+class CardCampaign(models.Model, mail.MailActivityMixin, link_tracker.MailRenderMixin, portal.MailThread):
     _description = 'Marketing Card Campaign'
-    _inherit = ['mail.activity.mixin', 'mail.render.mixin', 'mail.thread']
     _order = 'id DESC'
 
     def _default_card_template_id(self):

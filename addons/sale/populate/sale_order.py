@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -8,8 +9,7 @@ from odoo.tools import populate, groupby
 _logger = logging.getLogger(__name__)
 
 
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
+class SaleOrder(models.Model, sale.SaleOrder):
     _populate_sizes = {"small": 100, "medium": 2_000, "large": 20_000}
     _populate_dependencies = ["res.partner", "res.company", "res.users", "product.pricelist"]
 
@@ -50,8 +50,7 @@ class SaleOrder(models.Model):
         ]
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
     _populate_sizes = {"small": 1_000, "medium": 50_000, "large": 100_000}
     _populate_dependencies = ["sale.order", "product.product"]
 

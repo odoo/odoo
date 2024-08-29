@@ -1,2 +1,2 @@
-from . import template_gq
-from . import template_gq_syscebnl
+from .template_gq import AccountChartTemplate
+from .template_gq_syscebnl import AccountChartTemplate

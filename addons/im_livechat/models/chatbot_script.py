@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm, base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models, fields
@@ -6,10 +7,8 @@ from odoo.http import request
 from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty, plaintext2html
 
 
-class ChatbotScript(models.Model):
-    _name = 'chatbot.script'
+class ChatbotScript(models.Model, base.ImageMixin, utm.UtmSourceMixin):
     _description = 'Chatbot Script'
-    _inherit = ['image.mixin', 'utm.source.mixin']
     _rec_name = 'title'
     _order = 'title, id'
 

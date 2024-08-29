@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 from odoo.tools import SQL
 
 
-class PurchaseReport(models.Model):
-    _inherit = "purchase.report"
+class PurchaseReport(models.Model, purchase.PurchaseReport):
 
     picking_type_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
     effective_date = fields.Datetime(string="Effective Date")

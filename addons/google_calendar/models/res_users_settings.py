@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from datetime import timedelta
 
@@ -8,8 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT
 
-class ResUsersSettings(models.Model):
-    _inherit = "res.users.settings"
+class ResUsersSettings(models.Model, base.ResUsersSettings):
 
     # Google Calendar tokens and synchronization information.
     google_calendar_rtoken = fields.Char('Refresh Token', copy=False, groups='base.group_system')

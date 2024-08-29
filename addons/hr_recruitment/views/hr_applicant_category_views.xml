@@ -17,13 +17,13 @@
         </record>
 
         <record id="hr_applicant_category_view_tree" model="ir.ui.view">
-            <field name="name">hr.applicant.category.tree</field>
+            <field name="name">hr.applicant.category.list</field>
             <field name="model">hr.applicant.category</field>
             <field name="arch" type="xml">
-                <tree string="Tags" editable="bottom">
+                <list string="Tags" editable="bottom">
                     <field name="name"/>
                     <field name="color" groups="base.group_no_one"/>
-                </tree>
+                </list>
             </field>
         </record>
 

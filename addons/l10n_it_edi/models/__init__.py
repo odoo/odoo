@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import res_partner
-from . import res_company
-from . import res_config_settings
-from . import account_move
-from . import ddt
-from . import ir_attachment
-from . import account_edi_proxy_user
+from .res_partner import ResPartner
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .account_move import AccountMove
+from .ddt import L10nItDdt
+from .ir_attachment import IrAttachment
+from .account_edi_proxy_user import AccountEdiProxyClientUser

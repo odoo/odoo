@@ -14,8 +14,8 @@
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id">
-                    <field name="sale_line_employee_ids" mode="tree,kanban" context="{'default_sale_line_id': sale_line_id}">
-                        <tree editable="bottom">
+                    <field name="sale_line_employee_ids" mode="list,kanban" context="{'default_sale_line_id': sale_line_id}">
+                        <list editable="bottom">
                             <field name="company_id" column_invisible="True"/>
                             <field name="partner_id" column_invisible="True"/>
                             <field name="sale_order_id" column_invisible="True"/>
@@ -37,7 +37,7 @@
                             <field name="is_cost_changed" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="cost_currency_id" column_invisible="True"/>
-                        </tree>
+                        </list>
                         <kanban class="o_kanban_mobile">
                             <field name="employee_id"/>
                             <field name="sale_line_id"/>
@@ -154,7 +154,7 @@
     </record>
 
         <record id="view_task_tree2_inherited" model="ir.ui.view">
-            <field name="name">project.task.tree.inherited</field>
+            <field name="name">project.task.list.inherited</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="hr_timesheet.view_task_tree2_inherited" />
             <field name="arch" type="xml">
@@ -178,11 +178,11 @@
                  <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="pricing_type" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
-                <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
+                <xpath expr="//field[@name='timesheet_ids']/list" position="inside">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
                     <field name="is_so_line_edited" column_invisible="True"/>
                 </xpath>
-                <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
+                <xpath expr="//field[@name='timesheet_ids']/list/field[@name='unit_amount']" position="before">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
                     <field name="timesheet_invoice_id" column_invisible="True"/>
                     <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -8,8 +9,7 @@ from odoo import api, fields, models
 from odoo.tools.sql import SQL
 
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
 
     date_from = fields.Date(compute='_compute_product_margin_fields_values', string='Margin Date From')
     date_to = fields.Date(compute='_compute_product_margin_fields_values', string='Margin Date To')

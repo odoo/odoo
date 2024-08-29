@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class IrConfigParameter(models.Model):
+class IrConfigParameter(models.Model, base.IrConfigParameter):
     # Override of config parameter to specifically handle the template
     # rendering group (de)activation through ICP.
 
@@ -70,7 +71,8 @@ class IrConfigParameter(models.Model):
     #     sfu_server_key': rtc server usage and configuration;
     #   * 'discuss.tenor_api_key', 'discuss.tenor_gif_limit' and 'discuss.
     #     tenor_content_filter' used for gif fetch service;
-    _inherit = 'ir.config_parameter'
+    _name = "ir.config_parameter"
+
 
     @api.model
     def set_param(self, key, value):

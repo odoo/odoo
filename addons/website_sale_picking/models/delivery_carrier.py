@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import delivery
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _, api
 from odoo.exceptions import ValidationError
 
 
-class DeliveryCarrier(models.Model):
-    _inherit = 'delivery.carrier'
+class DeliveryCarrier(models.Model, delivery.DeliveryCarrier):
 
     # Onsite delivery means the client comes to a physical store to get the products himself.
     delivery_type = fields.Selection(selection_add=[

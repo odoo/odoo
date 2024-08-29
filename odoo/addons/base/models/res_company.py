@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from .res_partner import FormatAddressMixin, FormatVATLabelMixin
 
 import base64
 import logging
@@ -13,11 +14,9 @@ from odoo.tools import html2plaintext, file_open, ormcache
 _logger = logging.getLogger(__name__)
 
 
-class Company(models.Model):
-    _name = "res.company"
+class ResCompany(models.Model, FormatAddressMixin, FormatVATLabelMixin):
     _description = 'Companies'
     _order = 'sequence, name'
-    _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
 
     def copy(self, default=None):
@@ -87,7 +86,7 @@ class Company(models.Model):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
             if paperformat_euro:
                 company.write({'paperformat_id': paperformat_euro.id})
-        sup = super(Company, self)
+        sup = super()
         if hasattr(sup, 'init'):
             sup.init()
 
@@ -358,7 +357,7 @@ class Company(models.Model):
             if not currency.active:
                 currency.write({'active': True})
 
-        res = super(Company, self).write(values)
+        res = super().write(values)
 
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:
@@ -462,5 +461,5 @@ class Company(models.Model):
                 'active_test': False,
                 'default_parent_id': self.id,
             },
-            'views': [[False, 'tree'], [False, 'kanban'], [False, 'form']],
+            'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
         }

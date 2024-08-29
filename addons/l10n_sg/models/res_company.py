@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import fields, models
 
-class ResCompany(models.Model):
-    _name = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
     _description = 'Companies'
-    _inherit = 'res.company'
 
     l10n_sg_unique_entity_number = fields.Char(string='UEN', related="partner_id.l10n_sg_unique_entity_number", readonly=False)
 

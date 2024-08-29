@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from uuid import uuid4
@@ -8,9 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
 
 
-class LoyaltyCard(models.Model):
-    _name = 'loyalty.card'
-    _inherit = ['mail.thread']
+class LoyaltyCard(models.Model, mail.MailThread):
     _description = 'Loyalty Coupon'
     _rec_name = 'code'
 

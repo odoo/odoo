@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sale
 
 import math
 
@@ -6,8 +7,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)

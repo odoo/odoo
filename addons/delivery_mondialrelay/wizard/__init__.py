@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import choose_delivery_carrier
+from .choose_delivery_carrier import ChooseDeliveryCarrier

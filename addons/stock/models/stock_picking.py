@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail, portal
 
 import json
 import math
@@ -18,8 +19,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_d
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
-class PickingType(models.Model):
-    _name = "stock.picking.type"
+class StockPickingType(models.Model):
     _description = "Picking Type"
     _order = 'is_favorite desc, sequence, id'
     _rec_names_search = ['name', 'warehouse_id.name']
@@ -199,7 +199,7 @@ class PickingType(models.Model):
                         'prefix': vals['sequence_code'], 'padding': 5,
                         'company_id': picking_type.env.company.id,
                     })
-        return super(PickingType, self).write(vals)
+        return super().write(vals)
 
     @api.model
     def _search_is_favorite(self, operator, value):
@@ -529,9 +529,7 @@ class PickingType(models.Model):
         return graph_data
 
 
-class Picking(models.Model):
-    _name = "stock.picking"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class StockPicking(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = "Transfer"
     _order = "priority desc, scheduled_date asc, id desc"
 
@@ -1094,7 +1092,7 @@ class Picking(models.Model):
             for picking in self:
                 if picking.picking_type_id != picking_type:
                     picking.name = picking_type.sequence_id.next_by_id()
-        res = super(Picking, self).write(vals)
+        res = super().write(vals)
         if vals.get('signature'):
             for picking in self:
                 picking._attach_sign()
@@ -1116,7 +1114,7 @@ class Picking(models.Model):
     def unlink(self):
         self.move_ids._action_cancel()
         self.with_context(prefetch_fields=False).move_ids.unlink()  # Checks if moves are not done
-        return super(Picking, self).unlink()
+        return super().unlink()
 
     def do_print_picking(self):
         self.write({'printed': True})
@@ -1166,10 +1164,10 @@ class Picking(models.Model):
         view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
         return {
             'name': _('Detailed Operations'),
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move.line',
-            'views': [(view_id, 'tree')],
+            'views': [(view_id, 'list')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
                 'default_picking_id': self.id,
@@ -1196,7 +1194,7 @@ class Picking(models.Model):
             'name': _('Next Transfers'),
             "type": "ir.actions.act_window",
             "res_model": "stock.picking",
-            "views": [[False, "tree"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"]],
             "domain": [('id', 'in', next_transfers.ids)],
         }
 
@@ -1860,7 +1858,7 @@ class Picking(models.Model):
     def action_picking_move_tree(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_action")
         action['views'] = [
-            (self.env.ref('stock.view_picking_move_tree').id, 'tree'),
+            (self.env.ref('stock.view_picking_move_tree').id, 'list'),
         ]
         action['context'] = self.env.context
         action['domain'] = [('picking_id', 'in', self.ids)]
@@ -1924,7 +1922,7 @@ class Picking(models.Model):
             'name': _('Returns'),
             "type": "ir.actions.act_window",
             "res_model": "stock.picking",
-            "views": [[False, "tree"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"]],
             "domain": [('id', 'in', self.return_ids.ids)],
         }
 

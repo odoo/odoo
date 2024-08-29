@@ -11,7 +11,7 @@ from odoo.addons.l10n_es_edi_facturae import xml_utils
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
 
-class Certificate(models.Model):
+class L10nEsEdiFacturaeCertificate(models.Model):
     _name = 'l10n_es_edi_facturae.certificate'
     _description = 'Facturae Digital Certificate'
     _order = 'date_start desc, id desc'

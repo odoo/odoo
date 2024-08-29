@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # @author -  Fekete Mihai <feketemihai@gmail.com>
@@ -10,8 +11,7 @@
 from odoo import api, fields, models
 
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
+class ResPartner(models.Model, base.ResPartner):
 
     @api.model
     def _commercial_fields(self):

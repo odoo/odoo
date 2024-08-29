@@ -1,4 +1,5 @@
 from collections import defaultdict
+from odoo.addons import analytic
 from contextlib import contextmanager
 from datetime import date
 import logging
@@ -17,9 +18,7 @@ from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveLine(models.Model):
-    _name = "account.move.line"
-    _inherit = "analytic.mixin"
+class AccountMoveLine(models.Model, analytic.AnalyticMixin):
     _description = "Journal Item"
     _order = "date desc, move_name desc, id"
     _check_company_auto = True
@@ -455,9 +454,9 @@ class AccountMoveLine(models.Model):
     @api.model
     def get_views(self, views, options=None):
         res = super().get_views(views, options)
-        if res['views'].get('list') and self.env['ir.ui.view'].sudo().browse(res['views']['list']['id']).name == "account.move.line.payment.tree":
+        if res['views'].get('list') and self.env['ir.ui.view'].sudo().browse(res['views']['list']['id']).name == "account.move.line.payment.list":
             if toolbar := res['views']['list'].get('toolbar'):
-                # We dont want any additionnal action in the "account.move.line.payment.tree" view toolbar
+                # We dont want any additionnal action in the "account.move.line.payment.list" view toolbar
                 toolbar['action'] = []
         return res
 

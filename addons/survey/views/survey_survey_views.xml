@@ -67,8 +67,8 @@
                     </group>
                     <notebook>
                         <page string="Questions" name="questions">
-                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': id}">
-                                <tree decoration-bf="is_page">
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="list,kanban" context="{'default_survey_id': id}">
+                                <list decoration-bf="is_page">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title" widget="survey_description_page"/>
                                     <field name="background_image" column_invisible="True"/>
@@ -93,7 +93,7 @@
                                         <create name="add_question_control" string="Add a question"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                     </control>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Options" name="options">
@@ -196,10 +196,10 @@
         </field>
     </record>
     <record id="survey_survey_view_tree" model="ir.ui.view">
-        <field name="name">survey.survey.view.tree</field>
+        <field name="name">survey.survey.view.list</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <tree string="Survey" js_class="survey_view_tree">
+            <list string="Survey" js_class="survey_view_tree">
                 <field name="active" column_invisible="True"/>
                 <field name="certification" column_invisible="True"/>
                 <field name="title"/>
@@ -214,7 +214,7 @@
                 <field name="success_ratio"/>
                 <field name="answer_score_avg"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
-            </tree>
+            </list>
         </field>
     </record>
     <record id="survey_survey_view_kanban" model="ir.ui.view">
@@ -429,7 +429,7 @@
         <field name="name">Surveys</field>
         <field name="path">surveys</field>
         <field name="res_model">survey.survey</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">kanban,list,form,activity</field>
         <field name="help" type="html">
             <p>
                 No Survey Found

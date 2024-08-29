@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import mail_message
-from . import mail_notification
+from .mail_message import MailMessage
+from .mail_notification import MailNotification
 from . import discuss

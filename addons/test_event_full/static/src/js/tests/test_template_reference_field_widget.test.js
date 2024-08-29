@@ -64,9 +64,9 @@ test("Reference field displays right icons", async () => {
         type: "list",
         resModel: "event.mail",
         arch: `
-        <tree editable="top">
+        <list editable="top">
             <field name="template_ref" widget="EventMailTemplateReferenceField"/>
-        </tree>`,
+        </list>`,
     });
 
     // each field cell will be the field of a different record (1 field/line)

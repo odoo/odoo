@@ -1,4 +1,5 @@
 import ast
+from odoo.addons import account
 from babel.dates import format_datetime, format_date
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -21,8 +22,7 @@ def group_by_journal(vals_list):
     return res
 
 
-class account_journal(models.Model):
-    _inherit = "account.journal"
+class AccountJournal(models.Model, account.AccountJournal):
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
@@ -994,7 +994,7 @@ class account_journal(models.Model):
         action['domain'] = (action['domain'] or []) + [('journal_id', '=', self.id)]
         return action
 
-    def open_payments_action(self, payment_type=False, mode='tree'):
+    def open_payments_action(self, payment_type=False, mode='list'):
         if payment_type == 'outbound':
             action_ref = 'account.action_account_payments_payable'
         elif payment_type == 'transfer':
@@ -1086,7 +1086,7 @@ class account_journal(models.Model):
             'name': _('Journal Entries to Hash'),
             'res_model': 'account.move',
             'domain': [('id', 'in', moves.ids)],
-            'views': [(False, 'tree'), (False, 'form')],
+            'views': [(False, 'list'), (False, 'form')],
         }
         if len(moves.ids) == 1:
             action.update({

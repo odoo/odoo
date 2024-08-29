@@ -165,7 +165,7 @@
                                 </group>
                             </group>
                             <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices" required="not value_image"/>
                                     <field name="is_correct"
@@ -175,15 +175,15 @@
                                     <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
                                     <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
                                            column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
-                                </tree>
+                                </list>
                             </field>
 
                             <field name="matrix_row_ids" context="{'default_matrix_question_id': id}"
                                 invisible="question_type != 'matrix'">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Rows"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Description" name="survey_description">
@@ -287,15 +287,15 @@
         </field>
     </record>
     <record model="ir.ui.view" id="survey_question_tree">
-        <field name="name">Tree view for survey question</field>
+        <field name="name">List view for survey question</field>
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
-            <tree string="Survey Question" create="false">
+            <list string="Survey Question" create="false">
                 <field name="title"/>
                 <field name="survey_id"/>
                 <field name="question_type"/>
                 <field name="constr_mandatory" optional="1"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record model="ir.ui.view" id="survey_question_search">
@@ -317,7 +317,7 @@
     <record model="ir.actions.act_window" id="action_survey_question_form">
         <field name="name">Questions</field>
         <field name="res_model">survey.question</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="survey_question_search"/>
         <field name="context">{'search_default_group_by_page': True, 'show_survey_field': True}</field>
         <field name="domain">[('is_page', '=', False)]</field>
@@ -332,15 +332,15 @@
 
     <!-- LABELS -->
     <record id="survey_question_answer_view_tree" model="ir.ui.view">
-        <field name="name">survey.question.answer.view.tree</field>
+        <field name="name">survey.question.answer.view.list</field>
         <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
-            <tree string="Survey Label" create="false" default_order="question_id">
+            <list string="Survey Label" create="false" default_order="question_id">
                 <field name="sequence" widget="handle"/>
                 <field name="question_id"/>
                 <field name="value" string="Answer"/>
                 <field name="answer_score" groups="base.group_no_one"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -386,7 +386,7 @@
     <record id="survey_question_answer_action" model="ir.actions.act_window">
         <field name="name">Suggested Values</field>
         <field name="res_model">survey.question.answer</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="survey_question_answer_view_search"/>
         <field name="context">{'search_default_group_by_question': True}</field>
         <field name="help" type="html">

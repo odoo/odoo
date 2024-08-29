@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base, mail
 
 import itertools
 import logging
@@ -14,9 +15,7 @@ _logger = logging.getLogger(__name__)
 PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
 
 
-class ProductTemplate(models.Model):
-    _name = "product.template"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
+class ProductTemplate(models.Model, mail.MailThread, mail.MailActivityMixin, base.ImageMixin):
     _description = "Product"
     _order = "is_favorite desc, name"
     _check_company_auto = True
@@ -619,8 +618,8 @@ class ProductTemplate(models.Model):
         ]
         return {
             'name': _('Price Rules'),
-            'view_mode': 'tree,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'view_mode': 'list,form',
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list'), (False, 'form')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',
@@ -639,7 +638,7 @@ class ProductTemplate(models.Model):
             'name': _('Documents'),
             'type': 'ir.actions.act_window',
             'res_model': 'product.document',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'context': {
                 'default_res_model': self._name,
                 'default_res_id': self.id,

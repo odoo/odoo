@@ -3,5 +3,5 @@
 
 from . import lib
 from . import tools
-from . import models
+from .models import *
 from . import wizard

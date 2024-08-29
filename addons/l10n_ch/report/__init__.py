@@ -1,3 +1,3 @@
 # -*- coding:utf-8 -*-
 
-from . import swissqr_report
+from .swissqr_report import ReportL10nChQrReportMain

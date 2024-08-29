@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import loyalty, point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.osv import expression
 
-class LoyaltyRule(models.Model):
-    _name = 'loyalty.rule'
-    _inherit = ['loyalty.rule', 'pos.load.mixin']
+class LoyaltyRule(models.Model, loyalty.LoyaltyRule, point_of_sale.PosLoadMixin):
 
     valid_product_ids = fields.Many2many(
         'product.product', "Valid Products", compute='_compute_valid_product_ids',

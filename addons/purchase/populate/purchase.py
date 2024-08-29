@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase, base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -11,8 +12,7 @@ from odoo.addons.stock.populate.stock import COMPANY_NB_WITH_STOCK
 _logger = logging.getLogger(__name__)
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     def _populate_factories(self):
         return super()._populate_factories() + [
@@ -20,8 +20,7 @@ class ResCompany(models.Model):
         ]
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     _populate_sizes = {'small': 100, 'medium': 1_500, 'large': 25_000}
     _populate_dependencies = ['res.partner']
@@ -61,8 +60,7 @@ class PurchaseOrder(models.Model):
         ]
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+class PurchaseOrderLine(models.Model, purchase.PurchaseOrderLine):
 
     _populate_sizes = {'small': 500, 'medium': 7_500, 'large': 125_000}
     _populate_dependencies = ['purchase.order', 'product.product']

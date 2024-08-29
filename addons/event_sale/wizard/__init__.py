@@ -1,2 +1,2 @@
-from . import event_edit_registration
-from . import event_configurator
+from .event_edit_registration import RegistrationEditor, RegistrationEditorLine
+from .event_configurator import EventEventConfigurator

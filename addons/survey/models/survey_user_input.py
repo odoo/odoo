@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -14,13 +15,12 @@ from odoo.tools import float_is_zero
 _logger = logging.getLogger(__name__)
 
 
-class SurveyUserInput(models.Model):
+class SurveyUserInput(models.Model, mail.MailThread, mail.MailActivityMixin):
     """ Metadata for a set of one user's answers to a particular survey """
     _name = "survey.user_input"
     _description = "Survey User Input"
     _rec_name = "survey_id"
     _order = "create_date desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     # answer description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, index=True, ondelete='cascade')

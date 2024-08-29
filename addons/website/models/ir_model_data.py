@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -9,8 +10,7 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 
-class IrModelData(models.Model):
-    _inherit = 'ir.model.data'
+class IrModelData(models.Model, base.IrModelData):
 
     @api.model
     def _process_end_unlink_record(self, record):

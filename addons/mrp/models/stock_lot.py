@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from odoo.exceptions import UserError
 
 
-class StockLot(models.Model):
-    _inherit = 'stock.lot'
+class StockLot(models.Model, stock.StockLot):
 
     def _check_create(self):
         active_mo_id = self.env.context.get('active_mo_id')

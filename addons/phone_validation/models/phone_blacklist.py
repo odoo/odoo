@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -9,10 +10,8 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class PhoneBlackList(models.Model):
+class PhoneBlacklist(models.Model, mail.MailThread):
     """ Blacklist of phone numbers. Used to avoid sending unwanted messages to people. """
-    _name = 'phone.blacklist'
-    _inherit = ['mail.thread']
     _description = 'Phone Blacklist'
     _rec_name = 'number'
 
@@ -68,7 +67,7 @@ class PhoneBlackList(models.Model):
             except UserError as err:
                 raise UserError(_("%(error)s Please correct the number and try again.", error=str(err))) from err
             values['number'] = sanitized
-        return super(PhoneBlackList, self).write(values)
+        return super().write(values)
 
     def _search(self, domain, offset=0, limit=None, order=None):
         """ Override _search in order to grep search on sanitized number field """

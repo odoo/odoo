@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
@@ -6,8 +7,7 @@ from odoo import api, exceptions, fields, models, _
 
 from .base_automation import get_webhook_request_payload
 
-class ServerAction(models.Model):
-    _inherit = "ir.actions.server"
+class IrActionsServer(models.Model, base.IrActionsServer):
 
     name = fields.Char(compute='_compute_name', store=True, readonly=False)
 

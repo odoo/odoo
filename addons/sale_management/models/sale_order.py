@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -8,8 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools import is_html_empty
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     sale_order_template_id = fields.Many2one(
         comodel_name='sale.order.template',

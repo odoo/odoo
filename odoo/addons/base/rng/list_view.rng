@@ -20,8 +20,8 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="tree">
-        <rng:element name="tree">
+    <rng:define name="list">
+        <rng:element name="list">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="name"/></rng:optional>
             <rng:optional><rng:attribute name="create"/></rng:optional>
@@ -84,7 +84,7 @@
                     <rng:ref name="field"/>
                     <rng:ref name="widget"/>
                     <rng:ref name="separator"/>
-                    <rng:ref name="tree"/>
+                    <rng:ref name="list"/>
                     <rng:ref name="groupby"/>
                     <rng:ref name="button"/>
                     <rng:ref name="filter"/>
@@ -96,7 +96,7 @@
     </rng:define>
     <rng:start>
         <rng:choice>
-            <rng:ref name="tree" />
+            <rng:ref name="list" />
         </rng:choice>
     </rng:start>
 </rng:grammar>

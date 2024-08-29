@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock
 
 from odoo import models
 
 
-class StockReturnPicking(models.TransientModel):
-    _inherit = 'stock.return.picking'
+class StockReturnPicking(models.TransientModel, stock.StockReturnPicking):
 
     def _create_return(self):
         # Prevent copy of the carrier and carrier price when generating return picking

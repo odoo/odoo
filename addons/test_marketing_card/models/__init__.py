@@ -1,3 +1,3 @@
-from . import card_campaign
-from . import card_campaign_element
-from . import test_models
+from .card_campaign import CardCampaign
+from .card_campaign_element import CardCampaignElement
+from .test_models import CardTestEventLocationTag, CardTestEvent, CardTestEventPerformance, CardTestEventLocation

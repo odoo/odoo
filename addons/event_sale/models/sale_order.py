@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sale
 
 from werkzeug.urls import url_encode, url_join
 
@@ -7,8 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
+class SaleOrder(models.Model, sale.SaleOrder):
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 

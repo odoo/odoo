@@ -1,2 +1,2 @@
-from . import template_td
-from . import template_td_syscebnl
+from .template_td import AccountChartTemplate
+from .template_td_syscebnl import AccountChartTemplate

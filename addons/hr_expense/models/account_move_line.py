@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -6,8 +7,7 @@ from odoo.tools import SQL
 from odoo.tools.misc import frozendict
 
 
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     expense_id = fields.Many2one('hr.expense', string='Expense', copy=True) # copy=True, else we don't know price is tax incl.
 

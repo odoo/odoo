@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     dropship_picking_count = fields.Integer("Dropship Count", compute='_compute_picking_ids')
 
@@ -24,8 +24,7 @@ class SaleOrder(models.Model):
         return self._get_action_view_picking(self.picking_ids.filtered(lambda p: p.is_dropship))
 
 
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     def _compute_is_mto(self):
         super(SaleOrderLine, self)._compute_is_mto()

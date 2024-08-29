@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 _logger = logging.getLogger(__name__)
 
 
-class PeppolService(models.TransientModel):
+class AccountPeppolService(models.TransientModel):
     _name = 'account_peppol.service'
     _order = 'document_name, id'
     _description = 'Peppol Service'
@@ -19,7 +19,7 @@ class PeppolService(models.TransientModel):
     enabled = fields.Boolean()
 
 
-class PeppolServiceConfig(models.TransientModel):
+class AccountPeppolServiceWizard(models.TransientModel):
     _name = 'account_peppol.service.wizard'
     _description = 'Peppol Services Wizard'
 

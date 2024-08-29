@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 import io
 
@@ -6,8 +7,7 @@ from odoo import models
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
 
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+class IrActionsReport(models.Model, base.IrActionsReport):
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # EXTENDS base

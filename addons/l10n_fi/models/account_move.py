@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 import re
 from odoo import api, models, _
 from odoo.exceptions import UserError
@@ -7,8 +8,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class AccountInvoiceFinnish(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     @api.model
     def number2numeric(self, number):

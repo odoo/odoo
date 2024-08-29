@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account, utm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class AccountMove(models.Model):
-    _name = 'account.move'
-    _inherit = ['account.move', 'utm.mixin']
+class AccountMove(models.Model, account.AccountMove, utm.UtmMixin):
 
     @api.model
     def _get_invoice_default_sale_team(self):

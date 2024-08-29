@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     peppol_message_uuid = fields.Char(string='PEPPOL message ID')
     peppol_move_state = fields.Selection(

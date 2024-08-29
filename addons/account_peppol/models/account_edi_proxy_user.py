@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account_edi_proxy_client
 
 import logging
 
@@ -12,8 +13,9 @@ _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
 
 
-class AccountEdiProxyClientUser(models.Model):
-    _inherit = 'account_edi_proxy_client.user'
+class AccountEdiProxyClientUser(models.Model, account_edi_proxy_client.AccountEdiProxyClientUser):
+    _name = "account_edi_proxy_client.user"
+
 
     peppol_verification_code = fields.Char(string='SMS verification code')
     proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})

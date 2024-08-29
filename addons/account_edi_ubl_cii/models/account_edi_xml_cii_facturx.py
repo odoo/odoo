@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 from odoo import models, _
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
 from lxml import etree
@@ -17,9 +18,7 @@ CII_NAMESPACES = {
 }
 
 
-class AccountEdiXmlCII(models.AbstractModel):
-    _name = "account.edi.xml.cii"
-    _inherit = 'account.edi.common'
+class AccountEdiXmlCII(models.AbstractModel, account_edi_ubl_cii.AccountEdiCommon):
     _description = "Factur-x/XRechnung CII 2.2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):

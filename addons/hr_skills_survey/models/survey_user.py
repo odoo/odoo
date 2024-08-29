@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import survey
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
@@ -8,8 +9,9 @@ from odoo.osv import expression
 from odoo.tools import html2plaintext
 
 
-class SurveyUserInput(models.Model):
-    _inherit = 'survey.user_input'
+class SurveyUserInput(models.Model, survey.SurveyUserInput):
+    _name = "survey.user_input"
+
 
     def _mark_done(self):
         """ Will add certification to employee's resume if

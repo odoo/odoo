@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployeeBase(models.AbstractModel, hr.HrEmployeeBase):
 
     def _compute_presence_state(self):
         super()._compute_presence_state()

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -12,9 +13,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import convert, SQL
 
 
-class PosConfig(models.Model):
-    _name = 'pos.config'
-    _inherit = ['pos.bus.mixin', 'pos.load.mixin']
+class PosConfig(models.Model, point_of_sale.PosBusMixin, point_of_sale.PosLoadMixin):
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
 
@@ -651,7 +650,7 @@ class PosConfig(models.Model):
         self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
         return {
             'name': _('Session'),
-            'view_mode': 'form,tree',
+            'view_mode': 'form,list',
             'res_model': 'pos.session',
             'res_id': session_id,
             'view_id': False,

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import loyalty
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-class LoyaltyRule(models.Model):
-    _inherit = 'loyalty.rule'
+class LoyaltyRule(models.Model, loyalty.LoyaltyRule):
 
     website_id = fields.Many2one(related='program_id.website_id', store=True)
 

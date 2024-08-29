@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import repair, stock
 
 from odoo import api, models
 
 
-class Repair(models.Model):
-    _inherit = 'repair.order'
+class RepairOrder(models.Model, repair.RepairOrder):
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -45,8 +45,7 @@ class Repair(models.Model):
         }
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     def _prepare_phantom_line_vals(self, bom_line, qty):
         self.ensure_one()

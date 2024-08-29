@@ -2,17 +2,17 @@
 <odoo>
     <data>
         <record id="mail_activity_plan_template_view_tree" model="ir.ui.view">
-            <field name="name">mail.activity.plan.template.view.tree</field>
+            <field name="name">mail.activity.plan.template.view.list</field>
             <field name="model">mail.activity.plan.template</field>
             <field name="arch" type="xml">
-                <tree string="Activities">
+                <list string="Activities">
                     <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
                     <field name="summary" placeholder="e.g. Discuss Proposal"/>
                     <field name="responsible_type"/>
                     <field name="delay_count"/>
                     <field name="delay_unit"/>
                     <field name="delay_from"/>
-                </tree>
+                </list>
             </field>
         </record>
 

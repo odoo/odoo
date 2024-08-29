@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -8,8 +9,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.tools import format_list
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     group_use_recurring_revenues = fields.Boolean(string="Recurring Revenues", implied_group='crm.group_use_recurring_revenues')

@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import bus, base
 
 from odoo import fields, models
 
 
-class ResPartner(models.Model):
-    _name = "res.partner"
-    _inherit = ["res.partner", "bus.listener.mixin"]
+class ResPartner(models.Model, base.ResPartner, bus.BusListenerMixin):
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 

@@ -1,8 +1,8 @@
 from odoo import _, api, fields, models
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = "pos.config"
+class PosConfig(models.Model, point_of_sale.PosConfig):
 
     def _default_sinv_journal_id(self):
         return self.env['account.journal'].search([

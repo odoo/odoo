@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import fields, models, api
 
 
-class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+class AccountJournal(models.Model, account.AccountJournal):
 
     l10n_br_invoice_serial = fields.Char(
         'Series', copy=False,

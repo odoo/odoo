@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account, mail
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
@@ -6,10 +7,8 @@ from odoo.tools import create_index
 from odoo.tools import SQL
 
 
-class AccountPayment(models.Model):
-    _name = "account.payment"
+class AccountPayment(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin):
     _inherits = {'account.move': 'move_id'}
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Payments"
     _order = "date desc, name desc"
     _check_company_auto = True
@@ -1261,8 +1260,6 @@ class AccountPayment(models.Model):
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves
 # a lot of SQL queries
-class AccountMove(models.Model):
-    _name = "account.move"
-    _inherit = ['account.move']
+class AccountMove(models.Model, account.AccountMove):
 
     payment_ids = fields.One2many('account.payment', 'move_id', string='Payments')

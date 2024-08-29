@@ -2,14 +2,14 @@
 <odoo>
     <data>
         <record id="view_l10n_ke_item_code_tree" model="ir.ui.view">
-            <field name="name">l10n_ke.item.code.tree</field>
+            <field name="name">l10n_ke.item.code.list</field>
             <field name="model">l10n_ke.item.code</field>
             <field name="arch" type="xml">
-                <tree string="KRA Item Code">
+                <list string="KRA Item Code">
                     <field name="code"/>
                     <field name="description"/>
                     <field name="tax_rate"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_l10n_ke_item_code_search" model="ir.ui.view">

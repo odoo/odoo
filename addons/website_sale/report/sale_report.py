@@ -1,10 +1,10 @@
 # coding: utf-8
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 
 
-class SaleReport(models.Model):
-    _inherit = 'sale.report'
+class SaleReport(models.Model, sale.SaleReport):
 
     website_id = fields.Many2one('website', readonly=True)
     is_abandoned_cart = fields.Boolean(string="Abandoned Cart", readonly=True)

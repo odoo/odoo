@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import maintenance, mail
 
 import ast
 from dateutil.relativedelta import relativedelta
@@ -11,7 +12,6 @@ from odoo.osv import expression
 class MaintenanceStage(models.Model):
     """ Model for case stages. This models the main stages of a Maintenance Request management flow. """
 
-    _name = 'maintenance.stage'
     _description = 'Maintenance Stage'
     _order = 'sequence, id'
 
@@ -21,9 +21,7 @@ class MaintenanceStage(models.Model):
     done = fields.Boolean('Request Done')
 
 
-class MaintenanceEquipmentCategory(models.Model):
-    _name = 'maintenance.equipment.category'
-    _inherit = ['mail.alias.mixin', 'mail.thread']
+class MaintenanceEquipmentCategory(models.Model, mail.MailAliasMixin, mail.MailThread):
     _description = 'Maintenance Equipment Category'
 
     @api.depends('equipment_ids')
@@ -78,7 +76,6 @@ class MaintenanceEquipmentCategory(models.Model):
 
 
 class MaintenanceMixin(models.AbstractModel):
-    _name = 'maintenance.mixin'
     _check_company_auto = True
     _description = 'Maintenance Maintained Item'
 
@@ -118,9 +115,7 @@ class MaintenanceMixin(models.AbstractModel):
             record.maintenance_open_count = len(record.maintenance_ids.filtered(lambda mr: not mr.stage_id.done and not mr.archive))
 
 
-class MaintenanceEquipment(models.Model):
-    _name = 'maintenance.equipment'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'maintenance.mixin']
+class MaintenanceEquipment(models.Model, mail.MailThread, mail.MailActivityMixin, maintenance.MaintenanceMixin):
     _description = 'Maintenance Equipment'
     _check_company_auto = True
 
@@ -196,9 +191,7 @@ class MaintenanceEquipment(models.Model):
         return categories.browse(category_ids)
 
 
-class MaintenanceRequest(models.Model):
-    _name = 'maintenance.request'
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
+class MaintenanceRequest(models.Model, mail.MailThreadCc, mail.MailActivityMixin):
     _description = 'Maintenance Request'
     _order = "id desc"
     _check_company_auto = True
@@ -390,7 +383,6 @@ class MaintenanceRequest(models.Model):
 
 
 class MaintenanceTeam(models.Model):
-    _name = 'maintenance.team'
     _description = 'Maintenance Teams'
 
     name = fields.Char('Team Name', required=True, translate=True)

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import api, fields, models
 
 
-class AccountTax(models.Model):
+class AccountTax(models.Model, account.AccountTax):
 
-    _inherit = 'account.tax'
 
     l10n_ar_withholding_payment_type = fields.Selection(
         [('supplier', 'Supplier'), ('customer', 'Customer')], 'Argentinean Withholding type',

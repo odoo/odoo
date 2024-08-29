@@ -28,7 +28,7 @@
                     groups="mass_mailing.group_mass_mailing_user">
                     <group>
                         <field name="mailing_sms_ids" nolabel="1">
-                            <tree>
+                            <list>
                                 <field name="calendar_date" string="Date"/>
                                 <field name="subject" string="Title"/>
                                 <field name="mailing_type" column_invisible="True"/>
@@ -43,7 +43,7 @@
                                 <field name="bounced" string="Bounced (%)" optional="hide" avg="Average of Bounced"/>
                                 <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
                                 <button name="action_duplicate" type="object" string="Duplicate"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </page>

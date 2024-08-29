@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -9,8 +10,7 @@ from odoo import fields, models
 from odoo.tools import get_lang
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockMove(models.Model, stock.StockMove):
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')

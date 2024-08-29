@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -7,8 +8,7 @@ from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import groupby
 
 
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+class StockQuant(models.Model, stock.StockQuant):
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
     currency_id = fields.Many2one('res.currency', compute='_compute_value', groups='stock.group_stock_manager')

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from werkzeug import urls
 
@@ -9,8 +10,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_payumoney.controllers.main import PayUMoneyController
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Payumoney-specific rendering values.

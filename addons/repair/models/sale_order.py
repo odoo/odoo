@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     repair_order_ids = fields.One2many(
         comodel_name='repair.order', inverse_name='sale_order_id',
@@ -42,13 +42,12 @@ class SaleOrder(models.Model):
                 "name": _("Repair Orders"),
                 "type": "ir.actions.act_window",
                 "res_model": "repair.order",
-                "view_mode": "tree,form",
+                "view_mode": "list,form",
                 "domain": [('sale_order_id', '=', self.id)],
             }
 
 
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     def _compute_qty_delivered(self):
         remaining_so_lines = self

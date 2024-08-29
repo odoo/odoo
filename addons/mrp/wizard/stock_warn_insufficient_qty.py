@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class StockWarnInsufficientQtyUnbuild(models.TransientModel):
-    _name = 'stock.warn.insufficient.qty.unbuild'
-    _inherit = 'stock.warn.insufficient.qty'
+class StockWarnInsufficientQtyUnbuild(models.TransientModel, stock.StockWarnInsufficientQty):
     _description = 'Warn Insufficient Unbuild Quantity'
 
     unbuild_id = fields.Many2one('mrp.unbuild', 'Unbuild')

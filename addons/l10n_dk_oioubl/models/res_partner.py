@@ -1,8 +1,8 @@
 from odoo import api, models, fields
+from odoo.addons import base
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     ubl_cii_format = fields.Selection(selection_add=[('oioubl_201', "OIOUBL 2.01")])
 

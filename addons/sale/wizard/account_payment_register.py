@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 
 from odoo import models
 
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = 'account.payment.register'
+class AccountPaymentRegister(models.TransientModel, account.AccountPaymentRegister):
 
     def _create_payment_vals_from_wizard(self, batch_result):
         vals = super()._create_payment_vals_from_wizard(batch_result)

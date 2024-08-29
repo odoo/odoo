@@ -2,11 +2,11 @@ from lxml.builder import E
 
 from odoo import fields, models, api, Command
 
-class Product(models.Model):
-    _name = _description = 'ttu.product'
+class TtuProduct(models.Model):
+    _description = 'ttu.product'
 
-class Root(models.Model):
-    _name = _description = 'ttu.root'
+class TtuRoot(models.Model):
+    _description = 'ttu.root'
 
     product_id = fields.Many2one('ttu.product')
     product_qty = fields.Integer()
@@ -52,14 +52,14 @@ class Root(models.Model):
                     move_line.update(res)
 
     def _get_default_form_view(self):
-        move_subview = E.tree(
+        move_subview = E.list(
             {'editable': 'bottom'},
             E.field(name='product_id'),
             E.field(name='unit_factor'),
             E.field(name='quantity_done'),
             E.field(
                 {'name': 'move_line_ids', 'column_invisible': '1'},
-                E.tree(
+                E.list(
                     E.field(name='qty_done', invisible='1'),
                     E.field(name='product_id', invisible='1'),
                     E.field(name='move_id', invisible='1'),
@@ -84,8 +84,8 @@ class Root(models.Model):
         return t
 
 
-class Child(models.Model):
-    _name = _description = 'ttu.child'
+class TtuChild(models.Model):
+    _description = 'ttu.child'
 
     product_id = fields.Many2one('ttu.product')
     unit_factor = fields.Integer(default=1, required=True) # should be computed but we can ignore that
@@ -149,8 +149,8 @@ class Child(models.Model):
                 assert quantity_done == ml_quantity_done, "Cannot set the done quantity from this stock move, work directly with the move lines."
 
 
-class Grandchild(models.Model):
-    _name = _description = 'ttu.grandchild'
+class TtuGrandchild(models.Model):
+    _description = 'ttu.grandchild'
 
     product_id = fields.Many2one('ttu.product')
     product_uom_qty = fields.Integer()

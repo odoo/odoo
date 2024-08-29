@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import models
 
 
-class AutomaticEntryWizard(models.TransientModel):
-    _inherit = 'account.automatic.entry.wizard'
+class AccountAutomaticEntryWizard(models.TransientModel, account.AccountAutomaticEntryWizard):
 
     def _get_move_line_dict_vals_change_period(self, aml, date):
         res = super()._get_move_line_dict_vals_change_period(aml, date)

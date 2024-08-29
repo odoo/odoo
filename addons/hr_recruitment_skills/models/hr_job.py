@@ -1,11 +1,11 @@
 from markupsafe import Markup
+from odoo.addons import hr
 from ast import literal_eval
 
 from odoo import fields, models, _
 
 
-class HrJob(models.Model):
-    _inherit = "hr.job"
+class HrJob(models.Model, hr.HrJob):
 
     skill_ids = fields.Many2many(comodel_name='hr.skill', string="Expected Skills")
 
@@ -20,7 +20,7 @@ class HrJob(models.Model):
         action.update({
             'name': _("Matching Candidates"),
             'views': [
-                (self.env.ref('hr_recruitment_skills.hr_candidate_view_tree').id, 'tree'),
+                (self.env.ref('hr_recruitment_skills.hr_candidate_view_tree').id, 'list'),
                 (False, 'form'),
             ],
             'context': context,

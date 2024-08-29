@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import analytic
 
 from collections import defaultdict
 from datetime import timedelta
@@ -12,9 +13,7 @@ from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
 
 
-class SaleOrderLine(models.Model):
-    _name = 'sale.order.line'
-    _inherit = 'analytic.mixin'
+class SaleOrderLine(models.Model, analytic.AnalyticMixin):
     _description = "Sales Order Line"
     _rec_names_search = ['name', 'order_id.name']
     _order = 'order_id, sequence, id'

@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 
 
 class SmsSms(models.Model):
-    _name = 'sms.sms'
     _description = 'Outgoing SMS'
     _rec_name = 'number'
     _order = 'id DESC'

@@ -1,2 +1,2 @@
-from . import account
-from . import res_company
+from .account import AccountAccount
+from .res_company import ResCompany

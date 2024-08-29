@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
-class ProductCategory(models.Model):
-    _inherit = "product.category"
+class ProductCategory(models.Model, product.ProductCategory):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_delivery_category(self):

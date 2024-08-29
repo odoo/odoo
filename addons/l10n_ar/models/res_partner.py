@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 import stdnum.ar
@@ -8,9 +9,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class ResPartner(models.Model):
+class ResPartner(models.Model, base.ResPartner):
 
-    _inherit = 'res.partner'
 
     l10n_ar_vat = fields.Char(
         compute='_compute_l10n_ar_vat', string="VAT", help='Computed field that returns VAT or nothing if this one'

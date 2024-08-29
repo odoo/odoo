@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _
 
-class User(models.Model):
-    _inherit = ['res.users']
+class ResUsers(models.Model, base.ResUsers):
 
     hours_last_month = fields.Float(related='employee_id.hours_last_month')
     hours_last_month_display = fields.Char(related='employee_id.hours_last_month_display')
@@ -41,7 +41,7 @@ class User(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "tree"]],
+            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
             "context": {
                 "create": 0
             },
@@ -55,7 +55,7 @@ class User(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Overtime"),
             "res_model": "hr.attendance.overtime",
-            "views": [[False, "tree"]],
+            "views": [[False, "list"]],
             "context": {
                 "create": 0
             },

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_forum
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, models
 from odoo.tools import populate
 
-class Forum(models.Model):
-    _inherit = 'forum.forum'
+class ForumForum(models.Model, website_forum.ForumForum):
     _populate_sizes = {'small': 1, 'medium': 3, 'large': 10}
 
     def _populate_factories(self):

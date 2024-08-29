@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class FleetServiceType(models.Model):
-    _name = 'fleet.service.type'
     _description = 'Fleet Service Type'
     _order = 'name'
 

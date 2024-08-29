@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _, Command
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
-class Website(models.Model):
+class Website(models.Model, website.Website):
 
-    _inherit = "website"
 
     channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel')
 

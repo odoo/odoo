@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account_edi_ubl_cii
 
 from odoo import models, _
 
 
-class AccountEdiXmlUBLPINTMY(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
+class AccountEdiXmlPintMy(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUblBis3):
     _name = 'account.edi.xml.pint_my'
     _description = "Malaysian implementation of Peppol International (PINT) model for Billing"
     """

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,7 +9,7 @@ from odoo import api, models
 from odoo.osv.expression import AND
 from odoo.tools import float_is_zero, format_date, float_round, float_compare
 
-class StockForecasted(models.AbstractModel):
+class StockForecastedProductProduct(models.AbstractModel):
     _name = 'stock.forecasted_product_product'
     _description = "Stock Replenishment Report"
 
@@ -427,10 +428,9 @@ class StockForecasted(models.AbstractModel):
         return move_ids
 
 
-class StockForecastedTemplate(models.AbstractModel):
+class StockForecastedProductTemplate(models.AbstractModel, stock.StockForecastedProductProduct):
     _name = 'stock.forecasted_product_template'
     _description = "Stock Replenishment Report"
-    _inherit = 'stock.forecasted_product_product'
 
     @api.model
     def get_report_values(self, docids, data=None):

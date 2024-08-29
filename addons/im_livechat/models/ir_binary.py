@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models
 
 
-class IrBinary(models.AbstractModel):
-    _inherit = "ir.binary"
+class IrBinary(models.AbstractModel, base.IrBinary):
 
     def _find_record_check_access(self, record, access_token, field):
         """Custom access check allowing to retrieve an operator's avatar.

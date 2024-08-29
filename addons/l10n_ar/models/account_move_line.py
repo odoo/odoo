@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models
 
 
-class AccountMoveLine(models.Model):
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
-    _inherit = 'account.move.line'
 
     def _l10n_ar_prices_and_taxes(self):
         self.ensure_one()

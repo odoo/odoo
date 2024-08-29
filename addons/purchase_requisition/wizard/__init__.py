@@ -1,2 +1,2 @@
-from . import purchase_requisition_alternative_warning
-from . import purchase_requisition_create_alternative
+from .purchase_requisition_alternative_warning import PurchaseRequisitionAlternativeWarning
+from .purchase_requisition_create_alternative import PurchaseRequisitionCreateAlternative

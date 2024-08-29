@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class MrpBom(models.Model):
-    _inherit = 'mrp.bom'
+class MrpBom(models.Model, mrp.MrpBom):
 
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids', 'byproduct_ids', 'operation_ids')
     def _check_bom_lines(self):
@@ -21,8 +21,7 @@ class MrpBom(models.Model):
         return res
 
 
-class MrpBomLine(models.Model):
-    _inherit = 'mrp.bom.line'
+class MrpBomLine(models.Model, mrp.MrpBomLine):
 
     cost_share = fields.Float(
         "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!

@@ -1,4 +1,5 @@
 from odoo import _, models, tools
+from odoo.addons import account_edi_ubl_cii
 from odoo.tools import html2plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
@@ -38,13 +39,12 @@ def format_vat_number(partner):
     return vat
 
 
-class AccountEdiXmlOIOUBL201(models.AbstractModel):
+class AccountEdiXmlOioubl201(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl20):
     _name = "account.edi.xml.oioubl_201"
-    _inherit = 'account.edi.xml.ubl_20'
     _description = "OIOUBL 2.01"
 
     # Data validation Schematron available at the following URL:
-    # https://rep.erst.dk/git/openebusiness/common/-/tree/master/resources/Schematrons/OIOUBL
+    # https://rep.erst.dk/git/openebusiness/common/-/list/master/resources/Schematrons/OIOUBL
 
     # -------------------------------------------------------------------------
     # EXPORT

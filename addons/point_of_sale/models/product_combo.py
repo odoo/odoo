@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product, point_of_sale
 
 from odoo import api, models
 
 
-class ProductCombo(models.Model):
-    _name = 'product.combo'
-    _inherit = ['product.combo', 'pos.load.mixin']
+class ProductCombo(models.Model, product.ProductCombo, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -6,9 +7,8 @@ from odoo import fields, models, api
 from markupsafe import escape
 
 
-class PosSelfOrderCustomLink(models.Model):
+class PosSelfOrderCustomLink(models.Model, point_of_sale.PosLoadMixin):
     _name = "pos_self_order.custom_link"
-    _inherit = "pos.load.mixin"
     _description = (
         "Custom links that the restaurant can configure to be displayed on the self order screen"
     )

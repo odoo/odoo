@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="l10n_in_section_alert_view_tree" model="ir.ui.view">
-        <field name="name">l10n_in.section.alert.view.tree</field>
+        <field name="name">l10n_in.section.alert.view.list</field>
         <field name="model">l10n_in.section.alert</field>
         <field name="arch" type="xml">
-            <tree string="Section">
+            <list string="Section">
                 <field name="name"/>
                 <field name="tax_source_type"/>
                 <field name="consider_amount"/>
                 <field name="per_transaction_limit"/>
                 <field name="aggregate_limit"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -48,6 +48,6 @@
     <record id="l10n_in_section_alert_action" model="ir.actions.act_window">
         <field name="name">Section</field>
         <field name="res_model">l10n_in.section.alert</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

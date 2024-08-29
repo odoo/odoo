@@ -26,10 +26,10 @@
         </record>
 
         <record model="ir.ui.view" id="res_device_view_tree">
-            <field name="name">res.device.tree</field>
+            <field name="name">res.device.list</field>
             <field name="model">res.device</field>
             <field name="arch" type="xml">
-                <tree default_order="last_activity desc">
+                <list default_order="last_activity desc">
                     <field name="user_id"/>
                     <field name="display_name" string="Name"/>
                     <field name="ip_address"/>
@@ -38,7 +38,7 @@
                     <field name="country" optional="hidden"/>
                     <field name="city" optional="hidden"/>
                     <button type="object" name="revoke" string="Revoke" class="btn btn-secondary"/>
-                </tree>
+                </list>
             </field>
         </record>
 

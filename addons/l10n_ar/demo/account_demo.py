@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 import logging
 
 from odoo import api, models
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data(self, company=False):

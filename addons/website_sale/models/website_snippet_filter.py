@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website
 
 from collections import Counter
 
@@ -6,8 +7,7 @@ from odoo import _, api, fields, models
 from odoo.osv import expression
 
 
-class WebsiteSnippetFilter(models.Model):
-    _inherit = 'website.snippet.filter'
+class WebsiteSnippetFilter(models.Model, website.WebsiteSnippetFilter):
 
     product_cross_selling = fields.Boolean(
         string="About cross selling products",

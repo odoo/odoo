@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from collections import defaultdict
 
 from odoo import api, models
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     @api.model
     def _timesheet_domain_get_invoiced_lines(self, sale_line_delivery):

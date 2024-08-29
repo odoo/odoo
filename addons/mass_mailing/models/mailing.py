@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -37,22 +38,16 @@ DEFAULT_IMAGE_CHUNK_SIZE = 32768
 
 mso_re = re.compile(r"\[if mso\]>[\s\S]*<!\[endif\]")
 
-class MassMailing(models.Model):
+class MailingMailing(models.Model, mail.MailThread, mail.MailActivityMixin, mail.MailRenderMixin, utm.UtmSourceMixin):
     """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
-    _name = 'mailing.mailing'
     _description = 'Mass Mailing'
-    _inherit = ['mail.thread',
-                'mail.activity.mixin',
-                'mail.render.mixin',
-                'utm.source.mixin'
-    ]
     _order = 'calendar_date DESC'
     _rec_name = "subject"
     _systray_view = 'list'
 
     @api.model
     def default_get(self, fields_list):
-        vals = super(MassMailing, self).default_get(fields_list)
+        vals = super().default_get(fields_list)
 
         # field sent by the calendar view when clicking on a date block
         # we use it to setup the scheduled date of the created mailing.mailing
@@ -537,7 +532,7 @@ class MassMailing(models.Model):
         if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
-        result = super(MassMailing, self).write(values)
+        result = super().write(values)
         if values.get('ab_testing_enabled'):
             self._create_ab_testing_utm_campaigns()
         self._fix_attachment_ownership()
@@ -680,7 +675,7 @@ class MassMailing(models.Model):
         return {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'link.tracker',
             'domain': [('mass_mailing_id', '=', self.id)],
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
@@ -711,7 +706,7 @@ class MassMailing(models.Model):
         filter_key = 'search_default_filter_%s' % (view_filter)
         action['context'][filter_key] = True
         action['views'] = [
-            (self.env.ref('mass_mailing.mailing_trace_view_tree_mail').id, 'tree'),
+            (self.env.ref('mass_mailing.mailing_trace_view_tree_mail').id, 'list'),
             (self.env.ref('mass_mailing.mailing_trace_view_form').id, 'form')
         ]
         return action
@@ -774,7 +769,7 @@ class MassMailing(models.Model):
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
             'context': dict(self._context, create=False),
@@ -839,7 +834,7 @@ class MassMailing(models.Model):
         return {
             'name': _('A/B Tests'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,kanban,form,calendar,graph',
+            'view_mode': 'list,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
             'domain': expression.AND([
                 [('campaign_id', '=', self.campaign_id.id)],

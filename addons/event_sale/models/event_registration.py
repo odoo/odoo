@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.tools import float_is_zero
 
 
-class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+class EventRegistration(models.Model, event.EventRegistration):
 
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)

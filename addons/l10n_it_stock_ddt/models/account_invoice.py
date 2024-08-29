@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, fields, _
 from odoo.tools.float_utils import float_compare
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_it_ddt_ids = fields.Many2many('stock.picking', compute="_compute_ddt_ids")
     l10n_it_ddt_count = fields.Integer(compute="_compute_ddt_ids")
@@ -96,7 +96,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'name': _("Linked deliveries"),
             'res_model': 'stock.picking',
             'domain': [('id', 'in', self.l10n_it_ddt_ids.ids)],

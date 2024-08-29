@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class EventType(models.Model):
-    _inherit = "event.type"
+class EventType(models.Model, event.EventType):
 
     meeting_room_allow_creation = fields.Boolean(
         "Allow Room Creation", compute='_compute_meeting_room_allow_creation',

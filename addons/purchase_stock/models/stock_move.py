@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import deque
 
@@ -7,8 +8,7 @@ from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     purchase_line_id = fields.Many2one(
         'purchase.order.line', 'Purchase Order Line',

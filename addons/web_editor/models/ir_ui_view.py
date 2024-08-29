@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import copy
@@ -21,8 +22,7 @@ EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
 ]
 
 
-class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+class IrUiView(models.Model, base.IrUiView):
 
     def _get_cleaned_non_editing_attributes(self, attributes):
         """

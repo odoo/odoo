@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import markupsafe
@@ -37,8 +38,7 @@ L10N_ES_TBAI_LICENSE_DICT = {
     },
 }
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     # === TBAI config ===
     l10n_es_tbai_tax_agency = fields.Selection(

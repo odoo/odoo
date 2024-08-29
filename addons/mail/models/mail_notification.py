@@ -9,7 +9,6 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class MailNotification(models.Model):
-    _name = 'mail.notification'
     _table = 'mail_notification'
     _rec_name = 'res_partner_id'
     _log_access = False

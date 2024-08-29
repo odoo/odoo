@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, loyalty
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
-class LoyaltyProgram(models.Model):
-    _name = 'loyalty.program'
-    _inherit = ['loyalty.program', 'website.multi.mixin']
+class LoyaltyProgram(models.Model, loyalty.LoyaltyProgram, website.WebsiteMultiMixin):
 
     ecommerce_ok = fields.Boolean("Available on Website", default=True)
 

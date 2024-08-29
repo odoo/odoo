@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -11,8 +12,7 @@ from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
 
 
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
+class StockRule(models.Model, stock.StockRule):
 
     action = fields.Selection(selection_add=[
         ('buy', 'Buy')

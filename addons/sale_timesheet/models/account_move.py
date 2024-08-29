@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from collections import defaultdict
 
@@ -6,8 +7,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False, export_string_translation=False)
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count', compute_sudo=True, export_string_translation=False)
@@ -49,7 +49,7 @@ class AccountMove(models.Model):
             'domain': [('project_id', '!=', False)],
             'res_model': 'account.analytic.line',
             'view_id': False,
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets

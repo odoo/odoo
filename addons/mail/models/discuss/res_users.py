@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, models
 from odoo.addons.base.models.res_users import is_selection_groups
 
 
-class ResUsers(models.Model):
-    _inherit = "res.users"
+class ResUsers(models.Model, base.ResUsers):
 
     @api.model_create_multi
     def create(self, vals_list):

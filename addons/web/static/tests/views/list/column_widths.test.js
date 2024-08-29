@@ -135,7 +135,7 @@ test(`width computation: no record, lot of fields`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
@@ -145,7 +145,7 @@ test(`width computation: no record, lot of fields`, async () => {
                 <field name="datetime"/>
                 <field name="amount"/>
                 <field name="currency_id"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 119, 119, 91, 119, 91, 91, 145, 119, 130]);
 });
@@ -156,11 +156,11 @@ test(`width computation: no record, few fields`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 145, 458, 156]);
 });
@@ -171,11 +171,11 @@ test(`width computation: no record, all fields with a max width`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="int_field"/>
                 <field name="qux"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 250, 250, 261]);
 });
@@ -186,13 +186,13 @@ test(`width computation: no record, sample data`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
                 <field name="m2o"/>
                 <field name="int_field"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 146, 153, 153, 153, 157]);
 });
@@ -202,7 +202,7 @@ test(`width computation: with records, lot of fields`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
@@ -212,7 +212,7 @@ test(`width computation: with records, lot of fields`, async () => {
                 <field name="datetime"/>
                 <field name="amount"/>
                 <field name="currency_id"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 119, 119, 91, 119, 91, 91, 145, 119, 130]);
 });
@@ -222,7 +222,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
@@ -232,7 +232,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
                 <field name="datetime"/>
                 <field name="amount"/>
                 <field name="currency_id" width="25px"/>
-            </tree>
+            </list>
         `,
         groupBy: ["int_field"],
     });
@@ -245,11 +245,11 @@ test(`width computation: with records, few fields`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 145, 458, 156]);
 });
@@ -259,12 +259,12 @@ test(`width computation: with records, no relative fields`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="int_field"/>
                 <field name="qux"/>
                 <field name="date"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 201, 201, 201, 158]);
 });
@@ -282,11 +282,11 @@ test(`width computation: with records, very long text field`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="text"/>
                 <field name="qux"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 119, 538, 102]);
 });
@@ -300,7 +300,7 @@ test(`width computation: with records, lot of fields, long texts`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
@@ -310,7 +310,7 @@ test(`width computation: with records, lot of fields, long texts`, async () => {
                 <field name="datetime"/>
                 <field name="amount"/>
                 <field name="currency_id"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 119, 119, 91, 91, 91, 119, 145, 119, 130]);
 });
@@ -345,10 +345,10 @@ test(`width computation: editable list, overflowing table`, async () => {
         resModel: "abc",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="titi"/>
                 <field name="grosminet" widget="char"/>
-            </tree>
+            </list>
         `,
     });
     expect(`table`).toHaveRect(queryRect`.o_list_renderer`, {
@@ -367,11 +367,11 @@ test(`width computation: with records, few fields, long texts`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 119, 309, 332]);
 });
@@ -381,10 +381,10 @@ test(`width computation: list with handle field`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="int_field" widget="handle"/>
                 <field name="foo"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 29, 731]);
 });
@@ -396,11 +396,11 @@ test(`width computation: editable list, no record, with handle field`, async () 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="int_field" widget="handle"/>
                 <field name="currency_id"/>
                 <field name="m2o"/>
-            </tree>
+            </list>
         `,
     });
     expect(`thead th`).toHaveCount(4, { message: "there should be 4 th" });
@@ -426,10 +426,10 @@ test(`width computation: widget with listViewWidth in its definition`, async () 
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <widget name="my_widget"/>
                 <field name="foo"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 180, 580]);
 });
@@ -439,12 +439,12 @@ test(`width computation: list with width attribute in arch`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="int_field" width="52px"/>
                 <field name="foo" width="63px"/>
                 <field name="qux"/>
                 <field name="currency_id"/>
-            </tree>`,
+            </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 61, 72, 145, 481]);
 });
@@ -462,11 +462,11 @@ test(`width computation: width attribute in arch and overflowing table`, async (
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="datetime"/>
                 <field name="int_field" width="200px"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
     expect(getColumnWidths()).toEqual([40, 145, 210, 405]);
@@ -479,11 +479,11 @@ test(`width computation: no record, nameless and stringless buttons`, async () =
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <button string="choucroute"/>
                 <button icon="fa-heart"/>
-            </tree>
+            </list>
         `,
     });
     const columnWidths = getColumnWidths();
@@ -499,10 +499,10 @@ test(`width computation: no record, datetime field with date widget`, async () =
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="datetime" widget="date"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
     expect(getColumnWidths()).toEqual([40, 91, 669]);
@@ -516,11 +516,11 @@ test(`width computation: x2many`, async () => {
         <form>
             <sheet>
                 <field name="foo_o2m">
-                    <tree>
+                    <list>
                         <field name="bar"/>
                         <field name="foo"/>
                         <field name="qux"/>
-                    </tree>
+                    </list>
                 </field>
             </sheet>
         </form>`,
@@ -539,12 +539,12 @@ test(`width computation: x2many, column_invisible`, async () => {
                 <sheet>
                     <field name="bar"/>
                     <field name="foo_o2m">
-                        <tree>
+                        <list>
                             <field name="bar"/>
                             <field name="int_field" column_invisible="not parent.bar"/>
                             <field name="foo"/>
                             <field name="qux"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -591,10 +591,10 @@ test(`width computation: x2many, editable list, initially invisible, overflowing
                         <page string="Page1"></page>
                         <page string="Page2">
                             <field name="o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="titi"/>
                                     <field name="grosminet"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -639,10 +639,10 @@ test(`width computation: x2many, editable list, with invisible modifier on x2man
                 <sheet>
                     <field name="bar"/>
                     <field name="o2m" invisible="bar">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="titi"/>
                             <field name="grosminet"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -667,10 +667,10 @@ test.todo(`width computation: widths are re-computed on window resize`, async ()
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="datetime"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
     const initialTextWidth = queryRect(`th[data-name="text"]`).width;
@@ -692,12 +692,12 @@ test(`width computation: button columns don't have a max width`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <button name="b1" string="Do This"/>
                 <button name="b2" string="Do That"/>
                 <button name="b3" string="Or Rather Do Something Else"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -727,10 +727,10 @@ test(`freeze widths: add first record`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="datetime"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -745,11 +745,11 @@ test(`freeze widths: edit a record`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="datetime"/>
                 <field name="text"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -771,10 +771,10 @@ test(`freeze widths: switch records in edition`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -794,12 +794,12 @@ test(`freeze widths: switch mode`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="int_field" readonly="1"/>
                 <field name="m2o"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
     });
     const startWidths = getColumnWidths();
@@ -844,7 +844,7 @@ test(`freeze widths: switch mode (lot of fields)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" required="1"/>
                 <field name="int_field" readonly="1"/>
                 <field name="boolean"/>
@@ -854,7 +854,7 @@ test(`freeze widths: switch mode (lot of fields)`, async () => {
                 <field name="currency_id" column_invisible="1"/>
                 <field name="m2o"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
     });
     const startHeight = queryRect(`.o_data_row:eq(0)`).height;
@@ -883,14 +883,14 @@ test(`freeze widths: navigate with the pager`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="qux"/>
                 <field name="date"/>
                 <field name="datetime"/>
-            </tree>
+            </list>
         `,
         limit: 2,
     });
@@ -908,11 +908,11 @@ test(`freeze widths: toggle a filter`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
         searchViewArch: `
             <search>
@@ -935,11 +935,11 @@ test(`freeze widths: empty list, remove a filter s.t. records appear`, async () 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
         searchViewArch: `
             <search>
@@ -967,11 +967,11 @@ test(`freeze widths: grouped list, open a group`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -994,10 +994,10 @@ test(`freeze widths: toggle a filter, vertical scrollbar appears`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         searchViewArch: `
             <search>
@@ -1026,11 +1026,11 @@ test(`freeze widths: add a record in empty list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
         noContentHelp: '<p class="hello">click to add a foo</p>',
     });
@@ -1057,10 +1057,10 @@ test(`freeze widths: add a record in empty list with handle widget`, async () =>
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="int_field" widget="handle"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         noContentHelp: '<p class="hello">click to add a foo</p>',
     });
@@ -1082,10 +1082,10 @@ test(`freeze widths: edit multiple records`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="datetime"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1115,13 +1115,13 @@ test(`freeze widths: toggle optional fields`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="date"/>
                 <field name="text"/>
                 <field name="qux" optional="hide"/>
                 <field name="datetime" optional="show"/>
                 <field name="foo" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1148,10 +1148,10 @@ test(`freeze widths: x2many, add first record`, async () => {
         arch: `
             <form>
                 <field name="foo_o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -1171,10 +1171,10 @@ test(`freeze widths: x2many, edit a record`, async () => {
         arch: `
             <form>
                 <field name="foo_o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1202,10 +1202,10 @@ test(`freeze widths: x2many, remove last record`, async () => {
         arch: `
             <form>
                 <field name="foo_o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1226,11 +1226,11 @@ test(`freeze widths: x2many, toggle optional field`, async () => {
         arch: `
             <form>
                 <field name="foo_o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="date" required="1"/>
                         <field name="foo"/>
                         <field name="int_field" optional="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -1253,10 +1253,10 @@ test(`resize, reorder, resize again`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1288,10 +1288,10 @@ test(`resize column and toggle one checkbox`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1311,10 +1311,10 @@ test(`resize column and toggle check all`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1334,10 +1334,10 @@ test(`resize column headers in editable list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="reference" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     const originalWidths = getColumnWidths();
@@ -1357,11 +1357,11 @@ test.todo(`resize column headers in editable list (2)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="reference" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     const originalWidth1 = queryRect(`th:eq(1)`).width;
@@ -1389,16 +1389,16 @@ test(`resize column with several x2many lists in form group`, async () => {
             <form>
                 <group>
                     <field name="o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="display_name"/>
                             <field name="text"/>
-                        </tree>
+                        </list>
                     </field>
                     <field name="m2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="display_name"/>
                             <field name="text"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>
@@ -1440,12 +1440,12 @@ test(`resize column with x2many list with several fields in form notebook`, asyn
                     <notebook>
                         <page string="Page 1">
                             <field name="o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="display_name"/>
                                     <field name="display_name"/>
                                     <field name="display_name"/>
                                     <field name="display_name"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -1478,10 +1478,10 @@ test(`resize: unnamed columns cannot be resized`, async () => {
             <form>
                 <sheet>
                     <field name="o2m">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="display_name"/>
                             <button name="the_button" icon="fa-heart"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>

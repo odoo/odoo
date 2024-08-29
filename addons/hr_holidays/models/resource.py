@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import resource
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
@@ -6,8 +7,7 @@ from odoo.osv import expression
 import pytz
 from datetime import datetime
 
-class CalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class ResourceCalendarLeaves(models.Model, resource.ResourceCalendarLeaves):
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
 
@@ -153,8 +153,7 @@ class CalendarLeaves(models.Model):
 
         return res
 
-class ResourceCalendar(models.Model):
-    _inherit = "resource.calendar"
+class ResourceCalendar(models.Model, resource.ResourceCalendar):
 
     associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
 

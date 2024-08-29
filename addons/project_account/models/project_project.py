@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -7,8 +8,7 @@ from collections import defaultdict
 from odoo import models, _lt
 
 
-class Project(models.Model):
-    _inherit = 'project.project'
+class ProjectProject(models.Model, project.ProjectProject):
 
     def _add_purchase_items(self, profitability_items, with_action=True):
         domain = self._get_add_purchase_items_domain()

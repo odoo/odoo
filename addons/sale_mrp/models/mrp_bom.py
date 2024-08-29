@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
 from odoo.exceptions import UserError
 
 
-class MrpBom(models.Model):
-    _inherit = 'mrp.bom'
+class MrpBom(models.Model, mrp.MrpBom):
 
     def toggle_active(self):
         self.filtered(lambda bom: bom.active)._ensure_bom_is_free()

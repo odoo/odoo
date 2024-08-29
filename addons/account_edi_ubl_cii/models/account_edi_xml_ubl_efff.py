@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 
 from odoo import models
 
 import re
 
 
-class AccountEdiXmlUBLEFFF(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_20"
+class AccountEdiXmlUblEfff(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl20):
     _name = 'account.edi.xml.ubl_efff'
     _description = "E-FFF (BE)"
 

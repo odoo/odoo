@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class TaxOffice(models.Model):
+class L10nPlL10nPlTaxOffice(models.Model):
     _name = 'l10n_pl.l10n_pl_tax_office'
     _description = 'Tax Office in Poland'
     _rec_names_search = ['name', 'code']

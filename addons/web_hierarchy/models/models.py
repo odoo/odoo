@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, models
 
 
-class Base(models.AbstractModel):
-    _inherit = 'base'
+class Base(models.AbstractModel, base.Model):
 
     @api.model
     def hierarchy_read(self, domain, fields, parent_field, child_field=None, order=None):

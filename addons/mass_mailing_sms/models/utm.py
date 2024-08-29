@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,8 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class UtmCampaign(models.Model):
-    _inherit = 'utm.campaign'
+class UtmCampaign(models.Model, utm.UtmCampaign):
 
     mailing_sms_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
@@ -77,8 +77,7 @@ class UtmCampaign(models.Model):
         return ab_testing_campaign
 
 
-class UtmMedium(models.Model):
-    _inherit = 'utm.medium'
+class UtmMedium(models.Model, utm.UtmMedium):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_medium_sms(self):

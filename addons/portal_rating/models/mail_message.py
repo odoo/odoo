@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import format_datetime
 
 
-class MailMessage(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model, mail.MailMessage):
 
     def _portal_get_default_format_properties_names(self, options=None):
         """ Add request for rating information

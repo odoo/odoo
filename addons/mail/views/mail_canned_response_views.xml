@@ -16,10 +16,10 @@
         </record>
 
         <record id="mail_canned_response_view_tree" model="ir.ui.view">
-            <field name="name">mail.canned.response.tree</field>
+            <field name="name">mail.canned.response.list</field>
             <field name="model">mail.canned.response</field>
             <field name="arch" type="xml">
-                <tree string="Canned responses" editable="bottom" default_order="is_shared" sample="1">
+                <list string="Canned responses" editable="bottom" default_order="is_shared" sample="1">
                     <field name="source" readonly="not is_editable"/>
                     <field name="substitution" readonly="not is_editable"/>
                     <field name="description" readonly="not is_editable"/>
@@ -28,7 +28,7 @@
                     <field name="last_used" readonly="1"/>
                     <field name="is_editable" column_invisible="True"/>
                     <field name="is_shared" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -54,7 +54,7 @@
         <record id="mail_canned_response_action" model="ir.actions.act_window">
             <field name="name">Canned Responses</field>
             <field name="res_model">mail.canned.response</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="mail_canned_response_view_search"/>
             <field name="context">{
                 'search_default_filter_create_uid': 1,

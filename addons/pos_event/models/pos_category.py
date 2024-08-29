@@ -1,9 +1,9 @@
 from odoo import models, api, _
+from odoo.addons import point_of_sale
 from odoo.exceptions import UserError
 
 
-class PosCategory(models.Model):
-    _inherit = "pos.category"
+class PosCategory(models.Model, point_of_sale.PosCategory):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_pos_event_category(self):

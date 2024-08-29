@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import fields, models, api
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, account.AccountMove):
 
-    _inherit = 'account.move'
 
     l10n_ar_withholding_ids = fields.One2many(
         'account.move.line', 'move_id', string='Withholdings',

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account_edi_proxy_client
 
 import logging
 
@@ -8,8 +9,9 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class AccountEdiProxyClientUser(models.Model):
-    _inherit = 'account_edi_proxy_client.user'
+class AccountEdiProxyClientUser(models.Model, account_edi_proxy_client.AccountEdiProxyClientUser):
+    _name = "account_edi_proxy_client.user"
+
 
     proxy_type = fields.Selection(selection_add=[('l10n_it_edi', 'Italian EDI')], ondelete={'l10n_it_edi': 'cascade'})
 

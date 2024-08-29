@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock
 
 from odoo import models
 
 
-class StockPicking(models.Model):
-    _inherit = "stock.picking"
+class StockPicking(models.Model, stock.StockPicking):
 
     def _get_l10n_in_dropship_dest_partner(self):
         self.ensure_one()

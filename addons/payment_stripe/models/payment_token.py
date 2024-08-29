@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import logging
 import pprint
@@ -9,8 +10,7 @@ from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+class PaymentToken(models.Model, payment.PaymentToken):
 
     stripe_payment_method = fields.Char(string="Stripe Payment Method ID", readonly=True)
     stripe_mandate = fields.Char(string="Stripe Mandate", readonly=True)

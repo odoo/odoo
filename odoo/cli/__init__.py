@@ -7,6 +7,7 @@ import odoo
 from .command import Command, main
 
 from . import cloc
+from . import code_upgrade
 from . import deploy
 from . import scaffold
 from . import server

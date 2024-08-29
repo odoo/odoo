@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from hashlib import new as hashnew
 
@@ -8,8 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.payment_asiapay import const
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('asiapay', "AsiaPay")], ondelete={'asiapay': 'set default'}

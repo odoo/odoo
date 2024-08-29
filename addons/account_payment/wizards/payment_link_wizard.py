@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from odoo import _, api, fields, models
 from odoo.tools import formatLang
@@ -6,8 +7,7 @@ from odoo.tools import formatLang
 from odoo.addons.payment import utils as payment_utils
 
 
-class PaymentLinkWizard(models.TransientModel):
-    _inherit = 'payment.link.wizard'
+class PaymentLinkWizard(models.TransientModel, payment.PaymentLinkWizard):
 
     invoice_amount_due = fields.Monetary(
         string="Amount Due",

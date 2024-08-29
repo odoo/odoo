@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 
 from odoo import models, _
 
@@ -10,8 +11,7 @@ def get_formatted_sector_ro(city: str):
     return city.upper().replace(' ', '')
 
 
-class AccountEdiXmlUBLRO(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
+class AccountEdiXmlUblRo(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUblBis3):
     _name = "account.edi.xml.ubl_ro"
     _description = "CIUS RO"
 

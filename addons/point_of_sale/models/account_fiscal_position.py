@@ -1,9 +1,8 @@
 from odoo import models, api
+from odoo.addons import account, point_of_sale
 
 
-class AccountFiscalPosition(models.Model):
-    _name = 'account.fiscal.position'
-    _inherit = ['account.fiscal.position', 'pos.load.mixin']
+class AccountFiscalPosition(models.Model, account.AccountFiscalPosition, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):

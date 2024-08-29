@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_recruitment
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from odoo.exceptions import UserError
 
 
-class Applicant(models.Model):
+class HrApplicant(models.Model, hr_recruitment.HrApplicant):
 
-    _inherit = 'hr.applicant'
 
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:

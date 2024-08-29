@@ -1,4 +1,5 @@
 import logging
+from odoo.addons import account
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.TransientModel):
-    _inherit = 'account.move.send'
+class AccountMoveSend(models.TransientModel, account.AccountMoveSend):
 
     l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_l10n_es_edi_facturae_enable_xml')
     l10n_es_edi_facturae_checkbox_xml = fields.Boolean(

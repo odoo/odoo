@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     default_location_dest_id_is_subcontracting_loc = fields.Boolean(related='picking_type_id.default_location_dest_id.is_subcontracting_location')
 

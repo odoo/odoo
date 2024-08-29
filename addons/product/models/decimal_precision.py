@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, tools, _
 from odoo.exceptions import ValidationError
 
 
-class DecimalPrecision(models.Model):
-    _inherit = 'decimal.precision'
+class DecimalPrecision(models.Model, base.DecimalPrecision):
 
     @api.constrains('digits')
     def _check_main_currency_rounding(self):

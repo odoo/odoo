@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class Department(models.Model):
-    _name = "hr.department"
+class HrDepartment(models.Model, mail.MailThread):
     _description = "Department"
-    _inherit = ['mail.thread']
     _order = "name"
     _rec_name = 'complete_name'
     _parent_store = True
@@ -78,7 +77,7 @@ class Department(models.Model):
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.
-        departments = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        departments = super(HrDepartment, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         for department, vals in zip(departments, vals_list):
             manager = self.env['hr.employee'].browse(vals.get("manager_id"))
             if manager.user_id:
@@ -106,7 +105,7 @@ class Department(models.Model):
             self.message_unsubscribe(partner_ids=list(manager_to_unsubscribe))
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
-        return super(Department, self).write(vals)
+        return super().write(vals)
 
     def _update_employee_manager(self, manager_id):
         employees = self.env['hr.employee']
@@ -145,7 +144,7 @@ class Department(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "hr.department",
-            "views": [[False, "kanban"], [False, "tree"], [False, "form"]],
+            "views": [[False, "kanban"], [False, "list"], [False, "form"]],
             "domain": [['id', 'in', self.get_children_department_ids().ids]],
             "name": "Child departments",
         }

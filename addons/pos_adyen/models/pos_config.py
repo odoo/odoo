@@ -1,4 +1,5 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -8,8 +9,7 @@ from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class PosConfig(models.Model):
-    _inherit = 'pos.config'
+class PosConfig(models.Model, point_of_sale.PosConfig):
 
     adyen_ask_customer_for_tip = fields.Boolean('Ask Customers For Tip')
 

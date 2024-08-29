@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import hashlib
 import logging
@@ -11,8 +12,7 @@ from odoo.addons.payment_aps import const
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('aps', "Amazon Payment Services")], ondelete={'aps': 'set default'}

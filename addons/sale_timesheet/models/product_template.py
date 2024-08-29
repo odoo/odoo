@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 import threading
 
@@ -6,8 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     def _selection_service_policy(self):
         service_policies = super()._selection_service_policy()

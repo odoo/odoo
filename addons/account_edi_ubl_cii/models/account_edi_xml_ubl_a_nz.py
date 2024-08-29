@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 
 from odoo import models
 
 
-class AccountEdiXmlUBLANZ(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
+class AccountEdiXmlUblANz(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUblBis3):
     _name = 'account.edi.xml.ubl_a_nz'
     _description = "A-NZ BIS Billing 3.0"
 
     """
-    * Documentation: https://github.com/A-NZ-PEPPOL/A-NZ-PEPPOL-BIS-3.0/tree/master/Specifications
+    * Documentation: https://github.com/A-NZ-PEPPOL/A-NZ-PEPPOL-BIS-3.0/list/master/Specifications
     """
 
     # -------------------------------------------------------------------------

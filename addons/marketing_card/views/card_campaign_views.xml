@@ -75,7 +75,7 @@
                         <group>
                         <group>
                             <field name="card_element_ids" nolabel="1" colspan="2">
-                                <tree create="0" delete="0" open_form_view="1">
+                                <list create="0" delete="0" open_form_view="1">
                                     <field name="card_element_role"/>
                                     <field name="card_element_text_value"/>
                                     <!--fetch and save defaults so the modal form view saves the right values in unsaved new records-->
@@ -83,7 +83,7 @@
                                     <field name="value_type" column_invisible="1" force_save="1"/><!--fetch and save in new records-->
                                     <field name="campaign_id" column_invisible="1" force_save="1"/><!--necessary to properly update res_model-->
                                     <field name="res_model" column_invisible="1" force_save="1"/><!--necessary to properly update in the o2m form-->
-                                </tree>
+                                </list>
                             </field>
                         </group>
                         <group>
@@ -155,16 +155,16 @@
     </record>
 
     <record id="card_campaign_view_tree" model="ir.ui.view">
-        <field name="name">card.campaign.view.tree</field>
+        <field name="name">card.campaign.view.list</field>
         <field name="model">card.campaign</field>
         <field name="arch" type="xml">
-            <tree sample="1">
+            <list sample="1">
                 <field name="name"/>
                 <field name="user_id" widget="many2one_avatar"/>
                 <field name="res_model" string="Target"/>
                 <field name="target_url"/>
                 <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -192,7 +192,7 @@
         <field name="name">Card Campaign</field>
         <field name="res_model">card.campaign</field>
         <field name="search_view_id" ref="card_campaign_view_search"/>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create a Sharing Campaign!</p>
             <p>Prepare a design and some content and let your community spread the word!</p>

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import base64
 from datetime import timedelta
@@ -11,8 +12,7 @@ from odoo.exceptions import UserError
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection, L10nHuEdiConnectionError, XML_NAMESPACES
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     l10n_hu_group_vat = fields.Char(
         related='partner_id.l10n_hu_group_vat',

@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import event, point_of_sale
 from odoo import models, api, fields
 
 
-class EventTicket(models.Model):
-    _name = 'event.event.ticket'
-    _inherit = ['event.event.ticket', 'pos.load.mixin']
+class EventEventTicket(models.Model, event.EventEventTicket, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):

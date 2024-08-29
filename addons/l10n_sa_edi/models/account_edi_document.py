@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 from odoo import models
 
 
-class AccountEdiDocument(models.Model):
-    _inherit = 'account.edi.document'
+class AccountEdiDocument(models.Model, account_edi.AccountEdiDocument):
 
     def _prepare_jobs(self):
         """

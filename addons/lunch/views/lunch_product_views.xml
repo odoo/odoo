@@ -34,10 +34,10 @@
     </record>
 
     <record id="lunch_product_view_tree" model="ir.ui.view">
-        <field name="name">lunch.product.tree</field>
+        <field name="name">lunch.product.list</field>
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
-            <tree string="Products Tree">
+            <list string="Products List">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="name"/>
                 <field name="category_id"/>
@@ -45,17 +45,17 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="description"/>
                 <field name="price" widget="monetary"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="lunch_product_view_tree_order" model="ir.ui.view">
-        <field name="name">lunch.product.tree.order</field>
+        <field name="name">lunch.product.list.order</field>
         <field name="inherit_id" ref="lunch_product_view_tree"/>
         <field name="model">lunch.product</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="js_class">lunch_list</attribute>
                 <attribute name="create">0</attribute>
             </xpath>
@@ -170,7 +170,7 @@
     <record id="lunch_product_action_statbutton" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">lunch.product</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_group_by_supplier': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -182,13 +182,13 @@
     </record>
 
     <record id="lunch_product_category_view_tree" model="ir.ui.view">
-        <field name="name">Product category Tree</field>
+        <field name="name">Product category List</field>
         <field name="model">lunch.product.category</field>
         <field name="arch" type="xml">
-            <tree string="Products List">
+            <list string="Products List">
                 <field name='name' string="Product Category"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -260,7 +260,7 @@
     <record id="lunch_product_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">lunch.product</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new product for lunch
@@ -274,11 +274,11 @@
         <field name="name">Order Your Lunch</field>
         <field name="path">lunch</field>
         <field name="res_model">lunch.product</field>
-        <field name="view_mode">kanban,tree</field>
+        <field name="view_mode">kanban,list</field>
         <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_lunch_product_kanban_order')}),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('lunch_product_view_tree_order')})
+            (0, 0, {'view_mode': 'list', 'view_id': ref('lunch_product_view_tree_order')})
         ]"/>
         <field name="search_view_id" ref="lunch_product_view_search"/>
         <field name="domain">[]</field>
@@ -294,7 +294,7 @@
     <record id="lunch_product_category_action" model="ir.actions.act_window">
         <field name="name">Product Categories</field>
         <field name="res_model">lunch.product.category</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="search_view_id" ref="lunch_product_category_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

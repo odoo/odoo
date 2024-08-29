@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -12,8 +13,7 @@ from odoo.addons.resource.models.utils import Intervals
 from odoo.exceptions import UserError
 
 
-class EmployeePublic(models.Model):
-    _inherit = 'hr.employee.public'
+class HrEmployeePublic(models.Model, hr.HrEmployeePublic):
 
     first_contract_date = fields.Date(compute='_compute_manager_only_fields', search='_search_first_contract_date')
 
@@ -25,16 +25,14 @@ class EmployeePublic(models.Model):
         return [('id', 'in', employees.ids)]
 
 
-class EmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployeeBase(models.AbstractModel, hr.HrEmployeeBase):
 
     @api.model
     def _get_new_hire_field(self):
         return 'first_contract_date'
 
 
-class Employee(models.Model):
-    _inherit = "hr.employee"
+class HrEmployee(models.Model, hr.HrEmployee):
 
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts', groups="hr.group_hr_user")

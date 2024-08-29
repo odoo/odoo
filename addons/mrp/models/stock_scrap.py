@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 
 
-class StockScrap(models.Model):
-    _inherit = 'stock.scrap'
+class StockScrap(models.Model, stock.StockScrap):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',

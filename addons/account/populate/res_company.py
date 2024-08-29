@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 """Classes extending the populate factory for Companies and related models.
 
 Only adding specificities of basic accounting applications.
@@ -10,10 +11,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class ResCompany(models.Model):
+class ResCompany(models.Model, base.ResCompany):
     """Populate factory part for the accountings applications of res.company."""
 
-    _inherit = "res.company"
 
     def _populate(self, size):
         _logger.info('Loading Chart Template')

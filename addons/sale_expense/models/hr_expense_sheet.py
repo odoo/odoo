@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr_expense
 from collections import Counter
 
 from odoo import fields, models, _
 
 
-class HrExpenseSheet(models.Model):
-    _inherit = "hr.expense.sheet"
+class HrExpenseSheet(models.Model, hr_expense.HrExpenseSheet):
 
     sale_order_count = fields.Integer(compute='_compute_sale_order_count')
 

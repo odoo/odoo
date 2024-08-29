@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import base64
 import io
@@ -11,8 +12,7 @@ from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
 
 
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+class IrActionsReport(models.Model, base.IrActionsReport):
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         """Override to add and fill headers, footers and product documents to the sale quotation."""

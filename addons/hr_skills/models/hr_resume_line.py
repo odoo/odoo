@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class ResumeLine(models.Model):
-    _name = 'hr.resume.line'
+class HrResumeLine(models.Model):
     _description = "Resume line of an employee"
     _order = "line_type_id, date_end desc, date_start desc"
 

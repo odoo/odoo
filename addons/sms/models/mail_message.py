@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import fields, models
 
 
-class MailMessage(models.Model):
+class MailMessage(models.Model, mail.MailMessage):
     """ Override MailMessage class in order to add a new type: SMS messages.
     Those messages comes with their own notification method, using SMS
     gateway. """
-    _inherit = 'mail.message'
 
     message_type = fields.Selection(
         selection_add=[('sms', 'SMS')],

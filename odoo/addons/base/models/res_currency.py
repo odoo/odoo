@@ -19,8 +19,7 @@ except ImportError:
     num2words = None
 
 
-class Currency(models.Model):
-    _name = "res.currency"
+class ResCurrency(models.Model):
     _description = "Currency"
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
@@ -313,22 +312,21 @@ class Currency(models.Model):
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree', 'form'):
+        if view_type in ('list', 'form'):
             currency_name = (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company.root_id).currency_id.name
             fields_maps = [
                 [['company_rate', 'rate'], _('Unit per %s', currency_name)],
                 [['inverse_company_rate', 'inverse_rate'], _('%s per Unit', currency_name)],
             ]
             for fnames, label in fields_maps:
-                xpath_expression = '//tree//field[' + " or ".join(f"@name='{f}'" for f in fnames) + "][1]"
+                xpath_expression = '//list//field[' + " or ".join(f"@name='{f}'" for f in fnames) + "][1]"
                 node = arch.xpath(xpath_expression)
                 if node:
                     node[0].set('string', label)
         return arch, view
 
 
-class CurrencyRate(models.Model):
-    _name = "res.currency.rate"
+class ResCurrencyRate(models.Model):
     _description = "Currency Rate"
     _rec_names_search = ['name', 'rate']
     _order = "name desc"
@@ -469,7 +467,7 @@ class CurrencyRate(models.Model):
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'tree':
+        if view_type == 'list':
             names = {
                 'company_currency_name': (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company.root_id).currency_id.name,
                 'rate_currency_name': self.env['res.currency'].browse(self._context.get('active_id')).name or 'Unit',

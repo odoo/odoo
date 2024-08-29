@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class MailBlackList(models.Model):
+class MailBlacklist(models.Model, mail.MailBlacklist):
     """ Model of blacklisted email addresses to stop sending emails."""
-    _inherit = ['mail.blacklist']
 
     opt_out_reason_id = fields.Many2one(
         'mailing.subscription.optout', string='Opt-out Reason',

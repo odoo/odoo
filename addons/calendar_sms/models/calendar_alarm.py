@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 
 
-class CalendarAlarm(models.Model):
-    _inherit = 'calendar.alarm'
+class CalendarAlarm(models.Model, calendar.CalendarAlarm):
 
     alarm_type = fields.Selection(selection_add=[
         ('sms', 'SMS Text Message')

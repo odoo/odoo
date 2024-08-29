@@ -1,5 +1,5 @@
-from . import ir_filters
-from . import res_partner
-from . import res_company
-from . import res_currency
-from . import res_user
+from .ir_filters import IrFilters
+from .res_partner import ResPartnerIndustry, ResPartner
+from .res_company import ResCompany
+from .res_currency import ResCurrencyRate
+from .res_user import ResUsers

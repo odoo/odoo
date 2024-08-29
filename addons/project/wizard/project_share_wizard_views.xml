@@ -12,14 +12,14 @@
                     <field name="share_link" widget="CopyClipboardChar"/>
                 </group>
                 <field name="collaborator_ids" nolabel="1">
-                    <tree string="Collaborators" editable="bottom">
+                    <list string="Collaborators" editable="bottom">
                         <field name="partner_id"
                                options="{'no_create': True, 'no_open': True}"
                                domain="[('id', 'not in', parent.existing_partner_ids), ('partner_share', '=', True)]"
                         />
                         <field name="access_mode"/>
                         <field name="send_invitation"/>
-                    </tree>
+                    </list>
                 </field>
                 <p class="text-muted">Choose one of the following access modes for your collaborators:</p>
                 <ul class="text-muted">

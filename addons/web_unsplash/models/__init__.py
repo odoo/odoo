@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_attachment
-from . import ir_qweb_fields
-from . import res_config_settings
-from . import res_users
+from .ir_attachment import IrAttachment
+from .ir_qweb_fields import IrQwebFieldImage
+from .res_config_settings import ResConfigSettings
+from .res_users import ResUsers

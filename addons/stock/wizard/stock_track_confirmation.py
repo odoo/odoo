@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class StockTrackConfirmation(models.TransientModel):
-    _name = 'stock.track.confirmation'
     _description = 'Stock Track Confirmation'
 
     tracking_line_ids = fields.One2many('stock.track.line', 'wizard_id')
@@ -21,8 +20,7 @@ class StockTrackConfirmation(models.TransientModel):
         self.tracking_line_ids = [(0, 0, {'product_id': product}) for product in self.product_ids]
 
 
-class StockTrackingLines(models.TransientModel):
-    _name = 'stock.track.line'
+class StockTrackLine(models.TransientModel):
     _description = 'Stock Track Line'
 
     product_display_name = fields.Char('Name', compute='_compute_product_display_name', readonly=True)

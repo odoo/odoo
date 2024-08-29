@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 class LoyaltyGenerateWizard(models.TransientModel):
-    _name = 'loyalty.generate.wizard'
     _description = 'Generate Coupons'
 
     program_id = fields.Many2one('loyalty.program', required=True, default=lambda self: self.env.context.get('active_id', False) or self.env.context.get('default_program_id', False))

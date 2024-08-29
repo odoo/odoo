@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models
 from .res_config_settings import DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     def session_info(self):
         res = super().session_info()

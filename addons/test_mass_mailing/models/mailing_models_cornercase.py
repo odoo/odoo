@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class MailingTestPartnerUnstored(models.Model):
+class MailingTestPartnerUnstored(models.Model, mail.MailThreadBlacklist):
     """ Check mailing with unstored fields """
     _description = 'Mailing Model without stored partner_id'
-    _name = 'mailing.test.partner.unstored'
-    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
     name = fields.Char()

@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
+class StockRule(models.Model, stock.StockRule):
 
     def _prepare_purchase_order(self, company_id, origins, values):
         if 'partner_id' not in values[0] \

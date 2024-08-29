@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+class StockQuant(models.Model, stock.StockQuant):
 
     expiration_date = fields.Datetime(related='lot_id.expiration_date', store=True)
     removal_date = fields.Datetime(related='lot_id.removal_date', store=True)

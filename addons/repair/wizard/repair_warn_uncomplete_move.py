@@ -3,8 +3,7 @@
 
 from odoo import fields, models
 
-class RepairkWarnUncompleteMove(models.TransientModel):
-    _name = 'repair.warn.uncomplete.move'
+class RepairWarnUncompleteMove(models.TransientModel):
     _description = 'Warn Uncomplete Move(s)'
 
     repair_ids = fields.Many2many('repair.order', string='Repair Orders')

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock
 
 from odoo import api, fields, models
 import logging
@@ -6,8 +7,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockMove(models.Model, stock.StockMove):
     _description = "Stock Move Ewaybill"
 
     l10n_in_ewaybill_id = fields.One2many(related="picking_id.l10n_in_ewaybill_id")

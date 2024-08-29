@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -8,9 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     l10n_it_pec_email = fields.Char(string="PEC e-mail")
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)

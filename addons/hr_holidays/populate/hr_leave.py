@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -9,8 +10,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import groupby
 
 
-class HolidaysType(models.Model):
-    _inherit = "hr.leave.type"
+class HrLeaveType(models.Model, hr_holidays.HrLeaveType):
     _populate_sizes = {"small": 10, "medium": 30, "large": 100}
     _populate_dependencies = ['res.company']
 
@@ -27,8 +27,7 @@ class HolidaysType(models.Model):
         ]
 
 
-class HolidaysRequest(models.Model):
-    _inherit = "hr.leave"
+class HrLeave(models.Model, hr_holidays.HrLeave):
     _populate_sizes = {"small": 100, "medium": 800, "large": 10000}
     _populate_dependencies = ['hr.employee', 'hr.leave.type']
 

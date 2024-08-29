@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError
 
 
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+class AccountPayment(models.Model, account.AccountPayment):
 
     # == Business fields ==
     payment_transaction_id = fields.Many2one(
@@ -173,7 +173,7 @@ class AccountPayment(models.Model):
             action['res_id'] = refund_tx.id
             action['view_mode'] = 'form'
         else:
-            action['view_mode'] = 'tree,form'
+            action['view_mode'] = 'list,form'
             action['domain'] = [('source_payment_id', '=', self.id)]
         return action
 

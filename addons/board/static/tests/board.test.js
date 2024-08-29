@@ -52,7 +52,7 @@ class Partner extends models.Model {
     _views = {
         "form,100000001": "<form/>",
         "search,100000002": "<search/>",
-        "list,4": '<tree string="Partner"><field name="foo"/></tree>',
+        "list,4": '<list string="Partner"><field name="foo"/></list>',
     };
 }
 
@@ -665,7 +665,7 @@ describe.tags("desktop")("board_desktop", () => {
 
 describe.tags("mobile")("board_mobile", () => {
     test("can't switch views in the dashboard", async () => {
-        Partner._views["list,4"] = '<tree string="Partner"><field name="foo"/></tree>';
+        Partner._views["list,4"] = '<list string="Partner"><field name="foo"/></list>';
 
         onRpc("/web/action/load", () => {
             return Promise.resolve({
@@ -699,7 +699,7 @@ describe.tags("mobile")("board_mobile", () => {
     });
 
     test("Correctly soft switch to '1' layout on small screen", async () => {
-        Partner._views["list,4"] = '<tree string="Partner"><field name="foo"/></tree>';
+        Partner._views["list,4"] = '<list string="Partner"><field name="foo"/></list>';
 
         onRpc("/web/action/load", () => {
             return Promise.resolve({

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 
 from odoo import models, fields
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     def _get_template_matrix(self, **kwargs):
         self.ensure_one()
@@ -60,8 +60,7 @@ class ProductTemplate(models.Model):
         }
 
 
-class ProductTemplateAttributeValue(models.Model):
-    _inherit = "product.template.attribute.value"
+class ProductTemplateAttributeValue(models.Model, product.ProductTemplateAttributeValue):
 
     def _grid_header_cell(self, fro_currency, to_currency, company, display_extra=True):
         """Generate a header matrix cell for 1 or multiple attributes.

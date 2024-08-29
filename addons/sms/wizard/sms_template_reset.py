@@ -5,7 +5,6 @@ from odoo import fields, models, _
 
 
 class SMSTemplateReset(models.TransientModel):
-    _name = 'sms.template.reset'
     _description = 'SMS Template Reset'
 
     template_ids = fields.Many2many('sms.template')

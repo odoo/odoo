@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -18,8 +19,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = "account.edi.format"
+class AccountEdiFormat(models.Model, account_edi.AccountEdiFormat):
 
     def _is_enabled_by_default_on_journal(self, journal):
         self.ensure_one()

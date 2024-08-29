@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+class StockWarehouse(models.Model, stock.StockWarehouse):
 
     def _get_picking_type_create_values(self, max_sequence):
         data, next_sequence = super()._get_picking_type_create_values(max_sequence)

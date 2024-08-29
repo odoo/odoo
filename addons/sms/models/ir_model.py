@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class IrModel(models.Model):
-    _inherit = 'ir.model'
+class IrModel(models.Model, base.IrModel):
 
     is_mail_thread_sms = fields.Boolean(
         string="Mail Thread SMS", default=False,

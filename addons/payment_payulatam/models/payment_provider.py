@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from hashlib import md5
 
@@ -7,8 +8,7 @@ from odoo.tools.float_utils import float_repr, float_split
 
 from odoo.addons.payment_payulatam import const
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('payulatam', 'PayU Latam')], ondelete={'payulatam': 'set default'})

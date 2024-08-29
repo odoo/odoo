@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_forum
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class Forum(models.Model):
-    _inherit = 'forum.forum'
+class ForumForum(models.Model, website_forum.ForumForum):
 
     slide_channel_ids = fields.One2many('slide.channel', 'forum_id', 'Courses', help="Edit the course linked to this forum on the course form.")
     slide_channel_id = fields.Many2one('slide.channel', 'Course', compute='_compute_slide_channel_id', store=True)

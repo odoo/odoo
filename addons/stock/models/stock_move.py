@@ -17,7 +17,6 @@ PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
 
 class StockMove(models.Model):
-    _name = "stock.move"
     _description = "Stock Move"
     _order = 'sequence, id'
 

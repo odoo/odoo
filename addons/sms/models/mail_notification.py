@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class MailNotification(models.Model):
-    _inherit = 'mail.notification'
+class MailNotification(models.Model, mail.MailNotification):
 
     notification_type = fields.Selection(selection_add=[
         ('sms', 'SMS')

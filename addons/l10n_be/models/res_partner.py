@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
@@ -6,8 +7,7 @@
 from odoo import api, models
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     @api.depends('vat', 'country_id')
     def _compute_company_registry(self):

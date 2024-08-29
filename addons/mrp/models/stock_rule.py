@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -10,8 +11,7 @@ from odoo.osv import expression
 from odoo.tools import float_compare, OrderedSet
 
 
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
+class StockRule(models.Model, stock.StockRule):
     action = fields.Selection(selection_add=[
         ('manufacture', 'Manufacture')
     ], ondelete={'manufacture': 'cascade'})
@@ -221,8 +221,7 @@ class StockRule(models.Model):
         return new_move_vals
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class ProcurementGroup(models.Model, stock.ProcurementGroup):
 
     mrp_production_ids = fields.One2many('mrp.production', 'procurement_group_id')
 

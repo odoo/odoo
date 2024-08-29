@@ -2,9 +2,8 @@
 from odoo import fields, models
 
 
-class EwaybillCancel(models.TransientModel):
+class L10nInEwaybillCancel(models.TransientModel):
 
-    _name = 'l10n.in.ewaybill.cancel'
     _description = 'Cancel Ewaybill'
 
     l10n_in_ewaybill_id = fields.Many2one('l10n.in.ewaybill', string='Ewaybill', required=True)

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     def _l10n_in_get_warehouse_address(self):
         res = super()._l10n_in_get_warehouse_address()

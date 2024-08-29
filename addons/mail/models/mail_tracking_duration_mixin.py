@@ -4,7 +4,6 @@ from odoo import _, fields, models
 
 
 class MailTrackingDurationMixin(models.AbstractModel):
-    _name = "mail.tracking.duration.mixin"
     _description = "Mixin to compute the time a record has spent in each value a many2one field can take"
 
     duration_tracking = fields.Json(

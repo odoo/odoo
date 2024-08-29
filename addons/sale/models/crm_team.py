@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sales_team
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools import SQL
 
 
-class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+class CrmTeam(models.Model, sales_team.CrmTeam):
 
     invoiced = fields.Float(
         compute='_compute_invoiced',

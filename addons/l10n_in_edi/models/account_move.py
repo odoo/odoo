@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -7,8 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_in_edi_cancel_reason = fields.Selection(selection=[
         ("1", "Duplicate"),

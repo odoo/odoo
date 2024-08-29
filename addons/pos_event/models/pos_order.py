@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import point_of_sale
 from odoo import models, fields, api
 
 
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 

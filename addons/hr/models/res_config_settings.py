@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 import threading
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Company Working Hours',

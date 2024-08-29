@@ -11,7 +11,7 @@ from odoo.addons.base.models.assetsbundle import EXTENSIONS
 _match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\w+)$")
 
 
-class Assets(models.AbstractModel):
+class WebEditorAssets(models.AbstractModel):
     _name = 'web_editor.assets'
     _description = 'Assets Utils'
 

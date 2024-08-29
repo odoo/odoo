@@ -15,7 +15,6 @@ _logger = logging.getLogger(__name__)
 
 
 class StockSchedulerCompute(models.TransientModel):
-    _name = 'stock.scheduler.compute'
     _description = 'Run Scheduler Manually'
 
     def _procure_calculation_orderpoint(self):

@@ -4,9 +4,8 @@
 from odoo import api, fields, models
 
 
-class PeopleSeniority(models.Model):
+class CrmIapLeadSeniority(models.Model):
     """ Seniority for People Rules """
-    _name = 'crm.iap.lead.seniority'
     _description = 'People Seniority'
 
     name = fields.Char(string='Name', required=True, translate=True)

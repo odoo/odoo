@@ -80,13 +80,13 @@
                         <page string="Tickets" name="tickets">
                             <field name="event_ticket_ids" context="{
                                 'default_event_name': name,
-                                'tree_view_ref': 'event.event_event_ticket_view_tree_from_event',
+                                'list_view_ref': 'event.event_event_ticket_view_tree_from_event',
                                 'form_view_ref': 'event.event_event_ticket_view_form_from_event',
-                                'kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="tree,kanban"/>
+                                'kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="list,kanban"/>
                         </page>
                         <page string="Communication" name="event_communication">
                             <field name="event_mail_ids">
-                                <tree string="Communication" editable="bottom">
+                                <list string="Communication" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                                     <field name="interval_nbr" readonly="interval_unit == 'now'"/>
@@ -96,12 +96,12 @@
                                     <field name="mail_count_done"/>
                                     <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
                                         options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                          <page string="Questions" name="questions">
                             <field name="question_ids" string="Question" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="sequence" widget="handle" />
                                     <field name="title"/>
                                     <field name="is_mandatory_answer" string="Mandatory"/>
@@ -111,7 +111,7 @@
                                         invisible="question_type != 'simple_choice'" />
                                     <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats"
                                             title="Answer Breakdown" invisible="question_type not in ['simple_choice', 'text_box']"/>
-                                </tree>
+                                </list>
                                 <!-- Need to repeat the whole tree form here to be able to create answers properly
                                     Without this, the sub-fields of answer_ids are unknown to the web framework.
                                     We need this because we create questions and answers when the event type changes. -->
@@ -130,12 +130,12 @@
                                         <notebook invisible="question_type != 'simple_choice'">
                                             <page string="Answers" name="answers">
                                                 <field name="answer_ids">
-                                                    <tree editable="bottom">
+                                                    <list editable="bottom">
                                                         <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
                                                         <field name="display_name" column_invisible="True" />
                                                         <field name="sequence" widget="handle" />
                                                         <field name="name"/>
-                                                    </tree>
+                                                    </list>
                                                 </field>
                                             </page>
                                         </notebook>
@@ -163,10 +163,10 @@
     </record>
 
     <record model="ir.ui.view" id="view_event_tree">
-        <field name="name">event.event.tree</field>
+        <field name="name">event.event.list</field>
         <field name="model">event.event</field>
         <field name="arch" type="xml">
-            <tree string="Events"
+            <list string="Events"
                 multi_edit="1"
                 sample="1">
                 <field name="name"/>
@@ -184,7 +184,7 @@
                 <field name="stage_id" readonly="1"/>
                 <field name="message_needaction" readonly="1" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -333,7 +333,7 @@
        <field name="name">Events</field>
        <field name="path">events</field>
        <field name="res_model">event.event</field>
-       <field name="view_mode">kanban,calendar,tree,form,pivot,graph,activity</field>
+       <field name="view_mode">kanban,calendar,list,form,pivot,graph,activity</field>
        <field name="search_view_id" ref="view_event_search"/>
        <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     def get_l10n_es_pos_tbai_qrurl(self):
         """ This function manually triggers the account.edi post CRON and synchronously

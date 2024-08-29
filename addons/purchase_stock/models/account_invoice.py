@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
@@ -6,8 +7,7 @@ from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import groupby
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     def _stock_account_prepare_anglo_saxon_in_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the price difference

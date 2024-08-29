@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 import datetime
 import markupsafe
@@ -6,8 +7,7 @@ import markupsafe
 from odoo import _, api, Command, fields, models, tools
 
 
-class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+class MailThread(models.AbstractModel, mail.MailThread):
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Ratings', groups='base.group_user',
                                  domain=lambda self: [('res_model', '=', self._name)], auto_join=True)

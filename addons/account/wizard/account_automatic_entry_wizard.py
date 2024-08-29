@@ -10,8 +10,7 @@ from markupsafe import Markup, escape
 from odoo.tools import frozendict
 import json
 
-class AutomaticEntryWizard(models.TransientModel):
-    _name = 'account.automatic.entry.wizard'
+class AccountAutomaticEntryWizard(models.TransientModel):
     _description = 'Create Automatic Entries'
     _check_company_auto = True
 
@@ -447,9 +446,9 @@ class AutomaticEntryWizard(models.TransientModel):
             'name': _('Generated Entries'),
             'domain': [('id', 'in', created_moves.ids)],
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'type': 'ir.actions.act_window',
-            'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('account.view_move_tree').id, 'list'), (False, 'form')],
         }
         if len(created_moves) == 1:
             action.update({'view_mode': 'form', 'res_id': created_moves.id})

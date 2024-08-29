@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -36,8 +37,7 @@ def check_qr_iban_range(iban):
     return re.match(r'\d+', iid) and 30000 <= int(iid) <= 31999 # Those values for iid are reserved for QR-IBANs only
 
 
-class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     l10n_ch_qr_iban = fields.Char(string='QR-IBAN',
                                   compute='_compute_l10n_ch_qr_iban',

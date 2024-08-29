@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     def _should_force_price_unit(self):
         self.ensure_one()

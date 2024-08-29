@@ -47,9 +47,9 @@ test("BooleanToggleField is disabled if readonly in editable list", async () => 
         resModel: "partner",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="bar" widget="boolean_toggle"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_boolean_toggle input`).not.toBeEnabled();

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website
 from odoo import api, models
 
 
-class Website(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     @api.model_create_multi
     def create(self, vals_list):

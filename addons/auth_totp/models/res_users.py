@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -18,8 +19,7 @@ from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
 _logger = logging.getLogger(__name__)
 
 compress = functools.partial(re.sub, r'\s', '')
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, compute='_compute_totp_secret', inverse='_inverse_token')
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled', search='_totp_enable_search')

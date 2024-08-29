@@ -3,7 +3,7 @@
         <record model="ir.actions.act_window" id="action_mrp_production_moves">
             <field name="name">Inventory Moves</field>
             <field name="res_model">stock.move.line</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="domain">['|', ('move_id.raw_material_production_id', '=', active_id), ('move_id.production_id', '=', active_id)]</field>
         </record>
 
@@ -47,7 +47,7 @@
         </record>
 
         <record id="view_stock_move_line_operation_tree_finished" model="ir.ui.view">
-            <field name="name">stock.move.line.operation.tree.finished</field>
+            <field name="name">stock.move.line.operation.list.finished</field>
             <field name="model">stock.move.line</field>
             <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree" />
             <field name="arch" type="xml">

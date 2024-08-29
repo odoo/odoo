@@ -3,11 +3,11 @@
     <data>
 
         <record id="view_account_journal_tree" model="ir.ui.view">
-            <field name="name">account.journal.tree</field>
+            <field name="name">account.journal.list</field>
             <field name="model">account.journal</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree string="Account Journal">
+                <list string="Account Journal">
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
@@ -18,7 +18,7 @@
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -105,7 +105,7 @@
                             <page id="inbound_payment_settings" string="Incoming Payments" name="page_incoming_payments" invisible="type not in ['cash', 'bank', 'credit']">
                                 <field name="available_payment_method_ids" invisible="1"/>
                                 <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
-                                    <tree string="Payment Methods" editable="bottom">
+                                    <list string="Payment Methods" editable="bottom">
                                         <field name="available_payment_method_ids" column_invisible="True"/>
                                         <field name="payment_type" column_invisible="True"/>
                                         <field name="company_id" column_invisible="True"/>
@@ -117,12 +117,12 @@
                                                string="Outstanding Receipts accounts"
                                                options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                             <page id="outbound_payment_settings" string="Outgoing Payments" name="page_outgoing_payments" invisible="type not in ['cash', 'bank', 'credit']">
                                     <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
-                                        <tree string="Payment Methods" editable="bottom">
+                                        <list string="Payment Methods" editable="bottom">
                                             <field name="available_payment_method_ids" column_invisible="True"/>
                                             <field name="payment_type" column_invisible="True"/>
                                             <field name="company_id" column_invisible="True"/>
@@ -134,7 +134,7 @@
                                                    string="Outstanding Payments accounts"
                                                    options="{'no_quick_create': True}"
                                                    groups="account.group_account_readonly"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                     <field name="selected_payment_method_codes" invisible="1"/>
                                     <group name="outgoing_payment" />
@@ -232,9 +232,9 @@
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_journal_tree')}),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('view_account_journal_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_journal_view_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_journal_form')})]"/>
             <field name="help" type="html">
@@ -248,17 +248,17 @@
         </record>
 
         <record id="view_account_journal_group_tree" model="ir.ui.view">
-            <field name="name">account.journal.group.tree</field>
+            <field name="name">account.journal.group.list</field>
             <field name="model">account.journal.group</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="company_id" column_invisible="True"/>
                     <field name="sequence"  widget="handle"/>
                     <field name="name"/>
                     <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 

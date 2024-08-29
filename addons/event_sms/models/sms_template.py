@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sms
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 from odoo.osv import expression
 
 
-class SmsTemplate(models.Model):
-    _inherit = 'sms.template'
+class SmsTemplate(models.Model, sms.SmsTemplate):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

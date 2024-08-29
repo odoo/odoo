@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from odoo.addons import resource
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
 
@@ -6,8 +7,7 @@ from odoo import fields, models
 from odoo.osv.expression import AND
 
 
-class ResourceCalendar(models.Model):
-    _inherit = 'resource.calendar'
+class ResourceCalendar(models.Model, resource.ResourceCalendar):
 
     contracts_count = fields.Integer("# Contracts using it", compute='_compute_contracts_count', groups="hr_contract.group_hr_contract_manager")
 

@@ -38,10 +38,10 @@
     </record>
 
     <record id="stock_valuation_layer_tree" model="ir.ui.view">
-        <field name="name">stock.valuation.layer.tree</field>
+        <field name="name">stock.valuation.layer.list</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
-            <tree default_order="id desc" create="0"
+            <list default_order="id desc" create="0"
                   import="0" js_class="inventory_report_list"
                   action="action_open_reference" type="object" duplicate="0">
                 <header>
@@ -69,12 +69,12 @@
                     <field name="quantity_svl" invisible="1"/>
                     <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object" invisible="cost_method == 'standard' or quantity_svl &lt;= 0" />
                 </groupby>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="stock_valuation_layer_valuation_at_date_tree_inherited" model="ir.ui.view">
-        <field name="name">inventory.aging.tree</field>
+        <field name="name">inventory.aging.list</field>
         <field name="model">stock.valuation.layer</field>
         <field name="inherit_id" ref="stock_valuation_layer_tree"/>
         <field name="mode">primary</field>
@@ -111,7 +111,7 @@
         <field name="name">Stock Valuation</field>
         <field name="res_model">stock.valuation.layer</field>
         <field name="path">stock-valuation</field>
-        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="view_mode">list,form,pivot,graph</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
         <field name="domain">[('product_id.is_storable', '=', True)]</field>
         <field name="context">{
@@ -156,7 +156,7 @@
 
     <!-- reporting view -->
     <record id="stock_valuation_layer_report_tree" model="ir.ui.view">
-        <field name="name">stock.valuation.layer.report.tree</field>
+        <field name="name">stock.valuation.layer.report.list</field>
         <field name="model">stock.valuation.layer</field>
         <field name="inherit_id" ref="stock_valuation_layer_tree"/>
         <field name="mode">primary</field>
@@ -176,7 +176,7 @@
     <record id="stock_valuation_layer_report_action" model="ir.actions.act_window">
         <field name="name">Stock Valuation</field>
         <field name="res_model">stock.valuation.layer</field>
-        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_mode">list,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_report_tree"/>
         <field name="context">{'search_default_has_remaining_qty': 1}</field>
         <field name="domain">[('product_id.is_storable', '=', True)]</field>

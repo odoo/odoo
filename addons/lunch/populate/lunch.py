@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import lunch
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from dateutil.relativedelta import relativedelta
@@ -10,8 +11,7 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class LunchProductCategory(models.Model):
-    _inherit = 'lunch.product.category'
+class LunchProductCategory(models.Model, lunch.LunchProductCategory):
     _populate_sizes = {'small': 5, 'medium': 150, 'large': 400}
     _populate_dependencies = ['res.company']
 
@@ -27,8 +27,7 @@ class LunchProductCategory(models.Model):
         ]
 
 
-class LunchProduct(models.Model):
-    _inherit = 'lunch.product'
+class LunchProduct(models.Model, lunch.LunchProduct):
     _populate_sizes = {'small': 10, 'medium': 150, 'large': 10000}
     _populate_dependencies = ['lunch.product.category', 'lunch.supplier']
 
@@ -53,8 +52,7 @@ class LunchProduct(models.Model):
         ]
 
 
-class LunchLocation(models.Model):
-    _inherit = 'lunch.location'
+class LunchLocation(models.Model, lunch.LunchLocation):
 
     _populate_sizes = {'small': 3, 'medium': 50, 'large': 500}
     _populate_dependencies = ['res.company']
@@ -69,8 +67,7 @@ class LunchLocation(models.Model):
         ]
 
 
-class LunchSupplier(models.Model):
-    _inherit = 'lunch.supplier'
+class LunchSupplier(models.Model, lunch.LunchSupplier):
 
     _populate_sizes = {'small': 3, 'medium': 50, 'large': 1500}
 
@@ -108,8 +105,7 @@ class LunchSupplier(models.Model):
         ]
 
 
-class LunchOrder(models.Model):
-    _inherit = 'lunch.order'
+class LunchOrder(models.Model, lunch.LunchOrder):
     _populate_sizes = {'small': 20, 'medium': 3000, 'large': 15000}
     _populate_dependencies = ['lunch.product', 'res.users', 'res.company']
 
@@ -131,8 +127,7 @@ class LunchOrder(models.Model):
         ]
 
 
-class LunchAlert(models.Model):
-    _inherit = 'lunch.alert'
+class LunchAlert(models.Model, lunch.LunchAlert):
     _populate_sizes = {'small': 10, 'medium': 40, 'large': 150}
 
     _populate_dependencies = ['lunch.location']

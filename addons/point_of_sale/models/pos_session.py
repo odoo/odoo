@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail, point_of_sale, stock, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import timedelta
@@ -12,11 +13,9 @@ from odoo.service.common import exp_version
 from odoo.osv.expression import AND
 
 
-class PosSession(models.Model):
-    _name = 'pos.session'
+class PosSession(models.Model, portal.MailThread, mail.MailActivityMixin, point_of_sale.PosBusMixin, point_of_sale.PosLoadMixin):
     _order = 'id desc'
     _description = 'Point of Sale Session'
-    _inherit = ['mail.thread', 'mail.activity.mixin', "pos.bus.mixin", 'pos.load.mixin']
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -1546,7 +1545,7 @@ class PosSession(models.Model):
             'name': _('Cash register'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.line',
-            'view_mode': 'tree,kanban',
+            'view_mode': 'list,kanban',
             'domain': [('id', 'in', self.statement_line_ids.ids)],
         }
 
@@ -1557,7 +1556,7 @@ class PosSession(models.Model):
             'name': _('Journal Items'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move.line',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'view_id':self.env.ref('account.view_move_line_tree').id,
             'domain': [('id', 'in', all_related_moves.mapped('line_ids').ids)],
             'context': {
@@ -1598,7 +1597,7 @@ class PosSession(models.Model):
             'name': _('Payments'),
             'type': 'ir.actions.act_window',
             'res_model': 'pos.payment',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('session_id', '=', self.id)],
             'context': {'search_default_group_by_payment_method': 1}
         }
@@ -1636,9 +1635,9 @@ class PosSession(models.Model):
         return {
             'name': _('Orders'),
             'res_model': 'pos.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'views': [
-                (self.env.ref('point_of_sale.view_pos_order_tree_no_session_id').id, 'tree'),
+                (self.env.ref('point_of_sale.view_pos_order_tree_no_session_id').id, 'list'),
                 (self.env.ref('point_of_sale.view_pos_pos_form').id, 'form'),
                 ],
             'type': 'ir.actions.act_window',
@@ -1832,8 +1831,7 @@ class PosSession(models.Model):
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class ProcurementGroup(models.Model, stock.ProcurementGroup):
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

@@ -1,9 +1,9 @@
 # coding: utf-8
+from odoo.addons import account
 from odoo import models, fields, api
 
 
-class AccountTax(models.Model):
-    _inherit = 'account.tax'
+class AccountTax(models.Model, account.AccountTax):
 
     l10n_mx_factor_type = fields.Selection(
         selection=[

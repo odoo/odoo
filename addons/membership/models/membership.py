@@ -14,7 +14,7 @@ STATE = [
 ]
 
 
-class MembershipLine(models.Model):
+class MembershipMembershipLine(models.Model):
     _name = 'membership.membership_line'
     _rec_name = 'partner'
     _order = 'id desc'

@@ -16,13 +16,13 @@
     </record>
 
     <record id="view_picking_move_tree_inherited" model="ir.ui.view">
-        <field name="name">stock_picking_batch.picking.move.tree</field>
+        <field name="name">stock_picking_batch.picking.move.list</field>
         <field name="model">stock.move</field>
         <field name="inherit_id" ref="stock.view_picking_move_tree"/>
         <field name="mode">primary</field>
         <field name="priority" eval="1000"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="delete">0</attribute>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
@@ -39,10 +39,10 @@
     </record>
 
     <record id="view_move_line_tree" model="ir.ui.view">
-        <field name="name">stock_picking_batch.move.line.tree</field>
+        <field name="name">stock_picking_batch.move.line.list</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
+            <list editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
                 <field name="tracking" column_invisible="True"/>
                 <field name="state" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
@@ -59,7 +59,7 @@
                     groups="uom.group_uom" readonly="1" force_save="1"/>
                 <field name="quantity"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -109,16 +109,16 @@
                     </group>
                     <notebook>
                         <page string="Detailed Operations" name="page_detailed_operations" invisible="state == 'draft'">
-                            <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}" readonly="state not in ['draft', 'in_progress']"/>
+                            <field name="move_line_ids" context="{'list_view_ref': 'stock_picking_batch.view_move_line_tree'}" readonly="state not in ['draft', 'in_progress']"/>
                             <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Operations" name="page_operations" invisible="state == 'draft'">
-                            <field name="move_ids" context="{'tree_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
+                            <field name="move_ids" context="{'list_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
                         </page>
                         <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
-                            <field name="picking_ids" widget="many2many" mode="tree,kanban"
-                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'tree_view_ref': 'stock_picking_batch.stock_picking_view_batch_tree_ref'}" readonly="state not in ['draft', 'in_progress']"/>
+                            <field name="picking_ids" widget="many2many" mode="list,kanban"
+                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'list_view_ref': 'stock_picking_batch.stock_picking_view_batch_tree_ref'}" readonly="state not in ['draft', 'in_progress']"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -128,10 +128,10 @@
     </record>
 
     <record id="stock_picking_batch_tree" model="ir.ui.view">
-        <field name="name">stock.picking.batch.tree</field>
+        <field name="name">stock.picking.batch.list</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <tree string="Stock Batch Transfer" multi_edit="1" sample="1">
+            <list string="Stock Batch Transfer" multi_edit="1" sample="1">
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
@@ -140,7 +140,7 @@
                 <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')" decoration-danger="state == 'cancel'"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -221,7 +221,7 @@
     <record id="stock_picking_batch_action" model="ir.actions.act_window">
         <field name="name">Batch Transfers</field>
         <field name="res_model">stock.picking.batch</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_wave', '=', False)]</field>
         <field name="context">{'search_default_draft': True, 'search_default_in_progress': True}</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
@@ -249,7 +249,7 @@
         </field>
     </record>
     <record id="view_move_line_tree_inherit_stock_picking_batch" model="ir.ui.view">
-        <field name="name">stock.move.line.tree.stock_picking_batch</field>
+        <field name="name">stock.move.line.list.stock_picking_batch</field>
         <field name="model">stock.move.line</field>
         <field name="inherit_id" ref="stock.view_move_line_tree"/>
         <field name="arch" type="xml">

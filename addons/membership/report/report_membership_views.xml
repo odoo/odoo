@@ -59,10 +59,10 @@
         </record>
 
     <record id="report_membership_view_tree" model="ir.ui.view">
-        <field name="name">report.membership.view.tree</field>
+        <field name="name">report.membership.view.list</field>
         <field name="model">report.membership</field>
         <field name="arch" type="xml">
-            <tree string="Membership">
+            <list string="Membership">
                 <field name="partner_id"/>
                 <field name="membership_id" optional="hide"/>
                 <field name="start_date" optional="hide"/>
@@ -74,7 +74,7 @@
                 <field name="quantity" optional="show" sum="Sum of Quantity"/>
                 <field name="tot_earned" optional="show" sum="Sum of Earned Amount"/>
                 <field name="membership_state" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 

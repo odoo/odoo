@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 
 from odoo import fields, models
 
 
-class AccountAnalyticDistributionModel(models.Model):
-    _inherit = 'account.analytic.distribution.model'
+class AccountAnalyticDistributionModel(models.Model, analytic.AccountAnalyticDistributionModel):
 
     account_prefix = fields.Char(
         string='Accounts Prefix',

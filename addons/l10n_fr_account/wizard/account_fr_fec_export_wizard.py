@@ -8,7 +8,7 @@ from odoo.tools.misc import get_lang
 from stdnum.fr import siren
 
 
-class FecExportWizard(models.TransientModel):
+class L10nFrFecExportWizard(models.TransientModel):
     _name = 'l10n_fr.fec.export.wizard'
     _description = 'Fichier Echange Informatise'
 

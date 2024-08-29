@@ -167,7 +167,7 @@ class Partner extends models.Model {
                 </templates>
             </kanban>
         `,
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         form: `
             <form>
                 <header>

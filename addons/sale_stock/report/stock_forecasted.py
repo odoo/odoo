@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockForecasted(models.AbstractModel):
-    _inherit = 'stock.forecasted_product_product'
+class StockForecastedProductProduct(models.AbstractModel, stock.StockForecastedProductProduct):
+    _name = "stock.forecasted_product_product"
+
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)

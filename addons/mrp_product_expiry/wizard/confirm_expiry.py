@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product_expiry
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class ConfirmExpiry(models.TransientModel):
-    _inherit = 'expiry.picking.confirmation'
+class ExpiryPickingConfirmation(models.TransientModel, product_expiry.ExpiryPickingConfirmation):
 
     production_ids = fields.Many2many('mrp.production', readonly=True)
     workorder_id = fields.Many2one('mrp.workorder', readonly=True)
@@ -30,7 +30,7 @@ class ConfirmExpiry(models.TransientModel):
                     lot_name=self.lot_ids.name,
                 )
         else:
-            super(ConfirmExpiry, self)._compute_descriptive_fields()
+            super()._compute_descriptive_fields()
 
     def confirm_produce(self):
         ctx = dict(self._context, skip_expired=True)

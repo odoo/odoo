@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
+class SaleOrder(models.Model, sale.SaleOrder):
 
     margin = fields.Monetary("Margin", compute='_compute_margin', store=True)
     margin_percent = fields.Float("Margin (%)", compute='_compute_margin', store=True, aggregator="avg")

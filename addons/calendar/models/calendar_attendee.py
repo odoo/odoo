@@ -14,9 +14,8 @@ from odoo.tools import split_every
 _logger = logging.getLogger(__name__)
 
 
-class Attendee(models.Model):
+class CalendarAttendee(models.Model):
     """ Calendar Attendee Information """
-    _name = 'calendar.attendee'
     _rec_name = 'common_name'
     _description = 'Calendar Attendee Information'
     _order = 'create_date ASC'

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
 
 
-class ProductLabelLayout(models.TransientModel):
-    _inherit = 'picking.label.type'
+class PickingLabelType(models.TransientModel, stock.PickingLabelType):
 
     production_ids = fields.Many2many('mrp.production')
 

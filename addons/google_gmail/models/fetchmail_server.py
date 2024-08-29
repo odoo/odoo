@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import google_gmail, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 
 
-class FetchmailServer(models.Model):
-    _name = 'fetchmail.server'
-    _inherit = ['fetchmail.server', 'google.gmail.mixin']
+class FetchmailServer(models.Model, mail.FetchmailServer, google_gmail.GoogleGmailMixin):
 
     server_type = fields.Selection(selection_add=[('gmail', 'Gmail OAuth Authentication')], ondelete={'gmail': 'set default'})
 

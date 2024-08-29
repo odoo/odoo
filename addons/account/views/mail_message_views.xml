@@ -2,17 +2,17 @@
 <odoo>
 
     <record id="view_message_tree_audit_log" model="ir.ui.view">
-        <field name="name">mail.message.tree.inherit.audit.log</field>
+        <field name="name">mail.message.list.inherit.audit.log</field>
         <field name="model">mail.message</field>
         <field name="priority">99</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <tree edit="0" delete="0" create="0" action="action_open_document" type="object">
+            <list edit="0" delete="0" create="0" action="action_open_document" type="object">
                 <field name="date"/>
                 <field name="author_id" widget="many2one_avatar"/>
                 <field name="res_id" string="Name"/>
                 <field name="account_audit_log_preview"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -60,7 +60,7 @@
         <field name="name">Audit Trail</field>
         <field name="res_model">mail.message</field>
         <field name="view_id" ref="view_message_tree_audit_log"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">This is the Audit Trail Report</p>
             <div>Make sure you first activate the audit trail in the accounting settings</div>

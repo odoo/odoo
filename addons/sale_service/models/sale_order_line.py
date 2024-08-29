@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from itertools import groupby
@@ -9,8 +10,7 @@ from odoo.tools import format_amount
 from odoo.tools.sql import column_exists, create_column, create_index
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     # used to know if generate a task and/or a project, depending on the product settings
     is_service = fields.Boolean("Is a Service", compute='_compute_is_service', store=True, compute_sudo=True, export_string_translation=False)

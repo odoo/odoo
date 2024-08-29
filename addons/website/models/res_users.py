@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -9,8 +10,7 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=False)
 

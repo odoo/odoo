@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website, rating, product
 
 import logging
 
@@ -12,15 +13,7 @@ from odoo.addons.website.models import ir_http
 _logger = logging.getLogger(__name__)
 
 
-class ProductTemplate(models.Model):
-    _inherit = [
-        'rating.mixin',
-        'product.template',
-        'website.seo.metadata',
-        'website.published.multi.mixin',
-        'website.searchable.mixin',
-    ]
-    _name = 'product.template'
+class ProductTemplate(models.Model, rating.RatingMixin, product.ProductTemplate, website.WebsiteSeoMetadata, website.WebsitePublishedMultiMixin, website.WebsiteSearchableMixin):
     _mail_post_access = 'read'
     _check_company_auto = True
 

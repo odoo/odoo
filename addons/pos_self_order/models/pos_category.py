@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
 
 
-class PosCategory(models.Model):
-    _inherit = "pos.category"
+class PosCategory(models.Model, point_of_sale.PosCategory):
 
 
     hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour.")

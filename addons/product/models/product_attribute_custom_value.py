@@ -4,7 +4,6 @@ from odoo import api, fields, models
 
 
 class ProductAttributeCustomValue(models.Model):
-    _name = 'product.attribute.custom.value'
     _description = "Product Attribute Custom Value"
     _order = 'custom_product_template_attribute_value_id, id'
 

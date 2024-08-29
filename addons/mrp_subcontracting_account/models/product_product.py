@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
         """ Add the price of the subcontracting supplier if it exists with the bom configuration.

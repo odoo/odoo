@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mass_mailing
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -6,9 +7,7 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 
 
-class MassMailing(models.Model):
-    _name = 'mailing.mailing'
-    _inherit = 'mailing.mailing'
+class MailingMailing(models.Model, mass_mailing.MailingMailing):
 
     sale_quotation_count = fields.Integer('Quotation Count', compute='_compute_sale_quotation_count')
     sale_invoiced_amount = fields.Integer('Invoiced Amount', compute='_compute_sale_invoiced_amount')
@@ -53,7 +52,7 @@ class MassMailing(models.Model):
             'name': _("Sales Analysis"),
             'res_model': 'sale.report',
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,pivot,graph,form',
+            'view_mode': 'list,pivot,graph,form',
         }
 
     def action_redirect_to_invoiced(self):
@@ -79,12 +78,12 @@ class MassMailing(models.Model):
             'name': _("Invoices Analysis"),
             'res_model': 'account.invoice.report',
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,pivot,graph,form',
+            'view_mode': 'list,pivot,graph,form',
         }
 
     def _prepare_statistics_email_values(self):
         self.ensure_one()
-        values = super(MassMailing, self)._prepare_statistics_email_values()
+        values = super()._prepare_statistics_email_values()
         if not self.user_id:
             return values
 

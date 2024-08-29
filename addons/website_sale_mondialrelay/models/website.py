@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class WebsiteMondialRelay(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     def _prepare_sale_order_values(self, partner_sudo):
         values = super()._prepare_sale_order_values(partner_sudo)

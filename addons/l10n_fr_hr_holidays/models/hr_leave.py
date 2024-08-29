@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -7,8 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
-class HrLeave(models.Model):
-    _inherit = 'hr.leave'
+class HrLeave(models.Model, hr_holidays.HrLeave):
 
     l10n_fr_date_to_changed = fields.Boolean(export_string_translation=False)
 

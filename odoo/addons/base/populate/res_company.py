@@ -1,4 +1,5 @@
 import collections
+from odoo.addons import base
 import logging
 
 from odoo import models, Command
@@ -7,8 +8,7 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class Partner(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model, base.ResCompany):
 
     _populate_sizes = {
         'small': 5,

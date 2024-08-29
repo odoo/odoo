@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_hr_recruitment_tree_url" model="ir.ui.view" >
-        <field name="name">hr.recruitment.tree.inherit.url</field>
+        <field name="name">hr.recruitment.list.inherit.url</field>
         <field name="model">hr.recruitment.source</field>
         <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
         <field name="arch" type="xml">
@@ -54,7 +54,7 @@
     </record>
 
     <record id="view_hr_job_tree_inherit_website" model="ir.ui.view">
-        <field name="name">hr.job.tree</field>
+        <field name="name">hr.job.list</field>
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.hr_job_view_tree_inherit"/>
         <field name="arch" type="xml">

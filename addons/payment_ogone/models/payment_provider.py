@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import logging
 from hashlib import new as hashnew
@@ -16,8 +17,7 @@ from odoo.addons.payment_ogone import const
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('ogone', "Ogone")], ondelete={'ogone': 'set default'})

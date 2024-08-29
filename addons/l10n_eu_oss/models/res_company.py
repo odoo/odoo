@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from itertools import product
@@ -9,8 +10,7 @@ from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
 
 
-class Company(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     @api.model
     def _map_all_eu_companies_taxes(self):

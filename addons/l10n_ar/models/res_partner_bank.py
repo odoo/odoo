@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 from odoo import models, api, _
 from odoo.exceptions import ValidationError
 import logging
@@ -29,9 +30,8 @@ except ImportError:
         return number
 
 
-class ResPartnerBank(models.Model):
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
-    _inherit = 'res.partner.bank'
 
     @api.model
     def _get_supported_account_types(self):

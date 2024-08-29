@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import res_partner
-from . import sale_order
-from . import website
+from .res_partner import ResPartner
+from .sale_order import SaleOrder
+from .website import Website

@@ -16,14 +16,14 @@
     </record>
 
     <record id="view_afip_responsibility_type_tree" model="ir.ui.view">
-        <field name="name">afip.responsibility.type.tree</field>
+        <field name="name">afip.responsibility.type.list</field>
         <field name="model">l10n_ar.afip.responsibility.type</field>
         <field name="arch" type="xml">
-            <tree string="AFIP Responsibility Type" decoration-muted="(not active)">
+            <list string="AFIP Responsibility Type" decoration-muted="(not active)">
                 <field name="name"/>
                 <field name="code"/>
                 <field name='active'/>
-            </tree>
+            </list>
         </field>
     </record>
 

@@ -1,9 +1,9 @@
 from odoo import models
+from odoo.addons import base
 from odoo.tools import populate
 
 
-class Filter(models.Model):
-    _inherit = "ir.filters"
+class IrFilters(models.Model, base.IrFilters):
 
     # Based on the sizes of res.users, 10 filters per user.
     _populate_sizes = {

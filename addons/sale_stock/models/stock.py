@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -7,13 +8,11 @@ from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
 
 
-class StockRoute(models.Model):
-    _inherit = "stock.route"
+class StockRoute(models.Model, stock.StockRoute):
     sale_selectable = fields.Boolean("Selectable on Sales Order Line")
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockMove(models.Model, stock.StockMove):
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
     @api.model
@@ -66,21 +65,18 @@ class StockMove(models.Model):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
 
-class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     def _should_show_lot_in_invoice(self):
         return 'customer' in {self.location_id.usage, self.location_dest_id.usage}
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class ProcurementGroup(models.Model, stock.ProcurementGroup):
 
     sale_id = fields.Many2one('sale.order', 'Sale Order')
 
 
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
+class StockRule(models.Model, stock.StockRule):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
@@ -88,8 +84,7 @@ class StockRule(models.Model):
         return fields
 
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, index='btree_not_null')
 
@@ -177,8 +172,7 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
-class StockLot(models.Model):
-    _inherit = 'stock.lot'
+class StockLot(models.Model, stock.StockLot):
 
     sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
     sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')

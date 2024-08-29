@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 import base64
 import logging
 import io
@@ -13,8 +14,7 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.TransientModel):
-    _inherit = 'account.move.send'
+class AccountMoveSend(models.TransientModel, account.AccountMoveSend):
 
     enable_ubl_cii_xml = fields.Boolean(compute='_compute_enable_ubl_cii_xml')
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')

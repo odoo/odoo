@@ -31,7 +31,7 @@ class SurveyQuestion(models.Model):
         items around.
 
         It also removes on level of encoding by directly having 'Add a page' and 'Add a question'
-        links on the tree view of questions, enabling a faster encoding.
+        links on the list view of questions, enabling a faster encoding.
 
         However, this has the downside of making the code reading a little bit more complicated.
         Efforts were made at the model level to create computed fields so that the use of these models
@@ -42,7 +42,6 @@ class SurveyQuestion(models.Model):
 
         That makes the use and display of these information at view and controller levels easier to understand.
     """
-    _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'title'
     _order = 'sequence,id'
@@ -790,7 +789,6 @@ class SurveyQuestionAnswer(models.Model):
       * matrix: row and column values;
 
     """
-    _name = 'survey.question.answer'
     _rec_name = 'value'
     _rec_names_search = ['question_id.title', 'value']
     _order = 'question_id, sequence, id'

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,8 +9,7 @@ from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
 
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
@@ -157,8 +157,7 @@ class StockMoveLine(models.Model):
         return aggregated_move_lines
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     created_production_id = fields.Many2one('mrp.production', 'Created Production Order', check_company=True, index=True)
     production_id = fields.Many2one(

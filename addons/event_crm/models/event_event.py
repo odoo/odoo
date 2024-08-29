@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-class EventEvent(models.Model):
-    _name = "event.event"
-    _inherit = "event.event"
+class EventEvent(models.Model, event.EventEvent):
 
     lead_ids = fields.One2many(
         'crm.lead', 'event_id', string="Leads", groups='sales_team.group_sale_salesman',

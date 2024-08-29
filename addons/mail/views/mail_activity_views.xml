@@ -87,10 +87,10 @@
     </record>
 
     <record id="mail_activity_type_view_tree" model="ir.ui.view">
-        <field name="name">mail.activity.type.view.tree</field>
+        <field name="name">mail.activity.type.view.list</field>
         <field name="model">mail.activity.type</field>
         <field name="arch" type="xml">
-            <tree string="Activities" sample="1">
+            <list string="Activities" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
@@ -98,7 +98,7 @@
                 <field name="delay_from" string="Type"/>
                 <field name="res_model" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -132,14 +132,14 @@
     <record id="mail_activity_type_action" model="ir.actions.act_window">
         <field name="name">Activity Types</field>
         <field name="res_model">mail.activity.type</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
     </record>
 
 
     <record id="mail_activity_action" model="ir.actions.act_window">
         <field name="name">Activity Overview</field>
         <field name="res_model">mail.activity</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
@@ -284,10 +284,10 @@
     </record>
 
     <record id="mail_activity_view_tree" model="ir.ui.view">
-        <field name="name">mail.activity.view.tree</field>
+        <field name="name">mail.activity.view.list</field>
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
-            <tree string="Next Activities"
+            <list string="Next Activities"
                     decoration-danger="date_deadline &lt; current_date and active == True"
                     decoration-warning="date_deadline == current_date and active == True"
                     decoration-success="date_deadline &gt; current_date and active == True"
@@ -306,18 +306,18 @@
                 <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
                 <button name="unlink" type="object" string="Cancel" icon="fa-times" class="text-danger" invisible="active == False"/>
                 <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash" invisible="active == False"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="mail_activity_view_tree_without_record_access" model="ir.ui.view">
-        <field name="name">mail.activity.view.tree.without.record.access</field>
+        <field name="name">mail.activity.view.list.without.record.access</field>
         <field name="model">mail.activity</field>
         <field name="inherit_id" ref="mail_activity_view_tree"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="delete">0</attribute>
                 <attribute name="edit">0</attribute>
                 <attribute name="duplicate">0</attribute>
@@ -327,19 +327,19 @@
     </record>
 
     <record id="mail_activity_view_tree_open_target" model="ir.ui.view">
-        <field name="name">mail.activity.view.tree.open.target</field>
+        <field name="name">mail.activity.view.list.open.target</field>
         <field name="model">mail.activity</field>
         <field name="inherit_id" ref="mail_activity_view_tree"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="action">action_open_document</attribute>
                 <attribute name="type">object</attribute>
                 <attribute name="js_class">archive_disabled_activity_list</attribute>
                 <attribute name="multi_edit">1</attribute>
             </xpath>
-            <xpath expr="//tree//field[@name='activity_type_id']" position="attributes">
+            <xpath expr="//list//field[@name='activity_type_id']" position="attributes">
                 <attribute name="domain">[('res_model', '=', False)]</attribute>
             </xpath>
         </field>
@@ -378,7 +378,7 @@
     </record>
     <record id="mail_activity_action_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="mail.mail_activity_action"/>
     </record>
     <record id="mail_activity_action_view_form" model="ir.actions.act_window.view">
@@ -391,7 +391,7 @@
     <record id="mail_activity_without_access_action" model="ir.actions.act_window">
         <field name="name">Other activities</field>
         <field name="res_model">mail.activity</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="mail.mail_activity_view_search"/>
         <field name="domain">[('id', 'in', active_ids)]</field>
         <field name="help" type="html">
@@ -404,7 +404,7 @@
 
     <record id="mail_activity_action_without_access_view_tree" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="mail.mail_activity_view_tree_without_record_access"/>
         <field name="act_window_id" ref="mail.mail_activity_without_access_action"/>
     </record>
@@ -434,7 +434,7 @@
     <record id="mail_activity_action_my" model="ir.actions.act_window">
         <field name="name">My Activities</field>
         <field name="res_model">mail.activity</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">list,kanban</field>
         <field name="search_view_id" ref="mail.mail_activity_view_search"/>
         <field name="context">{
             'search_default_filter_user_id_uid': 1,
@@ -445,7 +445,7 @@
 
     <record id="mail_activity_action_my_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="mail.mail_activity_action_my"/>
         <field name="view_id" ref="mail.mail_activity_view_tree_open_target"/>
     </record>

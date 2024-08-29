@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 import re
 
 
-class Efaktur(models.Model):
+class L10nIdEfakturEfakturRange(models.Model):
     _name = "l10n_id_efaktur.efaktur.range"
     _description = "Available E-faktur range"
 

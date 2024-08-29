@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import base
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     pos_is_spanish = fields.Boolean(
         string="Consider the specific spanish legislation, such as the use of simplified invoices",

@@ -12,7 +12,7 @@ from odoo import models, fields, _
 from odoo.exceptions import ValidationError
 
 
-class EtaThumbDrive(models.Model):
+class L10nEgEdiThumbDrive(models.Model):
     _name = 'l10n_eg_edi.thumb.drive'
     _description = 'Thumb drive used to sign invoices in Egypt'
 

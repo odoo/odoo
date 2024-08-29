@@ -27,11 +27,11 @@
                     <notebook groups="base.group_no_one">
                         <page string="Registration Mails" name="registration_mails">
                             <field name="mail_registration_ids">
-                                <tree string="Registration mail" editable="bottom">
+                                <list string="Registration mail" editable="bottom">
                                     <field name="registration_id"/>
                                     <field name="scheduled_date"/>
                                     <field name="mail_sent" string="Sent"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -41,17 +41,17 @@
     </record>
 
     <record model="ir.ui.view" id="view_event_mail_tree">
-        <field name="name">event.mail.tree</field>
+        <field name="name">event.mail.list</field>
         <field name="model">event.mail</field>
         <field name="arch" type="xml">
-            <tree string="Event Mail Schedulers">
+            <list string="Event Mail Schedulers">
                 <field name="event_id"/>
                 <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                 <field name="scheduled_date"/>
                 <field name="mail_count_done"/>
                 <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
                     options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
-            </tree>
+            </list>
         </field>
     </record>
 

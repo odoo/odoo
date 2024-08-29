@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import odoo
 from odoo import api, models, fields
@@ -6,8 +7,7 @@ from odoo.http import request
 from odoo.addons.mail.tools.discuss import Store
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     def session_info(self):
         """Override to add the current user data (partner or guest) if applicable."""

@@ -26,10 +26,10 @@
     <record id="test_http_stargate_list" model="ir.ui.view">
         <field name="model">test_http.stargate</field>
         <field name="arch" type="xml">
-            <tree string="Stargate">
+            <list string="Stargate">
                 <field name="name"/>
                 <field name="sgc_designation"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -61,10 +61,10 @@
                 <group>
                     <field name="name"/>
                     <field name="stargate_ids">
-                        <tree>
+                        <list>
                             <field name="name"/>
                             <field name="sgc_designation"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>

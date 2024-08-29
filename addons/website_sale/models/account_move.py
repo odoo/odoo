@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import api, fields, models
 from odoo.tools.sql import column_exists, create_column
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     website_id = fields.Many2one(
         'website', compute='_compute_website_id', string='Website',

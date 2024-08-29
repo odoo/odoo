@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -11,14 +12,12 @@ from odoo.osv.expression import AND
 from odoo.tools import format_date
 
 
-class HrLeaveType(models.Model):
-    _inherit = 'hr.leave.type'
+class HrLeaveType(models.Model, hr_holidays.HrLeaveType):
 
     work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type')
 
 
-class HrLeave(models.Model):
-    _inherit = 'hr.leave'
+class HrLeave(models.Model, hr_holidays.HrLeave):
 
     def _prepare_resource_leave_vals(self):
         vals = super(HrLeave, self)._prepare_resource_leave_vals()

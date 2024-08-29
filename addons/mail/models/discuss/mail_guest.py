@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import bus, base
 
 import pytz
 import uuid
@@ -40,10 +41,8 @@ def add_guest_to_context(func):
     return wrapper
 
 
-class MailGuest(models.Model):
-    _name = 'mail.guest'
+class MailGuest(models.Model, base.AvatarMixin, bus.BusListenerMixin):
     _description = "Guest"
-    _inherit = ["avatar.mixin", "bus.listener.mixin"]
     _avatar_name_field = "name"
     _cookie_name = 'dgid'
     _cookie_separator = '|'

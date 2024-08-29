@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -18,7 +19,7 @@ LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'l
 _logger = logging.getLogger(__name__)
 
 
-class LinkTracker(models.Model):
+class LinkTracker(models.Model, utm.UtmMixin):
     """ Link trackers allow users to wrap any URL into a short URL that can be
     tracked by Odoo. Clicks are counter on each link. A tracker is linked to
     UTMs allowing to analyze marketing actions.
@@ -26,11 +27,9 @@ class LinkTracker(models.Model):
     This model is also used in mass_mailing where each link in html body is
     automatically converted into a short link that is tracked and integrates
     UTMs. """
-    _name = "link.tracker"
     _rec_name = "short_url"
     _description = "Link Tracker"
     _order = "count DESC"
-    _inherit = ["utm.mixin"]
 
     # URL info
     url = fields.Char(string='Target URL', required=True)
@@ -283,7 +282,6 @@ class LinkTracker(models.Model):
 
 
 class LinkTrackerCode(models.Model):
-    _name = "link.tracker.code"
     _description = "Link Tracker Code"
     _rec_name = 'code'
 
@@ -310,7 +308,6 @@ class LinkTrackerCode(models.Model):
 
 
 class LinkTrackerClick(models.Model):
-    _name = "link.tracker.click"
     _rec_name = "link_id"
     _description = "Link Tracker Click"
 

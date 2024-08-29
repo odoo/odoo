@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 
-class IrCronTrigger(models.Model):
-    _inherit = 'ir.cron.trigger'
+class IrCronTrigger(models.Model, base.IrCronTrigger):
 
     @api.constrains('cron_id')
     def _check_image_cron_is_not_already_triggered(self):

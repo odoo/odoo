@@ -1,13 +1,12 @@
 import base64
+from odoo.addons import spreadsheet
 import uuid
 from werkzeug.exceptions import Forbidden
 
 from odoo import models, fields, api, _
 from odoo.tools import consteq
 
-class SpreadsheetDashboardShare(models.Model):
-    _name = 'spreadsheet.dashboard.share'
-    _inherit = 'spreadsheet.mixin'
+class SpreadsheetDashboardShare(models.Model, spreadsheet.SpreadsheetMixin):
     _description = 'Copy of a shared dashboard'
 
     dashboard_id = fields.Many2one('spreadsheet.dashboard', required=True, ondelete='cascade')

@@ -3,11 +3,11 @@
     <data>
 
         <record model="ir.ui.view" id="view_mail_tracking_value_tree">
-            <field name="name">mail.tracking.value.tree</field>
+            <field name="name">mail.tracking.value.list</field>
             <field name="model">mail.tracking.value</field>
             <field name="priority">12</field>
             <field name="arch" type="xml">
-                <tree string="Tracking Value">
+                <list string="Tracking Value">
                     <field name="field_id"/>
                     <field name="old_value_integer"/>
                     <field name="old_value_float"/>
@@ -20,7 +20,7 @@
                     <field name="new_value_text"/>
                     <field name="new_value_datetime"/>
                     <field name="mail_message_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -60,7 +60,7 @@
         <record model="ir.actions.act_window" id="action_view_mail_tracking_value">
             <field name="name">Tracking Values</field>
             <field name="res_model">mail.tracking.value</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
     </data>

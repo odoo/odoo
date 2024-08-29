@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import l10n_es_edi_sii
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
@@ -7,8 +8,9 @@ from odoo import models
 from odoo.addons.account.tools.certificate import load_key_and_certificates
 
 
-class Certificate(models.Model):
-    _inherit = 'l10n_es_edi.certificate'
+class L10nEsEdiCertificate(models.Model, l10n_es_edi_sii.L10nEsEdiCertificate):
+    _name = "l10n_es_edi.certificate"
+
 
     # -------------------------------------------------------------------------
     # HELPERS

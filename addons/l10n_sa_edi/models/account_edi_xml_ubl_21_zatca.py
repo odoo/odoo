@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 from hashlib import sha256
 from base64 import b64encode
 from lxml import etree
@@ -19,9 +20,8 @@ PAYMENT_MEANS_CODE = {
 }
 
 
-class AccountEdiXmlUBL21Zatca(models.AbstractModel):
+class AccountEdiXmlUbl21Zatca(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl21):
     _name = "account.edi.xml.ubl_21.zatca"
-    _inherit = 'account.edi.xml.ubl_21'
     _description = "UBL 2.1 (ZATCA)"
 
     def _l10n_sa_get_namespaces(self):

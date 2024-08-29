@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from odoo import _, models
 from odoo.tools import float_round
@@ -6,8 +7,7 @@ from odoo.tools import float_round
 from odoo.addons.payment_razorpay import const
 
 
-class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+class PaymentToken(models.Model, payment.PaymentToken):
 
     def _razorpay_get_limit_exceed_warning(self, amount, currency_id):
         """ Return a warning message when the maximum payment amount is exceeded.

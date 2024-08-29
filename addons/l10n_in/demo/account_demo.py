@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import time
@@ -11,8 +12,7 @@ from odoo.tools.misc import file_open
 _logger = logging.getLogger(__name__)
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data(self, company=False):

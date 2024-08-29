@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_slides
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 
 
-class Course(models.Model):
-    _inherit = "slide.channel"
+class SlideChannel(models.Model, website_slides.SlideChannel):
 
     def action_mass_mailing_attendees(self):
         domain = repr([('slide_channel_ids', 'in', self.ids)])

@@ -6,7 +6,6 @@ from odoo.osv import expression
 
 
 class StockRequestCount(models.TransientModel):
-    _name = 'stock.request.count'
     _description = 'Stock Request an Inventory Count'
 
     inventory_date = fields.Date(

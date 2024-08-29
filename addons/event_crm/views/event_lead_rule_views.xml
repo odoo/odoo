@@ -16,17 +16,17 @@
     </record>
 
     <record id="event_lead_rule_view_tree" model="ir.ui.view">
-        <field name="name">event.lead.rule.view.tree</field>
+        <field name="name">event.lead.rule.view.list</field>
         <field name="model">event.lead.rule</field>
         <field name="arch" type="xml">
-            <tree string="Lead Generation Rules">
+            <list string="Lead Generation Rules">
                 <field name="name"/>
                 <field name="lead_creation_basis" string="Lead Creation Type" column_invisible="True"/>
                 <field name="lead_creation_trigger"/>
                 <field name="event_type_ids" widget="many2many_tags"/>
                 <field name="event_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -81,7 +81,7 @@
     <record id="event_lead_rule_action" model="ir.actions.act_window">
         <field name="name">Lead Generation Rule</field>
         <field name="res_model">event.lead.rule</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create a Lead Generation Rule</p>
             <p>Those automatically create leads when attendees register.</p>

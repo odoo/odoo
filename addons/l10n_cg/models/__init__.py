@@ -1,2 +1,2 @@
-from . import template_cg
-from . import template_cg_syscebnl
+from .template_cg import AccountChartTemplate
+from .template_cg_syscebnl import AccountChartTemplate

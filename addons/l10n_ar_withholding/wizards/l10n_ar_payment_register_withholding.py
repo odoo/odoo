@@ -7,7 +7,7 @@ from odoo import models, fields, api
 _logger = logging.getLogger(__name__)
 
 
-class l10nArPaymentRegisterWithholding(models.TransientModel):
+class L10nArPaymentRegisterWithholding(models.TransientModel):
     _name = 'l10n_ar.payment.register.withholding'
     _description = 'Payment register withholding lines'
     _check_company_auto = True

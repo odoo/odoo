@@ -1,4 +1,5 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import requests
@@ -10,8 +11,7 @@ _logger = logging.getLogger(__name__)
 TIMEOUT = 10
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+class PosPaymentMethod(models.Model, point_of_sale.PosPaymentMethod):
 
     # Viva Wallet
     viva_wallet_merchant_id = fields.Char(string="Merchant ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')

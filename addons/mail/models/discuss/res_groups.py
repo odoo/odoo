@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models
 
 
-class ResGroups(models.Model):
-    _inherit = "res.groups"
+class ResGroups(models.Model, base.ResGroups):
 
     def write(self, vals):
         res = super().write(vals)

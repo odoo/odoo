@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import uom
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
 
 
-class UoM(models.Model):
-    _inherit = 'uom.uom'
+class UomUom(models.Model, uom.UomUom):
 
     @api.onchange('rounding')
     def _onchange_rounding(self):

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _, _lt, Command
 from odoo.tools import html2plaintext
 
-class Task(models.Model):
-    _inherit = 'project.task'
+class ProjectTask(models.Model, project.ProjectTask):
 
     @api.model_create_multi
     def create(self, vals_list):

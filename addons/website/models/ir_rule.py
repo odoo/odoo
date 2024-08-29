@@ -1,10 +1,10 @@
 # coding: utf-8
+from odoo.addons import base
 from odoo import api, models
 from odoo.addons.website.models import ir_http
 
 
-class IrRule(models.Model):
-    _inherit = 'ir.rule'
+class IrRule(models.Model, base.IrRule):
 
     @api.model
     def _eval_context(self):

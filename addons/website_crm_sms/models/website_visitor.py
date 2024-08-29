@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+class WebsiteVisitor(models.Model, website.WebsiteVisitor):
 
     def _check_for_sms_composer(self):
         check = super(WebsiteVisitor, self)._check_for_sms_composer()

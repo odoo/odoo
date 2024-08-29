@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import account_move_send
+from .account_move_send import AccountMoveSend

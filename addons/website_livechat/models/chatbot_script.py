@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import im_livechat
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class ChatbotScript(models.Model):
-    _inherit = 'chatbot.script'
+class ChatbotScript(models.Model, im_livechat.ChatbotScript):
 
     def action_test_script(self):
         self.ensure_one()

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
@@ -8,8 +9,7 @@ from odoo.tools.float_utils import float_repr, float_round
 SII_VAT = '60805000-0'
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     partner_id_vat = fields.Char(related='partner_id.vat', string='VAT No')
     l10n_latam_internal_type = fields.Selection(

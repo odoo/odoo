@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import _, api, fields, models
 
 from odoo.addons.website.models import ir_http
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     last_website_so_id = fields.Many2one(
         string="Last Online Sales Order",

@@ -38,12 +38,12 @@
                         </page>
                         <page name="inherit_children" string="Inherited Views">
                             <field name="inherit_children_ids" context="{'default_model':model,'default_type':type,'default_inherit_id':id,'default_mode':'extension', 'active_test': False}">
-                                <tree default_order="priority,id" decoration-muted="not active">
+                                <list default_order="priority,id" decoration-muted="not active">
                                     <field name="id"/>
                                     <field name="priority"/>
                                     <field name="name"/>
                                     <field name="xml_id"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -55,14 +55,14 @@
         <record id="view_view_tree" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
-                <tree string="Views">
+                <list string="Views">
                     <field name="priority" string="Sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
                     <field name="xml_id" groups="base.group_no_one"/>
                     <field name="inherit_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -77,7 +77,7 @@
                     <field name="type"/>
                     <field name="arch_db" string="View Architecture"/>
                     <filter string="Form" name="form" domain="[('type', '=','form')]"/>
-                    <filter string="Tree" name="tree" domain="[('type', '=', 'tree')]"/>
+                    <filter string="List" name="list" domain="[('type', '=', 'list')]"/>
                     <filter string="Kanban" name="kanban" domain="[('type', '=', 'kanban')]"/>
                     <filter string="Search" name="search" domain="[('type', '=', 'search')]"/>
                     <filter string="QWeb" name="qweb" domain="[('type', '=', 'qweb')]"/>
@@ -165,10 +165,10 @@
         <record id="view_view_custom_tree" model="ir.ui.view">
             <field name="model">ir.ui.view.custom</field>
             <field name="arch" type="xml">
-                <tree string="Customized Views">
+                <list string="Customized Views">
                     <field name="user_id"/>
                     <field name="ref_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 

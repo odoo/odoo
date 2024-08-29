@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -11,8 +12,7 @@ from odoo.fields import Datetime
 _logger = logging.getLogger(__name__)
 
 
-class Employee(models.AbstractModel):
-    _inherit = 'hr.employee.base'
+class HrEmployeeBase(models.AbstractModel, hr.HrEmployeeBase):
 
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)
@@ -91,8 +91,8 @@ class Employee(models.AbstractModel):
         return {
             "type": "ir.actions.act_window",
             "res_model": "hr.employee",
-            "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
-            'view_mode': 'kanban,tree,form',
+            "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "list"], [False, "form"]],
+            'view_mode': 'kanban,list,form',
             "domain": [],
             "name": _("Employee's Presence to Define"),
             "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],

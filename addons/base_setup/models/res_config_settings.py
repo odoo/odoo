@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class ResConfigSettings(models.TransientModel):
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
-    _inherit = 'res.config.settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)

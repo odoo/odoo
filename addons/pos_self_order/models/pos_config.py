@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import point_of_sale
 import uuid
 import base64
 from os.path import join as opj
@@ -10,8 +11,7 @@ from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
 
 
-class PosConfig(models.Model):
-    _inherit = "pos.config"
+class PosConfig(models.Model, point_of_sale.PosConfig):
 
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()

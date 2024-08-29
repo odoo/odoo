@@ -1,9 +1,9 @@
 from odoo import models, api
+from odoo.addons import account
 from odoo.osv.expression import OR
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = 'account.fiscal.position'
+class AccountFiscalPosition(models.Model, account.AccountFiscalPosition):
 
     @api.model
     def _load_pos_data_domain(self, data):

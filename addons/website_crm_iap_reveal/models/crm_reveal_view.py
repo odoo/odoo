@@ -8,7 +8,6 @@ from odoo import api, fields, models
 DEFAULT_REVEAL_VIEW_WEEKS_VALID = 5
 
 class CRMRevealView(models.Model):
-    _name = 'crm.reveal.view'
     _description = 'CRM Reveal View'
     _rec_name = 'reveal_ip'
     _order = 'id desc'

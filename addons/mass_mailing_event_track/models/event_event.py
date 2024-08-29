@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 
 
-class Event(models.Model):
-    _inherit = "event.event"
+class EventEvent(models.Model, event.EventEvent):
 
     def action_mass_mailing_track_speakers(self):
         mass_mailing_action = dict(

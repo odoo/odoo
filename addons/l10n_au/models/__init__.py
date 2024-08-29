@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import template_au
-from . import account_move
-from . import res_partner_bank
-from . import account_payment
+from .template_au import AccountChartTemplate
+from .account_move import AccountMove
+from .res_partner_bank import ResPartnerBank
+from .account_payment import AccountPayment

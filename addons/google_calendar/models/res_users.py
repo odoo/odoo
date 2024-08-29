@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -12,8 +13,7 @@ from odoo.tools import str2bool
 
 _logger = logging.getLogger(__name__)
 
-class User(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     google_calendar_rtoken = fields.Char(related='res_users_settings_id.google_calendar_rtoken', groups="base.group_system")
     google_calendar_token = fields.Char(related='res_users_settings_id.google_calendar_token', groups="base.group_system")

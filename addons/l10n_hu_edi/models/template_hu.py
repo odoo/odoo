@@ -1,9 +1,9 @@
 from odoo import models
+from odoo.addons import account
 from odoo.addons.account.models.chart_template import template
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = 'account.chart.template'
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     def _load(self, template_code, company, install_demo):
         res = super()._load(template_code, company, install_demo)

@@ -15,20 +15,20 @@
         </record>
 
         <record id="mail_activity_plan_view_tree" model="ir.ui.view">
-            <field name="name">mail.activity.plan.view.tree</field>
+            <field name="name">mail.activity.plan.view.list</field>
             <field name="model">mail.activity.plan</field>
             <field name="arch" type="xml">
-                <tree string="Planning" sample="1">
+                <list string="Planning" sample="1">
                     <field name="name"/>
                     <field name="res_model_id" optional="hide"/>
                     <field name="steps_count"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="mail_activity_plan_view_tree_detailed" model="ir.ui.view">
-            <field name="name">mail.activity.plan.view.tree.detailed</field>
+            <field name="name">mail.activity.plan.view.list.detailed</field>
             <field name="model">mail.activity.plan</field>
             <field name="inherit_id" ref="mail.mail_activity_plan_view_tree"/>
             <field name="mode">primary</field>
@@ -67,7 +67,7 @@
                         <notebook>
                             <page string="Activities To Create">
                                 <field name="template_ids" nolabel="1">
-                                    <tree>
+                                    <list>
                                         <field name="company_id" column_invisible="1"/>
                                         <field name="note" column_invisible="1"/>
                                         <field name="sequence" widget="handle"/>
@@ -80,7 +80,7 @@
                                         <field name="delay_count"/>
                                         <field name="delay_unit" string="Unit"/>
                                         <field name="delay_from"/>
-                                    </tree>
+                                    </list>
                                     <kanban class="o_kanban_mobile">
                                         <field name="icon"/>
                                         <templates>
@@ -137,7 +137,7 @@
             <field name="priority">10</field>
             <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <attribute name="editable">bottom</attribute>
                 </xpath>
                 <xpath expr="//field[@name='res_model']" position="attributes">
@@ -149,7 +149,7 @@
         <record id="mail_activity_plan_action" model="ir.actions.act_window">
             <field name="name">Activity Plans</field>
             <field name="res_model">mail.activity.plan</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="mail_activity_plan_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -165,7 +165,7 @@
         <!-- Force the detailed view as all the activity plans are displayed in the admin view. -->
         <record id="mail_activity_plan_view_tree_action" model="ir.actions.act_window.view">
             <field name="sequence">1</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="mail.mail_activity_plan_view_tree_detailed"/>
             <field name="act_window_id" ref="mail.mail_activity_plan_action"/>
         </record>

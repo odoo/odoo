@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import models, fields, api, _
 
 
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+class IrActionsReport(models.Model, base.IrActionsReport):
 
     def retrieve_attachment(self, record):
         # Override this method in order to force to re-render the pdf in case of

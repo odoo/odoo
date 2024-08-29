@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class SMSTemplate(models.Model):
+class SMSTemplate(models.Model, mail.MailRenderMixin, mail.TemplateResetMixin):
     "Templates for sending SMS"
-    _name = "sms.template"
-    _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'SMS Templates'
 
     _unrestricted_rendering = True

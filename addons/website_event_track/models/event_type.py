@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class EventType(models.Model):
-    _inherit = 'event.type'
+class EventType(models.Model, event.EventType):
 
     website_track = fields.Boolean(
         string='Tracks on Website', compute='_compute_website_track_menu_data',

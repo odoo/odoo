@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import api, fields, models
 from odoo.tools import format_date, str2bool
@@ -6,8 +7,7 @@ from odoo.tools import format_date, str2bool
 from odoo.addons.payment import utils as payment_utils
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     transaction_ids = fields.Many2many(
         string="Transactions", comodel_name='payment.transaction',

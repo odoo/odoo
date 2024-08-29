@@ -1,1 +1,1 @@
-from . import purchase_requisition_create_alternative
+from .purchase_requisition_create_alternative import PurchaseRequisitionCreateAlternative

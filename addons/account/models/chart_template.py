@@ -65,7 +65,6 @@ def template(template=None, model='template_data'):
 
 
 class AccountChartTemplate(models.AbstractModel):
-    _name = "account.chart.template"
     _description = "Account Chart Template"
 
     @property

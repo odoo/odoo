@@ -14,16 +14,16 @@
     </record>
 
     <record id="lunch_cashmove_view_tree" model="ir.ui.view">
-        <field name="name">lunch.cashmove.tree</field>
+        <field name="name">lunch.cashmove.list</field>
         <field name="model">lunch.cashmove</field>
         <field name="arch" type="xml">
-            <tree string="cashmove tree">
+            <list string="cashmove list">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="date"/>
                 <field name="user_id"/>
                 <field name="description"/>
                 <field name="amount" sum="Total" widget="monetary"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -79,7 +79,7 @@
     <record id="lunch_cashmove_action_payment" model="ir.actions.act_window">
         <field name="name">Cash Moves</field>
         <field name="res_model">lunch.cashmove</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="lunch_cashmove_view_search"/>
         <field name="view_id" ref="lunch_cashmove_view_tree"/>
         <field name="help" type="html">

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models
 
 # Let us match the document types to properly suggest the DN and CN documents
@@ -12,9 +13,8 @@ UY_DOC_SUBTYPES = [
 ]
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, account.AccountMove):
 
-    _inherit = 'account.move'
 
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the

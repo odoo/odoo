@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 
 
-class IrMailServer(models.Model):
+class IrMailServer(models.Model, base.IrMailServer):
     _name = 'ir.mail_server'
-    _inherit = ['ir.mail_server']
 
     mail_template_ids = fields.One2many(
         comodel_name='mail.template',

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,9 +7,8 @@ from odoo.exceptions import UserError
 from odoo.tools import email_normalize
 
 
-class ResPartner(models.Model):
+class ResPartner(models.Model, base.ResPartner):
     """ Inherits partner and adds Tasks information in the partner form """
-    _inherit = 'res.partner'
 
     project_ids = fields.One2many('project.project', 'partner_id', string='Projects', export_string_translation=False)
     task_ids = fields.One2many('project.task', 'partner_id', string='Tasks', export_string_translation=False)

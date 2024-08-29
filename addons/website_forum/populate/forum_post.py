@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_forum
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -8,8 +9,7 @@ from odoo.tools import populate
 QA_WEIGHTS = {0: 25, 1: 35, 2: 20, 3: 10, 4: 4, 5: 3, 6: 2, 7: 1}
 _logger = logging.getLogger(__name__)
 
-class Post(models.Model):
-    _inherit = 'forum.post'
+class ForumPost(models.Model, website_forum.ForumPost):
     # Include an additional average of 2 post answers for each given size
     # e.g.: 100 posts as populated_model_records = ~300 actual forum.posts records
     _populate_sizes = {'small': 100, 'medium': 1000, 'large': 90000}

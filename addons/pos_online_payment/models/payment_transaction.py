@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import payment
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     pos_order_id = fields.Many2one('pos.order', string='POS Order', help='The Point of Sale order linked to the payment transaction', readonly=True)
 

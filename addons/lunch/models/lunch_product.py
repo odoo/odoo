@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -10,11 +11,9 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
-class LunchProduct(models.Model):
+class LunchProduct(models.Model, base.ImageMixin):
     """ Products available to order. A product is linked to a specific vendor. """
-    _name = 'lunch.product'
     _description = 'Lunch Product'
-    _inherit = 'image.mixin'
     _order = 'name'
     _check_company_auto = True
 

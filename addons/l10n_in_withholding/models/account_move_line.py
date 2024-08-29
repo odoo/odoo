@@ -1,8 +1,8 @@
 from odoo import fields, models, api
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     l10n_in_withhold_tax_amount = fields.Monetary(string="TDS Tax Amount", compute='_compute_withhold_tax_amount')
 

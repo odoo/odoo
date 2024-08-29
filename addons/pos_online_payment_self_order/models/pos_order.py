@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, tools
 from odoo.osv import expression
 
 
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     use_self_order_online_payment = fields.Boolean(compute='_compute_use_self_order_online_payment', store=True, readonly=True)
 

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models, SUPERUSER_ID
 
 
-class IrCron(models.AbstractModel):
-    _inherit = 'ir.cron'
+class IrCron(models.AbstractModel, base.IrCron):
 
     def _notify_admin(self, message):
         """ Send a notification to the admin users. """

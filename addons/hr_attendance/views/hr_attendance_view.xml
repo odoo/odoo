@@ -4,10 +4,10 @@
     <!-- views -->
 
     <record id="view_attendance_tree" model="ir.ui.view">
-        <field name="name">hr.attendance.tree</field>
+        <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
+            <list string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
                 <field name="employee_id" widget="many2one_avatar_user"/>
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
@@ -27,7 +27,7 @@
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
                 <field name="color" column_invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -246,7 +246,7 @@
         <field name="name">Attendances</field>
         <field name="path">attendances</field>
         <field name="res_model">hr.attendance</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">
             {
                 "search_default_employee": 1

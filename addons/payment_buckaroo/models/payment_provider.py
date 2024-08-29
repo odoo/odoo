@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from hashlib import sha1
 
@@ -9,8 +10,7 @@ from odoo import fields, models
 from odoo.addons.payment_buckaroo import const
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'})

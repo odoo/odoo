@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -26,8 +27,7 @@ ETA_DOMAINS = {
 }
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+class AccountEdiFormat(models.Model, account_edi.AccountEdiFormat):
 
     @api.model
     def _l10n_eg_get_eta_qr_domain(self, production_enviroment=False):

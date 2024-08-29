@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+class MailActivitySchedule(models.TransientModel, mail.MailActivitySchedule):
 
     def action_create_calendar_event(self):
         self.ensure_one()

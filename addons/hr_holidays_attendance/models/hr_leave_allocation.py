@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -8,8 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class HolidaysAllocation(models.Model):
-    _inherit = 'hr.leave.allocation'
+class HrLeaveAllocation(models.Model, hr_holidays.HrLeaveAllocation):
 
     def default_get(self, fields):
         res = super().default_get(fields)

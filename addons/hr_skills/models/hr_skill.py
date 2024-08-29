@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class Skill(models.Model):
-    _name = 'hr.skill'
+class HrSkill(models.Model):
     _description = "Skill"
     _order = "sequence, name"
 

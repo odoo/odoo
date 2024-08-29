@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import resource
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import datetime
@@ -7,8 +8,7 @@ from pytz import timezone
 from odoo import models
 from odoo.addons.resource.models.utils import Intervals
 
-class ResourceResource(models.Model):
-    _inherit = 'resource.resource'
+class ResourceResource(models.Model, resource.ResourceResource):
 
     def _get_calendars_validity_within_period(self, start, end, default_company=None):
         assert start.tzinfo and end.tzinfo

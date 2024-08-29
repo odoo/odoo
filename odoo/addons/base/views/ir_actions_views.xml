@@ -18,13 +18,13 @@
             </field>
         </record>
         <record id="action_view_tree" model="ir.ui.view">
-            <field name="name">ir.actions.actions.tree</field>
+            <field name="name">ir.actions.actions.list</field>
             <field name="model">ir.actions.actions</field>
             <field name="arch" type="xml">
-                <tree string="Action">
+                <list string="Action">
                     <field name="name"/>
                     <field name="type"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="action_view_search" model="ir.ui.view">
@@ -110,17 +110,17 @@
             </field>
         </record>
         <record id="act_report_xml_view_tree" model="ir.ui.view">
-            <field name="name">ir.actions.report.tree</field>
+            <field name="name">ir.actions.report.list</field>
             <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
-                <tree string="Report xml">
+                <list string="Report xml">
                     <field name="name"/>
                     <field name="model"/>
                     <field name="type"/>
                     <field name="report_name"/>
                     <field name="report_type"/>
                     <field name="attachment"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="act_report_xml_search_view" model="ir.ui.view">
@@ -179,16 +179,16 @@
         <!-- ir.actions.act_window -->
 
         <record id="view_window_action_tree" model="ir.ui.view">
-            <field name="name">ir.actions.windows.tree</field>
+            <field name="name">ir.actions.windows.list</field>
             <field name="model">ir.actions.act_window</field>
             <field name="arch" type="xml">
-                <tree string="Open Window">
+                <list string="Open Window">
                     <field name="name"/>
                     <field name="res_model"/>
                     <field name="view_id"/>
                     <field name="domain"/>
                     <field name="context"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_window_action_form" model="ir.ui.view">
@@ -238,11 +238,11 @@
                                             <field domain="[('type', '=', view_mode)]" name="view_id"/>
                                         </group>
                                     </form>
-                                    <tree string="Views">
+                                    <list string="Views">
                                         <field name="sequence" widget="handle"/>
                                         <field name="view_mode"/>
                                         <field name="view_id"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </group>
                         </page>
@@ -274,7 +274,7 @@
         </record>
         <record id="ir_action_window_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_window_action_tree"/>
             <field name="act_window_id" ref="ir_action_window"/>
         </record>
@@ -290,10 +290,10 @@
             <field name="name">Client Actions</field>
             <field name="model">ir.actions.client</field>
             <field name="arch" type="xml">
-                <tree string="Client Actions">
+                <list string="Client Actions">
                     <field name="name"/>
                     <field name="tag"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -437,12 +437,12 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Server Actions</field>
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
-                <tree string="Server Actions">
+                <list string="Server Actions">
                     <field name="name"/>
                     <field name="state"/>
                     <field name="model_id"/>
                     <field name="usage"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_server_action_search" model="ir.ui.view">
@@ -465,7 +465,7 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Server Actions</field>
             <field name="res_model">ir.actions.server</field>
             <field name="path">server-actions</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="search_view_id" ref="view_server_action_search"/>
             <field name="context">{'key':'server_action'}</field>
@@ -478,7 +478,7 @@ env['res.partner'].create({'name': partner_name})
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
             <field name="arch" type="xml">
-                <tree string="Config Wizard Steps">
+                <list string="Config Wizard Steps">
                     <field name="sequence" widget='handle'/>
                     <field name="action_id"/>
                     <field name="state" readonly="1"/>
@@ -486,7 +486,7 @@ env['res.partner'].create({'name': partner_name})
                     <button name="action_open" invisible="state != 'done'"
                             string="Todo" type="object" help="Set as Todo"
                             icon="fa-exchange"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="config_wizard_step_view_form" model="ir.ui.view">

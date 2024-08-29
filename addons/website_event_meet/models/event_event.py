@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class Event(models.Model):
-    _inherit = "event.event"
+class EventEvent(models.Model, event.EventEvent):
 
     meeting_room_ids = fields.One2many("event.meeting.room", "event_id", string="Meeting rooms")
     meeting_room_count = fields.Integer("Room count", compute="_compute_meeting_room_count")

@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class ProjectProductEmployeeMap(models.Model):
-    _name = 'project.sale.line.employee.map'
+class ProjectSaleLineEmployeeMap(models.Model):
     _description = 'Project Sales line, employee mapping'
 
     project_id = fields.Many2one('project.project', "Project", required=True)
@@ -120,7 +119,7 @@ class ProjectProductEmployeeMap(models.Model):
         return maps
 
     def write(self, values):
-        res = super(ProjectProductEmployeeMap, self).write(values)
+        res = super().write(values)
         self._update_project_timesheet()
         return res
 

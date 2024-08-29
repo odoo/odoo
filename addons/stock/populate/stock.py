@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -16,8 +17,7 @@ _logger = logging.getLogger(__name__)
 COMPANY_NB_WITH_STOCK = 3  # Need to be smaller than 5 (_populate_sizes['small'] of company)
 
 
-class Warehouse(models.Model):
-    _inherit = 'stock.warehouse'
+class StockWarehouse(models.Model, stock.StockWarehouse):
 
     _populate_sizes = {'small': 6, 'medium': 12, 'large': 24}
     _populate_dependencies = ['res.company']
@@ -50,8 +50,7 @@ class Warehouse(models.Model):
         ]
 
 
-class StorageCategory(models.Model):
-    _inherit = 'stock.storage.category'
+class StockStorageCategory(models.Model, stock.StockStorageCategory):
 
     _populate_sizes = {'small': 10, 'medium': 20, 'large': 50}
 
@@ -64,8 +63,7 @@ class StorageCategory(models.Model):
         ]
 
 
-class Location(models.Model):
-    _inherit = 'stock.location'
+class StockLocation(models.Model, stock.StockLocation):
 
     _populate_sizes = {'small': 50, 'medium': 2_000, 'large': 50_000}
     _populate_dependencies = ['stock.warehouse', 'stock.storage.category']
@@ -156,8 +154,7 @@ class Location(models.Model):
         ]
 
 
-class StockPutawayRule(models.Model):
-    _inherit = 'stock.putaway.rule'
+class StockPutawayRule(models.Model, stock.StockPutawayRule):
 
     _populate_sizes = {'small': 10, 'medium': 20, 'large': 50}
     _populate_dependencies = ['stock.location', 'product.product']
@@ -208,8 +205,7 @@ class StockPutawayRule(models.Model):
         ]
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = 'stock.warehouse.orderpoint'
+class StockWarehouseOrderpoint(models.Model, stock.StockWarehouseOrderpoint):
 
     _populate_sizes = {'small': 150, 'medium': 5_000, 'large': 60_000}
     _populate_dependencies = ['product.product', 'product.supplierinfo', 'stock.location']
@@ -284,8 +280,7 @@ class StockWarehouseOrderpoint(models.Model):
         ]
 
 
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+class StockQuant(models.Model, stock.StockQuant):
 
     _populate_sizes = {'small': 100, 'medium': 5000, 'large': 20000}
     _populate_dependencies = ['stock.location', 'product.product']
@@ -316,8 +311,7 @@ class StockQuant(models.Model):
 
         return res
 
-class PickingType(models.Model):
-    _inherit = 'stock.picking.type'
+class StockPickingType(models.Model, stock.StockPickingType):
 
     _populate_sizes = {'small': 9, 'medium': 30, 'large': 200}
     _populate_dependencies = ['stock.location']
@@ -361,8 +355,7 @@ class PickingType(models.Model):
         ]
 
 
-class Picking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     _populate_sizes = {'small': 100, 'medium': 2_000, 'large': 50_000}
     _populate_dependencies = ['stock.location', 'stock.picking.type', 'res.partner']
@@ -446,8 +439,7 @@ class Picking(models.Model):
         ]
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     _populate_sizes = {'small': 1_000, 'medium': 20_000, 'large': 1_000_000}
     _populate_dependencies = ['stock.picking', 'product.product']

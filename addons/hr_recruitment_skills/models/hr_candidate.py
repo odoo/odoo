@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr_recruitment
 
 from ast import literal_eval
 
 from odoo import fields, models, api
 
 
-class HrCandidate(models.Model):
-    _inherit = 'hr.candidate'
+class HrCandidate(models.Model, hr_recruitment.HrCandidate):
 
     candidate_skill_ids = fields.One2many('hr.candidate.skill', 'candidate_id', string="Skills")
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True)

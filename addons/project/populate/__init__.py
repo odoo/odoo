@@ -1,1 +1,1 @@
-from . import project
+from .project import ProjectTask, ProjectProject, ProjectTaskType

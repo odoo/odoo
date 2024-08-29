@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import re
 from datetime import datetime, timedelta, timezone
@@ -58,8 +59,7 @@ def get_cloud_storage_azure_user_delegation_key(env):
     return user_delegation_key
 
 
-class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
     _cloud_storage_azure_url_pattern = re.compile(r'https://(?P<account_name>[\w]+).blob.core.windows.net/(?P<container_name>[\w]+)/(?P<blob_name>[^?]+)')
 
     def _get_cloud_storage_azure_info(self):

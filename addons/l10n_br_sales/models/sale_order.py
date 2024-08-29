@@ -1,9 +1,9 @@
 # coding: utf-8
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     def _get_name_portal_content_view(self):
         self.ensure_one()

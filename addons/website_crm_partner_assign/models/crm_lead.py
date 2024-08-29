@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import crm
 
 import random
 from markupsafe import Markup
@@ -7,8 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 
 
-class CrmLead(models.Model):
-    _inherit = "crm.lead"
+class CrmLead(models.Model, crm.CrmLead):
 
     partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))

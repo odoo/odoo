@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class ProductReplenish(models.TransientModel):
-    _inherit = 'product.replenish'
+class ProductReplenish(models.TransientModel, stock.ProductReplenish):
 
     @api.depends('route_id')
     def _compute_date_planned(self):

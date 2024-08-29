@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import discuss_channel
-from . import discuss_channel_member
-from . import mail_message
+from .discuss_channel import DiscussChannel
+from .discuss_channel_member import DiscussChannelMember
+from .mail_message import MailMessage

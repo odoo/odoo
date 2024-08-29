@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.urls
 
 from odoo import models, fields, api
 
-class Partner(models.Model):
-    _name = 'res.partner'
-    _inherit = ['res.partner', 'website.published.multi.mixin']
+class ResPartner(models.Model, base.ResPartner, website.WebsitePublishedMultiMixin):
 
     visitor_ids = fields.One2many('website.visitor', 'partner_id', string='Visitors')
 

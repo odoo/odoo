@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import web
 
 from odoo import models
 
 
-class BaseDocumentLayout(models.TransientModel):
-    _inherit = 'base.document.layout'
+class BaseDocumentLayout(models.TransientModel, web.BaseDocumentLayout):
 
     def _get_preview_template(self):
         if (

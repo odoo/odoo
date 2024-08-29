@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import base64
 import json
@@ -17,14 +18,13 @@ from odoo.exceptions import ValidationError, UserError
 from .ir_attachment import get_cloud_storage_google_credential
 
 
-class CloudStorageSettings(models.TransientModel):
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
     """
     Instructions:
     cloud_storage_google_bucket_name: if changed and the old bucket name
         are still in use, you should promise the current service account
         has the permission to access the old bucket.
     """
-    _inherit = 'res.config.settings'
 
     cloud_storage_provider = fields.Selection(selection_add=[('google', 'Google Cloud Storage')])
 

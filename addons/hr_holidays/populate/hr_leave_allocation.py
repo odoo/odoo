@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.tools import populate
 
 
-class HolidaysAllocation(models.Model):
-    _inherit = "hr.leave.allocation"
+class HrLeaveAllocation(models.Model, hr_holidays.HrLeaveAllocation):
     _populate_sizes = {"small": 100, "medium": 800, "large": 10000}
     _populate_dependencies = ['hr.employee', 'hr.leave.type']
 

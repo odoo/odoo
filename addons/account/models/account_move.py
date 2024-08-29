@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account, product, mail, portal
 
 import calendar
 from collections import defaultdict
@@ -66,9 +67,7 @@ TYPE_REVERSE_MAP = {
 EMPTY = object()
 
 
-class AccountMove(models.Model):
-    _name = "account.move"
-    _inherit = ['portal.mixin', 'mail.thread.main.attachment', 'mail.activity.mixin', 'sequence.mixin', 'product.catalog.mixin']
+class AccountMove(models.Model, portal.PortalMixin, mail.MailThreadMainAttachment, mail.MailActivityMixin, account.SequenceMixin, product.ProductCatalogMixin):
     _description = "Journal Entry"
     _order = 'date desc, name desc, invoice_date desc, id desc'
     _mail_post_access = 'read'
@@ -4606,7 +4605,7 @@ class AccountMove(models.Model):
             'res_model': 'account.move',
             'view_mode': 'form',
             'domain': [('id', 'in', self.tax_cash_basis_created_move_ids.ids)],
-            'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('account.view_move_tree').id, 'list'), (False, 'form')],
         }
 
     def action_switch_move_type(self):

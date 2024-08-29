@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import bus
 
 import logging
 import requests
@@ -13,9 +14,7 @@ from odoo.addons.mail.tools.discuss import Store
 _logger = logging.getLogger(__name__)
 
 
-class MailRtcSession(models.Model):
-    _name = 'discuss.channel.rtc.session'
-    _inherit = ["bus.listener.mixin"]
+class DiscussChannelRtcSession(models.Model, bus.BusListenerMixin):
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'
 

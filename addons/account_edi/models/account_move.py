@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import io
@@ -9,8 +10,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     edi_document_ids = fields.One2many(
         comodel_name='account.edi.document',

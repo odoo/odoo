@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from odoo import models, fields
 from odoo.tools.sql import column_exists, create_column
 
 
-class AccountMoveLine(models.Model):
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
-    _inherit = 'account.move.line'
 
     def _auto_init(self):
         # Skip the computation of the field `l10n_latam_document_type_id` at the module installation

@@ -91,10 +91,10 @@
     </record>
 
     <record id="hr_candidate_view_tree" model="ir.ui.view">
-        <field name="name">hr.candidate.view.tree</field>
+        <field name="name">hr.candidate.view.list</field>
         <field name="model">hr.candidate</field>
         <field name="arch" type="xml">
-            <tree string="Candidates" multi_edit="1" sample="1">
+            <list string="Candidates" multi_edit="1" sample="1">
                 <field name="partner_name" string="Name"/>
                 <field name="email_from"/>
                 <field name="partner_phone"/>
@@ -109,7 +109,7 @@
                 <field name="accepted_applications_count" optional="hide"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -204,7 +204,7 @@
         <field name="name">Candidates</field>
         <field name="path">recruitment-candidates</field>
         <field name="res_model">hr.candidate</field>
-        <field name="view_mode">kanban,tree,form,calendar,activity</field>
+        <field name="view_mode">kanban,list,form,calendar,activity</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">

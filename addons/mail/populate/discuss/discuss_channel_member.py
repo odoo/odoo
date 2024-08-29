@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 import logging
 from collections import defaultdict
@@ -9,8 +10,7 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class ChannelMember(models.Model):
-    _inherit = "discuss.channel.member"
+class DiscussChannelMember(models.Model, mail.DiscussChannelMember):
     _populate_dependencies = ["res.partner", "res.users", "discuss.channel"]
 
     def _populate(self, size):

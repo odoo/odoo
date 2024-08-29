@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 import hashlib
 import hmac
@@ -7,8 +8,7 @@ from odoo import api, fields, models, _
 from odoo.addons.portal.utils import validate_thread_with_hash_pid, validate_thread_with_token
 
 
-class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+class MailThread(models.AbstractModel, mail.MailThread):
 
     _mail_post_token_field = 'access_token' # token field for external posts, to be overridden
 

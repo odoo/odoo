@@ -1,4 +1,5 @@
 import re
+from odoo.addons import mail
 from collections import defaultdict
 
 from odoo import api, models
@@ -9,8 +10,7 @@ CARD_IMAGE_URL = re.compile(r'(src=".*)(/web/image/card.campaign/)([0-9]+)/image
 CARD_PREVIEW_URL = re.compile(r'(href=".*/cards)/([0-9]+)/preview"')
 
 
-class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
+class MailComposeMessage(models.TransientModel, mail.MailComposeMessage):
 
     @api.model
     def _process_generic_card_url_body(self, res_id_body_pairs: list[tuple[int, str]]) -> list[str]:

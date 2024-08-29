@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -7,11 +8,9 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_round
 
 
-class RatingMixin(models.AbstractModel):
+class RatingMixin(models.AbstractModel, mail.MailThread):
     """This mixin adds rating statistics to mail.thread that already support ratings."""
-    _name = 'rating.mixin'
     _description = "Rating Mixin"
-    _inherit = 'mail.thread'
 
     rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', compute='_compute_rating_last_value', compute_sudo=True, store=True, aggregator="avg")
     rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')

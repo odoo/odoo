@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic, mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ast import literal_eval
 from collections import defaultdict
@@ -7,9 +8,7 @@ from odoo import api, fields, models, _
 from odoo.tools import float_round
 
 
-class MrpProduction(models.Model):
-    _name = 'mrp.production'
-    _inherit = ['mrp.production', 'analytic.mixin']
+class MrpProduction(models.Model, mrp.MrpProduction, analytic.AnalyticMixin):
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
@@ -76,7 +75,7 @@ class MrpProduction(models.Model):
             "res_model": "account.analytic.account",
             'domain': [('id', 'in', self.analytic_account_ids.ids)],
             "name": _("Analytic Accounts"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
 
     def _cal_price(self, consumed_moves):

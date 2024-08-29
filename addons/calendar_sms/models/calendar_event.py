@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
 from odoo.exceptions import UserError
 
-class CalendarEvent(models.Model):
-    _inherit = 'calendar.event'
+class CalendarEvent(models.Model, calendar.CalendarEvent):
 
     def _do_sms_reminder(self, alarms):
         """ Send an SMS text reminder to attendees that haven't declined the event """

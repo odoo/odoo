@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
 
-class Website(models.Model):
-    _inherit = "website"
+class Website(models.Model, website.Website):
 
     name_translated = fields.Char(translate=True)
 
 
-class TestModel(models.Model):
-    _name = 'test.model'
-    _inherit = [
-        'website.seo.metadata',
-        'website.published.mixin',
-        'website.searchable.mixin',
-    ]
+class TestModel(models.Model, website.WebsiteSeoMetadata, website.WebsitePublishedMixin, website.WebsiteSearchableMixin):
     _description = 'Website Model Test'
 
     name = fields.Char(required=True, translate=True)
@@ -46,8 +40,7 @@ class TestModel(models.Model):
         }
 
 
-class TestSubModel(models.Model):
-    _name = 'test.submodel'
+class TestSubmodel(models.Model):
     _description = 'Website Submodel Test'
 
     name = fields.Char(required=True)
@@ -56,17 +49,12 @@ class TestSubModel(models.Model):
 
 
 class TestTag(models.Model):
-    _name = 'test.tag'
     _description = 'Website Tag Test'
 
     name = fields.Char(required=True)
 
 
-class TestModelMultiWebsite(models.Model):
-    _name = 'test.model.multi.website'
-    _inherit = [
-        'website.published.multi.mixin',
-    ]
+class TestModelMultiWebsite(models.Model, website.WebsitePublishedMultiMixin):
     _description = 'Multi Website Model Test'
 
     name = fields.Char(required=True)
@@ -77,12 +65,7 @@ class TestModelMultiWebsite(models.Model):
     website_id = fields.Many2one('website', string='Website', ondelete='cascade')
 
 
-class TestModelExposed(models.Model):
-    _name = "test.model.exposed"
-    _inherit = [
-        'website.seo.metadata',
-        'website.published.mixin',
-    ]
+class TestModelExposed(models.Model, website.WebsiteSeoMetadata, website.WebsitePublishedMixin):
     _description = 'Website Model Test Exposed'
     _rec_name = "name"
 

@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from odoo.addons import hr_contract
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -15,8 +16,7 @@ from odoo.tools import ormcache, format_list
 from odoo.exceptions import UserError
 
 
-class HrContract(models.Model):
-    _inherit = 'hr.contract'
+class HrContract(models.Model, hr_contract.HrContract):
     _description = 'Employee Contract'
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,

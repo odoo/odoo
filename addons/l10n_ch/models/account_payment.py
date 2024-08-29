@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 import re
 
 from odoo import _, models, fields, api
 from odoo.tools import mod10r
 
 
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
+class AccountPayment(models.Model, account.AccountPayment):
 
     l10n_ch_reference_warning_msg = fields.Char(compute='_compute_l10n_ch_reference_warning_msg')
 

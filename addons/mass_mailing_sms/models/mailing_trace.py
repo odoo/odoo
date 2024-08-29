@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mass_mailing
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
@@ -7,10 +8,9 @@ import string
 from odoo import api, fields, models
 
 
-class MailingTrace(models.Model):
+class MailingTrace(models.Model, mass_mailing.MailingTrace):
     """ Improve statistics model to add SMS support. Main attributes of
     statistics model are used, only some specific data is required. """
-    _inherit = 'mailing.trace'
     CODE_SIZE = 3
 
     trace_type = fields.Selection(selection_add=[

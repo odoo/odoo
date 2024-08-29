@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import digest
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 from odoo.exceptions import AccessError
 
 
-class Digest(models.Model):
-    _inherit = 'digest.digest'
+class DigestDigest(models.Model, digest.DigestDigest):
 
     kpi_pos_total = fields.Boolean('POS Sales')
     kpi_pos_total_value = fields.Monetary(compute='_compute_kpi_pos_total_value')
@@ -24,6 +24,6 @@ class Digest(models.Model):
         )
 
     def _compute_kpis_actions(self, company, user):
-        res = super(Digest, self)._compute_kpis_actions(company, user)
+        res = super()._compute_kpis_actions(company, user)
         res['kpi_pos_total'] = 'point_of_sale.action_pos_sale_graph&menu_id=%s' % self.env.ref('point_of_sale.menu_point_root').id
         return res

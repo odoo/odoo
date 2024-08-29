@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class IrConfigParameter(models.Model):
-    _inherit = 'ir.config_parameter'
+class IrConfigParameter(models.Model, base.IrConfigParameter):
+    _name = "ir.config_parameter"
+
 
     def init(self, force=False):
         super(IrConfigParameter, self).init(force=force)

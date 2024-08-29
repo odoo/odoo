@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
 import itertools
@@ -45,7 +46,7 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
 
     return fields.Datetime.to_string(start_date), fields.Datetime.to_string(end_date)
 
-class Challenge(models.Model):
+class GamificationChallenge(models.Model, mail.MailThread):
     """Gamification challenge
 
     Set of predifined objectives assigned to people with rules for recurrence and
@@ -56,9 +57,7 @@ class Challenge(models.Model):
     'monthly' is selected)
     """
 
-    _name = 'gamification.challenge'
     _description = 'Gamification Challenge'
-    _inherit = 'mail.thread'
     _order = 'end_date, start_date, name, id'
 
     @api.model

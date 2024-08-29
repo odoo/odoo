@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -13,8 +14,7 @@ from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons import base
 base.models.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     oauth_provider_id = fields.Many2one('auth.oauth.provider', string='OAuth Provider')
     oauth_uid = fields.Char(string='OAuth User ID', help="Oauth Provider user_id", copy=False)

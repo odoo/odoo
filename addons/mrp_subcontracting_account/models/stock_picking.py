@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from odoo.osv.expression import OR
 
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     def action_view_stock_valuation_layers(self):
         action = super(StockPicking, self).action_view_stock_valuation_layers()

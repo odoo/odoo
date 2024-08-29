@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 
 
-class MailMessage(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model, mail.MailMessage):
 
     parent_author_name = fields.Char(compute="_compute_parent_author_name")
     parent_body = fields.Html(compute="_compute_parent_body")

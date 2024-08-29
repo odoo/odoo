@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -6,8 +7,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     # Transaction Details
     l10n_in_type_id = fields.Many2one("l10n.in.ewaybill.type", "E-waybill Document Type", tracking=True)

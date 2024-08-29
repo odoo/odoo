@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import uom
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class UoM(models.Model):
-    _inherit = "uom.uom"
+class UomUom(models.Model, uom.UomUom):
 
     fiscal_country_codes = fields.Char(compute="_compute_fiscal_country_codes")
 

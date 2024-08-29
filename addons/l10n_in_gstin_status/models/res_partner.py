@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import logging
 import re
@@ -10,8 +11,7 @@ from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 _logger = logging.getLogger(__name__)
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     l10n_in_gstin_verified_status = fields.Boolean(
         string="GST Status",

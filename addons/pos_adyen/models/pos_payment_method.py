@@ -1,4 +1,5 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
@@ -14,8 +15,7 @@ _logger = logging.getLogger(__name__)
 
 UNPREDICTABLE_ADYEN_DATA = object() # sentinel
 
-class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+class PosPaymentMethod(models.Model, point_of_sale.PosPaymentMethod):
 
     def _get_payment_terminal_selection(self):
         return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('adyen', 'Adyen')]

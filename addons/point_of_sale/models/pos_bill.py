@@ -1,13 +1,12 @@
 from odoo import api, fields, models, _
+from odoo.addons import point_of_sale
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
 
-class Bill(models.Model):
-    _name = "pos.bill"
+class PosBill(models.Model, point_of_sale.PosLoadMixin):
     _order = "value"
     _description = "Coins/Bills"
-    _inherit = ["pos.load.mixin"]
 
     name = fields.Char("Name")
     value = fields.Float("Coin/Bill Value", required=True, digits=(16, 4))

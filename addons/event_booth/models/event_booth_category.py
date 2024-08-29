@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class EventBoothCategory(models.Model):
-    _name = 'event.booth.category'
+class EventBoothCategory(models.Model, base.ImageMixin):
     _description = 'Event Booth Category'
-    _inherit = ['image.mixin']
     _order = 'sequence ASC'
 
     active = fields.Boolean(default=True)

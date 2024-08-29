@@ -90,14 +90,14 @@
     </record>
 
     <record id="crm_reveal_rule_tree" model="ir.ui.view">
-        <field name="name">crm.reveal.rule.tree</field>
+        <field name="name">crm.reveal.rule.list</field>
         <field name="model">crm.reveal.rule</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="lead_type"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -116,7 +116,7 @@
     <record id="crm_reveal_rule_action" model="ir.actions.act_window">
         <field name="name">Visits to Leads Rules</field>
         <field name="res_model">crm.reveal.rule</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="crm_reveal_rule_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -147,21 +147,21 @@
     </record>
 
     <record id="crm_reveal_view_tree" model="ir.ui.view">
-        <field name="name">crm.reveal.view.tree</field>
+        <field name="name">crm.reveal.view.list</field>
         <field name="model">crm.reveal.view</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="reveal_ip"/>
                 <field name="reveal_rule_id"/>
                 <field name="reveal_state"/>
                 <field name="create_date"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="crm_reveal_view_action" model="ir.actions.act_window">
         <field name="name">Lead Generation Views</field>
         <field name="res_model">crm.reveal.view</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

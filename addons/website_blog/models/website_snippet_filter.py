@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -6,8 +7,7 @@ from datetime import timedelta
 from odoo import models, fields, _
 
 
-class WebsiteSnippetFilter(models.Model):
-    _inherit = 'website.snippet.filter'
+class WebsiteSnippetFilter(models.Model, website.WebsiteSnippetFilter):
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)

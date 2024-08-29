@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ast import literal_eval
 from odoo import api, fields, models
 
 
-class WebsiteControllerPage(models.Model):
-    _name = 'website.controller.page'
+class WebsiteControllerPage(models.Model, website.WebsitePublishedMultiMixin, website.WebsiteSearchableMixin):
     _inherits = {'ir.ui.view': 'view_id'}
-    _inherit = [
-        'website.published.multi.mixin',
-        'website.searchable.mixin',
-    ]
     _description = 'Model Page'
     _order = 'website_id, id DESC'
     _sql_constraints = [

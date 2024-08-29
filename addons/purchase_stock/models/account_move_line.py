@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
@@ -7,8 +8,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 from collections import defaultdict
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     def _get_valued_in_moves(self):
         self.ensure_one()

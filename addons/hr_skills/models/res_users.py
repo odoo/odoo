@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
 
 
-class User(models.Model):
-    _inherit = ['res.users']
+class ResUsers(models.Model, base.ResUsers):
 
     resume_line_ids = fields.One2many(related='employee_id.resume_line_ids', readonly=False)
     employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids', readonly=False)

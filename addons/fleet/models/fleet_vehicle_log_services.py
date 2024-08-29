@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class FleetVehicleLogServices(models.Model):
-    _name = 'fleet.vehicle.log.services'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class FleetVehicleLogServices(models.Model, mail.MailThread, mail.MailActivityMixin):
     _rec_name = 'service_type_id'
     _description = 'Services for vehicles'
 

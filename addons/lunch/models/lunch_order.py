@@ -7,7 +7,6 @@ from odoo.osv.expression import AND
 
 
 class LunchOrder(models.Model):
-    _name = 'lunch.order'
     _description = 'Lunch Order'
     _order = 'id desc'
     _display_name = 'product_id'

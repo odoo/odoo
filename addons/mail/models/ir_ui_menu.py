@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import contextlib
 
@@ -6,8 +7,7 @@ from odoo import api, models
 from odoo.exceptions import AccessError
 
 
-class IrUiMenu(models.Model):
-    _inherit = 'ir.ui.menu'
+class IrUiMenu(models.Model, base.IrUiMenu):
 
     @api.model
     def _get_best_backend_root_menu_id_for_model(self, res_model):

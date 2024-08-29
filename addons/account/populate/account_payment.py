@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 """Classes defining the populate factory for Payments and related models."""
 from odoo import models, fields
 from odoo.tools import populate
@@ -11,10 +12,9 @@ from functools import lru_cache
 _logger = logging.getLogger(__name__)
 
 
-class AccountPayment(models.Model):
+class AccountPayment(models.Model, account.AccountPayment):
     """Populate factory part for account.payment."""
 
-    _inherit = "account.payment"
 
     _populate_sizes = {
         'small': 100,

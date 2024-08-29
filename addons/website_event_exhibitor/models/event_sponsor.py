@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, mail, website_jitsi, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -10,18 +11,11 @@ from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate
 
 
-class Sponsor(models.Model):
-    _name = "event.sponsor"
+class EventSponsor(models.Model, portal.MailThread, mail.MailActivityMixin, website.WebsitePublishedMixin, website_jitsi.ChatRoomMixin):
     _description = 'Event Sponsor'
     _order = "sequence, sponsor_type_id"
     # _order = 'sponsor_type_id, sequence' TDE FIXME
     _rec_name = 'name'
-    _inherit = [
-        'mail.thread',
-        'mail.activity.mixin',
-        'website.published.mixin',
-        'chat.room.mixin'
-    ]
 
     def _default_sponsor_type_id(self):
         return self.env['event.sponsor.type'].search([], order="sequence desc", limit=1).id
@@ -187,7 +181,7 @@ class Sponsor(models.Model):
 
     @api.depends('name', 'event_id.name')
     def _compute_website_url(self):
-        super(Sponsor, self)._compute_website_url()
+        super()._compute_website_url()
         for sponsor in self:
             if sponsor.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = sponsor.event_id.get_base_url()
@@ -204,7 +198,7 @@ class Sponsor(models.Model):
                 exhibitor_name = values['name'] if values.get('name') else self.env['res.partner'].browse(values['partner_id']).name
                 name = 'odoo-exhibitor-%s' % exhibitor_name or 'sponsor'
                 values['room_name'] = name
-        return super(Sponsor, self).create(values_list)
+        return super().create(values_list)
 
     def write(self, values):
         toupdate = self.env['event.sponsor']
@@ -213,8 +207,8 @@ class Sponsor(models.Model):
             # go into sequential update in order to create a custom room name for each sponsor
             for exhibitor in toupdate:
                 values['room_name'] = 'odoo-exhibitor-%s' % exhibitor.name
-                super(Sponsor, exhibitor).write(values)
-        return super(Sponsor, self - toupdate).write(values)
+                super(EventSponsor, exhibitor).write(values)
+        return super(EventSponsor, self - toupdate).write(values)
 
     # ------------------------------------------------------------
     # ACTIONS

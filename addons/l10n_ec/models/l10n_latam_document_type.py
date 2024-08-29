@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import l10n_latam_invoice_document
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 import re
 
 
-class L10nLatamDocumentType(models.Model):
-    _inherit = "l10n_latam.document.type"
+class L10nLatamDocumentType(models.Model, l10n_latam_invoice_document.L10nLatamDocumentType):
+    _name = "l10n_latam.document.type"
+
 
     internal_type = fields.Selection(
         selection_add=[

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ewaybill_type
-from . import res_company
-from . import res_config_settings
-from . import account_move
-from . import account_edi_format
+from .ewaybill_type import L10nInEwaybillType
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .account_move import AccountMove
+from .account_edi_format import AccountEdiFormat

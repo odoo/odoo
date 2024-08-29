@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,10 +7,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
 
-class MrpRoutingWorkcenter(models.Model):
-    _name = 'mrp.routing.workcenter'
+class MrpRoutingWorkcenter(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = 'Work Center Usage'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     _order = 'bom_id, sequence, id'
     _check_company_auto = True
@@ -153,11 +152,11 @@ class MrpRoutingWorkcenter(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Select Operations to Copy'),
             'res_model': 'mrp.routing.workcenter',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': ['|', ('bom_id', '=', False), ('bom_id.active', '=', True)],
             'context' : {
                 'bom_id': self.env.context["bom_id"],
-                'tree_view_ref': 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
+                'list_view_ref': 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
             }
         }
 

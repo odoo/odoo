@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 import base64
 
@@ -8,8 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.sale_pdf_quote_builder import utils
 
 
-class ProductDocument(models.Model):
-    _inherit = 'product.document'
+class ProductDocument(models.Model, product.ProductDocument):
 
     attached_on_sale = fields.Selection(
         selection_add=[('inside', "Inside quote pdf")],
@@ -68,7 +68,7 @@ class ProductDocument(models.Model):
             'name': _('Form Fields'),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.pdf.form.field',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'context': {
                 'default_document_type': 'product_document',
                 'default_product_document_ids': self.id,

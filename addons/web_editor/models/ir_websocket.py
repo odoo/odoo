@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import bus
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -7,8 +8,7 @@ from odoo import models
 from odoo.exceptions import AccessDenied
 
 
-class IrWebsocket(models.AbstractModel):
-    _inherit = 'ir.websocket'
+class IrWebsocket(models.AbstractModel, bus.IrWebsocket):
 
     def _build_bus_channel_list(self, channels):
         if self.env.uid:

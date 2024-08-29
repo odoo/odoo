@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import google_gmail, base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -7,11 +8,10 @@ from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 
-class IrMailServer(models.Model):
+class IrMailServer(models.Model, base.IrMailServer, google_gmail.GoogleGmailMixin):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
 
     _name = 'ir.mail_server'
-    _inherit = ['ir.mail_server', 'google.gmail.mixin']
 
     smtp_authentication = fields.Selection(
         selection_add=[('gmail', 'Gmail OAuth Authentication')],

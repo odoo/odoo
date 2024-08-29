@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 import math
 import pytz
@@ -30,10 +31,8 @@ def float_to_time(hours, moment='am'):
 def time_to_float(t):
     return float_round(t.hour + t.minute/60 + t.second/3600, precision_digits=2)
 
-class LunchSupplier(models.Model):
-    _name = 'lunch.supplier'
+class LunchSupplier(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = 'Lunch Supplier'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
 

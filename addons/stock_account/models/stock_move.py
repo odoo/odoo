@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -11,8 +12,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockMove(models.Model, stock.StockMove):
 
     to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=True,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

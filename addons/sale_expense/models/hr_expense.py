@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_expense
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class Expense(models.Model):
-    _inherit = "hr.expense"
+class HrExpense(models.Model, hr_expense.HrExpense):
 
     sale_order_id = fields.Many2one('sale.order', compute='_compute_sale_order_id', store=True, string='Customer to Reinvoice', readonly=False, tracking=True,
         # NOTE: only confirmed SO can be selected, but this domain in activated throught the name search with the `sale_expense_all_order`
@@ -25,7 +25,7 @@ class Expense(models.Model):
             expense.sale_order_id = False
 
     def _compute_analytic_distribution(self):
-        super(Expense, self)._compute_analytic_distribution()
+        super()._compute_analytic_distribution()
         for expense in self.filtered('sale_order_id'):
             if expense.sale_order_id.sudo().analytic_account_id:
                 expense.analytic_distribution = {expense.sale_order_id.sudo().analytic_account_id.id: 100}  # `sudo` required for normal employee without sale access rights
@@ -37,7 +37,7 @@ class Expense(models.Model):
         self.env.add_to_compute(self._fields['analytic_distribution'], to_reset)
 
     def _get_split_values(self):
-        vals = super(Expense, self)._get_split_values()
+        vals = super()._get_split_values()
         for split_value in vals:
             split_value['sale_order_id'] = self.sale_order_id.id
         return vals

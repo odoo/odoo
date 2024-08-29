@@ -9,7 +9,6 @@ class ProductTemplateAttributeLine(models.Model):
     """Attributes available on product.template with their selected values in a m2m.
     Used as a configuration model to generate the appropriate product.template.attribute.value"""
 
-    _name = 'product.template.attribute.line'
     _rec_name = 'attribute_id'
     _rec_names_search = ['attribute_id', 'value_ids']
     _description = "Product Template Attribute Line"
@@ -257,7 +256,7 @@ class ProductTemplateAttributeLine(models.Model):
             'type': 'ir.actions.act_window',
             'name': _("Product Variant Values"),
             'res_model': 'product.template.attribute.value',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', self.product_template_value_ids.ids)],
             'views': [
                 (self.env.ref('product.product_template_attribute_value_view_tree').id, 'list'),

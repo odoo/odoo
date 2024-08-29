@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr
 
 from ast import literal_eval
 
@@ -6,8 +7,7 @@ from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
 
-class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model, hr.HrEmployee):
 
     has_timesheet = fields.Boolean(compute='_compute_has_timesheet', groups="hr.group_hr_user,base.group_system", export_string_translation=False)
 

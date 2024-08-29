@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import uom
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
 
 
-class UomCode(models.Model):
+class L10nEgEdiUomCode(models.Model):
     _name = 'l10n_eg_edi.uom.code'
     _description = 'ETA code for the unit of measures'
 
@@ -12,8 +13,7 @@ class UomCode(models.Model):
     code = fields.Char(required=True)
 
 
-class UomUom(models.Model):
-    _inherit = 'uom.uom'
+class UomUom(models.Model, uom.UomUom):
 
     l10n_eg_unit_code_id = fields.Many2one('l10n_eg_edi.uom.code', string='ETA Unit Code',
                                            help='This is the type of unit according to egyptian tax authority')

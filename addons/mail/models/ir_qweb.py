@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 from odoo import models
 
-class IrQweb(models.AbstractModel):
+class IrQweb(models.AbstractModel, base.IrQweb):
     """ Add ``raise_on_code`` option for qweb. When this option is activated
     then all directives are prohibited.
     """
-    _inherit = 'ir.qweb'
 
     def _get_template_cache_keys(self):
         return super()._get_template_cache_keys() + ['raise_on_code']

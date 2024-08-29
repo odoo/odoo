@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 
 from functools import partial
 
 from odoo import models, fields
 
 
-class PosOrderReport(models.Model):
-    _inherit = "report.pos.order"
+class ReportPosOrder(models.Model, point_of_sale.ReportPosOrder):
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
 
     def _select(self):

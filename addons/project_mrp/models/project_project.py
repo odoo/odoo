@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _lt
 from odoo.osv import expression
 
 
-class Project(models.Model):
-    _inherit = "project.project"
+class ProjectProject(models.Model, project.ProjectProject):
 
     production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user', export_string_translation=False)
     workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user', export_string_translation=False)
@@ -32,14 +32,14 @@ class Project(models.Model):
         self.ensure_one()
         action = self.analytic_account_id.action_view_mrp_bom()
         if self.bom_count > 1:
-            action['view_mode'] = 'tree,form,kanban'
+            action['view_mode'] = 'list,form,kanban'
         return action
 
     def action_view_workorder(self):
         self.ensure_one()
         action = self.analytic_account_id.action_view_workorder()
         if self.workorder_count > 1:
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph'
+            action['view_mode'] = 'list,form,kanban,calendar,pivot,graph'
         return action
 
     # ----------------------------
@@ -90,7 +90,7 @@ class Project(models.Model):
         return profitability_items
 
     def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
+        buttons = super()._get_stat_buttons()
         if self.env.user.has_group('mrp.group_mrp_user'):
             self_sudo = self.sudo()
             buttons.extend([{

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import analytic
 
 from collections import defaultdict
 from statistics import mode
@@ -8,8 +9,7 @@ from odoo import api, fields, models, _, _lt
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 
-class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+class AccountAnalyticLine(models.Model, analytic.AccountAnalyticLine):
 
     def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockMove(models.Model, stock.StockMove):
 
     def _prepare_procurement_values(self):
         vals = super()._prepare_procurement_values()

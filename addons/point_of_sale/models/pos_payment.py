@@ -1,9 +1,10 @@
 from odoo import api, fields, models, _
+from odoo.addons import point_of_sale
 from odoo.tools import formatLang, float_is_zero
 from odoo.exceptions import ValidationError
 
 
-class PosPayment(models.Model):
+class PosPayment(models.Model, point_of_sale.PosLoadMixin):
     """ Used to register payments made in a pos.order.
 
     See `payment_ids` field of pos.order model.
@@ -11,10 +12,8 @@ class PosPayment(models.Model):
     `payment_method_id`.
     """
 
-    _name = "pos.payment"
     _description = "Point of Sale Payments"
     _order = "id desc"
-    _inherit = ['pos.load.mixin']
 
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True)

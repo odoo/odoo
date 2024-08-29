@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import event_sale_report
+from .event_sale_report import EventSaleReport

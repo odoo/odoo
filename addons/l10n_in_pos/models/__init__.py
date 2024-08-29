@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import pos_order
-from . import pos_order_line
-from . import product_product
-from . import account_move
+from .pos_order import PosOrder
+from .pos_order_line import PosOrderLine
+from .product_product import ProductProduct
+from .account_move import AccountMove

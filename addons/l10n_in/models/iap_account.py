@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import iap
 
 from odoo import api, models
 from odoo.addons.iap import jsonrpc
@@ -8,8 +9,7 @@ DEFAULT_IAP_TEST_ENDPOINT = "https://l10n-in-edi-demo.api.odoo.com"
 IAP_SERVICE_NAME = 'l10n_in_edi'
 
 
-class IapAccount(models.Model):
-    _inherit = 'iap.account'
+class IapAccount(models.Model, iap.IapAccount):
 
     @api.model
     def _l10n_in_connect_to_server(self, is_production, params, url_path, config_parameter, timeout=25):

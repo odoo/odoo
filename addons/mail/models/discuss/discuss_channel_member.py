@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import bus
 
 import logging
 import requests
@@ -15,9 +16,7 @@ _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
 
 
-class ChannelMember(models.Model):
-    _name = "discuss.channel.member"
-    _inherit = ["bus.listener.mixin"]
+class DiscussChannelMember(models.Model, bus.BusListenerMixin):
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]
     _bypass_create_check = {}

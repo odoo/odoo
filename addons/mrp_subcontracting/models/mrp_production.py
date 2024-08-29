@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -7,8 +8,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
-class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+class MrpProduction(models.Model, mrp.MrpProduction):
     _rec_names_search = ['name', 'incoming_picking.name']
 
     move_line_raw_ids = fields.One2many(

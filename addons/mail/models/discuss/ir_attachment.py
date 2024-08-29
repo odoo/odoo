@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import models, fields
 from odoo.addons.mail.tools.discuss import Store
 
 
-class IrAttachment(models.Model):
-    _inherit = "ir.attachment"
+class IrAttachment(models.Model, base.IrAttachment):
 
     voice_ids = fields.One2many("discuss.voice.metadata", "attachment_id")
 

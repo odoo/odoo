@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, base, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import textwrap
@@ -13,16 +14,8 @@ from odoo.tools.translate import html_translate
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
 
 
-class Forum(models.Model):
-    _name = 'forum.forum'
+class ForumForum(models.Model, portal.MailThread, base.ImageMixin, website.WebsiteSeoMetadata, website.WebsiteMultiMixin, website.WebsiteSearchableMixin):
     _description = 'Forum'
-    _inherit = [
-        'mail.thread',
-        'image.mixin',
-        'website.seo.metadata',
-        'website.multi.mixin',
-        'website.searchable.mixin',
-    ]
     _order = "sequence, id"
 
     @api.model
@@ -251,7 +244,7 @@ class Forum(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         forums = super(
-            Forum,
+            ForumForum,
             self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)
         ).create(vals_list)
         self.env['website'].sudo()._update_forum_count()

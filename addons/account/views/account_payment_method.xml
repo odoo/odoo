@@ -2,13 +2,13 @@
 <odoo>
 
     <record id="view_account_payment_method_line_tree" model="ir.ui.view">
-        <field name="name">account.payment.method.line.tree</field>
+        <field name="name">account.payment.method.line.list</field>
         <field name="model">account.payment.method.line</field>
         <field name="arch" type="xml">
-            <tree edit="0">
+            <list edit="0">
                 <field name="name" string="Payment Method Name"/>
                 <field name="journal_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 

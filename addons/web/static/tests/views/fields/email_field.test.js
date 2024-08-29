@@ -43,7 +43,7 @@ test("in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "contact",
-        arch: '<tree editable="bottom"><field name="email" widget="email"/></tree>',
+        arch: '<list editable="bottom"><field name="email" widget="email"/></list>',
     });
     expect(`tbody td:not(.o_list_record_selector) a`).toHaveCount(2);
     expect(`.o_field_email a`).toHaveCount(2);

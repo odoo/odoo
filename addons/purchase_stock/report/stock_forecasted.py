@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockForecasted(models.AbstractModel):
-    _inherit = 'stock.forecasted_product_product'
+class StockForecastedProductProduct(models.AbstractModel, stock.StockForecastedProductProduct):
+    _name = "stock.forecasted_product_product"
+
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)

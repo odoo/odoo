@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sale
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     l10n_it_edi_doi_date = fields.Date(
         string="Date on which Declaration of Intent is applied",

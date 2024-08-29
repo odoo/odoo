@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -10,8 +11,7 @@ from odoo.tools import float_compare
 _logger = logging.getLogger(__name__)
 
 
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
+class SaleOrder(models.Model, sale.SaleOrder):
 
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',

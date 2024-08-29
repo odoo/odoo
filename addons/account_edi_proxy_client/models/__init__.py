@@ -1,2 +1,2 @@
-from . import account_edi_proxy_user
-from . import res_company
+from .account_edi_proxy_user import AccountEdiProxyClientUser
+from .res_company import ResCompany

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sms
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -7,8 +8,7 @@ from odoo import fields, models
 from odoo.tools.mail import TEXT_URL_REGEX
 
 
-class SmsSms(models.Model):
-    _inherit = ['sms.sms']
+class SmsSms(models.Model, sms.SmsSms):
 
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     # Linking to another field than the comodel id allows to use the ORM to create

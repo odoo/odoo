@@ -39,12 +39,12 @@ QUnit.module("CountedQuantityWidget", (hooks) => {
             type: "list",
             serverData,
             resModel: "stock.quant",
-            arch: `<tree editable="bottom">
+            arch: `<list editable="bottom">
                         <field name="quantity"/>
                         <field name="inventory_quantity" widget="counted_quantity_widget"/>
                         <field name="inventory_quantity_set"/>
                         <field name="inventory_diff_quantity"/>
-                   </tree>
+                   </list>
                 `,
         });
 
@@ -79,12 +79,12 @@ QUnit.module("CountedQuantityWidget", (hooks) => {
             type: "list",
             serverData,
             resModel: "stock.quant",
-            arch: `<tree editable="bottom">
+            arch: `<list editable="bottom">
                         <field name="quantity"/>
                         <field name="inventory_quantity" widget="counted_quantity_widget"/>
                         <field name="inventory_quantity_set"/>
                         <field name="inventory_diff_quantity"/>
-                   </tree>
+                   </list>
                 `,
         });
 

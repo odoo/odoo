@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 
 
-class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
+class StockPickingType(models.Model, stock.StockPickingType):
 
     code = fields.Selection(selection_add=[
         ('mrp_operation', 'Manufacturing')
@@ -103,8 +103,7 @@ class StockPickingType(models.Model):
         mrp_records = [(r[0], r[1], _('Confirmed')) for r in mrp_records]
         return records + mrp_records
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     has_kits = fields.Boolean(compute='_compute_has_kits')
     production_count = fields.Integer(
@@ -141,7 +140,7 @@ class StockPicking(models.Model):
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.production_ids.ids)],
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
         if self.production_count == 1:
             action.update({

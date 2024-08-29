@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class Users(models.Model):
+class ResUsers(models.Model, base.ResUsers):
     """ Update of res.users class
         - add a preference about username for livechat purpose
     """
-    _inherit = 'res.users'
 
     livechat_username = fields.Char(string='Livechat Username', compute='_compute_livechat_username', inverse='_inverse_livechat_username', store=False)
     livechat_lang_ids = fields.Many2many('res.lang', string='Livechat Languages', compute='_compute_livechat_lang_ids', inverse='_inverse_livechat_lang_ids', store=False)

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import uuid
 
@@ -7,8 +8,7 @@ from odoo.exceptions import UserError
 from odoo.http import Stream
 
 
-class CloudStorageAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
     _cloud_storage_upload_url_time_to_expiry = 300  # 300 seconds
     _cloud_storage_download_url_time_to_expiry = 300  # 300 seconds
 

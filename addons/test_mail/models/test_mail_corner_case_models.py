@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import test_mail, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class MailPerformanceThread(models.Model):
-    _name = 'mail.performance.thread'
+class MailPerformanceThread(models.Model, mail.MailThread):
     _description = 'Performance: mail.thread'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     value = fields.Integer()
@@ -21,10 +20,8 @@ class MailPerformanceThread(models.Model):
             record.value_pc = float(record.value) / 100
 
 
-class MailPerformanceTracking(models.Model):
-    _name = 'mail.performance.tracking'
+class MailPerformanceTracking(models.Model, mail.MailThread):
     _description = 'Performance: multi tracking'
-    _inherit = ['mail.thread']
 
     name = fields.Char(required=True, tracking=True)
     field_0 = fields.Char(tracking=True)
@@ -32,12 +29,10 @@ class MailPerformanceTracking(models.Model):
     field_2 = fields.Char(tracking=True)
 
 
-class MailTestFieldType(models.Model):
+class MailTestFieldType(models.Model, mail.MailThread):
     """ Test default values, notably type, messing through models during gateway
     processing (i.e. lead.type versus attachment.type). """
     _description = 'Test Field Type'
-    _name = 'mail.test.field.type'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     email_from = fields.Char()
@@ -57,12 +52,10 @@ class MailTestFieldType(models.Model):
         return ['customer_id']
 
 
-class MailTestLang(models.Model):
+class MailTestLang(models.Model, mail.MailThread):
     """ A simple chatter model with lang-based capabilities, allowing to
     test translations. """
     _description = 'Lang Chatter Model'
-    _name = 'mail.test.lang'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     email_from = fields.Char()
@@ -92,27 +85,21 @@ class MailTestLang(models.Model):
 # TRACKING MODELS
 # ------------------------------------------------------------
 
-class MailTestTrackAllM2M(models.Model):
-    _name = 'mail.test.track.all.m2m'
+class MailTestTrackAllM2M(models.Model, mail.MailThread):
     _description = 'Sub-model: pseudo tags for tracking'
-    _inherit = ['mail.thread']
 
     name = fields.Char('Name')
 
 
-class MailTestTrackAllO2M(models.Model):
-    _name = 'mail.test.track.all.o2m'
+class MailTestTrackAllO2M(models.Model, mail.MailThread):
     _description = 'Sub-model: pseudo tags for tracking'
-    _inherit = ['mail.thread']
 
     name = fields.Char('Name')
     mail_track_all_id = fields.Many2one('mail.test.track.all')
 
 
-class MailTestTrackAll(models.Model):
-    _name = 'mail.test.track.all'
+class MailTestTrackAll(models.Model, mail.MailThread):
     _description = 'Test tracking on all field types'
-    _inherit = ['mail.thread']
 
     boolean_field = fields.Boolean('Boolean', tracking=1)
     char_field = fields.Char('Char', tracking=2)
@@ -141,10 +128,8 @@ class MailTestTrackAll(models.Model):
     name = fields.Char('Name')
 
 
-class MailTestTrackCompute(models.Model):
-    _name = 'mail.test.track.compute'
+class MailTestTrackCompute(models.Model, mail.MailThread):
     _description = "Test tracking with computed fields"
-    _inherit = ['mail.thread']
 
     partner_id = fields.Many2one('res.partner', tracking=True)
     partner_name = fields.Char(related='partner_id.name', store=True, tracking=True)
@@ -152,31 +137,25 @@ class MailTestTrackCompute(models.Model):
     partner_phone = fields.Char(related='partner_id.phone', tracking=True)
 
 
-class MailTestTrackGroups(models.Model):
-    _name = 'mail.test.track.groups'
+class MailTestTrackGroups(models.Model, mail.MailThread):
     _description = "Test tracking with groups"
-    _inherit = ['mail.thread']
 
     name = fields.Char(tracking=1)
     partner_id = fields.Many2one('res.partner', tracking=2, groups="base.group_user")
     secret = fields.Char(tracking=3, groups="base.group_user")
 
 
-class MailTestTrackMonetary(models.Model):
-    _name = 'mail.test.track.monetary'
+class MailTestTrackMonetary(models.Model, mail.MailThread):
     _description = 'Test tracking monetary field'
-    _inherit = ['mail.thread']
 
     company_id = fields.Many2one('res.company')
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
 
 
-class MailTestTrackSelection(models.Model):
+class MailTestTrackSelection(models.Model, mail.MailThread):
     """ Test tracking for selection fields """
     _description = 'Test Selection Tracking'
-    _name = 'mail.test.track.selection'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     selection_type = fields.Selection([('first', 'First'), ('second', 'Second')], tracking=True)
@@ -186,40 +165,33 @@ class MailTestTrackSelection(models.Model):
 # OTHER
 # ------------------------------------------------------------
 
-class MailTestMultiCompany(models.Model):
+class MailTestMultiCompany(models.Model, mail.MailThreadMainAttachment):
     """ This model can be used in multi company tests, with attachments support
     for checking record update in MC """
-    _name = 'mail.test.multi.company'
     _description = "Test Multi Company Mail"
-    _inherit = 'mail.thread.main.attachment'
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
 
 
-class MailTestMultiCompanyRead(models.Model):
+class MailTestMultiCompanyRead(models.Model, test_mail.MailTestMultiCompany):
     """ Just mail.test.simple, but multi company and supporting posting
     even if the user has no write access. """
     _description = 'Simple Chatter Model '
-    _name = 'mail.test.multi.company.read'
-    _inherit = ['mail.test.multi.company']
     _mail_post_access = 'read'
 
 
-class MailTestMultiCompanyWithActivity(models.Model):
+class MailTestMultiCompanyWithActivity(models.Model, mail.MailThread, mail.MailActivityMixin):
     """ This model can be used in multi company tests with activity"""
-    _name = "mail.test.multi.company.with.activity"
     _description = "Test Multi Company Mail With Activity"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
 
     name = fields.Char()
     company_id = fields.Many2one("res.company")
 
 
-class MailTestNotMailThread(models.Model):
+class MailTestNothread(models.Model):
     """ Models not inheriting from mail.thread but using some cross models
     capabilities of mail. """
-    _name = 'mail.test.nothread'
     _description = "NoThread Model"
 
     name = fields.Char()

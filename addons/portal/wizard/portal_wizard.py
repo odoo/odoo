@@ -17,7 +17,6 @@ class PortalWizard(models.TransientModel):
         A wizard to manage the creation/removal of portal users.
     """
 
-    _name = 'portal.wizard'
     _description = 'Grant Portal Access'
 
     def _default_partner_ids(self):
@@ -75,7 +74,6 @@ class PortalWizardUser(models.TransientModel):
         A model to configure users in the portal wizard.
     """
 
-    _name = 'portal.wizard.user'
     _description = 'Portal User Config'
 
     wizard_id = fields.Many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade')

@@ -91,7 +91,6 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
 
 class Website(models.Model):
 
-    _name = "website"
     _description = "Website"
     _order = "sequence, id"
 

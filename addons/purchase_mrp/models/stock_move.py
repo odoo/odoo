@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models, fields
@@ -6,8 +7,7 @@ from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.exceptions import UserError
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         vals = super(StockMove, self)._prepare_phantom_move_values(bom_line, product_qty, quantity_done)

@@ -13,7 +13,7 @@ class LineAdapter(NamedTuple):
     product_uom_id: models.Model
 
 
-class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
+class PurchaseEdiXmlUblBis3(models.AbstractModel):
     _name = "purchase.edi.xml.ubl_bis3"
     _description = "UBL BIS 3 Peppol Order transaction 3.4"
 

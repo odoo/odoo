@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import delivery
 
 from odoo import _, fields, models
 
@@ -9,8 +10,7 @@ from odoo.tools.misc import groupby
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
 
-class DeliveryCarrier(models.Model):
-    _inherit = 'delivery.carrier'
+class DeliveryCarrier(models.Model, delivery.DeliveryCarrier):
 
     # -------------------------------- #
     # Internals for shipping providers #

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
@@ -6,8 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import models
 from odoo.tools import populate
 
-class AccountAnalyticLine(models.Model):
-    _inherit = "account.analytic.line"
+class AccountAnalyticLine(models.Model, analytic.AccountAnalyticLine):
     _populate_sizes = {"small": 500, "medium": 5000, "large": 50000}
     _populate_dependencies = ["project.project", "project.task", "hr.employee"]
 

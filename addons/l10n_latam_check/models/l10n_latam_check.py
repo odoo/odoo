@@ -1,4 +1,5 @@
 # pylint: disable=protected-access
+from odoo.addons import mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import stdnum
@@ -11,11 +12,10 @@ from odoo.tools import index_exists
 _logger = logging.getLogger(__name__)
 
 
-class l10nLatamAccountPaymentCheck(models.Model):
+class L10nLatamCheck(models.Model, portal.MailThread, mail.MailActivityMixin):
     _name = 'l10n_latam.check'
     _description = 'Account payment check'
     _check_company_auto = True
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     payment_id = fields.Many2one(
         'account.payment',
@@ -160,7 +160,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
             'views': [
-                (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
+                (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'list'),
                 (False, 'form')
             ],
             'context': {'create': False},

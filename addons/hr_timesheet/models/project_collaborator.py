@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class ProjectCollaborator(models.Model):
-    _inherit = 'project.collaborator'
+class ProjectCollaborator(models.Model, project.ProjectCollaborator):
 
     @api.model
     def _toggle_project_sharing_portal_rules(self, active):

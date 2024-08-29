@@ -28,7 +28,6 @@ class ProcurementException(Exception):
 
 class StockRule(models.Model):
     """ A rule describe what a procurement should do; produce, buy, move, ... """
-    _name = 'stock.rule'
     _description = "Stock Rule"
     _order = "sequence, id"
     _check_company_auto = True
@@ -423,7 +422,6 @@ class ProcurementGroup(models.Model):
     The name is usually the name of the original document (sales order) or a
     sequence computed if created manually.
     """
-    _name = 'procurement.group'
     _description = 'Procurement Group'
     _order = "id desc"
 

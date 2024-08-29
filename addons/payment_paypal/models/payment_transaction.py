@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import logging
 
@@ -14,8 +15,7 @@ from odoo.addons.payment_paypal.controllers.main import PaypalController
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
     # this field has no use in Odoo except for debugging

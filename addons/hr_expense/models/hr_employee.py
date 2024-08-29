@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr, base
 
 from odoo import fields, models, api
 
 
-class EmployeeBase(models.AbstractModel):
-    _inherit = 'hr.employee.base'
+class HrEmployeeBase(models.AbstractModel, hr.HrEmployeeBase):
 
     filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user")
 
@@ -30,8 +30,7 @@ class EmployeeBase(models.AbstractModel):
         return res
 
 
-class Employee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model, hr.HrEmployee):
 
     def _group_hr_expense_user_domain(self):
         # We return the domain only if the group exists for the following reason:
@@ -67,14 +66,12 @@ class Employee(models.Model):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['expense_manager_id']
 
 
-class EmployeePublic(models.Model):
-    _inherit = 'hr.employee.public'
+class HrEmployeePublic(models.Model, hr.HrEmployeePublic):
 
     expense_manager_id = fields.Many2one('res.users', readonly=True)
 
 
-class User(models.Model):
-    _inherit = ['res.users']
+class ResUsers(models.Model, base.ResUsers):
 
     expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)
 

@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import mrp
 
 
-class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+class MrpProduction(models.Model, mrp.MrpProduction):
 
     def _compute_analytic_distribution(self):
         project_id = self.env.context.get('project_id')

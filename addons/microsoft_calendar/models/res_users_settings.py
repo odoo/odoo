@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, fields, models
 
 
-class ResUsersSettings(models.Model):
-    _inherit = "res.users.settings"
+class ResUsersSettings(models.Model, base.ResUsersSettings):
 
     # Microsoft Calendar settings.
     microsoft_calendar_sync_token = fields.Char('Microsoft Next Sync Token', copy=False, groups='base.group_system')

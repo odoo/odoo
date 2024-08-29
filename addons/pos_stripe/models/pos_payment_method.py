@@ -1,4 +1,5 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import requests
@@ -10,8 +11,7 @@ from odoo.exceptions import ValidationError, UserError, AccessError
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
 
-class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+class PosPaymentMethod(models.Model, point_of_sale.PosPaymentMethod):
 
     def _get_payment_terminal_selection(self):
         return super()._get_payment_terminal_selection() + [('stripe', 'Stripe')]

@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import web
 from markupsafe import Markup
 
 from odoo import api, fields, models
 
 
-class BaseDocumentLayout(models.TransientModel):
-    _inherit = 'base.document.layout'
+class BaseDocumentLayout(models.TransientModel, web.BaseDocumentLayout):
 
     @api.model
     def _default_company_details(self):

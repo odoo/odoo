@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import survey
 
 from markupsafe import Markup
 
@@ -6,8 +7,7 @@ from odoo import fields, models, _
 from odoo.tools.misc import clean_context
 
 
-class SurveyInvite(models.TransientModel):
-    _inherit = "survey.invite"
+class SurveyInvite(models.TransientModel, survey.SurveyInvite):
 
     applicant_id = fields.Many2one('hr.applicant', string='Applicant')
 

@@ -79,10 +79,10 @@
     </record>
 
     <record id="view_pos_session_tree" model="ir.ui.view">
-        <field name="name">pos.session.tree.view</field>
+        <field name="name">pos.session.list.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Session" create="0" sample="1">
+            <list string="Point of Sale Session" create="0" sample="1">
                 <field name="name" decoration-bf="1"/>
                 <field name="config_id" />
                 <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
@@ -92,7 +92,7 @@
                 <field name="cash_register_balance_end_real"/>
                 <field name="cash_register_balance_end"/>
                 <field name="state" widget="badge" decoration-info="state in ('opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -147,7 +147,7 @@
         <field name="name">Sessions</field>
         <field name="res_model">pos.session</field>
         <field name="path">pos-sessions</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="view_pos_session_search" />
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">

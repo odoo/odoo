@@ -25,11 +25,11 @@
         </record>
 
         <record id="view_move_tree" model="ir.ui.view">
-            <field name="name">stock.move.tree</field>
+            <field name="name">stock.move.list</field>
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Moves" create="0" default_order="date desc" duplicate="0">
+                <list string="Moves" create="0" default_order="date desc" duplicate="0">
                     <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True"/>
@@ -55,16 +55,16 @@
                            decoration-muted="state == 'draft'"
                            decoration-success="state == 'done'"
                            decoration-warning="state not in ('draft','cancel','done','assigned')"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="view_picking_move_tree" model="ir.ui.view">
-            <field name="name">stock.picking.move.tree</field>
+            <field name="name">stock.picking.move.list</field>
             <field name="model">stock.move</field>
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                <list decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                     <field name="company_id" column_invisible="True"/>
                     <field name="name" column_invisible="True"/>
                     <field name="date" column_invisible="True"/>
@@ -86,7 +86,7 @@
                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable"/>
                     <field name="picked"/>
                     <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -176,18 +176,18 @@
                     </div>
                     <field name="move_line_ids"
                            readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
-                           context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
+                           context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
                            widget="sml_x2_many"/>
                 </form>
             </field>
         </record>
 
         <record id="view_stock_move_line_operation_tree" model="ir.ui.view">
-            <field name="name">stock.move.line.operations.tree</field>
+            <field name="name">stock.move.line.operations.list</field>
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
+                <list editable="bottom" decoration-muted="state == 'done' and is_locked == True" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <field name="company_id" column_invisible="True" force_save="1"/>
                     <field name="picking_id" column_invisible="True" force_save="1"/>
                     <field name="move_id" column_invisible="True" force_save="1" />
@@ -203,7 +203,7 @@
                     <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
                     <field name="quant_id"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', parent.location_id)]"
-                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'tree_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True}"
+                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True}"
                         widget="pick_from"
                         column_invisible="not parent.show_quant"
                         options="{'no_create': True, 'no_open': True}"/>
@@ -233,16 +233,16 @@
                     <field name="quantity" string="Quantity" readonly="(state == 'done' and is_locked) or (package_level_id and parent.picking_type_entire_packs)" sum="Quantity"/>
                     <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
                         readonly="(package_level_id and parent.picking_type_entire_packs) or (state == 'done' and id)"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="view_stock_move_line_detailed_operation_tree" model="ir.ui.view">
-            <field name="name">stock.move.line.operations.tree</field>
+            <field name="name">stock.move.line.operations.list</field>
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" multi_edit="1" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
+                <list editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" multi_edit="1" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <header>
                         <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
                     </header>
@@ -258,7 +258,7 @@
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', picking_location_id)]"
-                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'tree_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False}"
+                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False}"
                         readonly="state in ('done', 'cancel') and is_locked"
                         widget="pick_from"
                         options="{'no_open': True, 'no_create': True}"/>
@@ -274,7 +274,7 @@
                     <field name="is_locked" column_invisible="True"/>
                     <field name="quantity" readonly="state in ('done', 'cancel') and is_locked" force_save="1"/>
                     <field name="product_uom_id" force_save="1" readonly="state != 'draft' and id" groups="uom.group_uom"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -323,22 +323,22 @@
                         </group>
                         <group name="linked_group" string="Linked Moves" groups="base.group_no_one" colspan="2">
                             <field name="move_orig_ids" string="Origin Moves" readonly="1">
-                                <tree>
+                                <list>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
                                     <field name="product_uom"/>
                                     <field name="state"/>
-                                </tree>
+                                </list>
                             </field>
                             <field name="move_dest_ids" string="Destination Moves" readonly="1">
-                                <tree>
+                                <list>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
                                     <field name="product_uom"/>
                                     <field name="state"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </group>
@@ -403,7 +403,7 @@
 
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
             <field name="sequence" eval="3"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="act_window_id" ref="stock_move_action"/>
         </record>
@@ -446,7 +446,7 @@
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" default_order='date, picking_id, sequence' string="Moves" create="0">
+                <list decoration-muted="state == 'cancel'" default_order='date, picking_id, sequence' string="Moves" create="0">
                     <field name="date" column_invisible="True"/>
                     <field name="date_deadline" optional="hide"/>
                     <field name="picking_id" string="Reference" column_invisible="True" readonly="state == 'done'"/>
@@ -459,7 +459,7 @@
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="state" optional="show"/>
                     <field name="company_id" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 

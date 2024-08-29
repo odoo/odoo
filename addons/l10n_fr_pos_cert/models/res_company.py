@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
@@ -21,8 +22,7 @@ def ctx_tz(record, field):
     return Datetime.context_timestamp(record, timestamp)
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     l10n_fr_pos_cert_sequence_id = fields.Many2one('ir.sequence')
 

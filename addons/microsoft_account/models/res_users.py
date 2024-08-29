@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -7,8 +8,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 
 
-class User(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     microsoft_calendar_rtoken = fields.Char('Microsoft Refresh Token', copy=False, groups="base.group_system")
     microsoft_calendar_token = fields.Char('Microsoft User token', copy=False, groups="base.group_system")

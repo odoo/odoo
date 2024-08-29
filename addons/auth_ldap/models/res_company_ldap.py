@@ -12,8 +12,7 @@ from odoo.tools.misc import str2bool
 _logger = logging.getLogger(__name__)
 
 
-class CompanyLDAP(models.Model):
-    _name = 'res.company.ldap'
+class ResCompanyLdap(models.Model):
     _description = 'Company LDAP configuration'
     _order = 'sequence'
     _rec_name = 'ldap_server'

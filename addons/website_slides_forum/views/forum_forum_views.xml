@@ -25,7 +25,7 @@
     </record>
 
     <record id="forum_forum_view_tree_slides" model="ir.ui.view">
-        <field name="name">forum.forum.view.tree.slides</field>
+        <field name="name">forum.forum.view.list.slides</field>
         <field name="model">forum.forum</field>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
@@ -41,7 +41,7 @@
     <record id="forum_forum_action_channel" model="ir.actions.act_window">
         <field name="name">Forums</field>
         <field name="res_model">forum.forum</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('slide_channel_ids', '!=', 'False')]</field>
         <field name="view_id" ref="forum_forum_view_tree_slides"/>
         <field name="help" type="html">

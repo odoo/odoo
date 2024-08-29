@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import delivery
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
@@ -6,8 +7,7 @@ from odoo.tools.json import scriptsafe as json_safe
 from odoo.exceptions import ValidationError
 
 
-class ChooseDeliveryCarrier(models.TransientModel):
-    _inherit = 'choose.delivery.carrier'
+class ChooseDeliveryCarrier(models.TransientModel, delivery.ChooseDeliveryCarrier):
 
     shipping_zip = fields.Char(related='order_id.partner_shipping_id.zip')
     shipping_country_code = fields.Char(related='order_id.partner_shipping_id.country_id.code')

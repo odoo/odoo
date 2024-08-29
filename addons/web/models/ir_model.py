@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
 
 
-class IrModel(models.Model):
-    _inherit = "ir.model"
+class IrModel(models.Model, base.IrModel):
 
     @api.model
     def display_name_for(self, models):

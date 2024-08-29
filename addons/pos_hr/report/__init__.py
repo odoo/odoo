@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import pos_order_report
+from .pos_order_report import ReportPosOrder

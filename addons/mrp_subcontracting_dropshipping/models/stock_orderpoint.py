@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = 'stock.warehouse.orderpoint'
+class StockWarehouseOrderpoint(models.Model, stock.StockWarehouseOrderpoint):
 
     def _prepare_procurement_values(self, date=False, group=False):
         vals = super()._prepare_procurement_values(date, group)

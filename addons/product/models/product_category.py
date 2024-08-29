@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class ProductCategory(models.Model):
-    _name = "product.category"
-    _inherit = ['mail.thread']
+class ProductCategory(models.Model, mail.MailThread):
     _description = "Product Category"
     _parent_name = "parent_id"
     _parent_store = True

@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class MembershipInvoice(models.TransientModel):
-    _name = "membership.invoice"
     _description = "Membership Invoice"
 
     product_id = fields.Many2one('product.product', string='Membership', required=True)
@@ -23,13 +22,13 @@ class MembershipInvoice(models.TransientModel):
 
         search_view_ref = self.env.ref('account.view_account_invoice_filter', False)
         form_view_ref = self.env.ref('account.view_move_form', False)
-        tree_view_ref = self.env.ref('account.view_move_tree', False)
+        list_view_ref = self.env.ref('account.view_move_tree', False)
 
         return  {
             'domain': [('id', 'in', invoice_list.ids)],
             'name': 'Membership Invoices',
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
-            'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
+            'views': [(list_view_ref.id, 'list'), (form_view_ref.id, 'form')],
             'search_view_id': search_view_ref and [search_view_ref.id],
         }

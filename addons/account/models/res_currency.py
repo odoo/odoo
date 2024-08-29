@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, _
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools import SQL
 
 
-class ResCurrency(models.Model):
-    _inherit = 'res.currency'
+class ResCurrency(models.Model, base.ResCurrency):
 
     def _get_fiscal_country_codes(self):
         return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))

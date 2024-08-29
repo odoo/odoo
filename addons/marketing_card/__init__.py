@@ -1,4 +1,4 @@
 from . import controllers
-from . import models
+from .models import *
 from . import tests
 from . import wizards

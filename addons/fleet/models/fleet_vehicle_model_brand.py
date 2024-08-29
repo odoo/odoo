@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class FleetVehicleModelBrand(models.Model):
-    _name = 'fleet.vehicle.model.brand'
     _description = 'Brand of the vehicle'
     _order = 'name asc'
 
@@ -29,7 +28,7 @@ class FleetVehicleModelBrand(models.Model):
         self.ensure_one()
         view = {
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'fleet.vehicle.model',
             'name': 'Models',
             'context': {'search_default_brand_id': self.id, 'default_brand_id': self.id}

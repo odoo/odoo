@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event_booth
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class EventBooth(models.Model):
-    _inherit = 'event.booth'
+class EventBooth(models.Model, event_booth.EventBooth):
 
     use_sponsor = fields.Boolean(related='booth_category_id.use_sponsor')
     sponsor_type_id = fields.Many2one(related='booth_category_id.sponsor_type_id')

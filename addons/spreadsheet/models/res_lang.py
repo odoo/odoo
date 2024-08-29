@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, models
 
@@ -8,8 +9,7 @@ from odoo.addons.spreadsheet.utils.formatting import (
 )
 
 
-class Lang(models.Model):
-    _inherit = "res.lang"
+class ResLang(models.Model, base.ResLang):
 
     @api.model
     def get_locales_for_spreadsheet(self):

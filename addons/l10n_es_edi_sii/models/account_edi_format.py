@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context
@@ -57,8 +58,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         return conn
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+class AccountEdiFormat(models.Model, account_edi.AccountEdiFormat):
 
     # -------------------------------------------------------------------------
     # ES EDI

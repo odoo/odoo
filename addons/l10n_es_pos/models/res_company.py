@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import base
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model, base.ResCompany):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

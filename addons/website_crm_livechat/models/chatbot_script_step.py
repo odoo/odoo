@@ -1,12 +1,12 @@
 
+from odoo.addons import im_livechat
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
 
 
-class ChatbotScriptStep(models.Model):
-    _inherit = 'chatbot.script.step'
+class ChatbotScriptStep(models.Model, im_livechat.ChatbotScriptStep):
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
         values = super()._chatbot_crm_prepare_lead_values(discuss_channel, description)

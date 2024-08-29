@@ -8,8 +8,7 @@ from odoo.exceptions import UserError
 from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
 
-class AccruedExpenseRevenue(models.TransientModel):
-    _name = 'account.accrued.orders.wizard'
+class AccountAccruedOrdersWizard(models.TransientModel):
     _description = 'Accrued Orders Wizard'
     _check_company_auto = True
 
@@ -275,6 +274,6 @@ class AccruedExpenseRevenue(models.TransientModel):
             'name': _('Accrual Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', (move.id, reverse_move.id))],
         }

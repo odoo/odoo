@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 from odoo.tools import float_compare, float_is_zero
 
 
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     # -------------------------------------------------------------------------
     # CRUD

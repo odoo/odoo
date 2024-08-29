@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+class StockQuant(models.Model, stock.StockQuant):
 
     is_subcontract = fields.Boolean(store=False, search='_search_is_subcontract')
 

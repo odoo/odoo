@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -27,7 +28,6 @@ except ImportError:
 
 
 class EventType(models.Model):
-    _name = 'event.type'
     _description = 'Event Template'
     _order = 'sequence, id'
 
@@ -90,11 +90,9 @@ class EventType(models.Model):
                 template.seats_max = 0
 
 
-class EventEvent(models.Model):
+class EventEvent(models.Model, portal.MailThread, mail.MailActivityMixin):
     """Event"""
-    _name = 'event.event'
     _description = 'Event'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin, id'
 
     @api.model

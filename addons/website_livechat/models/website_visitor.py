@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website
 
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
@@ -8,8 +9,7 @@ from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+class WebsiteVisitor(models.Model, website.WebsiteVisitor):
 
     livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
     livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -13,8 +14,7 @@ from odoo.addons.link_tracker.tools.html import find_links_with_urls_and_labels
 from odoo.tools.mail import is_html_empty, URL_SKIP_PROTOCOL_REGEX, TEXT_URL_REGEX
 
 
-class MailRenderMixin(models.AbstractModel):
-    _inherit = "mail.render.mixin"
+class MailRenderMixin(models.AbstractModel, mail.MailRenderMixin):
 
     # ------------------------------------------------------------
     # TOOLS

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_holidays
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -9,8 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
 
-class HRLeave(models.Model):
-    _inherit = 'hr.leave'
+class HRLeave(models.Model, hr_holidays.HrLeave):
 
     overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours')
     employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')

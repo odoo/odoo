@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 from odoo import models
 
 
-class ResCompany(models.Model):
+class ResCompany(models.Model, base.ResCompany):
 
-    _inherit = 'res.company'
 
     def _localization_use_documents(self):
         """ Uruguayan localization use documents """

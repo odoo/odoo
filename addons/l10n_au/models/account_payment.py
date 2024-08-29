@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models, api, _
 
 
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+class AccountPayment(models.Model, account.AccountPayment):
 
     @api.depends('country_code', 'partner_type')
     def _compute_payment_receipt_title(self):

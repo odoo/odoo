@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class MailActivity(models.Model):
-    _inherit = "mail.activity"
+class MailActivity(models.Model, mail.MailActivity):
 
     def action_create_calendar_event(self):
         """ Small override of the action that creates a calendar.

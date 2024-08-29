@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import uom
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class Uom(models.Model):
-    _inherit = 'uom.uom'
+class UomUom(models.Model, uom.UomUom):
 
     def _unprotected_uom_xml_ids(self):
         # Override

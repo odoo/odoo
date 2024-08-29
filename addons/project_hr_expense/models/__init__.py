@@ -1,2 +1,2 @@
-from . import hr_expense
-from . import project_project
+from .hr_expense import HrExpense
+from .project_project import ProjectProject

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -6,8 +7,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import format_date
 
 
-class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_trail(self):

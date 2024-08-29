@@ -6,8 +6,7 @@ from random import randint
 from odoo import fields, models
 
 
-class Tag(models.Model):
-    _name = "crm.tag"
+class CrmTag(models.Model):
     _description = "CRM Tag"
 
     def _get_default_color(self):

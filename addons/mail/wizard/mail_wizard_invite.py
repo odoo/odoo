@@ -10,14 +10,13 @@ from odoo.exceptions import UserError
 from odoo.tools import is_html_empty
 
 
-class Invite(models.TransientModel):
+class MailWizardInvite(models.TransientModel):
     """ Wizard to invite partners (or channels) and make them followers. """
-    _name = 'mail.wizard.invite'
     _description = 'Invite wizard'
 
     @api.model
     def default_get(self, fields):
-        result = super(Invite, self).default_get(fields)
+        result = super().default_get(fields)
         if 'message' not in fields:
             return result
 

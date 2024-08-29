@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 from odoo import models, fields, api, _
 from markupsafe import Markup
 
 
-class PosOrder(models.Model):
-    _inherit = "pos.order"
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     employee_id = fields.Many2one('hr.employee', string="Cashier", help="The employee who uses the cash register.")
     cashier = fields.Char(string="Cashier name", compute="_compute_cashier", store=True)

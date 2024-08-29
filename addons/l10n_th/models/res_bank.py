@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 import re
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     proxy_type = fields.Selection(selection_add=[('ewallet_id', 'Ewallet ID'),
                                                  ('merchant_tax_id', 'Merchant Tax ID'),

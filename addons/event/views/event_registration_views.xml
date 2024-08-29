@@ -3,10 +3,10 @@
 
     <!-- EVENT.REGISTRATION VIEWS -->
     <record model="ir.ui.view" id="view_event_registration_tree">
-        <field name="name">event.registration.tree</field>
+        <field name="name">event.registration.list</field>
         <field name="model">event.registration</field>
         <field name="arch" type="xml">
-            <tree string="Registration" multi_edit="1" sample="1"
+            <list string="Registration" multi_edit="1" sample="1"
                   expand="1" default_order="create_date desc"
                   class="o_event_registration_view_tree">
                 <field name="active" column_invisible="True"/>
@@ -32,7 +32,7 @@
                         class="o_btn_cancel_registration" icon="fa-times"
                         invisible="not active or (state != 'open' and state != 'draft')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -85,7 +85,7 @@
                     <notebook>
                         <page string="Questions" name="questions">
                             <field name="registration_answer_ids" widget="one2many">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="event_id" column_invisible="True" />
                                     <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
                                     <field name="question_type" string="Type" />
@@ -93,7 +93,7 @@
                                         invisible="question_type != 'simple_choice'"
                                         domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
                                     <field name="value_text_box" invisible="question_type == 'simple_choice'" />
-                                </tree>
+                                </list>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
                                     <field name="event_id"/>
                                     <field name="question_type"/>
@@ -291,7 +291,7 @@
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
         <field name="path">attendees</field>
-        <field name="view_mode">tree,kanban,form,calendar,graph</field>
+        <field name="view_mode">list,kanban,form,calendar,graph</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
         <field name="context">{
             'default_event_id': active_id,
@@ -313,7 +313,7 @@
     <record id="event_registration_action_kanban" model="ir.actions.act_window">
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="view_mode">kanban,list,form,calendar,graph</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
         <field name="context">{'default_event_id': active_id}</field>
         <field name="help" type="html">
@@ -328,7 +328,7 @@
     <record id="event_registration_action" model="ir.actions.act_window">
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="view_mode">kanban,list,form,calendar,graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Attendees expected yet!
@@ -341,14 +341,14 @@
     <record id="event_registration_action_tree" model="ir.actions.act_window">
        <field name="name">Event registrations</field>
        <field name="res_model">event.registration</field>
-       <field name="view_mode">tree,kanban,form,calendar,graph</field>
+       <field name="view_mode">list,kanban,form,calendar,graph</field>
     </record>
 
     <record id="action_registration" model="ir.actions.act_window">
         <field name="name">Attendees</field>
         <field name="res_model">event.registration</field>
         <field name="domain"></field>
-        <field name="view_mode">graph,pivot,kanban,tree,form</field>
+        <field name="view_mode">graph,pivot,kanban,list,form</field>
         <field name="context">{
                 'search_default_filter_last_month_creation': 1,
                 'search_default_taken': 1,
@@ -371,7 +371,7 @@
     <record id="event_registration_action_stats_from_event" model="ir.actions.act_window">
         <field name="name">Registration statistics</field>
         <field name="res_model">event.registration</field>
-        <field name="view_mode">graph,pivot,kanban,tree,form</field>
+        <field name="view_mode">graph,pivot,kanban,list,form</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
         <field name="context">{
                 'default_event_id': active_id,

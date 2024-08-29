@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 from odoo.osv import expression
 
-class City(models.Model):
-    _name = 'res.city'
+class ResCity(models.Model):
     _description = 'City'
     _order = 'name'
     _rec_names_search = ['name', 'zipcode']

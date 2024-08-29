@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 from odoo import models, fields
 from odoo.tools import SQL
 
 
-class AccountInvoiceReport(models.Model):
+class AccountInvoiceReport(models.Model, account.AccountInvoiceReport):
 
-    _inherit = 'account.invoice.report'
 
     l10n_ar_state_id = fields.Many2one('res.country.state', 'Delivery Province', readonly=True)
     date = fields.Date(readonly=True, string="Accounting Date")

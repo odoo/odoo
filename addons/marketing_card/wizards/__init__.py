@@ -1,1 +1,1 @@
-from . import card_card_share
+from .card_card_share import CardCardShare

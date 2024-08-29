@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
 from odoo.exceptions import ValidationError
 
 
-class GroupsView(models.Model):
-    _inherit = 'res.groups'
+class ResGroups(models.Model, base.ResGroups):
 
     @api.model
     def get_application_groups(self, domain):

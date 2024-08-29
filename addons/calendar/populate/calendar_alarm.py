@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
@@ -6,8 +7,7 @@ from odoo.addons.calendar.populate import data
 from odoo.tools import populate
 
 
-class Alarm(models.Model):
-    _inherit = 'calendar.alarm'
+class CalendarAlarm(models.Model, calendar.CalendarAlarm):
     _populate_sizes = {'small': 3, 'medium': 10, 'large': 30}
 
     def _populate_factories(self):

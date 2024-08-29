@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import analytic
 from copy import deepcopy
 
 from odoo import fields, models, api, Command
 from odoo.tools import float_compare
 
 
-class HrExpenseSplit(models.TransientModel):
-    _name = 'hr.expense.split'
-    _inherit = ['analytic.mixin']
+class HrExpenseSplit(models.TransientModel, analytic.AnalyticMixin):
     _description = 'Expense Split'
     _check_company_auto = True
 

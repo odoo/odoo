@@ -6,7 +6,6 @@ from odoo import api, fields, models
 
 class BaseImportModule(models.TransientModel):
     """ Import Module """
-    _name = "base.import.module"
     _description = "Import Module"
 
     module_file = fields.Binary(string='Module .ZIP file', required=True, attachment=False)
@@ -38,7 +37,7 @@ class BaseImportModule(models.TransientModel):
         return {
             'domain': [('name', 'in', self.env.context.get('module_name', []))],
             'name': 'Modules',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'ir.module.module',
             'view_id': False,
             'type': 'ir.actions.act_window',

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -6,8 +7,7 @@ from odoo.tools import SQL
 from odoo.exceptions import UserError
 
 
-class AccountAnalyticApplicability(models.Model):
-    _inherit = 'account.analytic.applicability'
+class AccountAnalyticApplicability(models.Model, analytic.AccountAnalyticApplicability):
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(
@@ -24,8 +24,7 @@ class AccountAnalyticApplicability(models.Model):
             applicability.display_account_prefix = True
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+class AccountAnalyticAccount(models.Model, analytic.AccountAnalyticAccount):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_account_in_analytic_distribution(self):

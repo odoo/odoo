@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+class SaleOrderLine(models.Model, sale.SaleOrderLine):
 
     @api.depends('analytic_line_ids.amount', 'qty_delivered_method')
     def _compute_purchase_price(self):

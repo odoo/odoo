@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
@@ -67,8 +67,7 @@ class AccountMove(models.Model):
             if move.move_type == 'entry' and move.reversed_pos_order_id:
                 move.amount_total_signed = move.amount_total_signed * -1
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()

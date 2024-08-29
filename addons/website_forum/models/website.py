@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
 
 
-class Website(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     forum_count = fields.Integer(readonly=True, default=0)
 

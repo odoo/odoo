@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import point_of_sale, base
 from odoo import api, fields, models
 
 
-class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = ['res.partner', 'pos.load.mixin']
+class ResPartner(models.Model, base.ResPartner, point_of_sale.PosLoadMixin):
 
     pos_order_count = fields.Integer(
         compute='_compute_pos_order',

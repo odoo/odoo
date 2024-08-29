@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
 
 
-class ProductReplenish(models.TransientModel):
-    _inherit = 'product.replenish'
+class ProductReplenish(models.TransientModel, stock.ProductReplenish):
 
     @api.model
     def default_get(self, fields):

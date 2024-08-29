@@ -217,9 +217,7 @@ class Home(http.Controller):
                 context=context,
             )))
 
-        if view_type == 'list':
-            view_type = 'tree'
-        elif not view_type:
+        if not view_type:
             if record_id:
                 view_type = 'form'
             else:

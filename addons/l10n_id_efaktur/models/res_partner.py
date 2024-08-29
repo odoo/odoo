@@ -1,12 +1,12 @@
 # -*- encoding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class ResPartner(models.Model):
+class ResPartner(models.Model, base.ResPartner):
     """Inherit res.partner object to add NPWP field and Kode Transaksi"""
-    _inherit = "res.partner"
 
     l10n_id_pkp = fields.Boolean(string="ID PKP", compute='_compute_l10n_id_pkp', store=True, readonly=False)
     l10n_id_nik = fields.Char(string='NIK')
@@ -34,8 +34,7 @@ class ResPartner(models.Model):
             record.l10n_id_pkp = record.vat and record.country_code == 'ID'
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     l10n_id_tax_address = fields.Char('Tax Address', related='company_id.partner_id.l10n_id_tax_address', readonly=False)
     l10n_id_tax_name = fields.Char('Tax Name', related='company_id.partner_id.l10n_id_tax_address', readonly=False)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import resource, hr, base, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -15,7 +16,7 @@ from odoo.osv import expression
 from odoo.tools import convert, format_date
 
 
-class HrEmployeePrivate(models.Model):
+class HrEmployee(models.Model, hr.HrEmployeeBase, mail.MailThreadMainAttachment, mail.MailActivityMixin, resource.ResourceMixin, base.AvatarMixin):
     """
     NB: Any field only available on the model hr.employee (i.e. not on the
     hr.employee.public model) should have `groups="hr.group_hr_user"` on its
@@ -23,10 +24,8 @@ class HrEmployeePrivate(models.Model):
     hr.employee model. Indeed, the prefetch loads the data for all the fields
     that are available according to the group defined on them.
     """
-    _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
     @api.model
@@ -225,7 +224,7 @@ class HrEmployeePrivate(models.Model):
             if not avatar and employee.user_id:
                 avatar = employee.user_id.sudo()[avatar_field]
             employee[avatar_field] = avatar
-        super(HrEmployeePrivate, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
+        super(HrEmployee, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
 
     @api.depends('name', 'permit_no')
     def _compute_work_permit_name(self):
@@ -258,7 +257,7 @@ class HrEmployeePrivate(models.Model):
             'view_mode': 'form',
         }
         if len(related_partners) > 1:
-            action['view_mode'] = 'kanban,tree,form'
+            action['view_mode'] = 'kanban,list,form'
             action['domain'] = [('id', 'in', related_partners.ids)]
             return action
         else:
@@ -388,7 +387,7 @@ class HrEmployeePrivate(models.Model):
         except ValueError:
             raise AccessError(_('You do not have access to this document.'))
         # the result is expected from this table, so we should link tables
-        return super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)], order=order)
+        return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
@@ -398,13 +397,13 @@ class HrEmployeePrivate(models.Model):
             self_sudo = self
 
         if self_sudo.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self).get_formview_id(access_uid=access_uid)
+            return super().get_formview_id(access_uid=access_uid)
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
 
     def get_formview_action(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
-        res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
+        res = super().get_formview_action(access_uid=access_uid)
         if access_uid:
             self_sudo = self.with_user(access_uid)
         else:
@@ -520,7 +519,7 @@ class HrEmployeePrivate(models.Model):
                                         (bool(all(emp.image_1920 for emp in self)))))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
-        res = super(HrEmployeePrivate, self).write(vals)
+        res = super().write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
@@ -535,7 +534,7 @@ class HrEmployeePrivate(models.Model):
 
     def unlink(self):
         resources = self.mapped('resource_id')
-        super(HrEmployeePrivate, self).unlink()
+        super().unlink()
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
@@ -545,7 +544,7 @@ class HrEmployeePrivate(models.Model):
         return []
 
     def toggle_active(self):
-        res = super(HrEmployeePrivate, self).toggle_active()
+        res = super().toggle_active()
         unarchived_employees = self.filtered(lambda employee: employee.active)
         unarchived_employees.write({
             'departure_reason_id': False,

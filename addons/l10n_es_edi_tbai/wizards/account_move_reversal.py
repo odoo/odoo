@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api
 from odoo.exceptions import UserError
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = 'account.move.reversal'
+class AccountMoveReversal(models.TransientModel, account.AccountMoveReversal):
 
     l10n_es_tbai_is_required = fields.Boolean(
         compute="_compute_l10n_es_tbai_is_required", readonly=True,

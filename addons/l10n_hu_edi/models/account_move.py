@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 import math
 import base64
@@ -19,8 +20,7 @@ from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_hu_payment_mode = fields.Selection(
         [
@@ -1040,8 +1040,7 @@ class AccountMove(models.Model):
         return tax_totals
 
 
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     @api.depends('move_id.delivery_date')
     def _compute_currency_rate(self):

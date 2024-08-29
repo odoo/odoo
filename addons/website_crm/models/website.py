@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class Website(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     def _get_crm_default_team_domain(self):
         if not self.env.user.has_group('crm.group_use_lead'):

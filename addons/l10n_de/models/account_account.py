@@ -1,9 +1,9 @@
 from odoo import models, _
+from odoo.addons import account
 from odoo.exceptions import UserError
 
 
-class AccountAccount(models.Model):
-    _inherit = ['account.account']
+class AccountAccount(models.Model, account.AccountAccount):
 
     def write(self, vals):
         if 'code' in vals and 'DE' in self.company_ids.account_fiscal_country_id.mapped('code'):

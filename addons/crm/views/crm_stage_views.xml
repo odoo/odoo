@@ -14,17 +14,17 @@
         </field>
     </record>
 
-    <!-- STAGES TREE VIEW + MUTI_EDIT -->
+    <!-- STAGES LIST VIEW + MUTI_EDIT -->
     <record id="crm_stage_tree" model="ir.ui.view">
-        <field name="name">crm.stage.tree</field>
+        <field name="name">crm.stage.list</field>
         <field name="model">crm.stage</field>
         <field name="arch" type="xml">
-            <tree string="Stages" multi_edit="1">
+            <list string="Stages" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name" readonly="1"/>
                 <field name="is_won"/>
                 <field name="team_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 

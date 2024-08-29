@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import res_config_settings
-from . import ir_http
-from . import res_partner
-from . import res_users
+from .res_config_settings import ResConfigSettings
+from .ir_http import IrHttp
+from .res_partner import ResPartner
+from .res_users import ResUsers

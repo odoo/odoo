@@ -1,3 +1,3 @@
-from . import product_attribute
-from . import sale_order
-from . import product
+from .product_attribute import ProductAttribute, ProductAttributeValue
+from .sale_order import SaleOrderLine, SaleOrder
+from .product import ProductProduct

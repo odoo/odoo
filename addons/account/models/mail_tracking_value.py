@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import api, models
 
 
-class MailTrackingValues(models.Model):
-    _inherit = 'mail.tracking.value'
+class MailTrackingValue(models.Model, mail.MailTrackingValue):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_log(self):

@@ -1,4 +1,5 @@
 import json
+from odoo.addons import account_edi
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
@@ -13,8 +14,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+class AccountEdiFormat(models.Model, account_edi.AccountEdiFormat):
 
     """
         Once the journal has been successfully onboarded, we can clear/report invoices through the ZATCA API:

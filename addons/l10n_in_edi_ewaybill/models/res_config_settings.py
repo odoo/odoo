@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools import html_escape
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     l10n_in_edi_ewaybill_username = fields.Char("Indian EDI Stock username",
         related="company_id.l10n_in_edi_ewaybill_username", readonly=False)

@@ -4,8 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class HrEmployeDeleteWizard(models.TransientModel):
-    _name = 'hr.employee.delete.wizard'
+class HrEmployeeDeleteWizard(models.TransientModel):
     _description = 'Employee Delete Wizard'
 
     employee_ids = fields.Many2many('hr.employee', string='Employees', context={'active_test': False}, export_string_translation=False)
@@ -57,8 +56,8 @@ class HrEmployeDeleteWizard(models.TransientModel):
            'name': _('Employees\' Timesheets'),
            'type': 'ir.actions.act_window',
            'res_model': 'account.analytic.line',
-           'view_mode': 'tree,form',
-           'views': [(False, 'tree'), (False, 'form')],
+           'view_mode': 'list,form',
+           'views': [(False, 'list'), (False, 'form')],
            'domain': [('employee_id', 'in', employees.ids), ('project_id', '!=', False)],
         }
         if len(employees) == 1:

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class IrModel(models.Model):
-    _inherit = 'ir.model'
+class IrModel(models.Model, base.IrModel):
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class ProjectProject(models.Model):
-    _inherit = "project.project"
+class ProjectProject(models.Model, project.ProjectProject):
 
     def _send_sms(self):
         for project in self:

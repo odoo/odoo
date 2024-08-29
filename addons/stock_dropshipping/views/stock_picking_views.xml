@@ -14,7 +14,7 @@
     <record id="action_picking_tree_dropship" model="ir.actions.act_window">
         <field name="name">Dropships</field>
         <field name="res_model">stock.picking</field>
-        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="view_mode">list,kanban,form,calendar</field>
         <field name="domain"></field>
         <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'dropship', 'search_default_dropships': 1}</field>
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>

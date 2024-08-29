@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -6,8 +7,7 @@ from ast import literal_eval
 from odoo import models, fields
 
 
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
 

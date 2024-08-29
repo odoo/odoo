@@ -45,7 +45,6 @@ export function openViewItem({ env }) {
             { limit: 1 }
         );
         const view = views[0];
-        view.type = view.type === "tree" ? "list" : view.type; // ignore tree view
         env.services.action.doAction({
             type: "ir.actions.act_window",
             name: view.name,

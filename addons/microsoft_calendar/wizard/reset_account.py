@@ -6,8 +6,7 @@ from odoo import fields, models
 from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
 
 
-class ResetMicrosoftAccount(models.TransientModel):
-    _name = 'microsoft.calendar.account.reset'
+class MicrosoftCalendarAccountReset(models.TransientModel):
     _description = 'Microsoft Calendar Account Reset'
 
     user_id = fields.Many2one('res.users', required=True)

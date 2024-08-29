@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import os
@@ -9,10 +10,8 @@ from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class EventRegistration(models.Model):
-    _name = 'event.registration'
+class EventRegistration(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = 'Event Registration'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
     @api.model

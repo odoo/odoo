@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from werkzeug.urls import iri_to_uri
 
@@ -9,8 +10,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 
 
-class PaymentProvider(models.Model):
-    _inherit = "payment.provider"
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     website_id = fields.Many2one(
         "website",

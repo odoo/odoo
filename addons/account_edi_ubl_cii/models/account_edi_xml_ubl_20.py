@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 from collections import defaultdict
 from lxml import etree
 
@@ -11,9 +12,8 @@ UBL_NAMESPACES = {
 }
 
 
-class AccountEdiXmlUBL20(models.AbstractModel):
+class AccountEdiXmlUbl20(models.AbstractModel, account_edi_ubl_cii.AccountEdiCommon):
     _name = "account.edi.xml.ubl_20"
-    _inherit = 'account.edi.common'
     _description = "UBL 2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):

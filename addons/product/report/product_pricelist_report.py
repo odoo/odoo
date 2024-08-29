@@ -4,7 +4,7 @@
 from odoo import api, models
 
 
-class ProductPricelistReport(models.AbstractModel):
+class ReportProductReportPricelist(models.AbstractModel):
     _name = 'report.product.report_pricelist'
     _description = 'Pricelist Report'
 

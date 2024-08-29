@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 
 
-class Website(models.Model):
-    _inherit = "website"
+class Website(models.Model, website.Website):
 
     website_slide_google_app_key = fields.Char('Google Doc Key', groups='base.group_system')
 

@@ -5,8 +5,7 @@ from odoo import _, fields, models
 from odoo.tools import plaintext2html
 
 
-class CardsCardShare(models.TransientModel):
-    _name = 'card.card.share'
+class CardCardShare(models.TransientModel):
     _description = 'Email Marketing Cards Wizard'
 
     def _default_message(self):

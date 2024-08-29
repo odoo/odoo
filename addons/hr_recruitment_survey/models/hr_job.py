@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr
 
 from odoo import fields, models, _
 
 
-class Job(models.Model):
-    _inherit = "hr.job"
+class HrJob(models.Model, hr.HrJob):
 
     survey_id = fields.Many2one(
         'survey.survey', "Interview Form",
@@ -24,7 +24,7 @@ class Job(models.Model):
 
         action = {
                 'name': _('Survey'),
-                'view_mode': 'form,tree',
+                'view_mode': 'form,list',
                 'res_model': 'survey.survey',
                 'type': 'ir.actions.act_window',
                 'res_id': survey.id,

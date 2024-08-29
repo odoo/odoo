@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sales_team
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -7,8 +8,7 @@ from datetime import datetime
 import pytz
 
 
-class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+class CrmTeam(models.Model, sales_team.CrmTeam):
 
     pos_config_ids = fields.One2many('pos.config', 'crm_team_id', string="Point of Sales")
     pos_sessions_open_count = fields.Integer(string='Open POS Sessions', compute='_compute_pos_sessions_open_count')

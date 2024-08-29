@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock, point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -8,8 +9,7 @@ from odoo.tools import float_is_zero, float_compare
 from itertools import groupby
 from collections import defaultdict
 
-class StockPicking(models.Model):
-    _inherit='stock.picking'
+class StockPicking(models.Model, stock.StockPicking):
 
     pos_session_id = fields.Many2one('pos.session', index=True)
     pos_order_id = fields.Many2one('pos.order', index=True)
@@ -156,9 +156,7 @@ class StockPicking(models.Model):
                 move.action_post()
         return res
 
-class StockPickingType(models.Model):
-    _name = 'stock.picking.type'
-    _inherit = ['stock.picking.type', 'pos.load.mixin']
+class StockPickingType(models.Model, stock.StockPickingType, point_of_sale.PosLoadMixin):
 
     @api.depends('warehouse_id')
     def _compute_hide_reservation_method(self):
@@ -182,13 +180,11 @@ class StockPickingType(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['id', 'use_create_lots', 'use_existing_lots']
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class ProcurementGroup(models.Model, stock.ProcurementGroup):
 
     pos_order_id = fields.Many2one('pos.order', 'POS Order')
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMove(models.Model, stock.StockMove):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()

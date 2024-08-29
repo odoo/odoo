@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
@@ -6,8 +7,7 @@ from odoo import models
 from odoo.tools import float_round
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockMove(models.Model, stock.StockMove):
 
     def _filter_anglo_saxon_moves(self, product):
         res = super(StockMove, self)._filter_anglo_saxon_moves(product)

@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import digest
 
 from odoo import _, fields, models
 from odoo.exceptions import AccessError
 
 
-class Digest(models.Model):
-    _inherit = 'digest.digest'
+class DigestDigest(models.Model, digest.DigestDigest):
 
     kpi_website_sale_total = fields.Boolean(string="eCommerce Sales")
     kpi_website_sale_total_value = fields.Monetary(compute='_compute_kpi_website_sale_total_value')

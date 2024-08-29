@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     landed_costs_ids = fields.One2many('stock.landed.cost', 'vendor_bill_id', string='Landed Costs')
     landed_costs_visible = fields.Boolean(compute='_compute_landed_costs_visible')
@@ -43,7 +43,7 @@ class AccountMove(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
         domain = [('id', 'in', self.landed_costs_ids.ids)]
         context = dict(self.env.context, default_vendor_bill_id=self.id)
-        views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'tree'), (False, 'form'), (False, 'kanban')]
+        views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'list'), (False, 'form'), (False, 'kanban')]
         return dict(action, domain=domain, context=context, views=views)
 
     def _post(self, soft=True):
@@ -52,8 +52,7 @@ class AccountMove(models.Model):
         return posted
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     product_type = fields.Selection(related='product_id.type', readonly=True)
     is_landed_costs_line = fields.Boolean()

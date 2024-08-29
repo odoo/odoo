@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import analytic
 
 from odoo.exceptions import UserError
 
@@ -17,8 +18,7 @@ TIMESHEET_INVOICE_TYPES = [
     ('other_costs', 'Other costs'),
 ]
 
-class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+class AccountAnalyticLine(models.Model, analytic.AccountAnalyticLine):
 
     timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)

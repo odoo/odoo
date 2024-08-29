@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, tools, _
 from odoo.tools import is_html_empty
 
 
-class MailActivity(models.Model):
-    _inherit = "mail.activity"
+class MailActivity(models.Model, mail.MailActivity):
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", ondelete='cascade')
 

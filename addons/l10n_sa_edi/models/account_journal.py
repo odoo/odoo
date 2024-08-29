@@ -1,4 +1,5 @@
 import json
+from odoo.addons import account
 import requests
 from markupsafe import Markup
 from lxml import etree
@@ -43,8 +44,7 @@ SANDBOX_AUTH = {
 }
 
 
-class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+class AccountJournal(models.Model, account.AccountJournal):
 
     """
         In order to clear/report an invoice through the ZATCA API, we need to onboard each journal by following

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -6,8 +7,7 @@ from collections import defaultdict
 from odoo import models
 
 
-class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+class EventRegistration(models.Model, event.EventRegistration):
 
     def _get_lead_grouping(self, rules, rule_to_new_regs):
         """ Override to support sale-order based grouping and update.

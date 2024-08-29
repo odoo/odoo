@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class WebsiteVisitor(models.Model):
-    _name = 'website.visitor'
-    _inherit = ['website.visitor']
+class WebsiteVisitor(models.Model, website.WebsiteVisitor):
 
     event_track_visitor_ids = fields.One2many(
         'event.track.visitor', 'visitor_id', string="Track Visitors",

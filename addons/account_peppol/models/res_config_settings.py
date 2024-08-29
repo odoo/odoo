@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
@@ -6,8 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     account_peppol_edi_user = fields.Many2one(
         comodel_name='account_edi_proxy_client.user',

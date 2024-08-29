@@ -1,12 +1,12 @@
 from dateutil.relativedelta import relativedelta
+from odoo.addons import base
 from datetime import date
 
 from odoo import models, Command
 from odoo.tools import populate
 
 
-class ResCurrencyRate(models.Model):
-    _inherit = "res.currency.rate"
+class ResCurrencyRate(models.Model, base.ResCurrencyRate):
 
     _populate_sizes = {
         'small': 100,

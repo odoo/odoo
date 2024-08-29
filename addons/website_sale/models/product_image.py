@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import base64
 
@@ -9,10 +10,8 @@ from odoo.tools.image import is_image_size_above
 from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
 
 
-class ProductImage(models.Model):
-    _name = 'product.image'
+class ProductImage(models.Model, base.ImageMixin):
     _description = "Product Image"
-    _inherit = ['image.mixin']
     _order = 'sequence, id'
 
     name = fields.Char(string="Name", required=True)

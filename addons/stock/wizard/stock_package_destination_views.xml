@@ -10,12 +10,12 @@
                 </div>
                 <div>
                     <field name="move_line_ids" style="margin-top:10px;">
-                        <tree>
+                        <list>
                             <field name="product_id"/>
                             <field name="location_dest_id"/>
                             <field name="quantity" String="quantity"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
-                        </tree>
+                        </list>
                         <kanban>
                             <field name="product_id"/>
                             <field name="quantity"/>

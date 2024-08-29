@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 from odoo import api, models
 
 
-class AccountEdiXmlUBL21(models.AbstractModel):
+class AccountEdiXmlUbl21(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl20):
     _name = "account.edi.xml.ubl_21"
-    _inherit = 'account.edi.xml.ubl_20'
     _description = "UBL 2.1"
 
     # -------------------------------------------------------------------------

@@ -34,7 +34,6 @@ class ConversionNotFound(ValueError):
     pass
 
 class IrFieldsConverter(models.AbstractModel):
-    _name = 'ir.fields.converter'
     _description = 'Fields Converter'
 
     @api.model
@@ -416,7 +415,7 @@ class IrFieldsConverter(models.AbstractModel):
         action = {
             'name': 'Possible Values',
             'type': 'ir.actions.act_window', 'target': 'new',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'views': [(False, 'list'), (False, 'form')],
             'context': {'create': False},
             'help': _(u"See all possible values")}

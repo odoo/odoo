@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_slides
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -7,8 +8,7 @@ from odoo import fields, models, _
 from odoo.tools import html2plaintext
 
 
-class SlideChannelPartner(models.Model):
-    _inherit = 'slide.channel.partner'
+class SlideChannelPartner(models.Model, website_slides.SlideChannelPartner):
 
     def _recompute_completion(self):
         res = super(SlideChannelPartner, self)._recompute_completion()
@@ -64,8 +64,7 @@ class SlideChannelPartner(models.Model):
                 })
                 self.env.user.employee_id.message_post(body=msg)
 
-class Channel(models.Model):
-    _inherit = 'slide.channel'
+class SlideChannel(models.Model, website_slides.SlideChannel):
 
     def _action_add_members(self, target_partners, member_status='joined', raise_on_access=False):
         res = super()._action_add_members(target_partners, member_status=member_status, raise_on_access=raise_on_access)

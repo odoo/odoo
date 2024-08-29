@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sales_team
 
 from odoo import _, fields, models
 
 
-class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+class CrmTeam(models.Model, sales_team.CrmTeam):
 
     website_ids = fields.One2many(
         string="Websites", comodel_name='website', inverse_name='salesteam_id',
@@ -37,7 +37,7 @@ class CrmTeam(models.Model):
         return {
             'name': _('Abandoned Carts'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('is_abandoned_cart', '=', True)],
             'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_sale').id],
             'context': {

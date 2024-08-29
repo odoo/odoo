@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
@@ -11,8 +12,7 @@ from odoo import api, models
 VALIDATION_KARMA_GAIN = 3
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     @property
     def SELF_READABLE_FIELDS(self):

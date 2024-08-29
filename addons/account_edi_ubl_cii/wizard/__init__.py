@@ -1,1 +1,1 @@
-from . import account_move_send
+from .account_move_send import AccountMoveSend

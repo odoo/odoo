@@ -8,13 +8,12 @@ from odoo import api, fields, models
 _logger = logging.getLogger(__name__)
 
 
-class AliasMixinOptional(models.AbstractModel):
+class MailAliasMixinOptional(models.AbstractModel):
     """ A mixin for models that handles underlying 'mail.alias' records to use
     the mail gateway. Field is not mandatory and its creation is done dynamically
     based on given 'alias_name', allowing to gradually populate the alias table
     without having void aliases as when used with an inherits-like implementation.
     """
-    _name = 'mail.alias.mixin.optional'
     _description = 'Email Aliases Mixin (light)'
     ALIAS_WRITEABLE_FIELDS = ['alias_domain_id', 'alias_name', 'alias_contact', 'alias_defaults', 'alias_bounced_content']
 

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
 import json
 
-class PosSession(models.Model):
-    _inherit = 'pos.session'
+class PosSession(models.Model, point_of_sale.PosSession):
 
     @api.model
     def _load_pos_data_models(self, config_id):

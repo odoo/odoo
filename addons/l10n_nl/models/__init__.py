@@ -1,4 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import template_nl
-from . import account_journal
-from . import account_chart_template
+from .template_nl import AccountChartTemplate
+from .account_journal import AccountJournal
+from .account_chart_template import AccountChartTemplate

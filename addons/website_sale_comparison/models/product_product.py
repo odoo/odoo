@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from collections import OrderedDict
 
 from odoo import models
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     def _prepare_categories_for_display(self):
         """On the comparison page group on the same line the values of each

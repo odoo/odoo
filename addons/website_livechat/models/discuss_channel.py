@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
 
 
-class DiscussChannel(models.Model):
-    _inherit = 'discuss.channel'
+class DiscussChannel(models.Model, mail.DiscussChannel):
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 

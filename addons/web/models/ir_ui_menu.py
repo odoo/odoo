@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -6,8 +7,7 @@ import re
 from odoo import models
 
 
-class IrUiMenu(models.Model):
-    _inherit = "ir.ui.menu"
+class IrUiMenu(models.Model, base.IrUiMenu):
 
     def load_web_menus(self, debug):
         """ Loads all menu items (all applications and their sub-menus) and

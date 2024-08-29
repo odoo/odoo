@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
-class ProjectMilestone(models.Model):
-    _name = 'project.milestone'
-    _inherit = 'project.milestone'
+class ProjectMilestone(models.Model, project.ProjectMilestone):
 
     def _default_sale_line_id(self):
         project_id = self._context.get('default_project_id')

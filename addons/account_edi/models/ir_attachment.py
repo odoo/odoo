@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
-class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_government_document(self):

@@ -5,13 +5,13 @@
         Country
         -->
         <record id="view_country_tree" model="ir.ui.view">
-            <field name="name">res.country.tree</field>
+            <field name="name">res.country.list</field>
             <field name="model">res.country</field>
             <field name="arch" type="xml">
-                <tree string="Country" create="0" delete="0">
+                <list string="Country" create="0" delete="0">
                     <field name="name"/>
                     <field name="code"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -52,10 +52,10 @@
                         </group>
                         <label for="state_ids"/>
                         <field name="state_ids">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="name"/>
                                 <field name="code"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>
@@ -86,12 +86,12 @@
         </record>
 
         <record id="view_country_group_tree" model="ir.ui.view">
-            <field name="name">res.country.group.tree</field>
+            <field name="name">res.country.group.list</field>
             <field name="model">res.country.group</field>
             <field name="arch" type="xml">
-                <tree string="Country Group">
+                <list string="Country Group">
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -127,14 +127,14 @@
 
         <!-- State -->
         <record id="view_country_state_tree" model="ir.ui.view">
-            <field name="name">res.country.state.tree</field>
+            <field name="name">res.country.state.list</field>
             <field name="model">res.country.state</field>
             <field name="arch" type="xml">
-                <tree string="State" editable="bottom">
+                <list string="State" editable="bottom">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
-                </tree>
+                </list>
             </field>
         </record>
 

@@ -25,10 +25,10 @@ class Partner extends models.Model {
             </form>
         `,
         list: /* xml */ `
-            <tree>
+            <list>
                 <field name="int_field" widget="color_picker"/>
                 <field name="display_name" />
-            </tree>`,
+            </list>`,
     };
 }
 
@@ -77,7 +77,7 @@ test("closes when color selected or outside click", async () => {
     expect(".o_field_color_picker button").toHaveCount(1);
 });
 
-test("color picker on tree view", async () => {
+test("color picker on list view", async () => {
     await mountView({
         type: "list",
         resModel: "res.partner",
@@ -98,10 +98,10 @@ test("color picker in editable list view", async () => {
         type: "list",
         resModel: "res.partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="int_field" widget="color_picker"/>
                 <field name="display_name" />
-            </tree>`,
+            </list>`,
     });
 
     expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(1);
@@ -123,10 +123,10 @@ test("column widths: dont overflow color picker in list", async () => {
         type: "list",
         resModel: "res.partner",
         arch: `
-        <tree editable="top">
+        <list editable="top">
             <field name="date_field"/>
             <field name="int_field" widget="color_picker"/>
-        </tree>`,
+        </list>`,
         domain: [["id", "<", 0]],
     });
     await contains(".o_control_panel_main_buttons .o_list_button_add", {

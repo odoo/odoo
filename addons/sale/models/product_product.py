@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from datetime import time, timedelta
 
@@ -7,8 +8,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
 
@@ -99,8 +99,7 @@ class ProductProduct(models.Model):
         return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 
 
-class ProductAttributeCustomValue(models.Model):
-    _inherit = "product.attribute.custom.value"
+class ProductAttributeCustomValue(models.Model, product.ProductAttributeCustomValue):
 
     sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", ondelete='cascade')
 
@@ -108,7 +107,6 @@ class ProductAttributeCustomValue(models.Model):
         ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
     ]
 
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
+class ProductPackaging(models.Model, product.ProductPackaging):
 
     sales = fields.Boolean("Sales", default=True, help="If true, the packaging can be used for sales orders")

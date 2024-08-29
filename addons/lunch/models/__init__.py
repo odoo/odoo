@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import lunch_alert
-from . import lunch_cashmove
-from . import lunch_location
-from . import lunch_order
-from . import lunch_product
-from . import lunch_product_category
-from . import lunch_topping
-from . import lunch_supplier
-from . import res_company
-from . import res_config_settings
-from . import res_users
+from .lunch_alert import LunchAlert
+from .lunch_cashmove import LunchCashmove
+from .lunch_location import LunchLocation
+from .lunch_order import LunchOrder
+from .lunch_product import LunchProduct
+from .lunch_product_category import LunchProductCategory
+from .lunch_topping import LunchTopping
+from .lunch_supplier import LunchSupplier
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .res_users import ResUsers

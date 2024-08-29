@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
-class HrDepartureWizard(models.TransientModel):
-    _inherit = 'hr.departure.wizard'
+class HrDepartureWizard(models.TransientModel, hr.HrDepartureWizard):
 
     def _get_employee_departure_date(self):
         employee = self.env['hr.employee'].browse(self.env.context['active_id'])

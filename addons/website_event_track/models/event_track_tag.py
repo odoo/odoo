@@ -6,8 +6,7 @@ from random import randint
 from odoo import fields, models
 
 
-class TrackTag(models.Model):
-    _name = "event.track.tag"
+class EventTrackTag(models.Model):
     _description = 'Event Track Tag'
     _order = "category_id, sequence, name"
 

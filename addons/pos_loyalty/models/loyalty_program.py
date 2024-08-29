@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import loyalty, point_of_sale
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-class LoyaltyProgram(models.Model):
-    _name = 'loyalty.program'
-    _inherit = ['loyalty.program', 'pos.load.mixin']
+class LoyaltyProgram(models.Model, loyalty.LoyaltyProgram, point_of_sale.PosLoadMixin):
 
     # NOTE: `pos_config_ids` satisfies an excpeptional use case: when no PoS is specified, the loyalty program is
     # applied to every PoS. You can access the loyalty programs of a PoS using _get_program_ids() of pos.config

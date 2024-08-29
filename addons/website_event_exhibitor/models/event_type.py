@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class EventType(models.Model):
-    _inherit = "event.type"
+class EventType(models.Model, event.EventType):
 
     exhibitor_menu = fields.Boolean(
         string='Showcase Exhibitors', compute='_compute_exhibitor_menu',

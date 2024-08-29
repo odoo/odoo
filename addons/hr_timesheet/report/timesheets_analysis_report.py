@@ -6,7 +6,6 @@ from odoo.tools.sql import drop_view_if_exists, SQL
 
 
 class TimesheetsAnalysisReport(models.Model):
-    _name = "timesheets.analysis.report"
     _description = "Timesheets Analysis Report"
     _auto = False
 

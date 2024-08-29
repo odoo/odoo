@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class Company(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     manufacturing_lead = fields.Float(
         'Manufacturing Lead Time', default=0.0, required=True,
@@ -34,5 +34,5 @@ class Company(models.Model):
         company_todo_sequence._create_unbuild_sequence()
 
     def _create_per_company_sequences(self):
-        super(Company, self)._create_per_company_sequences()
+        super()._create_per_company_sequences()
         self._create_unbuild_sequence()

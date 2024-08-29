@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
@@ -16,8 +17,7 @@ DOMAINS = {
 }
 
 
-class Message(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model, mail.MailMessage):
 
     account_audit_log_preview = fields.Text(string="Description", compute="_compute_account_audit_log_preview")
     account_audit_log_move_id = fields.Many2one(

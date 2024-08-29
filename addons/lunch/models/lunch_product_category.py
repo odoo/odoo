@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -8,10 +9,8 @@ from odoo import api, fields, models
 from odoo.tools.misc import file_open
 
 
-class LunchProductCategory(models.Model):
+class LunchProductCategory(models.Model, base.ImageMixin):
     """ Category of the product such as pizza, sandwich, pasta, chinese, burger... """
-    _name = 'lunch.product.category'
-    _inherit = 'image.mixin'
     _description = 'Lunch Product Category'
 
     @api.model

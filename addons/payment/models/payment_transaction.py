@@ -20,7 +20,6 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _name = 'payment.transaction'
     _description = 'Payment Transaction'
     _order = 'id desc'
     _rec_name = 'reference'
@@ -238,7 +237,7 @@ class PaymentTransaction(models.Model):
             action['res_id'] = refund_tx.id
             action['view_mode'] = 'form'
         else:
-            action['view_mode'] = 'tree,form'
+            action['view_mode'] = 'list,form'
             action['domain'] = [('source_transaction_id', '=', self.id)]
         return action
 

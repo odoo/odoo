@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 
 from odoo import api, models, _
 from odoo.exceptions import ValidationError
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = 'account.fiscal.position'
+class AccountFiscalPosition(models.Model, account.AccountFiscalPosition):
 
     @api.model_create_multi
     def create(self, vals_list):

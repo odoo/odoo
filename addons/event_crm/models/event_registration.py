@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,8 +9,7 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.phone_validation.tools import phone_validation
 
 
-class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+class EventRegistration(models.Model, event.EventRegistration):
 
     lead_ids = fields.Many2many(
         'crm.lead', string='Leads', copy=False, readonly=True,

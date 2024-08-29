@@ -176,7 +176,7 @@ test("in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "product",
-        arch: '<tree editable="top"><field name="description"/></tree>',
+        arch: '<list editable="top"><field name="description"/></list>',
     });
     await contains(".o_list_button_add").click();
     expect("textarea").toBeFocused();

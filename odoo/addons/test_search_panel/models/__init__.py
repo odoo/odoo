@@ -1,1 +1,1 @@
-from . import models
+from .models import TestSearchPanelCategoryTargetModel, TestSearchPanelCategoryTargetModelNoParentName, TestSearchPanelSourceModel, TestSearchPanelFilterTargetModel

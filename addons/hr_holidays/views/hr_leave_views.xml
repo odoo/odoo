@@ -457,10 +457,10 @@
     </record>
 
     <record id="hr_leave_view_tree" model="ir.ui.view">
-        <field name="name">hr.holidays.view.tree</field>
+        <field name="name">hr.holidays.view.list</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Requests" sample="1">
+            <list string="Time Off Requests" sample="1">
                 <field name="employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
@@ -486,18 +486,18 @@
                     invisible="state not in ('confirm', 'validate1')"
                     groups="hr_holidays.group_hr_holidays_user"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="hr_leave_view_tree_my" model="ir.ui.view">
-        <field name="name">hr.holidays.view.tree</field>
+        <field name="name">hr.holidays.view.list</field>
         <field name="model">hr.leave</field>
         <field name="inherit_id" ref="hr_leave_view_tree"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="default_order">date_from DESC</attribute>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="attributes">
@@ -578,7 +578,7 @@
         <field name="name">Dashboard</field>
         <field name="path">time-off</field>
         <field name="res_model">hr.leave</field>
-        <field name="view_mode">calendar,tree,form,activity</field>
+        <field name="view_mode">calendar,list,form,activity</field>
         <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'short_name': 1, 'search_default_year': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
@@ -600,7 +600,7 @@
 
     <record id="hr_leave_action_new_request_view_tree" model="ir.actions.act_window.view">
         <field name="sequence">2</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="hr_leave_action_new_request"/>
         <field name="view_id" ref="hr_leave_view_tree_my"/>
     </record>
@@ -640,7 +640,7 @@
         <field name="name">My Time Off</field>
         <field name="res_model">hr.leave</field>
         <field name="path">my-time-off</field>
-        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="view_mode">list,form,kanban,activity</field>
         <field name="context">{"search_default_group_date_from": True}</field>
         <field name="search_view_id" ref="hr_leave_view_search_my"/>
         <field name="view_ids" eval="[(5, 0, 0),
@@ -657,7 +657,7 @@
 
     <record id="hr_leave_action_my_view_tree" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="hr_leave_action_my"/>
         <field name="view_id" ref="hr_leave_view_tree_my"/>
     </record>
@@ -673,7 +673,7 @@
         <field name="name">All Time Off</field>
         <field name="res_model">hr.leave</field>
         <field name="path">time-off-approval</field>
-        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
             'search_default_waiting_for_me': 1,
@@ -694,7 +694,7 @@
     <record id="hr_leave_action_holiday_allocation_id" model="ir.actions.act_window">
         <field name="name">Time Off</field>
         <field name="res_model">hr.leave</field>
-        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
             'hide_employee_name': 1,
@@ -711,7 +711,7 @@
 
     <record id="action_view_tree_manager_approve" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="hr_leave_view_tree"/>
         <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
     </record>
@@ -787,21 +787,21 @@
         <field name="model">hr.leave</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Summary" sample="1">
+            <list string="Time Off Summary" sample="1">
                 <field name="employee_id"/>
                 <field name="number_of_days" string="Number of Days" type="measure"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="state"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
         <field name="name">Time Off Analysis</field>
         <field name="res_model">hr.leave</field>
-        <field name="view_mode">tree,graph,pivot,calendar,form</field>
+        <field name="view_mode">list,graph,pivot,calendar,form</field>
         <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
         <field name="context">{'search_default_filter_date_from': 1, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
         <field name="domain">[('state', '!=', 'cancel')]</field>
@@ -814,7 +814,7 @@
 
     <record id="action_window_leave_list" model="ir.actions.act_window.view">
         <field name="sequence" eval="5"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_holiday_list"/>
         <field name="act_window_id" ref="action_hr_available_holidays_report"/>
     </record>

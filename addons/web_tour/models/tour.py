@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 
-class Tour(models.Model):
+class WebTourTour(models.Model):
 
     _name = "web_tour.tour"
     _description = "Tours"

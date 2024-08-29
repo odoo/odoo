@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class SaleOrderCouponPoints(models.Model):
-    _name = 'sale.order.coupon.points'
     _description = 'Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon'
 
     order_id = fields.Many2one(comodel_name='sale.order', required=True, ondelete='cascade')

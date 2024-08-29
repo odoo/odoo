@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock_landed_costs
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class StockLandedCost(models.Model):
-    _inherit = 'stock.landed.cost'
+class StockLandedCost(models.Model, stock_landed_costs.StockLandedCost):
 
     target_model = fields.Selection(selection_add=[
         ('manufacturing', "Manufacturing Orders")

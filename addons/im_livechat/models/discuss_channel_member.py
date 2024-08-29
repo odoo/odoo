@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from datetime import datetime, timedelta
 
@@ -6,8 +7,7 @@ from odoo import api, models, fields
 from odoo.addons.mail.tools.discuss import Store
 
 
-class ChannelMember(models.Model):
-    _inherit = 'discuss.channel.member'
+class DiscussChannelMember(models.Model, mail.DiscussChannelMember):
 
     @api.autovacuum
     def _gc_unpin_livechat_sessions(self):

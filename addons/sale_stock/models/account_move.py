@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,8 +9,7 @@ from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     def _stock_account_get_last_step_stock_moves(self):
         """ Overridden from stock_account.
@@ -133,8 +133,7 @@ class AccountMove(models.Model):
             if incoterm_res:
                 move.incoterm_location = incoterm_res
 
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     def _sale_can_be_reinvoice(self):
         self.ensure_one()

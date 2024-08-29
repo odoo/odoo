@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     # if set, the matrix of the products configurable by matrix will be shown
     # on the report of the order.

@@ -8,7 +8,6 @@ class MailingSubscription(models.Model):
     """ Intermediate model between mass mailing list and mass mailing contact
         Indicates if a contact is opted out for a particular list
     """
-    _name = 'mailing.subscription'
     _description = 'Mailing List Subscription'
     _table = 'mailing_subscription'
     _rec_name = 'contact_id'
@@ -56,7 +55,7 @@ class MailingSubscription(models.Model):
         action = {
             'name': _('Mailing Contacts'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', self.contact_id.ids)],
             'res_model': 'mailing.contact',
         }

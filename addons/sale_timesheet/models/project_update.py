@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import project
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
@@ -6,8 +7,7 @@ from odoo.tools import float_utils, formatLang
 from odoo.tools.misc import format_duration
 
 
-class ProjectUpdate(models.Model):
-    _inherit = 'project.update'
+class ProjectUpdate(models.Model, project.ProjectUpdate):
 
     @api.model
     def _get_template_values(self, project):

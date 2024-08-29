@@ -10,7 +10,7 @@
                 <page string="Optional Products"
                     name="optional_products"
                     invisible="state not in ['draft', 'sent']">
-                    <field name="sale_order_option_ids" mode="tree,kanban" readonly="state in ['cancel', 'sale']">
+                    <field name="sale_order_option_ids" mode="list,kanban" readonly="state in ['cancel', 'sale']">
                         <form string="Optional Products">
                             <group>
                                 <field name="product_id"
@@ -70,7 +70,7 @@
                                 </t>
                             </templates>
                         </kanban>
-                        <tree string="Sales Quotation Template Lines"
+                        <list string="Sales Quotation Template Lines"
                             editable="bottom"
                             decoration-success="is_present == True">
                             <control>
@@ -95,7 +95,7 @@
                                 icon="fa-shopping-cart"
                                 title="Add to order lines"
                                 invisible="is_present"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </page>

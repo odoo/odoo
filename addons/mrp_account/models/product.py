@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 from odoo.tools import float_round, groupby
 
 
-class ProductTemplate(models.Model):
-    _name = 'product.template'
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     def _get_product_accounts(self):
         accounts = super()._get_product_accounts()
@@ -27,9 +26,7 @@ class ProductTemplate(models.Model):
             return templates.mapped('product_variant_id').button_bom_cost()
 
 
-class ProductProduct(models.Model):
-    _name = 'product.product'
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     def button_bom_cost(self):
         self.ensure_one()
@@ -113,8 +110,7 @@ class ProductProduct(models.Model):
             return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
 
 
-class ProductCategory(models.Model):
-    _inherit = 'product.category'
+class ProductCategory(models.Model, product.ProductCategory):
 
     property_stock_account_production_cost_id = fields.Many2one(
         'account.account', 'Production Account', company_dependent=True,

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     certifications_count = fields.Integer('Certifications Count', compute='_compute_certifications_count')
     certifications_company_count = fields.Integer('Company Certifications Count', compute='_compute_certifications_company_count')
@@ -26,7 +26,7 @@ class ResPartner(models.Model):
 
     def action_view_certifications(self):
         action = self.env["ir.actions.actions"]._for_xml_id("survey.res_partner_action_certifications")
-        action['view_mode'] = 'tree'
+        action['view_mode'] = 'list'
         action['domain'] = ['|', ('partner_id', 'in', self.ids), ('partner_id', 'in', self.child_ids.ids)]
 
         return action

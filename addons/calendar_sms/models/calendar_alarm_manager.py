@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class AlarmManager(models.AbstractModel):
-    _inherit = 'calendar.alarm_manager'
+class CalendarAlarmManager(models.AbstractModel, calendar.CalendarAlarmManager):
+    _name = "calendar.alarm_manager"
+
 
     @api.model
     def _send_reminder(self):

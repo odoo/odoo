@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class StockReturnPicking(models.TransientModel):
-    _inherit = "stock.return.picking"
+class StockReturnPicking(models.TransientModel, stock.StockReturnPicking):
 
     @api.model
     def default_get(self, default_fields):
@@ -21,8 +21,7 @@ class StockReturnPicking(models.TransientModel):
         return vals
 
 
-class StockReturnPickingLine(models.TransientModel):
-    _inherit = "stock.return.picking.line"
+class StockReturnPickingLine(models.TransientModel, stock.StockReturnPickingLine):
 
     to_refund = fields.Boolean(string="Update quantities on SO/PO", default=True,
         help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

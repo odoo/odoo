@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, _
 from odoo.exceptions import ValidationError
 
 
-class PosConfig(models.Model):
-    _inherit = 'pos.config'
+class PosConfig(models.Model, point_of_sale.PosConfig):
 
     @api.constrains('payment_method_ids')
     def _check_online_payment_methods(self):

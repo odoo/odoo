@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import models, fields
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     def _get_default_nomenclature(self):
         return self.env.ref('barcodes.default_barcode_nomenclature', raise_if_not_found=False)

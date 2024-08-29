@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 
 from odoo import models, api
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+class ResConfigSettings(models.TransientModel, base.ResConfigSettings):
 
     @api.onchange("pos_self_ordering_mode")
     def _onchange_pos_self_order_kiosk(self):

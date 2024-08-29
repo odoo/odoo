@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_move_line
-from . import sale_order_line
+from .account_move_line import AccountMoveLine
+from .sale_order_line import SaleOrderLine

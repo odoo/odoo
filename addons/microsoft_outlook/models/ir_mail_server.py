@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import microsoft_outlook, base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -7,11 +8,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class IrMailServer(models.Model):
+class IrMailServer(models.Model, base.IrMailServer, microsoft_outlook.MicrosoftOutlookMixin):
     """Add the Outlook OAuth authentication on the outgoing mail servers."""
 
     _name = 'ir.mail_server'
-    _inherit = ['ir.mail_server', 'microsoft.outlook.mixin']
 
     _OUTLOOK_SCOPE = 'https://outlook.office.com/SMTP.Send'
 

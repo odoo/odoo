@@ -4,13 +4,13 @@
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
-            <field name="name">res.partner.title.tree</field>
+            <field name="name">res.partner.title.list</field>
             <field name="model">res.partner.title</field>
             <field name="arch" type="xml">
-                <tree string="Partner Titles" editable="bottom">
+                <list string="Partner Titles" editable="bottom">
                     <field name="name"/>
                     <field name="shortcut"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_partner_title_form" model="ir.ui.view">
@@ -52,11 +52,11 @@
         -->
         <!-- Partner -->
         <record id="view_partner_tree" model="ir.ui.view">
-            <field name="name">res.partner.tree</field>
+            <field name="name">res.partner.list</field>
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contacts" sample="1" multi_edit="1">
+                <list string="Contacts" sample="1" multi_edit="1">
                     <field name="complete_name" string="Name"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="mobile" optional="hide"/>
@@ -68,7 +68,7 @@
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -352,10 +352,10 @@
                         </group>
                         <group string="Bank Accounts">
                             <field name="bank_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="bank_id"/>
                                     <field name="acc_number"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </sheet>
@@ -439,7 +439,7 @@
         <record id="action_partner_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
             <field name="res_model">res.partner</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="context">{'res_partner_search_mode': 'customer'}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help" type="html">
@@ -464,7 +464,7 @@
         </record>
         <record id="action_partner_tree_view1" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
@@ -472,7 +472,7 @@
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
             <field name="res_model">res.partner</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="domain">[]</field>
             <field name="context">{'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
             <field name="filter" eval="True"/>
@@ -492,7 +492,7 @@
         </record>
         <record id="action_partner_customer_form_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_customer_form"/>
         </record>
@@ -507,7 +507,7 @@
             <field name="name">Vendors</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[]</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="context">{'res_partner_search_mode': 'supplier', 'default_is_company': True}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
@@ -526,7 +526,7 @@
         </record>
         <record id="action_partner_vendor_form_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_supplier_form"/>
         </record>
@@ -560,11 +560,11 @@
             <field name="model">res.partner.category</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contact Tags" editable="bottom" multi_edit="1" sample="1">
+                <list string="Contact Tags" editable="bottom" multi_edit="1" sample="1">
                     <field name="name" placeholder='e.g. "Roadshow"'/>
                     <field name="parent_id" string="Category" domain="[('id', '!=', id)]"/>
                     <field name="color" widget="color_picker"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -620,10 +620,10 @@
             <field name="model">res.partner.industry</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Industry" editable="bottom">
+                <list string="Industry" editable="bottom">
                     <field name="name"/>
                     <field name="full_name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -643,7 +643,7 @@
         <record id="res_partner_industry_action" model="ir.actions.act_window">
             <field name="name">Industries</field>
             <field name="res_model">res.partner.industry</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="res_partner_industry_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

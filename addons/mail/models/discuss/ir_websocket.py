@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import bus
 
 import re
 
@@ -7,8 +8,7 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
 
-class IrWebsocket(models.AbstractModel):
-    _inherit = "ir.websocket"
+class IrWebsocket(models.AbstractModel, bus.IrWebsocket):
 
     def _get_missed_presences_identity_domains(self, presence_channels):
         identity_domain = super()._get_missed_presences_identity_domains(presence_channels)

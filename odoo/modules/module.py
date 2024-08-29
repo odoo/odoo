@@ -11,6 +11,7 @@ import os
 import pkg_resources
 import re
 import sys
+import traceback
 import warnings
 from os.path import join as opj, normpath
 
@@ -101,7 +102,7 @@ def initialize_sys_path():
         odoo.addons.__path__.append(dd)
 
     # hook odoo.addons on addons paths
-    for ad in tools.config['addons_path'].split(','):
+    for ad in odoo.conf.addons_paths:
         ad = os.path.normcase(os.path.abspath(ad.strip()))
         if ad not in odoo.addons.__path__:
             odoo.addons.__path__.append(ad)
@@ -367,6 +368,27 @@ def load_openerp_module(module_name):
         if info['post_load']:
             getattr(sys.modules[qualname], info['post_load'])()
 
+    except AttributeError as err:
+        _logger.critical("Couldn't load module %s", module_name)
+        trace = traceback.format_exc()
+        matching = re.search(r' *(\w+)(?: *: ([^ ]*))? *= *fields[.](One2many|Many2many|Many2one)(?:\[([^\]]*)\])?', trace)
+        if 'most likely due to a circular import' in trace and matching:
+            field_name = matching.group(1)
+            ttype = matching.group(3)
+            addons_class = matching.group(2) or matching.group(4)
+            addon_name = addons_class.split('.')[0] if '.' in addons_class else module_name
+            class_name = addons_class.split('.')[-1]
+            raise AttributeError((
+                str(err) + "\n"
+                "To avoid circular import for the the comodel use the annotation syntax:\n"
+                "    %(field_name)s: '%(module_name)s.%(ModelClass)s' = fields.%(ttype)s(...)"
+                ) % {
+                    "field_name": field_name,
+                    "module_name": addon_name,
+                    "ModelClass": class_name,
+                    "ttype": ttype,
+                }).with_traceback(err.__traceback__) from None
+        raise
     except Exception:
         _logger.critical("Couldn't load module %s", module_name)
         raise

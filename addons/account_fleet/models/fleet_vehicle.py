@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import fleet
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, models, fields
 
 
-class FleetVehicle(models.Model):
-    _inherit = 'fleet.vehicle'
+class FleetVehicle(models.Model, fleet.FleetVehicle):
 
     bill_count = fields.Integer(compute='_compute_move_ids', string="Bills Count")
     account_move_ids = fields.One2many('account.move', compute='_compute_move_ids')
@@ -34,11 +34,11 @@ class FleetVehicle(models.Model):
         self.ensure_one()
 
         form_view_ref = self.env.ref('account.view_move_form', False)
-        tree_view_ref = self.env.ref('account_fleet.account_move_view_tree', False)
+        list_view_ref = self.env.ref('account_fleet.account_move_view_tree', False)
 
         result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         result.update({
             'domain': [('id', 'in', self.account_move_ids.ids)],
-            'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
+            'views': [(list_view_ref.id, 'list'), (form_view_ref.id, 'form')],
         })
         return result

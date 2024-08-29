@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+class StockWarehouse(models.Model, stock.StockWarehouse):
 
     subcontracting_dropshipping_to_resupply = fields.Boolean(
         'Dropship Subcontractors', default=True,

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -8,8 +9,7 @@ from odoo.http import request
 from odoo.osv import expression
 
 
-class website_form_config(models.Model):
-    _inherit = 'website'
+class Website(models.Model, website.Website):
 
     def _website_form_last_record(self):
         if request and request.session.form_builder_model_model:
@@ -17,10 +17,8 @@ class website_form_config(models.Model):
         return False
 
 
-class website_form_model(models.Model):
-    _name = 'ir.model'
+class IrModel(models.Model, base.IrModel):
     _description = 'Models'
-    _inherit = 'ir.model'
 
     website_form_access = fields.Boolean('Allowed to use in forms', help='Enable the form builder feature for this model.')
     website_form_default_field_id = fields.Many2one('ir.model.fields', 'Field for custom form data', domain="[('model', '=', model), ('ttype', '=', 'text')]", help="Specify the field which will contain meta and custom form fields datas.")
@@ -129,11 +127,9 @@ class website_form_model(models.Model):
         )
 
 
-class website_form_model_fields(models.Model):
+class IrModelFields(models.Model, base.IrModelFields):
     """ fields configuration for form builder """
-    _name = 'ir.model.fields'
     _description = 'Fields'
-    _inherit = 'ir.model.fields'
 
     def init(self):
         # set all existing unset website_form_blacklisted fields to ``true``

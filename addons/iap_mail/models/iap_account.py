@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import iap
 
 from odoo import api, models
 
 
-class IapAccount(models.Model):
-    _inherit = 'iap.account'
+class IapAccount(models.Model, iap.IapAccount):
 
     @api.model
     def _send_success_notification(self, message, title=None):

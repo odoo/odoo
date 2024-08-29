@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountEdiXmlUBLPINTJP(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
+class AccountEdiXmlPintJp(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUblBis3):
     _name = 'account.edi.xml.pint_jp'
     _description = "Japanese implementation of Peppol International (PINT) model for Billing"
     """

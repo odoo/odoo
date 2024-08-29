@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, tools
 
 
-class Company(models.Model):
-    _name = 'res.company'
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     def _default_alias_domain_id(self):
         return self.env['mail.alias.domain'].search([], limit=1)

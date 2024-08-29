@@ -9,7 +9,6 @@ from odoo.osv import expression
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
-    _name = "project.tags"
     _description = "Project Tags"
     _order = "name"
 

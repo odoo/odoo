@@ -63,20 +63,20 @@ class TestMenuRootLookupByModel(MailCommon):
                  action=new_action(
                      'Contacts', res_model='res.partner',
                      path='all-contacts',
-                     view_mode='kanban,tree,form,activity',
+                     view_mode='kanban,list,form,activity',
                      context={'default_is_company': True},
                      domain='[]'))
         menu_root_invoicing = new_menu('Invoicing')
         new_menu('Companies', parent_id=menu_root_invoicing.id,
                  action=new_action(
                      'Companies', res_model='res.company',
-                     view_mode='tree,kanban,form'))
+                     view_mode='list,kanban,form'))
         menu_invoicing_customer = new_menu('Customers', parent_id=menu_root_invoicing.id)
         new_menu('Customers', parent_id=menu_invoicing_customer.id,
                  action=new_action(
                      'Customers', res_model='res.partner',
                      path='all-customers',
-                     view_mode='kanban,tree,form',
+                     view_mode='kanban,list,form',
                      context={
                          'search_default_customer': 1,
                          'res_partner_search_mode': 'customer',
@@ -88,7 +88,7 @@ class TestMenuRootLookupByModel(MailCommon):
         new_menu('Customers', parent_id=menu_sales_orders.id,
                  action=new_action(
                      'Customers', res_model='res.partner',
-                     view_mode='kanban,tree,form',
+                     view_mode='kanban,list,form',
                      context={
                          'search_default_customer': 1,
                          'res_partner_search_mode': 'customer',
@@ -102,7 +102,7 @@ class TestMenuRootLookupByModel(MailCommon):
                  action=new_action(
                      'Companies', res_model='res.company',
                      path='all-companies',
-                     view_mode='tree,kanban,form'))
+                     view_mode='list,kanban,form'))
 
         cls.menu_count = new_menu.call_count
         cls.menu_root_contact = menu_root_contact

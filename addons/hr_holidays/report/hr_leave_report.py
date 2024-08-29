@@ -5,8 +5,7 @@ from odoo import api, fields, models, tools, _
 from odoo.osv import expression
 
 
-class LeaveReport(models.Model):
-    _name = "hr.leave.report"
+class HrLeaveReport(models.Model):
     _description = 'Time Off Summary / Report'
     _auto = False
     _order = "date_from DESC, employee_id"

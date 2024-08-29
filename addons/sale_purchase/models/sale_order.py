@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     purchase_order_count = fields.Integer(
         "Number of Purchase Order Generated",
@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
             action.update({
                 'name': _("Purchase Order generated from %s", self.name),
                 'domain': [('id', 'in', purchase_order_ids)],
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             })
         return action
 

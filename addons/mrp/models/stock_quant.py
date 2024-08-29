@@ -1,9 +1,9 @@
 from odoo import models, api, _
+from odoo.addons import stock
 from odoo.exceptions import UserError
 
 
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+class StockQuant(models.Model, stock.StockQuant):
 
     @api.constrains('product_id')
     def _check_kits(self):

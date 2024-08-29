@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale, point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 
 
-class SaleOrder(models.Model):
-    _name = 'sale.order'
-    _inherit = ['sale.order', 'pos.load.mixin']
+class SaleOrder(models.Model, sale.SaleOrder, point_of_sale.PosLoadMixin):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_origin_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
     pos_order_count = fields.Integer(string='Pos Order Count', compute='_count_pos_order', readonly=True, groups="point_of_sale.group_pos_user")
@@ -38,7 +37,7 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Linked POS Orders'),
             'res_model': 'pos.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
@@ -49,9 +48,7 @@ class SaleOrder(models.Model):
             total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
             sale_order.amount_unpaid = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
 
-class SaleOrderLine(models.Model):
-    _name = 'sale.order.line'
-    _inherit = ['sale.order.line', 'pos.load.mixin']
+class SaleOrderLine(models.Model, sale.SaleOrderLine, point_of_sale.PosLoadMixin):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_line_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
 

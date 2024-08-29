@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 from collections import OrderedDict
 from zlib import error as zlib_error
 try:
@@ -11,8 +12,7 @@ from odoo.exceptions import UserError
 from odoo.tools import pdf
 
 
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+class IrActionsReport(models.Model, base.IrActionsReport):
 
     is_invoice_report = fields.Boolean(
         string="Invoice report",

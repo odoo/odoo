@@ -24,7 +24,7 @@
             <field name="model">change.password.wizard</field>
             <field name="arch" type="xml">
                 <form string="Change Password">
-                    <field mode="tree" name="user_ids"/>
+                    <field mode="list" name="user_ids"/>
                     <footer>
                         <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
@@ -37,11 +37,11 @@
             <field name="model">change.password.user</field>
             <field name="arch" type="xml">
                 <!-- the user list is editable, but one cannot add or delete rows -->
-                <tree string="Users" editable="bottom" create="false" delete="false">
+                <list string="Users" editable="bottom" create="false" delete="false">
                     <field name="user_id" column_invisible="True"/> <!-- required field, needed when updating the password -->
                     <field name="user_login" force_save="1"/>
                     <field name="new_passwd" password="True"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="change_password_wizard_action" model="ir.actions.act_window">
@@ -92,19 +92,19 @@
                         </page>
                         <page string="Access Rights" name="access_rights">
                             <field name="model_access">
-                                <tree string="Access Rights" editable="top">
+                                <list string="Access Rights" editable="top">
                                     <field name="name"/>
                                     <field name="model_id"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Record Rules" name="record_rules">
                             <field name="rule_groups">
-                                <tree string="Record Rules" editable="top">
+                                <list string="Record Rules" editable="top">
                                     <field name="name"/>
                                     <field name="model_id"/>
                                     <field name="domain_force"/>
@@ -112,7 +112,7 @@
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
-                                </tree>
+                                </list>
                             </field>
                         </page><page string="Notes" name="notes">
                             <field name="comment"/>
@@ -251,16 +251,16 @@
         </record>
 
         <record id="view_users_tree" model="ir.ui.view">
-            <field name="name">res.users.tree</field>
+            <field name="name">res.users.list</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <tree string="Users" multi_edit="1">
+                <list string="Users" multi_edit="1">
                     <field name="name" readonly="1"/>
                     <field name="login" readonly="1"/>
                     <field name="lang"/>
                     <field name="login_date" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="view_res_users_kanban" model="ir.ui.view">
@@ -328,7 +328,7 @@
             <field name="name">Users</field>
             <field name="res_model">res.users</field>
             <field name="path">users</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
             <field name="context">{'search_default_filter_no_share': 1, 'show_user_group_warning': True}</field>
@@ -336,7 +336,7 @@
         </record>
         <record id="action_res_users_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="act_window_id" ref="action_res_users"/>
         </record>
@@ -467,13 +467,13 @@
                                 </div>
                                 <div colspan="2" invisible="not api_key_ids">
                                     <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
-                                        <tree editable="bottom" create="false" delete="false">
+                                        <list editable="bottom" create="false" delete="false">
                                             <field name="name"/>
                                             <field name="scope"/>
                                             <field name="create_date"/>
                                             <button type="object" name="remove"
                                                     string="Delete API key." icon="fa-trash"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </div>
                                 <div colspan="2">
@@ -510,19 +510,19 @@
             <field name="model">res.users.apikeys</field>
             <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="arch" type="xml">
-                <tree create="false" edit="false" delete="false" editable="bottom">
+                <list create="false" edit="false" delete="false" editable="bottom">
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="scope"/>
                     <field name="create_date"/>
                     <button type="object" name="remove" title="Delete API key." icon="fa-trash"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_apikeys_admin">
             <field name="name">API Keys Listing</field>
             <field name="res_model">res.users.apikeys</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="view_id" ref="base.view_apikeys"/>
         </record>

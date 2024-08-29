@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_contract
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -8,8 +9,7 @@ from odoo import models
 from odoo.addons.resource.models.utils import datetime_to_string
 
 
-class HrContract(models.Model):
-    _inherit = 'hr.contract'
+class HrContract(models.Model, hr_contract.HrContract):
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         # Add the work entries difference for french payroll

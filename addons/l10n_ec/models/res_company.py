@@ -1,9 +1,9 @@
 from odoo import models
+from odoo.addons import base
 
 
-class ResCompany(models.Model):
+class ResCompany(models.Model, base.ResCompany):
 
-    _inherit = "res.company"
 
     def _localization_use_documents(self):
         self.ensure_one()

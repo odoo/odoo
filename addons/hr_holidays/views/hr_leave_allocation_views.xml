@@ -258,11 +258,11 @@
     </record>
 
     <record id="hr_leave_allocation_view_tree" model="ir.ui.view">
-        <field name="name">hr.leave.allocation.view.tree</field>
+        <field name="name">hr.leave.allocation.view.list</field>
         <field name="model">hr.leave.allocation</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <tree string="Allocation Requests" sample="1">
+            <list string="Allocation Requests" sample="1">
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_user" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
@@ -287,12 +287,12 @@
                     invisible="state not in ('confirm', 'validate1','validate')"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="hr_leave_allocation_view_tree_my" model="ir.ui.view">
-        <field name="name">hr.leave.allocation.view.tree.my</field>
+        <field name="name">hr.leave.allocation.view.list.my</field>
         <field name="model">hr.leave.allocation</field>
         <field name="inherit_id" ref="hr_leave_allocation_view_tree"/>
         <field name="mode">primary</field>
@@ -424,7 +424,7 @@
     <record id="hr_leave_allocation_action_my" model="ir.actions.act_window">
         <field name="name">My Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">list,kanban,form,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_my"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -439,7 +439,7 @@
     </record>
     <record id="hr_leave_allocation_action_my_view_tree" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="hr_leave_allocation_action_my"/>
         <field name="view_id" ref="hr_leave_allocation_view_tree_my"/>
     </record>
@@ -453,7 +453,7 @@
     <record id="hr_leave_allocation_action_all" model="ir.actions.act_window">
         <field name="name">All Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">list,kanban,form,activity</field>
         <field name="context">{}</field>
         <field name="domain">[]</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
@@ -470,7 +470,7 @@
     <record id="hr_leave_allocation_action_approve_department" model="ir.actions.act_window">
         <field name="name">Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
-        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="view_mode">list,form,kanban,activity</field>
         <field name="context">{'search_default_my_team': 1,'search_default_approve': 2}</field>
         <field name="domain">[]</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>

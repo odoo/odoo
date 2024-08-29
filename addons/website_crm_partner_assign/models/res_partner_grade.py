@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class ResPartnerGrade(models.Model):
-    _name = 'res.partner.grade'
+class ResPartnerGrade(models.Model, website.WebsitePublishedMixin):
     _order = 'sequence'
-    _inherit = ['website.published.mixin']
     _description = 'Partner Grade'
 
     sequence = fields.Integer('Sequence')

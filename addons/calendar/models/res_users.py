@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -7,8 +8,7 @@ from odoo import api, fields, models, modules, _
 from pytz import timezone, UTC
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     calendar_default_privacy = fields.Selection(related='res_users_settings_id.calendar_default_privacy', readonly=False, required=True)
 

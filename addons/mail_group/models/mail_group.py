@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -24,17 +25,15 @@ _logger = logging.getLogger(__name__)
 GROUP_SEND_BATCH_SIZE = 500
 
 
-class MailGroup(models.Model):
+class MailGroup(models.Model, mail.MailAliasMixin):
     """This model represents a mailing list.
 
     Users send emails to an alias to create new group messages or reply to existing
     group messages. Moderation can be activated on groups. In that case email have to
     be validated or rejected.
     """
-    _name = 'mail.group'
     _description = 'Mail Group'
     # TDE CHECK: use blaclist mixin
-    _inherit = ['mail.alias.mixin']
     _order = 'create_date DESC, id DESC'
 
     @api.model

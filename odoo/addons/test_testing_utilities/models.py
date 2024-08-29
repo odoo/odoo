@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import web
 from __future__ import division
 
 from itertools import count, zip_longest
 
 from odoo import api, fields, models, Command
 
-class A(models.Model):
+class TestTestingUtilitiesA(models.Model):
     _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
 
@@ -27,7 +28,7 @@ class A(models.Model):
         for r in self:
             r.f4 = r.f2 / (int(r.f1) or 1)
 
-class B(models.Model):
+class TestTestingUtilitiesReadonly(models.Model):
     _name = 'test_testing_utilities.readonly'
     _description = 'Testing Utilities Readonly'
 
@@ -39,7 +40,7 @@ class B(models.Model):
         for r in self:
             r.f2 = 2 * r.f1
 
-class C(models.Model):
+class TestTestingUtilitiesC(models.Model):
     _name = 'test_testing_utilities.c'
     _description = 'Testing Utilities C'
 
@@ -50,13 +51,13 @@ class C(models.Model):
     def _on_change_f2(self):
         self.name = self.f2.name
 
-class M2O(models.Model):
+class TestTestingUtilitiesM2o(models.Model):
     _name = 'test_testing_utilities.m2o'
     _description = 'Testing Utilities Many To One'
 
     name = fields.Char(required=True)
 
-class M2Onchange(models.Model):
+class TestTestingUtilitiesD(models.Model):
     _name = 'test_testing_utilities.d'
     _description = 'Testing Utilities D'
 
@@ -76,7 +77,7 @@ class M2Onchange(models.Model):
             ('name', 'ilike', self.f2),
         ], limit=1) if self.f2 else False
 
-class M2MChange(models.Model):
+class TestTestingUtilitiesE(models.Model):
     _name = 'test_testing_utilities.e'
     _description = 'Testing Utilities E'
 
@@ -98,14 +99,14 @@ class M2MChange(models.Model):
                 ]
             })
 
-class M2MSub(models.Model):
+class TestTestingUtilitiesSub2(models.Model):
     _name = 'test_testing_utilities.sub2'
     _description = 'Testing Utilities Subtraction 2'
 
     name = fields.Char()
     m2o_ids = fields.Many2many('test_testing_utilities.m2o')
 
-class M2MChange2(models.Model):
+class TestTestingUtilitiesF(models.Model):
     _name = 'test_testing_utilities.f'
     _description = 'Testing Utilities F'
 
@@ -123,19 +124,19 @@ class M2MChange2(models.Model):
     def _on_change_m2o(self):
         self.m2m = self.m2m | self.m2o
 
-class M2MReadonly(models.Model):
+class TestTestingUtilitiesG(models.Model):
     _name = 'test_testing_utilities.g'
     _description = 'Testing Utilities G'
 
     m2m = fields.Many2many('test_testing_utilities.sub3', readonly=True)
 
-class M2MSub3(models.Model):
+class TestTestingUtilitiesSub3(models.Model):
     _name = 'test_testing_utilities.sub3'
     _description = 'Testing Utilities Subtraction 3'
 
     name = fields.Char()
 
-class O2MChange(models.Model):
+class TestTestingUtilitiesParent(models.Model):
     _name = 'test_testing_utilities.parent'
     _description = 'Testing Utilities Parent'
 
@@ -147,7 +148,7 @@ class O2MChange(models.Model):
     def _onchange_values(self):
         self.v = self.value + sum(s.value for s in self.subs)
 
-class O2MSub(models.Model):
+class TestTestingUtilitiesSub(models.Model):
     _name = 'test_testing_utilities.sub'
     _description = 'Testing Utilities Subtraction'
 
@@ -171,7 +172,7 @@ class O2MSub(models.Model):
         if self.has_parent:
             self.value = self.parent_id.value
 
-class O2MRef(models.Model):
+class TestTestingUtilitiesRef(models.Model):
     _name = 'test_testing_utilities.ref'
     _description = 'Testing Utilities ref'
 
@@ -179,7 +180,7 @@ class O2MRef(models.Model):
     subs = fields.One2many('test_testing_utilities.ref.sub', 'parent_id')
     x = fields.Integer()
 
-class O2MRefSub(models.Model):
+class TestTestingUtilitiesRefSub(models.Model):
     _name = 'test_testing_utilities.ref.sub'
     _description = 'Testing Utilities Subtraction'
 
@@ -189,7 +190,7 @@ class O2MRefSub(models.Model):
     z = fields.Integer()
     parent_id = fields.Many2one('test_testing_utilities.ref')
 
-class O2MDefault(models.Model):
+class TestTestingUtilitiesDefault(models.Model):
     _name = 'test_testing_utilities.default'
     _description = 'Testing Utilities Default'
 
@@ -208,7 +209,7 @@ class O2MDefault(models.Model):
             self.subs = False
 
 
-class O2MSub3(models.Model):
+class TestTestingUtilitiesSub3(models.Model):
     _name = 'test_testing_utilities.sub3'
     _description = 'Testing Utilities Subtraction 3'
 
@@ -227,14 +228,14 @@ class O2MSub3(models.Model):
             r.name = str(r.v)
 
 
-class O2MRecursive(models.Model):
+class TestTestingUtilitiesRecursive(models.Model):
     _name = _description = 'test_testing_utilities.recursive'
 
     one_to_many_id = fields.Many2one('test_testing_utilities.recursive', readonly=True)
     many_to_one_ids = fields.One2many('test_testing_utilities.recursive', 'one_to_many_id', readonly=True)
 
 
-class O2MOnchangeParent(models.Model):
+class TestTestingUtilitiesOnchangeParent(models.Model):
     _name = 'test_testing_utilities.onchange_parent'
     _description = 'Testing Utilities Onchange Parent'
 
@@ -246,7 +247,7 @@ class O2MOnchangeParent(models.Model):
             self.env['test_testing_utilities.onchange_line'].new({'parent': self.id})
 
 
-class M2OOnchangeLine(models.Model):
+class TestTestingUtilitiesOnchangeLine(models.Model):
     _name = 'test_testing_utilities.onchange_line'
     _description = 'Testing Utilities Onchange Line'
 
@@ -258,7 +259,7 @@ class M2OOnchangeLine(models.Model):
     def _onchange_flag(self):
         self.flag = True
 
-class O2MChangeCount(models.Model):
+class TestTestingUtilitiesOnchangeCount(models.Model):
     _name = 'test_testing_utilities.onchange_count'
     _description = _name
 
@@ -273,20 +274,20 @@ class O2MChangeCount(models.Model):
             recs |= Sub.new({'name': str(i)})
         self.line_ids = recs
 
-class O2MChangeSub(models.Model):
+class TestTestingUtilitiesOnchangeCountSub(models.Model):
     _name = 'test_testing_utilities.onchange_count_sub'
     _description = _name
 
     parent = fields.Many2one('test_testing_utilities.onchange_count')
     name = fields.Char()
 
-class O2MReadonlySubfield(models.Model):
+class O2mReadonlySubfieldParent(models.Model):
     _name = 'o2m_readonly_subfield_parent'
     _description = _name
 
     line_ids = fields.One2many('o2m_readonly_subfield_child', 'parent_id')
 
-class O2MReadonlySubfieldChild(models.Model):
+class O2mReadonlySubfieldChild(models.Model):
     _name = _description = 'o2m_readonly_subfield_child'
 
     name = fields.Char()
@@ -301,12 +302,12 @@ class O2MReadonlySubfieldChild(models.Model):
     def _inverse_f(self):
         raise AssertionError("Inverse of f should not be called")
 
-class ReqBool(models.Model):
+class TestTestingUtilitiesReqBool(models.Model):
     _name = _description = 'test_testing_utilities.req_bool'
 
     f_bool = fields.Boolean(required=True)
 
-class O2MChangesParent(models.Model):
+class O2mChangesParent(models.Model):
     _name = _description = 'o2m_changes_parent'
 
     name = fields.Char()
@@ -319,7 +320,7 @@ class O2MChangesParent(models.Model):
                 Command.create({'v': 0, 'vv': 0})
             ]
 
-class O2MChangesChildren(models.Model):
+class O2mChangesChildren(models.Model):
     _name = _description = 'o2m_changes_children'
 
     name = fields.Char()
@@ -333,17 +334,15 @@ class O2MChangesChildren(models.Model):
             for line in record.line_ids:
                 line.v = record.v
 
-class O2MChangesChildrenLines(models.Model):
+class O2mChangesChildrenLines(models.Model):
     _name = _description = 'o2m_changes_children.lines'
 
     parent_id = fields.Many2one('o2m_changes_children')
     v = fields.Integer()
     vv = fields.Integer()
 
-class ResConfigTest(models.Model):
-    _inherit = 'res.config.settings'
+class ResConfigTest(models.Model, web.ResConfigSettings):
 
-    _name = 'res.config.test'
     _description = 'Config test'
 
     param1 = fields.Integer(

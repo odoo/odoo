@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -11,8 +12,7 @@ from odoo.osv.expression import AND
 from odoo.addons.project.models.project_task import CLOSED_STATES
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated with this sale', export_string_translation=False)
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user", export_string_translation=False)
@@ -191,8 +191,8 @@ class SaleOrder(models.Model):
             for idx, (view_id, view_type) in enumerate(action['views']):
                 if view_type == 'kanban':
                     action['views'][idx] = (kanban_view_id, 'kanban')
-                elif view_type == 'tree':
-                    action['views'][idx] = (list_view_id, 'tree')
+                elif view_type == 'list':
+                    action['views'][idx] = (list_view_id, 'list')
                 elif view_type == 'form':
                     action['views'][idx] = (form_view_id, 'form')
         else:  # 1 or 0 tasks -> form view
@@ -257,8 +257,8 @@ class SaleOrder(models.Model):
             'name': _('Projects'),
             'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
             'res_model': 'project.project',
-            'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
-            'view_mode': 'kanban,tree,form',
+            'views': [(False, 'kanban'), (False, 'list'), (False, 'form')],
+            'view_mode': 'kanban,list,form',
             'context': {
                 **self._context,
                 'default_partner_id': self.partner_id.id,
@@ -283,8 +283,8 @@ class SaleOrder(models.Model):
             'name': _('Milestones'),
             'domain': [('sale_line_id', 'in', self.order_line.ids)],
             'res_model': 'project.milestone',
-            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'tree')],
-            'view_mode': 'tree',
+            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'list')],
+            'view_mode': 'list',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import test_new_api
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -13,7 +14,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tools.translate import html_translate
 
 
-class Category(models.Model):
+class TestNewApiCategory(models.Model):
     _name = 'test_new_api.category'
     _description = 'Test New API Category'
     _order = 'name'
@@ -82,7 +83,7 @@ class Category(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class Discussion(models.Model):
+class TestNewApiDiscussion(models.Model):
     _name = 'test_new_api.discussion'
     _description = 'Test New API Discussion'
 
@@ -132,7 +133,7 @@ class Discussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class Message(models.Model):
+class TestNewApiMessage(models.Model):
     _name = 'test_new_api.message'
     _description = 'Test New API Message'
 
@@ -234,7 +235,7 @@ class Message(models.Model):
         return super().write(vals)
 
 
-class EmailMessage(models.Model):
+class TestNewApiEmailmessage(models.Model):
     _name = 'test_new_api.emailmessage'
     _description = 'Test New API Email Message'
     _inherits = {'test_new_api.message': 'message'}
@@ -245,7 +246,7 @@ class EmailMessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class DiscussionPartner(models.Model):
+class TestNewApiPartner(models.Model):
     """
     Simplified model for partners. Having a specific model avoids all the
     overrides from other modules that may change which fields are being read,
@@ -257,7 +258,7 @@ class DiscussionPartner(models.Model):
     name = fields.Char(string='Name')
 
 
-class Multi(models.Model):
+class TestNewApiMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
     """
@@ -286,7 +287,7 @@ class Multi(models.Model):
             line.tags |= self.tags
 
 
-class MultiLine(models.Model):
+class TestNewApiMultiLine(models.Model):
     _name = 'test_new_api.multi.line'
     _description = 'Test New API Multi Line'
 
@@ -296,13 +297,12 @@ class MultiLine(models.Model):
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
-class MultiLine2(models.Model):
+class TestNewApiMultiLine2(models.Model, test_new_api.TestNewApiMultiLine):
     _name = 'test_new_api.multi.line2'
-    _inherit = 'test_new_api.multi.line'
     _description = 'Test New API Multi Line 2'
 
 
-class MultiTag(models.Model):
+class TestNewApiMultiTag(models.Model):
     _name = 'test_new_api.multi.tag'
     _description = 'Test New API Multi Tag'
 
@@ -319,7 +319,7 @@ class MultiTag(models.Model):
             record.display_name = name or ""
 
 
-class Edition(models.Model):
+class TestNewApiCreativeworkEdition(models.Model):
     _name = 'test_new_api.creativework.edition'
     _description = 'Test New API Creative Work Edition'
 
@@ -329,7 +329,7 @@ class Edition(models.Model):
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
 
-class Book(models.Model):
+class TestNewApiCreativeworkBook(models.Model):
     _name = 'test_new_api.creativework.book'
     _description = 'Test New API Creative Work Book'
 
@@ -339,7 +339,7 @@ class Book(models.Model):
     )
 
 
-class Movie(models.Model):
+class TestNewApiCreativeworkMovie(models.Model):
     _name = 'test_new_api.creativework.movie'
     _description = 'Test New API Creative Work Movie'
 
@@ -349,7 +349,7 @@ class Movie(models.Model):
     )
 
 
-class MixedModel(models.Model):
+class TestNewApiMixed(models.Model):
     _name = 'test_new_api.mixed'
     _description = 'Test New API Mixed'
 
@@ -391,8 +391,7 @@ class MixedModel(models.Model):
                 if not model.model.startswith('ir.')]
 
 
-class BoolModel(models.Model):
-    _name = 'domain.bool'
+class DomainBool(models.Model):
     _description = 'Boolean Domain'
 
     bool_true = fields.Boolean('b1', default=True)
@@ -400,7 +399,7 @@ class BoolModel(models.Model):
     bool_undefined = fields.Boolean('b3')
 
 
-class Foo(models.Model):
+class TestNewApiFoo(models.Model):
     _name = 'test_new_api.foo'
     _description = 'Test New API Foo'
 
@@ -410,7 +409,7 @@ class Foo(models.Model):
     text = fields.Char(trim=False)
 
 
-class Bar(models.Model):
+class TestNewApiBar(models.Model):
     _name = 'test_new_api.bar'
     _description = 'Test New API Bar'
 
@@ -432,7 +431,7 @@ class Bar(models.Model):
         return [('name', 'in', records.mapped('name'))]
 
 
-class Related(models.Model):
+class TestNewApiRelated(models.Model):
     _name = 'test_new_api.related'
     _description = 'Test New API Related'
 
@@ -462,7 +461,7 @@ class Related(models.Model):
     foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
 
 
-class RelatedFoo(models.Model):
+class TestNewApiRelatedFoo(models.Model):
     _name = _description = 'test_new_api.related_foo'
 
     name = fields.Char()
@@ -470,20 +469,20 @@ class RelatedFoo(models.Model):
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
 
-class RelatedBar(models.Model):
+class TestNewApiRelatedBar(models.Model):
     _name = _description = 'test_new_api.related_bar'
 
     name = fields.Char()
 
 
-class RelatedInherits(models.Model):
+class TestNewApiRelatedInherits(models.Model):
     _name = _description = 'test_new_api.related_inherits'
     _inherits = {'test_new_api.related': 'base_id'}
 
     base_id = fields.Many2one('test_new_api.related', required=True, ondelete='cascade')
 
 
-class ComputeReadonly(models.Model):
+class TestNewApiComputeReadonly(models.Model):
     _name = 'test_new_api.compute.readonly'
     _description = 'Model with a computed readonly field'
 
@@ -496,7 +495,7 @@ class ComputeReadonly(models.Model):
             record.bar = record.foo
 
 
-class ComputeInverse(models.Model):
+class TestNewApiComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
     _description = 'Model with a computed inversed field'
 
@@ -521,7 +520,7 @@ class ComputeInverse(models.Model):
             self._context.get('log', []).append('constraint')
 
 
-class ComputeSudo(models.Model):
+class TestNewApiComputeSudo(models.Model):
     _name = 'test_new_api.compute.sudo'
     _description = 'Model with a compute_sudo field'
 
@@ -532,7 +531,7 @@ class ComputeSudo(models.Model):
         for record in self:
             record.name_for_uid = self.env.user.name
 
-class MultiComputeInverse(models.Model):
+class TestNewApiMultiComputeInverse(models.Model):
     """ Model with the same inverse method for several fields. """
     _name = 'test_new_api.multi_compute_inverse'
     _description = 'Test New API Multi Compute Inverse'
@@ -560,7 +559,7 @@ class MultiComputeInverse(models.Model):
             record.write({'foo': '/'.join([record.bar1, record.bar2, record.bar3])})
 
 
-class Move(models.Model):
+class TestNewApiMove(models.Model):
     _name = 'test_new_api.move'
     _description = 'Move'
 
@@ -590,7 +589,7 @@ class Move(models.Model):
             record.tag_string = (record.tag_name or "") * record.tag_repeat
 
 
-class MoveLine(models.Model):
+class TestNewApiMoveLine(models.Model):
     _name = 'test_new_api.move_line'
     _description = 'Move Line'
 
@@ -599,7 +598,7 @@ class MoveLine(models.Model):
     quantity = fields.Integer()
 
 
-class Payment(models.Model):
+class TestNewApiPayment(models.Model):
     _name = 'test_new_api.payment'
     _description = 'Payment inherits from Move'
     _inherits = {'test_new_api.move': 'move_id'}
@@ -607,14 +606,14 @@ class Payment(models.Model):
     move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
 
 
-class Order(models.Model):
+class TestNewApiOrder(models.Model):
     _name = _description = 'test_new_api.order'
 
     line_ids = fields.One2many('test_new_api.order.line', 'order_id')
     line_short_field_name = fields.Integer(index=True)
 
 
-class OrderLine(models.Model):
+class TestNewApiOrderLine(models.Model):
     _name = _description = 'test_new_api.order.line'
 
     order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
@@ -644,7 +643,7 @@ class OrderLine(models.Model):
         return super().unlink()
 
 
-class CompanyDependent(models.Model):
+class TestNewApiCompany(models.Model):
     _name = 'test_new_api.company'
     _description = 'Test New API Company'
 
@@ -660,7 +659,7 @@ class CompanyDependent(models.Model):
     html2 = fields.Html(company_dependent=True, sanitize_attributes=True, strip_classes=True, strip_style=True)
 
 
-class CompanyDependentAttribute(models.Model):
+class TestNewApiCompanyAttr(models.Model):
     _name = 'test_new_api.company.attr'
     _description = 'Test New API Company Attribute'
 
@@ -674,7 +673,7 @@ class CompanyDependentAttribute(models.Model):
             record.bar = (record.company.foo or '') * record.quantity
 
 
-class ComputeRecursive(models.Model):
+class TestNewApiRecursive(models.Model):
     _name = 'test_new_api.recursive'
     _description = 'Test New API Recursive'
 
@@ -713,7 +712,7 @@ class ComputeRecursive(models.Model):
                 rec.context_dependent_name = rec.name
 
 
-class ComputeRecursiveTree(models.Model):
+class TestNewApiRecursiveTree(models.Model):
     _name = 'test_new_api.recursive.tree'
     _description = 'Test New API Recursive with one2many field'
 
@@ -729,13 +728,13 @@ class ComputeRecursiveTree(models.Model):
             rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
 
 
-class ComputeRecursiveOrder(models.Model):
+class TestNewApiRecursiveOrder(models.Model):
     _name = _description = 'test_new_api.recursive.order'
 
     value = fields.Integer()
 
 
-class ComputeRecursiveLine(models.Model):
+class TestNewApiRecursiveLine(models.Model):
     _name = _description = 'test_new_api.recursive.line'
 
     order_id = fields.Many2one('test_new_api.recursive.order')
@@ -750,7 +749,7 @@ class ComputeRecursiveLine(models.Model):
             record.task_number = len(record.task_ids)
 
 
-class ComputeRecursiveTask(models.Model):
+class TestNewApiRecursiveTask(models.Model):
     _name = _description = 'test_new_api.recursive.task'
 
     value = fields.Integer()
@@ -768,7 +767,7 @@ class ComputeRecursiveTask(models.Model):
             record.line_id = record.line_id.search(domain, order='id desc', limit=1)
 
 
-class ComputeCascade(models.Model):
+class TestNewApiCascade(models.Model):
     _name = 'test_new_api.cascade'
     _description = 'Test New API Cascade'
 
@@ -787,7 +786,7 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
-class ComputeReadWrite(models.Model):
+class TestNewApiComputeReadwrite(models.Model):
     _name = 'test_new_api.compute.readwrite'
     _description = 'Model with a computed non-readonly field'
 
@@ -800,7 +799,7 @@ class ComputeReadWrite(models.Model):
             record.bar = record.foo
 
 
-class ComputeOnchange(models.Model):
+class TestNewApiComputeOnchange(models.Model):
     _name = 'test_new_api.compute.onchange'
     _description = "Compute method as an onchange"
 
@@ -855,7 +854,7 @@ class ComputeOnchange(models.Model):
         return [dict(vals, foo=_("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
 
 
-class ComputeOnchangeLine(models.Model):
+class TestNewApiComputeOnchangeLine(models.Model):
     _name = 'test_new_api.compute.onchange.line'
     _description = "Line-like model for test_new_api.compute.onchange"
 
@@ -869,7 +868,7 @@ class ComputeOnchangeLine(models.Model):
             line.bar = (line.foo or "") + "r"
 
 
-class ComputeDynamicDepends(models.Model):
+class TestNewApiComputeDynamicDepends(models.Model):
     _name = 'test_new_api.compute.dynamic.depends'
     _description = "Computed field with dynamic dependencies"
 
@@ -890,7 +889,7 @@ class ComputeDynamicDepends(models.Model):
             record.full_name = ", ".join(filter(None, (record[fname] for fname in fnames)))
 
 
-class ComputeUnassigned(models.Model):
+class TestNewApiComputeUnassigned(models.Model):
     _name = 'test_new_api.compute.unassigned'
     _description = "Model with computed fields left unassigned"
 
@@ -925,7 +924,7 @@ class ComputeUnassigned(models.Model):
                 record.bares = record.foo
 
 
-class ComputeOne2many(models.Model):
+class TestNewApiOne2many(models.Model):
     _name = 'test_new_api.one2many'
     _description = "A computed editable one2many field with a domain"
 
@@ -950,7 +949,7 @@ class ComputeOne2many(models.Model):
                 record.line_ids = [(0, 0, {'name': record.name})]
 
 
-class ComputeOne2manyLine(models.Model):
+class TestNewApiOne2manyLine(models.Model):
     _name = 'test_new_api.one2many.line'
     _description = "Line of a computed one2many"
 
@@ -959,7 +958,7 @@ class ComputeOne2manyLine(models.Model):
     container_id = fields.Many2one('test_new_api.one2many', required=True)
 
 
-class ModelBinary(models.Model):
+class TestNewApiModelBinary(models.Model):
     _name = 'test_new_api.model_binary'
     _description = 'Test Image field'
 
@@ -975,7 +974,7 @@ class ModelBinary(models.Model):
             record.binary_computed = [(record.id, bool(record.binary))]
 
 
-class ModelImage(models.Model):
+class TestNewApiModelImage(models.Model):
     _name = 'test_new_api.model_image'
     _description = 'Test Image field'
 
@@ -988,7 +987,7 @@ class ModelImage(models.Model):
     image_64 = fields.Image("Image 64", related='image', max_width=64, max_height=64, store=True, attachment=False, readonly=False)
 
 
-class BinarySvg(models.Model):
+class TestNewApiBinarySvg(models.Model):
     _name = 'test_new_api.binary_svg'
     _description = 'Test SVG upload'
 
@@ -1000,7 +999,7 @@ class BinarySvg(models.Model):
         store=True, attachment=False,
     )
 
-class MonetaryBase(models.Model):
+class TestNewApiMonetaryBase(models.Model):
     _name = 'test_new_api.monetary_base'
     _description = 'Monetary Base'
 
@@ -1008,7 +1007,7 @@ class MonetaryBase(models.Model):
     amount = fields.Monetary(currency_field='base_currency_id')
 
 
-class MonetaryRelated(models.Model):
+class TestNewApiMonetaryRelated(models.Model):
     _name = 'test_new_api.monetary_related'
     _description = 'Monetary Related'
 
@@ -1018,7 +1017,7 @@ class MonetaryRelated(models.Model):
     total = fields.Monetary()
 
 
-class MonetaryCustom(models.Model):
+class TestNewApiMonetaryCustom(models.Model):
     _name = 'test_new_api.monetary_custom'
     _description = 'Monetary Related Custom'
 
@@ -1027,7 +1026,7 @@ class MonetaryCustom(models.Model):
     x_amount = fields.Monetary(related='monetary_id.amount')
 
 
-class MonetaryInherits(models.Model):
+class TestNewApiMonetaryInherits(models.Model):
     _name = 'test_new_api.monetary_inherits'
     _description = 'Monetary Inherits'
     _inherits = {'test_new_api.monetary_base': 'monetary_id'}
@@ -1036,7 +1035,7 @@ class MonetaryInherits(models.Model):
     currency_id = fields.Many2one('res.currency')
 
 
-class MonetaryOrder(models.Model):
+class TestNewApiMonetaryOrder(models.Model):
     _name = 'test_new_api.monetary_order'
     _description = 'Sales Order'
 
@@ -1050,7 +1049,7 @@ class MonetaryOrder(models.Model):
             record.total = sum(line.subtotal for line in record.line_ids)
 
 
-class MonetaryOrderLine(models.Model):
+class TestNewApiMonetaryOrderLine(models.Model):
     _name = 'test_new_api.monetary_order_line'
     _description = 'Sales Order Line'
 
@@ -1058,14 +1057,14 @@ class MonetaryOrderLine(models.Model):
     subtotal = fields.Float(digits=(10, 2))
 
 
-class FieldWithCaps(models.Model):
+class TestNewApiFieldWithCaps(models.Model):
     _name = 'test_new_api.field_with_caps'
     _description = 'Model with field defined with capital letters'
 
     pArTneR_321_id = fields.Many2one('res.partner')
 
 
-class Selection(models.Model):
+class TestNewApiSelection(models.Model):
     _name = 'test_new_api.selection'
     _description = "Selection"
 
@@ -1073,7 +1072,7 @@ class Selection(models.Model):
     other = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
 
 
-class RequiredM2O(models.Model):
+class TestNewApiReqM2o(models.Model):
     _name = 'test_new_api.req_m2o'
     _description = 'Required Many2one'
 
@@ -1081,7 +1080,7 @@ class RequiredM2O(models.Model):
     bar = fields.Many2one('res.country', required=True)
 
 
-class RequiredM2OTransient(models.TransientModel):
+class TestNewApiReqM2oTransient(models.TransientModel):
     _name = 'test_new_api.req_m2o_transient'
     _description = 'Transient Model with Required Many2one'
 
@@ -1089,12 +1088,12 @@ class RequiredM2OTransient(models.TransientModel):
     bar = fields.Many2one('res.country', required=True)
 
 
-class TestTransient(models.TransientModel):
+class TestNewApiTransientModel(models.TransientModel):
     _name = 'test_new_api.transient_model'
     _description = 'Transient Model'
 
 
-class Attachment(models.Model):
+class TestNewApiAttachment(models.Model):
     _name = 'test_new_api.attachment'
     _description = 'Attachment'
 
@@ -1116,10 +1115,10 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             record.invalidate_recordset(['attachment_ids'])
             record.modified(['attachment_ids'])
-        return super(Attachment, self).modified(fnames, *args, **kwargs)
+        return super().modified(fnames, *args, **kwargs)
 
 
-class AttachmentHost(models.Model):
+class TestNewApiAttachmentHost(models.Model):
     _name = 'test_new_api.attachment.host'
     _description = 'Attachment Host'
 
@@ -1128,8 +1127,7 @@ class AttachmentHost(models.Model):
         domain=lambda self: [('res_model', '=', self._name)],
     )
 
-class DecimalPrecisionTestModel(models.Model):
-    _name = 'decimal.precision.test'
+class DecimalPrecisionTest(models.Model):
     _description = 'Decimal Precision Test'
 
     float = fields.Float()
@@ -1137,7 +1135,7 @@ class DecimalPrecisionTestModel(models.Model):
     float_4 = fields.Float(digits=(16, 4))
 
 
-class ModelA(models.Model):
+class TestNewApiModelA(models.Model):
     _name = 'test_new_api.model_a'
     _description = 'Model A'
 
@@ -1146,7 +1144,7 @@ class ModelA(models.Model):
     b_restricted_b_ids = fields.Many2many('test_new_api.model_b', relation='rel_model_a_model_b_2', ondelete='restrict')
 
 
-class ModelB(models.Model):
+class TestNewApiModelB(models.Model):
     _name = 'test_new_api.model_b'
     _description = 'Model B'
 
@@ -1155,7 +1153,7 @@ class ModelB(models.Model):
     b_restricted_a_ids = fields.Many2many('test_new_api.model_a', relation='rel_model_a_model_b_2')
 
 
-class ModelParent(models.Model):
+class TestNewApiModelParent(models.Model):
     _name = 'test_new_api.model_parent'
     _description = 'Model Multicompany parent'
 
@@ -1163,7 +1161,7 @@ class ModelParent(models.Model):
     company_id = fields.Many2one('res.company')
 
 
-class ModelChild(models.Model):
+class TestNewApiModelChild(models.Model):
     _name = 'test_new_api.model_child'
     _description = 'Model Multicompany child'
     _check_company_auto = True
@@ -1173,7 +1171,7 @@ class ModelChild(models.Model):
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
 
 
-class ModelChildNoCheck(models.Model):
+class TestNewApiModelChildNocheck(models.Model):
     _name = 'test_new_api.model_child_nocheck'
     _description = 'Model Multicompany child'
     _check_company_auto = True
@@ -1184,7 +1182,7 @@ class ModelChildNoCheck(models.Model):
 
 
 # model with explicit and stored field 'display_name'
-class Display(models.Model):
+class TestNewApiDisplay(models.Model, test_new_api.TestNewApiMixin, test_new_api.TestNewApiDisplay):
     _name = 'test_new_api.display'
     _description = 'Model that overrides display_name'
 
@@ -1196,19 +1194,18 @@ class Display(models.Model):
 
 
 # abstract model with automatic and non-stored field 'display_name'
-class Mixin(models.AbstractModel):
+class TestNewApiMixin(models.AbstractModel):
     _name = 'test_new_api.mixin'
     _description = 'Dummy mixin model'
 
 
 # in this model extension, the field 'display_name' should not be inherited from
 # 'test_new_api.mixin'
-class ExtendedDisplay(models.Model):
+class TestNewApiDisplay(models.Model, test_new_api.TestNewApiMixin, test_new_api.TestNewApiDisplay):
     _name = 'test_new_api.display'
-    _inherit = ['test_new_api.mixin', 'test_new_api.display']
 
 
-class ModelActiveField(models.Model):
+class TestNewApiModelActiveField(models.Model):
     _name = 'test_new_api.model_active_field'
     _description = 'A model with active field'
 
@@ -1232,7 +1229,7 @@ class ModelActiveField(models.Model):
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
-class ModelMany2oneReference(models.Model):
+class TestNewApiModelMany2oneReference(models.Model):
     _name = 'test_new_api.model_many2one_reference'
     _description = 'dummy m2oref model'
 
@@ -1240,7 +1237,7 @@ class ModelMany2oneReference(models.Model):
     res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
 
 
-class InverseM2oRef(models.Model):
+class TestNewApiInverseM2oRef(models.Model):
     _name = 'test_new_api.inverse_m2o_ref'
     _description = 'dummy m2oref inverse model'
 
@@ -1253,7 +1250,7 @@ class InverseM2oRef(models.Model):
             rec.model_ids_count = len(rec.model_ids)
 
 
-class ModelChildM2o(models.Model):
+class TestNewApiModelChildM2o(models.Model):
     _name = 'test_new_api.model_child_m2o'
     _description = 'dummy model with override write and ValidationError'
 
@@ -1275,13 +1272,13 @@ class ModelChildM2o(models.Model):
             record.cost = len(record.name)
 
     def write(self, vals):
-        res = super(ModelChildM2o, self).write(vals)
+        res = super().write(vals)
         if self.name == 'A':
             raise ValidationError('the first existing child should not be changed when adding a new child to the parent')
         return res
 
 
-class ModelParentM2o(models.Model):
+class TestNewApiModelParentM2o(models.Model):
     _name = 'test_new_api.model_parent_m2o'
     _description = 'dummy model with multiple childs'
 
@@ -1295,7 +1292,7 @@ class ModelParentM2o(models.Model):
             record.cost = sum(child.cost for child in record.child_ids)
 
 
-class Country(models.Model):
+class TestNewApiCountry(models.Model):
     _name = 'test_new_api.country'
     _description = 'Country, ordered by name'
     _order = 'name, id'
@@ -1303,7 +1300,7 @@ class Country(models.Model):
     name = fields.Char()
 
 
-class City(models.Model):
+class TestNewApiCity(models.Model):
     _name = 'test_new_api.city'
     _description = 'City, ordered by country then name'
     _order = 'country_id, name, id'
@@ -1312,7 +1309,7 @@ class City(models.Model):
     country_id = fields.Many2one('test_new_api.country')
 
 # abstract model with a selection field
-class StateMixin(models.AbstractModel):
+class TestNewApiStateMixin(models.AbstractModel):
     _name = 'test_new_api.state_mixin'
     _description = 'Dummy state mixin model'
 
@@ -1323,7 +1320,7 @@ class StateMixin(models.AbstractModel):
     ])
 
 
-class SelectionBase(models.Model):
+class TestNewApiModelSelectionBase(models.Model, test_new_api.TestNewApiModelSelectionBase):
     _name = 'test_new_api.model_selection_base'
     _description = "Model with a base selection field"
 
@@ -1333,8 +1330,9 @@ class SelectionBase(models.Model):
     ])
 
 
-class SelectionBaseNullExplicit(models.Model):
-    _inherit = 'test_new_api.model_selection_base'
+class TestNewApiModelSelectionBase(models.Model, test_new_api.TestNewApiModelSelectionBase):
+    _name = "test_new_api.model_selection_base"
+
     _description = "Model with a selection field extension with ondelete null"
 
     my_selection = fields.Selection(selection_add=[
@@ -1342,8 +1340,9 @@ class SelectionBaseNullExplicit(models.Model):
     ], ondelete={'quux': 'set null'})
 
 
-class SelectionBaseNullImplicit(models.Model):
-    _inherit = 'test_new_api.model_selection_base'
+class TestNewApiModelSelectionBase(models.Model, test_new_api.TestNewApiModelSelectionBase):
+    _name = "test_new_api.model_selection_base"
+
     _description = "Model with a selection field extension without ondelete"
 
     my_selection = fields.Selection(selection_add=[
@@ -1351,7 +1350,7 @@ class SelectionBaseNullImplicit(models.Model):
     ])
 
 
-class SelectionRelated(models.Model):
+class TestNewApiModelSelectionRelated(models.Model):
     _name = 'test_new_api.model_selection_related'
     _description = "Model with a related selection field"
 
@@ -1364,7 +1363,7 @@ class SelectionRelated(models.Model):
     )
 
 
-class SelectionRelatedUpdatable(models.Model):
+class TestNewApiModelSelectionRelatedUpdatable(models.Model):
     _name = 'test_new_api.model_selection_related_updatable'
     _description = "Model with an updatable related selection field"
 
@@ -1378,7 +1377,7 @@ class SelectionRelatedUpdatable(models.Model):
     )
 
 
-class SelectionRequired(models.Model):
+class TestNewApiModelSelectionRequired(models.Model, test_new_api.TestNewApiModelSelectionRequired):
     _name = 'test_new_api.model_selection_required'
     _description = "Model with a required selection field"
 
@@ -1389,8 +1388,9 @@ class SelectionRequired(models.Model):
     ], required=True, default='foo')
 
 
-class SelectionRequiredDefault(models.Model):
-    _inherit = 'test_new_api.model_selection_required'
+class TestNewApiModelSelectionRequired(models.Model, test_new_api.TestNewApiModelSelectionRequired):
+    _name = "test_new_api.model_selection_required"
+
     _description = "Model with a selection field extension with ondelete default"
 
     my_selection = fields.Selection(selection_add=[
@@ -1398,8 +1398,9 @@ class SelectionRequiredDefault(models.Model):
     ], ondelete={'baz': 'set default'})
 
 
-class SelectionRequiredCascade(models.Model):
-    _inherit = 'test_new_api.model_selection_required'
+class TestNewApiModelSelectionRequired(models.Model, test_new_api.TestNewApiModelSelectionRequired):
+    _name = "test_new_api.model_selection_required"
+
     _description = "Model with a selection field extension with ondelete cascade"
 
     my_selection = fields.Selection(selection_add=[
@@ -1407,8 +1408,9 @@ class SelectionRequiredCascade(models.Model):
     ], ondelete={'eggs': 'cascade'})
 
 
-class SelectionRequiredLiteral(models.Model):
-    _inherit = 'test_new_api.model_selection_required'
+class TestNewApiModelSelectionRequired(models.Model, test_new_api.TestNewApiModelSelectionRequired):
+    _name = "test_new_api.model_selection_required"
+
     _description = "Model with a selection field extension with ondelete set <option>"
 
     my_selection = fields.Selection(selection_add=[
@@ -1416,8 +1418,9 @@ class SelectionRequiredLiteral(models.Model):
     ], ondelete={'bacon': 'set bar'})
 
 
-class SelectionRequiredMultiple(models.Model):
-    _inherit = 'test_new_api.model_selection_required'
+class TestNewApiModelSelectionRequired(models.Model, test_new_api.TestNewApiModelSelectionRequired):
+    _name = "test_new_api.model_selection_required"
+
     _description = "Model with a selection field extension with multiple ondelete policies"
 
     my_selection = fields.Selection(selection_add=[
@@ -1426,8 +1429,9 @@ class SelectionRequiredMultiple(models.Model):
     ], ondelete={'pikachu': 'set default', 'eevee': lambda r: r.write({'my_selection': 'bar'})})
 
 
-class SelectionRequiredCallback(models.Model):
-    _inherit = 'test_new_api.model_selection_required'
+class TestNewApiModelSelectionRequired(models.Model, test_new_api.TestNewApiModelSelectionRequired):
+    _name = "test_new_api.model_selection_required"
+
     _description = "Model with a selection field extension with ondelete callback"
 
     my_selection = fields.Selection(selection_add=[
@@ -1437,7 +1441,7 @@ class SelectionRequiredCallback(models.Model):
     })
 
 
-class SelectionNonStored(models.Model):
+class TestNewApiModelSelectionNonStored(models.Model):
     _name = 'test_new_api.model_selection_non_stored'
     _description = "Model with non-stored selection field"
 
@@ -1447,7 +1451,7 @@ class SelectionNonStored(models.Model):
     ], store=False)
 
 
-class SelectionRequiredForWriteOverride(models.Model):
+class TestNewApiModelSelectionRequiredForWriteOverride(models.Model, test_new_api.TestNewApiModelSelectionRequiredForWriteOverride):
     _name = 'test_new_api.model_selection_required_for_write_override'
     _description = "Model with required selection field for an extension with write override"
 
@@ -1457,8 +1461,9 @@ class SelectionRequiredForWriteOverride(models.Model):
     ], required=True, default='foo')
 
 
-class SelectionRequiredWithWriteOverride(models.Model):
-    _inherit = 'test_new_api.model_selection_required_for_write_override'
+class TestNewApiModelSelectionRequiredForWriteOverride(models.Model, test_new_api.TestNewApiModelSelectionRequiredForWriteOverride):
+    _name = "test_new_api.model_selection_required_for_write_override"
+
 
     my_selection = fields.Selection(selection_add=[
         ('divinity', "Divinity: Original Sin 2"),
@@ -1472,7 +1477,7 @@ class SelectionRequiredWithWriteOverride(models.Model):
 
 # Special classes to ensure the correct usage of a shared cache amongst users.
 # See the method test_shared_cache_computed_field
-class SharedCacheComputeParent(models.Model):
+class TestNewApiModelSharedCacheComputeParent(models.Model):
     _name = 'test_new_api.model_shared_cache_compute_parent'
     _description = 'model_shared_cache_compute_parent'
 
@@ -1487,7 +1492,7 @@ class SharedCacheComputeParent(models.Model):
             parent.total_amount = sum(parent.line_ids.mapped('amount'))
 
 
-class ShareCacheComputeLine(models.Model):
+class TestNewApiModelSharedCacheComputeLine(models.Model):
     _name = 'test_new_api.model_shared_cache_compute_line'
     _description = 'model_shared_cache_compute_line'
 
@@ -1496,7 +1501,7 @@ class ShareCacheComputeLine(models.Model):
     user_id = fields.Many2one('res.users', default= lambda self: self.env.user)  # Note: There is an ir.rule about this.
 
 
-class ComputeContainer(models.Model):
+class TestNewApiComputeContainer(models.Model):
     _name = _description = 'test_new_api.compute.container'
 
     name = fields.Char()
@@ -1509,7 +1514,7 @@ class ComputeContainer(models.Model):
             record.member_count = len(record.member_ids)
 
 
-class ComputeMember(models.Model):
+class TestNewApiComputeMember(models.Model):
     _name = _description = 'test_new_api.compute.member'
 
     name = fields.Char()
@@ -1522,7 +1527,7 @@ class ComputeMember(models.Model):
             member.container_id = container.search([('name', '=', member.name)], limit=1)
 
 
-class User(models.Model):
+class TestNewApiUser(models.Model):
     _name = _description = 'test_new_api.user'
     _allow_sudo_commands = False
 
@@ -1536,7 +1541,7 @@ class User(models.Model):
             user.group_count = len(user.group_ids)
 
 
-class Group(models.Model):
+class TestNewApiGroup(models.Model):
     _name = _description = 'test_new_api.group'
     _allow_sudo_commands = False
 
@@ -1544,7 +1549,7 @@ class Group(models.Model):
     user_ids = fields.Many2many('test_new_api.user')
 
 
-class ModelNoAccess(models.Model):
+class TestNewApiModelNoAccess(models.Model):
     _name = 'test_new_api.model.no_access'
     _description = "Testing Utilities attrs and groups: if never access rights"
 
@@ -1552,7 +1557,7 @@ class ModelNoAccess(models.Model):
     cd = fields.Integer(default=1, groups="base.group_portal")
 
 
-class ModelAllAccess(models.Model):
+class TestNewApiModelAllAccess(models.Model):
     _name = 'test_new_api.model.all_access'
     _description = "Testing Utilities attrs and groups: if free access rights"
 
@@ -1564,7 +1569,7 @@ class ModelAllAccess(models.Model):
         return
 
 
-class ModelSomeAccess(models.Model):
+class TestNewApiModelSomeAccess(models.Model):
     _name = 'test_new_api.model.some_access'
     _description = 'Testing Utilities attrs and groups'
 
@@ -1582,7 +1587,7 @@ class ModelSomeAccess(models.Model):
     g_id = fields.Many2one("test_new_api.model.all_access", string="m2o g_id")
 
 
-class Model2SomeAccess(models.Model):
+class TestNewApiModel2SomeAccess(models.Model):
     _name = 'test_new_api.model2.some_access'
     _description = 'Testing Utilities attrs and groups sub'
 
@@ -1590,7 +1595,7 @@ class Model2SomeAccess(models.Model):
     g_d = fields.Integer(related='g_id.d')
 
 
-class Model3SomeAccess(models.Model):
+class TestNewApiModel3SomeAccess(models.Model):
     _name = 'test_new_api.model3.some_access'
     _description = 'Testing Utilities attrs and groups sub sub'
 
@@ -1598,7 +1603,7 @@ class Model3SomeAccess(models.Model):
     xxx_sub_id = fields.Many2one(related='xxx_id.g_id')
 
 
-class ComputedModifier(models.Model):
+class TestNewApiComputedModifier(models.Model):
     _name = 'test_new_api.computed.modifier'
     _description = 'Test onchange and compute for automatically added invisible fields'
 
@@ -1618,7 +1623,7 @@ class ComputedModifier(models.Model):
         self.sub_bar = self.bar
 
 
-class ComputeEditable(models.Model):
+class TestNewApiComputeEditable(models.Model):
     _name = _description = 'test_new_api.compute_editable'
 
     precision_rounding = fields.Float(default=0.01, digits=(1, 10))
@@ -1631,7 +1636,7 @@ class ComputeEditable(models.Model):
             line.count += line.same
 
 
-class ComputeEditableLine(models.Model):
+class TestNewApiComputeEditableLine(models.Model):
     _name = _description = 'test_new_api.compute_editable.line'
 
     parent_id = fields.Many2one('test_new_api.compute_editable')
@@ -1656,7 +1661,7 @@ class ComputeEditableLine(models.Model):
         for rec in self:
             rec.one_compute = float_round(99.9999999, precision_rounding=rec.parent_id.precision_rounding)
 
-class ConstrainedUnlinks(models.Model):
+class TestNewApiModelConstrainedUnlinks(models.Model):
     _name = 'test_new_api.model_constrained_unlinks'
     _description = 'Model with unlink override that is constrained'
 
@@ -1676,7 +1681,7 @@ class ConstrainedUnlinks(models.Model):
                 raise ValueError("You didn't say if you wanted it crudo or cotto...")
 
 
-class TriggerLeft(models.Model):
+class TestNewApiTriggerLeft(models.Model):
     _name = 'test_new_api.trigger.left'
     _description = 'model with a related many2one'
 
@@ -1684,7 +1689,7 @@ class TriggerLeft(models.Model):
     right_id = fields.Many2one(related='middle_ids.right_id', store=True)
 
 
-class TriggerMiddle(models.Model):
+class TestNewApiTriggerMiddle(models.Model):
     _name = 'test_new_api.trigger.middle'
     _description = 'model linking test_new_api.trigger.left and test_new_api.trigger.right'
 
@@ -1692,7 +1697,7 @@ class TriggerMiddle(models.Model):
     right_id = fields.Many2one('test_new_api.trigger.right', required=True)
 
 
-class TriggerRight(models.Model):
+class TestNewApiTriggerRight(models.Model):
     _name = 'test_new_api.trigger.right'
     _description = 'model with a dependency on the inverse of the related many2one'
 
@@ -1705,7 +1710,7 @@ class TriggerRight(models.Model):
             record.left_size = len(record.left_ids)
 
 
-class Crew(models.Model):
+class TestNewApiCrew(models.Model):
     _name = 'test_new_api.crew'
     _description = 'All yaaaaaarrrrr by ship'
     _table = 'test_new_api_crew'
@@ -1717,7 +1722,7 @@ class Crew(models.Model):
     ship_id = fields.Many2one('test_new_api.ship')
 
 
-class Ship(models.Model):
+class TestNewApiShip(models.Model):
     _name = 'test_new_api.ship'
     _description = 'Yaaaarrr machine'
 
@@ -1726,7 +1731,7 @@ class Ship(models.Model):
     prisoner_ids = fields.Many2many('test_new_api.prisoner', 'test_new_api_crew', 'ship_id', 'prisoner_id')
 
 
-class Pirate(models.Model):
+class TestNewApiPirate(models.Model):
     _name = 'test_new_api.pirate'
     _description = 'Yaaarrr'
 
@@ -1734,7 +1739,7 @@ class Pirate(models.Model):
     ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'pirate_id', 'ship_id')
 
 
-class Prisoner(models.Model):
+class TestNewApiPrisoner(models.Model):
     _name = 'test_new_api.prisoner'
     _description = 'Yaaarrr minions'
 
@@ -1742,7 +1747,7 @@ class Prisoner(models.Model):
     ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'prisoner_id', 'ship_id')
 
 
-class Precompute(models.Model):
+class TestNewApiPrecompute(models.Model):
     _name = 'test_new_api.precompute'
     _description = 'model with precomputed fields'
 
@@ -1786,7 +1791,7 @@ class Precompute(models.Model):
             record.size = sum(record.line_ids.mapped('size'))
 
 
-class PrecomputeLine(models.Model):
+class TestNewApiPrecomputeLine(models.Model):
     _name = 'test_new_api.precompute.line'
     _description = 'secondary model with precomputed fields'
 
@@ -1800,7 +1805,7 @@ class PrecomputeLine(models.Model):
             line.size = len(line.name or "")
 
 
-class PrecomputeCombo(models.Model):
+class TestNewApiPrecomputeCombo(models.Model):
     _name = 'test_new_api.precompute.combo'
     _description = 'yet another model with precomputed fields'
 
@@ -1828,7 +1833,7 @@ class PrecomputeCombo(models.Model):
         _logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
 
 
-class PrecomputeEditable(models.Model):
+class TestNewApiPrecomputeEditable(models.Model):
     _name = 'test_new_api.precompute.editable'
     _description = 'yet another model with precomputed editable fields'
 
@@ -1853,7 +1858,7 @@ class PrecomputeEditable(models.Model):
             record.baz2 = record.baz
 
 
-class PrecomputeReadonly(models.Model):
+class TestNewApiPrecomputeReadonly(models.Model):
     _name = 'test_new_api.precompute.readonly'
     _description = 'a model with precomputed readonly fields'
 
@@ -1874,7 +1879,7 @@ class PrecomputeReadonly(models.Model):
         self.baz = "COMPUTED"
 
 
-class PrecomputeRequired(models.Model):
+class TestNewApiPrecomputeRequired(models.Model):
     _name = 'test_new_api.precompute.required'
     _description = 'a model with precomputed required fields'
 
@@ -1882,7 +1887,7 @@ class PrecomputeRequired(models.Model):
     name = fields.Char(related='partner_id.name', precompute=True, store=True, required=True)
 
 
-class PrecomputeMonetary(models.Model):
+class TestNewApiPrecomputeMonetary(models.Model):
     _name = 'test_new_api.precompute.monetary'
     _description = 'a model with precomputed monetary and currency'
 
@@ -1899,7 +1904,7 @@ class PrecomputeMonetary(models.Model):
         self.currency_id = 1  # EUR
 
 
-class Prefetch(models.Model):
+class TestNewApiPrefetch(models.Model):
     _name = 'test_new_api.prefetch'
     _description = 'A model to check the prefetching of fields (translated and group)'
 
@@ -1917,14 +1922,14 @@ class Prefetch(models.Model):
     line_ids = fields.One2many('test_new_api.prefetch.line', 'prefetch_id')
 
 
-class PrefetchLine(models.Model):
+class TestNewApiPrefetchLine(models.Model):
     _name = _description = 'test_new_api.prefetch.line'
 
     prefetch_id = fields.Many2one('test_new_api.prefetch')
     harry = fields.Integer(related='prefetch_id.harry', store=True)
 
 
-class Modified(models.Model):
+class TestNewApiModified(models.Model):
     _name = 'test_new_api.modified'
     _description = 'A model to check modified trigger'
 
@@ -1938,7 +1943,7 @@ class Modified(models.Model):
             rec.total_quantity = sum(rec.line_ids.mapped('quantity'))
 
 
-class ModifiedLine(models.Model):
+class TestNewApiModifiedLine(models.Model):
     _name = 'test_new_api.modified.line'
     _description = 'A model to check modified trigger'
 
@@ -1963,7 +1968,7 @@ class ModifiedLine(models.Model):
             rec.total_price_quantity = rec.total_price * rec.quantity
 
 
-class RelatedTranslation(models.Model):
+class TestNewApiRelatedTranslation1(models.Model):
     _name = 'test_new_api.related_translation_1'
     _description = 'A model to test translation for related fields'
 
@@ -1971,7 +1976,7 @@ class RelatedTranslation(models.Model):
     html = fields.Html('HTML', translate=html_translate)
 
 
-class RelatedTranslation2(models.Model):
+class TestNewApiRelatedTranslation2(models.Model):
     _name = 'test_new_api.related_translation_2'
     _description = 'A model to test translation for related fields'
 
@@ -1994,7 +1999,7 @@ class RelatedTranslation2(models.Model):
             record.computed_html = record.related_id.html
 
 
-class RelatedTranslation3(models.Model):
+class TestNewApiRelatedTranslation3(models.Model):
     _name = 'test_new_api.related_translation_3'
     _description = 'A model to test translation for related fields'
 
@@ -2003,27 +2008,27 @@ class RelatedTranslation3(models.Model):
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
 
 
-class IndexedTranslation(models.Model):
+class TestNewApiIndexedTranslation(models.Model):
     _name = 'test_new_api.indexed_translation'
     _description = 'A model to indexed translated fields'
 
     name = fields.Text('Name trigram', translate=True, index='trigram')
 
-class EmptyChar(models.Model):
+class TestNewApiEmptyChar(models.Model):
     _name = 'test_new_api.empty_char'
     _description = 'A model to test emtpy char'
 
     name = fields.Char('Name')
 
 
-class EmptyInt(models.Model):
+class TestNewApiEmptyInt(models.Model):
     _name = 'test_new_api.empty_int'
     _description = 'A model to test empty int'
 
     number = fields.Integer('Number')
 
 
-class Team(models.Model):
+class TestNewApiTeam(models.Model):
     _name = 'test_new_api.team'
     _description = 'Odoo Team'
 
@@ -2032,7 +2037,7 @@ class Team(models.Model):
     member_ids = fields.One2many('test_new_api.team.member', 'team_id')
 
 
-class TeamMember(models.Model):
+class TestNewApiTeamMember(models.Model):
     _name = 'test_new_api.team.member'
     _description = 'Odoo Developer'
 
@@ -2041,7 +2046,7 @@ class TeamMember(models.Model):
     parent_id = fields.Many2one('test_new_api.team', related='team_id.parent_id')
 
 
-class UnsearchableO2M(models.Model):
+class TestNewApiUnsearchableO2m(models.Model):
     _name = 'test_new_api.unsearchable.o2m'
     _description = 'Test non-stored unsearchable o2m'
 
@@ -2056,7 +2061,7 @@ class UnsearchableO2M(models.Model):
             r.parent_id = r.stored_parent_id
 
 
-class AnyParent(models.Model):
+class TestNewApiAnyParent(models.Model):
     _name = 'test_new_api.any.parent'
     _description = 'Any Parent'
 
@@ -2064,7 +2069,7 @@ class AnyParent(models.Model):
     child_ids = fields.One2many('test_new_api.any.child', 'parent_id')
 
 
-class AnyChild(models.Model):
+class TestNewApiAnyChild(models.Model):
     _name = 'test_new_api.any.child'
     _description = 'Any Child'
     _inherits = {
@@ -2077,7 +2082,7 @@ class AnyChild(models.Model):
     tag_ids = fields.Many2many('test_new_api.any.tag')
 
 
-class AnyTag(models.Model):
+class TestNewApiAnyTag(models.Model):
     _name = 'test_new_api.any.tag'
     _description = 'Any tag'
 
@@ -2085,7 +2090,7 @@ class AnyTag(models.Model):
     child_ids = fields.Many2many('test_new_api.any.child')
 
 
-class CustomView(models.Model):
+class TestNewApiCustomView(models.Model):
     _name = _description = "test_new_api.custom.view"
     _auto = False
     _depends = {
@@ -2108,7 +2113,7 @@ class CustomView(models.Model):
         """
         self.env.cr.execute(query)
 
-class CustomTableQuery(models.Model):
+class TestNewApiCustomTableQuery(models.Model):
     _name = _description = "test_new_api.custom.table_query"
     _auto = False
     _depends = {
@@ -2129,7 +2134,7 @@ class CustomTableQuery(models.Model):
             GROUP BY tag.id
         """
 
-class CustomTableQuerySQL(models.Model):
+class TestNewApiCustomTableQuerySql(models.Model):
     _name = _description = "test_new_api.custom.table_query_sql"
     _auto = False
     _depends = {
@@ -2152,7 +2157,7 @@ class CustomTableQuerySQL(models.Model):
             """,
         )
 
-class ModelAutovacuumed(models.Model):
+class TestNewApiAutovacuumed(models.Model):
     _name = _description = 'test_new_api.autovacuumed'
 
     expire_at = fields.Datetime('Expires at')
@@ -2162,7 +2167,7 @@ class ModelAutovacuumed(models.Model):
         self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
 
 
-class SharedComputeMethod(models.Model):
+class TestNewApiSharedCompute(models.Model):
     _name = _description = 'test_new_api.shared.compute'
 
     name = fields.Char(compute='_compute_name', store=True, readonly=False)

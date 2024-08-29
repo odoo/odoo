@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+class AccountAnalyticLine(models.Model, analytic.AccountAnalyticLine):
     _description = 'Analytic Line'
 
     product_id = fields.Many2one(

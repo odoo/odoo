@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrderTemplate(models.Model):
-    _name = "sale.order.template"
     _description = "Quotation Template"
     _order = 'sequence, id'
 

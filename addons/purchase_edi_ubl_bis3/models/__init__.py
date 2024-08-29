@@ -1,3 +1,3 @@
-from . import account_edi_common
-from . import purchase_edi_xml_ubl_bis3
-from . import purchase_order
+from .account_edi_common import AccountEdiCommon
+from .purchase_edi_xml_ubl_bis3 import PurchaseEdiXmlUblBis3
+from .purchase_order import PurchaseOrder

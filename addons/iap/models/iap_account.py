@@ -16,7 +16,6 @@ DEFAULT_ENDPOINT = 'https://iap.odoo.com'
 
 
 class IapAccount(models.Model):
-    _name = 'iap.account'
     _rec_name = 'service_name'
     _description = 'IAP Account'
 
@@ -45,7 +44,7 @@ class IapAccount(models.Model):
     @api.model
     def get_view(self, view_id=None, view_type='form', **kwargs):
         res = super().get_view(view_id, view_type, **kwargs)
-        if view_type == 'tree':
+        if view_type == 'list':
             self.env['iap.account'].get_services()
         return res
 
@@ -241,7 +240,6 @@ class IapAccount(models.Model):
 
 
 class IAPAccountInfo(models.TransientModel):
-    _name = 'iap.account.info'
     _description = 'IAP Account Info'
     _transient_max_hours = 1
 

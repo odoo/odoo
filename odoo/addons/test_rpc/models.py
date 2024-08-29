@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class ModelA(models.Model):
+class TestRpcModelA(models.Model):
     _name = "test_rpc.model_a"
     _description = "Model A"
 
@@ -13,7 +13,7 @@ class ModelA(models.Model):
     field_b2 = fields.Many2one("test_rpc.model_b", string="restricted field", ondelete="restrict")
 
 
-class ModelB(models.Model):
+class TestRpcModelB(models.Model):
     _name = "test_rpc.model_b"
     _description = "Model B"
 

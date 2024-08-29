@@ -74,7 +74,7 @@ test("PhoneField in editable list view on normal screens", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
+        arch: '<list editable="bottom"><field name="foo" widget="phone"/></list>',
     });
     expect("tbody td:not(.o_list_record_selector).o_data_cell").toHaveCount(2);
     expect("tbody td:not(.o_list_record_selector) a:first").toHaveText("yop");

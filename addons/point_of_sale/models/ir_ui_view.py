@@ -1,9 +1,8 @@
 from odoo import models, api
+from odoo.addons import point_of_sale, base
 
 
-class IrUiView(models.Model):
-    _name = 'ir.ui.view'
-    _inherit = ['ir.ui.view', 'pos.load.mixin']
+class IrUiView(models.Model, base.IrUiView, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

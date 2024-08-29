@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import loyalty
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class LoyaltyProgram(models.Model):
-    _inherit = 'loyalty.program'
+class LoyaltyProgram(models.Model, loyalty.LoyaltyProgram):
 
     order_count = fields.Integer(compute='_compute_order_count')
     sale_ok = fields.Boolean(string="Sales", default=True)

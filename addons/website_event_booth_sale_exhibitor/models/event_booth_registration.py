@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import event_booth_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class EventBoothRegistration(models.Model):
-    _inherit = 'event.booth.registration'
+class EventBoothRegistration(models.Model, event_booth_sale.EventBoothRegistration):
 
     sponsor_name = fields.Char(string='Sponsor Name')
     sponsor_email = fields.Char(string='Sponsor Email')

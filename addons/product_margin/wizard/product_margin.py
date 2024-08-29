@@ -7,7 +7,6 @@ from odoo import api, fields, models, _
 
 
 class ProductMargin(models.TransientModel):
-    _name = 'product.margin'
     _description = 'Product Margin'
 
     from_date = fields.Date('From', default=time.strftime('%Y-01-01'))
@@ -40,14 +39,14 @@ class ProductMargin(models.TransientModel):
             context.update(date_to=self.to_date)
 
         views = [
-            (tree_view_id, 'tree'),
+            (tree_view_id, 'list'),
             (form_view_id, 'form'),
             (graph_view_id, 'graph')
         ]
         return {
             'name': _('Product Margins'),
             'context': context,
-            "view_mode": 'tree,form,graph',
+            "view_mode": 'list,form,graph',
             'res_model': 'product.product',
             'type': 'ir.actions.act_window',
             'views': views,

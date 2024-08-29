@@ -1,33 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import sms, utm
 
 from odoo import fields, models
 
 
-class UtmTestSourceMixin(models.Model):
+class UtmTestSourceMixin(models.Model, utm.UtmSourceMixin):
     """ Test utm.source.mixin """
     _description = "UTM Source Mixin Test Model"
-    _name = "utm.test.source.mixin"
     _order = "id DESC"
     _rec_name = "title"
-    _inherit = [
-        "utm.source.mixin",
-    ]
 
     name = fields.Char(inherited=True)
     title = fields.Char()
 
 
-class UtmTestSourceMixinOther(models.Model):
+class UtmTestSourceMixinOther(models.Model, sms.MailThread, utm.UtmSourceMixin):
     """ Test utm.source.mixin, similar to the other one, allowing also to test
     cross model uniqueness check """
     _description = "UTM Source Mixin Test Model (another)"
-    _name = "utm.test.source.mixin.other"
     _order = "id DESC"
     _rec_name = "title"
-    _inherit = [
-        "mail.thread",
-        "utm.source.mixin",
-    ]
 
     name = fields.Char(inherited=True)
     title = fields.Char()

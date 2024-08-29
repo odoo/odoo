@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import uom
 
 from odoo import fields, models
 
 
-class ProductUoM(models.Model):
-    _inherit = 'uom.uom'
+class UomUom(models.Model, uom.UomUom):
 
     l10n_hu_edi_code = fields.Selection(
         selection=[

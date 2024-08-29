@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
@@ -18,8 +19,7 @@ FORMULA_ALLOWED_TOKENS = {
 }
 
 
-class AccountTaxPython(models.Model):
-    _inherit = "account.tax"
+class AccountTax(models.Model, account.AccountTax):
 
     amount_type = fields.Selection(
         selection_add=[('code', "Custom Formula")],

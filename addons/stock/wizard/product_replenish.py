@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -9,9 +10,7 @@ from odoo.osv import expression
 from odoo.tools.misc import clean_context
 
 
-class ProductReplenish(models.TransientModel):
-    _name = 'product.replenish'
-    _inherit = 'stock.replenish.mixin'
+class ProductReplenish(models.TransientModel, stock.StockReplenishMixin):
     _description = 'Product Replenish'
     _check_company_auto = True
 

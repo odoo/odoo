@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -7,8 +8,7 @@ from odoo import api, fields, models
 from odoo.tools.sql import column_exists, create_column
 
 
-class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
+class StockMoveLine(models.Model, stock.StockMoveLine):
 
     expiration_date = fields.Datetime(
         string='Expiration Date', compute='_compute_expiration_date', store=True,

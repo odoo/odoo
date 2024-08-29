@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import requests
@@ -10,8 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 logger = logging.getLogger(__name__)
 
 
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     @api.model
     def get_frontend_session_info(self):

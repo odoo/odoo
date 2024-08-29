@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_work_entry
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class HrWorkEntry(models.Model):
-    _inherit = 'hr.work.entry'
+class HrWorkEntry(models.Model, hr_work_entry.HrWorkEntry):
 
     leave_id = fields.Many2one('hr.leave', string='Time Off')
     leave_state = fields.Selection(related='leave_id.state')
@@ -77,8 +77,7 @@ class HrWorkEntry(models.Model):
             leave_sudo.action_refuse()
 
 
-class HrWorkEntryType(models.Model):
-    _inherit = 'hr.work.entry.type'
+class HrWorkEntryType(models.Model, hr_work_entry.HrWorkEntryType):
     _description = 'HR Work Entry Type'
 
     leave_type_ids = fields.One2many(

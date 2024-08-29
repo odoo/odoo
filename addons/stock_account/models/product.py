@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -9,9 +10,7 @@ from collections import defaultdict
 from datetime import datetime
 
 
-class ProductTemplate(models.Model):
-    _name = 'product.template'
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
@@ -95,8 +94,7 @@ class ProductTemplate(models.Model):
         return accounts
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
@@ -809,8 +807,7 @@ class ProductProduct(models.Model):
         return valuation / qty_to_invoice
 
 
-class ProductCategory(models.Model):
-    _inherit = 'product.category'
+class ProductCategory(models.Model, product.ProductCategory):
 
     property_valuation = fields.Selection([
         ('manual_periodic', 'Manual'),

@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, models
 from odoo.osv import expression
 
 
-class ResUsers(models.Model):
-    _inherit = "res.users"
+class ResUsers(models.Model, base.ResUsers):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

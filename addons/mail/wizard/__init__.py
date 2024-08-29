@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import base_module_uninstall
-from . import base_partner_merge_automatic_wizard
-from . import mail_blacklist_remove
-from . import mail_compose_message
-from . import mail_activity_schedule
-from . import mail_resend_message
-from . import mail_template_preview
-from . import mail_template_reset
-from . import mail_wizard_invite
+from .base_module_uninstall import BaseModuleUninstall
+from .base_partner_merge_automatic_wizard import BasePartnerMergeAutomaticWizard
+from .mail_blacklist_remove import MailBlacklistRemove
+from .mail_compose_message import MailComposeMessage
+from .mail_activity_schedule import MailActivitySchedule
+from .mail_resend_message import MailResendMessage, MailResendPartner
+from .mail_template_preview import MailTemplatePreview
+from .mail_template_reset import MailTemplateReset
+from .mail_wizard_invite import MailWizardInvite

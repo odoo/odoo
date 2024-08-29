@@ -4,8 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class SupplierInfo(models.Model):
-    _name = "product.supplierinfo"
+class ProductSupplierinfo(models.Model):
     _description = "Supplier Pricelist"
     _order = 'sequence, min_qty DESC, price, id'
     _rec_name = 'partner_id'

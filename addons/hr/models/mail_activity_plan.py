@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class MailActivityPlan(models.Model):
-    _inherit = 'mail.activity.plan'
+class MailActivityPlan(models.Model, mail.MailActivityPlan):
 
     department_id = fields.Many2one(
         'hr.department', check_company=True,

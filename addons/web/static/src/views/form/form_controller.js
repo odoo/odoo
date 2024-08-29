@@ -64,7 +64,6 @@ export async function loadSubViews(fieldNodes, fields, context, resModel, viewSe
 
         fieldInfo.views = fieldInfo.views || {};
         let viewType = fieldInfo.viewMode || "list,kanban";
-        viewType = viewType.replace("tree", "list");
         if (viewType.includes(",")) {
             viewType = isSmall ? "kanban" : "list";
         }

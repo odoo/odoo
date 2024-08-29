@@ -4,7 +4,7 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'">
+            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'">
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
@@ -31,22 +31,22 @@
                 <field name="department_id" readonly="1" column_invisible="context.get('invisible_department', True)" optional="hide"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="hr_applicant_view_tree_activity" model="ir.ui.view">
-        <field name="name">hr.applicant.view.tree.activity</field>
+        <field name="name">hr.applicant.view.list.activity</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+            <list string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
                 <field name="partner_id"/>
                 <field name="activity_date_deadline"/>
                 <field name="activity_type_id"/>
                 <field name="activity_summary"/>
                 <field name="stage_id"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -380,7 +380,7 @@
     <record model="ir.actions.act_window" id="action_hr_job_applications">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,graph,calendar,pivot,activity</field>
+        <field name="view_mode">kanban,list,form,graph,calendar,pivot,activity</field>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'search_default_stage':1, 'dialog_size':'medium', 'allow_search_matching_applicants': 1}</field>
         <field name="help" type="html">
@@ -408,7 +408,7 @@
             'default_res_ids': active_ids,
         }</field>
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">tree</field>
+        <field name="binding_view_types">list</field>
     </record>
 
     <record model="ir.actions.act_window" id="action_hr_applicant_new">
@@ -422,7 +422,7 @@
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
         <field name="path">recruitment-applications</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
+        <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
         <field name="context">{'search_default_stage':1}</field>
@@ -443,7 +443,7 @@
     <record id="hr_applicant_action_from_department" model="ir.actions.act_window">
         <field name="name">New Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">tree,kanban,form,graph,calendar,pivot</field>
+        <field name="view_mode">list,kanban,form,graph,calendar,pivot</field>
         <field name="context">{
             'search_default_department_id': active_id,
             'default_department_id': active_id,
@@ -461,7 +461,7 @@
 
     <record model="ir.actions.act_window.view" id="action_hr_sec_tree_view_act_job">
         <field name="sequence" eval="0"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="crm_case_tree_view_job"/>
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>

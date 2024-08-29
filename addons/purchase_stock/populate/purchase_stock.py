@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -9,8 +10,7 @@ from odoo.tools import populate, groupby
 _logger = logging.getLogger(__name__)
 
 
-class PurchaseOrder(models.Model):
-    _inherit = "purchase.order"
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     _populate_dependencies = ["res.partner", "stock.picking.type"]
 

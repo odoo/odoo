@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import crm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -12,8 +13,7 @@ from odoo.addons.iap.tools import iap_tools
 _logger = logging.getLogger(__name__)
 
 
-class Lead(models.Model):
-    _inherit = 'crm.lead'
+class CrmLead(models.Model, crm.CrmLead):
 
     iap_enrich_done = fields.Boolean(string='Enrichment done', help='Whether IAP service for lead enrichment based on email has been performed on this lead.')
     show_enrich_button = fields.Boolean(string='Allow manual enrich', compute="_compute_show_enrich_button")
@@ -40,7 +40,7 @@ class Lead(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        leads = super(Lead, self).create(vals_list)
+        leads = super().create(vals_list)
         enrich_mode = self.env['ir.config_parameter'].sudo().get_param('crm.iap.lead.enrich.setting', 'auto')
         if enrich_mode == 'auto':
             cron = self.env.ref('crm_iap_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
@@ -165,6 +165,6 @@ class Lead(models.Model):
 
     def _merge_get_fields_specific(self):
         return {
-            ** super(Lead, self)._merge_get_fields_specific(),
+            ** super()._merge_get_fields_specific(),
             'iap_enrich_done': lambda fname, leads: any(lead.iap_enrich_done for lead in leads),
         }

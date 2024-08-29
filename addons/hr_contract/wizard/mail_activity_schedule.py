@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 from dateutil.relativedelta import relativedelta
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+class MailActivitySchedule(models.TransientModel, mail.MailActivitySchedule):
 
     def _compute_plan_date(self):
         todo = self.filtered(lambda s: s.res_model == 'hr.employee')

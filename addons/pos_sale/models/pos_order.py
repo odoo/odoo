@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
 
 
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     currency_rate = fields.Float(compute='_compute_currency_rate', store=True, digits=0, readonly=True)
     crm_team_id = fields.Many2one('crm.team', string="Sales Team", ondelete="set null")
@@ -124,7 +124,7 @@ class PosOrder(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Linked Sale Orders'),
             'res_model': 'sale.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
@@ -159,8 +159,7 @@ class PosOrder(models.Model):
 
         return inv_line_vals
 
-class PosOrderLine(models.Model):
-    _inherit = 'pos.order.line'
+class PosOrderLine(models.Model, point_of_sale.PosOrderLine):
 
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")

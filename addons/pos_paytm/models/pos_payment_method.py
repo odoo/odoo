@@ -1,4 +1,5 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -17,8 +18,7 @@ _logger = logging.getLogger(__name__)
 REQUEST_TIMEOUT = 30
 iv = b'@@@@&&&&####$$$$'
 
-class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+class PosPaymentMethod(models.Model, point_of_sale.PosPaymentMethod):
 
     paytm_tid = fields.Char(string='PayTM Terminal ID', help="Terminal model or Activation code \n ex: 70000123")
     channel_id = fields.Char(string='PayTM Channel ID', default='EDC')

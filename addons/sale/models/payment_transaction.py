@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from datetime import datetime
 from dateutil import relativedelta
@@ -7,8 +8,7 @@ from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.tools import str2bool
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     sale_order_ids = fields.Many2many('sale.order', 'sale_order_transaction_rel', 'transaction_id', 'sale_order_id',
                                       string='Sales Orders', copy=False, readonly=True)
@@ -231,6 +231,6 @@ class PaymentTransaction(models.Model):
             action['res_id'] = sale_order_ids[0]
             action['view_mode'] = 'form'
         else:
-            action['view_mode'] = 'tree,form'
+            action['view_mode'] = 'list,form'
             action['domain'] = [('id', 'in', sale_order_ids)]
         return action

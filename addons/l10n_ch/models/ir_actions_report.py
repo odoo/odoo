@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 from odoo import api, models
@@ -10,8 +11,7 @@ from reportlab.lib.units import mm
 CH_QR_CROSS_SIZE_RATIO = 0.1522 # Ratio between the side length of the Swiss QR-code cross image and the QR-code's
 CH_QR_CROSS_FILE = Path('../static/src/img/CH-Cross_7mm.png') # Image file containing the Swiss QR-code cross to add on top of the QR-code
 
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+class IrActionsReport(models.Model, base.IrActionsReport):
 
     @api.model
     def get_available_barcode_masks(self):

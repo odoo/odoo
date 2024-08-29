@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website_sale
 
 from collections import defaultdict
 import logging
@@ -10,8 +11,7 @@ from odoo.tools import populate
 _logger = logging.getLogger(__name__)
 
 
-class ProductPublicCategory(models.Model):
-    _inherit = 'product.public.category'
+class ProductPublicCategory(models.Model, website_sale.ProductPublicCategory):
     _populate_sizes = {'small': 20, 'medium': 100, 'large': 1_500}
     _populate_dependencies = ['product.template']
 

@@ -1,2 +1,2 @@
-from . import template_bf
-from . import template_bf_syscebnl
+from .template_bf import AccountChartTemplate
+from .template_bf_syscebnl import AccountChartTemplate

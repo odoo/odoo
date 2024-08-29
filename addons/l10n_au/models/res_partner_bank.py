@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -7,8 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     aba_bsb = fields.Char(string='BSB', help='Bank State Branch code - needed if payment is to be made using ABA files')
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -6,8 +7,7 @@ from datetime import datetime, timedelta
 from odoo import _, models
 
 
-class HrDepartureWizard(models.TransientModel):
-    _inherit = 'hr.departure.wizard'
+class HrDepartureWizard(models.TransientModel, hr.HrDepartureWizard):
 
     def action_register_departure(self):
         super(HrDepartureWizard, self).action_register_departure()

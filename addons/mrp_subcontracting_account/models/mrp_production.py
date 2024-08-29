@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 
 
-class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+class MrpProduction(models.Model, mrp.MrpProduction):
 
     def _cal_price(self, consumed_moves):
         finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)

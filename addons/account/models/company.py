@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base, portal
 
 from collections import defaultdict
 from datetime import timedelta, datetime, date
@@ -49,9 +50,7 @@ LOCK_DATE_FIELDS = [
 ]
 
 
-class ResCompany(models.Model):
-    _name = "res.company"
-    _inherit = ["res.company", "mail.thread"]
+class ResCompany(models.Model, base.ResCompany, portal.MailThread):
 
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection(MONTH_SELECTION, default='12', required=True)
@@ -479,7 +478,7 @@ class ResCompany(models.Model):
             if draft_entries:
                 error_msg = _('There are still draft entries in the period you want to hard lock. You should either post or delete them.')
                 action_error = {
-                    'view_mode': 'tree',
+                    'view_mode': 'list',
                     'name': _('Draft Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
@@ -540,7 +539,7 @@ class ResCompany(models.Model):
                     'name': _('Journal Entries to Hash'),
                     'res_model': 'account.move',
                     'domain': [('id', 'in', move_ids)],
-                    'views': [(False, 'tree'), (False, 'form')],
+                    'views': [(False, 'list'), (False, 'form')],
                 }
                 if len(move_ids) == 1:
                     action.update({

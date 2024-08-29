@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import auth_totp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
 from collections import defaultdict
 
 
-class AuthTotpDevice(models.Model):
-    _inherit = "auth_totp.device"
+class AuthTotpDevice(models.Model, auth_totp.AuthTotpDevice):
+    _name = "auth_totp.device"
+
 
     def unlink(self):
         """ Notify users when trusted devices are removed from their account. """

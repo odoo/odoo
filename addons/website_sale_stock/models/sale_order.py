@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model, sale.SaleOrder):
 
     def _get_warehouse_available(self):
         self.ensure_one()

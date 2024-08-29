@@ -175,10 +175,10 @@
     </record>
 
     <record id='fleet_vehicle_view_tree' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.tree</field>
+        <field name="name">fleet.vehicle.list</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <tree string="Vehicle" 
+            <list string="Vehicle" 
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
@@ -202,7 +202,7 @@
                 <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
                     decoration-danger="contract_state == 'expired'" optional="hide"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -339,7 +339,7 @@
         <field name="name">Vehicles</field>
         <field name="path">fleet</field>
         <field name="res_model">fleet.vehicle</field>
-        <field name="view_mode">kanban,tree,form,pivot,activity</field>
+        <field name="view_mode">kanban,list,form,pivot,activity</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Ready to manage your fleet more efficiently?
@@ -376,16 +376,16 @@
     </record>
 
     <record id='fleet_vehicle_odometer_view_tree' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.odometer.tree</field>
+        <field name="name">fleet.vehicle.odometer.list</field>
         <field name="model">fleet.vehicle.odometer</field>
         <field name="arch" type="xml">
-            <tree string="Odometer Logs" editable="top">
+            <list string="Odometer Logs" editable="top">
                 <field name="date" />
                 <field name="vehicle_id" widget="many2one_avatar"/>
                 <field name="driver_id" widget="many2one_avatar"/>
                 <field name="value" />
                 <field name="unit" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -440,7 +440,7 @@
     <record id='fleet_vehicle_odometer_action' model='ir.actions.act_window'>
         <field name="name">Odometers</field>
         <field name="res_model">fleet.vehicle.odometer</field>
-        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="view_mode">list,kanban,form,graph</field>
         <field name="context"></field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -454,13 +454,13 @@
     <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet_group_user" sequence="10"/>
 
     <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
-        <field name="name">fleet.service.type.tree</field>
+        <field name="name">fleet.service.type.list</field>
         <field name="model">fleet.service.type</field>
         <field name="arch" type="xml">
-            <tree string="Service Types" editable="bottom">
+            <list string="Service Types" editable="bottom">
                 <field name="name" />
                 <field name="category"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -480,7 +480,7 @@
     <record id='fleet_vehicle_service_types_action' model='ir.actions.act_window'>
         <field name="name">Types</field>
         <field name="res_model">fleet.service.type</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{"search_default_groupby_category" : True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -495,13 +495,13 @@
         id="fleet_vehicle_service_types_menu" sequence="1" groups="base.group_no_one"/>
 
     <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.state.tree</field>
+        <field name="name">fleet.vehicle.state.list</field>
         <field name="model">fleet.vehicle.state</field>
         <field name="arch" type="xml">
-            <tree string="State" editable="bottom">
+            <list string="State" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -523,7 +523,7 @@
     <record id='fleet_vehicle_state_action' model='ir.actions.act_window'>
         <field name="name">Status</field>
         <field name="res_model">fleet.vehicle.state</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new vehicle status
@@ -552,13 +552,13 @@
     </record>
 
     <record id="fleet_vehicle_tag_view_view_tree" model="ir.ui.view">
-        <field name="name">fleet.vehicle.tag.tree</field>
+        <field name="name">fleet.vehicle.tag.list</field>
         <field name="model">fleet.vehicle.tag</field>
         <field name="arch" type="xml">
-            <tree string="Vehicle Tags" editable="bottom">
+            <list string="Vehicle Tags" editable="bottom">
                 <field name="name"/>
                 <field name="color" widget="color_picker"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -575,15 +575,15 @@
     <menuitem id="fleet_vehicle_tag_menu" parent="fleet_vehicles_configuration" action="fleet_vehicle_tag_action" sequence="20" groups="base.group_no_one"/>
 
     <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
-        <field name="name">fleet.vehicle.assignation.log.view.tree</field>
+        <field name="name">fleet.vehicle.assignation.log.view.list</field>
         <field name="model">fleet.vehicle.assignation.log</field>
         <field name="arch" type="xml">
-            <tree default_order="date_start desc, id desc" string="Assignment Logs" editable="bottom">
+            <list default_order="date_start desc, id desc" string="Assignment Logs" editable="bottom">
                 <field name="vehicle_id" />
                 <field name="driver_id" widget="many2one_avatar" string="Current Driver" />
                 <field name="date_start"/>
                 <field name="date_end"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -591,7 +591,7 @@
         <field name="name">Mail to Driver</field>
         <field name="model_id" ref="fleet.model_fleet_vehicle"/>
         <field name="binding_model_id" ref="fleet.model_fleet_vehicle"/>
-        <field name="binding_view_types">tree</field>
+        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
     </record>

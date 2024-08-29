@@ -27,10 +27,10 @@
     </record>
 
     <record id="lunch_order_view_tree" model="ir.ui.view">
-        <field name="name">lunch.order.tree</field>
+        <field name="name">lunch.order.list</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'" expand="1">
+            <list string="Order lines List" create="false" edit="false" decoration-muted="state == 'cancelled'" expand="1">
                 <header>
                     <button name="action_confirm" type="object" string="Receive"/>
                 </header>
@@ -58,7 +58,7 @@
                     <button string="Send Orders" type="object" name="action_send_orders" invisible="not show_order_button"/>
                     <button string="Confirm Orders" type="object" name="action_confirm_orders" invisible="not show_confirm_button"/>
                 </groupby>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -136,7 +136,7 @@
     <record id="lunch_order_action" model="ir.actions.act_window">
         <field name="name">My Orders</field>
         <field name="res_model">lunch.order</field>
-        <field name="view_mode">tree,kanban,pivot</field>
+        <field name="view_mode">list,kanban,pivot</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
         <field name="context">{"search_default_is_mine":1, "search_default_group_by_date": 1, 'show_reorder_button': True}</field>
         <field name="help" type="html">
@@ -151,7 +151,7 @@
     <record id="lunch_order_action_by_supplier" model="ir.actions.act_window">
         <field name="name">Today's Orders</field>
         <field name="res_model">lunch.order</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">list,kanban</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
         <field name="context">{"search_default_group_by_supplier":1, "search_default_date_filter":1}</field>
         <field name="help" type="html">
@@ -166,7 +166,7 @@
     <record id="lunch_order_action_control_suppliers" model="ir.actions.act_window">
         <field name="name">Control Vendors</field>
         <field name="res_model">lunch.order</field>
-        <field name="view_mode">tree,kanban,pivot</field>
+        <field name="view_mode">list,kanban,pivot</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
         <field name="context">{"search_default_group_by_supplier":1}</field>
         <field name="help" type="html">

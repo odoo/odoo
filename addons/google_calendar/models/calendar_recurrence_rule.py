@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar, google_calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -11,9 +12,7 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 
 _logger = logging.getLogger(__name__)
 
-class RecurrenceRule(models.Model):
-    _name = 'calendar.recurrence'
-    _inherit = ['calendar.recurrence', 'google.calendar.sync']
+class CalendarRecurrence(models.Model, calendar.CalendarRecurrence, google_calendar.GoogleCalendarSync):
 
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
@@ -182,7 +181,7 @@ class RecurrenceRule(models.Model):
             vals['event_tz'] = gevent.start.get('timeZone')
             attendee_values[base_event.id] = {'attendee_ids': base_values.get('attendee_ids')}
 
-        recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        recurrence = super(CalendarRecurrence, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
         generic_values_creation = {
             rec.id: attendee_values[rec.base_event_id.id]
             for rec in recurrence if attendee_values.get(rec.base_event_id.id)

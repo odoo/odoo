@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import calendar
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 from odoo import models
 
 
-class Attendee(models.Model):
-    _name = 'calendar.attendee'
-    _inherit = 'calendar.attendee'
+class CalendarAttendee(models.Model, calendar.CalendarAttendee):
 
     def do_tentative(self):
         # Synchronize event after state change

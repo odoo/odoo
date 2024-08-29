@@ -37,11 +37,11 @@
     </record>
 
     <record id="mailing_contact_view_tree" model="ir.ui.view">
-        <field name="name">mailing.contact.view.tree</field>
+        <field name="name">mailing.contact.view.list</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing List Contacts" sample="1" multi_edit="1">
+            <list string="Mailing List Contacts" sample="1" multi_edit="1">
                 <header>
                     <button name="action_import" string="Import" type="object" display="always"
                         context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
@@ -57,7 +57,7 @@
                 <field name="message_bounce" sum="Total Bounces" readonly="1"/>
                 <field name="opt_out" readonly="1" column_invisible="'default_list_ids' not in context"/>
                 <field name="list_ids" widget="many2many_tags" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -126,13 +126,13 @@
                         </group>
                     </group>
                     <field name="subscription_ids">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                            <field name="list_id"/>
                            <field name="opt_out_datetime" readonly="1"/>
                            <field name="opt_out"/>
                            <field name="opt_out_reason_id"/>
                            <field name="create_date" string="Subscription Date"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
                 <chatter/>
@@ -165,7 +165,7 @@
     <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
         <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
-        <field name="view_mode">tree,kanban,form,graph,pivot</field>
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
         <field name="context">{'search_default_filter_not_email_bl': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -180,7 +180,7 @@
     <!-- Activated dynamically when the option that splits name into first and last name is enabled. -->
     <!-- We set them into a noupdate block to avoid the configuration to be reset after an update. -->
     <record id="mailing_contact_view_tree_split_name" model="ir.ui.view">
-        <field name="name">mailing.contact.view.tree.split.name</field>
+        <field name="name">mailing.contact.view.list.split.name</field>
         <field name="model">mailing.contact</field>
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
         <field name="active">False</field>

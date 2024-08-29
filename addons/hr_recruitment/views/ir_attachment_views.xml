@@ -27,14 +27,14 @@
             <field name="model">ir.attachment</field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="name" column_invisible="True"/>
                     <field name="res_id" column_invisible="True"/>
                     <field name="res_model" column_invisible="True"/>
                     <field name="datas" widget="binary" filename="name" string="File"/>
                     <field name="res_name" widget="applicant_char" string="Applicant" invisible="res_model != 'hr.applicant'"/>
                     <field name="create_date"/>
-                </tree>
+                </list>
             </field>
         </record>
     </data>

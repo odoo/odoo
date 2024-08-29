@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class Employee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model, hr.HrEmployee):
 
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
     car_ids = fields.One2many(
@@ -22,7 +22,7 @@ class Employee(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "fleet.vehicle.assignation.log",
-            "views": [[self.env.ref("hr_fleet.fleet_vehicle_assignation_log_employee_view_list").id, "tree"], [False, "form"]],
+            "views": [[self.env.ref("hr_fleet.fleet_vehicle_assignation_log_employee_view_list").id, "list"], [False, "form"]],
             "domain": [("driver_employee_id", "in", self.ids)],
             "context": dict(self._context, default_driver_id=self.user_id.partner_id.id, default_driver_employee_id=self.id),
             "name": "History Employee Cars",
@@ -86,7 +86,6 @@ class Employee(models.Model):
                     car.driver_id = user.partner_id
 
 
-class EmployeePublic(models.Model):
-    _inherit = 'hr.employee.public'
+class HrEmployeePublic(models.Model, hr.HrEmployeePublic):
 
     mobility_card = fields.Char(readonly=True)

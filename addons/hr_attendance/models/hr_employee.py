@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
@@ -8,8 +9,7 @@ from odoo import models, fields, api, exceptions, _
 from odoo.tools import float_round
 
 
-class HrEmployee(models.Model):
-    _inherit = "hr.employee"
+class HrEmployee(models.Model, hr.HrEmployee):
 
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
@@ -194,7 +194,7 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "tree"]],
+            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
             "context": {
                 "create": 0
             },
@@ -208,7 +208,7 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Overtime"),
             "res_model": "hr.attendance.overtime",
-            "views": [[False, "tree"]],
+            "views": [[False, "list"]],
             "context": {
                 "create": 0
             },

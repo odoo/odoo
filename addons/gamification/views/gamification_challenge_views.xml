@@ -4,12 +4,12 @@
         <field name="name">Challenges List</field>
         <field name="model">gamification.challenge</field>
         <field name="arch" type="xml">
-            <tree string="Challenges" decoration-info="state == 'draft'" decoration-muted="state == 'done'">
+            <list string="Challenges" decoration-info="state == 'draft'" decoration-muted="state == 'done'">
                 <field name="name"/>
                 <field name="period"/>
                 <field name="manager_id"/>
                 <field name="state"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -67,13 +67,13 @@
                     <notebook>
                         <page string="Goals" name="goals">
                             <field name="line_ids" nolabel="1" colspan="4">
-                                <tree string="Line List" editable="bottom" >
+                                <list string="Line List" editable="bottom" >
                                     <field name="sequence" widget="handle"/>
                                     <field name="definition_id" />
                                     <field name="condition"/>
                                     <field name="target_goal" string="Target"/>
                                     <field name="definition_full_suffix"/>
-                                </tree>
+                                </list>
                             </field>
                             <field name="description" placeholder="Describe the challenge: what is does, who it targets, why it matters..."/>
                         </page>
@@ -146,7 +146,7 @@
     <record id="challenge_list_action" model="ir.actions.act_window">
         <field name="name">Challenges</field>
         <field name="res_model">gamification.challenge</field>
-        <field name="view_mode">kanban,tree</field>
+        <field name="view_mode">kanban,list</field>
         <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

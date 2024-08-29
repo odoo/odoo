@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from odoo.addons import resource
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
@@ -7,8 +8,7 @@ from odoo.tools import ormcache
 from collections import defaultdict
 
 
-class ResourceCalendar(models.Model):
-    _inherit = 'resource.calendar'
+class ResourceCalendar(models.Model, resource.ResourceCalendar):
 
     def _works_on_date(self, date):
         self.ensure_one()

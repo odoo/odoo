@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr
 
 from odoo import models
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployeeBase(models.AbstractModel, hr.HrEmployeeBase):
 
     def write(self, vals):
         # Prevent the resource calendar of leaves to be updated by a write to

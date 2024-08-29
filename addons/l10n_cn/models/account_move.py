@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -10,8 +11,7 @@ try:
 except ImportError:
     an2cn = None
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     fapiao = fields.Char(string='Fapiao Number', size=8, copy=False, tracking=True)
 

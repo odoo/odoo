@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -20,11 +21,9 @@ STATUS_COLOR = {
     'to_define': 0,
 }
 
-class ProjectUpdate(models.Model):
-    _name = 'project.update'
+class ProjectUpdate(models.Model, mail.MailThreadCc, mail.MailActivityMixin):
     _description = 'Project Update'
     _order = 'id desc'
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
 
     def default_get(self, fields):
         result = super().default_get(fields)

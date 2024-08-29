@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class StockReplenishmentInfo(models.TransientModel):
-    _inherit = 'stock.replenishment.info'
+class StockReplenishmentInfo(models.TransientModel, stock.StockReplenishmentInfo):
     _description = 'Stock supplier replenishment information'
 
     supplierinfo_id = fields.Many2one(related='orderpoint_id.supplier_id')
@@ -19,8 +19,7 @@ class StockReplenishmentInfo(models.TransientModel):
             replenishment_info.supplierinfo_ids = replenishment_info.product_id.seller_ids
 
 
-class StockReplenishmentOption(models.TransientModel):
-    _inherit = 'stock.replenishment.option'
+class StockReplenishmentOption(models.TransientModel, stock.StockReplenishmentOption):
 
     def select_route(self):
         if self._context.get('replenish_id'):

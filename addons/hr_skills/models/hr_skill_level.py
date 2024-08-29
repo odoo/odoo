@@ -4,8 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class SkillLevel(models.Model):
-    _name = 'hr.skill.level'
+class HrSkillLevel(models.Model):
     _description = "Skill Level"
     _order = "level_progress desc"
 

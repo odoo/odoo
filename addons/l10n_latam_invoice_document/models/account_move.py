@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import account
 
 from collections import defaultdict
 
@@ -7,9 +8,8 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.sql import column_exists, create_column, drop_index, index_exists
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, account.AccountMove):
 
-    _inherit = "account.move"
 
     _sql_constraints = [(
         'unique_name', "", "Another entry with the same name already exists.",

@@ -1,11 +1,11 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+class PosPaymentMethod(models.Model, point_of_sale.PosPaymentMethod):
 
     adyen_merchant_account = fields.Char(help='The POS merchant account code used in Adyen')
 

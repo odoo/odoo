@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from werkzeug.urls import url_join
 
@@ -6,8 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class Product(models.Model):
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)

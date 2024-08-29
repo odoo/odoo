@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+class AccountAnalyticAccount(models.Model, analytic.AccountAnalyticAccount):
     _description = 'Analytic Account'
 
     project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects', export_string_translation=False)

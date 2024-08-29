@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr_holidays
 
 
 from odoo import api, models, _
@@ -7,8 +8,7 @@ from odoo.osv.expression import AND
 from odoo.tools import format_date
 
 
-class HrLeave(models.Model):
-    _inherit = 'hr.leave'
+class HrLeave(models.Model, hr_holidays.HrLeave):
 
     def _compute_resource_calendar_id(self):
         super()._compute_resource_calendar_id()

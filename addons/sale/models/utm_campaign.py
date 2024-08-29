@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
-class UtmCampaign(models.Model):
-    _inherit = 'utm.campaign'
+class UtmCampaign(models.Model, utm.UtmCampaign):
     _description = 'UTM Campaign'
 
     quotation_count = fields.Integer('Quotation Count',

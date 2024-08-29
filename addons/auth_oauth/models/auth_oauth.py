@@ -3,10 +3,9 @@
 from odoo import fields, models
 
 
-class AuthOAuthProvider(models.Model):
+class AuthOauthProvider(models.Model):
     """Class defining the configuration values of an OAuth2 provider"""
 
-    _name = 'auth.oauth.provider'
     _description = 'OAuth2 provider'
     _order = 'sequence, name'
 

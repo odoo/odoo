@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.tools import SQL
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     karma = fields.Integer('Karma', compute='_compute_karma', store=True, readonly=False)
     karma_tracking_ids = fields.One2many('gamification.karma.tracking', 'user_id', string='Karma Changes', groups="base.group_system")
@@ -69,7 +69,7 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, values_list):
-        res = super(Users, self).create(values_list)
+        res = super().create(values_list)
 
         self._add_karma_batch({
             user: {
@@ -351,7 +351,7 @@ WHERE sub.user_id IN %s""",
             'res_model': 'gamification.karma.tracking',
             'target': 'current',
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'context': {
                 'default_user_id': self.id,
                 'search_default_user_id': self.id,

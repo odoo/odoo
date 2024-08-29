@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, website_jitsi
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -6,14 +7,9 @@ import datetime
 from odoo import api, fields, models
 
 
-class EventMeetingRoom(models.Model):
-    _name = "event.meeting.room"
+class EventMeetingRoom(models.Model, website_jitsi.ChatRoomMixin, website.WebsitePublishedMixin):
     _description = "Event Meeting Room"
     _order = "is_pinned DESC, id"
-    _inherit = [
-        'chat.room.mixin',
-        'website.published.mixin',
-    ]
 
     _DELAY_CLEAN = datetime.timedelta(hours=4)
 

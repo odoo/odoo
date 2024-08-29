@@ -1,2 +1,2 @@
-from . import analytic_account
-from . import analytic_line
+from .analytic_account import AccountAnalyticAccount
+from .analytic_line import AccountAnalyticLine

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ServerActions(models.Model):
+class IrActionsServer(models.Model, base.IrActionsServer):
     """ Add SMS option in server actions. """
-    _name = 'ir.actions.server'
-    _inherit = ['ir.actions.server']
 
     state = fields.Selection(selection_add=[
         ('sms', 'Send SMS'), ('followers',),
@@ -33,7 +32,7 @@ class ServerActions(models.Model):
             mail_models = self.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
             for action in mail_thread_based:
                 action.available_model_ids = mail_models.ids
-        super(ServerActions, self - mail_thread_based)._compute_available_model_ids()
+        super(IrActionsServer, self - mail_thread_based)._compute_available_model_ids()
 
     @api.depends('model_id', 'state')
     def _compute_sms_template_id(self):

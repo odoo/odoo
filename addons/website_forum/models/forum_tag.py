@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website, portal
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 
 
-class Tags(models.Model):
-    _name = "forum.tag"
+class ForumTag(models.Model, portal.MailThread, website.WebsiteSearchableMixin, website.WebsiteSeoMetadata):
     _description = "Forum Tag"
-    _inherit = [
-        'mail.thread',
-        'website.searchable.mixin',
-        'website.seo.metadata',
-    ]
 
     name = fields.Char('Name', required=True)
     color = fields.Integer('Color')
@@ -42,7 +37,7 @@ class Tags(models.Model):
             forum = self.env['forum.forum'].browse(vals.get('forum_id'))
             if self.env.user.karma < forum.karma_tag_create and not self.env.is_admin():
                 raise AccessError(_('%d karma required to create a new Tag.', forum.karma_tag_create))
-        return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
+        return super(ForumTag, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
 
     # ----------------------------------------------------------------------
     # WEBSITE

@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ProductDocument(models.Model):
-    _inherit = 'product.document'
+class ProductDocument(models.Model, product.ProductDocument):
 
     shown_on_product_page = fields.Boolean(string="Publish on website")
 

@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import hr
 
 from collections import defaultdict
 
 from odoo import models
 from odoo.tools import populate
 
-class HrDepartment(models.Model):
-    _inherit = 'hr.department'
+class HrDepartment(models.Model, hr.HrDepartment):
 
     _populate_sizes = {'small': 5, 'medium': 30, 'large': 200}
 
@@ -37,8 +37,7 @@ class HrDepartment(models.Model):
         for parent, children in parent_children.items():
             children.write({'parent_id': parent})
 
-class HrJob(models.Model):
-    _inherit = 'hr.job'
+class HrJob(models.Model, hr.HrJob):
 
     _populate_sizes = {'small': 5, 'medium': 20, 'large': 100}
     _populate_dependencies = ['hr.department']
@@ -51,8 +50,7 @@ class HrJob(models.Model):
             ('department_id', populate.randomize(department_ids)),
         ]
 
-class HrWorkLocation(models.Model):
-    _inherit = 'hr.work.location'
+class HrWorkLocation(models.Model, hr.HrWorkLocation):
 
     _populate_sizes = {'small': 2, 'medium': 5, 'large': 20}
     def _populate_factories(self):
@@ -63,8 +61,7 @@ class HrWorkLocation(models.Model):
             ('address_id', populate.constant(address_id)),
         ]
 
-class HrEmployeeCategory(models.Model):
-    _inherit = 'hr.employee.category'
+class HrEmployeeCategory(models.Model, hr.HrEmployeeCategory):
 
     _populate_sizes = {'small': 10, 'medium': 50, 'large': 200}
 
@@ -73,8 +70,7 @@ class HrEmployeeCategory(models.Model):
             ('name', populate.constant('tag_{counter}')),
         ]
 
-class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model, hr.HrEmployee):
 
     _populate_sizes = {'small': 100, 'medium': 2000, 'large': 20000}
     _populate_dependencies = ['res.company', 'res.users', 'resource.calendar', 'hr.department',

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mass_mailing
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
 from odoo import fields, models, _, tools
 
 
-class MassMailing(models.Model):
-    _name = 'mailing.mailing'
-    _inherit = 'mailing.mailing'
+class MailingMailing(models.Model, mass_mailing.MailingMailing):
 
     use_leads = fields.Boolean('Use Leads', compute='_compute_use_leads')
     crm_lead_count = fields.Integer('Leads/Opportunities Count', compute='_compute_crm_lead_count')
@@ -42,12 +41,12 @@ class MassMailing(models.Model):
             'name': _("Leads Analysis"),
             'res_model': 'crm.lead',
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,pivot,graph,form',
+            'view_mode': 'list,pivot,graph,form',
         }
 
     def _prepare_statistics_email_values(self):
         self.ensure_one()
-        values = super(MassMailing, self)._prepare_statistics_email_values()
+        values = super()._prepare_statistics_email_values()
         if not self.user_id:
             return values
         if not self.env['crm.lead'].check_access_rights('read', raise_exception=False):

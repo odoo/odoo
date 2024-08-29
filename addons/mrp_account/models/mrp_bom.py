@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import analytic, mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
 from odoo import models, api, fields
 
 
-class MrpBom(models.Model):
-    _name = 'mrp.bom'
-    _inherit = ['mrp.bom', 'analytic.mixin']
+class MrpBom(models.Model, mrp.MrpBom, analytic.AnalyticMixin):
 
     # Company dependent JSON fields are not yet supported
     analytic_distribution_text = fields.Text(company_dependent=True)

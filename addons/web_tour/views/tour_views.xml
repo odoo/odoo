@@ -21,10 +21,10 @@
         <record id="edit_tour_list" model="ir.ui.view">
             <field name="model">web_tour.tour</field>
             <field name="arch" type="xml">
-                <tree string="Menu" create="0" edit="0">
+                <list string="Menu" create="0" edit="0">
                     <field name="name"/>
                     <field name="user_id"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record id="edit_tour_search" model="ir.ui.view">

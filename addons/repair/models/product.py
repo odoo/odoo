@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
-class Product(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model, product.ProductProduct):
 
     product_catalog_product_is_in_repair = fields.Boolean(
         compute='_compute_product_is_in_repair',
@@ -37,7 +37,6 @@ class Product(models.Model):
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')

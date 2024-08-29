@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
 from stdnum import luhn
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     def _get_invoice_reference_no_invoice(self):
         """ This computes the reference based on the Odoo format.

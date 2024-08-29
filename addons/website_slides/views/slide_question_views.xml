@@ -17,12 +17,12 @@
                         <h1><field options="{'line_breaks': False}" widget="text" name="question" default_focus="1" placeholder="e.g. What powers a computer?"/></h1>
                     </div>
                     <field name="answer_ids">
-                        <tree editable="bottom" create="true" delete="true">
+                        <list editable="bottom" create="true" delete="true">
                             <field name="display_name" column_invisible="True"/>
                             <field name="text_value"/>
                             <field name="is_correct"/>
                             <field name="comment"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -30,30 +30,30 @@
     </record>
 
     <record id="slide_question_view_tree" model="ir.ui.view">
-        <field name="name">slide.question.view.tree</field>
+        <field name="name">slide.question.view.list</field>
         <field name="model">slide.question</field>
         <field name="arch" type="xml">
-            <tree string="Quizzes">
+            <list string="Quizzes">
                 <field name="sequence" widget="handle"/>
                 <field name="question"/>
                 <field name="slide_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="slide_question_view_tree_report" model="ir.ui.view">
-        <field name="name">slide.question.view.tree.report</field>
+        <field name="name">slide.question.view.list.report</field>
         <field name="model">slide.question</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree string="Quizzes" create="0">
+            <list string="Quizzes" create="0">
                 <field name="sequence" widget="handle"/>
                 <field name="question"/>
                 <field name="slide_id"/>
                 <field name="attempts_count"/>
                 <field name="attempts_avg"/>
                 <field name="done_count"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -71,7 +71,7 @@
     <record id="slide_question_action_report" model="ir.actions.act_window">
         <field name="name">Quizzes</field>
         <field name="res_model">slide.question</field>
-        <field name="view_mode">tree,graph,pivot,form</field>
+        <field name="view_mode">list,graph,pivot,form</field>
         <field name="view_id" ref="slide_question_view_tree_report"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

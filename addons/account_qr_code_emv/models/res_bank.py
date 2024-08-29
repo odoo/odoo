@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import re
 
@@ -7,8 +8,7 @@ from odoo.tools.misc import remove_accents
 from odoo.addons.account_qr_code_emv.const import CURRENCY_MAPPING
 
 
-class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     display_qr_setting = fields.Boolean(compute='_compute_display_qr_setting')
     include_reference = fields.Boolean(string="Include Reference", help="Include the reference in the QR code.")

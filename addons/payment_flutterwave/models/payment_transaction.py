@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 import logging
 import pprint
@@ -16,8 +17,7 @@ from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveControll
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Flutterwave-specific rendering values.

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -8,9 +9,7 @@ from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 
-class ProductTemplate(models.Model):
-    _name = 'product.template'
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit of Measure')
     purchase_method = fields.Selection([
@@ -55,9 +54,7 @@ class ProductTemplate(models.Model):
         return action
 
 
-class ProductProduct(models.Model):
-    _name = 'product.product'
-    _inherit = 'product.product'
+class ProductProduct(models.Model, product.ProductProduct):
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit of Measure')
@@ -116,15 +113,13 @@ class ProductProduct(models.Model):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
 
 
-class ProductSupplierinfo(models.Model):
-    _inherit = "product.supplierinfo"
+class ProductSupplierinfo(models.Model, product.ProductSupplierinfo):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
 
 
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
+class ProductPackaging(models.Model, product.ProductPackaging):
 
     purchase = fields.Boolean("Purchase", default=True, help="If true, the packaging can be used for purchase orders")

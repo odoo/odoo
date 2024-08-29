@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_slides
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -6,14 +7,12 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.osv import expression
 
-class ChannelUsersRelation(models.Model):
-    _inherit = 'slide.channel.partner'
+class SlideChannelPartner(models.Model, website_slides.SlideChannelPartner):
 
     nbr_certification = fields.Integer(related='channel_id.nbr_certification')
     survey_certification_success = fields.Boolean('Certified')
 
-class Channel(models.Model):
-    _inherit = 'slide.channel'
+class SlideChannel(models.Model, website_slides.SlideChannel):
 
     members_certified_count = fields.Integer('# Certified Attendees', compute='_compute_members_certified_count')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)

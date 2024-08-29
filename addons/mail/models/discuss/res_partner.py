@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -6,8 +7,7 @@ from odoo.tools import SQL
 from odoo.addons.mail.tools.discuss import Store
 
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
+class ResPartner(models.Model, base.ResPartner):
 
     channel_ids = fields.Many2many(
         "discuss.channel",

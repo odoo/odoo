@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from datetime import date, timedelta
 
@@ -6,8 +7,7 @@ from odoo import models
 from odoo.tools import populate
 
 
-class Pricelist(models.Model):
-    _inherit = "product.pricelist"
+class ProductPricelist(models.Model, product.ProductPricelist):
     _populate_sizes = {"small": 20, "medium": 100, "large": 1_500}
     _populate_dependencies = ["res.company"]
 
@@ -32,8 +32,7 @@ class Pricelist(models.Model):
         ]
 
 
-class PricelistItem(models.Model):
-    _inherit = "product.pricelist.item"
+class ProductPricelistItem(models.Model, product.ProductPricelistItem):
     _populate_sizes = {"small": 500, "medium": 5_000, "large": 50_000}
     _populate_dependencies = ["product.product", "product.template", "product.pricelist"]
 

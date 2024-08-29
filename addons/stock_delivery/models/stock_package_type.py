@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import stock
 
 from odoo import api, fields, models
 
 
-class PackageType(models.Model):
-    _inherit = 'stock.package.type'
+class StockPackageType(models.Model, stock.StockPackageType):
 
     shipper_package_code = fields.Char('Carrier Code')
     package_carrier_type = fields.Selection([('none', 'No carrier integration')], string='Carrier', default='none')
@@ -30,4 +30,4 @@ class PackageType(models.Model):
                 package.length_uom_name = ""
             else:
                 package_without_carrier |= package
-        super(PackageType, package_without_carrier)._compute_length_uom_name()
+        super(StockPackageType, package_without_carrier)._compute_length_uom_name()

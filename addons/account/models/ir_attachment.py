@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 from odoo import api, models
 from odoo.tools.pdf import OdooPdfFileReader
 
@@ -15,8 +16,7 @@ import zipfile
 _logger = logging.getLogger(__name__)
 
 
-class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
 
     def _build_zip_from_attachments(self):
         """ Return the zip bytes content resulting from compressing the attachments in `self`"""

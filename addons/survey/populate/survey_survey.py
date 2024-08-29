@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import survey
 
 from odoo import fields, models
 from odoo.tools import populate
 
-class Survey(models.Model):
-    _inherit = 'survey.survey'
+class SurveySurvey(models.Model, survey.SurveySurvey):
     _populate_sizes = {'small': 10, 'medium': 100, 'large': 1000}
     _populate_dependencies = ['res.users']
 

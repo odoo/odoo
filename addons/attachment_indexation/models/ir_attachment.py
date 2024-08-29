@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
@@ -34,8 +35,7 @@ def textToString(element):
     return buff
 
 
-class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model, base.IrAttachment):
 
     def _index_docx(self, bin_data):
         '''Index Microsoft .docx documents'''

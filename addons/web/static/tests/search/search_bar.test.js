@@ -109,7 +109,7 @@ class Partner extends models.Model {
         },
     ];
     _views = {
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         search: `
             <search>
                 <field name="foo"/>

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class UtmCampaign(models.Model):
-    _inherit = 'utm.campaign'
+class UtmCampaign(models.Model, utm.UtmCampaign):
 
     use_leads = fields.Boolean('Use Leads', compute='_compute_use_leads')
     crm_lead_count = fields.Integer('Leads/Opportunities count', groups='sales_team.group_sale_salesman', compute="_compute_crm_lead_count")
@@ -24,7 +24,7 @@ class UtmCampaign(models.Model):
     def action_redirect_to_leads_opportunities(self):
         view = 'crm.crm_lead_all_leads' if self.use_leads else 'crm.crm_lead_opportunities'
         action = self.env['ir.actions.act_window']._for_xml_id(view)
-        action['view_mode'] = 'tree,kanban,graph,pivot,form,calendar'
+        action['view_mode'] = 'list,kanban,graph,pivot,form,calendar'
         action['domain'] = [('campaign_id', 'in', self.ids)]
         action['context'] = {'active_test': False, 'create': False}
         return action

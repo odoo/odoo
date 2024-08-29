@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class SaleReport(models.Model):
-    _inherit = "sale.report"
+class SaleReport(models.Model, sale.SaleReport):
 
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
 

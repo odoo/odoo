@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 import pytz
 
@@ -22,11 +23,9 @@ def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
 
 
-class HrAttendance(models.Model):
-    _name = "hr.attendance"
+class HrAttendance(models.Model, mail.MailThread):
     _description = "Attendance"
     _order = "check_in desc"
-    _inherit = "mail.thread"
 
     def _default_employee(self):
         return self.env.user.employee_id

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -6,8 +7,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.website.models import ir_http
 
 
-class ProductPricelist(models.Model):
-    _inherit = 'product.pricelist'
+class ProductPricelist(models.Model, product.ProductPricelist):
 
     #=== DEFAULT METHODS ===#
 

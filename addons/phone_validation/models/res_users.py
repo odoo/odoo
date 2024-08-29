@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     def _deactivate_portal_user(self, **post):
         """Blacklist the phone of the user after deleting it."""
@@ -17,7 +17,7 @@ class Users(models.Model):
                     if number:
                         numbers_to_blacklist[number] = user
 
-        super(Users, self)._deactivate_portal_user(**post)
+        super()._deactivate_portal_user(**post)
 
         if numbers_to_blacklist:
             current_user = self.env.user

@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import microsoft_outlook, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class FetchmailServer(models.Model):
+class FetchmailServer(models.Model, mail.FetchmailServer, microsoft_outlook.MicrosoftOutlookMixin):
     """Add the Outlook OAuth authentication on the incoming mail servers."""
 
-    _name = 'fetchmail.server'
-    _inherit = ['fetchmail.server', 'microsoft.outlook.mixin']
 
     _OUTLOOK_SCOPE = 'https://outlook.office.com/IMAP.AccessAsUser.All'
 

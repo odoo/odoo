@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -18,7 +19,6 @@ from odoo.tools import SQL, unique
 _logger = logging.getLogger(__name__)
 
 class AccountFiscalPosition(models.Model):
-    _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
     _order = 'sequence'
     _check_company_auto = True
@@ -289,7 +289,6 @@ class AccountFiscalPosition(models.Model):
         self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
 
 class AccountFiscalPositionTax(models.Model):
-    _name = 'account.fiscal.position.tax'
     _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
     _check_company_auto = True
@@ -310,7 +309,6 @@ class AccountFiscalPositionTax(models.Model):
 
 
 class AccountFiscalPositionAccount(models.Model):
-    _name = 'account.fiscal.position.account'
     _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
     _check_company_auto = True
@@ -333,9 +331,7 @@ class AccountFiscalPositionAccount(models.Model):
     ]
 
 
-class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+class ResPartner(models.Model, base.ResPartner):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
 
@@ -714,7 +710,7 @@ class ResPartner(models.Model):
                 'name': _("Partners"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'res.partner',
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'views': [(False, 'list'), (False, 'form')],
                 'domain': [('id', 'in', bank_partners.partner_id.ids)],
             }

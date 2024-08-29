@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -14,8 +15,7 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     narration = fields.Html(translate=True)
 
@@ -65,8 +65,7 @@ class AccountMove(models.Model):
         # Only update translations of real records
         self.filtered('id')._load_narration_translation()
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     l10n_gcc_invoice_tax_amount = fields.Float(string='Tax Amount', compute='_compute_tax_amount', digits='Product Price')
     l10n_gcc_line_name = fields.Char(compute='_compute_l10n_gcc_line_name')

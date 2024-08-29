@@ -106,9 +106,9 @@ test("widget many2many_tags_avatar in list view", async () => {
         type: "list",
         resModel: "turtle",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="partner_ids" widget="many2many_tags_avatar"/>
-            </tree>`,
+            </list>`,
     });
     expect(
         `.o_data_row:nth-child(1) .o_field_many2many_tags_avatar .o_avatar img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128']`
@@ -187,9 +187,9 @@ test("widget many2many_tags_avatar list view - don't crash on keyboard navigatio
         type: "list",
         resModel: "turtle",
         arch: /*xml*/ `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="partner_ids" widget="many2many_tags_avatar"/>
-                </tree>
+                </list>
             `,
     });
 
@@ -228,7 +228,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         form: '<form><field name="name"/></form>',
     };
     Partner._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 

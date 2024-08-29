@@ -1,10 +1,10 @@
 from odoo import api, models, fields
+from odoo.addons import account
 from odoo.tools import SQL
 from odoo.tools.date_utils import get_month
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_in_is_withholding = fields.Boolean(
         string="Is Indian TDS Entry",
@@ -55,7 +55,7 @@ class AccountMove(models.Model):
             'name': "TDS Entries",
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', self.l10n_in_withhold_move_ids.ids)],
         }
 

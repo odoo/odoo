@@ -1,9 +1,9 @@
 from odoo import api, models, _
+from odoo.addons import account
 from odoo.exceptions import UserError
 
 
-class AccountTax(models.Model):
-    _inherit = 'account.tax'
+class AccountTax(models.Model, account.AccountTax):
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_declaration_of_intent_tax(self):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -14,10 +15,8 @@ from odoo.tools import escape_psql, split_every, SQL
 _logger = logging.getLogger(__name__)
 
 
-class IrModuleModule(models.Model):
-    _name = "ir.module.module"
+class IrModuleModule(models.Model, base.IrModuleModule):
     _description = 'Module'
-    _inherit = _name
 
     # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([
@@ -33,7 +32,7 @@ class IrModuleModule(models.Model):
     }
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
-                                domain=[('res_model', '=', _name), ('mimetype', '=like', 'image/%')],
+                                domain=[('res_model', '=', 'ir.module.module'), ('mimetype', '=like', 'image/%')],
                                 string='Screenshots', readonly=True)
     # for kanban view
     is_installed_on_current_website = fields.Boolean(compute='_compute_is_installed_on_current_website')

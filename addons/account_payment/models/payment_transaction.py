@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import payment
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+class PaymentTransaction(models.Model, payment.PaymentTransaction):
 
     payment_id = fields.Many2one(
         string="Payment", comodel_name='account.payment', readonly=True)
@@ -59,7 +59,7 @@ class PaymentTransaction(models.Model):
             action['view_mode'] = 'form'
             action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
         else:
-            action['view_mode'] = 'tree,form'
+            action['view_mode'] = 'list,form'
             action['domain'] = [('id', 'in', invoice_ids)]
         return action
 

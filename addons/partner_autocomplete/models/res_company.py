@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -14,9 +15,7 @@ _logger = logging.getLogger(__name__)
 COMPANY_AC_TIMEOUT = 5
 
 
-class ResCompany(models.Model):
-    _name = 'res.company'
-    _inherit = 'res.company'
+class ResCompany(models.Model, base.ResCompany):
 
     partner_gid = fields.Integer('Company database ID', related="partner_id.partner_gid", inverse="_inverse_partner_gid", store=True)
     iap_enrich_auto_done = fields.Boolean('Enrich Done')

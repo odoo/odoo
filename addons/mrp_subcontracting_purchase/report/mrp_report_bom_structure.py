@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mrp
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
 
 
-class ReportBomStructure(models.AbstractModel):
-    _inherit = 'report.mrp.report_bom_structure'
+class ReportMrpReportBomStructure(models.AbstractModel, mrp.ReportMrpReportBomStructure):
+    _name = "report.mrp.report_bom_structure"
+
 
     @api.model
     def _is_buy_route(self, rules, product, bom):

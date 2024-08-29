@@ -7,7 +7,6 @@ from odoo import api, exceptions, fields, models, _
 
 
 class PortalMixin(models.AbstractModel):
-    _name = "portal.mixin"
     _description = 'Portal Mixin'
 
     access_url = fields.Char(

@@ -1,88 +1,76 @@
 from odoo import fields, models
 
 
-class Char(models.Model):
-    _name = 'import.char'
+class ImportChar(models.Model):
     _description = 'Tests: Base Import Model, Character'
 
     value = fields.Char()
 
 
-class CharRequired(models.Model):
-    _name = 'import.char.required'
+class ImportCharRequired(models.Model):
     _description = 'Tests: Base Import Model, Character required'
 
     value = fields.Char(required=True)
 
 
-class CharReadonly(models.Model):
-    _name = 'import.char.readonly'
+class ImportCharReadonly(models.Model):
     _description = 'Tests: Base Import Model, Character readonly'
 
     value = fields.Char(readonly=True)
 
 
-class CharNoreadonly(models.Model):
-    _name = 'import.char.noreadonly'
+class ImportCharNoreadonly(models.Model):
     _description = 'Tests: Base Import Model, Character No readonly'
 
     value = fields.Char(readonly=True)
 
 
-class CharStillreadonly(models.Model):
-    _name = 'import.char.stillreadonly'
+class ImportCharStillreadonly(models.Model):
     _description = 'Tests: Base Import Model, Character still readonly'
 
     value = fields.Char(readonly=True)
 
 
 # TODO: complex field (m2m, o2m, m2o)
-class M2o(models.Model):
-    _name = 'import.m2o'
+class ImportM2o(models.Model):
     _description = 'Tests: Base Import Model, Many to One'
 
     value = fields.Many2one('import.m2o.related')
 
 
-class M2oRelated(models.Model):
-    _name = 'import.m2o.related'
+class ImportM2oRelated(models.Model):
     _description = 'Tests: Base Import Model, Many to One related'
 
     value = fields.Integer(default=42)
 
 
-class M2oRequired(models.Model):
-    _name = 'import.m2o.required'
+class ImportM2oRequired(models.Model):
     _description = 'Tests: Base Import Model, Many to One required'
 
     value = fields.Many2one('import.m2o.required.related', required=True)
 
 
-class M2oRequiredRelated(models.Model):
-    _name = 'import.m2o.required.related'
+class ImportM2oRequiredRelated(models.Model):
     _description = 'Tests: Base Import Model, Many to One required related'
 
     value = fields.Integer(default=42)
 
 
-class O2m(models.Model):
-    _name = 'import.o2m'
+class ImportO2m(models.Model):
     _description = 'Tests: Base Import Model, One to Many'
 
     name = fields.Char()
     value = fields.One2many('import.o2m.child', 'parent_id')
 
 
-class O2mChild(models.Model):
-    _name = 'import.o2m.child'
+class ImportO2mChild(models.Model):
     _description = 'Tests: Base Import Model, One to Many child'
 
     parent_id = fields.Many2one('import.o2m')
     value = fields.Integer()
 
 
-class Preview(models.Model):
-    _name = 'import.preview'
+class ImportPreview(models.Model):
     _description = 'Tests: Base Import Model Preview'
 
     name = fields.Char('Name')
@@ -90,8 +78,7 @@ class Preview(models.Model):
     othervalue = fields.Integer(string='Other Variable')
 
 
-class Float(models.Model):
-    _name = 'import.float'
+class ImportFloat(models.Model):
     _description = 'Tests: Base Import Model Float'
 
     value = fields.Float()
@@ -99,8 +86,7 @@ class Float(models.Model):
     currency_id = fields.Many2one('res.currency')
 
 
-class Complex(models.Model):
-    _name = 'import.complex'
+class ImportComplex(models.Model):
     _description = 'Tests: Base Import Model Complex'
 
     f = fields.Float()

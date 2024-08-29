@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
 
 
-class L10nItDeclarationOfIntent(models.Model):
+class L10nItEdiDoiDeclarationOfIntent(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin):
     _name = "l10n_it_edi_doi.declaration_of_intent"
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Declaration of Intent"
     _order = 'protocol_number_part1, protocol_number_part2'
 
@@ -291,7 +291,7 @@ class L10nItDeclarationOfIntent(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
             'domain': [('id', 'in', self.sale_order_ids.ids)],
-            'views': [(self.env.ref('l10n_it_edi_doi.view_quotation_tree').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('l10n_it_edi_doi.view_quotation_tree').id, 'list'), (False, 'form')],
             'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_quotation').id],
             'context': {
                 'search_default_sales': 1,
@@ -305,7 +305,7 @@ class L10nItDeclarationOfIntent(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'domain': [('id', 'in', self.invoice_ids.ids)],
-            'views': [(self.env.ref('l10n_it_edi_doi.view_move_tree').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('l10n_it_edi_doi.view_move_tree').id, 'list'), (False, 'form')],
             'search_view_id': [self.env.ref('account.view_account_invoice_filter').id],
             'context': {
                 'search_default_posted': 1,

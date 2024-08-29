@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
 
 
-class Channel(models.Model):
-    _inherit = 'discuss.channel'
+class DiscussChannel(models.Model, mail.DiscussChannel):
 
     def execute_command_help(self, **kwargs):
         super().execute_command_help(**kwargs)

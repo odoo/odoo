@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from typing import Dict
@@ -6,8 +7,7 @@ from typing import Dict
 from odoo import models, fields, api
 
 
-class PosOrderLine(models.Model):
-    _inherit = "pos.order.line"
+class PosOrderLine(models.Model, point_of_sale.PosOrderLine):
 
     combo_id = fields.Many2one('product.combo', string='Combo reference')
 
@@ -31,8 +31,7 @@ class PosOrderLine(models.Model):
             del vals['combo_parent_uuid']
         return super().write(vals)
 
-class PosOrder(models.Model):
-    _inherit = "pos.order"
+class PosOrder(models.Model, point_of_sale.PosOrder):
 
     table_stand_number = fields.Char(string="Table Stand Number")
 

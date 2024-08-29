@@ -1,8 +1,8 @@
 from odoo import models, _
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountEdiCommon(models.AbstractModel):
-    _inherit = "account.edi.common"
+class AccountEdiCommon(models.AbstractModel, account_edi_ubl_cii.AccountEdiCommon):
 
     def get_tax_unece_codes_order(self, order, tax):
         """

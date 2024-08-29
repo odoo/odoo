@@ -6,9 +6,8 @@ from random import randint
 from odoo import fields, models
 
 
-class MeetingType(models.Model):
+class CalendarEventType(models.Model):
 
-    _name = 'calendar.event.type'
     _description = 'Event Meeting Type'
 
     def _default_color(self):

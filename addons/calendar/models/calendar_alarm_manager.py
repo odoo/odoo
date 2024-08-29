@@ -8,7 +8,7 @@ from odoo import api, fields, models
 from odoo.tools import plaintext2html
 
 
-class AlarmManager(models.AbstractModel):
+class CalendarAlarmManager(models.AbstractModel):
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import payment
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+class PaymentProvider(models.Model, payment.PaymentProvider):
 
     so_reference_type = fields.Selection(string='Communication',
         selection=[

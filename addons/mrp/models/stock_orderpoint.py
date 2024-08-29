@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import stock
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -7,8 +8,7 @@ from odoo.osv.expression import AND
 from dateutil.relativedelta import relativedelta
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = 'stock.warehouse.orderpoint'
+class StockWarehouseOrderpoint(models.Model, stock.StockWarehouseOrderpoint):
 
     show_bom = fields.Boolean('Show BoM column', compute='_compute_show_bom')
     bom_id = fields.Many2one(

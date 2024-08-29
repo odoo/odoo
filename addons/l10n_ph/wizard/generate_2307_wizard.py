@@ -6,7 +6,7 @@ from odoo import fields, models
 from odoo.addons.l10n_ph import utils
 
 
-class Generate2307Wizard(models.TransientModel):
+class L10nPh2307Wizard(models.TransientModel):
     _name = "l10n_ph_2307.wizard"
     _description = "Exports 2307 data to a XLS file."
 

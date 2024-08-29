@@ -1,4 +1,5 @@
 from importlib import import_module
+from odoo.addons import base
 from inspect import getmembers, ismodule, isclass, isfunction
 
 from odoo import api, models, fields
@@ -20,8 +21,7 @@ template_module = lambda m: ismodule(m) and m.__name__.split('.')[-1].startswith
 template_class = isclass
 template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template') and f._l10n_template[1] == 'template_data'
 
-class IrModule(models.Model):
-    _inherit = "ir.module.module"
+class IrModuleModule(models.Model, base.IrModuleModule):
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
 

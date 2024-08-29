@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account_edi_ubl_cii
 
 from odoo import models
 
 
-class AccountEdiXmlUBLNL(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
+class AccountEdiXmlUblNl(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUblBis3):
     _name = 'account.edi.xml.ubl_nl'
     _description = "SI-UBL 2.0 (NLCIUS)"
 
     """
     SI-UBL 2.0 (NLCIUS) and UBL Bis 3 are 2 different formats used in the Netherlands.
-    (source: https://github.com/peppolautoriteit-nl/publications/tree/master/NLCIUS-PEPPOLBIS-Differences)
+    (source: https://github.com/peppolautoriteit-nl/publications/list/master/NLCIUS-PEPPOLBIS-Differences)
     NLCIUS defines a set of rules
     (source: https://www.softwarepakketten.nl/wiki_uitleg/60&bronw=7/Nadere_specificaties_EN_16931_1_norm_voor_de_Europese_kernfactuur.htm)
     Fortunately, some of these rules are already present in UBL Bis 3, but some are missing.

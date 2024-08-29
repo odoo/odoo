@@ -1,6 +1,6 @@
 # coding: utf-8
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import pos_config
-from . import pos_payment_method
-from . import res_config_settings
+from .pos_config import PosConfig
+from .pos_payment_method import PosPaymentMethod
+from .res_config_settings import ResConfigSettings

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import product
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
@@ -6,8 +7,7 @@ from odoo.addons.stock_landed_costs.models.stock_landed_cost import SPLIT_METHOD
 from odoo.exceptions import UserError
 
 
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
+class ProductTemplate(models.Model, product.ProductTemplate):
 
     landed_cost_ok = fields.Boolean('Is a Landed Cost', help='Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts.')
     split_method_landed_cost = fields.Selection(SPLIT_METHOD, string="Default Split Method",

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base, mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -18,9 +19,7 @@ MODEL_FIELDS_TO_VEHICLE = {
     'vehicle_range': 'vehicle_range', 'power_unit': 'power_unit'
 }
 
-class FleetVehicle(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'avatar.mixin']
-    _name = 'fleet.vehicle'
+class FleetVehicle(models.Model, mail.MailThread, mail.MailActivityMixin, base.AvatarMixin):
     _description = 'Vehicle'
     _order = 'license_plate asc, acquisition_date asc'
     _rec_names_search = ['name', 'driver_id.name']
@@ -405,7 +404,7 @@ class FleetVehicle(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Assignment Logs',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'res_model': 'fleet.vehicle.assignation.log',
             'domain': [('vehicle_id', '=', self.id)],
             'context': {'default_driver_id': self.driver_id.id, 'default_vehicle_id': self.id}

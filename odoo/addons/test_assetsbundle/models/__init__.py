@@ -1,1 +1,1 @@
-from . import ir_qweb
+from .ir_qweb import IrQweb

@@ -1,4 +1,5 @@
 import re
+from odoo.addons import base
 from odoo import models, fields, _
 from odoo.exceptions import UserError
 from cryptography.hazmat.backends import default_backend
@@ -6,8 +7,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model, base.ResCompany):
 
     def _l10n_sa_generate_private_key(self):
         """

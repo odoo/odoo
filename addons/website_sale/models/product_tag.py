@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import website, product
 
 from odoo import fields, models
 
 
-class ProductTag(models.Model):
-    _name = 'product.tag'
-    _inherit = ['website.multi.mixin', 'product.tag']
+class ProductTag(models.Model, website.WebsiteMultiMixin, product.ProductTag):
 
     visible_on_ecommerce = fields.Boolean(
         string="Visible on eCommerce",

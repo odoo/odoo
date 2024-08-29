@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import website_event_track
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class EventTrack(models.Model):
-    _inherit = ['event.track']
+class EventTrack(models.Model, website_event_track.EventTrack):
 
     quiz_id = fields.Many2one('event.quiz', string="Quiz", compute='_compute_quiz_id', store=True, groups="event.group_event_user")
     quiz_ids = fields.One2many('event.quiz', 'event_track_id', string="Quizzes")

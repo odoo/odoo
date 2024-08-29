@@ -16,7 +16,7 @@
         </record>
 
         <record id="view_employee_tree_inherit_expense" model="ir.ui.view">
-            <field name="name">hr.employee.tree.expense</field>
+            <field name="name">hr.employee.list.expense</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_tree"/>
             <field name="arch" type="xml">
@@ -41,10 +41,10 @@
         </record>
 
         <record id="hr_expense_view_expenses_analysis_tree" model="ir.ui.view">
-            <field name="name">hr.expense.tree</field>
+            <field name="name">hr.expense.list</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
+                <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
                     <field name="is_editable" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -90,17 +90,17 @@
                     <field name="state" optional="show" readonly="True" decoration-info="state in ['draft', 'reported']"
                            decoration-success="state in ['approved', 'done']"
                            decoration-warning="state == 'submitted'" decoration-danger="state == 'refused'" widget="badge"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="view_expenses_tree" model="ir.ui.view">
-            <field name="name">hr.expense.tree</field>
+            <field name="name">hr.expense.list</field>
             <field name="model">hr.expense</field>
             <field name="inherit_id" ref="hr_expense_view_expenses_analysis_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
                     <attribute name="js_class">hr_expense_dashboard_tree</attribute>
                 </xpath>
@@ -108,13 +108,13 @@
         </record>
 
         <record id="view_my_expenses_tree" model="ir.ui.view">
-            <field name="name">hr.expense.tree</field>
+            <field name="name">hr.expense.list</field>
             <field name="model">hr.expense</field>
             <field name="priority">20</field>
             <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
                     <attribute name="js_class">hr_expense_dashboard_tree</attribute>
                 </xpath>
@@ -175,7 +175,7 @@
                                     context="{
                                         'default_type': 'service',
                                         'default_can_be_expensed': 1,
-                                        'tree_view_ref': 'hr_expense.product_product_expense_tree_view',
+                                        'list_view_ref': 'hr_expense.product_product_expense_tree_view',
                                         'form_view_ref': 'hr_expense.product_product_expense_form_view',
                                     }"
                                     class="w-100"/>
@@ -455,7 +455,7 @@
         <record id="hr_expense_actions_all" model="ir.actions.act_window">
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
@@ -479,7 +479,7 @@
         </record>
 
         <record id="hr_expense_actions_all_tree" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="hr_expense_view_expenses_analysis_tree"/>
             <field name="act_window_id" ref="hr_expense_actions_all"/>
         </record>
@@ -488,7 +488,7 @@
             <field name="name">My Expenses</field>
             <field name="path">expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
+            <field name="view_mode">list,kanban,form,graph,pivot,activity</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="context">{'search_default_my_expenses': 1}</field>
             <field name="help" type="html">
@@ -501,9 +501,9 @@
             </field>
         </record>
 
-        <!-- Tree & Kanban view for "All My Expenses" with header -->
+        <!-- List & Kanban view for "All My Expenses" with header -->
         <record id="hr_expense_actions_my_all_tree" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_my_expenses_tree"/>
             <field name="act_window_id" ref="hr_expense_actions_my_all"/>
         </record>
@@ -616,11 +616,11 @@
         </record>
 
         <record id="product_product_expense_tree_view" model="ir.ui.view">
-            <field name="name">product.product.expense.tree</field>
+            <field name="name">product.product.expense.list</field>
             <field name="model">product.product</field>
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Product Variants">
+                <list string="Product Variants">
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="product_template_attribute_value_ids" widget="many2many_tags"
@@ -628,15 +628,15 @@
                     <field name="standard_price"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="barcode"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record model="ir.ui.view" id="product_product_expense_categories_tree_view">
-            <field name="name">product.product.expense.categories.tree.view</field>
+            <field name="name">product.product.expense.categories.list.view</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree class="o_expense_categories">
+                <list class="o_expense_categories">
                     <field name="name" readonly="1"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="default_code" optional="show" string="Reference" readonly="1"/>
@@ -644,14 +644,14 @@
                     <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show" string="Sales Price"/>
                     <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show"/>
                     <field name="supplier_taxes_id" widget="many2many_tags" optional="show"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="hr_expense_product" model="ir.actions.act_window">
             <field name="name">Expense Categories</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service'}</field>
             <field name="domain">[('can_be_expensed', '=', True)]</field>
@@ -666,7 +666,7 @@
 
         <record id="hr_expense_product_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="product_product_expense_categories_tree_view"/>
             <field name="act_window_id" ref="hr_expense_product"/>
         </record>
@@ -686,10 +686,10 @@
         </record>
 
         <record id="view_hr_expense_sheet_tree" model="ir.ui.view">
-            <field name="name">hr.expense.sheet.tree</field>
+            <field name="name">hr.expense.sheet.list</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree" sample="1" decoration-info="state == 'draft'">
+                <list string="Expense Reports" multi_edit="1" js_class="hr_expense_tree" sample="1" decoration-info="state == 'draft'">
                     <field name="product_ids" column_invisible="True"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -716,19 +716,19 @@
                            decoration-success="payment_state == 'paid'"
                            decoration-danger="payment_state in ('reversed','not_paid')"
                            widget="badge" invisible="state in ['draft', 'submit', 'cancel']"/>
-                </tree>
+                </list>
             </field>
         </record>
 
-        <!-- Tree view for "My Reports" with header -->
+        <!-- List view for "My Reports" with header -->
         <record id="view_hr_expense_sheet_dashboard_tree_header" model="ir.ui.view">
-            <field name="name">hr.expense.sheet.dashboard.tree</field>
+            <field name="name">hr.expense.sheet.dashboard.list</field>
             <field name="model">hr.expense.sheet</field>
             <field name="priority">20</field>
             <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <attribute name="js_class">hr_expense_dashboard_tree</attribute>
                 </xpath>
             </field>
@@ -857,7 +857,7 @@
                             <field name="expense_line_ids"
                                     nolabel="1"
                                     widget="expense_lines_widget"
-                                    mode="tree,kanban"
+                                    mode="list,kanban"
                                     domain="[
                                         ('sheet_id', '=', False),
                                         ('employee_id', '=', employee_id),
@@ -875,7 +875,7 @@
                                     }"
                                     readonly="not is_editable"
                                     force_save="1">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="employee_id" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="nb_attachment" column_invisible="True"/>
@@ -910,7 +910,7 @@
                                            string="Subtotal In Currency " optional="show"
                                            readonly="true" groups="base.group_multi_currency"/>
                                     <field name="total_amount" string="Subtotal" readonly="True"/>
-                                </tree>
+                                </list>
                             </field>
                             <group class="oe_subtotal_footer" colspan="2" name="expense_total">
                                 <field name="untaxed_amount"/>
@@ -1099,7 +1099,7 @@
             <field name="name">My Reports</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="path">my-expense-reports</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="context">{'search_default_my_reports': 1, 'search_default_not_refused_reports': 1}</field>
             <field name="help" type="html">
@@ -1111,9 +1111,9 @@
             </field>
         </record>
 
-        <!-- Tree & Kanban view for "My Reports" with header -->
+        <!-- List & Kanban view for "My Reports" with header -->
         <record id="action_hr_expense_sheet_my_all_tree" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="view_hr_expense_sheet_dashboard_tree_header"/>
             <field name="act_window_id" ref="action_hr_expense_sheet_my_all"/>
         </record>
@@ -1128,7 +1128,7 @@
             <field name="name">All Reports</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="path">expense-reports</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="view_mode">list,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search_with_panel"/>
             <field name="domain">[]</field>
             <field name="context">{ 'searchpanel_default_state': ["draft", "submit", "approve", "post", "done"] }</field>
@@ -1144,7 +1144,7 @@
         <record id="action_hr_expense_account" model="ir.actions.act_window">
             <field name="name">Employee Expenses</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="view_mode">list,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="domain">[]</field>
@@ -1165,7 +1165,7 @@
         <record id="action_hr_expense_sheet_all_all" model="ir.actions.act_window">
             <field name="name">All Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">graph,pivot,tree,kanban,form</field>
+            <field name="view_mode">graph,pivot,list,kanban,form</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="help" type="html">
@@ -1180,7 +1180,7 @@
         <record id="action_hr_expense_sheet_department_to_approve" model="ir.actions.act_window">
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="view_mode">list,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search_with_panel"/>
             <field name="context">{ 'searchpanel_default_state': ["submit"] }</field>
             <field name="domain">[('department_id', '=', active_id)]</field>

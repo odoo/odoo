@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import calendar
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
@@ -7,8 +8,7 @@ from odoo import api, fields, models
 from odoo.addons.resource.models.utils import Intervals, sum_intervals, timezone_datetime
 
 
-class CalendarEvent(models.Model):
-    _inherit = "calendar.event"
+class CalendarEvent(models.Model, calendar.CalendarEvent):
 
     unavailable_partner_ids = fields.Many2many('res.partner', compute='_compute_unavailable_partner_ids')
 

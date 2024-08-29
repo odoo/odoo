@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import equipment
-from . import res_users
+from .equipment import MaintenanceRequest, MaintenanceEquipment
+from .res_users import ResUsers, HrEmployee

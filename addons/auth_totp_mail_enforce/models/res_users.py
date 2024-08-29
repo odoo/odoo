@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import babel.dates
 import logging
@@ -20,8 +21,7 @@ TOTP_RATE_LIMITS = {
 }
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model, base.ResUsers):
 
     def _mfa_type(self):
         r = super()._mfa_type()

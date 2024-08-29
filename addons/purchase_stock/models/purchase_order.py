@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import purchase
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
 
@@ -9,8 +10,7 @@ from odoo.tools import format_list
 from odoo.tools.misc import OrderedSet
 
 
-class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+class PurchaseOrder(models.Model, purchase.PurchaseOrder):
 
     @api.model
     def _default_picking_type(self):

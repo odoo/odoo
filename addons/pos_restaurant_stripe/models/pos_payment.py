@@ -1,10 +1,10 @@
 # coding: utf-8
+from odoo.addons import point_of_sale
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 
 
-class PosPayment(models.Model):
-    _inherit = 'pos.payment'
+class PosPayment(models.Model, point_of_sale.PosPayment):
 
     def _update_payment_line_for_tip(self, tip_amount):
         """Capture the payment when a tip is set."""

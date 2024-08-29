@@ -23,7 +23,7 @@
                       string="E-Factura"
                       invisible="not l10n_ro_edi_document_ids">
                     <field name="l10n_ro_edi_document_ids">
-                        <tree create="false" delete="false" edit="false" no_open="1"
+                        <list create="false" delete="false" edit="false" no_open="1"
                               decoration-danger="state == 'invoice_sending_failed'"
                               decoration-warning="state == 'invoice_sending'"
                               decoration-success="state == 'invoice_sent'">
@@ -40,7 +40,7 @@
                                     type="object"
                                     string="Download"
                                     invisible="not attachment_id"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>
@@ -48,7 +48,7 @@
     </record>
 
     <record id="out_invoice_tree_inherit_l10n_ro_edi" model="ir.ui.view">
-        <field name="name">out.invoice.tree.inherit.l10n_ro_edi</field>
+        <field name="name">out.invoice.list.inherit.l10n_ro_edi</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_out_invoice_tree"/>
         <field name="arch" type="xml">
@@ -59,7 +59,7 @@
     </record>
 
     <record id="out_credit_note_tree_inherit_l10n_ro_edi" model="ir.ui.view">
-        <field name="name">out.credit.note.tree.inherit.l10n_ro_edi</field>
+        <field name="name">out.credit.note.list.inherit.l10n_ro_edi</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_out_credit_note_tree"/>
         <field name="arch" type="xml">
@@ -70,7 +70,7 @@
     </record>
 
     <record id="in_invoice_tree_inherit_l10n_ro_edi" model="ir.ui.view">
-        <field name="name">in.invoice.tree.inherit.l10n_ro_edi</field>
+        <field name="name">in.invoice.list.inherit.l10n_ro_edi</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_in_invoice_tree"/>
         <field name="arch" type="xml">

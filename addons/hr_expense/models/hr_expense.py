@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import analytic, mail
 
 import re
 from markupsafe import Markup
@@ -9,9 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_repr, float_round, is_html_empty
 
 
-class HrExpense(models.Model):
-    _name = "hr.expense"
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'analytic.mixin']
+class HrExpense(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin, analytic.AnalyticMixin):
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
@@ -541,7 +540,7 @@ class HrExpense(models.Model):
         """
             Create the expenses from files.
 
-            :return: An action redirecting to hr.expense tree view.
+            :return: An action redirecting to hr.expense list view.
         """
         if not attachment_ids:
             raise UserError(_("No attachment was provided"))

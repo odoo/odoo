@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import logging
 import re
@@ -41,8 +42,7 @@ class ModelConverter(ir_http.ModelConverter):
         return record.with_context(_converter_value=value)
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(models.AbstractModel, base.IrHttp):
 
     rerouting_limit = 10
 

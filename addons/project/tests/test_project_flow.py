@@ -492,13 +492,13 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         project_pigs_milestone_action = self.env['ir.actions.act_window'].create({
             'name': 'Milestones',
             'res_model': 'project.milestone',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'domain': f"[('project_id', '=', {self.project_pigs.id})]",
         })
         task_action = self.env['ir.actions.act_window'].create({
             'name': 'Tasks',
             'res_model': 'project.task',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'domain': "[('project_id', '=', active_id), ('display_in_project', '=', True)]",
             'context': "{'default_project_id': active_id}",
         })

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import utm
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -9,8 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
 
 
-class UtmCampaign(models.Model):
-    _inherit = 'utm.campaign'
+class UtmCampaign(models.Model, utm.UtmCampaign):
 
     mailing_mail_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',

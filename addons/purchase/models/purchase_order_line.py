@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import analytic
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
@@ -9,9 +10,7 @@ from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import UserError
 
 
-class PurchaseOrderLine(models.Model):
-    _name = 'purchase.order.line'
-    _inherit = 'analytic.mixin'
+class PurchaseOrderLine(models.Model, analytic.AnalyticMixin):
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 

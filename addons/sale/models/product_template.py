@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from collections import defaultdict
 
@@ -9,8 +10,7 @@ from odoo.tools import float_round, format_list
 from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(models.Model, product.ProductTemplate):
     _check_company_auto = True
 
     service_type = fields.Selection(

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import hr_recruitment
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug import urls
@@ -6,8 +7,7 @@ from werkzeug import urls
 from odoo import api, fields, models
 
 
-class RecruitmentSource(models.Model):
-    _inherit = 'hr.recruitment.source'
+class HrRecruitmentSource(models.Model, hr_recruitment.HrRecruitmentSource):
 
     url = fields.Char(compute='_compute_url', string='Url Parameters')
 

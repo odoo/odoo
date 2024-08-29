@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import base
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model, base.ResCompany):
 
     l10n_in_edi_ewaybill_username = fields.Char("E-Waybill (IN) Username", groups="base.group_system")
     l10n_in_edi_ewaybill_password = fields.Char("E-Waybill (IN) Password", groups="base.group_system")

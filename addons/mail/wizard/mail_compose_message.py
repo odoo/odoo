@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -26,7 +27,7 @@ def _reopen(self, res_id, model, context=None):
             }
 
 
-class MailComposer(models.TransientModel):
+class MailComposeMessage(models.TransientModel, mail.MailComposerMixin):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
 
@@ -36,8 +37,6 @@ class MailComposer(models.TransientModel):
             contain template placeholders that will be merged with actual data
             before being sent to each recipient.
     """
-    _name = 'mail.compose.message'
-    _inherit = 'mail.composer.mixin'
     _description = 'Email composition wizard'
     _log_access = True
     _batch_size = 500
@@ -620,7 +619,7 @@ class MailComposer(models.TransientModel):
         """
         non_mass_mail = self.filtered(lambda m: m.composition_mode != 'mass_mail')
         non_mass_mail.can_edit_body = True
-        super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
+        super(MailComposeMessage, self - non_mass_mail)._compute_can_edit_body()
 
     # ------------------------------------------------------------
     # CRUD / ORM

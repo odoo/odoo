@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import base
 
 import re
 
@@ -7,8 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools import single_email_re
 
 
-class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+class ResPartnerBank(models.Model, base.ResPartnerBank):
 
     proxy_type = fields.Selection(selection_add=[('id', "FPS ID"), ('mobile', "Mobile Number"), ('email', "Email Address")],
                                   ondelete={'id': 'set default', 'mobile': 'set default', 'email': 'set default'})

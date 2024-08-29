@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import mail
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
@@ -6,8 +7,7 @@ from odoo.http import request
 from odoo.tools import format_datetime
 
 
-class MailMessage(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model, mail.MailMessage):
 
     def portal_message_format(self, options=None):
         """ Simpler and portal-oriented version of 'message_format'. Purpose

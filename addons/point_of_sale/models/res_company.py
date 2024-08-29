@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import point_of_sale, base
 
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
-class ResCompany(models.Model):
-    _name = 'res.company'
-    _inherit = ['res.company', 'pos.load.mixin']
+class ResCompany(models.Model, base.ResCompany, point_of_sale.PosLoadMixin):
 
     point_of_sale_update_stock_quantities = fields.Selection([
             ('closing', 'At the session closing (faster)'),

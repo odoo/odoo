@@ -1,10 +1,10 @@
 import requests
+from odoo.addons import account
 
 from odoo import models, fields, _, api, modules, tools
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_ro_edi_document_ids = fields.One2many(
         comodel_name='l10n_ro_edi.document',

@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from odoo import models
 from odoo.addons.mail.tools.discuss import Store
 
 
-class MailMessage(models.Model):
-    _inherit = "mail.message"
+class MailMessage(models.Model, mail.MailMessage):
 
     def _validate_access_for_current_persona(self, operation):
         if not self:

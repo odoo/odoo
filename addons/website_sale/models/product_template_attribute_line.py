@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import product
 
 from collections import OrderedDict
 
 from odoo import models
 
 
-class ProductTemplateAttributeLine(models.Model):
-    _inherit = 'product.template.attribute.line'
+class ProductTemplateAttributeLine(models.Model, product.ProductTemplateAttributeLine):
 
     def _prepare_single_value_for_display(self):
         """On the product page group together the attribute lines that concern

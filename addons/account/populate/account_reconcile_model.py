@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 """Classes defining the populate factory for Bank Statements and related models."""
 from odoo import models
 from odoo.tools import populate
@@ -8,10 +9,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AccountReconcileModel(models.Model):
+class AccountReconcileModel(models.Model, account.AccountReconcileModel):
     """Populate factory part for account.reconcile.model."""
 
-    _inherit = "account.reconcile.model"
 
     _populate_sizes = {
         'small': 5,
@@ -39,10 +39,9 @@ class AccountReconcileModel(models.Model):
         ]
 
 
-class AccountReconcileModelLine(models.Model):
+class AccountReconcileModelLine(models.Model, account.AccountReconcileModelLine):
     """Populate factory part for account.reconcile.model.line."""
 
-    _inherit = "account.reconcile.model.line"
 
     _populate_sizes = {
         'small': 10,

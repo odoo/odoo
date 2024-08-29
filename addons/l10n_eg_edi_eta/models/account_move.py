@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.addons import account
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import json
@@ -12,8 +13,7 @@ from datetime import datetime
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model, account.AccountMove):
 
     l10n_eg_long_id = fields.Char(string='ETA Long ID', compute='_compute_eta_long_id')
     l10n_eg_qr_code = fields.Char(string='ETA QR Code', compute='_compute_eta_qr_code_str')

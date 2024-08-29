@@ -6,7 +6,7 @@ from odoo import models, fields, api
 from odoo.osv import expression
 
 
-class EtaActivityType(models.Model):
+class L10nEgEdiActivityType(models.Model):
     _name = 'l10n_eg_edi.activity.type'
     _description = 'ETA code for activity type'
 

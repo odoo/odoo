@@ -1,9 +1,9 @@
 from odoo import models, api
+from odoo.addons import point_of_sale
 from odoo.osv import expression
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+class PosPaymentMethod(models.Model, point_of_sale.PosPaymentMethod):
 
     @api.model
     def _load_pos_self_data_domain(self, data):

@@ -258,7 +258,7 @@ export class Field extends Component {
                 }
             }
             for (const child of node.children) {
-                const viewType = child.tagName === "tree" ? "list" : child.tagName;
+                const viewType = child.tagName;
                 const { ArchParser } = viewRegistry.get(viewType);
                 // We copy and hence isolate the subview from the main view's tree
                 // This way, the subview's tree is autonomous and CSS selectors will work normally
@@ -275,8 +275,6 @@ export class Field extends Component {
             if (viewMode) {
                 if (viewMode.split(",").length !== 1) {
                     viewMode = isSmall() ? "kanban" : "list";
-                } else {
-                    viewMode = viewMode === "tree" ? "list" : viewMode;
                 }
             } else {
                 if (views.list && !views.kanban) {

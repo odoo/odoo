@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons import mail
 
 from markupsafe import Markup
 
@@ -6,8 +7,7 @@ from odoo import models, _
 from odoo.tools import html2plaintext
 
 
-class DiscussChannel(models.Model):
-    _inherit = 'discuss.channel'
+class DiscussChannel(models.Model, mail.DiscussChannel):
 
     def execute_command_lead(self, **kwargs):
         key = kwargs['body']
