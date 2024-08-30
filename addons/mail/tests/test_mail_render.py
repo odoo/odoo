@@ -492,7 +492,7 @@ class TestRegexRendering(common.MailCommon):
             with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
                 self.assertEqual(render(template), expected)
                 self.assertFalse(unsafe_eval.called)
-                self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template))
+                self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))
 
         non_static_templates = (
             ('''{{''}}''', ''),
@@ -503,7 +503,7 @@ class TestRegexRendering(common.MailCommon):
             with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
                 self.assertEqual(render(template), expected)
                 self.assertTrue(unsafe_eval.called)
-                self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template))
+                self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))
 
 
 @tagged('mail_render')
