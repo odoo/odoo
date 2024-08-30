@@ -141,7 +141,7 @@
             <field name="name">mrp.workcenter.kanban</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <kanban highlight_color="color" class="o_workcenter_kanban" create="0" can_open="0" sample="1">
+                <kanban highlight_color="color" class="o_workcenter_kanban" create="0" can_open="0" sample="0">
                     <field name="workorder_count"/>
                     <field name="working_state"/>
                     <field name="oee_target"/>
@@ -186,7 +186,23 @@
                             </div>
                         </t>
                         <t t-name="kanban-card">
-                            <field name="name" class="fw-bold fs-4 ms-2"/>
+                            <div class="ms-1">
+                                <div style="display: inline-block" name="wc_stages">
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
+                                        title="No workorder currently in progress. Click to mark work center as blocked."
+                                        aria-label="No workorder currently in progress. Click to mark work center as blocked."
+                                        invisible="working_state in ('blocked', 'done')"/>
+                                    <a name="unblock" type="object" class=" o_status o_status_red float-end"
+                                        title="Workcenter blocked, click to unblock."
+                                        aria-label="Workcenter blocked, click to unblock."
+                                        invisible="working_state in ('normal', 'done')"/>
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
+                                        title="Work orders in progress. Click to block work center."
+                                        aria-label="Work orders in progress. Click to block work center."
+                                        invisible="working_state in ('normal', 'blocked')"/>
+                                </div>
+                                <field name="name" class="fw-bold fs-4 ms-2"/>
+                            </div>
                             <div class="row mt-3 pb-3">
                                 <div class="col-6">
                                     <div class="btn-group p-1" name="o_wo">
@@ -229,19 +245,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="ms-auto" name="wc_stages">
-                                <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
-                                    title="No workorder currently in progress. Click to mark work center as blocked."
-                                    aria-label="No workorder currently in progress. Click to mark work center as blocked."
-                                    invisible="working_state in ('blocked', 'done')"/>
-                                <a name="unblock" type="object" class=" o_status o_status_red float-end"
-                                    title="Workcenter blocked, click to unblock."
-                                    aria-label="Workcenter blocked, click to unblock."
-                                    invisible="working_state in ('normal', 'done')"/>
-                                <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
-                                    title="Work orders in progress. Click to block work center."
-                                    aria-label="Work orders in progress. Click to block work center."
-                                    invisible="working_state in ('normal', 'blocked')"/>
+                            <div class="row">
+                                <field name="kanban_dashboard_graph" graph_type="bar" widget="workcenter_dashboard_graph"/>
                             </div>
                         </t>
                     </templates>

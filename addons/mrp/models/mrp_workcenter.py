@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
+from babel.dates import format_date
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
@@ -10,7 +12,9 @@ from random import randint
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.resource.models.utils import make_aware, Intervals
-from odoo.tools.float_utils import float_compare
+from odoo.tools.date_utils import start_of, end_of
+from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.misc import get_lang
 
 
 class MrpWorkcenter(models.Model):
@@ -75,12 +79,83 @@ class MrpWorkcenter(models.Model):
     tag_ids = fields.Many2many('mrp.workcenter.tag')
     capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
         help="Specific number of pieces that can be produced in parallel per product.", copy=True)
+    kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
         for workcenter in self:
             if workcenter in workcenter.alternative_workcenter_ids:
                 raise ValidationError(_("Workcenter %s cannot be an alternative of itself.", workcenter.name))
+
+    def _compute_kanban_dashboard_graph(self):
+        week_range, date_start, date_stop = self._get_week_range_and_first_last_days()
+        load_data = self._get_workcenter_load_per_week(week_range, date_start, date_stop)
+        load_graph_data = self._prepare_graph_data(load_data, week_range)
+        for wc in self:
+            wc.kanban_dashboard_graph = json.dumps(load_graph_data[wc.id])
+
+    def _get_week_range_and_first_last_days(self):
+        """ We calculate the delta between today and the previous monday,
+        then add it to the delta between monday and the previous first day
+        of the week as configured in the language settings.
+        We use the result to calculate the modulo of 7 to make sure that
+        we do not take the previous first day of the week from 2 weeks ago.
+
+        E.g. today is Thursday, the first of a week is a Tuesday.
+        The delta between today and Monday is 3 days.
+        The delta between Monday and the previous Tuesday is 6 days.
+        (3 + 6) % 7 = 2, so from today, the first day of the current week is 2 days ago.
+        """
+        week_range = {}
+        locale = get_lang(self.env).code
+        today = datetime.today()
+        delta_from_monday_to_today = (today - start_of(today, 'week')).days
+        first_week_day = int(get_lang(self.env).week_start) - 1
+        day_offset = ((7 - first_week_day) + delta_from_monday_to_today) % 7
+
+        for delta in range(-7, 28, 7):
+            week_start = start_of(today + relativedelta.relativedelta(days=delta - day_offset), 'day')
+            week_end = week_start + relativedelta.relativedelta(days=6)
+            short_name = (format_date(week_start, 'd - ', locale=locale)
+                          + format_date(week_end, 'd MMM', locale=locale))
+            if not delta:
+                short_name = _('This Week')
+            week_range[week_start] = short_name
+        date_start = start_of(today + relativedelta.relativedelta(days=-7 - day_offset), 'day')
+        date_stop = end_of(today + relativedelta.relativedelta(days=27 - day_offset), 'day')
+        return week_range, date_start, date_stop
+
+    def _get_workcenter_load_per_week(self, week_range, date_start, date_stop):
+        load_data = {rec: {} for rec in self}
+        # demo data
+        if not self.order_ids:
+            for wc in self:
+                load_limit = 40     # default max load per week is 40 hours on a new workcenter
+                load_data[wc] = {week_start: randint(0, int(load_limit * 2)) for week_start in week_range}
+            return load_data
+
+        result = self.env['mrp.workorder']._read_group(
+            [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready', 'progress')),
+             ('production_date', '>=', date_start), ('production_date', '<=', date_stop)],
+            ['workcenter_id', 'production_date:week'], ['duration_expected:sum'])
+        for r in result:
+            load_in_hours = round(r[2] / 60, 1)
+            load_data[r[0]].update({r[1]: load_in_hours})
+        return load_data
+
+    def _prepare_graph_data(self, load_data, week_range):
+        graph_data = {wid: [] for wid in self._ids}
+        for workcenter in self:
+            load_limit = sum(workcenter.resource_calendar_id.attendance_ids.mapped('duration_hours'))
+            wc_data = {'is_sample_data': not self.order_ids, 'labels': list(week_range.values())}
+            load_bar = []
+            excess_bar = []
+            for week_start in week_range:
+                load_bar.append(min(load_data[workcenter].get(week_start, 0), load_limit))
+                excess_bar.append(max(float_round(load_data[workcenter].get(week_start, 0) - load_limit, precision_digits=1, rounding_method='HALF-UP'), 0))
+            wc_data['values'] = [load_bar, load_limit, excess_bar]
+            graph_data[workcenter.id].append(wc_data)
+        return graph_data
 
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_start')
     def _compute_workorder_count(self):
