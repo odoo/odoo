@@ -289,7 +289,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
                 {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 0.0,   'credit': 1.0},
             ]
         self.assertRecordValues(
-            sorted(stock_negative_landed_cost.account_move_id.line_ids, key=lambda d: (d['name'], d['debit'])),
+            stock_negative_landed_cost.account_move_id.line_ids.sorted(lambda d: (d['name'], d['debit'])),
             sorted(move_lines, key=lambda d: (d['name'], d['debit'])),
         )
 
