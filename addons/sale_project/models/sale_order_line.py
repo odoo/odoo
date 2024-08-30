@@ -58,6 +58,7 @@ class SaleOrderLine(models.Model):
             if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
                 product = self.env['product.product'].search([
                     ('name', 'ilike', product_name),
+                    ('type', '=', 'service'),
                     ('company_id', 'in', [False, self.env.company.id]),
                 ], limit=1)
                 if product:
