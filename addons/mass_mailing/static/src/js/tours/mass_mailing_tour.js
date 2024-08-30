@@ -10,8 +10,6 @@
 
     registry.category("web_tour.tours").add('mass_mailing_tour', {
         url: '/odoo',
-        rainbowManMessage: _t('Congratulations, I love your first mailing. :)'),
-        sequence: 200,
         steps: () => [stepUtils.showAppsMenuItem(), {
         isActive: ["enterprise"],
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',

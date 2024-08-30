@@ -58,6 +58,7 @@ Featuring
         'data/mail_templates.xml',
         'data/slide_data.xml',
         'data/website_data.xml',
+        'data/slides_tour.xml',
     ],
     'demo': [
         'data/res_users_demo.xml',

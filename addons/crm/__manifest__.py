@@ -35,6 +35,7 @@
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/crm_recurring_plan_data.xml',
+        'data/crm_tour.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',

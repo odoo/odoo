@@ -23,6 +23,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_report.xml',
         'data/mail_template_data.xml',
         'data/onboarding_data.xml',
+        'data/account_tour.xml',
         'views/account_payment_view.xml',
         'wizard/account_automatic_entry_wizard_views.xml',
         'wizard/account_autopost_bills_wizard.xml',
