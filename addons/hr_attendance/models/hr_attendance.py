@@ -707,7 +707,7 @@ class HrAttendance(models.Model):
 
         previous_duration = self.env['hr.attendance']._read_group(
             domain=[
-                ('employee_id', 'in', to_verify.mapped('employee_id').ids),
+                ('employee_id', 'in', to_verify.employee_id.ids),
                 ('check_in', '>', (fields.Datetime.now() - relativedelta(days=1)).replace(hour=0, minute=0, second=0)),
                 ('check_out', '!=', False)], groupby=['check_in:day', 'employee_id'], aggregates=['worked_hours:sum'])
 

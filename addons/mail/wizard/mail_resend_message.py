@@ -62,7 +62,7 @@ class MailResendMessage(models.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         for wizard in self:
             "If a partner disappeared from partner list, we cancel the notification"
-            to_cancel = wizard.partner_ids.filtered(lambda p: not p.resend).mapped("partner_id")
+            to_cancel = wizard.partner_ids.filtered(lambda p: not p.resend).partner_id
             to_send = wizard.partner_ids.filtered(lambda p: p.resend)
             notif_to_cancel = wizard.notification_ids.filtered(lambda notif: notif.notification_type == 'email' and notif.res_partner_id in to_cancel and notif.notification_status in ('exception', 'bounce'))
             notif_to_cancel.sudo().write({'notification_status': 'canceled'})

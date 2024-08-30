@@ -671,7 +671,7 @@ class SaleOrder(models.Model):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
-        self.mapped("order_line")  # Prefetch indication
+        self.fetch(['order_line'])  # Prefetch indication
         for order in self:
             if order.state == 'cancel':
                 order.expected_date = False
@@ -1382,7 +1382,7 @@ class SaleOrder(models.Model):
     @api.readonly
     def action_view_invoice(self, invoices=False):
         if not invoices:
-            invoices = self.mapped('invoice_ids')
+            invoices = self.invoice_ids
         action = self.env['ir.actions.actions']._for_xml_id('account.action_move_out_invoice_type')
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]

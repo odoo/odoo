@@ -371,10 +371,20 @@ class CardCampaign(models.Model):
 
     def _get_card_element_values(self, record):
         """Helper to get the right value for dynamic fields."""
+
+        def get_first_value_from_path(path):
+            if not path:
+                return False
+            *path_parts, last_field = path.split('.')
+            item = record
+            for path_part in path_parts:
+                item = item[path_part]
+            return item[:1][last_field] or False
+
         self.ensure_one()
         result = {
-            'image1': images[0] if (images := self.content_image1_path and record.mapped(self.content_image1_path)) else False,
-            'image2': images[0] if (images := self.content_image2_path and record.mapped(self.content_image2_path)) else False,
+            'image1': get_first_value_from_path(self.content_image1_path),
+            'image2': get_first_value_from_path(self.content_image2_path),
         }
         campaign_text_element_fields = (
             ('header', 'content_header', 'content_header_dyn', 'content_header_path'),
@@ -388,8 +398,7 @@ class CardCampaign(models.Model):
                 result[el] = self[text_field]
             else:
                 try:
-                    m = record.mapped(self[path_field])
-                    result[el] = m and m[0] or False
+                    result[el] = get_first_value_from_path(self[path_field])
                 except (AttributeError, KeyError):
                     # for generic image, or if field incorrect, return name of field
                     result[el] = self[path_field]

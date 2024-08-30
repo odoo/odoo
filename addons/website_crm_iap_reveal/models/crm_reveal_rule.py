@@ -291,7 +291,7 @@ class CrmRevealRule(models.Model):
             # will become ['175','176','177','190','191']
             reveal_ids = [
                 reveal_id.strip()
-                for reveal_ids in rule.mapped('industry_tag_ids.reveal_ids')
+                for reveal_ids in rule.industry_tag_ids.mapped('reveal_ids')
                 for reveal_id in reveal_ids.split(',')
             ]
             data = {

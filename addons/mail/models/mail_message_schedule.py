@@ -63,7 +63,7 @@ class MailMessageSchedule(models.Model):
         """
         for model, schedules in self._group_by_model().items():
             if model:
-                records = self.env[model].browse(schedules.mapped('mail_message_id.res_id'))
+                records = self.env[model].browse(schedules.mail_message_id.mapped('res_id'))
             else:
                 records = [self.env['mail.thread']] * len(schedules)
 

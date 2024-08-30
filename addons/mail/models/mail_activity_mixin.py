@@ -97,10 +97,10 @@ class MailActivityMixin(models.AbstractModel):
     @api.depends('activity_ids.activity_type_id.decoration_type', 'activity_ids.activity_type_id.icon')
     def _compute_activity_exception_type(self):
         # prefetch all activity types for all activities, this will avoid any query in loops
-        self.mapped('activity_ids.activity_type_id.decoration_type')
+        self.activity_ids.activity_type_id.mapped('decoration_type')
 
         for record in self:
-            activity_type_ids = record.activity_ids.mapped('activity_type_id')
+            activity_type_ids = record.activity_ids.activity_type_id
             exception_activity_type_id = False
             for activity_type_id in activity_type_ids:
                 if activity_type_id.decoration_type == 'danger':

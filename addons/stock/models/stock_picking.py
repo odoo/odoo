@@ -1157,7 +1157,7 @@ class StockPicking(models.Model):
 
     def action_confirm(self):
         self._check_company()
-        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
+        self.package_level_ids.filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
         self.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm()
 
@@ -1171,7 +1171,7 @@ class StockPicking(models.Model):
         also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
-        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
+        self.package_level_ids.filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         self.filtered(lambda picking: picking.state == 'draft').action_confirm()
         moves = self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done')).sorted(
             key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
@@ -1266,7 +1266,7 @@ class StockPicking(models.Model):
         return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.is_storable))
 
     def _get_entire_pack_location_dest(self, move_line_ids):
-        location_dest_ids = move_line_ids.mapped('location_dest_id')
+        location_dest_ids = move_line_ids.location_dest_id
         if len(location_dest_ids) > 1:
             return False
         return location_dest_ids.id
@@ -1564,7 +1564,7 @@ class StockPicking(models.Model):
                 })
                 moves_to_backorder.write({'picking_id': backorder_picking.id, 'picked': False})
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id': backorder_picking.id})
-                moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
+                moves_to_backorder.move_line_ids.write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
                 backorder_picking.user_id = False
                 picking.message_post(
@@ -1612,7 +1612,7 @@ class StockPicking(models.Model):
         visited_documents = {}
         if stream == 'DOWN':
             if groupby_method:
-                grouped_moves = groupby(origin_objects.mapped(stream_field), key=groupby_method)
+                grouped_moves = groupby(origin_objects[stream_field], key=groupby_method)
             else:
                 raise AssertionError('You have to define a groupby method and pass them as arguments.')
         elif stream == 'UP':
@@ -1620,7 +1620,7 @@ class StockPicking(models.Model):
             # _get_upstream_documents_and_responsibles on
             # destination objects in order to ascend documents.
             grouped_moves = {}
-            for visited_move in origin_objects.mapped(stream_field):
+            for visited_move in origin_objects[stream_field]:
                 for document, responsible, visited in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name]):
                     if grouped_moves.get((document, responsible)):
                         grouped_moves[(document, responsible)] |= visited_move
@@ -1692,9 +1692,9 @@ class StockPicking(models.Model):
             {'move_dest': (move_orig, (new_qty, old_qty))}
             """
             origin_moves = self.env['stock.move'].browse([move.id for move_orig in rendering_context.values() for move in move_orig[0]])
-            origin_picking = origin_moves.mapped('picking_id')
+            origin_picking = origin_moves.picking_id
             move_dest_ids = self.env['stock.move'].concat(*rendering_context.keys())
-            impacted_pickings = origin_picking._get_impacted_pickings(move_dest_ids) - move_dest_ids.mapped('picking_id')
+            impacted_pickings = origin_picking._get_impacted_pickings(move_dest_ids) - move_dest_ids.picking_id
             values = {
                 'origin_picking': origin_picking,
                 'moves_information': rendering_context.values(),
@@ -1884,7 +1884,7 @@ class StockPicking(models.Model):
     def action_see_packages(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_package_view")
-        packages = self.move_line_ids.mapped('result_package_id')
+        packages = self.move_line_ids.result_package_id
         action['domain'] = [('id', 'in', packages.ids)]
         action['context'] = {'picking_id': self.id}
         return action

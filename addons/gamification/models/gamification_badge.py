@@ -210,7 +210,7 @@ class GamificationBadge(models.Model):
         elif self.rule_auth == 'users' and self.env.user not in self.rule_auth_user_ids:
             return self.USER_NOT_VIP
         elif self.rule_auth == 'having':
-            all_user_badges = self.env['gamification.badge.user'].search([('user_id', '=', self.env.uid)]).mapped('badge_id')
+            all_user_badges = self.env['gamification.badge.user'].search([('user_id', '=', self.env.uid)]).badge_id
             if self.rule_auth_badge_ids - all_user_badges:
                 return self.BADGE_REQUIRED
 

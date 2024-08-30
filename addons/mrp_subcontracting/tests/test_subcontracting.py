@@ -79,7 +79,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         resupplying actually works
         """
         # Check subcontracting picking Type
-        self.assertTrue(all(self.env['stock.warehouse'].search([]).with_context(active_test=False).mapped('subcontracting_type_id.use_create_components_lots')))
+        self.assertTrue(all(self.env['stock.warehouse'].search([]).with_context(active_test=False).subcontracting_type_id.mapped('use_create_components_lots')))
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
@@ -397,8 +397,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move.picked = True
         picking_receipt2 = picking_form.save()
 
-        mo_pick1 = picking_receipt1.move_ids.mapped('move_orig_ids.production_id')
-        mo_pick2 = picking_receipt2.move_ids.mapped('move_orig_ids.production_id')
+        mo_pick1 = picking_receipt1.move_ids.move_orig_ids.production_id
+        mo_pick2 = picking_receipt2.move_ids.move_orig_ids.production_id
         self.assertEqual(len(mo_pick1), 1)
         self.assertEqual(len(mo_pick2), 1)
         self.assertEqual(mo_pick1.bom_id, self.bom)

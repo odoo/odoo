@@ -102,7 +102,7 @@ class SaleOrder(models.Model):
         configured as 'task_in_project' """
         for order in self:
             order.visible_project = any(
-                service_tracking == 'task_in_project' for service_tracking in order.order_line.mapped('product_id.service_tracking')
+                service_tracking == 'task_in_project' for service_tracking in order.order_line.product_id.mapped('service_tracking')
             )
 
     @api.depends('order_line.product_id', 'order_line.project_id')
@@ -113,8 +113,8 @@ class SaleOrder(models.Model):
         for project in projects:
             projects_per_so[project.sale_order_id.id] |= project
         for order in self:
-            projects = order.order_line.mapped('product_id.project_id')
-            projects |= order.order_line.mapped('project_id')
+            projects = order.order_line.product_id.project_id
+            projects |= order.order_line.project_id
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
                 projects = projects._filtered_access('read')

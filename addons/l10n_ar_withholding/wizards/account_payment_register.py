@@ -69,7 +69,7 @@ class AccountPaymentRegister(models.TransientModel):
             payment_vals['write_off_line_vals'].append({
                 'currency_id': self.currency_id.id,
                 'name': nice_base_label,
-                'tax_ids': [Command.set(withholding_lines.mapped('tax_id').ids)],
+                'tax_ids': [Command.set(withholding_lines.tax_id.ids)],
                 'account_id': account_id,
                 'balance': cc_base_amount,
                 'amount_currency': base_amount,

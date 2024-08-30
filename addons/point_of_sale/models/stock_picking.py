@@ -200,8 +200,8 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
-        vals['pos_session_id'] = self.mapped('group_id.pos_order_id.session_id').id
-        vals['pos_order_id'] = self.mapped('group_id.pos_order_id').id
+        vals['pos_session_id'] = self.group_id.pos_order_id.session_id.id
+        vals['pos_order_id'] = self.group_id.pos_order_id.id
         return vals
 
     def _key_assign_picking(self):
@@ -228,7 +228,7 @@ class StockMove(models.Model):
         # Already called in self._action_confirm() but just to be safe when coming from _launch_stock_rule_from_pos_order_lines.
         self._check_company()
         if moves:
-            moves_product_ids = set(moves.mapped('product_id').ids)
+            moves_product_ids = set(moves.product_id.ids)
             lots = lines.pack_lot_ids.filtered(lambda l: l.lot_name and l.product_id.id in moves_product_ids)
             lots_data = set(lots.mapped(lambda l: (l.product_id.id, l.lot_name)))
             existing_lots = self.env['stock.lot'].search([
@@ -243,7 +243,7 @@ class StockMove(models.Model):
                     lots_data.remove((lot.product_id.id, lot.name))
             moves = moves.filtered(lambda m: m.picking_type_id.use_create_lots)
             if moves:
-                moves_product_ids = set(moves.mapped('product_id').ids)
+                moves_product_ids = set(moves.product_id.ids)
                 missing_lot_values = []
                 for lot_product_id, lot_name in filter(lambda l: l[0] in moves_product_ids, lots_data):
                     missing_lot_values.append({'company_id': self.company_id.id, 'product_id': lot_product_id, 'name': lot_name})

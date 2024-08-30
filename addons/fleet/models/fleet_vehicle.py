@@ -252,7 +252,7 @@ class FleetVehicle(models.Model):
             ('expiration_date', '>', today),
             ('expiration_date', '<', limit_date),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('vehicle_id').ids
+        ]).vehicle_id.ids
         res.append(('id', search_operator, res_ids))
         return res
 
@@ -306,7 +306,7 @@ class FleetVehicle(models.Model):
                 vehicle.create_driver_history(vals)
             if 'future_driver_id' in vals and vals['future_driver_id']:
                 state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-                states = vehicle.mapped('state_id').ids
+                states = vehicle.state_id.ids
                 if not state_waiting_list or state_waiting_list.id not in states:
                     future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
                     if self.vehicle_type == 'bike':
@@ -331,7 +331,7 @@ class FleetVehicle(models.Model):
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-            states = self.mapped('state_id').ids if 'state_id' not in vals else [vals['state_id']]
+            states = self.state_id.ids if 'state_id' not in vals else [vals['state_id']]
             if not state_waiting_list or state_waiting_list.id not in states:
                 future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
                 if self.vehicle_type == 'bike':
@@ -366,7 +366,7 @@ class FleetVehicle(models.Model):
     def action_accept_driver_change(self):
         # Find all the vehicles of the same type for which the driver is the future_driver_id
         # remove their driver_id and close their history using current date
-        vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids), ('vehicle_type', '=', self.vehicle_type)])
+        vehicles = self.search([('driver_id', 'in', self.future_driver_id.ids), ('vehicle_type', '=', self.vehicle_type)])
         vehicles.write({'driver_id': False})
 
         for vehicle in self:

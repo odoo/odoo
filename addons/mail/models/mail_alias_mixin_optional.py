@@ -131,13 +131,13 @@ class MailAliasMixinOptional(models.AbstractModel):
                 record.sudo().alias_domain_id = alias_domain_id.id
 
         if alias_vals and (record_vals or self.browse().has_access('write')):
-            self.mapped('alias_id').sudo().write(alias_vals)
+            self.alias_id.sudo().write(alias_vals)
 
         return True
 
     def unlink(self):
         """ Delete the given records, and cascade-delete their corresponding alias. """
-        aliases = self.mapped('alias_id')
+        aliases = self.alias_id
         res = super().unlink()
         aliases.sudo().unlink()
         return res

@@ -109,7 +109,7 @@ class MailActivitySchedule(models.TransientModel):
             errors = set()
             applied_on = scheduler._get_applied_on_records()
             if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
-                               len(applied_on.mapped('company_id')) > 1):
+                               len(applied_on.company_id) > 1):
                 errors.add(_('The records must belong to the same company.'))
             if scheduler.plan_id:
                 errors |= set(scheduler._check_plan_templates_error(applied_on))

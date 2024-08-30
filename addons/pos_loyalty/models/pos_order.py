@@ -19,7 +19,7 @@ class PosOrder(models.Model):
         """
         point_changes = {int(k): v for k, v in point_changes.items()}
         coupon_ids_from_pos = set(point_changes.keys())
-        coupons = self.env['loyalty.card'].browse(coupon_ids_from_pos).exists().filtered('program_id.active')
+        coupons = self.env['loyalty.card'].browse(coupon_ids_from_pos).exists().filtered(lambda rec: rec.program_id.active)
         coupon_difference = set(coupons.ids) ^ coupon_ids_from_pos
         if coupon_difference:
             return {
@@ -195,13 +195,13 @@ class PosOrder(models.Model):
                                                                                   p.pos_report_print_id)
         if gift_card_programs:
             gift_cards = self.env['loyalty.card'].search([('source_pos_order_id', '=', self.id),
-                                                          ('program_id', 'in', gift_card_programs.mapped('id'))])
+                                                          ('program_id', 'in', gift_card_programs.ids)])
             if gift_cards:
                 for program in gift_card_programs:
                     filtered_gift_cards = gift_cards.filtered(lambda gc: gc.program_id == program)
                     if filtered_gift_cards:
                         action_report = program.pos_report_print_id
-                        report = action_report._render_qweb_pdf(action_report.report_name, filtered_gift_cards.mapped('id'))
+                        report = action_report._render_qweb_pdf(action_report.report_name, filtered_gift_cards.ids)
                         filename = name + '.pdf'
                         gift_card_pdf = self.env['ir.attachment'].create({
                             'name': filename,

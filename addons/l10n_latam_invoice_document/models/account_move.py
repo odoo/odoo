@@ -182,7 +182,7 @@ class AccountMove(models.Model):
 
     @api.constrains('move_type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
-        for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
+        for rec in self.filtered(lambda rec: rec.l10n_latam_document_type_id.internal_type):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.move_type
             if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund']:

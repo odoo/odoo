@@ -697,7 +697,7 @@ class ResPartner(models.Model):
         return res
 
     def write(self, values):
-        if values.get('vat') and len(self.mapped('country_id')) == 1:
+        if values.get('vat') and len(self.country_id) == 1:
             country_id = values.get('country_id', self.country_id.id)
             values['vat'] = self._fix_vat_number(values['vat'], country_id)
         res = super().write(values)

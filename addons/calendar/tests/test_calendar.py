@@ -461,8 +461,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'stop': datetime(2020, 12, 13, 22),
         })
         self.assertEqual(len(event.attendee_ids), 2)
-        self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))
-        self.assertTrue(self.env.user.partner_id in event.attendee_ids.mapped('partner_id'))
+        self.assertTrue(self.partner_demo in event.attendee_ids.partner_id)
+        self.assertTrue(self.env.user.partner_id in event.attendee_ids.partner_id)
 
     def test_discuss_videocall(self):
         self.event_tech_presentation._set_discuss_videocall_location()

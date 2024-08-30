@@ -28,4 +28,4 @@ class TestChannel(TestHrCommon):
             'subscription_department_ids': [(4, self.department.id)]
         })
 
-        self.assertEqual(self.channel.channel_partner_ids, self.department.mapped('member_ids.user_id.partner_id'))
+        self.assertEqual(self.channel.channel_partner_ids, self.department.member_ids.user_id.partner_id)

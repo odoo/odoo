@@ -192,7 +192,7 @@ class AccountMove(models.Model):
                     self.journal_id.type == 'purchase'
                     and section_id not in self.l10n_in_withhold_move_ids.filtered(lambda m:
                         m.state == 'posted'
-                    ).mapped('line_ids.tax_ids.l10n_in_section_id')
+                    ).line_ids.tax_ids.l10n_in_section_id
                 )
             case _:
                 return False

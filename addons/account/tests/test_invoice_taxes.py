@@ -298,7 +298,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.assertEqual(len(ref_tax_lines), 2, "There should be two refund tax lines")
         self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == ref_base_line.account_id).balance), 4.2, "Refund tax line on base account should amount to 4.2 (10% of 42)")
         self.assertAlmostEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, 2, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
-        self.assertEqual(ref_tax_lines.mapped('tax_tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")
+        self.assertEqual(ref_tax_lines.tax_tag_ids, ref_tax_tag, "Refund tax lines should have the right tag")
 
     def test_division_tax(self):
         '''

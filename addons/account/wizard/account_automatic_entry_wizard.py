@@ -144,7 +144,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         move_line_ids = self.env['account.move.line'].browse(self.env.context['active_ids'])
         res['move_line_ids'] = [(6, 0, move_line_ids.ids)]
 
-        if any(move.state != 'posted' for move in move_line_ids.mapped('move_id')):
+        if any(move.state != 'posted' for move in move_line_ids.move_id):
             raise UserError(_('You can only change the period/account for posted journal items.'))
         if any(move_line.reconciled for move_line in move_line_ids):
             raise UserError(_('You can only change the period/account for items that are not yet reconciled.'))
@@ -203,7 +203,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():
-            source_accounts = self.move_line_ids.mapped('account_id')
+            source_accounts = self.move_line_ids.account_id
             counterpart_label = len(source_accounts) == 1 and _("Transfer from %s", source_accounts.display_name) or _("Transfer counterpart")
 
             # We divide the amount for each account by the total balance to reflect the lines counter-parted
@@ -416,9 +416,11 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             accrual_move = created_moves[1:].filtered(lambda m: m.date == m._get_accounting_date(move.date, False))
 
             if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
-                destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
+                destination_move_lines = destination_move.line_ids.filtered(
+                    lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset + 2]
                 destination_move_offset += 2
-                accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
+                accrual_move_lines = accrual_move.line_ids.filtered(
+                    lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move] + 2]
                 accrual_move_offsets[accrual_move] += 2
                 (accrual_move_lines + destination_move_lines).filtered(lambda line: not line.currency_id.is_zero(line.balance)).reconcile()
             body = Markup("%(title)s<ul><li>%(link1)s %(second)s</li><li>%(link2)s %(third)s</li></ul>") % {

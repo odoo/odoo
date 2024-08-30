@@ -170,7 +170,7 @@ class L10n_LatamCheck(models.Model):
 
     def _get_reconciled_move(self):
         reconciled_line = self.outstanding_line_id.full_reconcile_id.reconciled_line_ids - self.outstanding_line_id
-        return (reconciled_line.move_id.line_ids - reconciled_line).mapped('move_id')
+        return (reconciled_line.move_id.line_ids - reconciled_line).move_id
 
     @api.constrains('amount')
     def _constrains_min_amount(self):

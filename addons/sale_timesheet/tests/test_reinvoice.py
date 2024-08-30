@@ -278,7 +278,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertEqual(sale_order_line.qty_delivered, 1, "The delivered quantity of SO line should not have been incremented")
-        self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+        self.assertTrue(invoice_a.line_ids.analytic_line_ids, "Analytic lines should be generated")
 
     def test_reversed_invoice_reinvoice_with_period(self):
         """

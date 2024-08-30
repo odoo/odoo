@@ -29,12 +29,12 @@ class ProductTemplate(models.Model):
     def action_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
         if templates:
-            return templates.mapped('product_variant_id').action_bom_cost()
+            return templates.product_variant_id.action_bom_cost()
 
     def button_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
         if templates:
-            return templates.mapped('product_variant_id').button_bom_cost()
+            return templates.product_variant_id.button_bom_cost()
 
 
 class ProductProduct(models.Model):
@@ -45,7 +45,7 @@ class ProductProduct(models.Model):
         self._set_price_from_bom()
 
     def action_bom_cost(self):
-        boms_to_recompute = self.env['mrp.bom'].search(['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids)])
+        boms_to_recompute = self.env['mrp.bom'].search(['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.product_tmpl_id.ids)])
         for product in self:
             product._set_price_from_bom(boms_to_recompute)
 

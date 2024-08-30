@@ -559,7 +559,7 @@ class StockMoveLine(models.Model):
             # Unlinking a move line should unreserve.
             if not float_is_zero(ml.quantity_product_uom, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.quantity_product_uom, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
-        moves = self.mapped('move_id')
+        moves = self.move_id
         package_levels = self.package_level_id
         res = super().unlink()
         package_levels = package_levels.filtered(lambda pl: not (pl.move_line_ids or pl.move_ids))
@@ -648,7 +648,7 @@ class StockMoveLine(models.Model):
 
         if ml_ids_tracked_without_lot:
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
-            products_list = "\n".join(f"- {product_name}" for product_name in mls_tracked_without_lot.mapped("product_id.display_name"))
+            products_list = "\n".join(f"- {product_name}" for product_name in mls_tracked_without_lot.product_id.mapped("display_name"))
             raise UserError(
                 _(
                     "You need to supply a Lot/Serial Number for product:\n%(products)s",

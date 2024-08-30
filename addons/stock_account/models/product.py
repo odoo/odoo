@@ -798,7 +798,7 @@ will update the cost of every lot/serial number in stock."),
     @api.model
     def _svl_empty_stock_am(self, stock_valuation_layers):
         move_vals_list = []
-        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.product_id}
         for out_stock_valuation_layer in stock_valuation_layers:
             product = out_stock_valuation_layer.product_id
             stock_input_account = product_accounts[product.id].get('stock_input')
@@ -846,7 +846,7 @@ will update the cost of every lot/serial number in stock."),
 
     def _svl_replenish_stock_am(self, stock_valuation_layers):
         move_vals_list = []
-        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.product_id}
         for out_stock_valuation_layer in stock_valuation_layers:
             product = out_stock_valuation_layer.product_id
             if not product_accounts[product.id].get('stock_input'):
@@ -919,7 +919,7 @@ will update the cost of every lot/serial number in stock."),
         candidates = stock_moves\
             .sudo()\
             .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
-            .mapped('stock_valuation_layer_ids')
+            .stock_valuation_layer_ids
 
         if self.env.context.get('candidates_prefetch_ids'):
             candidates = candidates.with_prefetch(self.env.context.get('candidates_prefetch_ids'))

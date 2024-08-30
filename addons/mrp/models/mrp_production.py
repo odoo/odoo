@@ -529,7 +529,7 @@ class MrpProduction(models.Model):
     @api.depends('move_finished_ids.move_line_ids')
     def _compute_lines(self):
         for production in self:
-            production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
+            production.finished_move_line_ids = production.move_finished_ids.move_line_ids
 
     @api.depends(
         'move_raw_ids.state', 'move_raw_ids.quantity', 'move_finished_ids.state',
@@ -638,7 +638,7 @@ class MrpProduction(models.Model):
     @api.depends('move_raw_ids', 'state', 'move_raw_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
         for order in self:
-            already_reserved = order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
+            already_reserved = order.state not in ('done', 'cancel') and order.move_raw_ids.move_line_ids
             any_quantity_done = any(order.move_raw_ids.mapped('picked'))
 
             order.unreserve_visible = not any_quantity_done and already_reserved
@@ -1142,7 +1142,7 @@ class MrpProduction(models.Model):
     def _get_moves_finished_values(self):
         moves = []
         for production in self:
-            if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
+            if production.product_id in production.bom_id.byproduct_ids.product_id:
                 raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
             finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)
             finished_move_values['location_final_id'] = self.location_final_id.id
@@ -1746,7 +1746,7 @@ class MrpProduction(models.Model):
         moves_to_finish.picked = True
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
         for order in self:
-            consume_move_lines = moves_to_do_by_order[order.id].mapped('move_line_ids')
+            consume_move_lines = moves_to_do_by_order[order.id].move_line_ids
             order.move_finished_ids.move_line_ids.consume_line_ids = [(6, 0, consume_move_lines.ids)]
         return True
 
@@ -2200,7 +2200,7 @@ class MrpProduction(models.Model):
             'views': [[self.env.ref('stock.stock_scrap_form_view2').id, 'form']],
             'type': 'ir.actions.act_window',
             'context': {'default_production_id': self.id,
-                        'product_ids': (self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids,
+                        'product_ids': (self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.move_finished_ids.filtered(lambda x: x.state == 'done')).product_id.ids,
                         'default_company_id': self.company_id.id
                         },
             'target': 'new',
@@ -2270,8 +2270,8 @@ class MrpProduction(models.Model):
             impacted_object = []
             if visited_objects:
                 visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
-                visited_objects |= visited_objects.mapped('move_orig_ids')
-                impacted_object = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
+                visited_objects |= visited_objects.move_orig_ids
+                impacted_object = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).picking_id
             values = {
                 'production_order': self,
                 'order_exceptions': order_exceptions,
@@ -2690,13 +2690,13 @@ class MrpProduction(models.Model):
         products = set([(production.product_id, production.bom_id) for production in self])
         if len(products) > 1:
             raise UserError(_('You can only merge manufacturing orders of identical products with same BoM.'))
-        additional_raw_ids = self.mapped("move_raw_ids").filtered(lambda move: not move.bom_line_id)
-        additional_byproduct_ids = self.mapped('move_byproduct_ids').filtered(lambda move: not move.byproduct_id)
+        additional_raw_ids = self.move_raw_ids.filtered(lambda move: not move.bom_line_id)
+        additional_byproduct_ids = self.move_byproduct_ids.filtered(lambda move: not move.byproduct_id)
         if additional_raw_ids or additional_byproduct_ids:
             raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         if len(set(self.mapped('state'))) > 1:
             raise UserError(_("You can only merge manufacturing with the same state."))
-        if len(set(self.mapped('picking_type_id'))) > 1:
+        if len(set(self.picking_type_id)) > 1:
             raise UserError(_('You can only merge manufacturing with the same operation type'))
         # TODO explode and check no quantity has been edited
         return True
@@ -2788,7 +2788,7 @@ class MrpProduction(models.Model):
             productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.done_mrp_lot_label_to_print)
             for print_format in productions_to_print.picking_type_id.mapped('done_mrp_lot_label_to_print'):
                 lots_to_print = productions_by_print_formats.get(print_format)
-                lots_to_print = lots_to_print.move_finished_ids.move_line_ids.mapped('lot_id')
+                lots_to_print = lots_to_print.move_finished_ids.move_line_ids.lot_id
                 if print_format == 'pdf':
                     action = self.env.ref("stock.action_report_lot_label").report_action(lots_to_print.ids, config=False)
                     clean_action(action, self.env)
@@ -2831,7 +2831,7 @@ class MrpProduction(models.Model):
         }
 
     def action_open_label_type(self):
-        move_line_ids = self.move_finished_ids.mapped('move_line_ids')
+        move_line_ids = self.move_finished_ids.move_line_ids
         if self.env.user.has_group('stock.group_production_lot') and move_line_ids.lot_id:
             view = self.env.ref('stock.picking_label_type_form')
             return {

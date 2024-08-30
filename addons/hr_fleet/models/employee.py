@@ -66,7 +66,7 @@ class HrEmployee(models.Model):
         if 'work_contact_id' in vals:
             car_ids = self.env['fleet.vehicle'].sudo().search([
                 ('driver_employee_id', 'in', self.ids),
-                ('driver_id', 'in', self.mapped('work_contact_id').ids),
+                ('driver_id', 'in', self.work_contact_id.ids),
             ])
             if car_ids:
                 car_ids.write({'driver_id': vals['work_contact_id']})

@@ -163,13 +163,13 @@ class StockPackage_Level(models.Model):
     def write(self, vals):
         result = super().write(vals)
         if vals.get('location_dest_id'):
-            self.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
-            self.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})
+            self.move_line_ids.write({'location_dest_id': vals['location_dest_id']})
+            self.move_ids.write({'location_dest_id': vals['location_dest_id']})
         return result
 
     def unlink(self):
-        self.mapped('move_ids').write({'package_level_id': False})
-        self.mapped('move_line_ids').write({'result_package_id': False})
+        self.move_ids.write({'package_level_id': False})
+        self.move_line_ids.write({'result_package_id': False})
         return super().unlink()
 
     def _check_move_lines_map_quant_package(self, package, only_picked=False):

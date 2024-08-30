@@ -20,7 +20,7 @@ class PosDailySalesReportsWizard(models.TransientModel):
         for wizard in self:
             domain = [('session_id', '=', self.pos_session_id.id)]
             orders = self.env['pos.order'].search(domain)
-            wizard.employee_ids = orders.mapped('employee_id')
+            wizard.employee_ids = orders.employee_id
 
     @api.onchange('pos_session_id')
     def _onchange_pos_session_id(self):

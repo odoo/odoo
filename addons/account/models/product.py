@@ -86,7 +86,7 @@ class ProductTemplate(models.Model):
     def _compute_fiscal_country_codes(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
-            record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+            record.fiscal_country_codes = ",".join(allowed_companies.account_fiscal_country_id.mapped('code'))
 
     @api.depends('taxes_id', 'list_price')
     def _compute_tax_string(self):

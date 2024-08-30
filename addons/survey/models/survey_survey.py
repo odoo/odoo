@@ -576,7 +576,7 @@ class SurveySurvey(models.Model):
             answer_vals.update(additional_vals)
             user_inputs += user_inputs.create(answer_vals)
 
-        for question in self.mapped('question_ids').filtered(
+        for question in self.question_ids.filtered(
                 lambda q: q.question_type == 'char_box' and (q.save_as_email or q.save_as_nickname)):
             for user_input in user_inputs:
                 if question.save_as_email and user_input.email:
@@ -930,12 +930,12 @@ class SurveySurvey(models.Model):
         current_user_input_lines = current_user_inputs.user_input_line_ids.filtered('suggested_answer_id')
 
         # count the number of vote per answer
-        votes_by_answer = dict.fromkeys(current_user_input_lines.mapped('suggested_answer_id'), 0)
+        votes_by_answer = dict.fromkeys(current_user_input_lines.suggested_answer_id, 0)
         for answer in current_user_input_lines:
             votes_by_answer[answer.suggested_answer_id] += 1
 
         # extract most voted answer for each question
-        most_voted_answer_by_questions = dict.fromkeys(current_user_input_lines.mapped('question_id'))
+        most_voted_answer_by_questions = dict.fromkeys(current_user_input_lines.question_id)
         for question in most_voted_answer_by_questions.keys():
             for answer in votes_by_answer.keys():
                 if answer.question_id != question:
@@ -1032,7 +1032,7 @@ class SurveySurvey(models.Model):
         if self.questions_layout == 'page_per_section':
             if not self.page_ids:
                 raise UserError(_('You cannot send an invitation for a "One page per section" survey if the survey has no sections.'))
-            if not self.page_ids.mapped('question_ids'):
+            if not self.page_ids.question_ids:
                 raise UserError(_('You cannot send an invitation for a "One page per section" survey if the survey only contains empty sections.'))
 
         if not self.active:
@@ -1189,7 +1189,7 @@ class SurveySurvey(models.Model):
         if user_input_lines:
             user_input_domain = [
                 ('survey_id', 'in', self.ids),
-                ('id', 'in', user_input_lines.mapped('user_input_id').ids)
+                ('id', 'in', user_input_lines.user_input_id.ids)
             ]
         else:
             user_input_domain = [
@@ -1266,9 +1266,9 @@ class SurveySurvey(models.Model):
                 survey._create_certification_badge_trigger()
         else:
             # if badge with owner : archive them, else delete everything (badge, challenge, goal)
-            badges = self.mapped('certification_badge_id')
+            badges = self.certification_badge_id
             challenges_to_delete = self.env['gamification.challenge'].search([('reward_id', 'in', badges.ids)])
-            goals_to_delete = challenges_to_delete.mapped('line_ids').mapped('definition_id')
+            goals_to_delete = challenges_to_delete.line_ids.definition_id
             badges.action_archive()
             # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
             challenges_to_delete.unlink()

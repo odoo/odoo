@@ -132,8 +132,8 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
 
         # Set account_id in the generated repartition lines. Automatically, nothing is set.
-        invoice_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('invoice_repartition_line_ids')
-        refund_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('refund_repartition_line_ids')
+        invoice_rep_lines = (account_tax_05_incl | account_tax_10_incl).invoice_repartition_line_ids
+        refund_rep_lines = (account_tax_05_incl | account_tax_10_incl).refund_repartition_line_ids
 
         # Expense account, should just be something else than receivable/payable
         (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.company_data['default_account_tax_sale'].id})
@@ -644,7 +644,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
         _logger.info('DONE: Checks for journal entries before closing the session.')
         cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
-        total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
+        total_cash_payment = sum(pos_session.order_ids.payment_ids.filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
         pos_session.post_closing_cash_details(total_cash_payment)
         pos_session.close_session_from_ui()
         after_closing_cb = args.get('after_closing_cb')

@@ -208,7 +208,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('date_to', '>=', today_start),
         ])
         operator = ['in', 'not in'][(operator == '=') != value]
-        return [('id', operator, holidays.mapped('employee_id').ids)]
+        return [('id', operator, holidays.employee_id.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -235,7 +235,7 @@ class HrEmployeeBase(models.AbstractModel):
 
         old_managers = self.env['res.users']
         if 'leave_manager_id' in values:
-            old_managers = self.mapped('leave_manager_id')
+            old_managers = self.leave_manager_id
             if values['leave_manager_id']:
                 leave_manager = self.env['res.users'].browse(values['leave_manager_id'])
                 old_managers -= leave_manager

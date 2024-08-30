@@ -783,7 +783,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         :return: a list of recordset of the documents linked to `self`
         :rtype: list
         """
-        return list(self.mapped('picking_id'))
+        return list(self.picking_id)
 
     def _propagate_date_log_note(self, move_orig):
         """Post a deadline change alert log note on the documents linked to `self`."""
@@ -1087,8 +1087,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')) if not merge_extra else self[0].product_uom_qty,
             'date': min(self.mapped('date')) if all(p.move_type == 'direct' for p in self.picking_id) else max(self.mapped('date')),
-            'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
-            'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
+            'move_dest_ids': [(4, m.id) for m in self.move_dest_ids],
+            'move_orig_ids': [(4, m.id) for m in self.move_orig_ids],
             'state': state,
             'origin': origin,
         }
@@ -1118,7 +1118,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.write({'propagate_cancel': False})
 
     def _update_candidate_moves_list(self, candidate_moves_set):
-        for picking in self.mapped('picking_id'):
+        for picking in self.picking_id:
             candidate_moves_set.add(picking.move_ids)
 
     def _merge_moves(self, merge_into=False):
@@ -1160,7 +1160,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 # Merge all positive moves together
                 if len(moves) > 1:
                     # link all move lines to record 0 (the one we will keep).
-                    moves.mapped('move_line_ids').write({'move_id': moves[0].id})
+                    moves.move_line_ids.write({'move_id': moves[0].id})
                     # merge move data
                     merge_extra = self.env.context.get('merge_extra') and bool(merge_into)
                     moves[0].write(moves.with_context(merge_extra=merge_extra)._merge_moves_fields())
@@ -1182,8 +1182,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         pos_move.product_uom_qty += neg_move.product_uom_qty
                         pos_move.write({
                             'price_unit': float_round(new_total_value / pos_move.product_qty, precision_digits=price_unit_prec) if pos_move.product_qty else 0,
-                            'move_dest_ids': [Command.link(m.id) for m in neg_move.mapped('move_dest_ids') if m.location_id == pos_move.location_dest_id],
-                            'move_orig_ids': [Command.link(m.id) for m in neg_move.mapped('move_orig_ids') if m.location_dest_id == pos_move.location_id],
+                            'move_dest_ids': [Command.link(m.id) for m in neg_move.move_dest_ids if m.location_id == pos_move.location_dest_id],
+                            'move_orig_ids': [Command.link(m.id) for m in neg_move.move_orig_ids if m.location_dest_id == pos_move.location_id],
                         })
                         merged_moves |= pos_move
                         moves_to_unlink |= neg_move
@@ -1439,16 +1439,16 @@ Please change the quantity done or the rounding precision of your unit of measur
             origin = ','.join(origins[:5])
             if len(origins) > 5:
                 origin += "..."
-        partners = self.mapped('partner_id')
+        partners = self.partner_id
         partner = len(partners) == 1 and partners.id or False
         vals = {
             'origin': origin,
-            'company_id': self.mapped('company_id').id,
+            'company_id': self.company_id.id,
             'user_id': False,
-            'group_id': self.mapped('group_id').id,
+            'group_id': self.group_id.id,
             'partner_id': partner,
-            'picking_type_id': self.mapped('picking_type_id').id,
-            'location_id': self.mapped('location_id').id,
+            'picking_type_id': self.picking_type_id.id,
+            'location_id': self.location_id.id,
         }
         if self.location_dest_id.ids:
             vals['location_dest_id'] = self.location_dest_id.id
@@ -1749,7 +1749,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.env['stock.quant']._get_available_quantity(self.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative)
 
     def _get_available_move_lines_in(self):
-        move_lines_in = self.move_orig_ids.move_dest_ids.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
+        move_lines_in = self.move_orig_ids.move_dest_ids.move_orig_ids.filtered(lambda m: m.state == 'done').move_line_ids
 
         def _keys_in_groupby(ml):
             return (ml.location_dest_id, ml.lot_id, ml.result_package_id, ml.owner_id)
@@ -1764,16 +1764,16 @@ Please change the quantity done or the rounding precision of your unit of measur
         return grouped_move_lines_in
 
     def _get_available_move_lines_out(self, assigned_moves_ids, partially_available_moves_ids):
-        move_lines_out_done = (self.move_orig_ids.mapped('move_dest_ids') - self)\
+        move_lines_out_done = (self.move_orig_ids.move_dest_ids - self)\
             .filtered(lambda m: m.state in ['done'])\
-            .mapped('move_line_ids')
+            .move_line_ids
         # As we defer the write on the stock.move's state at the end of the loop, there
         # could be moves to consider in what our siblings already took.
         StockMove = self.env['stock.move']
-        moves_out_siblings = self.move_orig_ids.mapped('move_dest_ids') - self
+        moves_out_siblings = self.move_orig_ids.move_dest_ids - self
         moves_out_siblings_to_consider = moves_out_siblings & (StockMove.browse(assigned_moves_ids) + StockMove.browse(partially_available_moves_ids))
         reserved_moves_out_siblings = moves_out_siblings.filtered(lambda m: m.state in ['partially_available', 'assigned'])
-        move_lines_out_reserved = (reserved_moves_out_siblings | moves_out_siblings_to_consider).mapped('move_line_ids')
+        move_lines_out_reserved = (reserved_moves_out_siblings | moves_out_siblings_to_consider).move_line_ids
 
         def _keys_out_groupby(ml):
             return (ml.location_id, ml.lot_id, ml.package_id, ml.owner_id)
@@ -1942,7 +1942,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_cancel._do_unreserve()
 
         for move in moves_to_cancel:
-            siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
+            siblings_states = (move.move_dest_ids.move_orig_ids - move).mapped('state')
             if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
@@ -1999,17 +1999,17 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_todo._check_company()
         if not cancel_backorder:
             moves_todo._create_backorder()
-        moves_todo.mapped('move_line_ids').sorted()._action_done()
+        moves_todo.move_line_ids.sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
         for result_package in moves_todo\
-                .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
+                .move_line_ids.filtered(lambda ml: ml.picked).result_package_id\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
-            if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
+            if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).location_id) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
-        picking = moves_todo.mapped('picking_id')
+        picking = moves_todo.picking_id
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
@@ -2063,7 +2063,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
-        self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
+        self.with_context(prefetch_fields=False).move_line_ids.unlink()
         return super(StockMove, self).unlink()
 
     def _prepare_move_split_vals(self, qty):

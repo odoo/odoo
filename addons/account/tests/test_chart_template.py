@@ -191,7 +191,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         self.env['account.report.line'].create({
             'name': "[SIGNED_TAG] Signed tag line",
             'report_id': tax_report.id,
-            'sequence': max(tax_report.mapped('line_ids.sequence') or [0]) + 1,
+            'sequence': max(tax_report.line_ids.mapped('sequence') or [0]) + 1,
             'expression_ids': [
                 Command.create({
                     'label': 'balance',

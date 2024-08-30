@@ -14,7 +14,7 @@ class PosOrder(models.Model):
 
     def _count_sale_order(self):
         for order in self:
-            order.sale_order_count = len(order.lines.mapped('sale_order_origin_id'))
+            order.sale_order_count = len(order.lines.sale_order_origin_id)
 
     @api.model
     def _complete_values_from_session(self, session, values):
@@ -31,7 +31,7 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
         invoice_vals['team_id'] = self.crm_team_id.id
-        sale_orders = self.lines.mapped('sale_order_origin_id')
+        sale_orders = self.lines.sale_order_origin_id
         if sale_orders:
             if sale_orders[0].partner_invoice_id.id != sale_orders[0].partner_shipping_id.id:
                 invoice_vals['partner_shipping_id'] = sale_orders[0].partner_shipping_id.id
@@ -78,11 +78,11 @@ class PosOrder(models.Model):
                 })
                 line.sale_order_line_id = sale_line
 
-            so_lines = order.lines.mapped('sale_order_line_id')
+            so_lines = order.lines.sale_order_line_id
 
             if order.state != 'draft':
                 # confirm the unconfirmed sale orders that are linked to the sale order lines
-                sale_orders = so_lines.mapped('order_id')
+                sale_orders = so_lines.order_id
                 for sale_order in sale_orders.filtered(lambda so: so.state in ['draft', 'sent']):
                     sale_order.action_confirm()
 
@@ -123,7 +123,7 @@ class PosOrder(models.Model):
 
     def action_view_sale_order(self):
         self.ensure_one()
-        linked_orders = self.lines.mapped('sale_order_origin_id')
+        linked_orders = self.lines.sale_order_origin_id
         return {
             'type': 'ir.actions.act_window',
             'name': _('Linked Sale Orders'),
@@ -203,7 +203,7 @@ class PosOrderLine(models.Model):
         return params
 
     def _launch_stock_rule_from_pos_order_lines(self):
-        orders = self.mapped('order_id')
+        orders = self.order_id
         for order in orders:
             self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
         return super()._launch_stock_rule_from_pos_order_lines()

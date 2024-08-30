@@ -1499,6 +1499,8 @@ ResUsersPatchedInTest = ResUsers
 
 
 # TODO: reorganize or split the file to avoid declaring classes multiple times
+
+
 # pylint: disable=E0102
 class ResGroups(models.Model):  # noqa: F811
     _inherit = 'res.groups'

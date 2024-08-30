@@ -437,8 +437,8 @@ class TestAPI(MailCommon, TestRecipients):
             partner_ids=self.partner_1.ids,
         )
         self.assertEqual(message.attachment_ids, attachments)
-        self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
-        self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
+        self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(ticket_record.ids))
+        self.assertEqual(set(message.attachment_ids.mapped('res_model')), {ticket_record._name})
         self.assertEqual(message.body, "<p>Initial Body</p>")
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
@@ -457,8 +457,8 @@ class TestAPI(MailCommon, TestRecipients):
             attachment_ids=new_attachments.ids
         )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
-        self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
-        self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
+        self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(ticket_record.ids))
+        self.assertEqual(set(message.attachment_ids.mapped('res_model')), {ticket_record._name})
         self.assertEqual(message.body, Markup('<p>New Body</p><span class="o-mail-Message-edited"></span>'))
 
         # void attachments
@@ -511,21 +511,21 @@ class TestChatterTweaks(MailCommon, TestRecipients):
         original = self.test_record.message_follower_ids
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
+        self.assertEqual(self.test_record.message_follower_ids.partner_id, original.partner_id)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
-        self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
+        self.assertEqual(self.test_record.message_follower_ids.partner_id, original.partner_id)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
-        self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
+        self.assertEqual(self.test_record.message_follower_ids.partner_id, original.partner_id | self.partner_1 | self.partner_2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_chatter_context_cleaning(self):
@@ -563,7 +563,7 @@ class TestChatterTweaks(MailCommon, TestRecipients):
         self.flush_tracking()
         self.assertEqual(len(rec.message_ids), 2,
                          "A tracking message should have been posted")
-        self.assertEqual(len(rec.message_ids.sudo().mapped('tracking_value_ids')), 1,
+        self.assertEqual(len(rec.message_ids.sudo().tracking_value_ids), 1,
                          "New tracking message should have tracking values")
 
     def test_chatter_tracking_disable(self):
@@ -571,21 +571,21 @@ class TestChatterTweaks(MailCommon, TestRecipients):
         rec = self.env['mail.test.track'].with_user(self.user_employee).with_context({'tracking_disable': True}).create({'name': 'Test', 'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(rec.sudo().message_ids, self.env['mail.message'])
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
+        self.assertEqual(rec.sudo().message_ids.tracking_value_ids, self.env['mail.tracking.value'])
 
         rec.write({'user_id': self.user_admin.id})
         self.flush_tracking()
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
+        self.assertEqual(rec.sudo().message_ids.tracking_value_ids, self.env['mail.tracking.value'])
 
         rec.with_context({'tracking_disable': False}).write({'user_id': self.user_employee.id})
         self.flush_tracking()
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        self.assertEqual(len(rec.sudo().message_ids.tracking_value_ids), 1)
 
         rec = self.env['mail.test.track'].with_user(self.user_employee).with_context({'tracking_disable': False}).create({'name': 'Test', 'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(len(rec.sudo().message_ids), 1,
                          "Creation message without tracking values should have been posted")
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 0,
+        self.assertEqual(len(rec.sudo().message_ids.tracking_value_ids), 0,
                          "Creation message without tracking values should have been posted")
 
     def test_cache_invalidation(self):
@@ -974,7 +974,7 @@ class TestNoThread(MailCommon, TestRecipients):
         self.assertEqual(len(messages), 2)
         for record, message in zip(test_records, messages):
             self.assertEqual(
-                sorted(message.mapped('attachment_ids.name')),
+                sorted(message.attachment_ids.mapped('name')),
                 sorted(['AttFileName_00.txt', 'AttFileName_01.txt',
                         f'TestReport2 for {record.name}.html',
                         f'TestReport for {record.name}.html'])

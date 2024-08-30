@@ -27,7 +27,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference(self):
         self.ensure_one()
-        vendor_refs = [ref for ref in set(self.invoice_line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
+        vendor_refs = [ref for ref in set(self.invoice_line_ids.purchase_line_id.order_id.mapped('partner_ref')) if ref]
         if self.ref:
             return [ref for ref in self.ref.split(', ') if ref and ref not in vendor_refs] + vendor_refs
         return vendor_refs
@@ -64,11 +64,11 @@ class AccountMove(models.Model):
         self.currency_id = new_currency_id
 
         # Copy purchase lines.
-        po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
+        po_lines = self.purchase_id.order_line - self.invoice_line_ids.purchase_line_id
         self._add_purchase_order_lines(po_lines)
 
         # Compute invoice_origin.
-        origins = set(self.invoice_line_ids.mapped('purchase_line_id.order_id.name'))
+        origins = set(self.invoice_line_ids.purchase_line_id.order_id.mapped('name'))
         self.invoice_origin = ','.join(list(origins))
 
         # Compute ref.
@@ -178,10 +178,10 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         # OVERRIDE
-        old_purchases = [move.mapped('line_ids.purchase_line_id.order_id') for move in self]
+        old_purchases = [move.line_ids.purchase_line_id.order_id for move in self]
         res = super(AccountMove, self).write(vals)
         for i, move in enumerate(self):
-            new_purchases = move.mapped('line_ids.purchase_line_id.order_id')
+            new_purchases = move.line_ids.purchase_line_id.order_id
             if not new_purchases:
                 continue
             diff_purchases = new_purchases - old_purchases[i]

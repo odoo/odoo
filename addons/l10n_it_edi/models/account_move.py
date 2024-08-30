@@ -1326,14 +1326,14 @@ class AccountMove(models.Model):
             sending activity and returns an errors dictionary ready for the
             actionable_errors widget to display. """
 
-        companies = self.mapped("company_id")
-        companies_partners = companies.mapped("partner_id")
+        companies = self.company_id
+        companies_partners = companies.partner_id
         moves_full = self.filtered(lambda m: not m._l10n_it_edi_is_simplified())
         moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
 
-        full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
-        simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)
-        representatives = companies.mapped("l10n_it_tax_representative_partner_id").filtered(lambda p: p not in companies_partners | simplified | full)
+        full = moves_full.commercial_partner_id.filtered(lambda p: p not in companies_partners)
+        simplified = moves_simplified.commercial_partner_id.filtered(lambda p: p not in companies_partners | full)
+        representatives = companies.l10n_it_tax_representative_partner_id.filtered(lambda p: p not in companies_partners | simplified | full)
 
         return {
             **companies._l10n_it_edi_export_check(),
@@ -1375,7 +1375,7 @@ class AccountMove(models.Model):
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
-        if move_lines := self.mapped("invoice_line_ids").filtered(lambda line:
+        if move_lines := self.invoice_line_ids.filtered(lambda line:
             line.display_type == 'product'
             and len(line.tax_ids.flatten_taxes_hierarchy()._l10n_it_filter_kind('vat')) != 1
         ):
@@ -1384,7 +1384,7 @@ class AccountMove(models.Model):
                     'message': _("Invoices must have exactly one VAT tax set per line."),
                     **({
                         'action_text': _("View invoice(s)"),
-                        'action': move_lines.mapped("move_id")._get_records_action(name=_("Check taxes on invoice lines")),
+                        'action': move_lines.move_id._get_records_action(name=_("Check taxes on invoice lines")),
                     } if len(self) > 1 else {})
                 }}
         return {}

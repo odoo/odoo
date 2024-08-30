@@ -1006,7 +1006,7 @@ class PosSession(models.Model):
                 for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
                     candidates = stock_moves_batch\
                         .filtered(lambda m: not bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
-                        .mapped('stock_valuation_layer_ids')
+                        .stock_valuation_layer_ids
                     for move in stock_moves_batch.with_context(candidates_prefetch_ids=candidates._prefetch_ids):
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
@@ -1242,8 +1242,8 @@ class PosSession(models.Model):
         combine_cash_statement_lines = {}
         split_cash_receivable_lines = {}
         combine_cash_receivable_lines = {}
-        split_cash_statement_lines = BankStatementLine.create(split_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
-        combine_cash_statement_lines = BankStatementLine.create(combine_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        split_cash_statement_lines = BankStatementLine.create(split_cash_statement_line_vals).move_id.line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        combine_cash_statement_lines = BankStatementLine.create(combine_cash_statement_line_vals).move_id.line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
         split_cash_receivable_lines = MoveLine.create(split_cash_receivable_vals)
         combine_cash_receivable_lines = MoveLine.create(combine_cash_receivable_vals)
 
@@ -1324,7 +1324,7 @@ class PosSession(models.Model):
         )
         all_lines.filtered(lambda line: line.move_id.state != 'posted').move_id._post(soft=False)
 
-        accounts = all_lines.mapped('account_id')
+        accounts = all_lines.account_id
         lines_by_account = [all_lines.filtered(lambda l: l.account_id == account and not l.reconciled) for account in accounts if account.reconcile]
         for lines in lines_by_account:
             lines.reconcile()
@@ -1353,9 +1353,9 @@ class PosSession(models.Model):
 
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
-        pickings |= self._get_closed_orders().filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
+        pickings |= self._get_closed_orders().filtered(lambda o: not o.is_invoiced).picking_ids
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
-        stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
+        stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).line_ids
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
@@ -1640,7 +1640,7 @@ class PosSession(models.Model):
             'res_model': 'account.move.line',
             'view_mode': 'list',
             'view_id':self.env.ref('account.view_move_line_tree').id,
-            'domain': [('id', 'in', all_related_moves.mapped('line_ids').ids)],
+            'domain': [('id', 'in', all_related_moves.line_ids.ids)],
             'context': {
                 'journal_type':'general',
                 'search_default_group_by_move': 1,
@@ -1658,15 +1658,15 @@ class PosSession(models.Model):
         # And yes, we are only concern for split bank payment methods.
         diff_lines_ref = [self._get_diff_account_move_ref(pm) for pm in self.payment_method_ids if pm.type == 'bank' and pm.split_transactions]
         cost_move_lines = ['pos_order_'+str(rec.id) for rec in self._get_closed_orders()]
-        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref + cost_move_lines)]).mapped('move_id')
+        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref + cost_move_lines)]).move_id
 
     def _get_related_account_moves(self):
-        pickings = self.picking_ids | self._get_closed_orders().mapped('picking_ids')
-        invoices = self.mapped('order_ids.account_move')
-        invoice_payments = self.mapped('order_ids.payment_ids.account_move_id')
-        stock_account_moves = pickings.mapped('move_ids.account_move_ids')
-        cash_moves = self.statement_line_ids.mapped('move_id')
-        bank_payment_moves = self.bank_payment_ids.mapped('move_id')
+        pickings = self.picking_ids | self._get_closed_orders().picking_ids
+        invoices = self.order_ids.account_move
+        invoice_payments = self.order_ids.payment_ids.account_move_id
+        stock_account_moves = pickings.move_ids.account_move_ids
+        cash_moves = self.statement_line_ids.move_id
+        bank_payment_moves = self.bank_payment_ids.move_id
         other_related_moves = self._get_other_related_moves()
         return invoices | invoice_payments | self.move_id | stock_account_moves | cash_moves | bank_payment_moves | other_related_moves
 

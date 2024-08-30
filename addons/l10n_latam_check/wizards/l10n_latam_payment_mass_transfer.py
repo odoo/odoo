@@ -39,7 +39,7 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
     def _compute_journal_company(self):
         # use ._origin because if not a NewId for the checks is used and the returned
         # value for current_journal_id is wrong
-        journal = self.check_ids._origin.mapped("current_journal_id")
+        journal = self.check_ids._origin.current_journal_id
         if len(journal) != 1:
             raise UserError(_("All selected checks must be on the same journal and on hand"))
         self.journal_id = journal
@@ -56,7 +56,7 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
                 raise UserError(_('You have selected payments which are not checks. Please call this action from the Third Party Checks menu'))
             elif not all(check.payment_id.state != 'draft' for check in checks):
                 raise UserError(_("All the selected checks must be posted"))
-            currency_ids = checks.mapped('currency_id')
+            currency_ids = checks.currency_id
             if any(x != currency_ids[0] for x in currency_ids):
                 raise UserError(_("All the selected checks must use the same currency"))
             res['check_ids'] = checks.ids

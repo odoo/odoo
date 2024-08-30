@@ -220,7 +220,7 @@ class MailMessage(models.Model):
         my_messages = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', self.env.user.partner_id.id),
-            ('is_read', '=', False)]).mapped('mail_message_id')
+            ('is_read', '=', False)]).mail_message_id
         for message in self:
             message.needaction = message in my_messages
 
@@ -233,7 +233,7 @@ class MailMessage(models.Model):
     def _compute_has_error(self):
         error_from_notification = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
-            ('notification_status', 'in', ('bounce', 'exception'))]).mapped('mail_message_id')
+            ('notification_status', 'in', ('bounce', 'exception'))]).mail_message_id
         for message in self:
             message.has_error = message in error_from_notification
 
@@ -725,7 +725,7 @@ class MailMessage(models.Model):
         if not self:
             return True
         self.check_access('unlink')
-        self.mapped('attachment_ids').filtered(
+        self.attachment_ids.filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])

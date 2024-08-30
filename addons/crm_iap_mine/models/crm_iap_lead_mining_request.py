@@ -214,7 +214,7 @@ class CrmIapLeadMiningRequest(models.Model):
             # will become ['175','176','177','190','191']
             all_industry_ids = [
                 reveal_id.strip()
-                for reveal_ids in self.mapped('industry_ids.reveal_ids')
+                for reveal_ids in self.industry_ids.mapped('reveal_ids')
                 for reveal_id in reveal_ids.split(',')
             ]
             payload['industry_ids'] = all_industry_ids

@@ -137,7 +137,7 @@ class WebsiteBlog(http.Controller):
             all_tags = request.env['blog.tag']
         else:
             all_tags = tools.lazy(lambda: blogs.all_tags(join=True) if not blog else blogs.all_tags().get(blog.id, request.env['blog.tag']))
-        tag_category = tools.lazy(lambda: sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper()))
+        tag_category = tools.lazy(lambda: sorted(all_tags.category_id, key=lambda category: category.name.upper()))
         other_tags = tools.lazy(lambda: sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper()))
         nav_list = tools.lazy(self.nav_list)
         # and avoid accessing related blogs one by one

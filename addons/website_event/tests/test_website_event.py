@@ -142,7 +142,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(second_registration.name, 'Attendee B')
         self.assertEqual(second_registration.company_name, 'My Company')
 
-        event_questions = registrations.mapped('event_id.question_ids')
+        event_questions = registrations.event_id.question_ids
         self.assertEqual(len(event_questions), 7)
 
         first_registration_answers = first_registration.registration_answer_ids

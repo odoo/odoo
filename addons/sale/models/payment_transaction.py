@@ -68,7 +68,7 @@ class PaymentTransaction(models.Model):
             # the re-computation of the field is not done with the same environment, reading fields
             # that were not already available in the cache could trigger an AccessError (e.g., if
             # the payment was initiated by a public user).
-            sales_orders.mapped('transaction_ids')
+            sales_orders.transaction_ids
             sales_orders._send_payment_succeeded_for_order_mail()
 
         for authorized_tx in self.filtered(lambda tx: tx.state == 'authorized'):

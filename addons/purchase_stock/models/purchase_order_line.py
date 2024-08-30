@@ -365,7 +365,7 @@ class PurchaseOrderLine(models.Model):
         # name. This way, we can merge lines with the same description. To do so, we need the
         # product name in the context of the PO partner.
         if lines and values.get('product_description_variants'):
-            partner = self.mapped('order_id.partner_id')[:1]
+            partner = self.order_id.partner_id[:1]
             product_lang = product_id.with_context(
                 lang=partner.lang,
                 partner_id=partner.id,

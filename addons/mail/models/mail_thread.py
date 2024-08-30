@@ -128,7 +128,7 @@ class MailThread(models.AbstractModel):
     @api.depends('message_follower_ids')
     def _compute_message_partner_ids(self):
         for thread in self:
-            thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
+            thread.message_partner_ids = thread.message_follower_ids.partner_id
 
     def _inverse_message_partner_ids(self):
         for thread in self:
@@ -1954,7 +1954,7 @@ class MailThread(models.AbstractModel):
         domain = [('email_normalized', 'in', normalized_emails)]
         if extra_domain:
             domain = expression.AND([domain, extra_domain])
-        partners = self.env['res.users'].sudo().search(domain).mapped('partner_id')
+        partners = self.env['res.users'].sudo().search(domain).partner_id
         # return a search on partner to filter results current user should not see (multi company for example)
         return self.env['res.partner'].search([('id', 'in', partners.ids)])
 
@@ -1995,7 +1995,7 @@ class MailThread(models.AbstractModel):
             followers = self.env['mail.followers'].search([
                 ('res_model', '=', alias.alias_parent_model_id.sudo().model),
                 ('res_id', '=', alias.alias_parent_thread_id)]
-            ).mapped('partner_id')
+            ).partner_id
         else:
             followers = self.env['res.partner']
 
@@ -2034,7 +2034,7 @@ class MailThread(models.AbstractModel):
           matching partner is an empty record.
         """
         if records and isinstance(records, self.pool['mail.thread']):
-            followers = records.mapped('message_partner_ids')
+            followers = records.message_partner_ids
         else:
             followers = self.env['res.partner']
 
@@ -3350,7 +3350,7 @@ class MailThread(models.AbstractModel):
                             ('res_partner_id', 'in', tocreate_recipient_ids)
                         ])
                         if existing_notifications:
-                            tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.mapped('res_partner_id.id')]
+                            tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.res_partner_id._ids]
                             existing_notifications.write({
                                 'notification_status': 'ready',
                                 'mail_mail_id': new_email.id,
@@ -4622,7 +4622,7 @@ class MailThread(models.AbstractModel):
             # If the image is not SVG: We take the original one if exist otherwise we take it
             svg_ids = res.filtered(lambda attachment: attachment.mimetype == 'image/svg+xml')
             non_svg_ids = res - svg_ids
-            original_ids = res.mapped('original_id')
+            original_ids = res.original_id
             res = res.filtered(lambda attachment: (attachment in svg_ids and attachment not in original_ids) or (attachment in non_svg_ids and attachment.original_id not in non_svg_ids))
         return res
 

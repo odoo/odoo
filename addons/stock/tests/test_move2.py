@@ -397,7 +397,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_ship.state, 'cancel')
         self.assertFalse(next_activity, 'If a next activity has been created if means that scheduler failed\
         and the end of this test do not have sense.')
-        self.assertEqual(len(picking_ship.move_ids.mapped('move_orig_ids')), 0,
+        self.assertEqual(len(picking_ship.move_ids.move_orig_ids), 0,
         'Scheduler should not create picking pack and pick since ship has been manually cancelled.')
 
     def test_no_backorder_1(self):
@@ -615,10 +615,10 @@ class TestPickShip(TestStockCommon):
         """ We created the return for ship picking. The origin/destination
         link between return moves should have been created during return creation.
         """
-        self.assertTrue(return_ship_picking.move_ids in return_pick_picking.move_ids.mapped('move_orig_ids'),
+        self.assertTrue(return_ship_picking.move_ids in return_pick_picking.move_ids.move_orig_ids,
                         'The pick return picking\'s moves should have the ship return picking\'s moves as origin')
 
-        self.assertTrue(return_pick_picking.move_ids in return_ship_picking.move_ids.mapped('move_dest_ids'),
+        self.assertTrue(return_pick_picking.move_ids in return_ship_picking.move_ids.move_dest_ids,
                         'The ship return picking\'s moves should have the pick return picking\'s moves as destination')
 
         return_ship_picking.move_ids[0].move_line_ids[0].write({
@@ -3634,7 +3634,7 @@ class TestAutoAssign(TestStockCommon):
         pick_1.button_validate()
         delivery_order_1 = self.env['stock.picking'].search([('partner_id', '=', partner_1.id), ('picking_type_id', '=', warehouse.out_type_id.id)], limit=1)
         self.assertEqual(delivery_order_1.partner_id, partner_1)
-        self.assertEqual(delivery_order_1.move_ids.mapped('product_id'), self.productA | self.productB)
+        self.assertEqual(delivery_order_1.move_ids.product_id, self.productA | self.productB)
         self.assertEqual(delivery_order_1.move_ids.mapped('product_uom_qty'), [2.0, 3.0])
         pick_2 = self.env['stock.picking'].create({
             'picking_type_id': warehouse.pick_type_id.id,
@@ -3656,5 +3656,5 @@ class TestAutoAssign(TestStockCommon):
         self.assertEqual(delivery_order_1, self.env['stock.picking'].search([('partner_id', '=', partner_1.id), ('picking_type_id', '=', warehouse.out_type_id.id)], limit=1))
         delivery_order_2 = self.env['stock.picking'].search([('partner_id', '=', partner_2.id), ('picking_type_id', '=', warehouse.out_type_id.id)], limit=1)
         self.assertEqual(delivery_order_2.partner_id, partner_2)
-        self.assertEqual(delivery_order_2.move_ids.mapped('product_id'), self.productA)
+        self.assertEqual(delivery_order_2.move_ids.product_id, self.productA)
         self.assertEqual(delivery_order_2.move_ids.product_uom_qty, 1.0)

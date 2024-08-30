@@ -359,8 +359,8 @@ class MailingList(models.Model):
         opted in and the other one opted out, send the mail anyway. """
         # TODO DBE Fixme : Optimize the following to get real opt_out and opt_in
         subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
-        opt_out_contacts = subscriptions.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
-        opt_in_contacts = subscriptions.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
+        opt_out_contacts = subscriptions.filtered(lambda rel: rel.opt_out).contact_id.mapped('email_normalized')
+        opt_in_contacts = subscriptions.filtered(lambda rel: not rel.opt_out).contact_id.mapped('email_normalized')
         opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
         return opt_out
 

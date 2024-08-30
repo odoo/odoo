@@ -12,7 +12,7 @@ class UomUom(models.Model):
     @api.depends_context("allowed_company_ids")
     def _compute_fiscal_country_codes(self):
         for record in self:
-            record.fiscal_country_codes = ",".join(self.env.companies.mapped("account_fiscal_country_id.code"))
+            record.fiscal_country_codes = ",".join(self.env.companies.account_fiscal_country_id.mapped("code"))
 
     def _get_unece_code(self):
         """ Returns the UNECE code used for international trading for corresponding to the UoM as per

@@ -110,7 +110,7 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             loc_domain = [('usage', 'in', ('internal', 'view'))]
             other_warehouses = self.env['stock.warehouse'].search([('id', '!=', orderpoint.warehouse_id.id)])
-            for view_location_id in other_warehouses.mapped('view_location_id'):
+            for view_location_id in other_warehouses.view_location_id:
                 loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
                 loc_domain = expression.AND([loc_domain, ['|', ('company_id', '=', False), ('company_id', '=', orderpoint.company_id.id)]])
             orderpoint.allowed_location_ids = self.env['stock.location'].search(loc_domain)

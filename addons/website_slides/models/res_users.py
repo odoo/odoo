@@ -24,7 +24,7 @@ class ResUsers(models.Model):
         if sanitized_vals.get('groups_id'):
             added_group_ids = [command[1] for command in sanitized_vals['groups_id'] if command[0] == 4]
             added_group_ids += [id for command in sanitized_vals['groups_id'] if command[0] == 6 for id in command[2]]
-            self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', added_group_ids)])._action_add_members(self.mapped('partner_id'))
+            self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', added_group_ids)])._action_add_members(self.partner_id)
         return res
 
     def get_gamification_redirection_data(self):

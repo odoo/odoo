@@ -31,7 +31,7 @@ class MailMessage(models.Model):
             ('message_id', '!=', False),
             ("consumed", "=", True),
         ])
-        return [('id', 'in', ratings.mapped('message_id').ids)]
+        return [('id', 'in', ratings.message_id.ids)]
 
     def _to_store_defaults(self):
         # sudo: mail.message - guest and portal user can receive rating of accessible message

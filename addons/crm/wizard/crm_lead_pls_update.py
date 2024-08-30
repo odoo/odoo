@@ -28,7 +28,7 @@ class CrmLeadPlsUpdate(models.TransientModel):
         if self.env.user._is_admin():
             set_param = self.env['ir.config_parameter'].sudo().set_param
             if self.pls_fields:
-                pls_fields_str = ','.join(self.pls_fields.mapped('field_id.name'))
+                pls_fields_str = ','.join(self.pls_fields.field_id.mapped('name'))
                 set_param('crm.pls_fields', pls_fields_str)
             else:
                 set_param('crm.pls_fields', "")

@@ -44,7 +44,7 @@ class TestOdoobot(MailCommon, TestRecipients):
                 answer=False
             )
         # Odoobot should not be a follower but user_employee and user_admin should
-        follower = self.test_record.message_follower_ids.mapped('partner_id')
+        follower = self.test_record.message_follower_ids.partner_id
         self.assertNotIn(self.odoobot, follower)
         self.assertIn(self.user_employee.partner_id, follower)
         self.assertIn(self.user_admin.partner_id, follower)

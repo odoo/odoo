@@ -24,7 +24,7 @@ class TestWebsiteSequence(BaseCommon):
         product_templates = ProductTemplate.search([])
         # if stock is installed we can't archive since there is orderpoints
         if 'orderpoint_ids' in cls.env['product.product']:
-            product_templates.mapped('product_variant_ids.orderpoint_ids').write({'active': False})
+            product_templates.product_variant_ids.orderpoint_ids.write({'active': False})
         # if pos loyalty is installed we can't archive since there are loyalty rules and rewards
         if 'loyalty.program' in cls.env:
             programs = cls.env['loyalty.program'].search([])

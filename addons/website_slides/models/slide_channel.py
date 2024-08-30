@@ -107,8 +107,8 @@ class SlideChannelPartner(models.Model):
             completing the course to the attendee (see _post_completion_update_hook)
         """
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
-            ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
-             ('partner_id', 'in', self.mapped('partner_id').ids),
+            ['&', '&', ('channel_id', 'in', self.channel_id.ids),
+             ('partner_id', 'in', self.partner_id.ids),
              ('completed', '=', True),
              ('slide_id.is_published', '=', True),
              ('slide_id.active', '=', True)],
@@ -639,7 +639,7 @@ class SlideChannel(models.Model):
             ('partner_id', '=', self.env.user.partner_id.id),
             ('slide_id', 'in', new_published_slides.ids),
             ('completed', '=', True)
-        ]).mapped('slide_id')
+        ]).slide_id
         for channel in self:
             new_slides = new_published_slides.filtered(lambda slide: slide.channel_id == channel)
             channel.partner_has_new_content = any(slide not in slide_partner_completed for slide in new_slides)
@@ -682,7 +682,7 @@ class SlideChannel(models.Model):
             ('partner_id', '=', self.env.user.partner_id.id),
             ('channel_id', 'in', self.prerequisite_channel_ids.ids),
             ('member_status', '=', 'completed'),
-        ]).mapped('channel_id')
+        ]).channel_id
         for channel in self:
             channel.prerequisite_user_has_completed = all(
                 channel in completed_prerequisite_channels for channel in channel.prerequisite_channel_ids)
@@ -978,7 +978,7 @@ class SlideChannel(models.Model):
 
     def _add_groups_members(self):
         for channel in self:
-            channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
+            channel._action_add_members(channel.enroll_group_ids.users.partner_id)
 
     def _get_earned_karma(self, partner_ids):
         """ Compute the number of karma earned by partners on a channel

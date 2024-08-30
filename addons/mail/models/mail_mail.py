@@ -158,7 +158,7 @@ class MailMail(models.Model):
             if values.get('attachment_ids'):
                 new_mails_w_attach += mail
         if new_mails_w_attach:
-            new_mails_w_attach.mapped('attachment_ids').check(mode='read')
+            new_mails_w_attach.attachment_ids.check(mode='read')
 
         return new_mails
 
@@ -298,7 +298,7 @@ class MailMail(models.Model):
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
-                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m._is_thread_message())
+                    messages = notifications.mail_message_id.filtered(lambda m: m._is_thread_message())
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
         if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.

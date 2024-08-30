@@ -496,7 +496,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         def _aggregate(fname):
             if isinstance(self.env['crm.lead'][fname], models.BaseModel):
-                values = leads.mapped(fname)
+                values = leads[fname]
             else:
                 values = [_find_value(lead, fname) for lead in leads]
             return values

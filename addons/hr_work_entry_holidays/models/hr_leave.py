@@ -168,7 +168,7 @@ class HrLeave(models.Model):
 
         cancellable_leaves = self.filtered('can_cancel')
         work_entries = self.env['hr.work.entry'].sudo().search([('state', '=', 'validated'), ('leave_id', 'in', cancellable_leaves.ids)])
-        leave_ids = work_entries.mapped('leave_id').ids
+        leave_ids = work_entries.leave_id.ids
 
         for leave in cancellable_leaves:
             leave.can_cancel = leave.id not in leave_ids

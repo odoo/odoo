@@ -1008,7 +1008,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 0)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
         self.product1.product_tmpl_id.categ_id.write({
@@ -1021,7 +1021,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
         # An accounting entry should only be created for the replenish now that the category is perpetual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 1)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
         for svl in self.product1.stock_valuation_layer_ids.sorted()[-2:]:
             self.assertEqual(svl.description, 'Valuation method change for product category Goods: from manual_periodic to real_time.')
@@ -1034,7 +1034,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 0)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
         cat2 = self.env['product.category'].create({'name': 'standard auto'})
@@ -1055,7 +1055,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
         # An accounting entry should only be created for the replenish now that the category is perpetual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 1)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
     def test_standard_auto_to_manual_1(self):
@@ -1066,7 +1066,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 1)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
@@ -1074,7 +1074,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
         # An accounting entry should only be created for the emptying now that the category is manual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 2)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
     def test_standard_auto_to_manual_2(self):
@@ -1085,7 +1085,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 1)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
         cat2 = self.env['product.category'].create({'name': 'fifo'})
@@ -1096,7 +1096,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
         # An accounting entry should only be created for the emptying now that the category is manual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids.account_move_id), 2)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
     def test_return_delivery_fifo(self):

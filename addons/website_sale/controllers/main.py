@@ -1502,7 +1502,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param sale.order order_sudo: The current cart.
         :return: None
         """
-        if request.lang.code in request.website.mapped('language_ids.code'):
+        if request.lang.code in request.website.language_ids.mapped('code'):
             address_values['lang'] = request.lang.code
 
         address_values['company_id'] = order_sudo.website_id.company_id.id

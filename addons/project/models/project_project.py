@@ -547,7 +547,7 @@ class ProjectProject(models.Model):
 
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
-            self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
+            self.with_context(active_test=False).tasks.write({'active': vals['active']})
         if 'name' in vals and self.account_id:
             projects_read_group = self.env['project.project']._read_group(
                 [('account_id', 'in', self.account_id.ids)],
@@ -590,7 +590,7 @@ class ProjectProject(models.Model):
         res = super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         if subtype_ids:
             project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids)
-            task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids
+            task_subtypes = (project_subtypes.parent_id | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids
             if task_subtypes:
                 for task in self.task_ids:
                     partners = set(task.message_partner_ids.ids) & set(partner_ids)

@@ -91,7 +91,7 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
+                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.order_line}
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
@@ -215,9 +215,9 @@ class PurchaseOrder(models.Model):
 
         def _render_note_exception_quantity_po(order_exceptions):
             order_line_ids = self.env['purchase.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
-            purchase_order_ids = order_line_ids.mapped('order_id')
+            purchase_order_ids = order_line_ids.order_id
             move_ids = self.env['stock.move'].concat(*rendering_context.keys())
-            impacted_pickings = move_ids.mapped('picking_id')._get_impacted_pickings(move_ids) - move_ids.mapped('picking_id')
+            impacted_pickings = move_ids.picking_id._get_impacted_pickings(move_ids) - move_ids.picking_id
             values = {
                 'purchase_order_ids': purchase_order_ids,
                 'order_exceptions': order_exceptions.values(),

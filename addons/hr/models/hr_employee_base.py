@@ -170,7 +170,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.depends('user_id')
     def _compute_last_activity(self):
-        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
+        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.user_id.ids)], ['user_id', 'last_presence'])
         # transform the result to a dict with this format {user.id: last_presence}
         presences = {p['user_id'][0]: p['last_presence'] for p in presences}
 
@@ -252,7 +252,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.depends('department_id')
     def _compute_parent_id(self):
-        for employee in self.filtered('department_id.manager_id'):
+        for employee in self.filtered(lambda rec: rec.department_id.manager_id):
             employee.parent_id = employee.department_id.manager_id
 
     @api.depends('resource_calendar_id', 'hr_presence_state')
@@ -278,7 +278,7 @@ class HrEmployeeBase(models.AbstractModel):
         all_employee_tz = set(self.mapped('tz'))
         for tz in all_employee_tz:
             employee_ids = self.filtered(lambda e: e.tz == tz)
-            resource_calendar_ids = employee_ids.mapped('resource_calendar_id')
+            resource_calendar_ids = employee_ids.resource_calendar_id
             for calendar_id in resource_calendar_ids:
                 res_employee_ids = employee_ids.filtered(lambda e: e.resource_calendar_id.id == calendar_id.id)
                 start_dt = fields.Datetime.now()

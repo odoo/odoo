@@ -289,13 +289,13 @@ class TestTraceability(TestMrpCommon):
         mo_backorder.button_mark_done()
 
         mo = mo | mo_backorder
-        raw_move_lines = mo.move_raw_ids.mapped('move_line_ids')
+        raw_move_lines = mo.move_raw_ids.move_line_ids
         raw_line_raw_1_lot_1 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_1_lot_1')
         self.assertEqual(set(raw_line_raw_1_lot_1.produce_line_ids.lot_id.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
         raw_line_raw_2_lot_1 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_2_lot_1')
         self.assertEqual(set(raw_line_raw_2_lot_1.produce_line_ids.lot_id.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
 
-        finished_move_lines = mo.move_finished_ids.mapped('move_line_ids')
+        finished_move_lines = mo.move_finished_ids.move_line_ids
         finished_move_line_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Final_lot_1')
         self.assertEqual(finished_move_line_lot_1.consume_line_ids.filtered(lambda l: l.quantity), raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
         finished_move_line_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Final_lot_2')

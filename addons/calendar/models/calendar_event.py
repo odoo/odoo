@@ -784,7 +784,7 @@ class CalendarEvent(models.Model):
         # Get concerned attendees to notify them if there is an alarm on the unlinked events,
         # as it might have changed their next event notification
         events = self.filtered_domain([('alarm_ids', '!=', False)])
-        partner_ids = events.mapped('partner_ids').ids
+        partner_ids = events.partner_ids.ids
 
         # don't forget to update recurrences if there are some base events in the set to unlink,
         # but after having removed the events ;-)

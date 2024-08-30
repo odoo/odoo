@@ -189,7 +189,7 @@ class Im_LivechatChannel(models.Model):
     def action_view_chatbot_scripts(self):
         action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.chatbot_script_action')
         chatbot_script_ids = self.env['im_livechat.channel.rule'].search(
-            [('channel_id', 'in', self.ids)]).mapped('chatbot_script_id')
+            [('channel_id', 'in', self.ids)]).chatbot_script_id
         if len(chatbot_script_ids) == 1:
             action['res_id'] = chatbot_script_ids.id
             action['view_mode'] = 'form'
@@ -206,7 +206,7 @@ class Im_LivechatChannel(models.Model):
     ):
         user_operator = False
         if chatbot_script:
-            if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
+            if chatbot_script.id not in self.browse(self.ids).rule_ids.chatbot_script_id._ids:
                 return False
         else:
             user_operator = self._get_operator(previous_operator_id=previous_operator_id, lang=lang, country_id=country_id)

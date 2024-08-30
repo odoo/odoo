@@ -603,7 +603,7 @@ class AccountJournal(models.Model):
 
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
-        for bank_account in self.mapped('bank_account_id'):
+        for bank_account in self.bank_account_id:
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account

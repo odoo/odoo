@@ -646,7 +646,7 @@ class HrExpense(models.Model):
             # then changing the expense.employee_id triggers changing the sheet.employee_id too.
             # Otherwise we unlink the expense line from sheet, (so that the user can create a new report).
             if self.sheet_id:
-                employees = self.sheet_id.expense_line_ids.mapped('employee_id')
+                employees = self.sheet_id.expense_line_ids.employee_id
                 if len(employees) == 1:
                     self.sheet_id.write({'employee_id': vals['employee_id']})
                 elif len(employees) > 1:
@@ -755,7 +755,7 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if not expenses_with_amount:
             raise UserError(_("You cannot report the expenses without amount!"))
-        if len(expenses_with_amount.mapped('employee_id')) != 1:
+        if len(expenses_with_amount.employee_id) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
         if any(not expense.product_id for expense in expenses_with_amount):
             raise UserError(_("You can not create report without category."))
@@ -1069,7 +1069,7 @@ class HrExpense(models.Model):
 
         if employee.user_id:
             company = employee.user_id.company_id
-            currencies = company.currency_id | employee.user_id.company_ids.mapped('currency_id')
+            currencies = company.currency_id | employee.user_id.company_ids.currency_id
         else:
             company = employee.company_id
             currencies = company.currency_id

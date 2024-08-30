@@ -93,7 +93,7 @@
                         <div class="tab-content" id="o_tab_content_spam">
                             <div class="tab-pane fade show active" data-key="create_uid" id="spam_user" role="tabpanel" aria-labelledby="user-tab">
                                 <form class="row" >
-                                    <div t-foreach="posts_ids.mapped('create_uid')" t-as="create_user" class="col-6">
+                                    <div t-foreach="posts_ids.create_uid" t-as="create_user" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
                                                 <div class="form-check">
@@ -110,7 +110,7 @@
                             </div>
                             <div class="tab-pane fade" data-key="country_id" id="spam_country" role="tabpanel" aria-labelledby="country-tab">
                                 <form class="row">
-                                    <div t-foreach="posts_ids.mapped('create_uid.country_id')" t-as="country" class="col-6">
+                                    <div t-foreach="posts_ids.create_uid.country_id" t-as="country" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
                                                 <div class="form-check">

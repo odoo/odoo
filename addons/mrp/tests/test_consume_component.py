@@ -348,7 +348,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         warehouse.manufacture_steps = 'pbm'
         bom = self.bom_serial
         bom.product_id = self.produced_serial
-        components = self.bom_serial.bom_line_ids.mapped('product_id')
+        components = self.bom_serial.bom_line_ids.product_id
         lot_1 = self.env['stock.lot'].create({
             'name': 'lot_1',
             'product_id': components[1].id,

@@ -28,7 +28,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(set([bom[0].id for bom in boms]), set((self.bom_2 | self.bom_3).ids))
         self.assertEqual(
             set([line[0].id for line in lines]),
-            set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
+            set((self.bom_2 | self.bom_3).bom_line_ids.filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
 
     def test_10_variants(self):
         test_bom = self.env['mrp.bom'].create({
