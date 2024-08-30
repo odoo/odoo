@@ -100,7 +100,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'name': 'VAT 10 perc Incl',
             'amount_type': 'percent',
             'amount': 10.0,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         # assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product
@@ -112,7 +112,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'name': 'VAT 5 perc Incl',
             'amount_type': 'percent',
             'amount': 5.0,
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
         })
 
         # create a second VAT tax of 5% but this time for a child company, to
@@ -122,7 +122,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'name': 'VAT 05 perc Excl (US)',
             'amount_type': 'percent',
             'amount': 5.0,
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
             'company_id': cls.company_data_2['company'].id,
         })
 
@@ -379,11 +379,11 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.tax_tag_refund_base = create_tag('Refund Base tag')
         cls.tax_tag_refund_tax = create_tag('Refund Tax tag')
 
-        def create_tax(percentage, price_include=False, include_base_amount=False):
+        def create_tax(percentage, price_include_override='tax_excluded', include_base_amount=False):
             return cls.env['account.tax'].create({
                 'name': f'Tax {percentage}%',
                 'amount': percentage,
-                'price_include': price_include,
+                'price_include_override': price_include_override,
                 'amount_type': 'percent',
                 'include_base_amount': include_base_amount,
                 'invoice_repartition_line_ids': [
@@ -409,12 +409,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                     }),
                 ],
             })
-        def create_tax_fixed(amount, price_include=False):
+
+        def create_tax_fixed(amount, price_include_override='tax_excluded', include_base_amount=False):
             return cls.env['account.tax'].create({
                 'name': f'Tax fixed amount {amount}',
                 'amount': amount,
-                'price_include': price_include,
-                'include_base_amount': price_include,
+                'price_include_override': price_include_override,
+                'include_base_amount': include_base_amount,
                 'amount_type': 'fixed',
                 'invoice_repartition_line_ids': [
                     (0, 0, {
@@ -440,13 +441,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 ],
             })
 
-        tax_fixed006 = create_tax_fixed(0.06, price_include=True)
-        tax_fixed012 = create_tax_fixed(0.12, price_include=True)
-        tax7 = create_tax(7, price_include=False)
+        tax_fixed006 = create_tax_fixed(0.06, price_include_override='tax_included', include_base_amount=True)
+        tax_fixed012 = create_tax_fixed(0.12, price_include_override='tax_included', include_base_amount=True)
+        tax7 = create_tax(7, price_include_override='tax_excluded')
         tax8 = create_tax(8, include_base_amount=True)
         tax9 = create_tax(9)
-        tax10 = create_tax(10, price_include=True)
-        tax21 = create_tax(21, price_include=True)
+        tax10 = create_tax(10, price_include_override='tax_included')
+        tax21 = create_tax(21, price_include_override='tax_included')
 
 
         tax_group_7_10 = tax7.copy()

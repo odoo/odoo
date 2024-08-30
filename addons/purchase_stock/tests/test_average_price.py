@@ -261,7 +261,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'type_tax_use': 'purchase',
             'amount_type': 'percent',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'invoice_repartition_line_ids': [
                 (0, 0, {'repartition_type': 'base'}),
                 (0, 0, {

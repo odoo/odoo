@@ -599,7 +599,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         tax_2 = self.env['account.tax'].create({
             'name': '5 incl',
             'amount': 5,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         product_a = self.env['product.product'].create({

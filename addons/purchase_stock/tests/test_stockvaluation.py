@@ -944,7 +944,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             "name": "Tax with no account",
             "amount_type": "percent",
             "amount": 5,
-            "price_include": True,
+            "price_include_override": "tax_included",
             "invoice_repartition_line_ids": repartition_line_vals,
             "refund_repartition_line_ids": repartition_line_vals,
         })
@@ -1032,7 +1032,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             "name": "Tax with no account",
             "amount_type": "fixed",
             "amount": 5,
-            "price_include": 5,
+            "price_include_override": "tax_included",
         })
 
         # Create PO

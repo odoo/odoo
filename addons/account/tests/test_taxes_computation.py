@@ -26,8 +26,8 @@ class TestTaxesComputation(TestTaxCommon):
             },
         )
 
-        tax_percent1 = self.percent_tax(0.0, price_include=True)
-        tax_percent2 = self.percent_tax(8.0, price_include=True)
+        tax_percent1 = self.percent_tax(0.0, price_include_override='tax_included')
+        tax_percent2 = self.percent_tax(8.0, price_include_override='tax_included')
         tax_group1 = self.group_of_taxes(tax_percent1, sequence=5)
         tax_group2 = self.group_of_taxes(tax_percent2, sequence=6)
         self.assert_taxes_computation(
@@ -45,8 +45,8 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_random_case_1(self):
-        tax_percent_8_price_included = self.percent_tax(8.0, price_include=True)
-        tax_percent_0_price_included = self.percent_tax(0.0, price_include=True)
+        tax_percent_8_price_included = self.percent_tax(8.0, price_include_override='tax_included')
+        tax_percent_0_price_included = self.percent_tax(0.0, price_include_override='tax_included')
 
         self.assert_taxes_computation(
             tax_percent_8_price_included + tax_percent_0_price_included,
@@ -77,7 +77,7 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_random_case_2(self):
-        tax_percent_5_price_included = self.percent_tax(5.0, price_include=True)
+        tax_percent_5_price_included = self.percent_tax(5.0, price_include_override='tax_included')
         currency_dp_half = 0.05
 
         self.assert_taxes_computation(
@@ -159,7 +159,7 @@ class TestTaxesComputation(TestTaxCommon):
 
     def test_random_case_3(self):
         tax_percent_15_price_excluded = self.percent_tax(15.0)
-        tax_percent_5_5_price_included = self.percent_tax(5.5, price_include=True)
+        tax_percent_5_5_price_included = self.percent_tax(5.5, price_include_override='tax_included')
 
         self.assert_taxes_computation(
             tax_percent_15_price_excluded + tax_percent_5_5_price_included,
@@ -190,7 +190,7 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_random_case_4(self):
-        tax_percent_12_price_included = self.percent_tax(12.0, price_include=True)
+        tax_percent_12_price_included = self.percent_tax(12.0, price_include_override='tax_included')
 
         self.assert_taxes_computation(
             tax_percent_12_price_included,
@@ -220,7 +220,7 @@ class TestTaxesComputation(TestTaxCommon):
 
     def test_random_case_5(self):
         tax_percent_19 = self.percent_tax(19.0)
-        tax_percent_19_price_included = self.percent_tax(19.0, price_include=True)
+        tax_percent_19_price_included = self.percent_tax(19.0, price_include_override='tax_included')
         currency_dp_0 = 1.0
 
         self.assert_taxes_computation(
@@ -326,7 +326,7 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_random_case_6(self):
-        tax_percent_20_price_included = self.percent_tax(20.0, price_include=True)
+        tax_percent_20_price_included = self.percent_tax(20.0, price_include_override='tax_included')
         currency_dp_6 = 0.000001
 
         self.assert_taxes_computation(
@@ -359,7 +359,7 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_random_case_7(self):
-        tax_percent_21_price_included = self.percent_tax(21.0, price_include=True)
+        tax_percent_21_price_included = self.percent_tax(21.0, price_include_override='tax_included')
         currency_dp_6 = 0.000001
 
         self.assert_taxes_computation(
@@ -459,7 +459,7 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_random_case_9(self):
-        tax_division_100 = self.division_tax(100.0, price_include=True)
+        tax_division_100 = self.division_tax(100.0, price_include_override='tax_included')
 
         self.assert_taxes_computation(
             tax_division_100,
@@ -475,7 +475,7 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_fixed_tax_price_included_affect_base_on_0(self):
-        tax = self.fixed_tax(0.05, price_include=True, include_base_amount=True)
+        tax = self.fixed_tax(0.05, price_include_override='tax_included', include_base_amount=True)
         self.assert_taxes_computation(
             tax,
             0.0,
@@ -578,8 +578,8 @@ class TestTaxesComputation(TestTaxCommon):
         # tax1      T               T                   T
         # tax2      T               T
         # tax3                                          T
-        tax1.price_include = True
-        tax2.price_include = True
+        tax1.price_include_override = 'tax_included'
+        tax2.price_include_override = 'tax_included'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,
             112.0,
@@ -635,7 +635,7 @@ class TestTaxesComputation(TestTaxCommon):
             rounding_method='round_globally',
         )
 
-        (tax1 + tax2 + tax3 + tax4 + tax5).price_include = True
+        (tax1 + tax2 + tax3 + tax4 + tax5).price_include_override = 'tax_included'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3 + tax4 + tax5,
             48.0,
@@ -657,7 +657,7 @@ class TestTaxesComputation(TestTaxCommon):
     def test_division_taxes_for_l10n_au_differed_gst(self):
         tax = self.division_tax(
             amount=100,
-            price_include=True,
+            price_include_override='tax_included',
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
                 Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
@@ -730,7 +730,7 @@ class TestTaxesComputation(TestTaxCommon):
         # tax1                      T
         # tax2      T
         # tax3
-        tax2.price_include = True
+        tax2.price_include_override = 'tax_included'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,
             120.0,
@@ -793,7 +793,7 @@ class TestTaxesComputation(TestTaxCommon):
         # tax1
         # tax2                      T
         # tax3
-        tax2.price_include = False
+        tax2.price_include_override = 'tax_excluded'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,
             100.0,
@@ -814,8 +814,8 @@ class TestTaxesComputation(TestTaxCommon):
         # tax1      T
         # tax2      T               T
         # tax3
-        tax1.price_include = True
-        tax2.price_include = True
+        tax1.price_include_override = 'tax_included'
+        tax2.price_include_override = 'tax_included'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,
             122.0,
@@ -876,12 +876,12 @@ class TestTaxesComputation(TestTaxCommon):
         self._run_js_tests()
 
     def test_adapt_price_unit_to_another_taxes(self):
-        tax_fixed_incl = self.fixed_tax(10, price_include=True)
-        tax_fixed_excl = self.fixed_tax(10)
-        tax_include_src = self.percent_tax(21, price_include=True)
-        tax_include_dst = self.percent_tax(6, price_include=True)
-        tax_exclude_src = self.percent_tax(15)
-        tax_exclude_dst = self.percent_tax(21)
+        tax_fixed_incl = self.fixed_tax(10, price_include_override='tax_included')
+        tax_fixed_excl = self.fixed_tax(10, price_include_override='tax_excluded')
+        tax_include_src = self.percent_tax(21, price_include_override='tax_included')
+        tax_include_dst = self.percent_tax(6, price_include_override='tax_included')
+        tax_exclude_src = self.percent_tax(15, price_include_override='tax_excluded')
+        tax_exclude_dst = self.percent_tax(21, price_include_override='tax_excluded')
 
         self.assert_adapt_price_unit_to_another_taxes(
             121.0,

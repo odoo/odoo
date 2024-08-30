@@ -32,14 +32,14 @@ class TestSaleCouponCommon(SaleCommon):
             'name': "10% Tax incl",
             'amount_type': 'percent',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         cls.tax_10pc_base_incl = cls.env['account.tax'].create({
             'name': "10% Tax incl base amount",
             'amount_type': 'percent',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
         })
 
@@ -47,14 +47,14 @@ class TestSaleCouponCommon(SaleCommon):
             'name': "10% Tax excl",
             'amount_type': 'percent',
             'amount': 10,
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
         })
 
         cls.tax_20pc_excl = cls.env['account.tax'].create({
             'name': "20% Tax excl",
             'amount_type': 'percent',
             'amount': 20,
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
         })
 
         cls.tax_group = cls.env['account.tax'].create({

@@ -94,7 +94,7 @@ class TestCIIFR(TestUBLCommon):
             'amount_type': 'percent',
             'amount': 5,
             'type_tax_use': 'sale',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
     @classmethod
@@ -330,8 +330,8 @@ class TestCIIFR(TestUBLCommon):
 
     def test_export_with_fixed_taxes_case3(self):
         # CASE 3: same as Case 1 but taxes are Price Included
-        self.recupel.price_include = True
-        self.tax_21.price_include = True
+        self.recupel.price_include_override = 'tax_included'
+        self.tax_21.price_include_override = 'tax_included'
 
         # Price TTC = 121 = (99 + 1 ) * 1.21
         invoice = self._generate_move(

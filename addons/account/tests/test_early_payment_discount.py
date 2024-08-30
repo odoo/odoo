@@ -632,7 +632,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         tax = self.env['account.tax'].create({
             'name': 'Tax 21% included',
             'amount': 21,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice:

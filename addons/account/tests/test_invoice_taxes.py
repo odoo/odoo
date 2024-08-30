@@ -23,7 +23,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'name': '21% incl',
             'amount_type': 'percent',
             'amount': 21,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
             'sequence': 20,
         })
@@ -37,7 +37,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'name': '5% incl',
             'amount_type': 'percent',
             'amount': 5,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
             'sequence': 40,
         })
@@ -318,7 +318,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'type_tax_use': 'sale',
             'amount_type': 'division',
             'amount': 100,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
         })
         invoice = self._create_invoice([(100, sale_tax)])

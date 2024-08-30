@@ -571,7 +571,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             'amount': '15.0',
             'amount_type': 'percent',
             'type_tax_use': 'purchase',
-            'price_include': True
+            'price_include_override': 'tax_included',
         })
 
         # create a purchase.order with the project account in analytic_distribution

@@ -264,7 +264,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_price_include_breakdown(self):
-        tax_10_incl = self.create_tax(10, {'price_include': True})
+        tax_10_incl = self.create_tax(10, {'price_include_override': 'tax_included'})
         self.sale_order.order_line[0].tax_id = tax_10_incl + self.tax_10
         self.sale_order.order_line[1].tax_id = self.tax_10
         self.sale_order.order_line[2].tax_id = self.tax_10
@@ -288,7 +288,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_price_include_include_base_amount_breakdown(self):
-        tax_10_pi_ba = self.create_tax(10, {'price_include': True, 'include_base_amount': True})
+        tax_10_pi_ba = self.create_tax(10, {'price_include_override': 'tax_included', 'include_base_amount': True})
         self.tax_10.sequence = 2
         self.sale_order.order_line[0].tax_id = tax_10_pi_ba + self.tax_10
         self.sale_order.order_line[1].tax_id = self.tax_10
@@ -337,7 +337,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_price_include_include_base_amount_breakdown_with_discount(self):
-        tax_10_pi_ba = self.create_tax(10, {'price_include': True, 'include_base_amount': True})
+        tax_10_pi_ba = self.create_tax(10, {'price_include_override': 'tax_included', 'include_base_amount': True})
         self.tax_10.sequence = 2
         self.sale_order.order_line[0].tax_id = tax_10_pi_ba + self.tax_10
         self.sale_order.order_line[0].discount = 25.0
@@ -410,8 +410,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_fixed_amount_price_include(self):
-        tax_fix = self.create_tax(5, {'amount_type': 'fixed', 'include_base_amount': True, 'price_include': True})
-        tax_percentage = self.create_tax(21, {'amount_type': 'percent', 'price_include': True})
+        tax_fix = self.create_tax(5, {'amount_type': 'fixed', 'include_base_amount': True, 'price_include_override': 'tax_included'})
+        tax_percentage = self.create_tax(21, {'amount_type': 'percent', 'price_include_override': 'tax_included'})
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,

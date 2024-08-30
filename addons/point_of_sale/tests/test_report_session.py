@@ -15,7 +15,7 @@ class TestReportSession(TestPoSCommon):
         self.tax1 = self.env['account.tax'].create({
             'name': 'Tax 1',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         self.product1 = self.create_product('Product A', self.categ_basic, 110, self.tax1.id)
 
