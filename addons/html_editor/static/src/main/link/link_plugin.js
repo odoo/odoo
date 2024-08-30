@@ -400,7 +400,6 @@ export class LinkPlugin extends Plugin {
             }
             this.shared.domInsert(link);
             this.shared.setCursorEnd(link);
-            this.dispatch("ADD_STEP");
             return link;
         }
     }
