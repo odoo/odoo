@@ -120,7 +120,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'journal_id': cls.company_data['default_journal_purchase'].id,
             'invoice_date': fields.Date.from_string('2019-01-01'),
             'fiscal_position_id': False,
-            'payment_reference': '',
+            'payment_reference': False,
             'invoice_payment_term_id': cls.pay_terms_a.id,
             'amount_untaxed': 960.0,
             'amount_tax': 168.0,
