@@ -1771,6 +1771,8 @@ class MrpProduction(models.Model):
         :return: mrp.production records in order of [orig_prod_1, backorder_prod_1,
         backorder_prod_2, orig_prod_2, backorder_prod_2, etc.]
         """
+        amounts_arg = bool(amounts)
+
         def _default_amounts(production):
             return [production.qty_producing, production._get_quantity_to_backorder()]
 
@@ -1854,7 +1856,24 @@ class MrpProduction(models.Model):
                     new_moves_vals.append(move_vals)
                     moves.append(move)
 
-        backorder_moves = self.env['stock.move'].create(new_moves_vals)
+        # Merge move vals for the same product from the same source if no explicit amounts were provided
+        updated_moves_vals = {}
+        if not amounts_arg:
+            for move_vals in new_moves_vals:
+                key_tuple = (move_vals['product_id'], move_vals['location_id'])
+                if key_tuple in updated_moves_vals:
+                    if 'quantity' in updated_moves_vals[key_tuple]:
+                        updated_moves_vals[key_tuple]['quantity'] += move_vals.get('quantity', 0)
+                    else:
+                        updated_moves_vals[key_tuple]['quantity'] = move_vals.get('quantity', 0)
+                    if 'product_uom_qty' in updated_moves_vals[key_tuple]:
+                        updated_moves_vals[key_tuple]['product_uom_qty'] += move_vals.get('product_uom_qty', 0)
+                    else:
+                        updated_moves_vals[key_tuple]['product_uom_qty'] = move_vals.get('product_uom_qty', 0)
+                else:
+                    updated_moves_vals[key_tuple] = move_vals
+
+        backorder_moves = self.env['stock.move'].create(list(updated_moves_vals.values()) or new_moves_vals)
         move_to_assign = backorder_moves
         # Split `stock.move.line`s. 2 options for this:
         # - do_unreserve -> action_assign
