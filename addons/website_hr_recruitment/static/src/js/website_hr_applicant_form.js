@@ -42,19 +42,19 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
 
     async _onFocusOutName(ev) {
         const field = "name"
-        const messageContainerId = "#name-message";
+        const messageContainerId = "#warning-message";
         await this.checkRedundant(ev.currentTarget, field, messageContainerId);
     },
 
     async _onFocusOutMail (ev) {
         const field = "email"
-        const messageContainerId = "#email-message";
+        const messageContainerId = "#warning-message";
         await this.checkRedundant(ev.currentTarget, field, messageContainerId);
     },
 
     async _onFocusOutPhone (ev) {
         const field = "phone"
-        const messageContainerId = "#phone-message";
+        const messageContainerId = "#warning-message";
         await this.checkRedundant(ev.currentTarget, field, messageContainerId);
     },
 
