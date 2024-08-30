@@ -12,6 +12,7 @@ export class ProtectedNodePlugin extends Plugin {
         return {
             is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
             filter_descendants_to_remove: p.filterDescendantsToRemove.bind(p),
+            isUnsplittable: isProtecting, // avoid merge
         };
     }
     static shared = ["setProtectingNode"];

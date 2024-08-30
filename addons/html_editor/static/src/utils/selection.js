@@ -197,6 +197,21 @@ function updateCursorBeforeUnwrap(node, cursor) {
     }
 }
 
+function updateCursorBeforeMergeIntoPreviousSibling(node, cursor) {
+    if (cursor.node === node) {
+        cursor.node = node.previousSibling;
+        cursor.offset += node.previousSibling.childNodes.length;
+    } else if (cursor.node === node.parentNode) {
+        const childIndex = childNodeIndex(node);
+        if (cursor.offset === childIndex) {
+            cursor.node = node.previousSibling;
+            cursor.offset = node.previousSibling.childNodes.length;
+        } else if (cursor.offset > childIndex) {
+            cursor.offset--;
+        }
+    }
+}
+
 /** @typedef {import("@html_editor/core/selection_plugin").Cursor} Cursor */
 
 export const callbacksForCursorUpdate = {
@@ -215,6 +230,8 @@ export const callbacksForCursorUpdate = {
     prepend: (to, node) => (cursor) => updateCursorBeforeMove(to, 0, node, cursor),
     /** @type {(node: HTMLElement) => (cursor: Cursor) => void} */
     unwrap: (node) => (cursor) => updateCursorBeforeUnwrap(node, cursor),
+    /** @type {(node: HTMLElement) => (cursor: Cursor) => void} */
+    merge: (node) => (cursor) => updateCursorBeforeMergeIntoPreviousSibling(node, cursor),
 };
 
 /**

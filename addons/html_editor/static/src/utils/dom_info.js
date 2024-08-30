@@ -609,8 +609,6 @@ export function areSimilarElements(node, node2) {
     if (node.nodeName !== node2.nodeName) {
         return false; // The nodes aren't the same type of element.
     }
-    const nodeName = node.nodeName;
-
     for (const name of new Set([...node.getAttributeNames(), ...node2.getAttributeNames()])) {
         if (node.getAttribute(name) !== node2.getAttribute(name)) {
             return false; // The nodes don't have the same attributes.
@@ -623,14 +621,8 @@ export function areSimilarElements(node, node2) {
     ) {
         return false; // The nodes have pseudo elements with content.
     }
-    if (isIconElement(node) || isIconElement(node2)) {
+    if (isBlock(node)) {
         return false;
-    }
-    if (["UL", "OL"].includes(nodeName)) {
-        return !isSelfClosingElement(node) && !isSelfClosingElement(node2); // The nodes are non-empty lists. TODO: this doesn't check that and it will always be true!
-    }
-    if (isBlock(node) || isSelfClosingElement(node) || isSelfClosingElement(node2)) {
-        return false; // The nodes are blocks or are empty but visible. TODO: Not sure this was what we wanted to check (see just above).
     }
     const nodeStyle = getComputedStyle(node);
     const node2Style = getComputedStyle(node2);

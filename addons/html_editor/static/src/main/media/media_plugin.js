@@ -62,6 +62,7 @@ export class MediaPlugin extends Plugin {
                     text: "Replace",
                 },
             ],
+            isUnsplittable: isIconElement, // avoid merge
         };
         return resources;
     };
