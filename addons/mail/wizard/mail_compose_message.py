@@ -735,18 +735,24 @@ class MailComposer(models.TransientModel):
             if records:
                 records._message_mail_after_hook(iter_mails_sudo)
 
-            if not self.force_send:
-                continue
-            # as 'send' does not filter out scheduled mails (only 'process_email_queue'
-            # does) we need to do it manually
-            iter_mails_sudo_tosend = iter_mails_sudo.filtered(
-                lambda mail: (
-                    not mail.scheduled_date or
-                    mail.scheduled_date <= datetime.datetime.utcnow()
+            if self.force_send:
+                # as 'send' does not filter out scheduled mails (only 'process_email_queue'
+                # does) we need to do it manually
+                iter_mails_sudo_tosend = iter_mails_sudo.filtered(
+                    lambda mail: (
+                        not mail.scheduled_date or
+                        mail.scheduled_date <= datetime.datetime.utcnow()
+                    )
                 )
-            )
-            if iter_mails_sudo_tosend:
-                iter_mails_sudo_tosend.send(auto_commit=auto_commit)
+                if iter_mails_sudo_tosend:
+                    iter_mails_sudo_tosend.send(auto_commit=auto_commit)
+                    continue
+            # sending emails will commit and invalidate cache; in case we do not force
+            # send better void the cache and commit what is already generated to avoid
+            # running several times on same records in case of issue
+            if auto_commit is True:
+                self._cr.commit()
+            self.env.invalidate_all()
 
         return mails_sudo
 
