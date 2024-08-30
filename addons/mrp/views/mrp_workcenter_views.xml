@@ -149,7 +149,7 @@
             <field name="name">mrp.workcenter.kanban</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_dashboard o_workcenter_kanban" create="0" can_open="0" sample="1">
+                <kanban class="o_kanban_dashboard o_workcenter_kanban" create="0" can_open="0" sample="0">
                     <field name="name"/>
                     <field name="color"/>
                     <field name="workorder_count"/>
@@ -199,7 +199,22 @@
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header o_kanban_record_top">
                                     <div class="o_kanban_record_headings o_kanban_card_header_title">
-                                        <span class="o_primary ml8" style="display: inline-block">
+                                        <span class="o_primary ml8" style="">
+                                            <div style="display: inline-block" name="wc_stages">
+                                                <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
+                                                    title="No workorder currently in progress. Click to mark work center as blocked."
+                                                    aria-label="No workorder currently in progress. Click to mark work center as blocked."
+                                                    invisible="working_state in ('blocked', 'done')"/>
+                                                <a name="unblock" type="object" class=" o_status o_status_red float-end"
+                                                    title="Workcenter blocked, click to unblock."
+                                                    aria-label="Workcenter blocked, click to unblock."
+                                                    invisible="working_state in ('normal', 'done')"/>
+                                                <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
+                                                    title="Work orders in progress. Click to block work center."
+                                                    aria-label="Work orders in progress. Click to block work center."
+                                                    invisible="working_state in ('normal', 'blocked')"/>
+                                            </div>
+                                            <span> </span>
                                             <field name="name"/>
                                         </span>
                                     </div>
@@ -268,20 +283,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 o_kanban_primary_left" style="position:absolute; bottom:10px;" name="wc_stages">
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
-                                                title="No workorder currently in progress. Click to mark work center as blocked."
-                                                aria-label="No workorder currently in progress. Click to mark work center as blocked."
-                                                invisible="working_state in ('blocked', 'done')"/>
-                                            <a name="unblock" type="object" class=" o_status o_status_red float-end"
-                                                title="Workcenter blocked, click to unblock."
-                                                aria-label="Workcenter blocked, click to unblock."
-                                                invisible="working_state in ('normal', 'done')"/>
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
-                                                title="Work orders in progress. Click to block work center."
-                                                aria-label="Work orders in progress. Click to block work center."
-                                                invisible="working_state in ('normal', 'blocked')"/>
-                                        </div>
+                                        <field name="kanban_dashboard_graph" graph_type="line" widget="workcenter_dashboard_graph"/>
                                     </div>
                                 </div>
                             </div>

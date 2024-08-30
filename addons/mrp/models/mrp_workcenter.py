@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
+from babel.dates import format_date
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
@@ -10,7 +12,9 @@ from random import randint
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.resource.models.utils import make_aware, Intervals
+from odoo.tools.date_utils import start_of, end_of
 from odoo.tools.float_utils import float_compare
+from odoo.tools.misc import get_lang
 
 
 class MrpWorkcenter(models.Model):
@@ -75,12 +79,69 @@ class MrpWorkcenter(models.Model):
     tag_ids = fields.Many2many('mrp.workcenter.tag')
     capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
         help="Specific number of pieces that can be produced in parallel per product.", copy=True)
+    kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
         for workcenter in self:
             if workcenter in workcenter.alternative_workcenter_ids:
                 raise ValidationError(_("Workcenter %s cannot be an alternative of itself.", workcenter.name))
+
+    def _compute_kanban_dashboard_graph(self):
+
+        def _get_date_array():
+            date_array = {}
+            today = datetime.today()
+            locale = get_lang(self.env).code
+            for delta in range(-1, 4):
+                delta_date = today + relativedelta.relativedelta(weeks=delta)
+                week_start = start_of(delta_date, 'week')
+                week_end = end_of(delta_date, 'week')
+                short_name = (format_date(week_start, 'd - ', locale=locale)
+                              + format_date(week_end, 'd MMM', locale=locale))
+                if not delta:
+                    short_name = 'This Week'
+                date_array[(week_start.strftime('%Y-%m-%d'), week_end.strftime('%Y-%m-%d'))] = short_name
+            return date_array
+
+        week_range = _get_date_array()
+        load_per_week = self._get_workcenter_load_per_week(week_range)
+        load_graph_data = self._prepare_graph_data(load_per_week, week_range)
+        for wc in self:
+            wc.kanban_dashboard_graph = json.dumps(load_graph_data[wc.id])
+
+    def _get_workcenter_load_per_week(self, week_range):
+        load_per_week_per_wc = {rec: {} for rec in self}
+        for week in week_range:
+            result = self.env['mrp.workorder']._read_group(
+                [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready', 'progress')),
+                 ('production_date', '>', week[0]), ('production_date', '<', week[1])],
+                ['workcenter_id'], ['duration_expected:sum'])
+            for r in result:
+                load_in_hours = round(r[1] / 60, 1)
+                load_per_week_per_wc[r[0]].update({week: load_in_hours})
+        return load_per_week_per_wc
+
+    def _prepare_graph_data(self, load_data, week_range):
+        graph_data = {wid: [] for wid in self._ids}
+        sample_data = not self.order_ids
+        for workcenter in self:
+            max_load_per_week = sum(workcenter.resource_calendar_id.attendance_ids.mapped('duration_hours'))
+            wc_data = {'key': 'Load', 'values': [], 'is_sample_data': sample_data}
+            main_line = []
+            for week in week_range:
+                main_line.append({
+                    'x': week_range[week],
+                    'y': load_data[workcenter].get(week, 0) if not sample_data else randint(0, int(max_load_per_week * 1.5))
+                })
+            roof_line = [
+                {'x': next(iter(week_range.values())), 'y': max_load_per_week},
+                {'x': list(week_range.values())[-1], 'y': max_load_per_week},
+            ]
+            wc_data['values'].append(main_line)
+            wc_data['values'].append(roof_line)
+            graph_data[workcenter.id].append(wc_data)
+        return graph_data
 
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_start')
     def _compute_workorder_count(self):
