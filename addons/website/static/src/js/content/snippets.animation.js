@@ -10,7 +10,6 @@ import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
-import mixins from "@web/legacy/js/core/mixins";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wUtils from "@website/js/utils";
 import { renderToElement } from "@web/core/utils/render";
@@ -100,7 +99,7 @@ publicWidget.Widget.include({
  *
  * This uses a simple API: it can be started, stopped, played and paused.
  */
-var AnimationEffect = Class.extend(mixins.ParentedMixin, {
+var AnimationEffect = Class.extend(publicWidget.ParentedMixin, {
     /**
      * @constructor
      * @param {Object} parent
@@ -128,7 +127,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      *        triggered when scrolling a modal.
      */
     init: function (parent, updateCallback, startEvents, $startTarget, options) {
-        mixins.ParentedMixin.init.call(this);
+        publicWidget.ParentedMixin.init.call(this);
         this.setParent(parent);
 
         options = options || {};
@@ -184,7 +183,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      * @override
      */
     destroy: function () {
-        mixins.ParentedMixin.destroy.call(this);
+        publicWidget.ParentedMixin.destroy.call(this);
         this.stop();
     },
 
