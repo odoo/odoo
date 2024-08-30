@@ -7,6 +7,7 @@ import pytz
 
 from collections import defaultdict
 from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -592,6 +593,12 @@ class HolidaysType(models.Model):
             carryover_date = False
             if carryover_policy in ['maximum', 'lost']:
                 carryover_date = allocation._get_carryover_date(target_date)
+                # If carry over date == target date, then add 1 year to carry over date.
+                # Rational: for example if carry over date = 01/01 this year and target date = 01/01 this year,
+                # then any accrued days on 01/01 this year will have their carry over date 01/01 next year
+                # and not 01/01 this year.
+                if carryover_date == target_date:
+                    carryover_date += relativedelta(years=1)
 
             expiration_dates.extend([expiration_date, carryover_date])
             expiration_dates_per_allocation[allocation]['expiration_date'] = expiration_date
