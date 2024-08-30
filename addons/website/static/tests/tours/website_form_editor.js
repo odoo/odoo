@@ -953,11 +953,15 @@ registerWebsitePreviewTour("website_form_editable_content", {
         run: "drag_and_drop :iframe section.s_website_form",
     },
     {
+        trigger: ":iframe section.s_website_form .col-lg-4[contenteditable=true]",
+    },
+    {
         content: "Click on the text inside the dropped form column",
         trigger: ":iframe section.s_website_form h3.card-title",
         run: "dblclick",
     },
-    {   // Simulate a user interaction with the editable content.
+    {
+        // Simulate a user interaction with the editable content.
         content: "Update the text inside the form column",
         trigger: ":iframe section.s_website_form h3.card-title",
         run: "editor ABC",
