@@ -133,7 +133,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/public/minimal_dom.js',
             'web/static/src/legacy/js/core/dom.js',
-            'web/static/src/legacy/js/core/service_mixins.js',
             'web/static/src/legacy/js/public/public_widget.js',
 
             # lib
