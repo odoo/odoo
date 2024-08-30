@@ -45,7 +45,7 @@ class BaseLanguageExport(models.TransientModel):
                 ids = self.env[this.model_name].search(ast.literal_eval(this.domain)).ids
                 trans_export_records(lang, this.model_name, ids, buf, this.format, self._cr)
             else:
-                mods = sorted(this.mapped('modules.name')) or ['all']
+                mods = sorted(this.modules.mapped('name')) or ['all']
                 trans_export(lang, mods, buf, this.format, self._cr)
             out = base64.encodebytes(buf.getvalue())
 

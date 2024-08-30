@@ -421,7 +421,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
         # Make the company of all related users consistent with destination partner company
         if dst_partner.company_id:
-            partner_ids.mapped('user_ids').sudo().write({
+            partner_ids.user_ids.sudo().write({
                 'company_ids': [Command.link(dst_partner.company_id.id)],
                 'company_id': dst_partner.company_id.id
             })

@@ -148,4 +148,4 @@ class test_inherits(common.TransactionCase):
         unit_bar = self.env['test.unit'].create({'name': 'bar'})
         boxes.unit_id = unit_bar
 
-        self.assertEqual(boxes.mapped('unit_id.name'), ['bar'])
+        self.assertEqual(boxes.unit_id.mapped('name'), ['bar'])

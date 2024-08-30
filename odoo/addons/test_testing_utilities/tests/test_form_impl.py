@@ -605,7 +605,7 @@ class TestO2M(TransactionCase):
                 ...
         r = f.record
         self.assertEqual(r.v, 5)
-        self.assertEqual(r.mapped('line_ids.vv'), [5, 0])
+        self.assertEqual(r.line_ids.mapped('vv'), [5, 0])
         self.assertEqual(r.line_ids[0].v, 5, "onchange should have updated the existing lines")
         self.assertEqual(r.line_ids[1].v, 0, "onchange should not impact new line")
 
@@ -617,15 +617,15 @@ class TestO2M(TransactionCase):
             with f.line_ids.edit(1) as line:
                 line.vv = 2
         self.assertEqual(r.v, 6)
-        self.assertEqual(r.mapped('line_ids.vv'), [1, 2])
-        self.assertEqual(r.mapped('line_ids.v'), [6, 6], "onchange should have updated vs")
+        self.assertEqual(r.line_ids.mapped('vv'), [1, 2])
+        self.assertEqual(r.line_ids.mapped('v'), [6, 6], "onchange should have updated vs")
 
         # update record: onchange then don't even touch the lines
         with Form(r) as f:
             f.v = 7
         self.assertEqual(r.v, 7)
-        self.assertEqual(r.mapped('line_ids.vv'), [1, 2])
-        self.assertEqual(r.mapped('line_ids.v'), [7, 7])
+        self.assertEqual(r.line_ids.mapped('vv'), [1, 2])
+        self.assertEqual(r.line_ids.mapped('v'), [7, 7])
 
 class TestNestedO2M(TransactionCase):
     def test_id_cannot_be_assigned(self):

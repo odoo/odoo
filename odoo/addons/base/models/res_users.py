@@ -618,7 +618,7 @@ class ResUsers(models.Model):
                     _('Company %(company_name)s is not in the allowed companies for user %(user_name)s (%(company_allowed)s).',
                       company_name=user.company_id.name,
                       user_name=user.name,
-                      company_allowed=', '.join(user.mapped('company_ids.name')))
+                      company_allowed=', '.join(user.company_ids.mapped('name')))
                 )
 
     @api.constrains('action_id')
@@ -2014,7 +2014,7 @@ class UsersView(models.Model):
 
         if 'groups_id' not in values and (add or rem):
             added = self.env['res.groups'].sudo().browse(add)
-            added |= added.mapped('trans_implied_ids')
+            added |= added.trans_implied_ids
             added_ids = added._ids
             # remove group ids in `rem` and add group ids in `add`
             # do not remove groups that are added by implied
@@ -2326,7 +2326,7 @@ class ResUsersApikeys(models.Model):
         but won't check the identity (mainly used to remove trusted devices)"""
         if not self:
             return {'type': 'ir.actions.act_window_close'}
-        if self.env.is_system() or self.mapped('user_id') == self.env.user:
+        if self.env.is_system() or self.user_id == self.env.user:
             ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
                self.mapped('scope'), self.env.user.login, self.env.uid, ip)
