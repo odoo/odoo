@@ -2212,3 +2212,45 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
+
+    def test_apply_reward_on_product_scan(self):
+        """
+        Test that the rewards are correctly applied if the
+        product is scanned rather than added by hand.
+        """
+        product = self.product_a
+        product.write({
+            'available_in_pos': True,
+            'barcode': '95412427100283',
+        })
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'My super program',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'product_ids': [Command.set(product.ids)],
+                'reward_point_mode': 'order',
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosRewardProductScan",
+            login="pos_admin",
+        )
+        # check the same flow with gs1 nomenclature
+        self.env.company.nomenclature_id = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosRewardProductScanGS1",
+            login="pos_admin",
+        )
