@@ -11,8 +11,6 @@ const description = "Days off";
 
 registry.category("web_tour.tours").add("hr_holidays_tour", {
     url: "/odoo",
-    rainbowManMessage: _t("Congrats, we can see that your request has been validated."),
-    test: false,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

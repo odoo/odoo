@@ -8,7 +8,6 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('hr_expense_tour' , {
     url: "/odoo",
-    rainbowManMessage: _t("There you go - expense management in a nutshell!"),
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',

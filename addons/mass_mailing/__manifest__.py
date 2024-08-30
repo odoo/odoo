@@ -31,6 +31,7 @@
         'data/mailing_subscription_optout.xml',
         'data/mailing_subscription.xml',
         'data/res_users_data.xml',
+        'data/mass_mailing_tour.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mailing_contact_import_views.xml',
         'wizard/mailing_contact_to_list_views.xml',

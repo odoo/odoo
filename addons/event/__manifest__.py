@@ -34,6 +34,7 @@ Key Features
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         'data/event_data.xml',
+        'data/event_tour.xml',
         'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',

@@ -7,9 +7,6 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('hr_recruitment_tour',{
     url: "/odoo",
-    rainbowManMessage: () => markup(_t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>")),
-    fadeout: "slow",
-    sequence: 230,
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
@@ -27,7 +24,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Create your first Job Position."),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_hr_job_simple_form",
@@ -37,7 +34,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("What do you want to recruit today? Choose a job title..."),
     tooltipPosition: "right",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: '.o_hr_job_simple_form',
@@ -57,7 +54,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Copy this email address, to paste it in your email composer, to apply."),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_kanban_applicant",
@@ -67,7 +64,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Let’s go back to the dashboard."),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_hr_recruitment_kanban",
@@ -77,7 +74,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_kanban_applicant",
@@ -87,7 +84,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
     tooltipPosition: "bottom",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_kanban_applicant",
@@ -97,7 +94,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: markup(_t("<b>Click to view</b> the application.")),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_applicant_form",
@@ -107,7 +104,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_applicant_form",
@@ -117,7 +114,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Send your email. Followers will get a copy of the communication."),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_applicant_form",
@@ -127,7 +124,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Or talk about this applicant privately with your colleagues."),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_applicant_form",
@@ -137,7 +134,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     content: _t("Let’s create this new employee now."),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_hr_employee_form_view",

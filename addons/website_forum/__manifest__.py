@@ -26,6 +26,7 @@ Ask questions, get answers, no distractions
         'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
         'data/website_menu_data.xml',
+        'data/website_forum_tour.xml',
 
         'views/forum_post_views.xml',
         'views/forum_post_reason_views.xml',

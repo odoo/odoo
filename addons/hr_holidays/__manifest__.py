@@ -31,6 +31,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'data/mail_message_subtype_data.xml',
         'data/hr_holidays_data.xml',
         'data/ir_cron_data.xml',
+        'data/hr_holidays_tour.xml',
 
         'security/hr_holidays_security.xml',
         'security/ir.model.access.csv',
