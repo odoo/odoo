@@ -35,7 +35,6 @@ var PortalChatter = publicWidget.Widget.extend({
         this.set('messages', []);
         this.set('message_count', this.options['message_count']);
         this.set('pager', {});
-        this.set('domain', this.options['domain']);
         this._currentPage = this.options['pager_start'];
     },
     /**
@@ -58,7 +57,6 @@ var PortalChatter = publicWidget.Widget.extend({
             this.set('pager', this._pager(this._currentPage));
         });
         this.on("change:pager", this, this._renderPager);
-        this.on("change:domain", this, this._onChangeDomain);
         // set options and parameters
         this.set('message_count', this.options['message_count']);
         this.set('messages', this.preprocessMessages(this.result['messages']));
@@ -76,12 +74,11 @@ var PortalChatter = publicWidget.Widget.extend({
 
     /**
      * Fetch the messages and the message count from the server for the
-     * current page and current domain.
+     * current page.
      *
-     * @param {Array} domain
      * @returns {Promise}
      */
-    messageFetch: function (domain) {
+    messageFetch: function () {
         var self = this;
         return rpc('/mail/chatter_fetch', self._messageFetchPrepareParams()).then(function (result) {
             self.set('messages', self.preprocessMessages(result['messages']));
@@ -127,7 +124,6 @@ var PortalChatter = publicWidget.Widget.extend({
             'is_user_publisher': false,
             'hash': false,
             'pid': false,
-            'domain': [],
             'two_columns': false,
         }, this.options || {});
 
@@ -182,16 +178,18 @@ var PortalChatter = publicWidget.Widget.extend({
         });
     },
     /**
-     * Change the current page by refreshing current domain
+     * Changes the current page.
      *
      * @private
      * @param {Number} page
-     * @param {Array} domain
      */
-    _changeCurrentPage: function (page, domain) {
+    _changeCurrentPage: function (page) {
         this._currentPage = page;
-        var d = domain ? domain : Object.assign({}, this.get("domain"));
-        this.set('domain', d); // trigger fetch message
+        var self = this;
+        return this.messageFetch().then(function () {
+            var p = self._currentPage;
+            self.set('pager', self._pager(p));
+        });
     },
     _messageFetchPrepareParams: function () {
         var self = this;
@@ -270,13 +268,6 @@ var PortalChatter = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    _onChangeDomain: function () {
-        var self = this;
-        return this.messageFetch().then(function () {
-            var p = self._currentPage;
-            self.set('pager', self._pager(p));
-        });
-    },
     /**
      * @private
      * @param {MouseEvent} event
@@ -331,4 +322,4 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
     },
 });
 
-export default PortalChatter
+export default PortalChatter;
