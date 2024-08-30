@@ -19,8 +19,16 @@ class WebsiteSnippetFilter(models.Model):
         website = self.env['website'].get_current_website()
         if self.model_name == 'product.product' and not website.has_ecommerce_access():
             return []
-
-        return super()._prepare_values(**kwargs)
+        hide_variants = False
+        search_domain = kwargs.get('search_domain')
+        if self.filter_id and search_domain and 'hide_variants' in search_domain:
+            hide_variants = True
+            search_domain.remove('hide_variants')
+            kwargs['search_domain'] = search_domain
+        return super(
+            WebsiteSnippetFilter,
+            self.with_context(hide_variants=hide_variants),
+        )._prepare_values(**kwargs)
 
     @api.model
     def _get_website_currency(self):
@@ -223,13 +231,3 @@ class WebsiteSnippetFilter(models.Model):
                 ).search(domain, limit=limit)
         return products
 
-    def _prepare_values(self, limit=None, search_domain=None):
-        hide_variants = False
-        if self.filter_id and search_domain and 'hide_variants' in search_domain:
-            hide_variants = True
-            search_domain.remove('hide_variants')
-            search_domain = search_domain or None
-        return super(
-            WebsiteSnippetFilter,
-            self.with_context(hide_variants=hide_variants)
-        )._prepare_values(limit, search_domain)
