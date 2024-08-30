@@ -104,7 +104,7 @@ export class PosOrder extends Base {
             total_discount: this.get_total_discount(),
             rounding_applied: this.get_rounding_applied(),
             tax_details: this.get_tax_details(),
-            change: this.uiState.locked ? this.amount_return : this.get_change(),
+            change: this.amount_return,
             name: this.name,
             invoice_id: null, //TODO
             cashier: this.employee_id?.name || this.user_id?.name,
