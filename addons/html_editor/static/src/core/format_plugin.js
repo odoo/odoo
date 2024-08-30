@@ -135,9 +135,10 @@ export class FormatPlugin extends Plugin {
             case "FORMAT_REMOVE_FORMAT":
                 this.removeFormat();
                 break;
-            case "CLEAN_FOR_SAVE":
-                this.cleanForSave(payload.root);
+            case "CLEAN_FOR_SAVE": {
+                this.cleanForSave(payload);
                 break;
+            }
             case "NORMALIZE":
                 this.normalize(payload.node);
                 break;
@@ -372,16 +373,18 @@ export class FormatPlugin extends Plugin {
         this.mergeAdjacentInlines(root);
     }
 
-    cleanForSave(root) {
-        root.querySelectorAll("[data-oe-zws-empty-inline]").forEach((el) => this.cleanElement(el));
-        this.mergeAdjacentInlines(root);
+    cleanForSave({ root, preserveSelection = false } = {}) {
+        for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+            this.cleanElement(element, { preserveSelection });
+        }
+        this.mergeAdjacentInlines(root, { preserveSelection });
     }
 
-    cleanElement(element) {
+    cleanElement(element, { preserveSelection }) {
         delete element.dataset.oeZwsEmptyInline;
         if (!allWhitespaceRegex.test(element.textContent)) {
             // The element has some meaningful text. Remove the ZWS in it.
-            this.cleanZWS(element);
+            this.cleanZWS(element, { preserveSelection });
             return;
         }
         if (this.resources.isUnremovable.some((predicate) => predicate(element))) {
@@ -399,13 +402,13 @@ export class FormatPlugin extends Plugin {
         restore();
     }
 
-    cleanZWS(element) {
+    cleanZWS(element, { preserveSelection = true } = {}) {
         const textNodes = descendants(element).filter(isTextNode);
-        const cursors = this.shared.preserveSelection();
+        const cursors = preserveSelection ? this.shared.preserveSelection() : null;
         for (const node of textNodes) {
             cleanTextNode(node, "\u200B", cursors);
         }
-        cursors.restore();
+        cursors?.restore();
     }
 
     insertText(selection, content) {
@@ -469,12 +472,14 @@ export class FormatPlugin extends Plugin {
         }
     }
 
-    mergeAdjacentInlines(root) {
-        let selectionToRestore;
+    mergeAdjacentInlines(root, { preserveSelection = true } = {}) {
+        let selectionToRestore = null;
         for (const node of descendants(root)) {
             if (this.shouldBeMergedWithPreviousSibling(node)) {
-                selectionToRestore ??= this.shared.preserveSelection();
-                selectionToRestore.update(callbacksForCursorUpdate.merge(node));
+                if (preserveSelection) {
+                    selectionToRestore ??= this.shared.preserveSelection();
+                    selectionToRestore.update(callbacksForCursorUpdate.merge(node));
+                }
                 node.previousSibling.append(...childNodes(node));
                 node.remove();
             }
