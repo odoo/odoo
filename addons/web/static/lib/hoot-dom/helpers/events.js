@@ -654,19 +654,6 @@ const triggerClick = (target, pointerInit) => {
     if (isFirefox()) {
         // Thanks Firefox
         switch (getTag(target)) {
-            case "input": {
-                if (isCheckable(target)) {
-                    /**
-                     * @firefox
-                     * Special action: input 'Click'
-                     *  On: unprevented 'click' on an <input type="checkbox|radio"/>
-                     *  Do: triggers a 'change' event on the input
-                     */
-                    target.checked = target.type === "radio" ? true : !target.checked;
-                    dispatch(target, "change");
-                }
-                break;
-            }
             case "label": {
                 /**
                  * @firefox
