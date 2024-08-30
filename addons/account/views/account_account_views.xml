@@ -38,7 +38,9 @@
                                     <div class="col col-md-auto">
                                         <label for="code" string="Code"/>
                                         <div>
-                                            <field name="code" placeholder="e.g. 101000" class="oe_inline"/>
+                                            <field name="placeholder_code" invisible="1"/>
+                                            <field name="code" placeholder="e.g. 101000" class="oe_inline"
+                                                   widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +95,8 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <list editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
-                    <field name="code"/>
+                    <field name="placeholder_code" column_invisible="1"/>
+                    <field name="code" string="Code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
                     <field name="name"/>
                     <field name="account_type" widget="account_type_selection"/>
                     <field name="group_id" optional="hide"/>

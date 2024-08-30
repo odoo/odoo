@@ -46,6 +46,7 @@ class AccountAccount(models.Model):
     company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id')
     company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', search='_search_code', inverse='_inverse_code')
+    placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code')
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
@@ -371,6 +372,18 @@ class AccountAccount(models.Model):
             for record in self
         }
         self.env['ir.property'].with_company(self.env.company.root_id).sudo()._set_multi('code', 'account.account', values)
+
+    @api.depends_context('company')
+    @api.depends('code')
+    def _compute_placeholder_code(self):
+        self.placeholder_code = False
+        for record in self:
+            if record.code:
+                record.placeholder_code = record.code
+            elif authorized_companies := (record.company_ids & self.env['res.company'].browse(self.env.user._get_company_ids())):
+                company = authorized_companies[0]
+                if code := record.with_company(company).code:
+                    record.placeholder_code = f'{code} ({company.name})'
 
     @api.depends_context('company')
     @api.depends('code')
