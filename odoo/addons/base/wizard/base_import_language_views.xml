@@ -11,6 +11,7 @@
                         <field name="name" placeholder="e.g. English"/>
                         <field name="code" string="Code" placeholder="e.g. en_US"/>
                         <field name="data" filename="filename" options="{'accepted_file_extensions': '.csv,.po'}"/>
+                        <field name="filename" invisible="1"/> <!-- The name is needed in the BinaryField component used to upload the file -->
                         <field name="overwrite" groups="base.group_no_one"/>
                     </group>
                     <footer>
