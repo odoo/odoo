@@ -12,7 +12,6 @@
                     <button name="action_export_json" string="Download JSON" class="oe_highlight" type="object" invisible="not error_message" groups="base.group_no_one"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,generated"/>
                 </header>
-                <field name="blocking_level" invisible="1"/>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" invisible="not error_message or blocking_level == 'error'">
                     <div class="o_row">
                         <field name="error_message"/>
@@ -31,9 +30,6 @@
                     </div>
                     <group name="document_details" string="Document Details">
                         <group>
-                            <field name="picking_id" invisible="1"/>
-                            <field name="picking_type_code" invisible="1"/>
-                            <field name="sub_type_code" invisible="1"/>
                             <field name="type_id" widget="selection" readonly="state != 'pending'" domain="[
                                         ('allowed_supply_type', 'in', (picking_type_code == 'incoming' and 'in' or 'out', 'both')), ('code','=','CHL')]"/>
                             <field name="type_description" invisible="sub_type_code != '8'" required="sub_type_code == '8'"/>
@@ -45,11 +41,6 @@
                         </group>
                     </group>
                     <group name="partners" string="Address Details">
-                        <field name="company_id" invisible="1"/>
-                        <field name="is_bill_to_editable" invisible="1"/>
-                        <field name="is_bill_from_editable" invisible="1"/>
-                        <field name="is_ship_to_editable" invisible="1"/>
-                        <field name="is_ship_from_editable" invisible="1"/>
                         <group>
                             <field name="fiscal_position_id" readonly="state != 'pending'"/>
                         </group>
@@ -129,7 +120,6 @@
                             <field name="move_ids" mode="tree,kanban" force_save="1" readonly="state != 'pending'">
                                 <tree editable="bottom" create="0" delete="0">
                                     <field name="company_currency_id" column_invisible="1"/>
-                                    <field name="company_id" column_invisible="1"/>
                                     <field name="product_id" readonly="1"/>
                                     <field name="quantity" string="Quantity" readonly="1"/>
                                     <field name="ewaybill_price_unit" string="Unit Price"/>
