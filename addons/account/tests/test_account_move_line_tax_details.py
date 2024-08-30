@@ -1292,3 +1292,98 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                         for amount in amounts],
                     )
                     self.assertTotalAmounts(invoice, tax_details)
+
+    def test_multiple_same_tax_lines_with_analytic(self):
+        """ One Invoice line with analytic_distribution and another without analytic_distribution with same group of tax"""
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan with Tax details'})
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Analytic account with Tax details',
+            'plan_id': analytic_plan.id,
+            'company_id': False,
+        })
+        # Don't set analytic to False here. allowed ORM to do it becosue it's set SQL Null
+        child1_tax = self.env['account.tax'].create({
+            'name': "child1_tax",
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                }),
+            ],
+        })
+        child2_tax = child1_tax.copy({'name': 'child2_tax', 'amount': 5.0})
+        tax_group = self.env['account.tax'].create({
+            'name': "tax_group",
+            'amount_type': 'group',
+            'children_tax_ids': [Command.set((child1_tax + child2_tax).ids)],
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(tax_group.ids)],
+                    'analytic_distribution': {
+                        analytic_account.id: 100,
+                    },
+                }),
+                Command.create({
+                    'name': 'line2',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_group.ids)],
+                }),
+            ]
+        })
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+        tax_details = self._get_tax_details()
+        self.assertTaxDetailsValues(
+            tax_details,
+            [
+                {
+                    'base_line_id': base_lines[0].id,
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': -1000.0,
+                    'tax_amount': -50.0,
+                },
+                {
+                    'base_line_id': base_lines[0].id,
+                    'tax_line_id': tax_lines[0].id,
+                    'base_amount': -1000.0,
+                    'tax_amount': -100.0,
+                },
+                {
+                    'base_line_id': base_lines[1].id,
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -5.0,
+                },
+                {
+                    'base_line_id': base_lines[1].id,
+                    'tax_line_id': tax_lines[0].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+            ],
+        )
+        self.assertTotalAmounts(invoice, tax_details)
