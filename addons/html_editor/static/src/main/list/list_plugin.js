@@ -14,17 +14,15 @@ import {
     isProtecting,
     isVisible,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants, getAdjacents } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    descendants,
+    getAdjacents,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
-import {
-    applyToTree,
-    compareListTypes,
-    createList,
-    getListMode,
-    insertListAfter,
-    isListItem,
-} from "./utils";
+import { compareListTypes, createList, getListMode, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 function isListActive(listMode) {
@@ -256,15 +254,14 @@ export class ListPlugin extends Plugin {
         if (closestNestedLI) {
             root = closestNestedLI.parentElement;
         }
-        applyToTree(root, (element) => {
+        for (const element of selectElements(root, "ul, ol, li")) {
             if (isProtected(element) || isProtecting(element)) {
-                return element;
+                continue;
             }
-            element = this.liWithoutParentToP(element);
-            element = this.mergeSimilarLists(element);
-            element = this.normalizeLI(element);
-            return element;
-        });
+            for (const fn of [this.liWithoutParentToP, this.mergeSimilarLists, this.normalizeLI]) {
+                fn.call(this, element);
+            }
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -382,20 +379,18 @@ export class ListPlugin extends Plugin {
 
     liWithoutParentToP(element) {
         const isOrphan = element.nodeName === "LI" && !element.closest("ul, ol");
-
         if (!isOrphan) {
-            return element;
+            return;
         }
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = document.createElement("p");
+        const paragraph = this.document.createElement("p");
         element.replaceWith(paragraph);
         paragraph.replaceChildren(...element.childNodes);
-        return paragraph;
     }
 
     mergeSimilarLists(element) {
         if (!element.matches("ul, ol, li.oe-nested")) {
-            return element;
+            return;
         }
         const previousSibling = element.previousElementSibling;
         if (
@@ -405,17 +400,13 @@ export class ListPlugin extends Plugin {
             compareListTypes(previousSibling, element)
         ) {
             const cursors = this.shared.preserveSelection();
-
-            cursors.shiftOffset(element, previousSibling.childNodes.length);
-            element.prepend(...previousSibling.childNodes);
-
-            cursors.remapNode(previousSibling, element);
+            cursors.update(callbacksForCursorUpdate.merge(element));
+            previousSibling.append(...element.childNodes);
             // @todo @phoenix: what if unremovable/unmergeable?
-            previousSibling.remove();
+            element.remove();
 
             cursors.restore();
         }
-        return element;
     }
 
     /**
@@ -423,7 +414,7 @@ export class ListPlugin extends Plugin {
      */
     normalizeLI(element) {
         if (!isListItem(element) || element.classList.contains("oe-nested")) {
-            return element;
+            return;
         }
 
         if ([...element.children].some(isBlock)) {
@@ -431,8 +422,6 @@ export class ListPlugin extends Plugin {
             wrapInlinesInBlocks(element, cursors);
             cursors.restore();
         }
-
-        return element;
     }
 
     // --------------------------------------------------------------------------
