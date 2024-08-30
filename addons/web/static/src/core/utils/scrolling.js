@@ -18,12 +18,14 @@ export function closestScrollableX(el) {
 }
 
 function isScrollableY(el) {
-    if (el && el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
-            return true;
-        }
+    const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
+    if (
+        /\bauto\b|\bscroll\b/.test(overflow) ||
+        (overflow === "visible" && el === el.ownerDocument.scrollingElement)
+    ) {
+        return true;
     }
+
     return false;
 }
 
@@ -37,7 +39,7 @@ export function closestScrollableY(el) {
     if (!el) {
         return null;
     }
-    if (isScrollableY(el)) {
+    if (isScrollableY(el) && el.scrollHeight > el.clientHeight) {
         return el;
     }
     return closestScrollableY(el.parentElement);
@@ -154,10 +156,13 @@ export function compensateScrollbar(
 
 export function getScrollingElement(document = window.document) {
     const baseScrollingElement = document.scrollingElement;
-    if (isScrollableY(baseScrollingElement)) {
+    if (
+        isScrollableY(baseScrollingElement) &&
+        baseScrollingElement.scrollHeight > baseScrollingElement.clientHeight
+    ) {
         return baseScrollingElement;
     }
-    const bodyHeight = window.getComputedStyle(document.body).height;
+    const bodyHeight = document.body.clientHeight;
     for (const el of document.body.children) {
         // Search for a body child which is at least as tall as the body
         // and which has the ability to scroll if enough content in it. If
@@ -170,4 +175,20 @@ export function getScrollingElement(document = window.document) {
         }
     }
     return baseScrollingElement;
+}
+
+/**
+ *
+ * This method returns the scrolling target of a given element.
+ *
+ * @param {HTMLElement} contextItem
+ *
+ * @returns {Window | HTMLElement} the scrolling target
+ *
+ */
+export function getScrollingTarget(contextItem = window.document) {
+    const scrollingElement =
+        contextItem instanceof Element ? contextItem : getScrollingElement(contextItem);
+    const document = scrollingElement.ownerDocument;
+    return scrollingElement === document.scrollingElement ? document.defaultView : scrollingElement;
 }
