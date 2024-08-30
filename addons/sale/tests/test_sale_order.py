@@ -396,7 +396,7 @@ class TestSaleOrder(SaleCommon):
         tax_a = self.env['account.tax'].create({
             'name': 'Test tax',
             'type_tax_use': 'sale',
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
             'amount_type': 'percent',
             'amount': 15.0,
         })
@@ -888,7 +888,7 @@ class TestSalesTeam(SaleCommon):
             'amount_type': 'percent',
             'amount': 25.0,
             'include_base_amount': True,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         mapped_tax_a = self.env['account.tax'].create({
@@ -896,7 +896,7 @@ class TestSalesTeam(SaleCommon):
             'amount_type': 'percent',
             'amount': 12.5,
             'include_base_amount': True,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         mapped_tax_b = self.env['account.tax'].create({
@@ -904,14 +904,14 @@ class TestSalesTeam(SaleCommon):
             'amount_type': 'percent',
             'amount': 5.0,
             'include_base_amount': True,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         sales_tax = self.env['account.tax'].create({
             'name': "VAT 20%",
             'amount_type': 'percent',
             'amount': 20.0,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         mapping_a = self.env['account.fiscal.position'].create({

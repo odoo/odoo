@@ -114,13 +114,13 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'name': "IVA 21% (Bienes)",
                 'company_id': cls.company_data['company'].id,
                 'amount': 21.0,
-                'price_include': False,
+                'price_include_override': 'tax_excluded',
                 'l10n_es_edi_facturae_tax_type': '01'
             }, {
                 'name': "IVA 21% (Bienes) Included",
                 'company_id': cls.company_data['company'].id,
                 'amount': 21.0,
-                'price_include': True,
+                'price_include_override': 'tax_included',
                 'l10n_es_edi_facturae_tax_type': '01'
         }
         ])
@@ -203,13 +203,13 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'name': "IVA 21%",
                 'company_id': self.company_data['company'].id,
                 'amount': 21.0,
-                'price_include': False,
+                'price_include_override': 'tax_excluded',
                 'l10n_es_edi_facturae_tax_type': '01'
             }, {
                 'name': "IVA 21% withholding",
                 'company_id': self.company_data['company'].id,
                 'amount': -21.0,
-                'price_include': False,
+                'price_include_override': 'tax_excluded',
                 'l10n_es_edi_facturae_tax_type': '01'
             }])
 

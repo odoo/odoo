@@ -21,7 +21,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         })
         cls.partner_id = cls.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000"})
         cls.partner_id_vat = cls.env['res.partner'].create({"name": "l10ntest3", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "67890", "vat": "010000000000000"})
-        cls.tax_id = cls.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include": True})
+        cls.tax_id = cls.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include_override": "tax_included"})
 
         cls.efaktur = cls.env['l10n_id_efaktur.efaktur.range'].create({'min': '0000000000001', 'max': '0000000000010'})
         cls.maxDiff = None
@@ -201,7 +201,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         """
         # Prepare the test invoice.
         tax_id = self.env["account.tax"].create(
-            {"name": "test tax 11", "type_tax_use": "sale", "amount": 11.0, "price_include": True}
+            {"name": "test tax 11", "type_tax_use": "sale", "amount": 11.0, "price_include_override": "tax_included"}
         )
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

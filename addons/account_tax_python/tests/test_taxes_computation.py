@@ -8,13 +8,20 @@ class TestTaxesComputation(TestTaxCommon):
 
     def python_tax(self, formula, **kwargs):
         self.number += 1
-        return self.env['account.tax'].create({
+        vals = {
             **kwargs,
             'name': f"code_({self.number})",
             'amount_type': 'code',
             'amount': 0.0,
             'formula': formula,
-        })
+        }
+        if 'price_include' in vals:
+            price_include = vals.pop('price_include')
+            if self.env.company.account_price_include != price_include:
+                vals['price_include_override'] = price_include
+            else:
+                vals['price_include_override'] = False
+        return self.env['account.tax'].create(vals)
 
     def _jsonify_tax(self, tax):
         values = super()._jsonify_tax(tax)
@@ -27,7 +34,7 @@ class TestTaxesComputation(TestTaxCommon):
         price_unit,
         expected_values,
         product_values=None,
-        price_include=False,
+        price_include='tax_excluded',
     ):
         tax = self.python_tax(formula, price_include=price_include)
         if product_values:
@@ -61,7 +68,7 @@ class TestTaxesComputation(TestTaxCommon):
                     (102.7, 27.3),
                 ),
             },
-            price_include=True,
+            price_include='tax_included',
         )
         self.assert_python_taxes_computation(
             "product.volume * quantity * 0.35",

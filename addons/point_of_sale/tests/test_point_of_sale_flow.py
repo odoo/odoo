@@ -1167,7 +1167,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Tax 50%',
             'amount_type': 'percent',
             'amount': 50.0,
-            'price_include': 0
+            'price_include_override': 'tax_excluded',
         })
 
         # set tax to product

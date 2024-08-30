@@ -34,7 +34,7 @@ class TestTax(TestTaxCommon):
 
     def test_forced_price_exclude_context_key(self):
         """ Test the 'force_price_include' context key that force all taxes to act as price excluded taxes. """
-        taxes = (self.percent_tax(10.0, price_include=True) + self.percent_tax(10.0, price_include=True))\
+        taxes = (self.percent_tax(10.0, price_include_override='tax_included') + self.percent_tax(10.0, price_include_override='tax_included'))\
             .with_context({'force_price_include': False})
         self._check_compute_all_results(
             taxes,
@@ -64,11 +64,11 @@ class TestTax(TestTaxCommon):
             ],
         }
         tax_price_excluded = self.percent_tax(21.0, **common_values)
-        tax_price_included = self.percent_tax(21.0, price_include=True, **common_values)
+        tax_price_included = self.percent_tax(21.0, price_include_override='tax_included', **common_values)
 
         for tax, price_unit in ((tax_price_included, 121.0), (tax_price_excluded, 100.0)):
             for sign in (1, -1):
-                with self.subTest(sign=sign, price_include=tax.price_include):
+                with self.subTest(sign=sign, price_include_override=tax.price_include_override):
                     self._check_compute_all_results(
                         tax,
                         {

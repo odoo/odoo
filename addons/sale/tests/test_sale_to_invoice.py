@@ -272,7 +272,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.action_confirm()
         tax_downpayment = self.company_data['default_tax_sale'].copy({
             'name': 'default price included',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         # Let's do an invoice for a deposit of 100
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({

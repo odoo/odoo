@@ -442,7 +442,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'name': 'included_tax_line',
             'amount_type': 'percent',
             'amount': 20,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': False,
         })
         self.account = self.company_data['default_account_revenue']
