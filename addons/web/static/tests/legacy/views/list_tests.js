@@ -2265,6 +2265,37 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection box in grouped list, multi pages)', async function (assert) {
+        assert.expect(8);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['int_field'],
+            arch: '<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>',
+        });
+
+        assert.containsN(list, '.o_group_header', 2);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // open first group and select all records of first page
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+        assert.containsOnce(list, '.o_data_row');
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsOnce(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().replace(/\s+/g, ' ').trim(),
+            '1 selected Select all'); // we don't know the total count, so we don't display it
+
+        // select all domain
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), 'All selected');
+
+        list.destroy();
+    });
+
     QUnit.test('selection box is displayed after header buttons', async function (assert) {
         assert.expect(5);
 

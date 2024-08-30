@@ -600,11 +600,11 @@
 
 <t t-name="ListView.selection">
     <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center pl-0 px-lg-2 py-0 mb-0 ml-2" role="alert">
-        <span t-if="isDomainSelected">All <span class="text-monospace" t-esc="nbTotal"/> selected</span>
+        <span t-if="isDomainSelected">All <t t-if="isTotalTrustable"><span class="text-monospace" t-esc="nbTotal"/> </t>selected</span>
         <t t-else="">
             <span class="text-monospace mr-1" t-esc="nbSelected"/> selected
-            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal">
-                <i class="fa fa-arrow-right"/> Select all <span class="text-monospace" t-esc="nbTotal"/>
+            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal" title="Select all records matching the search">
+                <i class="fa fa-arrow-right"/> Select all <span t-if="isTotalTrustable" class="text-monospace" t-esc="nbTotal"/>
             </a>
         </t>
     </div>
