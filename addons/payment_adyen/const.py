@@ -41,6 +41,7 @@ PAYMENT_METHODS_MAPPING = {
     'bacs_direct_debit': 'directdebit_GB',
     'bancontact_card': 'bcmc',
     'bancontact': 'bcmc_mobile',
+    'cash_app_pay': 'cashapp',
     'gopay': 'gopay_wallet',
     'becs_direct_debit': 'au_becs_debit',
     'afterpay': 'afterpaytouch',
