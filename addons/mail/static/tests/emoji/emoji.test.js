@@ -1,3 +1,5 @@
+import { patchTranslations } from "@web/../tests/web_test_helpers";
+
 import {
     click,
     contains,
@@ -14,6 +16,19 @@ import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 
 describe.current.tags("desktop");
 defineMailModels();
+
+test("emoji picker works well with translation with double quotes", async () => {
+    patchTranslations({
+        "Japanese “here” button": `Bouton "ici" japonais`,
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await insertText("input[placeholder='Search for an emoji']", "ici");
+    await contains(`.o-Emoji[title='Bouton "ici" japonais']`);
+});
 
 test("search emoji from keywords", async () => {
     const pyEnv = await startServer();
