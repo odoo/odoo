@@ -6,6 +6,7 @@ from uuid import uuid4
 import pytz
 
 from odoo import api, fields, models, _, Command
+from odoo.http import request
 from odoo.osv.expression import OR, AND
 from odoo.exceptions import AccessError, ValidationError, UserError
 
@@ -570,9 +571,13 @@ class PosConfig(models.Model):
         if not self.current_session_id:
             self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
         path = '/pos/web' if self._force_http() else '/pos/ui'
+        pos_url = path + '?config_id=%d' % self.id
+        debug = request and request.session.debug
+        if debug:
+            pos_url += '&debug=%s' % debug
         return {
             'type': 'ir.actions.act_url',
-            'url': path + '?config_id=%d' % self.id,
+            'url': pos_url,
             'target': 'self',
         }
 
