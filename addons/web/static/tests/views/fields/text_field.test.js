@@ -183,7 +183,7 @@ test("in editable list view", async () => {
 });
 
 test.tags("desktop")("with dynamic placeholder", async () => {
-    onRpc("allowed_qweb_expressions", () => []);
+    onRpc("mail_allowed_qweb_expressions", () => []);
 
     Product._fields.placeholder = fields.Char({ default: "product" });
     await mountView({
@@ -212,7 +212,7 @@ test.tags("desktop")("with dynamic placeholder", async () => {
 });
 
 test.tags("mobile")("with dynamic placeholder in mobile", async () => {
-    onRpc("allowed_qweb_expressions", () => []);
+    onRpc("mail_allowed_qweb_expressions", () => []);
 
     Product._fields.placeholder = fields.Char({ default: "product" });
     await mountView({

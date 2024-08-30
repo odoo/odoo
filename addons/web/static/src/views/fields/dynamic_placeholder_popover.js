@@ -4,8 +4,8 @@ import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { user } from "@web/core/user";
 
-const allowedQwebExpressions = memoize(async (_null, orm) => {
-    return await orm.call("ir.qweb", "allowed_qweb_expressions");
+const allowedQwebExpressions = memoize(async (model, orm) => {
+    return await orm.call(model, "mail_allowed_qweb_expressions");
 });
 
 export class DynamicPlaceholderPopover extends Component {
@@ -28,7 +28,7 @@ export class DynamicPlaceholderPopover extends Component {
             [this.isTemplateEditor, this.allowedQwebExpressions] = await Promise.all([
                 user.hasGroup("mail.group_mail_template_editor"),
                 // (only the first element is the cache key)
-                allowedQwebExpressions(null, this.orm),
+                allowedQwebExpressions(this.props.resModel, this.orm),
             ]);
         });
     }

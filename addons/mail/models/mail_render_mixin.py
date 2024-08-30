@@ -211,19 +211,19 @@ class MailRenderMixin(models.AbstractModel):
             for fname, field in template._fields.items():
                 engine = getattr(field, 'render_engine', 'inline_template')
                 if engine in ('qweb', 'qweb_view'):
-                    if self._has_unsafe_expression_template_qweb(template[fname]):
+                    if self._has_unsafe_expression_template_qweb(template[fname], template.render_model):
                         return True
                 else:
-                    if self._has_unsafe_expression_template_inline_template(template[fname]):
+                    if self._has_unsafe_expression_template_inline_template(template[fname], template.render_model):
                         return True
         return False
 
     @api.model
-    def _has_unsafe_expression_template_qweb(self, template_src):
+    def _has_unsafe_expression_template_qweb(self, template_src, model):
         if template_src:
             try:
                 node = html.fragment_fromstring(template_src, create_parent='div')
-                self.env["ir.qweb"].with_context(raise_on_forbidden_code=True)._generate_code(node)
+                self.env["ir.qweb"].with_context(raise_on_forbidden_code_for_model=model)._generate_code(node)
             except QWebException as e:
                 if isinstance(e.__cause__, PermissionError):
                     return True
@@ -231,11 +231,11 @@ class MailRenderMixin(models.AbstractModel):
         return False
 
     @api.model
-    def _has_unsafe_expression_template_inline_template(self, template_txt):
+    def _has_unsafe_expression_template_inline_template(self, template_txt, model):
         if template_txt:
             template_instructions = parse_inline_template(str(template_txt))
             expressions = [inst[1] for inst in template_instructions]
-            if not all(self.env["ir.qweb"]._is_expression_allowed(e) for e in expressions if e):
+            if not all(self.env["ir.qweb"]._is_expression_allowed(e, model) for e in expressions if e):
                 return True
         return False
 
@@ -298,7 +298,7 @@ class MailRenderMixin(models.AbstractModel):
         if not template_src or not res_ids:
             return results
 
-        if not self._has_unsafe_expression_template_qweb(template_src):
+        if not self._has_unsafe_expression_template_qweb(template_src, model):
             # do not call the qweb engine
             return self._render_template_qweb_regex(template_src, model, res_ids)
 
@@ -311,12 +311,14 @@ class MailRenderMixin(models.AbstractModel):
 
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
+            options = options or {}
+            if is_restricted:
+                options['raise_on_forbidden_code_for_model'] = model
             try:
                 render_result = self.env['ir.qweb']._render(
                     html.fragment_fromstring(template_src, create_parent='div'),
                     variables,
-                    raise_on_forbidden_code=is_restricted,
-                    **(options or {})
+                    **options,
                 )
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
                 render_result = render_result[5:-6]
@@ -350,7 +352,7 @@ class MailRenderMixin(models.AbstractModel):
                 tag = match.group(1)
                 expr = match.group(3)
                 default = match.group(9)
-                if not self.env['ir.qweb']._is_expression_allowed(expr):
+                if not self.env['ir.qweb']._is_expression_allowed(expr, model):
                     raise SyntaxError(f"Invalid expression for the regex mode {expr!r}")
 
                 try:
@@ -452,7 +454,7 @@ class MailRenderMixin(models.AbstractModel):
         if not template_txt or not res_ids:
             return results
 
-        if not self._has_unsafe_expression_template_inline_template(str(template_txt)):
+        if not self._has_unsafe_expression_template_inline_template(str(template_txt), model):
             # do not call the qweb engine
             return self._render_template_inline_template_regex(str(template_txt), model, res_ids)
 
@@ -498,7 +500,7 @@ class MailRenderMixin(models.AbstractModel):
             for string, expression, default in template:
                 renderer.append(string)
                 if expression:
-                    if not self.env['ir.qweb']._is_expression_allowed(expression):
+                    if not self.env['ir.qweb']._is_expression_allowed(expression, model):
                         raise SyntaxError(f"Invalid expression for the regex mode {expression!r}")
                     try:
                         value = reduce(lambda rec, field: rec[field], expression.split('.')[1:], record) or default

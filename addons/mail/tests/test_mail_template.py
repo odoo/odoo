@@ -77,12 +77,13 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
         self.assertFalse(self.user_employee.has_group('base.group_sanitize_override'))
 
+        model = self.env['ir.model']._get_id('res.partner')
         record = self.user_employee.partner_id
 
         # Group System can create / write / unlink mail template
         mail_template = self.env['mail.template'].with_user(self.user_admin).create({
             'name': 'Test template',
-            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'model_id': model,
         })
         self.assertEqual(mail_template.name, 'Test template')
 
@@ -90,20 +91,24 @@ class TestMailTemplate(MailCommon):
         self.assertEqual(mail_template.name, 'New name')
 
         # Standard employee can create and edit non-dynamic templates
-        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p>foo</p>'})
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p>foo</p>', 'model_id': model})
         employee_template.with_user(self.user_employee).body_html = '<p>bar</p>'
 
         employee_template = self.env['mail.template'].with_user(self.user_employee).create({
             'email_to': 'foo@bar.com',
-            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'model_id': model,
         })
         employee_template = employee_template.with_user(self.user_employee)
 
         employee_template.email_to = 'bar@foo.com'
 
-        # Standard employee cannot create and edit templates with dynamic qweb
+        # Standard employee cannot create and edit templates with forbidden expression
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '''<p t-out="'foo'"></p>'''})
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '''<p t-out="'foo'"></p>''', 'model_id': model})
+
+        # If no model is specify, he can not write allowed expression
+        with self.assertRaises(AccessError):
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '''<p t-out="object.name"></p>'''})
 
         # Standard employee cannot edit templates from another user, non-dynamic and dynamic
         with self.assertRaises(AccessError):
@@ -116,7 +121,7 @@ class TestMailTemplate(MailCommon):
 
         # Standard employee cannot create and edit templates with dynamic inline fields
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}'})
+            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}', 'model_id': model})
 
         # Standard employee cannot edit his own templates if dynamic
         with self.assertRaises(AccessError):
@@ -190,7 +195,7 @@ class TestMailTemplate(MailCommon):
         for expression in forbidden_qweb_expressions:
             with self.assertRaises(AccessError):
                 employee_template.body_html = expression
-            self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression))
+            self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression, 'res.partner'))
 
         # allowed expressions
         allowed_qweb_expressions = (
@@ -205,9 +210,9 @@ class TestMailTemplate(MailCommon):
         for expression in allowed_qweb_expressions:
             template = self.env['mail.template'].with_user(self.user_employee).create({
                 'body_html': expression,
-                'model_id': self.env['ir.model']._get_id('res.partner'),
+                'model_id': model,
             })
-            self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression))
+            self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression, 'res.partner'))
 
             with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
                 patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
