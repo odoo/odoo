@@ -121,3 +121,12 @@ class MailTestRatingThread(models.Model):
 
     def _rating_get_partner(self):
         return self.customer_id or super()._rating_get_partner()
+
+
+class MailTestRatingThreadRead(models.Model):
+    """Same as MailTestRatingThread but accessible on post on read by portal users. """
+    _description = 'Read-post rating model'
+    _name = 'mail.test.rating.thread.read'
+    _inherit = 'mail.test.rating.thread'
+    _order = 'name asc, id asc'
+    _mail_post_access = 'read'
