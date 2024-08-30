@@ -9,10 +9,12 @@
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
                 <field name="finished_lot_id"/>
+                <field name="connected_employee_ids"/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
+                <filter string="My Work Orders" name="my_work_order" domain="[('connected_employee_ids','in',[1])]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
                 <filter string="Late" name="late" domain="[('date_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
                 <separator/>
@@ -74,6 +76,9 @@
                 <field name="working_state" column_invisible="True"/>
                 <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
+                <field name="allowed_employees" column_invisible="True"/>
+                <field name="all_employees_allowed" column_invisible="True"/>
+                <field name="employee_assigned_ids" widget="many2many_avatar_user" domain="not all_employees_allowed and [('id','in',allowed_employees)] or []" optional="hidden"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity"/>
@@ -144,6 +149,8 @@
             <field name="is_user_working" invisible="1"/>
             <field name="working_state" invisible="1"/>
             <field name="production_state" invisible="1"/>
+            <field name="allowed_employees" invisible="1"/>
+            <field name="all_employees_allowed" invisible="1"/>
             <header>
                 <field name="state" widget="statusbar" statusbar_visible="pending,waiting,ready,progress,done"/>
             </header>
@@ -196,7 +203,8 @@
                     <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <tree editable="bottom">
-                                <field name="user_id"/>
+                                <field name="user_id" column_invisible="True"/>
+                                <field name="employee_id" domain="['|',(parent.all_employees_allowed , '=', True),('id', 'in', parent.allowed_employees)]"/>
                                 <field name="duration" widget="float_time" readonly="id"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
@@ -281,6 +289,8 @@
                 <field name="production_id"/>
                 <field name="product_id"/>
                 <field name="finished_lot_id"/>
+                <field name="connected_employee_ids"/>
+                <filter string="My Work Orders" name="my_work_order" domain="[('connected_employee_ids','in',[1])]"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
                 <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
@@ -390,9 +400,7 @@
                                             <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
                                             <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
                                             <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
-                                            <t name="user_avatar" t-if="record.last_working_user_id.raw_value">
-                                                <img t-att-src="kanban_image('res.users', 'avatar_128', record.last_working_user_id.raw_value)" class="oe_kanban_avatar o_avatar rounded" alt="Avatar"/>
-                                            </t>
+                                            <t t-if="record.employee_ids.raw_value"><field name="employee_ids" widget="list.many2many_avatar_user"/></t>
                                         </div>
                                     </div>
                                 </div>
@@ -504,5 +512,23 @@
         <field name="view_mode">graph</field>
         <field name="view_id" ref="view_work_center_load_graph"/>
         <field name="act_window_id" ref="action_mrp_workcenter_load_report_graph"/>
+    </record>
+
+    <record id="action_start" model="ir.actions.server">
+        <field name="name">Start</field>
+        <field name="model_id" ref="model_mrp_workorder"/>
+        <field name="binding_model_id" ref="model_mrp_workorder"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.button_start()</field>
+    </record>
+
+    <record id="action_pending" model="ir.actions.server">
+        <field name="name">Pause</field>
+        <field name="model_id" ref="model_mrp_workorder"/>
+        <field name="binding_model_id" ref="model_mrp_workorder"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.button_pending()</field>
     </record>
 </odoo>

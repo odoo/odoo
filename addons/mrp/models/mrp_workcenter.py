@@ -75,6 +75,11 @@ class MrpWorkcenter(models.Model):
     tag_ids = fields.Many2many('mrp.workcenter.tag')
     capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
         help="Specific number of pieces that can be produced in parallel per product.", copy=True)
+    employee_ids = fields.Many2many(
+        'hr.employee', string="employees with access",
+        help='if left empty, all employees can log in to the workcenter', store=True,
+        readonly=False)
+    employee_costs_hour = fields.Monetary(string='Employee Hourly Cost', currency_field='currency_id', default=0.0)
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
@@ -177,6 +182,21 @@ class MrpWorkcenter(models.Model):
     def _compute_has_routing_lines(self):
         for workcenter in self:
             workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', '=', workcenter.id)], limit=1)
+
+    @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
+    def _compute_working_state(self):
+        self.working_state = 'normal'
+        time_log = self.env['mrp.workcenter.productivity'].search([
+            ('workcenter_id', 'in', self.ids),
+            ('date_end', '=', False),
+        ])
+        for time in time_log:
+            if time.loss_type in ('productive', 'performance'):
+                # the productivity line has a `loss_type` that means the workcenter is being used
+                time.workcenter_id.working_state = 'done'
+            else:
+                # the workcenter is blocked
+                time.workcenter_id.working_state = 'blocked'
 
     @api.constrains('default_capacity')
     def _check_capacity(self):
@@ -428,6 +448,12 @@ class MrpWorkcenterProductivity(models.Model):
     date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
     date_end = fields.Datetime('End Date')
     duration = fields.Float('Duration', compute='_compute_duration', store=True)
+    employee_id = fields.Many2one(
+        'hr.employee', string="Employee", compute='_compute_employee',
+        help='employee that record this working time', store=True, readonly=False)
+    employee_cost = fields.Monetary('employee_cost', compute='_compute_employee_cost', default=0, store=True)
+    total_cost = fields.Float('Cost', compute='_compute_total_cost', compute_sudo=True)
+    currency_id = fields.Many2one(related='company_id.currency_id')
 
     @api.depends('date_end', 'date_start')
     def _compute_duration(self):
@@ -456,15 +482,22 @@ class MrpWorkcenterProductivity(models.Model):
         self.date_start = self.date_end - timedelta(minutes=self.duration)
         self._loss_type_change()
 
-    @api.constrains('workorder_id')
-    def _check_open_time_ids(self):
-        for workorder in self.workorder_id:
-            open_time_ids_by_user = self.env["mrp.workcenter.productivity"]._read_group(
-                [("id", "in", workorder.time_ids.ids), ("date_end", "=", False)],
-                ["user_id"], having=[("__count", ">", 1)],
-            )
-            if open_time_ids_by_user:
-                raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
+    @api.depends('employee_id.hourly_cost')
+    def _compute_employee_cost(self):
+        for time in self:
+            if time.employee_id:
+                time.employee_cost = time.employee_id.hourly_cost
+
+    @api.depends('duration', 'employee_cost')
+    def _compute_total_cost(self):
+        for time in self:
+            time.total_cost = time.employee_cost * time.duration / 60
+
+    @api.depends('user_id')
+    def _compute_employee(self):
+        for time in self:
+            if time.user_id and time.user_id.employee_id:
+                time.employee_id = time.user_id.employee_id
 
     def button_block(self):
         self.ensure_one()

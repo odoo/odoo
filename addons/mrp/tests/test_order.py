@@ -3048,6 +3048,7 @@ class TestMrpOrder(TestMrpCommon):
         """
             Check that the timers in the workorders are stopped after the cancellation of the MO
         """
+        self.env.user.employee_id = self.env['hr.employee'].create({'user_id': self.env.uid})
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_2
         mo_form.product_qty = 1
@@ -3085,6 +3086,8 @@ class TestMrpOrder(TestMrpCommon):
         """
         # Required for `workorder_ids` to be visible in the view
         self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+        # Employee required to start the work order
+        self.env.user.employee_id = self.env['hr.employee'].create({'user_id': self.env.uid})
         production_form = Form(self.env['mrp.production'])
         production_form.bom_id = self.bom_2
         production_form.product_qty = 1

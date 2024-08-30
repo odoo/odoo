@@ -369,6 +369,24 @@
                                         <div class="o_row">
                                             <field name="oee_target"/> %
                                         </div>
+                                    </group>
+                                    <group string="Costing Information" name="costing">
+                                        <label for="costs_hour"/>
+                                        <div id="costs_hour">
+                                            <field name="costs_hour" widget="monetary" class="oe_inline"/> per workcenter
+                                        </div>
+                                        <label for="employee_costs_hour" string=""/>
+                                        <div>
+                                            <field name="employee_costs_hour" class="oe_inline"/> per employee
+                                        </div>
+                                    </group>
+                                    <group string="Operations" name="workorder_employee">
+                                        <field name="employee_ids" widget="many2many_tags"
+                                            string="Allowed Employees"
+                                            domain="[('company_id', '=', company_id)]"
+                                            />
+                                    </group>
+                                    <group>
                                         <label for="time_start"/>
                                         <div>
                                             <field name="time_start" widget="float_time" class="oe_inline"/> minutes

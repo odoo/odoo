@@ -464,7 +464,7 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_operation_cost(self, operation, workcenter, duration):
-        return (duration / 60.0) * workcenter.costs_hour
+        return (duration / 60.0) * (workcenter.costs_hour + operation.employee_ratio * workcenter.employee_costs_hour)
 
     @api.model
     def _get_operation_line(self, product, bom, qty, level, index, bom_report_line, simulated_leaves_per_workcenter):

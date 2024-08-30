@@ -61,6 +61,7 @@ class MrpRoutingWorkcenter(models.Model):
                                      string="Blocks", help="Operations that cannot start before this operation is completed.",
                                      domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
                                      copy=False)
+    employee_ratio = fields.Float("Employee Capacity", default=1, help="Number of employees needed to complete operation.")
 
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
