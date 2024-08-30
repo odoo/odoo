@@ -6,6 +6,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/Selection
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Notification from "@point_of_sale/../tests/tours/helpers/generic_components/NotificationTourMethods";
 import { registry } from "@web/core/registry";
+import { scan_barcode } from "@point_of_sale/../tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
     test: true,
@@ -502,5 +503,31 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsActive"
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.selectedOrderlineHas("Test Product A", "1.00", "100.00"),
             PosLoyalty.finalizeOrder("Cash", "100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosRewardProductScan", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            scan_barcode("95412427100283"),
+            ProductScreen.selectedOrderlineHas("product_a", "1.00", "1,150.00"),
+            PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
+            PosLoyalty.orderTotalIs("575.00"),
+            PosLoyalty.finalizeOrder("Cash", "575.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
+    test: true,
+    steps: () =>
+        [
+            scan_barcode("0195412427100283"),
+            ProductScreen.selectedOrderlineHas("product_a", "1.00", "1,150.00"),
+            PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
+            PosLoyalty.orderTotalIs("575.00"),
+            PosLoyalty.finalizeOrder("Cash", "575.00"),
         ].flat(),
 });
