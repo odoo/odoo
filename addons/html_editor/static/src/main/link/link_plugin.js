@@ -524,6 +524,7 @@ export class LinkPlugin extends Plugin {
                 textNodeToReplace.splitText(match[0].length);
                 selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
                 this.shared.setCursorStart(nodeForSelectionRestore);
+                this.dispatch("ADD_STEP");
             }
         }
     }

@@ -1,7 +1,9 @@
-import { test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, press } from "@odoo/hoot-dom";
-import { testEditor } from "../_helpers/editor";
-import { setSelection } from "../_helpers/selection";
+import { setupEditor, testEditor } from "../_helpers/editor";
+import { getContent, setSelection } from "../_helpers/selection";
+import { insertText, undo } from "../_helpers/user_actions";
+import { cleanLinkArtifacts } from "../_helpers/format";
 
 async function insertSpace(editor) {
     manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: " " });
@@ -139,4 +141,20 @@ test("should not transform url after two space", async () => {
         contentAfter:
             "<p>a http://test.com b http://test.com&nbsp; []&nbsp;c http://test.com d</p>",
     });
+});
+
+test("transform text url into link and undo it", async () => {
+    const { el, editor } = await setupEditor(`<p>[]</p>`);
+    insertText(editor, "www.abc.jpg ");
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p><a href="http://www.abc.jpg">www.abc.jpg</a> []</p>'
+    );
+
+    undo(editor);
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        '<p><a href="http://www.abc.jpg">www.abc.jpg</a>[]</p>'
+    );
+
+    undo(editor);
+    expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.abc.jpg[]</p>");
 });
