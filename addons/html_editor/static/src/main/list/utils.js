@@ -50,16 +50,6 @@ export function compareListTypes(a, b) {
     return true;
 }
 
-export function applyToTree(root, func) {
-    const modifiedRoot = func(root);
-    let next = modifiedRoot.firstElementChild;
-    while (next) {
-        const modifiedNext = applyToTree(next, func);
-        next = modifiedNext.nextElementSibling;
-    }
-    return modifiedRoot;
-}
-
 export function isListItem(node) {
     return node.nodeName === "LI" && !node.classList.contains("nav-item");
 }
