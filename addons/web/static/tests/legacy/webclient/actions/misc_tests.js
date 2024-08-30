@@ -106,6 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         doAction(webClient, 4448);
         await nextTick();
+        await nextTick(); // wait for the unhandledrejection error to be thrown/caught
         assert.containsOnce(target, ".o_error_dialog");
         assert.strictEqual(
             document.querySelector(".o_error_dialog .modal-body").innerText,
@@ -122,6 +123,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         doAction(webClient, "plop");
         await nextTick();
+        await nextTick(); // wait for the unhandledrejection error to be thrown/caught
         assert.containsOnce(target, ".o_error_dialog");
         assert.strictEqual(
             document.querySelector(".o_error_dialog .modal-body").innerText,
@@ -138,6 +140,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         doAction(webClient, "not.found.action");
         await nextTick();
+        await nextTick(); // wait for the unhandledrejection error to be thrown/caught
         assert.containsOnce(target, ".o_error_dialog");
         assert.strictEqual(
             document.querySelector(".o_error_dialog .modal-body").innerText,
