@@ -9,7 +9,6 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     l10n_in_hsn_code = fields.Char(string="HSN/SAC Code", help="Harmonized System Nomenclature/Services Accounting Code")
-    l10n_in_hsn_description = fields.Char(string="HSN/SAC Description", help="HSN/SAC description is required if HSN/SAC code is not provided.")
     l10n_in_hsn_warning = fields.Text(string="HSC/SAC warning", compute="_compute_l10n_in_hsn_warning")
 
     @api.depends('sale_ok', 'l10n_in_hsn_code')
