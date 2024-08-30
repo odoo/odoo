@@ -107,8 +107,6 @@ class PosConfig(models.Model):
     iface_print_skip_screen = fields.Boolean(string='Skip Preview Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='total', required=True)
-    iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
-        help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
     customer_display_type = fields.Selection(selection=lambda self: self._get_customer_display_types(), string='Customer Facing Display', help="Show checkout to customers.", default='local')
@@ -158,7 +156,6 @@ class PosConfig(models.Model):
     default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    start_category = fields.Boolean("Start Category", default=False)
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
@@ -333,13 +330,6 @@ class PosConfig(models.Model):
                                         " the Accounting application."))
             if config.invoice_journal_id.currency_id and config.invoice_journal_id.currency_id != config.currency_id:
                 raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
-
-    @api.constrains('iface_start_categ_id', 'iface_available_categ_ids')
-    def _check_start_categ(self):
-        for config in self:
-            allowed_categ_ids = config.iface_available_categ_ids or self.env['pos.category'].search([])
-            if config.iface_start_categ_id and config.iface_start_categ_id not in allowed_categ_ids:
-                raise ValidationError(_("Start category should belong in the available categories."))
 
     def _check_payment_method_ids(self):
         self.ensure_one()

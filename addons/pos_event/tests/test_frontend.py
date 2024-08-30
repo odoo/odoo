@@ -64,10 +64,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
 
-        cls.main_pos_config.write({
-            'iface_start_categ_id': cls.event_category.id,
-        })
-
     def test_selling_event_in_pos(self):
         self.pos_user.write({
             'groups_id': [
