@@ -8039,8 +8039,8 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         if (targetEl) {
             const src = getBgImageURL(targetEl);
             // Don't set the src if not relative (ie, not local image: cannot be
-            // modified)
-            this.img.src = src.startsWith("/") ? src : "";
+            // modified) or if it is not an already modified image.
+            this.img.src = src.startsWith("/") || src.startsWith("data:image") ? src : "";
         }
         return await this._super(...arguments);
     },
