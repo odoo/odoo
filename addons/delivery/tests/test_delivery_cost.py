@@ -227,7 +227,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             'type_tax_use': 'sale',
             'amount_type': 'percent',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
         }, {
             'name': '15% exc',

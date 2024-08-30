@@ -642,6 +642,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                     'account_id': tax_received_account.id,
                 }),
             ],
+            'price_include_override': 'tax_excluded',
         })
         zero_amount_product = self.env['product.product'].create({
             'name': 'Zero Amount Product',
@@ -833,7 +834,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',
             'amount': 15,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
@@ -874,26 +875,28 @@ class TestUi(TestPointOfSaleHttpCommon):
         tax_inclusive_1 = self.env['account.tax'].create({
             'name': 'Tax incl.20%',
             'amount': 20,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
         tax_exclusive_1 = self.env['account.tax'].create({
             'name': 'Tax excl.20%',
             'amount': 20,
+            'price_include_override': 'tax_excluded',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
         tax_inclusive_2 = self.env['account.tax'].create({
             'name': 'Tax incl.10%',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
         tax_exclusive_2 = self.env['account.tax'].create({
             'name': 'Tax excl.10%',
             'amount': 10,
+            'price_include_override': 'tax_excluded',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
@@ -1026,7 +1029,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Tax 10% Included',
             'amount_type': 'percent',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         # define a product record with the tax
@@ -1116,7 +1119,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount': 15,
             'amount_type': 'percent',
             'type_tax_use': 'sale',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         #create a tax of 0%
         self.tax2 = self.env['account.tax'].create({
@@ -1124,6 +1127,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount': 0,
             'amount_type': 'percent',
             'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
         })
         #create a fiscal position with the two taxes
         self.fiscal_position = self.env['account.fiscal.position'].create({
@@ -1431,7 +1435,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         tax_1 = self.env['account.tax'].create({
             'name': 'Tax 10%',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })
@@ -1439,7 +1443,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         tax_2 = self.env['account.tax'].create({
             'name': 'Tax 5%',
             'amount': 5,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'amount_type': 'percent',
             'type_tax_use': 'sale',
         })

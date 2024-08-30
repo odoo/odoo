@@ -184,8 +184,8 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         pricelist = self.pricelist
         # Add 10% tax on product
         tax10, tax6 = self.env['account.tax'].create([
-            {'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent'},
-            {'name': "Test tax 6", 'amount': 6, 'price_include': True, 'amount_type': 'percent'},
+            {'name': "Test tax 10", 'amount': 10, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
+            {'name': "Test tax 6", 'amount': 6, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
         ])
 
         test_product = self.env['product.product'].create({
@@ -236,8 +236,8 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
         # Add 10% tax on product
         tax10, tax0 = self.env['account.tax'].create([
-            {'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent'},
-            {'name': "Test tax 0", 'amount': 0, 'price_include': True, 'amount_type': 'percent'},
+            {'name': "Test tax 10", 'amount': 10, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
+            {'name': "Test tax 0", 'amount': 0, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
         ])
 
         # Create fiscal position mapping taxes 10% -> 0%

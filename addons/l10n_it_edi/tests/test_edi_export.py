@@ -72,7 +72,7 @@ class TestItEdiExport(TestItEdi):
             'name': "22% price included tax",
             'amount': 22.0,
             'amount_type': 'percent',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         invoice = self.env['account.move'].with_company(self.company).create({

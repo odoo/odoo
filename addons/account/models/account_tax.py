@@ -126,7 +126,6 @@ class AccountTax(models.Model):
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(
         compute='_compute_price_include',
-        inverse='_inverse_price_include',
         search='_search_price_include',
         help="Determines whether the price you use on the product and invoices includes this tax.")
     company_price_include = fields.Selection(related="company_id.account_price_include")
@@ -259,14 +258,6 @@ class AccountTax(models.Model):
                 or (tax.company_price_include == 'tax_included'
                     and not tax.price_include_override)
             )
-
-    def _inverse_price_include(self):
-        for tax in self:
-            new_value = 'tax_included' if tax.price_include else 'tax_excluded'
-            if tax.company_price_include == new_value:
-                tax.price_include_override = False
-            else:
-                tax.price_include_override = new_value
 
     def _search_price_include(self, operator, value):
         if isinstance(value, bool):

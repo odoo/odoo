@@ -128,7 +128,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'name': 'Tax 10% included',
             'amount': 10.0,
             'type_tax_use': 'purchase',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         self.purchase_order.order_line.taxes_id = tax_10_included
         self.purchase_order.order_line.qty_received = 5

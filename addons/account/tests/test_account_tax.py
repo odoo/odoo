@@ -84,7 +84,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
             'amount': 21,
             'amount_type': 'fixed',
             'type_tax_use': 'purchase',
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
             'is_base_affected': False,
         })

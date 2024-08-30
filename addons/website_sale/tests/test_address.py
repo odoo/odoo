@@ -283,9 +283,9 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         ]
 
         tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
-            {'name': 'Tax 10% incl', 'amount': 10, 'price_include': True},
-            {'name': 'Tax 20% excl', 'amount': 20, 'price_include': False},
-            {'name': 'Tax 15% incl', 'amount': 15, 'price_include': True},
+            {'name': 'Tax 10% incl', 'amount': 10, 'price_include_override': 'tax_included'},
+            {'name': 'Tax 20% excl', 'amount': 20, 'price_include_override': 'tax_excluded'},
+            {'name': 'Tax 15% incl', 'amount': 15, 'price_include_override': 'tax_included'},
         ])
         fpos_be, fpos_nl = self.env['account.fiscal.position'].create([
             {

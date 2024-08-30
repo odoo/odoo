@@ -93,7 +93,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             'name': "15% Tax",
             'amount_type': 'percent',
             'amount': 15,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         p_specific_product = self.env['loyalty.program'].create({
             'name': '20% reduction on Large Cabinet in cart',
@@ -126,10 +126,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(len(order.order_line.ids), 1, "We should not get the reduction line since we dont have 320$ tax excluded (cabinet is 320$ tax included)")
-        sol1.tax_id.price_include = False
+        sol1.tax_id.price_include_override = 'tax_excluded'
         sol1._compute_tax_id()
         self.env.flush_all()
-        self.env['account.tax'].invalidate_model(['price_include'])
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
@@ -217,7 +216,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             'name': "35% Tax incl",
             'amount_type': 'percent',
             'amount': 35,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         # Set tax and prices on products as neeed for the test
@@ -909,7 +908,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             'name': "30% Tax",
             'amount_type': 'percent',
             'amount': 30,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         sol2.tax_id = percent_tax
 

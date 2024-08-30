@@ -351,7 +351,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'amount': 20.0,
                     'type_tax_use': type_tax_use,
                     'country_id': company_data['company'].account_fiscal_country_id.id,
-                    'price_include': True,
+                    'price_include_override': 'tax_included',
                     'include_base_amount': True,
                     'tax_exigibility': 'on_invoice',
                     'invoice_repartition_line_ids': [

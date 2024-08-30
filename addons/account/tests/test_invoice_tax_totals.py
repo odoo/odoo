@@ -226,7 +226,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount_type': 'percent',
             'amount': 10.0,
             'tax_group_id': self.tax_group1.id,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
         })
 
@@ -784,14 +784,14 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'tax_group_id': self.tax_group1.id,
             'amount': 1.0,
             'include_base_amount': True,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         tax_21 = self.env['account.tax'].create({
             'name': "tax_21",
             'amount_type': 'percent',
             'tax_group_id': self.tax_group2.id,
             'amount': 21.0,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -1073,7 +1073,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             })
 
         # == Tax-included ==
-        taxes.write({'price_include': True})
+        taxes.write({'price_include_override': 'tax_included'})
         document = self._create_document_for_tax_totals_test([(48.0, taxes)])
 
         # Multiple tax groups.

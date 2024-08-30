@@ -16,7 +16,7 @@ def setup_product_combo_items(self):
             "amount": 20,
             "amount_type": "percent",
             "type_tax_use": "sale",
-            "price_include": True,
+            "price_include_override": "tax_included",
             "include_base_amount": True,
         }
     )

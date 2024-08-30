@@ -547,7 +547,7 @@ class TestSalePrices(SaleCommon):
         tax_a, tax_b = self.env['account.tax'].create([{
             'name': 'Test tax A',
             'type_tax_use': 'sale',
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'amount': 15.0,
         }, {
             'name': 'Test tax B',
@@ -635,32 +635,32 @@ class TestSalePrices(SaleCommon):
             'name': "fixed include",
             'amount': 10.00,
             'amount_type': 'fixed',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         }, {
             'name': "fixed exclude",
             'amount': 10.00,
             'amount_type': 'fixed',
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
         }, {
             'name': "Include 21%",
             'amount': 21.00,
             'amount_type': 'percent',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         }, {
             'name': "Include 6%",
             'amount': 6.00,
             'amount_type': 'percent',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         }, {
             'name': "Exclude 15%",
             'amount': 15.00,
             'amount_type': 'percent',
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
         }, {
             'name': "Exclude 21%",
             'amount': 21.00,
             'amount_type': 'percent',
-            'price_include': False,
+            'price_include_override': 'tax_excluded',
         }])
 
         (
@@ -804,7 +804,7 @@ class TestSalePrices(SaleCommon):
         tax_include, tax_exclude = self.env['account.tax'].create([{
             'name': 'Include Tax',
             'amount': '21.00',
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'type_tax_use': 'sale',
         }, {
             'name': 'Exclude Tax',
@@ -845,14 +845,14 @@ class TestSalePrices(SaleCommon):
             'type_tax_use': 'sale',
             'amount_type': 'fixed',
             'amount': 0.05,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
         }, {
             'name': 'Recupel 0.25',
             'type_tax_use': 'sale',
             'amount_type': 'fixed',
             'amount': 0.25,
-            'price_include': True,
+            'price_include_override': 'tax_included',
             'include_base_amount': True,
         }])
         order = self.empty_order
@@ -881,7 +881,7 @@ class TestSalePrices(SaleCommon):
         tax_include, tax_exclude = self.env['account.tax'].create([{
             'name': 'Tax with price include',
             'amount': 10,
-            'price_include': True
+            'price_include_override': 'tax_included',
         }, {
             'name': 'Tax with no price include',
             'amount': 10,
@@ -932,7 +932,7 @@ class TestSalePrices(SaleCommon):
             'name': 'Super Tax',
             'amount_type': 'percent',
             'amount': 15.0,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })]
         order.action_confirm()
         self.assertEqual(line.untaxed_amount_to_invoice, 0)
@@ -983,7 +983,7 @@ class TestSalePrices(SaleCommon):
             'name': 'Super Tax',
             'amount_type': 'percent',
             'amount': 10.0,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })]
         line.discount = 50.0
         order.action_confirm()
