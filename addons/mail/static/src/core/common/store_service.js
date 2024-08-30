@@ -542,7 +542,7 @@ export class Store extends BaseStore {
                 mail_post_autofollow: !isNote && thread.hasWriteAccess,
             },
             post_data: postData,
-            attachment_tokens: attachments.map((attachment) => attachment.accessToken),
+            attachment_tokens: attachments.map((attachment) => attachment.access_token),
             canned_response_ids: cannedResponseIds,
             partner_emails: recipientEmails,
             partner_additional_values: recipientAdditionalValues,

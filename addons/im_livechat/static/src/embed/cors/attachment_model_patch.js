@@ -9,7 +9,7 @@ patch(Attachment.prototype, {
         };
     },
     get urlRoute() {
-        if (!this.accessToken && this.thread?.model === "discuss.channel") {
+        if (!this.access_token && this.thread?.model === "discuss.channel") {
             return this.isImage
                 ? `/im_livechat/cors/channel/${this.thread.id}/image/${this.id}`
                 : `/im_livechat/cors/channel/${this.thread.id}/attachment/${this.id}`;

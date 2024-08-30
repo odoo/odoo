@@ -77,7 +77,7 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _to_store(self, store: Store, /, *, fields=None, access_token=False):
+    def _to_store(self, store: Store, /, *, fields=None, extra_fields=None):
         if fields is None:
             fields = [
                 "checksum",
@@ -89,6 +89,8 @@ class IrAttachment(models.Model):
                 "size",
                 "thread",
             ]
+        if extra_fields:
+            fields.extend(extra_fields)
         safari = (
             request
             and request.httprequest.user_agent
@@ -120,6 +122,4 @@ class IrAttachment(models.Model):
                     if attachment.res_model != "mail.compose.message" and attachment.res_id
                     else False
                 )
-            if access_token:
-                data["accessToken"] = attachment.access_token
             store.add(attachment, data)
