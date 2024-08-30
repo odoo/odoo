@@ -606,7 +606,7 @@ class IrActionsServer(models.Model):
     evaluation_type = fields.Selection([
         ('value', 'Update'),
         ('equation', 'Compute')
-    ], 'Value Type', default='value', change_default=True)
+    ], 'Value Type', default='value')
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',

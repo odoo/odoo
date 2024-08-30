@@ -138,7 +138,7 @@ class EventEvent(models.Model):
         default=lambda self: self.env.user)
     use_barcode = fields.Boolean(compute='_compute_use_barcode')
     company_id = fields.Many2one(
-        'res.company', string='Company', change_default=True,
+        'res.company', string='Company',
         default=lambda self: self.env.company,
         required=False)
     organizer_id = fields.Many2one(

@@ -456,7 +456,7 @@ describe.tags("desktop")("DebugMenu", () => {
         serverState.debug = "1";
 
         onRpc("ir.default", "set", async (args) => {
-            expect(args.args).toEqual(["res.partner", "name", "p1", true, true, false]);
+            expect(args.args).toEqual(["res.partner", "name", "p1", true, true]);
             return true;
         });
 
@@ -652,16 +652,15 @@ describe.tags("desktop")("DebugMenu", () => {
         }
 
         expect(argSteps).toEqual([
-            ["partner", "datetime", "2024-01-24 16:46:16", true, true, false],
+            ["partner", "datetime", "2024-01-24 16:46:16", true, true],
             [
                 "partner",
                 "reference",
                 { resId: 1, resModel: "pony", displayName: "pony,1" },
                 true,
                 true,
-                false,
             ],
-            ["partner", "m2o", 1, true, true, false],
+            ["partner", "m2o", 1, true, true],
         ]);
     });
 

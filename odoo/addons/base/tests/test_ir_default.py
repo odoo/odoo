@@ -58,29 +58,6 @@ class TestIrDefault(TransactionCase):
         default3 = IrDefault3.env['res.partner'].default_get(['ref']).get('ref')
         self.assertEqual(default3, 'GLOBAL', "Wrong default value.")
 
-    def test_conditions(self):
-        """ check user-defined defaults with condition """
-        IrDefault = self.env['ir.default']
-
-        # default without condition
-        IrDefault.search([('field_id.model', '=', 'res.partner')]).unlink()
-        IrDefault.set('res.partner', 'ref', 'X')
-        self.assertEqual(IrDefault._get_model_defaults('res.partner'),
-                         {'ref': 'X'})
-        self.assertEqual(IrDefault._get_model_defaults('res.partner', condition='name=Agrolait'),
-                         {})
-
-        # default with a condition
-        IrDefault.search([('field_id.model', '=', 'res.partner.title')]).unlink()
-        IrDefault.set('res.partner.title', 'shortcut', 'X')
-        IrDefault.set('res.partner.title', 'shortcut', 'Mr', condition='name=Mister')
-        self.assertEqual(IrDefault._get_model_defaults('res.partner.title'),
-                         {'shortcut': 'X'})
-        self.assertEqual(IrDefault._get_model_defaults('res.partner.title', condition='name=Miss'),
-                         {})
-        self.assertEqual(IrDefault._get_model_defaults('res.partner.title', condition='name=Mister'),
-                         {'shortcut': 'Mr'})
-
     def test_invalid(self):
         """ check error cases with 'ir.default' """
         IrDefault = self.env['ir.default']

@@ -2799,7 +2799,7 @@ class Model(models.AbstractModel):
         :rtype: list
         """
         return [
-            'change_default', 'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'domain', 'aggregator', 'groups',
+            'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'domain', 'aggregator', 'groups',
             'help', 'model_field', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
             'sortable', 'store', 'string', 'translate', 'trim', 'type', 'groupable',
         ]

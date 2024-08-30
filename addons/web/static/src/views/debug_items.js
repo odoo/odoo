@@ -232,7 +232,6 @@ class SetDefaultDialog extends Component {
         this.orm = useService("orm");
         this.state = {
             fieldToSet: "",
-            condition: "",
             scope: "self",
         };
         this.fields = this.props.record.fields;
@@ -242,7 +241,6 @@ class SetDefaultDialog extends Component {
         this.fieldsValues = this.props.record.data;
         this.modifierDatas = {};
         this.defaultFields = this.getDefaultFields();
-        this.conditions = this.getConditions();
     }
 
     getDefaultFields() {
@@ -279,26 +277,6 @@ class SetDefaultDialog extends Component {
             .sort((field) => field.string);
     }
 
-    getConditions() {
-        return this.fieldNamesInView
-            .filter((fieldName) => {
-                const fieldInfo = this.fields[fieldName];
-                return fieldInfo.change_default;
-            })
-            .map((fieldName) => {
-                const fieldInfo = this.fields[fieldName];
-                const valueDisplayed = this.display(fieldInfo, this.fieldsValues[fieldName]);
-                const value = valueDisplayed[0];
-                const displayed = valueDisplayed[1];
-                return {
-                    name: fieldName,
-                    string: fieldInfo.string,
-                    value: value,
-                    displayed: displayed,
-                };
-            });
-    }
-
     display(fieldInfo, value) {
         let displayed = value;
         if (value && fieldInfo.type === "many2one") {
@@ -331,7 +309,6 @@ class SetDefaultDialog extends Component {
             fieldToSet,
             this.state.scope === "self",
             true,
-            this.state.condition || false,
         ]);
         this.props.close();
     }

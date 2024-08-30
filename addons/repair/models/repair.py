@@ -54,7 +54,7 @@ class Repair(models.Model):
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, check_company=True, change_default=True, compute='_compute_partner_id', readonly=False, store=True,
+        index=True, check_company=True, compute='_compute_partner_id', readonly=False, store=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     user_id = fields.Many2one('res.users', string="Responsible", default=lambda self: self.env.user, check_company=True)
 

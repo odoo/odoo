@@ -279,7 +279,7 @@ class PosOrder(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
-    partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
+    partner_id = fields.Many2one('res.partner', string='Customer', index='btree_not_null')
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
 
     session_id = fields.Many2one(
@@ -1197,7 +1197,7 @@ class PosOrderLine(models.Model):
     name = fields.Char(string='Line No', required=True, copy=False)
     skip_change = fields.Boolean('Skip line when sending ticket to kitchen printers.')
     notice = fields.Char(string='Discount Notice')
-    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True)
     attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Selected Attributes")
     custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='pos_order_line_id',

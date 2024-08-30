@@ -20,22 +20,6 @@
                         </select>
                     </td>
                 </tr>
-                <tr t-if="conditions.length">
-                    <td>
-                        <label for="formview_default_conditions"
-                            class="oe_label oe_align_right">
-                            Condition:
-                        </label>
-                    </td>
-                    <td>
-                        <select id="formview_default_conditions" class="o_input" t-model="state.condition">
-                            <option value=""/>
-                            <option t-foreach="conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="cond.name">
-                                <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
-                            </option>
-                        </select>
-                    </td>
-                </tr>
                 <tr>
                     <td colspan="2">
                         <input type="radio" id="formview_default_self"

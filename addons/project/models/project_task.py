@@ -180,7 +180,7 @@ class Task(models.Model):
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
     project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
-                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True)
+                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True)
     display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, readonly=False, export_string_translation=False)
     # Technical field to display the 'Display in Project' button in the form view, depending on the project
     show_display_in_project = fields.Boolean(compute='_compute_show_display_in_project')

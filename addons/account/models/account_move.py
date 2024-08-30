@@ -157,7 +157,6 @@ class AccountMove(models.Model):
         required=True,
         readonly=True,
         tracking=True,
-        change_default=True,
         index=True,
         default="entry",
     )
@@ -334,7 +333,6 @@ class AccountMove(models.Model):
         tracking=True,
         inverse='_inverse_partner_id',
         check_company=True,
-        change_default=True,
         index=True,
         ondelete='restrict',
     )

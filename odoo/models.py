@@ -977,17 +977,6 @@ class BaseModel(metaclass=MetaModel):
                     func._onchange, missing
                 )
 
-        # add onchange methods to implement "change_default" on fields
-        def onchange_default(field, self):
-            value = field.convert_to_write(self[field.name], self)
-            condition = "%s=%s" % (field.name, value)
-            defaults = self.env['ir.default']._get_model_defaults(self._name, condition)
-            self.update(defaults)
-
-        for name, field in cls._fields.items():
-            if field.change_default:
-                methods[name].append(functools.partial(onchange_default, field))
-
         # optimization: memoize result on cls, it will not be recomputed
         cls._onchange_methods = methods
         return methods
