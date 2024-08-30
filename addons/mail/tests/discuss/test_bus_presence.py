@@ -10,11 +10,13 @@ except ImportError:
 from odoo.tests import tagged, new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.mail.tests.common import MailCommon
 
 
 @tagged("post_install", "-at_install")
-class TestBusPresence(WebsocketCase):
+class TestBusPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, sender, recipient):
+        self._reset_bus()
         sent_from_user = isinstance(sender, self.env.registry["res.users"])
         receive_to_user = isinstance(recipient, self.env.registry["res.users"])
         if receive_to_user:
