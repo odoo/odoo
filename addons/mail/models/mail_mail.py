@@ -645,6 +645,18 @@ class MailMail(models.Model):
                 if smtp_session:
                     smtp_session.quit()
 
+    def action_send_and_close(self):
+        """ An action sending the selected mail and redirecting to mail.mail list view. """
+        self.send()
+        return {
+            'name': _('Emails'),
+            'res_model': 'mail.mail',
+            'view_mode': 'list',
+            'views': [[False, 'list'], [False, 'form']],
+            'target': 'main',
+            'type': 'ir.actions.act_window',
+        }
+
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False,
               mail_server=False, post_send_callback=None):
         IrMailServer = self.env['ir.mail_server']
