@@ -23,6 +23,12 @@ $input-border-color: $gray-400;
             width: if($-list, 100%, 50%);
         }
 
+        @if ($-list == false) {
+            [data-ppr="3"] td.oe_product {
+                width: 100%;
+            }
+        }
+
         .modal-dialog {
             table, tbody, tr, td {
                 display: revert;
