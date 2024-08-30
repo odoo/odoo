@@ -22,6 +22,9 @@ export class TimeOffCardPopover extends Component {
         "onClickNewAllocationRequest?",
         "errorLeaves",
         "accrualExcess",
+        "timeOffType",
+        "employeeId",
+        "employeeCompany",
     ];
 
     setup() {
@@ -39,6 +42,46 @@ export class TimeOffCardPopover extends Component {
             domain: [["id", "in", this.props.errorLeaves]],
         });
     }
+
+    async allocatedLeaves() {
+        const { employeeId, timeOffType, employeeCompany } = this.props;
+        const today = new Date().toISOString().split('T')[0];
+        const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
+
+        const resModel = "hr.leave.allocation"
+        const name = "My Allocations"
+        const context = isInHolidaysUserGroup ? {} : {
+            list_view_ref: "hr_holidays.hr_leave_allocation_view_tree_my",
+            form_view_ref: "hr_holidays.hr_leave_allocation_view_form",
+        }
+        const domain = [["holiday_status_id", "=", timeOffType], ['employee_company_id','=', employeeCompany],
+                '|', ["date_to", "=", false], ["date_to", ">=", today],
+                employeeId ? ['employee_id', '=', employeeId] : ['employee_id.user_id', '=', user.userId]]
+
+        openLeaveWindow(this.actionService, resModel, name, domain, context);
+    }
+
+    async navigateInfo(stateList) {
+        const { employeeId, timeOffType, employeeCompany } = this.props;
+        const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
+
+        const resModel = "hr.leave"
+        const name = "My Time Off"
+        const domain = [
+            ['state', 'in', stateList],
+            ['holiday_status_id', '=', timeOffType], ['company_id','=', employeeCompany],
+            employeeId ? ['employee_id', '=', employeeId] : ['user_id', '=', user.userId]
+        ];
+        const context = isInHolidaysUserGroup ? {
+            search_default_group_date_from: true
+        } : {
+            search_default_group_date_from: true,
+            list_view_ref: "hr_holidays.hr_leave_view_tree_my",
+            form_view_ref: "hr_holidays.hr_leave_view_form",
+        }
+
+        openLeaveWindow(this.actionService, resModel, name, domain, context);
+    }
 }
 
 export class TimeOffCard extends Component {
@@ -51,6 +94,7 @@ export class TimeOffCard extends Component {
             popoverClass: "bg-view",
         });
         this.newAllocationRequest = useNewAllocationRequest();
+        this.actionService = useService("action");
         this.lang = user.lang;
         this.formatNumber = formatNumber;
         const { data } = this.props;
@@ -77,7 +121,7 @@ export class TimeOffCard extends Component {
     }
 
     onClickInfo(ev) {
-        const { data } = this.props;
+        const { data, holidayStatusId, employeeId } = this.props;
         this.popover.open(ev.target, {
             allocated: formatNumber(this.lang, data.max_leaves),
             accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
@@ -93,6 +137,9 @@ export class TimeOffCard extends Component {
             onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
             errorLeaves: this.errorLeaves,
             accrualExcess: this.getAccrualExcess(data),
+            timeOffType: holidayStatusId,
+            employeeId: employeeId,
+            employeeCompany: data.employee_company
         });
     }
 
@@ -106,6 +153,41 @@ export class TimeOffCard extends Component {
         this.popover.close();
         await this.newAllocationRequest(this.props.employeeId, this.props.holidayStatusId);
     }
+
+    async navigateTimeOffType() {
+        const { employeeId, holidayStatusId, data } = this.props;
+        const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
+
+        const resModel = "hr.leave"
+        const name = "My Time Off"
+        const domain = [
+            ['holiday_status_id', '=', holidayStatusId], ['company_id','=', data.employee_company],
+            employeeId ? ['employee_id', '=', employeeId] : ['user_id', '=', user.userId]
+        ];
+        const context = isInHolidaysUserGroup ? {
+            search_default_group_date_from: true
+        } : {
+            list_view_ref: "hr_holidays.hr_leave_view_tree_my",
+            form_view_ref: "hr_holidays.hr_leave_view_form",
+            search_default_group_date_from: true
+        };
+
+        openLeaveWindow(this.actionService, resModel, name, domain, context);
+    }
+}
+
+function openLeaveWindow(actionService, resModel, name, domain, context) {
+    actionService.doAction({
+        type: "ir.actions.act_window",
+        name: name,
+        res_model: resModel,
+        views: [
+            [false, "list"],
+            [false, "form"]
+        ],
+        domain: domain,
+        context: context
+    });
 }
 
 export class TimeOffCardMobile extends TimeOffCard {
