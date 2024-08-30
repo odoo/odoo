@@ -348,6 +348,67 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
     @users('enguerran')
     def test_expiration_date(self):
         """
+        The accrual plan:
+            - Accrue at the end of period.
+            - Carryover date : 01/01.
+            Milestones:
+                Milestone 1:
+                - Start immediately.
+                - Accrue 10 days.
+                - Accrue days on 01/01 (start of the year).
+                - Unused accruals are carried over with a maximum of 5.
+
+        Create an accrual allocation with this plan and allocate it to the logged-in user.
+        The employee will be accrued 10 days. The carryover policy is set to carryover with
+        a maximum of 5, so only 5 leaves will be carriedover. The remaining days of the allocation
+        will expire.
+
+        If the target date is 01/01/2025, then the expiration date should be 01/01/2026 because 5 of the days
+        accrued on 01/01/2025 will expire on 01/01/2026.
+        """
+        with freeze_time('2024-1-01'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
+                'name': 'Test Accrual Plan',
+                'carryover_date': 'year_start',
+                'level_ids': [
+                    (0, 0, {
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 10,
+                    'added_value_type': 'day',
+                    'frequency': 'yearly',
+                    'yearly_day': 1,
+                    'yearly_month': 'jan',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'maximum',
+                    'postpone_max_days': 5,
+                    })
+                ],
+            })
+
+            logged_in_emp = self.env.user.employee_id
+            allocation = self.env['hr.leave.allocation'].sudo().create({
+                'date_from': date(2024, 1, 1),
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'holiday_status_id': self.leave_type.id,
+                'employee_id': logged_in_emp.id,
+                'number_of_days': 0,
+            })
+
+            target_date = date(2025, 1, 1)
+            allocation_data = self.leave_type.get_allocation_data(allocation.employee_id, target_date)
+            # Assert the date of expiration
+            self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_expire'],
+                        (target_date + relativedelta(years=1)).strftime('%m/%d/%Y'),
+                        "The expiration date should be the carryover date of the year that follows the target date's year")
+
+            # Assert the number of expiring leaves
+            self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'], 5)
+
+    @users('enguerran')
+    def test_expiration_date_2(self):
+        """
         - Define an accrual plan:
             - Carryover date : 1st of September.
             - Carryover with a maximum of 5 days.
