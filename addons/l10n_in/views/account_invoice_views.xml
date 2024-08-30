@@ -13,8 +13,6 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='ref']" position="after">
-                <field name="country_code" invisible="1"/>
-                <field name="l10n_in_journal_type" invisible="1"/>
                 <field name="l10n_in_state_id" domain="[('country_id.code', '=', 'IN')]"
                     options="{'no_create': True, 'no_open': True}"
                     invisible="country_code != 'IN' or move_type == 'entry'"
