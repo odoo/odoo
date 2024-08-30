@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { share } from "./contentshare";
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
@@ -9,16 +8,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         'click #o_wblog_next_container': '_onNextBlogClick',
         'click #o_wblog_post_content_jump': '_onContentAnchorClick',
         'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
-    },
-
-    /**
-     * @override
-     */
-    start: function () {
-        document.querySelectorAll(".js_tweet, .js_comment").forEach((el) => {
-            share(el);
-        });
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
