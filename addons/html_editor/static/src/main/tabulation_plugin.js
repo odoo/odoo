@@ -34,6 +34,7 @@ export class TabulationPlugin extends Plugin {
             { hotkey: "tab", command: "TAB" },
             { hotkey: "shift+tab", command: "SHIFT_TAB" },
         ],
+        isUnsplittable: isEditorTab, // avoid merge
     });
 
     setup() {
