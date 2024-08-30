@@ -280,13 +280,10 @@ class TestAccountMove(TestAccountMoveStockCommon):
             'property_stock_journal': self.stock_journal.id,
         })
 
-        amls = self.env['account.move.line'].search([('product_id', '=', product.id)])
-        if amls[0].account_id == self.stock_valuation_account:
-            stock_valuation_line = amls[0]
-            output_line = amls[1]
-        else:
-            output_line = amls[0]
-            stock_valuation_line = amls[1]
+        amls = self.env['account.move.line'].search([('product_id', '=', product.id)]).sorted(
+            # ensure the aml with the stock_valuation_account is the first one
+            lambda amls: amls.account_id != self.stock_valuation_account
+        )
 
         expected_valuation_line = {
             'account_id': self.stock_valuation_account.id,
@@ -298,10 +295,7 @@ class TestAccountMove(TestAccountMoveStockCommon):
             'credit': 0,
             'debit': product.standard_price,
         }
-        self.assertRecordValues(
-            [stock_valuation_line, output_line],
-            [expected_valuation_line, expected_output_line]
-        )
+        self.assertRecordValues(amls, [expected_valuation_line, expected_output_line])
 
     def test_stock_account_move_automated_not_standard_with_branch_company(self):
         """
