@@ -147,6 +147,23 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner DDD"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-80", "25.00"),
+            ProductScreen.pressNumpad("Qty"),
+            ProductScreen.pressNumpad("1"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
     test: true,
     url: "/pos/web",
