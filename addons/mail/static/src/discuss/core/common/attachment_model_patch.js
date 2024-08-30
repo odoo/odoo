@@ -10,7 +10,7 @@ patch(Attachment.prototype, {
         return super.isDeletable;
     },
     get urlRoute() {
-        if (!this.accessToken && this.thread?.model === "discuss.channel") {
+        if (!this.access_token && this.thread?.model === "discuss.channel") {
             return this.isImage
                 ? `/discuss/channel/${this.thread.id}/image/${this.id}`
                 : `/discuss/channel/${this.thread.id}/attachment/${this.id}`;

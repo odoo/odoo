@@ -394,7 +394,7 @@ export class Message extends Record {
             attachment_ids: attachments.concat(this.attachments).map((attachment) => attachment.id),
             attachment_tokens: attachments
                 .concat(this.attachments)
-                .map((attachment) => attachment.accessToken),
+                .map((attachment) => attachment.access_token),
             body: await prettifyMessageContent(body, validMentions),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),

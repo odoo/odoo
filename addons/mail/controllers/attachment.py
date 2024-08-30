@@ -75,7 +75,7 @@ class AttachmentController(http.Controller):
             # sudo: ir.attachment - posting a new attachment on an accessible thread
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
-            res = {"data": Store(attachment, access_token=True).get_result()}
+            res = {"data": Store(attachment, extra_fields=["access_token"]).get_result()}
         except AccessError:
             res = {"error": _("You are not allowed to upload an attachment here.")}
         return request.make_json_response(res)

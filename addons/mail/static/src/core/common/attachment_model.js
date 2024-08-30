@@ -64,7 +64,7 @@ export class Attachment extends FileModelMixin(Record) {
         if (this.id > 0) {
             await rpc(
                 "/mail/attachment/delete",
-                assignDefined({ attachment_id: this.id }, { access_token: this.accessToken })
+                assignDefined({ attachment_id: this.id }, { access_token: this.access_token })
             );
         }
         this.delete();
