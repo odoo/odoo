@@ -27,7 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '1101020',
                 'cash_account_code_prefix': '1101010',
                 'transfer_account_code_prefix': '1101030',
-                'account_default_pos_receivable_account_id': 'ec1102050101',
+                'account_default_pos_receivable_account_id': 'ec1102050103',
                 'income_currency_exchange_account_id': 'ec430501',
                 'expense_currency_exchange_account_id': 'ec520304',
                 'account_journal_early_pay_discount_loss_account_id': 'ec_early_pay_discount_loss',
