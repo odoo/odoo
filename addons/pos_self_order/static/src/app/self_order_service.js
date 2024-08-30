@@ -19,7 +19,6 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
-import { categorySorter } from "./utils";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -185,9 +184,8 @@ export class SelfOrder extends Reactive {
         now = now.hour + now.minute / 60;
         const prodByCategIds = this.productByCategIds;
         const availableCategories = this.productCategories
-            .sort((a, b) => a.sequence - b.sequence)
             .filter((c) => prodByCategIds[c.id])
-            .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id));
+            .sort((a, b) => a.sequence - b.sequence);
 
         this.categoryList = new Set(availableCategories);
         this.availableCategories = availableCategories.filter((c) => {
