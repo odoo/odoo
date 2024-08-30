@@ -248,14 +248,10 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                 # validate the views that have not been checked yet
                 env['ir.ui.view']._validate_module_views(module_name)
 
-            # need to commit any modification the module's installation or
-            # update made to the schema or data so the tests can run
-            # (separately in their own transaction)
-            env.cr.commit()
             concrete_models = [model for model in model_names if not registry[model]._abstract]
             if concrete_models:
                 env.cr.execute("""
-                    SELECT model FROM ir_model 
+                    SELECT model FROM ir_model
                     WHERE id NOT IN (SELECT DISTINCT model_id FROM ir_model_access) AND model IN %s
                 """, [tuple(concrete_models)])
                 models = [model for [model] in env.cr.fetchall()]
@@ -273,6 +269,9 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
         test_time = test_queries = 0
         test_results = None
         if tools.config.options['test_enable'] and (needs_update or not updating):
+            # commit any modification the module's installation or upgrade made
+            # to the database so the tests can see them in their own transaction
+            env.cr.commit()
             loader = odoo.tests.loader
             suite = loader.make_suite([module_name], 'at_install')
             if suite.countTestCases():
