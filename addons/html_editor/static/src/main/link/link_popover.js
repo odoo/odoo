@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { Component, useState, onMounted, useExternalListener, useRef } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 
@@ -63,7 +63,7 @@ export class LinkPopover extends Component {
         this.http = useService("http");
 
         this.editingWrapper = useRef("editing-wrapper");
-
+        useAutofocus({ refName: this.state.label === "" ? "label" : "url", mobile: true });
         onMounted(() => {
             if (!this.state.editing) {
                 this.loadAsyncLinkPreview();

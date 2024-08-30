@@ -1,21 +1,23 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, tick } from "@odoo/hoot-mock";
-import { setContent, getContent, setSelection } from "../_helpers/selection";
-import { setupEditor } from "../_helpers/editor";
 import {
-    waitUntil,
-    waitFor,
     click,
-    queryOne,
+    fill,
+    getActiveElement,
     press,
-    select,
-    queryText,
     queryAllTexts,
+    queryOne,
+    queryText,
+    select,
+    waitFor,
+    waitUntil,
 } from "@odoo/hoot-dom";
-import { insertText, splitBlock, insertLineBreak } from "../_helpers/user_actions";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { cleanLinkArtifacts } from "../_helpers/format";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { setupEditor } from "../_helpers/editor";
+import { cleanLinkArtifacts } from "../_helpers/format";
+import { getContent, setContent, setSelection } from "../_helpers/selection";
+import { insertLineBreak, insertText, splitBlock } from "../_helpers/user_actions";
 
 describe("should open a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
@@ -227,6 +229,9 @@ describe("Link creation", () => {
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
+            expect(getActiveElement()).toBe(queryOne(".o-we-linkpopover input.o_we_label_link"), {
+                message: "should focus label input by default, when we don't have a label",
+            });
         });
 
         test("when create a new link by powerbox and not input anything, the link should be removed", async () => {
@@ -236,7 +241,7 @@ describe("Link creation", () => {
             click(".o-we-command-name:first");
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a></a></p>");
 
             const pNode = queryOne("p");
             setSelection({
@@ -344,6 +349,21 @@ describe("Link creation", () => {
             click(".o-we-toolbar .fa-link");
             await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>H<a href="#">el[]</a>lo</p>');
+        });
+        test("when you open link popover with a label, url input should be focus by default ", async () => {
+            const { el } = await setupEditor("<p>[Hello]</p>");
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover");
+            expect(getActiveElement()).toBe(
+                queryOne(".o-we-linkpopover input.o_we_href_input_link")
+            );
+
+            fill("test.com");
+            click(".o_we_apply_link");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="http://test.com">Hello[]</a></p>'
+            );
         });
         test("should be correctly unlink/link", async () => {
             const { el } = await setupEditor('<p>aaaa[b<a href="http://test.com/">cd</a>e]f</p>');

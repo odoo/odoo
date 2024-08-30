@@ -5,10 +5,10 @@
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper"  data-prevent-closing-overlay="true">
                 <div class="col p-2" style="max-width: 250px;">
                     <div class="input-group mb-1">
-                        <input class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Type your link label"/>
+                        <input t-ref="label" class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Type your link label"/>
                     </div>
                     <div class="input-group mb-1">
-                        <input class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                        <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
                     </div>
                     <div class="input-group" t-on-change="onChangeClasses">
                         <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
