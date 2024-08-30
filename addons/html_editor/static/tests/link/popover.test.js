@@ -5,6 +5,7 @@ import {
     getActiveElement,
     press,
     queryAllTexts,
+    queryFirst,
     queryOne,
     queryText,
     select,
@@ -17,7 +18,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
-import { insertLineBreak, insertText, splitBlock } from "../_helpers/user_actions";
+import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
 
 describe("should open a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
@@ -444,6 +445,33 @@ describe("Link creation", () => {
             await waitFor(".o-we-linkpopover");
             expect(".o_we_label_link").toHaveValue("st m");
             expect(".o_we_href_input_link").toHaveValue("");
+        });
+        test("create a link and undo it", async () => {
+            const { el, editor } = await setupEditor("<p>[Hello]</p>");
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">Hello[]</a></p>');
+
+            undo(editor);
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[]Hello</p>");
+        });
+        test("extend a link on selection and undo it", async () => {
+            const { el, editor } = await setupEditor(
+                `<p>[<a href="https://www.test.com">Hello</a> my friend]</p>`
+            );
+            await waitFor(".o-we-toolbar");
+            click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover");
+            expect(queryFirst(".o-we-linkpopover a").href).toBe("https://www.test.com/");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                `<p><a href="https://www.test.com">Hello my friend[]</a></p>`
+            );
+
+            undo(editor);
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                `<p><a href="https://www.test.com">Hello[]</a> my friend</p>`
+            );
         });
     });
 });
