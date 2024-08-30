@@ -3,6 +3,7 @@ import {
     MAIN_PLUGINS,
     DYNAMIC_PLACEHOLDER_PLUGINS,
 } from "@html_editor/plugin_sets";
+import { decodeHTMLEntities } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, status, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
@@ -137,12 +138,11 @@ export class HtmlField extends Component {
                 await this.updateValue(this.codeViewRef.el.value);
                 return;
             }
-
             if (urgent) {
-                await this.updateValue(this.editor.getContent());
+                await this.updateValue(decodeHTMLEntities(this.editor.getContent()));
             }
             const el = await this.getEditorContent();
-            const content = el.innerHTML;
+            const content = decodeHTMLEntities(el.innerHTML);
             if (!urgent || (urgent && this.lastValue !== content)) {
                 await this.updateValue(content);
             }
