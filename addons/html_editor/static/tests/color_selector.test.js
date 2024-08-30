@@ -147,7 +147,7 @@ test("select hex color and apply it", async () => {
 });
 
 test("always show the current custom color", async () => {
-    await setupEditor(`<p>[test]</p>`);
+    const { el } = await setupEditor(`<p>[test]</p>`);
     await waitFor(".o-we-toolbar");
     click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
@@ -157,8 +157,9 @@ test("always show the current custom color", async () => {
     click(".o_hex_input");
     await animationFrame();
     expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(1);
+    const defaultTextColor = getComputedStyle(el.querySelector("p")).color;
     expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
-        "rgb(55, 65, 81)",
+        defaultTextColor,
         { message: "backgroundColor is the default black" }
     );
 
