@@ -287,7 +287,7 @@ class Cloc(object):
         self.count_customization(env)
 
     def count_database(self, database):
-        registry = odoo.registry(config['db_name'])
+        registry = odoo.modules.registry.Registry(config['db_name'])
         with registry.cursor() as cr:
             uid = odoo.SUPERUSER_ID
             env = odoo.api.Environment(cr, uid, {})

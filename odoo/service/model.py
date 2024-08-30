@@ -12,6 +12,7 @@ import odoo
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.models import check_method_name
+from odoo.modules.registry import Registry
 from odoo.tools import DotDict
 from odoo.tools.translate import _, translate_sql_constraint
 from . import security
@@ -30,7 +31,7 @@ def dispatch(method, params):
 
     threading.current_thread().dbname = db
     threading.current_thread().uid = uid
-    registry = odoo.registry(db).check_signaling()
+    registry = Registry(db).check_signaling()
     with registry.manage_changes():
         if method == 'execute':
             res = execute(db, uid, *params[3:])
@@ -62,7 +63,7 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 
 def execute(db, uid, obj, method, *args, **kw):
     # TODO could be conditionnaly readonly as in _call_kw_readonly
-    with odoo.registry(db).cursor() as cr:
+    with Registry(db).cursor() as cr:
         check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:

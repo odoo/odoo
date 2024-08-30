@@ -1710,7 +1710,8 @@ def _get_translation_upgrade_queries(cr, field):
     field's column, while the queries in ``cleanup_queries`` remove the corresponding data from
     table ``_ir_translation``.
     """
-    Model = odoo.registry(cr.dbname)[field.model_name]
+    from odoo.modules.registry import Registry  # noqa: PLC0415
+    Model = Registry(cr.dbname)[field.model_name]
     translation_name = f"{field.model_name},{field.name}"
     migrate_queries = []
     cleanup_queries = []

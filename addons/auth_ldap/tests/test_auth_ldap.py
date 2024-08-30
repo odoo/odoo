@@ -13,7 +13,7 @@ class TestAuthLDAP(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.registry = odoo.registry(get_db_name())
+        cls.registry = Registry(get_db_name())
 
     def setUp(self):
         super().setUp()

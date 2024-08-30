@@ -14,8 +14,9 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models, modules, registry, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
 _UNFOLLOW_REGEX = re.compile(r'<span id="mail_unfollow".*?<\/span>', re.DOTALL)
@@ -591,7 +592,7 @@ class MailMail(models.Model):
 
         @self.env.cr.postcommit.add
         def send_emails_with_new_cursor():
-            db_registry = registry(dbname)
+            db_registry = Registry(dbname)
             with db_registry.cursor() as cr:
                 env = api.Environment(cr, SUPERUSER_ID, _context)
                 env['mail.mail'].browse(email_ids).send()

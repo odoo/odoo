@@ -3,7 +3,8 @@
 
 from odoo.exceptions import AccessDenied
 
-from odoo import api, models, registry, SUPERUSER_ID
+from odoo import api, models, SUPERUSER_ID
+from odoo.modules.registry import Registry
 
 
 class Users(models.Model):
@@ -14,7 +15,7 @@ class Users(models.Model):
         try:
             return super()._login(db, credential, user_agent_env=user_agent_env)
         except AccessDenied as e:
-            with registry(db).cursor() as cr:
+            with Registry(db).cursor() as cr:
                 login = credential['login']
                 cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
                 res = cr.fetchone()

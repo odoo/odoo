@@ -8,18 +8,20 @@ import psycopg2.errors
 
 import odoo
 from odoo.exceptions import UserError
+from odoo.modules.registry import Registry
 from odoo.tests import common
 from odoo.tests.common import BaseCase
 from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
+
 @contextmanager
 def environment():
     """ Return an environment with a new cursor for the current database; the
         cursor is committed and closed after the context block.
     """
-    registry = odoo.registry(common.get_db_name())
+    registry = Registry(common.get_db_name())
     with registry.cursor() as cr:
         yield odoo.api.Environment(cr, ADMIN_USER_ID, {})
 

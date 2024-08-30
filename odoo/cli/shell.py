@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import odoo
+from odoo.modules.registry import Registry
 from odoo.tools import config
 from . import Command
 
@@ -106,7 +107,7 @@ class Shell(Command):
             'odoo': odoo,
         }
         if dbname:
-            registry = odoo.registry(dbname)
+            registry = Registry(dbname)
             with registry.cursor() as cr:
                 uid = odoo.SUPERUSER_ID
                 ctx = odoo.api.Environment(cr, uid, {})['res.users'].context_get()

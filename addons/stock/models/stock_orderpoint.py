@@ -8,9 +8,10 @@ from datetime import datetime, time
 from dateutil import relativedelta
 from psycopg2 import OperationalError
 
-from odoo import SUPERUSER_ID, _, api, fields, models, registry
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, frozendict, split_every
 
@@ -600,7 +601,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
-                cr = registry(self._cr.dbname).cursor()
+                cr = Registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             try:
                 orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch_ids)

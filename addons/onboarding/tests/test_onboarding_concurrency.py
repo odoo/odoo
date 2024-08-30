@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 import psycopg2.errors
 
 import odoo
+from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged, BaseCase
 from odoo.tools import mute_logger
 
@@ -17,7 +18,7 @@ class TestOnboardingConcurrency(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.registry = odoo.registry(get_db_name())
+        cls.registry = Registry(get_db_name())
         cls.addClassCleanup(cls.cleanUpClass)
 
         with cls.registry.cursor() as cr:

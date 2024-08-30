@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, registry
+from odoo import models
 from odoo.api import Environment
 from odoo.fields import Datetime
 from odoo.http import request
+from odoo.modules.registry import Registry
 from odoo.addons.bus.websocket import wsrequest
 
 class IrWebsocket(models.AbstractModel):
@@ -23,6 +24,6 @@ class IrWebsocket(models.AbstractModel):
                 ('ip', '=', ip_address),
                 ('create_date', '>=', Datetime.to_string(Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)))])
             if not users_log:
-                with registry(req.env.cr.dbname).cursor() as cr:
+                with Registry(req.env.cr.dbname).cursor() as cr:
                     env = Environment(cr, req.env.user.id, {})
                     env['res.users.log'].sudo().create({'ip': ip_address})

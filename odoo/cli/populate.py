@@ -10,6 +10,8 @@ from unittest.mock import patch
 import odoo
 
 from . import Command
+from odoo.modules.registry import Registry
+
 _logger = logging.getLogger(__name__)
 
 
@@ -38,7 +40,7 @@ class Populate(Command):
         opt = odoo.tools.config.parse_config(cmdargs)
         populate_models = opt.populate_models and set(opt.populate_models.split(','))
         dbname = odoo.tools.config['db_name']
-        registry = odoo.registry(dbname)
+        registry = Registry(dbname)
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
             self.populate(
