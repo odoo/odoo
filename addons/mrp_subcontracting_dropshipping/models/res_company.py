@@ -73,14 +73,14 @@ class ResCompany(models.Model):
     def _create_missing_subcontracting_dropshipping_rules(self):
         route = self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
         company_ids = self.env['res.company'].search([])
-        company_has_rules = self.env['stock.rule'].search([('route_id', '=', route.id)]).mapped('company_id')
+        company_has_rules = self.env['stock.rule'].search([('route_id', '=', route.id)]).company_id
         company_todo_rules = company_ids - company_has_rules
         company_todo_rules._create_subcontracting_dropshipping_rules()
 
     @api.model
     def _create_missing_subcontracting_dropshipping_sequence(self):
         company_ids = self.env['res.company'].search([])
-        company_has_seq = self.env['ir.sequence'].search([('code', '=', 'mrp.subcontracting.dropshipping')]).mapped('company_id')
+        company_has_seq = self.env['ir.sequence'].search([('code', '=', 'mrp.subcontracting.dropshipping')]).company_id
         company_todo_sequence = company_ids - company_has_seq
         company_todo_sequence._create_subcontracting_dropshipping_sequence()
 
@@ -90,7 +90,7 @@ class ResCompany(models.Model):
         company_has_dropship_subcontractor_picking_type = self.env['stock.picking.type'].search([
             ('default_location_src_id.usage', '=', 'supplier'),
             ('default_location_dest_id', 'in', company_ids.subcontracting_location_id.ids),
-        ]).mapped('company_id')
+        ]).company_id
         company_todo_picking_type = company_ids - company_has_dropship_subcontractor_picking_type
         company_todo_picking_type._create_subcontracting_dropshipping_picking_type()
 

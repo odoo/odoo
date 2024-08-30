@@ -133,7 +133,7 @@ class ResCompany(models.Model):
             sales_tax_accounts = self.env['account.tax'].search([
                     *self.env['account.tax']._check_company_domain(self),
                     ('type_tax_use', '=', 'sale'),
-                ]).invoice_repartition_line_ids.mapped('account_id')
+                ]).invoice_repartition_line_ids.account_id
             if not sales_tax_accounts:
                 return False
             new_code = self.env['account.account'].with_company(self)._search_new_account_code(sales_tax_accounts[0].with_company(self).code)

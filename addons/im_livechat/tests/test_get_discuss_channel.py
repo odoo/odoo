@@ -20,7 +20,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         for _i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
             channel_operator_ids = [channel_info['operator']['id'] for channel_info in discuss_channels]
-            self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
+            self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.partner_id.ids))
 
     def test_channel_get_livechat_visitor_info(self):
         self.maxDiff = None

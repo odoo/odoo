@@ -66,7 +66,7 @@ class MailingSMSController(http.Controller):
                     ('contact_id.phone_sanitized', '=', tocheck_number),
                 ])
                 subscriptions.write({'opt_out': True})
-                lists_optout = subscriptions.mapped('list_id')
+                lists_optout = subscriptions.list_id
             else:
                 blacklist_rec = request.env['phone.blacklist'].sudo().add(tocheck_number)
                 blacklist_rec._message_log(
@@ -76,7 +76,7 @@ class MailingSMSController(http.Controller):
                 ('contact_id.phone_sanitized', '=', tocheck_number),
                 ('list_id', 'not in', mailing_list_ids.ids),
                 ('opt_out', '=', False),
-            ]).mapped('list_id')
+            ]).list_id
         elif tocheck_number:
             unsubscribe_error = _('Number %s not found', tocheck_number)
         else:

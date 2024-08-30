@@ -1910,7 +1910,7 @@ class TestStockFlow(TestStockCommon):
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
 
         self.assertEqual(incoming_picking.company_id, self.env.company)
-        self.assertEqual(incoming_picking.move_ids.mapped('company_id'), self.env.company)
+        self.assertEqual(incoming_picking.move_ids.company_id, self.env.company)
         self.assertEqual(outgoing_picking.company_id, company_2)
         self.assertEqual(outgoing_picking.move_ids.company_id, company_2)
 
@@ -1918,7 +1918,7 @@ class TestStockFlow(TestStockCommon):
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_3.out_type_id.id)])
 
         self.assertEqual(incoming_picking.company_id, self.env.company)
-        self.assertEqual(incoming_picking.move_ids.mapped('company_id'), self.env.company)
+        self.assertEqual(incoming_picking.move_ids.company_id, self.env.company)
         self.assertEqual(outgoing_picking.company_id, company_3)
         self.assertEqual(outgoing_picking.move_ids.company_id, company_3)
 

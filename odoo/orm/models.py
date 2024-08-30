@@ -6403,10 +6403,8 @@ class BaseModel(metaclass=MetaModel):
             if "." not in func:
                 # simple field name, just use the field getter
                 field = self._fields[func]
-                if field.compute and field.store:
-                    # process pending computations in batch
-                    field.recompute(self)
-                func = field.__get__
+                mapped_values = field.mapped_cache(self)
+                return list(itertools.starmap(field.convert_to_record, zip(mapped_values, self)))
             else:
                 # a path, cache all values and then function maps each record
                 # to the followed path; if there are x2many fields, used mapped
@@ -6449,12 +6447,10 @@ class BaseModel(metaclass=MetaModel):
                 mapped_values = self.mapped(func)
                 return self.browse(rec.id for rec, value in zip(self, mapped_values) if value)
             if not func:  # support for an empty path of fields
-                return self
+                return self.with_prefetch()  # break prefetch
             field = self._fields[func]
-            if field.compute and field.store:
-                # process pending computations in batch
-                field.recompute(self)
-            func = field.__get__
+            mapped_values = field.mapped_cache(self)
+            return self.browse(rec.id for rec, value in zip(self, mapped_values) if field.convert_to_record(value, rec))
         return self.browse(rec.id for rec in self if func(rec))
 
     def grouped(self, key):
@@ -6587,7 +6583,8 @@ class BaseModel(metaclass=MetaModel):
                 is_any = comparator in ('any', 'not any')
                 for record, data in zip(self, record_data):
                     if is_any:
-                        assert isinstance(data, BaseModel)
+                        if not isinstance(data, BaseModel):
+                            raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' is not relational.")
                         if bool(data.filtered_domain(value)) == (comparator == 'any'):
                             matching_ids.add(record.id)
                         continue

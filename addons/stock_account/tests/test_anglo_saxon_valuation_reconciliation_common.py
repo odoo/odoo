@@ -92,7 +92,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
 
         stock_moves = picking.move_ids
 
-        valuation_line = stock_moves.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
+        valuation_line = stock_moves.account_move_ids.line_ids.filtered(lambda x: x.account_id.id == interim_account_id)
 
         if invoice.is_purchase_document() and any(l.display_type == 'cogs' for l in invoice_line):
             self.assertEqual(len(invoice_line), 2, "Only two line2 should have been written by invoice in stock input account")

@@ -54,7 +54,7 @@ class WebsiteVisitor(models.Model):
         if unavailable_visitors_count:
             raise UserError(_('Recipients are not available. Please refresh the page to get latest visitors status.'))
         # check if user is available as operator
-        for website in self.mapped('website_id'):
+        for website in self.website_id:
             if not website.channel_id:
                 raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.', website.name))
         self.website_id.channel_id.write({'user_ids': [(4, self.env.user.id)]})

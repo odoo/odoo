@@ -72,7 +72,7 @@ class TestSMSSchedule(EventCase, SMSCase):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(sub_scheduler.mail_registration_ids), 3)
         self.assertTrue(all(m.mail_sent is True for m in sub_scheduler.mail_registration_ids))
-        self.assertEqual(sub_scheduler.mapped('mail_registration_ids.registration_id'), test_event.registration_ids)
+        self.assertEqual(sub_scheduler.mail_registration_ids.registration_id, test_event.registration_ids)
 
         sanitized_numbers = []
         for registration in test_event.registration_ids:

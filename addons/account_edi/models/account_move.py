@@ -265,7 +265,7 @@ class AccountMove(models.Model):
         """
         for move in self:
             to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
-            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
+            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.edi_format_id.mapped('name'))))
         self.button_cancel()
 
     def button_cancel(self):

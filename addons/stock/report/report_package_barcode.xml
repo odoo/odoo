@@ -191,7 +191,7 @@
 </template>
 
 <template id="report_picking_packages">
-    <t t-set="docs" t-value="docs.move_line_ids.mapped('result_package_id')"/>
+    <t t-set="docs" t-value="docs.move_line_ids.result_package_id"/>
     <t t-call="stock.report_package_barcode"/>
 </template>
 </data>

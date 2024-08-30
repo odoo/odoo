@@ -9,6 +9,6 @@ class PosOrder(models.Model):
         bank_partner_id = super()._get_partner_bank_id()
         swiss_order = self.filtered(lambda o: o.company_id.country_code == 'CH')
         if swiss_order:
-            has_pay_later = any(not pm.journal_id for pm in swiss_order.payment_ids.mapped('payment_method_id'))
+            has_pay_later = any(not pm.journal_id for pm in swiss_order.payment_ids.payment_method_id)
             bank_partner_id = bank_partner_id if has_pay_later else False
         return bank_partner_id

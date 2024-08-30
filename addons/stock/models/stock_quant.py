@@ -824,7 +824,7 @@ class StockQuant(models.Model):
             else:
                 return available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
         else:
-            availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
+            availaible_quantities = dict.fromkeys(list(set(quants.lot_id)) + ['untracked'], 0.0)
             for quant in quants:
                 if not quant.lot_id and strict and lot_id:
                     continue
@@ -1018,7 +1018,7 @@ class StockQuant(models.Model):
         moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
         moves._action_done()
         self.location_id.write({'last_inventory_date': fields.Date.today()})
-        date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
+        date_by_location = {loc: loc._get_next_inventory_date() for loc in self.location_id}
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
         self.write({'inventory_quantity': 0, 'user_id': False})
@@ -1452,7 +1452,7 @@ class StockQuant(models.Model):
                                                      ('quantity', '!=', 0),
                                                      '|', ('location_id.usage', '=', 'customer'),
                                                            *internal_domain])
-            sn_locations = quants.mapped('location_id')
+            sn_locations = quants.location_id
             if quants:
                 if not source_location_id:
                     # trying to assign an already existing SN
@@ -1604,7 +1604,7 @@ class StockQuantPackage(models.Model):
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
         domain = ['|', ('result_package_id', 'in', self.ids), ('package_id', 'in', self.ids)]
-        pickings = self.env['stock.move.line'].search(domain).mapped('picking_id')
+        pickings = self.env['stock.move.line'].search(domain).picking_id
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 

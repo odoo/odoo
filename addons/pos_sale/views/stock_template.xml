@@ -3,7 +3,7 @@
     <template id="message_body" inherit_id="stock.message_body">
         <xpath expr="//t[contains(@t-if, 'move.state')]" position="inside">
             <t groups="point_of_sale.group_pos_user">
-                <t t-set="pos_orders" t-value="move.sale_line_id.pos_order_line_ids.mapped('order_id')" />
+                <t t-set="pos_orders" t-value="move.sale_line_id.pos_order_line_ids.order_id" />
                 <t t-if="len(pos_orders)">
                     <li>
                         Delivered from

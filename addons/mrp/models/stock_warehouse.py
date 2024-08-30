@@ -264,12 +264,12 @@ class StockWarehouse(models.Model):
 
     def _get_all_routes(self):
         routes = super(StockWarehouse, self)._get_all_routes()
-        routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).mapped('manufacture_pull_id').mapped('route_id')
+        routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).manufacture_pull_id.route_id
         return routes
 
     def _update_location_manufacture(self, new_manufacture_step):
-        self.mapped('pbm_loc_id').write({'active': new_manufacture_step != 'mrp_one_step'})
-        self.mapped('sam_loc_id').write({'active': new_manufacture_step == 'pbm_sam'})
+        self.pbm_loc_id.write({'active': new_manufacture_step != 'mrp_one_step'})
+        self.sam_loc_id.write({'active': new_manufacture_step == 'pbm_sam'})
 
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)

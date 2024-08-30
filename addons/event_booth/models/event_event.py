@@ -81,9 +81,9 @@ class EventEvent(models.Model):
     @api.depends('event_booth_ids.booth_category_id')
     def _compute_event_booth_category_ids(self):
         for event in self:
-            event.event_booth_category_ids = event.event_booth_ids.mapped('booth_category_id')
+            event.event_booth_category_ids = event.event_booth_ids.booth_category_id
 
     @api.depends('event_booth_ids.is_available')
     def _compute_event_booth_category_available_ids(self):
         for event in self:
-            event.event_booth_category_available_ids = event.event_booth_ids.filtered(lambda booth: booth.is_available).mapped('booth_category_id')
+            event.event_booth_category_available_ids = event.event_booth_ids.filtered(lambda booth: booth.is_available).booth_category_id

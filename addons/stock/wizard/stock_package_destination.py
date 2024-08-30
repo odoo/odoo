@@ -24,7 +24,7 @@ class StockPackageDestination(models.TransientModel):
     @api.depends('move_line_ids')
     def _filter_location(self):
         for destination in self:
-            destination.filtered_location = destination.move_line_ids.mapped('location_dest_id')
+            destination.filtered_location = destination.move_line_ids.location_dest_id
 
     def action_done(self):
         # set the same location on each move line and pass again in action_put_in_pack

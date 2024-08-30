@@ -88,7 +88,7 @@ class TestCRMPLS(TransactionCase):
         """
         # Set the PLS config
         frequency_fields = self.env['crm.lead.scoring.frequency.field'].search([])
-        pls_fields_str = ','.join(frequency_fields.mapped('field_id.name'))
+        pls_fields_str = ','.join(frequency_fields.field_id.mapped('name'))
         pls_start_date_str = "2021-01-01"
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
         IrConfigSudo.set_param("crm.pls_start_date", pls_start_date_str)
@@ -96,7 +96,7 @@ class TestCRMPLS(TransactionCase):
 
         date_to_update = "2021-02-02"
         fields_to_remove = frequency_fields.filtered(lambda f: f.field_id.name in ['source_id', 'lang_id'])
-        fields_after_updation_str = ','.join((frequency_fields - fields_to_remove).mapped('field_id.name'))
+        fields_after_updation_str = ','.join((frequency_fields - fields_to_remove).field_id.mapped('name'))
 
         # Check that wizard to update lead probabilities has correct value set by default
         pls_update_wizard = Form(self.env['crm.lead.pls.update'])

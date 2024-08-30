@@ -261,7 +261,7 @@ class PosOrder(models.Model):
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-            .mapped('picking_ids.move_ids')\
+            .picking_ids.move_ids\
             ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
         price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
@@ -352,7 +352,7 @@ class PosOrder(models.Model):
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
         for order in self:
-            order.refund_orders_count = len(order.mapped('lines.refund_orderline_ids.order_id'))
+            order.refund_orders_count = len(order.lines.refund_orderline_ids.order_id)
             order.refunded_order_id = order.lines.refunded_orderline_id.order_id
 
     @api.depends('lines.refunded_qty', 'lines.qty')
@@ -634,7 +634,7 @@ class PosOrder(models.Model):
             'view_mode': 'list,form',
             'res_model': 'pos.order',
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
+            'domain': [('id', 'in', self.lines.refund_orderline_ids.order_id.ids)],
         }
 
     def _is_pos_order_paid(self):
@@ -1016,7 +1016,7 @@ class PosOrder(models.Model):
         if receivable_account.reconcile:
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
-                payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
+                payment_receivables = payment_moves.line_ids.filtered(lambda line: line.account_id == receivable_account and line.partner_id)
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
@@ -1067,7 +1067,7 @@ class PosOrder(models.Model):
     @api.model
     def _get_refunded_orders(self, order):
         refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
-        return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
+        return self.env['pos.order.line'].browse(refunded_orderline_ids).order_id
 
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
@@ -1204,8 +1204,7 @@ class PosOrder(models.Model):
             })
             attachment += [(4, basic_receipt.id)]
 
-
-        if self.mapped('account_move'):
+        if self.account_move:
             report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
             filename = name + '.pdf'
             invoice = self.env['ir.attachment'].create({
@@ -1236,7 +1235,7 @@ class PosOrder(models.Model):
         orders = self.search([('id', 'in', server_ids), ('state', '=', 'draft')])
         orders.write({'state': 'cancel'})
         # TODO Looks like delete cascade is a better solution.
-        orders.mapped('payment_ids').sudo().unlink()
+        orders.payment_ids.sudo().unlink()
         orders.sudo().unlink()
         return orders.ids
 
@@ -1348,7 +1347,7 @@ class PosOrderLine(models.Model):
     @api.depends('refund_orderline_ids')
     def _compute_refund_qty(self):
         for orderline in self:
-            orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
+            orderline.refunded_qty = -sum(orderline.refund_orderline_ids.mapped('qty'))
 
     def _prepare_refund_data(self, refund_order, PosPackOperationLot):
         """
@@ -1531,7 +1530,7 @@ class PosOrderLine(models.Model):
             self.env['procurement.group'].run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
-        orders = self.mapped('order_id')
+        orders = self.order_id
         for order in orders:
             pickings_to_confirm = order.picking_ids
             if pickings_to_confirm:

@@ -57,7 +57,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        self.line_ids.filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
     def button_cancel(self):
@@ -67,7 +67,7 @@ class AccountMove(models.Model):
         # Unlink the COGS lines generated during the 'post' method.
         # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
         # However, since it can be called in RPC, better be safe.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        self.line_ids.filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
     # -------------------------------------------------------------------------
@@ -199,7 +199,7 @@ class AccountMove(models.Model):
             if not stock_moves:
                 continue
 
-            products = product or move.mapped('invoice_line_ids.product_id')
+            products = product or move.invoice_line_ids.product_id
             for prod in products:
                 if prod.valuation != 'real_time':
                     continue

@@ -19,7 +19,7 @@ class PosConfig(models.Model):
         open_configs = (
             self.env['pos.session']
             .search(['|', ('state', '!=', 'closed'), ('rescue', '=', True)])
-            .mapped('config_id')
+            .config_id
         )
         # Do not modify configs where an opened session exists.
         product = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
@@ -35,4 +35,4 @@ class PosConfig(models.Model):
     def _get_special_products(self):
         res = super()._get_special_products()
         default_discount_product = self.env.ref('pos_discount.product_product_consumable', raise_if_not_found=False) or self.env['product.product']
-        return res | self.env['pos.config'].search([]).mapped('discount_product_id') | default_discount_product
+        return res | self.env['pos.config'].search([]).discount_product_id | default_discount_product

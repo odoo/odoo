@@ -8,10 +8,10 @@ from . import controllers
 
 def uninstall_hook(env):
     warehouses = env["stock.warehouse"].search([])
-    subcontracting_routes = warehouses.mapped("subcontracting_route_id")
+    subcontracting_routes = warehouses.subcontracting_route_id
     warehouses.write({"subcontracting_route_id": False})
     companies = env["res.company"].search([])
-    subcontracting_locations = companies.mapped("subcontracting_location_id")
+    subcontracting_locations = companies.subcontracting_location_id
     subcontracting_locations.active = False
     companies.write({"subcontracting_location_id": False})
     operations_type_to_remove = (warehouses.subcontracting_resupply_type_id | warehouses.subcontracting_type_id)

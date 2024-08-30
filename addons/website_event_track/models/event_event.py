@@ -53,7 +53,7 @@ class EventEvent(models.Model):
     @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
     def _compute_tracks_tag_ids(self):
         for event in self:
-            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
+            event.tracks_tag_ids = event.track_ids.tag_ids.filtered(lambda tag: tag.color != 0).ids
 
     # ------------------------------------------------------------
     # WEBSITE MENU MANAGEMENT

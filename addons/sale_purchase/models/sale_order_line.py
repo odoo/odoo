@@ -88,7 +88,7 @@ class SaleOrderLine(models.Model):
         for purchase_order, sale_lines in purchase_to_notify_map.items():
             render_context = {
                 'sale_lines': sale_lines,
-                'sale_orders': sale_lines.mapped('order_id'),
+                'sale_orders': sale_lines.order_id,
                 'origin_values': origin_values,
             }
             purchase_order._activity_schedule_with_view('mail.mail_activity_data_warning',

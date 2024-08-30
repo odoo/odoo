@@ -62,11 +62,11 @@ class StockMoveLine(models.Model):
         lines = super(StockMoveLine, self)._get_similar_move_lines()
         if self.move_id.production_id:
             finished_moves = self.move_id.production_id.move_finished_ids
-            finished_move_lines = finished_moves.mapped('move_line_ids')
+            finished_move_lines = finished_moves.move_line_ids
             lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         if self.move_id.raw_material_production_id:
             raw_moves = self.move_id.raw_material_production_id.move_raw_ids
-            raw_moves_lines = raw_moves.mapped('move_line_ids')
+            raw_moves_lines = raw_moves.move_line_ids
             lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
@@ -547,7 +547,7 @@ class StockMove(models.Model):
     def _action_cancel(self):
         res = super(StockMove, self)._action_cancel()
         if not 'skip_mo_check' in self.env.context:
-            mo_to_cancel = self.mapped('raw_material_production_id').filtered(lambda p: all(m.state == 'cancel' for m in p.move_raw_ids))
+            mo_to_cancel = self.raw_material_production_id.filtered(lambda p: all(m.state == 'cancel' for m in p.move_raw_ids))
             if mo_to_cancel:
                 mo_to_cancel._action_cancel()
         return res
@@ -594,8 +594,8 @@ class StockMove(models.Model):
             'reservation_date': self.reservation_date,
             'date_deadline': self.date_deadline,
             'manual_consumption': self._is_manual_consumption(),
-            'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
-            'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
+            'move_orig_ids': [Command.link(m.id) for m in self.move_orig_ids],
+            'move_dest_ids': [Command.link(m.id) for m in self.move_dest_ids],
             'procure_method': self.procure_method,
         }
 
@@ -696,9 +696,9 @@ class StockMove(models.Model):
 
     def _update_candidate_moves_list(self, candidate_moves_set):
         super()._update_candidate_moves_list(candidate_moves_set)
-        for production in self.mapped('raw_material_production_id'):
+        for production in self.raw_material_production_id:
             candidate_moves_set.add(production.move_raw_ids.filtered(lambda m: m.product_id in self.product_id))
-        for production in self.mapped('production_id'):
+        for production in self.production_id:
             candidate_moves_set.add(production.move_finished_ids.filtered(lambda m: m.product_id in self.product_id))
         # this will include sibling pickings as a result of merging MOs
         for picking in self.move_dest_ids.raw_material_production_id.picking_ids:

@@ -167,7 +167,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po._send_reminder_mail()
         messages_send = po.message_ids - old_messages
         self.assertTrue(messages_send)
-        self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
+        self.assertTrue(po.partner_id in messages_send.partner_ids)
 
         # check confirm button + date planned localized in message
         old_messages = po.message_ids
@@ -573,7 +573,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
         po.button_confirm()
 
-        self.assertEqual(po.order_line.product_id.seller_ids.mapped('partner_id'), delivery_address)
+        self.assertEqual(po.order_line.product_id.seller_ids.partner_id, delivery_address)
 
     def test_supplier_list_in_product_with_multicompany(self):
         """

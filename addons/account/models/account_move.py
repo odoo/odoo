@@ -2851,11 +2851,17 @@ class AccountMove(models.Model):
             }
 
         def needed():
-            return self._sync_dynamic_line_needed_values(container['records'].mapped(needed_vals_fname))
+            *path, needed_fname = needed_vals_fname.split('.')
+            recs = container['records']
+            for part in path:
+                recs = recs[part]
+            return self._sync_dynamic_line_needed_values(recs.mapped(needed_fname))
 
         def dirty():
             *path, dirty_fname = needed_dirty_fname.split('.')
-            eligible_recs = container['records'].mapped('.'.join(path))
+            eligible_recs = container['records']
+            for part in path:
+                eligible_recs = eligible_recs[part]
             if eligible_recs._name == 'account.move.line':
                 eligible_recs = eligible_recs.filtered(lambda l: l.display_type != 'cogs')
             dirty_recs = eligible_recs.filtered(dirty_fname)
@@ -4491,7 +4497,7 @@ class AccountMove(models.Model):
     def _get_reconciled_amls(self):
         """Helper used to retrieve the reconciled move lines on this journal entry"""
         reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-        return reconciled_lines.mapped('matched_debit_ids.debit_move_id') + reconciled_lines.mapped('matched_credit_ids.credit_move_id')
+        return reconciled_lines.matched_debit_ids.debit_move_id + reconciled_lines.matched_credit_ids.credit_move_id
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
@@ -4635,7 +4641,7 @@ class AccountMove(models.Model):
             default_values_list = [{} for move in self]
 
         if cancel:
-            lines = self.mapped('line_ids')
+            lines = self.line_ids
             # Avoid maximum recursion depth.
             if lines:
                 lines.remove_move_reconcile()
@@ -4836,10 +4842,10 @@ class AccountMove(models.Model):
                 supplier_count[invoice.partner_id] += 1
             elif invoice.move_type == 'entry':
                 sale_amls = invoice.line_ids.filtered(lambda line: line.partner_id and line.account_id.account_type == 'asset_receivable')
-                for partner in sale_amls.mapped('partner_id'):
+                for partner in sale_amls.partner_id:
                     customer_count[partner] += 1
                 purchase_amls = invoice.line_ids.filtered(lambda line: line.partner_id and line.account_id.account_type == 'liability_payable')
-                for partner in purchase_amls.mapped('partner_id'):
+                for partner in purchase_amls.partner_id:
                     supplier_count[partner] += 1
         for partner, count in customer_count.items():
             (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
@@ -5133,8 +5139,8 @@ class AccountMove(models.Model):
 
         self._check_draftable()
         # We remove all the analytics entries for this journal
-        self.mapped('line_ids.analytic_line_ids').with_context(force_analytic_line_delete=True).unlink()
-        self.mapped('line_ids').remove_move_reconcile()
+        self.line_ids.analytic_line_ids.with_context(force_analytic_line_delete=True).unlink()
+        self.line_ids.remove_move_reconcile()
         self.state = 'draft'
 
     def _check_draftable(self):

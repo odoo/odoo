@@ -448,7 +448,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'sale_order_template_id': quotation_template.id,
         })
         sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
-        self.assertFalse(sale_order.order_line.mapped('task_id'),
+        self.assertFalse(sale_order.order_line.task_id,
                          "SOL should have no related tasks, because they are from services that generates a task")
         sale_order.action_confirm()
         self.assertEqual(sale_order.tasks_count, 2, "SO should have 2 related tasks")

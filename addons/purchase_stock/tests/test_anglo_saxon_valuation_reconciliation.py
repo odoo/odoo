@@ -283,7 +283,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         interim_account_id = self.company_data['default_account_stock_in'].id
 
-        valuation_line = picking.move_ids.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
+        valuation_line = picking.move_ids.account_move_ids.line_ids.filtered(lambda x: x.account_id.id == interim_account_id)
         self.assertTrue(valuation_line.full_reconcile_id, "The reconciliation should be total at that point.")
 
     def test_reconcile_cash_basis_bill(self):
@@ -381,7 +381,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             .create({})\
             ._create_payments()
 
-        partial_rec = bill.mapped('line_ids.matched_debit_ids')
+        partial_rec = bill.line_ids.matched_debit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
 
         # Tax values based on payment

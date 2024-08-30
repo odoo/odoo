@@ -62,7 +62,7 @@ class TestSaleReportCurrencyRate(SaleCommon):
         self.assertEqual(self.product.currency_id, usd)
 
         # Needed to get conversion rates between companies.
-        currency_rates = (companies + self.env.company).mapped('currency_id')._get_rates(
+        currency_rates = (companies + self.env.company).currency_id._get_rates(
             self.env.company, today
         )
 

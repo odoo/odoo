@@ -184,7 +184,7 @@ class TestSMSWizards(TestSMSActionsCommon):
         with self.with_user('employee'):
             wizard = self.env['sms.resend'].with_context(default_mail_message_id=self.msg.id).create({})
             self.assertTrue(wizard.has_insufficient_credit)
-            self.assertEqual(set(wizard.mapped('recipient_ids.partner_name')), set((self.partner_1 | self.partner_2).mapped('display_name')))
+            self.assertEqual(set(wizard.recipient_ids.mapped('partner_name')), set((self.partner_1 | self.partner_2).mapped('display_name')))
             wizard.write({'recipient_ids': [(1, r.id, {'resend': True}) for r in wizard.recipient_ids]})
             with self.mockSMSGateway():
                 wizard.action_resend()

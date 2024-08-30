@@ -526,7 +526,7 @@ class ProductTemplate(models.Model):
         if self._context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
-            self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
+            self.with_context(active_test=False).product_variant_ids.write({'active': vals.get('active')})
         if 'image_1920' in vals:
             self.env['product.product'].invalidate_model([
                 'image_1920',
@@ -971,7 +971,7 @@ class ProductTemplate(models.Model):
                 if filter_line.value_ids:
                     result[product_attribute_value.id] = filter_line.value_ids.ids
                 else:
-                    result[product_attribute_value.id] = filter_line.product_tmpl_id.mapped('attribute_line_ids.product_template_value_ids').ids
+                    result[product_attribute_value.id] = filter_line.product_tmpl_id.attribute_line_ids.product_template_value_ids.ids
 
         return result
 
@@ -1335,7 +1335,7 @@ class ProductTemplate(models.Model):
             return _("The product template is archived so no combination is possible.")
 
         necessary_values = necessary_values or self.env['product.template.attribute.value']
-        necessary_attribute_lines = necessary_values.mapped('attribute_line_id')
+        necessary_attribute_lines = necessary_values.attribute_line_id
         attribute_lines = self.valid_product_template_attribute_line_ids.filtered(
             lambda ptal: ptal not in necessary_attribute_lines)
 

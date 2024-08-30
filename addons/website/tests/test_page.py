@@ -202,8 +202,8 @@ class TestPage(common.TransactionCase):
 
         pages = Page.search([('url', '=', '/page_1')])
         self.assertEqual(len(pages), Website.search_count([]) - 1, "A specific page for every website should have been created, except for the one from where we deleted the generic one.")
-        self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
-        self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
+        self.assertTrue(website_id not in pages.website_id.ids, "The website from which we deleted the generic page should not have a specific one.")
+        self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).website_id.ids, "Same for views")
 
 
 @tagged('-at_install', 'post_install')

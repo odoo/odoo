@@ -167,11 +167,11 @@ class TestCertificationBadge(common.TestSurveyCommon):
         certification_surveys = self.env['survey.survey'].browse([survey_1.id, survey_2.id, survey_3.id])
         self.assertEqual(len(certification_surveys), 3, 'There should be 3 certification survey created')
 
-        challenges = self.env['gamification.challenge'].search([('reward_id', 'in', certification_surveys.mapped('certification_badge_id').ids)])
+        challenges = self.env['gamification.challenge'].search([('reward_id', 'in', certification_surveys.certification_badge_id.ids)])
         self.assertEqual(len(challenges), 3, "3 challenges should be created")
         challenge_lines = self.env['gamification.challenge.line'].search([('challenge_id', 'in', challenges.ids)])
         self.assertEqual(len(challenge_lines), 3, "3 challenge_lines should be created")
-        goals = challenge_lines.mapped('definition_id')
+        goals = challenge_lines.definition_id
         self.assertEqual(len(goals), 3, "3 goals should be created")
 
         # Test write multi
@@ -192,9 +192,9 @@ class TestCertificationBadge(common.TestSurveyCommon):
             self.assertEqual(survey.certification_badge_id.active, True,
                              'Every badge should be reactivated if the 3 survey give badges again')
 
-        challenges = self.env['gamification.challenge'].search([('reward_id', 'in', certification_surveys.mapped('certification_badge_id').ids)])
+        challenges = self.env['gamification.challenge'].search([('reward_id', 'in', certification_surveys.certification_badge_id.ids)])
         self.assertEqual(len(challenges), 3, "3 challenges should be created")
         challenge_lines = self.env['gamification.challenge.line'].search([('challenge_id', 'in', challenges.ids)])
         self.assertEqual(len(challenge_lines), 3, "3 challenge_lines should be created")
-        goals = challenge_lines.mapped('definition_id')
+        goals = challenge_lines.definition_id
         self.assertEqual(len(goals), 3, "3 goals should be created")

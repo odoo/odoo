@@ -630,7 +630,7 @@ class TestWarehouse(TestStockCommon):
         })
         wh = self.env["stock.warehouse"].search([])
 
-        assert len(set(wh.mapped("company_id.id"))) > 1
+        assert len(set(wh.company_id.mapped("id"))) > 1
 
         companies_before = wh.mapped(lambda w: (w.id, w.company_id))
         # writing on any field should change the company of warehouses

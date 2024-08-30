@@ -224,7 +224,7 @@ class StockMove(models.Model):
         """ Overridden to return the vendor bills related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
+        rslt += self.picking_id.purchase_id.invoice_ids.filtered(lambda x: x.state == 'posted')
         return rslt
 
     def _get_source_document(self):
@@ -238,7 +238,7 @@ class StockMove(models.Model):
             # In case val_stock_move is a return move, its valuation entries have been made with the
             # currency rate corresponding to the original stock move
             valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-            svl = val_stock_move.with_context(active_test=False).mapped('stock_valuation_layer_ids').filtered(
+            svl = val_stock_move.with_context(active_test=False).stock_valuation_layer_ids.filtered(
                 lambda l: l.quantity)
             layers_qty = sum(svl.mapped('quantity'))
             layers_values = sum(svl.mapped('value'))

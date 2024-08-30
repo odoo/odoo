@@ -355,8 +355,8 @@ class StockMove(models.Model):
         stock_valuation_layers._check_company()
 
         # For every in move, run the vacuum for the linked product.
-        products_to_vacuum = valued_moves['in'].mapped('product_id')
-        company = valued_moves['in'].mapped('company_id') and valued_moves['in'].mapped('company_id')[0] or self.env.company
+        products_to_vacuum = valued_moves['in'].product_id
+        company = valued_moves['in'].company_id and valued_moves['in'].company_id[0] or self.env.company
         products_to_vacuum._run_fifo_vacuum(company)
 
         return res
@@ -367,8 +367,8 @@ class StockMove(models.Model):
             # consistent accounting entries.
             if move._is_in() and move._is_out():
                 raise UserError(_("The move lines are not in a consistent state: some are entering and other are leaving the company."))
-            company_src = move.mapped('move_line_ids.location_id.company_id')
-            company_dst = move.mapped('move_line_ids.location_dest_id.company_id')
+            company_src = move.move_line_ids.location_id.company_id
+            company_dst = move.move_line_ids.location_dest_id.company_id
             try:
                 if company_src:
                     company_src.ensure_one()
@@ -691,8 +691,8 @@ class StockMove(models.Model):
         if self._should_exclude_for_valuation():
             return am_vals
 
-        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
-        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
+        company_from = self._is_out() and self.move_line_ids.location_id.company_id or False
+        company_to = self._is_in() and self.move_line_ids.location_dest_id.company_id or False
 
         journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several

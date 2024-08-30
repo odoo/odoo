@@ -159,7 +159,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             # check account move in the invoiced order
             invoiced_orders = self.pos_session.order_ids.filtered(lambda order: order.is_invoiced)
             self.assertEqual(2, len(invoiced_orders), 'Only one order is invoiced in this test.')
-            invoices = invoiced_orders.mapped('account_move')
+            invoices = invoiced_orders.account_move
             self.assertAlmostEqual(sum(invoices.mapped('amount_total')), 481.08)
 
         def _after_closing_cb():

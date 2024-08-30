@@ -169,7 +169,7 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100, lot_id=lot)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         mo.action_assign()
-        for ml in mo.move_raw_ids.mapped('move_line_ids'):
+        for ml in mo.move_raw_ids.move_line_ids:
             if ml.product_id.tracking != 'none':
                 self.assertEqual(ml.lot_id, lot, 'Wrong reserved lot.')
 

@@ -54,7 +54,7 @@ class MembershipMembership_Line(models.Model):
             FROM account_move
             WHERE reversed_entry_id IN %s
             GROUP BY reversed_entry_id
-        ''', [tuple(self.mapped('account_invoice_id.id'))])
+        ''', [tuple(self.account_invoice_id.mapped('id'))])
         reverse_map = dict(self._cr.fetchall())
         for line in self:
             move_state = line.account_invoice_id.state

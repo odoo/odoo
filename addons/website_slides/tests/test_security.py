@@ -365,7 +365,7 @@ class TestAccessFeatures(common.SlidesCase):
             'enroll_group_ids': [(4, self.ref('base.group_user'))]
         })
         channel.invalidate_model(['partner_ids'])
-        self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id'))
+        self.assertEqual(channel.partner_ids, user_employees.partner_id)
 
         new_user = self.env['res.users'].create({
             'name': 'NewUser',
@@ -373,7 +373,7 @@ class TestAccessFeatures(common.SlidesCase):
             'groups_id': [(6, 0, [self.ref('base.group_user')])]
         })
         channel.invalidate_model()
-        self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
+        self.assertEqual(channel.partner_ids, user_employees.partner_id | new_user.partner_id)
 
         new_user_2 = self.env['res.users'].create({
             'name': 'NewUser2',
@@ -381,10 +381,10 @@ class TestAccessFeatures(common.SlidesCase):
             'groups_id': [(5, 0)]
         })
         channel.invalidate_model()
-        self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
+        self.assertEqual(channel.partner_ids, user_employees.partner_id | new_user.partner_id)
         new_user_2.write({'groups_id': [(4, self.ref('base.group_user'))]})
         channel.invalidate_model()
-        self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
+        self.assertEqual(channel.partner_ids, user_employees.partner_id | new_user.partner_id | new_user_2.partner_id)
 
         new_user_3 = self.env['res.users'].create({
             'name': 'NewUser3',
@@ -392,10 +392,10 @@ class TestAccessFeatures(common.SlidesCase):
             'groups_id': [(5, 0)]
         })
         channel.invalidate_model()
-        self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
+        self.assertEqual(channel.partner_ids, user_employees.partner_id | new_user.partner_id | new_user_2.partner_id)
         self.env.ref('base.group_user').write({'users': [(4, new_user_3.id)]})
         channel.invalidate_model()
-        self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id | new_user_3.partner_id)
+        self.assertEqual(channel.partner_ids, user_employees.partner_id | new_user.partner_id | new_user_2.partner_id | new_user_3.partner_id)
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_channel_access_fields_employee(self):

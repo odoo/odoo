@@ -15,11 +15,11 @@ class SaleOrder(models.Model):
         so_lines = self.env['sale.order.line'].search(
             [('order_id', 'in', self.ids)]
         )
-        products = so_lines.mapped('product_id')
+        products = so_lines.product_id
         related_channels = self.env['slide.channel'].search(
             [('product_id', 'in', products.ids), ('enroll', '=', 'payment')],
         )
-        channel_products = related_channels.mapped('product_id')
+        channel_products = related_channels.product_id
 
         channels_per_so = {sale_order: self.env['slide.channel'] for sale_order in self}
         for so_line in so_lines:

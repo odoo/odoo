@@ -249,7 +249,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         production of a tracked product.
         """
         mo = self.generate_mo(tracking_final='serial', qty_final=3, qty_base_1=1, qty_base_2=1)[0]
-        comp1, comp2 = mo.move_raw_ids.mapped('product_id')
+        comp1, comp2 = mo.move_raw_ids.product_id
         self.env['stock.quant']._update_available_quantity(comp1, mo.warehouse_id.lot_stock_id, 5)
         # Generate an SN using the action_generate_serial
         mo.action_generate_serial()

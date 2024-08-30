@@ -21,7 +21,7 @@ class WebsiteVisitor(models.Model):
         super(WebsiteVisitor, self)._compute_email_phone()
 
         left_visitors = self.filtered(lambda visitor: not visitor.email or not visitor.mobile)
-        leads = left_visitors.mapped('lead_ids').sorted('create_date', reverse=True)
+        leads = left_visitors.lead_ids.sorted('create_date', reverse=True)
         visitor_to_lead_ids = dict((visitor.id, visitor.lead_ids.ids) for visitor in left_visitors)
 
         for visitor in left_visitors:
@@ -35,7 +35,7 @@ class WebsiteVisitor(models.Model):
         check = super(WebsiteVisitor, self)._check_for_message_composer()
         if not check and self.lead_ids:
             sorted_leads = self.lead_ids._sort_by_confidence_level(reverse=True)
-            partners = sorted_leads.mapped('partner_id')
+            partners = sorted_leads.partner_id
             if not partners:
                 main_lead = self.lead_ids[0]
                 main_lead._handle_partner_assignment(create_missing=True)
@@ -60,7 +60,7 @@ class WebsiteVisitor(models.Model):
     def _prepare_message_composer_context(self):
         if not self.partner_id and self.lead_ids:
             sorted_leads = self.lead_ids._sort_by_confidence_level(reverse=True)
-            lead_partners = sorted_leads.mapped('partner_id')
+            lead_partners = sorted_leads.partner_id
             partner = lead_partners[0] if lead_partners else False
             if partner:
                 return {

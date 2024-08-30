@@ -35,8 +35,8 @@ class AccountMove(models.Model):
 
     def _count_attachments(self):
         domains = [[('res_model', '=', 'account.move'), ('res_id', '=', self.id)]]
-        statement_ids = self.line_ids.mapped('statement_id')
-        payment_ids = self.line_ids.mapped('payment_id')
+        statement_ids = self.line_ids.statement_id
+        payment_ids = self.line_ids.payment_id
         if statement_ids:
             domains.append([('res_model', '=', 'account.bank.statement'), ('res_id', 'in', statement_ids.ids)])
         if payment_ids:

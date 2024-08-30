@@ -99,7 +99,7 @@ class AccountAnalyticLine(models.Model):
         return not self.timesheet_invoice_id or self.timesheet_invoice_id.state == 'cancel'
 
     def _check_timesheet_can_be_billed(self):
-        return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
+        return self.so_line in self.project_id.sale_line_employee_ids.sale_line_id | self.task_id.sale_line_id | self.project_id.sale_line_id
 
     def _check_can_write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
