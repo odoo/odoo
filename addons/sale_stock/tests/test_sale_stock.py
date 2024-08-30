@@ -2034,3 +2034,159 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         ship02.move_ids.write({'quantity': 7, 'picked': True})
         ship02.button_validate()
         self.assertEqual(so.delivery_status, 'full')
+<<<<<<< saas-17.4
+||||||| 95faa85e3f8601ff1017f47910dc68f1f203ad38
+
+    def test_double_return_on_so(self):
+        """
+        Check that the return of a return of a delivery linked to an SO
+        is seen as an outgoing move for the related procurements.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'sol_p1',
+                    'product_id': self.env['product.product'].create({'name': 'p1'}).id,
+                    'product_uom_qty': 5,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        delivery.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+        # create and validate a return
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=delivery.id,
+            active_model='stock.picking'))
+        return_wiz = return_form.save()
+        res = return_wiz.create_returns()
+        do_return = self.env['stock.picking'].browse(res['res_id'])
+        do_return.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 0.0)
+        # create and validate the return of the return
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=do_return.id,
+            active_model='stock.picking'))
+        return_wiz = return_form.save()
+        res = return_wiz.create_returns()
+        do_return_return = self.env['stock.picking'].browse(res['res_id'])
+        do_return_return.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line_form:
+                line_form.product_uom_qty = 8.0
+        delivery_2 = so.picking_ids - delivery - do_return - do_return_return
+        self.assertTrue(delivery_2)
+        self.assertEqual(delivery_2.move_ids.product_uom_qty, 3.0)
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+=======
+
+    def test_double_return_on_so(self):
+        """
+        Check that the return of a return of a delivery linked to an SO
+        is seen as an outgoing move for the related procurements.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'sol_p1',
+                    'product_id': self.env['product.product'].create({'name': 'p1'}).id,
+                    'product_uom_qty': 5,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        delivery.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+        # create and validate a return
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=delivery.id,
+            active_model='stock.picking'))
+        return_wiz = return_form.save()
+        res = return_wiz.create_returns()
+        do_return = self.env['stock.picking'].browse(res['res_id'])
+        do_return.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 0.0)
+        # create and validate the return of the return
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=do_return.id,
+            active_model='stock.picking'))
+        return_wiz = return_form.save()
+        res = return_wiz.create_returns()
+        do_return_return = self.env['stock.picking'].browse(res['res_id'])
+        do_return_return.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line_form:
+                line_form.product_uom_qty = 8.0
+        delivery_2 = so.picking_ids - delivery - do_return - do_return_return
+        self.assertTrue(delivery_2)
+        self.assertEqual(delivery_2.move_ids.product_uom_qty, 3.0)
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+
+    def test_return_from_customer_multi_step(self):
+        """
+        Check that, when using multi-step routes, returned quantities are counted on
+        the corresponding SO's delivered quantity only once for the whole move chain
+        """
+        # Set-up multi-step routes
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.company_data['default_warehouse']
+
+        with Form(warehouse) as w:
+            w.reception_steps = 'two_steps'
+
+        # Make *Stock/Input* a return location
+        loc_input = warehouse.wh_input_stock_loc_id
+        loc_input.return_location = True
+
+        # Make SO and confirm
+        product = self.env['product.product'].create({
+            'name': 'Delivered Product',
+            'type': 'product',
+        })
+        so = self._get_new_sale_order(product=product)
+        so.action_confirm()
+
+        # Validate delivery
+        picking = so.picking_ids
+        self.assertEqual(len(picking), 1)
+
+        def validate_picking(picking, qty=10):
+            picking.move_ids.quantity = qty
+            picking.move_ids.picked = True
+            picking.button_validate()
+
+        validate_picking(picking)
+        self.assertEqual(so.order_line[0].qty_delivered, 10)
+
+        # Create return picking chain
+        stock_return_picking_form = Form(
+            self.env['stock.return.picking'].with_context(
+                active_ids=picking.ids,
+                active_id=picking.ids[0],
+                active_model='stock.picking'
+            )
+        )
+
+        stock_return_picking_form.location_id = loc_input
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.create_returns()
+
+        return_1 = so.picking_ids.filtered(lambda r: r.location_dest_id.name == 'Input')
+        return_2 = so.picking_ids.filtered(lambda r: r.location_dest_id.name == 'Stock')
+
+        # Check that validating returns correctly updates the SO's delivered qty
+        validate_picking(return_1)
+        self.assertEqual(so.order_line[0].qty_delivered, 0)
+
+        validate_picking(return_2)
+        self.assertEqual(so.order_line[0].qty_delivered, 0)
+>>>>>>> 1c9dda4bd484253395b17e7a1531c55ce24aedb2
