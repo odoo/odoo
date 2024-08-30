@@ -89,10 +89,9 @@ class ResUsers(models.Model):
                 # visitor records to it.
                 if visitor_pre_authenticate_sudo != visitor_current_user_sudo:
                     visitor_pre_authenticate_sudo._merge_visitor(visitor_current_user_sudo)
-                visitor_current_user_sudo._update_visitor_last_visit()
+                    visitor_current_user_sudo._update_visitor_last_visit()
             else:
                 visitor_pre_authenticate_sudo.access_token = user_partner.id
-                visitor_pre_authenticate_sudo._update_visitor_last_visit()
         return auth_info
 
     @api.constrains('groups_id')
