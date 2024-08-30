@@ -165,7 +165,12 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        return { ...super.childSubEnv, messageHighlight: this.messageHighlight };
+        return {
+            ...super.childSubEnv,
+            messageHighlight: this.messageHighlight,
+            onActivityChanged: this.onActivityChanged.bind(this),
+            reloadParentView: this.reloadParentView.bind(this),
+        };
     },
 
     get followerButtonLabel() {
