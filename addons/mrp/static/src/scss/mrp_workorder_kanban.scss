@@ -20,4 +20,17 @@
 }
 .o_workcenter_kanban {
     --KanbanRecord-width: 400px;
+    .o_kanban_renderer {
+        --KanbanRecord-width: 480px;
+
+        @include media-only(screen) {
+            --KanbanGroup-width: 480px;
+        }
+        @include media-only(print) {
+            --KanbanGroup-width: 400px;
+        }
+    }
+    .o_dashboard_graph {
+            margin: 0px -8px;
+    }
 }
