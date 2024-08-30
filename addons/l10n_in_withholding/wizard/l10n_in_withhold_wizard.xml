@@ -20,11 +20,6 @@
                     <field name="warning_message"/>
                 </div>
                 <sheet>
-                    <field name="related_move_id" invisible="1"/>
-                    <field name="related_payment_id" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="type_name" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                     <group>
                         <group id="header_left_group">
                             <field name="date"/>
@@ -39,7 +34,6 @@
                             <field name="withhold_line_ids">
                                 <tree editable="bottom">
                                     <field name="currency_id" column_invisible="True"/>
-                                    <field name="l10n_in_tds_tax_type" column_invisible="True"/>
                                     <field name="tax_id" domain="[('l10n_in_tds_tax_type', '=', l10n_in_tds_tax_type)]"/>
                                     <field name="base" sum="Total Base" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
