@@ -66,7 +66,7 @@ export class LinkSelectionPlugin extends Plugin {
                 this.normalize(payload.node || this.editable);
                 break;
             case "CLEAN_FOR_SAVE":
-                this.cleanForSave(payload.root);
+                this.cleanForSave(payload);
                 break;
         }
     }
@@ -82,8 +82,8 @@ export class LinkSelectionPlugin extends Plugin {
     /**
      * @param {Element} root
      */
-    cleanForSave(root) {
-        this.removeFEFFs(root);
+    cleanForSave({ root, preserveSelection = false }) {
+        this.removeFEFFs(root, { preserveSelection });
         this.clearLinkInSelectionClass(root);
     }
 
@@ -105,7 +105,7 @@ export class LinkSelectionPlugin extends Plugin {
      * @param {Object} [options]
      * @param {Function} [options.exclude]
      */
-    removeFEFFs(root, { exclude = () => false } = {}) {
+    removeFEFFs(root, { exclude = () => false, preserveSelection = true } = {}) {
         const defaultFilter = (node) =>
             node.nodeType === Node.TEXT_NODE &&
             node.textContent.includes("\uFEFF") &&
@@ -116,7 +116,7 @@ export class LinkSelectionPlugin extends Plugin {
         const combinedFilter = (node) => defaultFilter(node) && !exclude(node);
         const nodes = descendants(root).filter(combinedFilter);
         if (nodes.length > 0) {
-            const cursors = this.shared.preserveSelection();
+            const cursors = preserveSelection ? this.shared.preserveSelection() : null;
             for (const node of nodes) {
                 // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
                 // nodes visible if needed.
@@ -124,7 +124,7 @@ export class LinkSelectionPlugin extends Plugin {
                 cleanTextNode(node, "\uFEFF", cursors);
                 restoreSpaces();
             }
-            cursors.restore();
+            cursors?.restore();
         }
 
         // Comment in the original code:
