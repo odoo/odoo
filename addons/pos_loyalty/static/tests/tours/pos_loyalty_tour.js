@@ -509,3 +509,29 @@ registry.category("web_tour.tours").add("CustomerLoyaltyPointsDisplayed", {
             PosLoyalty.checkPartnerPoints("John Doe", "100.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosRewardProductScan", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.scan_barcode("95412427100283"),
+            ProductScreen.selectedOrderlineHas("product_a", "1.00", "1,150.00"),
+            PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
+            PosLoyalty.orderTotalIs("575.00"),
+            PosLoyalty.finalizeOrder("Cash", "575.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.scan_barcode("0195412427100283"),
+            ProductScreen.selectedOrderlineHas("product_a", "1.00", "1,150.00"),
+            PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
+            PosLoyalty.orderTotalIs("575.00"),
+            PosLoyalty.finalizeOrder("Cash", "575.00"),
+        ].flat(),
+});

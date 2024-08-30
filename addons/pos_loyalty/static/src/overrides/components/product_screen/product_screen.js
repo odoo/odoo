@@ -22,4 +22,8 @@ patch(ProductScreen.prototype, {
         await super._barcodeProductAction(code);
         this.pos.updateRewards();
     },
+    async _barcodeGS1Action(code) {
+        await super._barcodeGS1Action(code);
+        this.pos.updateRewards();
+    },
 });
