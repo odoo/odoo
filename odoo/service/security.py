@@ -3,9 +3,11 @@
 
 import odoo
 import odoo.exceptions
+from odoo.modules.registry import Registry
+
 
 def check(db, uid, passwd):
-    res_users = odoo.registry(db)['res.users']
+    res_users = Registry(db)['res.users']
     return res_users.check(db, uid, passwd)
 
 def compute_session_token(session, env):

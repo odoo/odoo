@@ -1,8 +1,9 @@
 import json
 
-from odoo import fields, models, registry, _
+from odoo import fields, models, _
 from odoo.tools import SQL
 from odoo.exceptions import AccessDenied
+from odoo.modules.registry import Registry
 
 from odoo.addons.base.models.res_users import check_identity
 from .._vendor.webauthn.helpers.exceptions import InvalidAuthenticationResponse
@@ -35,7 +36,7 @@ class UsersPasskey(models.Model):
     def _login(cls, db, credential, user_agent_env):
         if credential['type'] == 'webauthn':
             webauthn = json.loads(credential['webauthn_response'])
-            with registry(db).cursor() as cr:
+            with Registry(db).cursor() as cr:
                 cr.execute(SQL("""
                     SELECT login
                       FROM auth_passkey_key key

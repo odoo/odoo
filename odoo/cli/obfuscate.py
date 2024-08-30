@@ -7,6 +7,7 @@ import logging
 from collections import defaultdict
 
 from . import Command
+from odoo.modules.registry import Registry
 from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
@@ -156,7 +157,7 @@ class Obfuscate(Command):
                 _logger.error("--allfields can only be used in unobfuscate mode")
                 sys.exit("ERROR: --allfields can only be used in unobfuscate mode")
             self.dbname = odoo.tools.config['db_name']
-            self.registry = odoo.registry(self.dbname)
+            self.registry = Registry(self.dbname)
             with self.registry.cursor() as cr:
                 self.cr = cr
                 self.begin()

@@ -3,6 +3,7 @@ import inspect
 import itertools
 
 import odoo
+from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged
 from .lint_case import LintCase
 
@@ -114,7 +115,7 @@ def assert_valid_override(parent_signature, child_signature):
 class TestLintOverrideSignatures(LintCase):
     def test_lint_override_signature(self):
         self.failureException = TypeError
-        registry = odoo.registry(get_db_name())
+        registry = Registry(get_db_name())
         for model_name, model_cls in registry.items():
             for method_name, _ in inspect.getmembers(model_cls, inspect.isroutine):
                 if method_name not in methods_to_sanitize:
