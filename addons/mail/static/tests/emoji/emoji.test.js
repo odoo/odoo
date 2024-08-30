@@ -122,6 +122,20 @@ test("recent category (basic)", async () => {
     });
 });
 
+test("search emojis prioritize frequently used emojis", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await contains(".o-EmojiPicker-navbar [title='Frequently used']", { count: 0 });
+    await click(".o-EmojiPicker-content .o-Emoji", { text: "🤥" });
+    await click("button[aria-label='Emojis']");
+    await insertText("input[placeholder='Search for an emoji']", "lie");
+    await contains(".o-EmojiPicker-sectionIcon", { count: 0 }); // await search performed
+    await contains(".o-EmojiPicker-content .o-Emoji:eq(0)", { text: "🤥" });
+});
+
 test("emoji usage amount orders frequent emojis", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
