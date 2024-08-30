@@ -3808,8 +3808,11 @@ class BaseModel(metaclass=MetaModel):
         # In these cases, only all translations of the first stored translation field will be updated
         # For other stored related translated field, the translation for the flush language will be updated
         if field.related and not field.store:
-            related_path, field_name = field.related.rsplit(".", 1)
-            return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
+            *related_path, field_name = field.related.split('.')
+            records = self
+            for path_part in related_path:
+                records = records[path_part]
+            return records._update_field_translations(field_name, translations, digest)
 
         if field.translate is True:
             # falsy values (except emtpy str) are used to void the corresponding translation
@@ -6357,28 +6360,21 @@ class BaseModel(metaclass=MetaModel):
     # Record traversal and update
     #
 
-    def _mapped_func(self, func):
-        """ Apply function ``func`` on all records in ``self``, and return the
-            result as a list or a recordset (if ``func`` returns recordsets).
-        """
-        if self:
-            vals = [func(rec) for rec in self]
-            if isinstance(vals[0], BaseModel):
-                return vals[0].union(*vals)         # union of all recordsets
-            return vals
-        else:
-            vals = func(self)
-            return vals if isinstance(vals, BaseModel) else []
-
-    def mapped(self, func):
-        """Apply ``func`` on all records in ``self``, and return the result as a
-        list or a recordset (if ``func`` return recordsets). In the latter
-        case, the order of the returned recordset is arbitrary.
+    def mapped(self, func: str | Callable) -> list:
+        """Apply ``func`` on all records in ``self``, and return a list of
+        mapped results on each record.
 
         :param func: a function or a dot-separated sequence of field names
         :type func: callable or str
-        :return: self if func is falsy, result of func applied to all ``self`` records.
-        :rtype: list or recordset
+        :return: list of func applied to each record in ``self``
+        :rtype: list of mapped results (same size as self)
+
+        The function is roughly equivalent to a list comprehension in python:
+        ``list(map(func, self))``.
+        In case of a dot-separated sequence, we traverse the path for each
+        record to get a single value. When the last field is not relational
+        and we have traversed an x2many field in the path, we use ``mapped``
+        because we may have multiple values.
 
         .. code-block:: python3
 
@@ -6392,23 +6388,45 @@ class BaseModel(metaclass=MetaModel):
             # returns a list of names
             records.mapped('name')
 
-            # returns a recordset of partners
-            records.mapped('partner_id')
+            # returns a list of recordset of partners
+            records.partner_id
 
-            # returns the union of all partner banks, with duplicates removed
-            records.mapped('partner_id.bank_ids')
+            # returns a list of partner banks for each partner in the record
+            records.partner_id.bank_ids
+
+        If you need a recordset as a value, you should use the field directly
+        or getattr with the name of the field.
         """
-        if not func:
-            return self                 # support for an empty path of fields
         if isinstance(func, str):
-            recs = self
-            for name in func.split('.'):
-                recs = recs._fields[name].mapped(recs)
-            return recs
-        else:
-            return self._mapped_func(func)
+            if not func:
+                return list(self)  # support for an empty path of fields
+            if "." not in func:
+                # simple field name, just use the field getter
+                field = self._fields[func]
+                if field.compute and field.store:
+                    # process pending computations in batch
+                    field.recompute(self)
+                func = field.__get__
+            else:
+                # a path, cache all values and then function maps each record
+                # to the followed path; if there are x2many fields, used mapped
+                *path_start, last_name = func.split(".")
+                use_mapped = False
+                comodel = self
+                for part in path_start:
+                    field = comodel._fields[part]
+                    use_mapped = use_mapped or '2many' in field.type
+                    comodel = comodel.env[field.comodel_name]
+                use_mapped = use_mapped and not comodel._fields[last_name].relational
 
-    def filtered(self, func) -> Self:
+                def resolve_func(record):
+                    for part in path_start:
+                        record = record[part]
+                    return record.mapped(last_name) if use_mapped else record[last_name]
+                func = resolve_func
+        return list(map(func, self))
+
+    def filtered(self, func: str | Callable) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
         :param func: a function or a dot-separated sequence of field names
@@ -6422,12 +6440,21 @@ class BaseModel(metaclass=MetaModel):
 
             # only keep records whose partner is a company
             records.filtered("partner_id.is_company")
+
+        If you just want to check if any record satisfies a condition, you
+        should use ``if any(rec.my_field_to_check for rec in self)``.
         """
         if isinstance(func, str):
-            if '.' in func:
-                return self.browse(rec.id for rec in self if any(rec.mapped(func)))
-            else:  # Avoid costly mapped
-                return self.browse(rec.id for rec in self if rec[func])
+            if "." in func:
+                mapped_values = self.mapped(func)
+                return self.browse(rec.id for rec, value in zip(self, mapped_values) if value)
+            if not func:  # support for an empty path of fields
+                return self
+            field = self._fields[func]
+            if field.compute and field.store:
+                # process pending computations in batch
+                field.recompute(self)
+            func = field.__get__
         return self.browse(rec.id for rec in self if func(rec))
 
     def grouped(self, key):
@@ -6556,9 +6583,18 @@ class BaseModel(metaclass=MetaModel):
                     value = Datetime.to_datetime(value)
 
                 matching_ids = set()
-                for record in self:
-                    data = record.mapped(key)
-                    if isinstance(data, BaseModel) and comparator not in ('any', 'not any'):
+                record_data = self.mapped(key)
+                is_any = comparator in ('any', 'not any')
+                for record, data in zip(self, record_data):
+                    if is_any:
+                        assert isinstance(data, BaseModel)
+                        if bool(data.filtered_domain(value)) == (comparator == 'any'):
+                            matching_ids.add(record.id)
+                        continue
+
+                    if field.type in ('date', 'datetime'):
+                        data = Datetime.to_datetime(data)
+                    if isinstance(data, BaseModel):
                         v = value
                         if isinstance(value, (list, tuple, set)) and value:
                             v = next(iter(value))
@@ -6569,9 +6605,9 @@ class BaseModel(metaclass=MetaModel):
                                 # failed to access the record, return empty string for comparison
                                 data = ['']
                         else:
-                            data = data and data.ids or [False]
-                    elif field.type in ('date', 'datetime'):
-                        data = [Datetime.to_datetime(d) for d in data]
+                            data = data.ids if data else [False]
+                    else:
+                        data = [data]
 
                     if comparator == '=':
                         ok = value in data
@@ -6595,10 +6631,6 @@ class BaseModel(metaclass=MetaModel):
                         ok = any(like_regex.match(unaccent(x)) for x in data)
                         if comparator.startswith('not'):
                             ok = not ok
-                    elif comparator == 'any':
-                        ok = data.filtered_domain(value)
-                    elif comparator == 'not any':
-                        ok = not data.filtered_domain(value)
                     else:
                         raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
 
@@ -6974,22 +7006,6 @@ class BaseModel(metaclass=MetaModel):
     def _cache(self):
         """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
-
-    def _in_cache_without(self, field, limit=PREFETCH_MAX):
-        """ Return records to prefetch that have no value in cache for ``field``
-            (:class:`Field` instance), including ``self``.
-            Return at most ``limit`` records.
-        """
-        ids = expand_ids(self.id, self._prefetch_ids)
-        ids = self.env.cache.get_missing_ids(self.browse(ids), field)
-        if limit:
-            ids = itertools.islice(ids, limit)
-        # Those records are aimed at being either fetched, or computed.  But the
-        # method '_fetch_field' is not correct with new records: it considers
-        # them as forbidden records, and clears their cache!  On the other hand,
-        # compute methods are not invoked with a mix of real and new records for
-        # the sake of code simplicity.
-        return self.browse(ids)
 
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the

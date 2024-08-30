@@ -213,9 +213,9 @@ class TestORM(TransactionCase):
         }]
         foo, bar = self.env['res.country'].create(vals_list)
         self.assertEqual(foo.name, 'Foo')
-        self.assertCountEqual(foo.mapped('state_ids.code'), ['NF', 'SF', 'WF', 'EF'])
+        self.assertCountEqual(foo.state_ids.mapped('code'), ['NF', 'SF', 'WF', 'EF'])
         self.assertEqual(bar.name, 'Bar')
-        self.assertCountEqual(bar.mapped('state_ids.code'), ['NB', 'SB'])
+        self.assertCountEqual(bar.state_ids.mapped('code'), ['NB', 'SB'])
 
 
 class TestInherits(TransactionCase):

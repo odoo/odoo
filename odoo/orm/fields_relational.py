@@ -35,8 +35,16 @@ class _Relational(Field[M], typing.Generic[M]):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
-        # multirecord case: use mapped
-        return self.mapped(records)
+        # multirecord case: use mapped_cache and convert in a batch
+        values = self.mapped_cache(records)
+        return self.convert_to_record_relational(values, records)
+
+    def convert_to_record_relational(self, values, records):
+        """ Convert a list of values from the cache format to the record format.
+        Some field classes may override this method to add optimizations for
+        batch processing.
+        """
+        raise NotImplementedError
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
@@ -247,7 +255,7 @@ class Many2one(_Relational[M]):
         prefetch_ids = PrefetchMany2one(record, self)
         return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
-    def convert_to_record_multi(self, values, records):
+    def convert_to_record_relational(self, values, records):
         # return the ids as a recordset without duplicates
         prefetch_ids = PrefetchMany2one(records, self)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
@@ -424,7 +432,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
 
-    def convert_to_record_multi(self, values, records):
+    def convert_to_record_relational(self, values, records):
         # return the list of ids as a recordset without duplicates
         prefetch_ids = PrefetchX2many(records, self)
         Comodel = records.pool[self.comodel_name]
