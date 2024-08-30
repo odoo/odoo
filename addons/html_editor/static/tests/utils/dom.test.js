@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
-import { cleanTextNode, wrapInlinesInBlocks } from "@html_editor/utils/dom";
+import { cleanTextNode, fillEmpty, wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
@@ -268,5 +268,15 @@ describe("wrapInlinesInBlocks", () => {
                 <p style="margin-bottom: 0px;"><span class="a">span</span></p>
             `)
         );
+    });
+});
+
+describe("fillEmpty", () => {
+    test("should not add fill a shrunk protected block, nor add a ZWS to it", async () => {
+        const { el } = await setupEditor('<div data-oe-protected="true"></div>');
+        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        const div = el.firstChild;
+        fillEmpty(div);
+        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
     });
 });

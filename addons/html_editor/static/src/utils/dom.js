@@ -148,7 +148,7 @@ export function removeClass(element, ...classNames) {
 /**
  * Add a BR in the given node if its closest ancestor block has nothing to make
  * it visible, and/or add a zero-width space in the given node if it's an empty
- * inline unremovable so the cursor can stay in it.
+ * inline so the cursor can stay in it.
  *
  * @param {HTMLElement} el
  * @returns {Object} { br: the inserted <br> if any,
@@ -157,9 +157,7 @@ export function removeClass(element, ...classNames) {
 export function fillEmpty(el) {
     const document = el.ownerDocument;
     const fillers = { ...fillShrunkPhrasingParent(el) };
-    if (!isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
-        // As soon as there is actual content in the node, the zero-width space
-        // is removed by the sanitize function.
+    if (!isBlock(el) && !isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
         const zws = document.createTextNode("\u200B");
         el.appendChild(zws);
         el.setAttribute("data-oe-zws-empty-inline", "");
