@@ -14,6 +14,7 @@
         'data/mail_templates.xml',
         'data/website_blog_data.xml',
         'data/blog_snippet_template_data.xml',
+        'data/website_blog_tour.xml',
         'views/website_blog_views.xml',
         'views/website_blog_components.xml',
         'views/website_blog_posts_loop.xml',

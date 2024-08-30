@@ -8,8 +8,6 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('survey_tour', {
     url: "/odoo",
-    rainbowManMessage: _t("Congratulations! You are now ready to collect feedback like a pro :-)"),
-    sequence: 225,
     steps: () => [
     ...stepUtils.goToAppSteps('survey.menu_surveys', markup(_t("Ready to change the way you <b>gather data</b>?"))),
 {
@@ -27,7 +25,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Let's get started!"),
     tooltipPosition: 'bottom',
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: '.js_question-wrapper span:contains("How frequently")',
@@ -37,7 +35,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Whenever you pick an answer, Odoo saves it for you."),
     tooltipPosition: 'bottom',
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: '.js_question-wrapper span:contains("How many")',
@@ -47,7 +45,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Only a single question left!"),
     tooltipPosition: 'bottom',
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: '.js_question-wrapper span:contains("How likely")',

@@ -8,8 +8,6 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('crm_tour', {
     url: "/odoo",
-    rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
-    sequence: 10,
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
@@ -46,7 +44,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),
     tooltipPosition: "bottom",
     run: "click",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
@@ -56,7 +54,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     tooltipPosition: "right",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
-}, 
+},
 {
     isActive: ["auto"],
     trigger: ".o_opportunity_kanban",

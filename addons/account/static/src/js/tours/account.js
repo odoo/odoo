@@ -26,7 +26,6 @@ export const accountTourSteps = {
 
 registry.category("web_tour.tours").add('account_tour', {
     url: "/odoo",
-    sequence: 60,
     steps: () => [
     ...accountTourSteps.goToAccountMenu('Send invoices to your customers in no time with the <b>Invoicing app</b>.'),
     ...accountTourSteps.onboarding(),
@@ -44,7 +43,7 @@ registry.category("web_tour.tours").add('account_tour', {
         isActive: ["auto"],
         trigger: "div[name=partner_id] input",
         run: "edit Test",
-    }, 
+    },
     {
         isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
@@ -54,7 +53,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
         content: _t("Select first partner"),
         run: "click",
-    }, 
+    },
     {
         isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
@@ -64,7 +63,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: ".modal-content button.btn-primary",
         content: markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
         run: "click",
-    }, 
+    },
     {
         isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
@@ -139,7 +138,7 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t('Go back'),
         tooltipPosition: 'bottom',
         run: "click",
-    }, 
+    },
     {
         isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
@@ -148,7 +147,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "button[name=action_invoice_sent]:contains(print & send)",
         content: _t("Send the invoice and check what the customer will receive."),
         run: "click",
-    }, 
+    },
     {
         isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
