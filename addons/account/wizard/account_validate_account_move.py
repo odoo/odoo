@@ -1,4 +1,5 @@
 from odoo import models, fields, _
+from odoo.addons.account.models.exceptions import TaxClosingNonPostedDependingMovesError
 from odoo.exceptions import UserError
 
 
@@ -21,5 +22,19 @@ class ValidateAccountMove(models.TransientModel):
             raise UserError(_('There are no journal items in the draft state to post.'))
         if self.force_post:
             moves.auto_post = 'no'
-        moves._post(not self.force_post)
+        try:
+            moves._post(not self.force_post)
+        except TaxClosingNonPostedDependingMovesError as exception:
+            return {
+                "type": "ir.actions.client",
+                "tag": "account_reports.redirect_action",
+                "target": "new",
+                "name": "Depending Action",
+                "params": {
+                    "depending_action": exception.args[0],
+                },
+                'context': {
+                    'dialog_size': 'medium',
+                },
+            }
         return {'type': 'ir.actions.act_window_close'}
