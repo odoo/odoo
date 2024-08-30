@@ -19,6 +19,9 @@ class TestPaymentTransaction(APSCommon):
 
     def test_no_item_missing_from_rendering_values(self):
         """ Test that the rendered values are conform to the transaction fields. """
+        self.env['ir.config_parameter'].set_param('web.base.url', 'http://127.0.0.1:8069')
+        self.patch(self, 'base_url', lambda: 'http://127.0.0.1:8069')
+
         tx = self._create_transaction(flow='redirect')
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency)
@@ -36,7 +39,7 @@ class TestPaymentTransaction(APSCommon):
             'signature': 'c9b9f35a607606c045f8882e762a4a4a35572cf230fe1cd45fa18d7c8681aeb9',
             'api_url': self.provider._aps_get_api_url(),
         }
-        self.assertDictEqual(tx._get_specific_rendering_values(None), expected_values)
+        self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
