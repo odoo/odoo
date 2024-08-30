@@ -1342,9 +1342,15 @@ patch(PosOrder.prototype, {
                   Math.ceil(unclaimedQty / reward.reward_product_qty),
                   Math.floor(points / reward.required_points)
               );
-        const cost = reward.clear_wallet ? points : claimable_count * reward.required_points;
+        const cost = reward.clear_wallet
+            ? points
+            : Math.min(claimable_count * reward.required_points, args["cost"] || Infinity);
         // In case the reward is the product multiple times, give it as many times as possible
-        const freeQuantity = Math.min(unclaimedQty, reward.reward_product_qty * claimable_count);
+        const freeQuantity = Math.min(
+            unclaimedQty,
+            reward.reward_product_qty * claimable_count,
+            args["quantity"] || Infinity
+        );
         return [
             {
                 product_id: reward.discount_line_product_id,
@@ -1353,12 +1359,12 @@ patch(PosOrder.prototype, {
                     this.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,
-                qty: args["quantity"] || freeQuantity,
+                qty: freeQuantity,
                 reward_id: reward,
                 is_reward_line: true,
                 _reward_product_id: product,
                 coupon_id: args["coupon_id"],
-                points_cost: args["cost"] || cost,
+                points_cost: cost,
                 reward_identifier_code: _newRandomRewardCode(),
             },
         ];
