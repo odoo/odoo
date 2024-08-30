@@ -114,7 +114,7 @@
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
-                            <field name="title_id"/>
+                            <field name="title_id" placeholder="e.g. Miss or Mister"/>
                             <field name="company_name"/>
                             <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                         </group>
@@ -125,15 +125,19 @@
                                    placeholder="e.g. &quot;VIP&quot;, &quot;Roadshow&quot;, ..." style="width: 100%"/>
                         </group>
                     </group>
-                    <field name="subscription_ids">
-                        <list editable="bottom">
-                           <field name="list_id"/>
-                           <field name="opt_out_datetime" readonly="1"/>
-                           <field name="opt_out"/>
-                           <field name="opt_out_reason_id"/>
-                           <field name="create_date" string="Subscription Date"/>
-                        </list>
-                    </field>
+                    <notebook>
+                        <page string="Subscriptions">
+                            <field name="subscription_ids">
+                                <list editable="bottom">
+                                    <field name="list_id"/>
+                                    <field name="opt_out_datetime" readonly="1"/>
+                                    <field name="opt_out"/>
+                                    <field name="opt_out_reason_id"/>
+                                    <field name="create_date" string="Subscription Date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
