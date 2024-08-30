@@ -6,7 +6,7 @@
 from contextlib import contextmanager
 import unittest
 
-from odoo import api, registry, SUPERUSER_ID
+from odoo import api, SUPERUSER_ID
 from odoo.tests import common
 from odoo.tests.common import BaseCase
 
@@ -18,7 +18,7 @@ def environment():
     """ Return an environment with a new cursor for the current database; the
         cursor is committed and closed after the context block.
     """
-    reg = registry(common.get_db_name())
+    reg = Registry(common.get_db_name())
     with reg.cursor() as cr:
         yield api.Environment(cr, SUPERUSER_ID, {})
 

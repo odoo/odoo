@@ -14,7 +14,7 @@ from lxml import etree, html
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools, release, registry
+from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
@@ -507,9 +507,6 @@ class Website(models.Model):
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
         redirect_url = theme.button_choose_theme()
 
-        # Force to refresh env after install of module
-        assert self.env.registry is registry()
-
         website.configurator_done = True
 
         # Enable tour
@@ -621,7 +618,6 @@ class Website(models.Model):
 
         if modules:
             modules.button_immediate_install()
-            assert self.env.registry is registry()
 
         self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
 

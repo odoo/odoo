@@ -97,6 +97,7 @@ class Registry(Mapping):
 
     def __new__(cls, db_name):
         """ Return the registry for the given database name."""
+        assert db_name, "Missing database name"
         with cls._lock:
             try:
                 return cls.registries[db_name]

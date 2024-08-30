@@ -3,8 +3,9 @@
 import psycopg2
 import re
 
-from odoo import _, api, fields, models, registry, Command, SUPERUSER_ID
+from odoo import _, api, fields, models, Command, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -299,7 +300,7 @@ class DeliveryCarrier(models.Model):
 
             # Use a new cursor to avoid rollback that could be caused by an upper method
             try:
-                db_registry = registry(db_name)
+                db_registry = Registry(db_name)
                 with db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     IrLogging = env['ir.logging']

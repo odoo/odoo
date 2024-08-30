@@ -33,6 +33,8 @@ def registry(database_name=None):
     on the current thread. If the registry does not exist yet, it is created on
     the fly.
     """
+    import warnings  # noqa: PLC0415
+    warnings.warn("Use directly odoo.modules.registry.Registry", DeprecationWarning, 2)
     if database_name is None:
         import threading
         database_name = threading.current_thread().dbname

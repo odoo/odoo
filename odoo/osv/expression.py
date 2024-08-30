@@ -748,7 +748,7 @@ def get_unaccent_wrapper(cr):
         "Since 18.0, deprecated method, use env.registry.unaccent instead",
         DeprecationWarning, 2,
     )
-    return odoo.registry(cr.dbname).unaccent
+    return odoo.modules.registry.Registry(cr.dbname).unaccent
 
 
 class expression(object):
