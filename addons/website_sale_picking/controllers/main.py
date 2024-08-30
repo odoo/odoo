@@ -2,7 +2,9 @@
 
 from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.http import request
 
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
 
 
@@ -29,3 +31,13 @@ class PaymentPortalOnsite(PaymentPortal):
         # TODO should be managed in a `_compute_warehouse_id` override
         if sale_order.carrier_id.delivery_type == 'onsite' and sale_order.carrier_id.warehouse_id:
             sale_order.warehouse_id = sale_order.carrier_id.warehouse_id
+
+
+class WebsiteSalePicking(WebsiteSale):
+
+    def _check_delivery_address(self, partner_sudo):
+        order_sudo = request.website.sale_get_order()
+        carrier_sudo = order_sudo.carrier_id
+        if carrier_sudo.delivery_type == 'onsite' and partner_sudo == carrier_sudo.warehouse_id.partner_id:
+            return True
+        return super()._check_delivery_address(partner_sudo)
