@@ -316,8 +316,8 @@ class WebsiteHrRecruitment(WebsiteForm):
         if any(applicant for applicant in refused_applicants if refused_applicants_condition(applicant)):
             return {
                 'message':  _(
-                    'You applied for this position less than 6 months ago, and have been rejected.'
-                    ' Please don\'t reapply unless you have a good reason.'
+                    'We\'ve found a previous closed application in our system within the last 6 months.'
+                    ' Please consider before applying in order not to duplicate efforts.'
                 )
             }
 
@@ -342,7 +342,7 @@ class WebsiteHrRecruitment(WebsiteForm):
 
         return {
             'message':  _(
-                'You already applied to another position recently.'
+                'We found a recent application with a similar name, email, phone number.'
                 ' You can continue if it\'s not a mistake.'
             )
         }
