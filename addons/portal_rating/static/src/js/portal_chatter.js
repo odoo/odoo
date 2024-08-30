@@ -112,10 +112,9 @@ PortalChatter.include({
     },
     /**
      * @override
-     * @param {Array} domain
      * @returns {Promise}
      */
-    messageFetch: async function (domain) {
+    messageFetch: async function () {
         const result = await this._super(...arguments);
         this._updateRatingCardValues(result);
         return result;
@@ -152,6 +151,11 @@ PortalChatter.include({
         var params = this._super.apply(this, arguments);
         if (this.options['display_rating']) {
             params['rating_include'] = true;
+
+            const ratingValue = this.get('rating_value');
+            if (ratingValue !== false) {
+                params['rating_value'] = ratingValue;
+            }
         }
         return params;
     },
@@ -231,7 +235,7 @@ PortalChatter.include({
      * @override
      * @returns {Promise}
      */
-    _onChangeDomain: function () {
+    _changeCurrentPage: function () {
         const spinnerDelayed = setTimeout(()=> {
             this.$('.o_portal_chatter_messages_loading').removeClass('d-none');
             this.$('.o_portal_chatter_messages').addClass('d-none');
@@ -372,10 +376,6 @@ PortalChatter.include({
      * @private
      */
     _onChangeRatingDomain: function () {
-        var domain = [];
-        if (this.get('rating_value')) {
-            domain = [['rating_value', '=', this.get('rating_value')]];
-        }
-        this._changeCurrentPage(1, domain);
+        this._changeCurrentPage(1);
     },
 });
