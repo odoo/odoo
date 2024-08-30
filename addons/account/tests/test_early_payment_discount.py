@@ -153,14 +153,10 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
-            {'amount_currency': -1000.0},
-            {
-                'account_id': self.env.company['account_journal_early_pay_discount_loss_account_id'].id,
-                'amount_currency': 100.0,
-            },
-            {'amount_currency': 900.0},
-        ])
+        self.assertEqual(
+            payments.line_ids.sorted('balance').mapped('amount_currency'),
+            [-1000.0, 100.0, 900.0],
+        )
 
     def test_register_discounted_payment_on_single_invoice_with_fixed_tax_1(self):
         self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'

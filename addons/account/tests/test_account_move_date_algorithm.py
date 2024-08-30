@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from contextlib import closing
+
+import freezegun
+
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-
-import freezegun
 
 
 @tagged('post_install', '-at_install')
@@ -262,7 +264,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 'account.group_account_manager',
                 'account.group_account_invoice',
         ):
-            with self.subTest(group=group), self.cr.savepoint() as sp:
+            with self.subTest(group=group), closing(self.cr.savepoint()):
                 self.env.user.groups_id = [Command.set(self.env.ref(group).ids)]
 
                 self.assertTrue(self.env.user.has_group(group))
@@ -275,10 +277,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
                 self.env.company.sudo().sale_lock_date = fields.Date.to_date('2023-02-01')
                 (invoice + payment.move_id).action_post()
-                self.assertRecordValues([invoice, payment.move_id], [
-                    {'date': fields.Date.to_date('2023-02-28')},
-                    {'date': fields.Date.to_date('2023-01-30')},
-                ])
+                self.assertEqual(invoice.date.isoformat(), '2023-02-28')
+                self.assertEqual(payment.move_id.date.isoformat(), '2023-01-30')
 
                 self.env.company.sudo().sale_lock_date = fields.Date.to_date('2023-03-01')
                 (invoice + payment.move_id).line_ids\
@@ -288,13 +288,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
 
                 # The sale lock date does not matter for the caba move, since it is not in a sale journal
-                self.assertRecordValues(caba_move.journal_id, [{
-                    'type': 'general',
-                }])
-                self.assertRecordValues(caba_move, [{
-                    'date': fields.Date.to_date('2023-02-28'),
-                }])
-                sp.close()  # Rollback to ensure all subtests start in the same situation
+                self.assertEqual(caba_move.journal_id.type, 'general')
+                self.assertEqual(caba_move.date.isoformat(), '2023-02-28')
 
     @freezegun.freeze_time('2024-08-05')
     def test_lock_date_exceptions(self):
