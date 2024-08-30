@@ -874,7 +874,7 @@ class ChromeBrowser:
         self.screencast_frames = []
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
-        self.window_size = test_class.browser_size
+        self.window_size = test_class.browser_size.replace('x', ',')
         self.touch_enabled = test_class.touch_enabled
         self.sigxcpu_handler = None
         self._chrome_start()
