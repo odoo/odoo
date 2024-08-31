@@ -5,6 +5,8 @@ import { ImageDescription } from "./image_description";
 import { ImagePadding } from "./image_padding";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { boundariesOut } from "@html_editor/utils/position";
+import { ImageTransformation } from "./image_transformation";
+import { registry } from "@web/core/registry";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -159,7 +161,7 @@ export class ImagePlugin extends Plugin {
                     },
                     title: _t("Transform the picture (click twice to reset transformation)"),
                     icon: "fa-object-ungroup",
-                    isFormatApplied: () => p.currentImageTransformation.imageEl,
+                    isFormatApplied: () => p.isImageTransformationOpen(),
                 },
                 {
                     id: "image_delete",
@@ -182,11 +184,11 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = createFileViewer();
+    }
 
-        this.currentImageTransformation = {
-            imageEl: undefined,
-            clean: undefined,
-        };
+    destroy() {
+        super.destroy();
+        this.closeImageTransformation();
     }
 
     handleCommand(command, payload) {
@@ -277,32 +279,14 @@ export class ImagePlugin extends Plugin {
                 if (!selectedImg) {
                     return;
                 }
-                const $selectedImg = $(selectedImg);
-                $selectedImg.transfo({ document: this.document });
-                this.currentImageTransformation = {
-                    clean: () => {
-                        $selectedImg.transfo("destroy");
-                        this.currentImageTransformation.clean = undefined;
-                        this.currentImageTransformation.imageEl = undefined;
-                    },
-                    imageEl: selectedImg,
-                };
-                break;
-            }
-            case "CONTENT_UPDATED": {
-                if (
-                    this.currentImageTransformation.imageEl &&
-                    payload.root === this.currentImageTransformation.imageEl
-                ) {
-                    this.dispatch("ADD_STEP");
-                }
+                this.openImageTransformation(selectedImg);
                 break;
             }
             case "DELETE_IMAGE": {
                 const selectedImg = this.getSelectedImage();
                 if (selectedImg) {
                     selectedImg.remove();
-                    this.currentImageTransformation.clean?.();
+                    this.closeImageTransformation();
                     this.dispatch("ADD_STEP");
                 }
             }
@@ -310,7 +294,7 @@ export class ImagePlugin extends Plugin {
     }
 
     onSelectionChange() {
-        this.currentImageTransformation.clean?.();
+        this.closeImageTransformation();
     }
 
     getSelectedImage() {
@@ -361,6 +345,31 @@ export class ImagePlugin extends Plugin {
             const commands = [embedImageCommand, this.shared.getPathAsUrlCommand(text, url)];
             this.shared.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
             return true;
+        }
+    }
+
+    openImageTransformation(image) {
+        if (registry.category("main_components").contains("ImageTransformation")) {
+            return;
+        }
+        registry.category("main_components").add("ImageTransformation", {
+            Component: ImageTransformation,
+            props: {
+                image,
+                document: this.document,
+                destroy: this.closeImageTransformation,
+                onChange: () => this.dispatch("ADD_STEP"),
+            },
+        });
+    }
+
+    isImageTransformationOpen() {
+        return registry.category("main_components").contains("ImageTransformation");
+    }
+
+    closeImageTransformation() {
+        if (this.isImageTransformationOpen()) {
+            registry.category("main_components").remove("ImageTransformation");
         }
     }
 }
