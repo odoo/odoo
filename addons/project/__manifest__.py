@@ -204,7 +204,6 @@
 
             'html_editor/static/src/**/*',
             'html_editor/static/lib/DOMpurify.js',
-            'html_editor/static/lib/jQuery.transfo.js',
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
