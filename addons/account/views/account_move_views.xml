@@ -313,6 +313,13 @@
                     <field name="invoice_date"/>
                     <field name="date"/>
                     <field name="date_maturity" string="Due Date"/>
+                    <field
+                        name="date"
+                        string="Unreconciled Date at"
+                        filter_domain="[
+                            '|', ('full_reconcile_id.partial_reconcile_ids.max_date', '>', raw_value),
+                            '&amp;', ('is_account_reconcile', '=', True), ('matching_number', '=', False)
+                        ]"/>
                     <field name="discount_date" string="Discount Date"/>
                     <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', raw_value), ('debit', '=', raw_value)]"/>
                     <field name="account_id"/>
