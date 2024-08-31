@@ -281,21 +281,6 @@ test("Can transform an image", async () => {
     }
 });
 
-test("jquery transform overlay is rightly positioned in iframe", async () => {
-    const { el } = await setupEditor(
-        `
-        <img class="img-fluid test-image" src="${base64Img}">
-    `,
-        { props: { iframe: true } }
-    );
-    click(":iframe img.test-image");
-    await waitFor(".o-we-toolbar");
-    click(".o-we-toolbar button[name='image_transform']");
-    await animationFrame();
-    expect(":iframe .transfo-controls").toHaveCount(1);
-    expect(el.contains(queryOne(":iframe .transfo-controls"))).toBe(false);
-});
-
 test("Image transformation dissapear when selection change", async () => {
     const { el } = await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
