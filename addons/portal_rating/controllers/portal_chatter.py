@@ -3,6 +3,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.osv import expression
 
 from odoo.addons.portal.controllers import mail
 
@@ -42,3 +43,9 @@ class PortalChatter(mail.PortalChatter):
         result = super(PortalChatter, self).portal_message_fetch(res_model, res_id, domain=domain, limit=limit, offset=offset, **kw)
         result.update(self._portal_rating_stats(res_model, res_id, **kw))
         return result
+
+    def _setup_portal_message_fetch_extra_domain(self, data):
+        domains = [super()._setup_portal_message_fetch_extra_domain(data)]
+        if data.get('rating_value', False) is not False:
+            domains.append([('rating_value', '=', float(data['rating_value']))])
+        return expression.AND(domains)

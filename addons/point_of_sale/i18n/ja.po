@@ -4428,7 +4428,7 @@ msgstr "このプロダクトの収入勘定を定義してください: \"%s\" 
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please define income account for this product: '%s' (id:%d)."
-msgstr "このプロダクトの収入勘定を定義して下さい: '%s' (id:%d)."
+msgstr "このプロダクトの収益勘定を定義して下さい: '%s' (id:%d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7399,6 +7399,15 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr "アクティブなPoSセッションがある間は、連絡先を削除できません。最初にセッション%sを閉じます。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
