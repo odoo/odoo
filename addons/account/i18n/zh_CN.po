@@ -6,8 +6,8 @@
 # Yazi Tian, 2024
 # Minggui He <heccjj@gmail.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-20 13:46+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6648,6 +6648,8 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"公式的形式为 "
+"line_code.expression_label。这样就可以为该表达式（在_carryover_*标记的表达式上）设置结转的目标，以避免与母行不同。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -15576,7 +15578,7 @@ msgstr "勾选后，显示该表达式值时不显示0值。"
 msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
-msgstr ""
+msgstr "当针对一个表达式进行结转时，该表达式的标签必须以 _applied_carryover_ 开头。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16231,7 +16233,7 @@ msgstr "不能对具有资产负债表外科目的行使用税项"
 msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
-msgstr ""
+msgstr "如果表达式中的标签不是以 _carryover_ 开头，则不能使用字段 carryover_target。"
 
 #. module: account
 #. odoo-python
