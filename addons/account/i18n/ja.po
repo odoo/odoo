@@ -169,7 +169,7 @@ msgstr "%(tag)s (%(country_code)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr "%(tax_name)s (端数処理)"
+msgstr "%(tax_name)s (丸め)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -1328,7 +1328,7 @@ msgid ""
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
 "<strong>この通貨はすでに勘定科目の生成に使われています</strong> <br/>\n"
-"                        端数処理ファクタの変更は以前の入力に対して適用されませんので、新旧データの間の不一致が発生される場合があります。"
+"                        丸めファクタの変更は以前の入力に対して適用されませんので、新旧データの間の不一致が発生される場合があります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1572,7 +1572,7 @@ msgstr "勘定科目%sは消込を許可していません。許可するには�
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "勘定科目現金端数処理"
+msgstr "勘定科目現金丸め"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -2169,7 +2169,7 @@ msgstr "仕訳グループを追加"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a line"
-msgstr "明細を追加"
+msgstr "明細追加"
 
 #. module: account
 #. odoo-javascript
@@ -2366,7 +2366,7 @@ msgstr "PEPPOLネットワークを通じて請求書を送受信できるよう
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr "現金端数処理管理を許可"
+msgstr "現金丸め管理を許可"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3682,21 +3682,21 @@ msgstr "キャッシュレジスタ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Cash Rounding"
-msgstr "現金端数処理"
+msgstr "現金丸め"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_cash_rounding_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_cash_rounding_id
 msgid "Cash Rounding Method"
-msgstr "現金端数処理方法"
+msgstr "現金丸め方法"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.rounding_list_action
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "現金端数処理"
+msgstr "現金丸め"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -3707,7 +3707,7 @@ msgstr "現金収支計算書"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Cash basis rounding difference"
-msgstr "現金主義端数処理差異"
+msgstr "現金主義丸め差異"
 
 #. module: account
 #. odoo-python
@@ -4524,7 +4524,7 @@ msgstr "手動で作成"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
-msgstr "最初の現金端数処理を作成しましょう。"
+msgstr "最初の現金丸めを作成しましょう。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -5216,7 +5216,7 @@ msgstr "デフォルトの費用勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Income Account"
-msgstr "デフォルトの収入勘定"
+msgstr "デフォルト収益勘定"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8482,7 +8482,7 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, the journal items must "
 "include one and only one receivable/payable account (with an exception of "
 "internal transfers)."
-msgstr "仕訳入力%sは無効です。続けるには、仕訳項目は一つのみの買掛又は売掛勘定科目を含める必要があります (内部振込は例外)。"
+msgstr "仕訳入力%sは無効です。続けるには、仕訳項目は一つのみの買掛又は売掛勘定科目を含める必要があります (内部振替は例外)。"
 
 #. module: account
 #. odoo-python
@@ -9059,7 +9059,7 @@ msgstr "ロック日メッセージ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr "仕訳を手動でロック"
+msgstr "仕訳を手動でロックする"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9067,7 +9067,7 @@ msgstr "仕訳を手動でロック"
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr "ハッシュで送信済請求書をロック"
+msgstr "送信済請求書をハッシュでロックする"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -9639,6 +9639,13 @@ msgstr "税収を無効にする"
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
 msgstr "支払タイプが出金の場合の金額フィールドの負の値"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -11680,7 +11687,7 @@ msgstr "返金"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 msgid "Register Payment"
-msgstr "支払を登録"
+msgstr "支払登録"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -11697,7 +11704,7 @@ msgstr "新規購買領収書を登録"
 #: model_terms:ir.actions.act_window,help:account.action_account_payments_payable
 #: model_terms:ir.actions.act_window,help:account.action_account_payments_transfer
 msgid "Register a payment"
-msgstr "支払を登録してください"
+msgstr "支払登録する"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
@@ -12050,7 +12057,7 @@ msgstr "顧客請求書・仕入先請求書の照合規則"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr "相手勘定仕訳を提案する規則"
+msgstr "相手勘定エントリを提案する規則"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -13854,7 +13861,7 @@ msgstr ""
 msgid ""
 "The button priority shifted since the invoice has been sent. Let's register "
 "the payment now."
-msgstr "請求書が送付されたので、ボタンの優先順位が移動しました。支払を登録しましょう。"
+msgstr "請求書が送付されたので、ボタンの優先順位が移動しました。支払登録しましょう。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -14580,7 +14587,7 @@ msgstr "仕訳のデフォルト貸方・借方の種類は、「売掛金」又
 msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
-msgstr "res.通貨のフォームビューで四捨五入の係数を変更すると危険であることを知らせる警告が表示されます。"
+msgstr "res.通貨のフォームビューで丸めの係数を変更すると危険であることを知らせる警告が表示されます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -15638,7 +15645,7 @@ msgstr "バッチ支払を使用"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
-msgstr "予算を使って、予測収益及び費用を実績と比較"
+msgstr "予算を使って、見込収益及び費用を実績と比較"
 
 #. module: account
 #. odoo-python
@@ -15925,7 +15932,7 @@ msgstr "%s の警告です。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Warning for Cash Rounding Method: %s"
-msgstr "現金端数処理方法の警告: %s"
+msgstr "現金丸め方法の警告: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16329,7 +16336,7 @@ msgstr "外貨を指定せずに、外国通貨での金額を指定すること
 msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
-msgstr "選択した仕訳項目に支払う金額が残っていないため、支払を登録できません。"
+msgstr "選択した仕訳項目に支払う金額が残っていないため、支払登録できません。"
 
 #. module: account
 #. odoo-python

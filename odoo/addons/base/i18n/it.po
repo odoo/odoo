@@ -4536,6 +4536,54 @@ msgid ""
 "For detailed guidance, refer to the [SII Guide](https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf).\n"
 "\n"
 msgstr ""
+"\n"
+"Localizzazione EDI cilena\n"
+"========================\n"
+"Questo modulo facilita la generazione di DTE (Documento Fiscale Elettronico) per la fatturazione cilena. Caratteristiche principali:\n"
+"- Formato DTE in XML: Il documento è strutturato in formato XML per transazioni elettroniche standardizzate.\n"
+"- Comunicazione diretta con SII: permette l'interazione diretta con il Servicio de Impuestos Internos (SII) per inviare fatture e altri documenti fiscali relativi alle vendite.\n"
+"- Comunicazione con i clienti: Invia i DTE delle vendite ai clienti.\n"
+"- Comunicazione con fornitori: accetta i DTE dai fornitori (venditori).\n"
+"- Notifiche SII: informano il SII riguardo l'accettazione o il rifiuto delle fatture dei fornitori o altri DTE.\n"
+"\n"
+"Nota: per visualizzare i codici a barre sulle fatture, è necessaria la raccolta \"pdf417gen\".\n"
+"\n"
+"Conformità ricevute elettroniche\n"
+"==============================\n"
+"\n"
+"In base ai requisiti del SII, a partire da marzo 2021, tutte le transazioni di boletas devono essere inviate al SII utilizzando un servizio web diverso da quello utilizzato per le fatture elettroniche. In precedenza, era richiesto solo un rapporto giornaliero.\n"
+"\n"
+"Modifiche recenti\n"
+"==============\n"
+"\n"
+"- Eliminazione del requisito del Libro Vendite Giornaliero: a partire dal 1° agosto 2022, il libro vendite giornaliero (\"Libro de ventas diarias\") non è più richiesto dalle autorità ed è stato rimosso da questa versione di Odoo.\n"
+"\n"
+"Differenze tra i flussi di lavoro delle boletas elettroniche e della fatturazione elettronica\n"
+"=========================================================================\n"
+"\n"
+"1. Server dedicati per boletas:\n"
+"- Ambiente di produzione: `palena.sii.cl`\n"
+"- Ambiente di test: `maullin.sii.cl`\n"
+"\n"
+"2. Servizi di autenticazione e stato differenti:\n"
+"- i servizi e i metodi di autenticazione per la verifica dello stato di consegna e dei documenti differiscono tra boletas elettroniche e fatture elettroniche.\n"
+"\n"
+"3. Token di autenticazione:\n"
+"- il processo per ottenere i token di autenticazione cambia.\n"
+"\n"
+"4. Schema XML aggiornato:\n"
+"- nuove etichette sono state incorporate nello schema XML per le boletas elettroniche.\n"
+"\n"
+"5. Diagnosi di validazione:\n"
+"- le boletas elettroniche ricevono diagnosi di validazione tramite un servizio web REST utilizzando il track-id di consegna.\n"
+"- le fatture elettroniche continuano a ricevere diagnosi via e-mail.\n"
+"\n"
+"6. Lunghezza del track-ID:\n"
+"- boletas elettroniche: 15 cifre\n"
+"- fatture elettroniche: 10 cifre\n"
+"\n"
+"Per informazioni più dettagliate, fai riferimento a [SII Guide](https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf).\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -5025,6 +5073,17 @@ msgid ""
 "============================================================================================================\n"
 "\n"
 msgstr ""
+"\n"
+"Regole di retribuzione Francia.\n"
+"=====================\n"
+"\n"
+"    - Configurazione di hr_payroll per la localizzazione francese\n"
+"    - Tutte le principali regole di contribuzione per la busta paga francese, per 'cadre' e 'non-cadre'\n"
+"    - Nuovo rendiconto busta paga\n"
+"\n"
+"Il modulo non è stato realizzato dal team R&S Libro paga. Non garantiamo l'accuratezza dei dati contenuti nel modulo.\n"
+"============================================================================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -12663,7 +12722,7 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "<i class=\"fa fa-gear\"/> Detect Max Limit"
-msgstr ""
+msgstr "<i class=\"fa fa-gear\"/> Individua limite max"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -14218,6 +14277,8 @@ msgstr "Aggiungi la certificazione al curriculum dei dipendenti"
 #: model:ir.module.module,description:base.module_pos_account_tax_python
 msgid "Add code to manage custom taxes to the POS assets bundle"
 msgstr ""
+"Aggiungi codice per gestire imposte personalizzate all'insieme di risorse "
+"del POS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_slides
@@ -15058,7 +15119,7 @@ msgstr "Assegnare il congedo retribuito e seguire le richieste di congedo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_tax_python
 msgid "Allow custom taxes in POS"
-msgstr ""
+msgstr "Consente imposte personalizzate nel POS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
@@ -17548,7 +17609,7 @@ msgstr "Avatax Brasile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_avatax_sale
 msgid "Avatax Brazil Sale"
-msgstr ""
+msgstr "Avatax Brasile per Vendite"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_stock
@@ -17685,12 +17746,12 @@ msgstr "Bangladesh - Contabilità"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bd_hr_payroll
 msgid "Bangladesh - Payroll"
-msgstr ""
+msgstr "Bangladesh - Libro paga"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bd_hr_payroll_account
 msgid "Bangladesh - Payroll with Accounting"
-msgstr ""
+msgstr "Bangladesh - Libro paga e Contabilità"
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
@@ -18992,7 +19053,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_mail_server_certificate_requires_tls
 msgid "Certificate-based authentication requires a TLS transport"
-msgstr ""
+msgstr "L'autenticazione basata su certificato richiede un trasporto TLS"
 
 #. module: base
 #: model:res.country,name:base.td
@@ -19109,7 +19170,7 @@ msgstr "Selezionare la casella se il contatto è un dipendente."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_mass_mailing
 msgid "Checkout Newsletter"
-msgstr ""
+msgstr "Newsletter al checkout"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_latam_check
@@ -19701,6 +19762,8 @@ msgid ""
 "Computed field to check if the record should be visible according to the "
 "domain"
 msgstr ""
+"Campo calcolato per verificare se il record deve essere visibile a seconda "
+"del dominio"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -19861,6 +19924,8 @@ msgid ""
 "Constraint to ensure that either an XML action or a python_method is "
 "defined, but not both."
 msgstr ""
+"Vincolo per garantire la definizione di un'azione XML o di un python_method "
+"ma non entrambi."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_embedded_actions_check_python_method_requires_name
@@ -19868,6 +19933,8 @@ msgid ""
 "Constraint to ensure that if a python_method is defined, then the name must "
 "also be defined."
 msgstr ""
+"Vincolo per garantire la definizione di un nome se viene definito un "
+"python_method."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_res_id_only_when_embedded_action
@@ -19875,6 +19942,8 @@ msgid ""
 "Constraint to ensure that the embedded_parent_res_id is only defined when a "
 "top_action_id is defined."
 msgstr ""
+"Vincolo per garantire la definizione di un embedded_parent_res_id solo se "
+"viene definito un top_action_id"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
@@ -20041,7 +20110,7 @@ msgstr "Converti i Ticket da/in Leads"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Convert attachments to links for emails over"
-msgstr ""
+msgstr "Converti allegati in link per e-mail"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
@@ -20628,6 +20697,9 @@ msgid ""
 "Cron job %(name)s (%(id)s) has been deactivated after failing %(count)s "
 "times. More information can be found in the server logs around %(time)s."
 msgstr ""
+"Il lavoro CRON %(name)s (%(id)s) è stato disattivato dopo %(count)s "
+"fallimenti. È possibile trovare più informazioni nei log del server verso le"
+" %(time)s."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__cuba
@@ -21091,7 +21163,7 @@ msgstr "Debugging"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Debugging information:"
-msgstr ""
+msgstr "Informazioni di debug:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_decimal_precision_form
@@ -21205,7 +21277,7 @@ msgstr "Valori predefiniti"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__filter_ids
 msgid "Default filter of the embedded action (if none, no filters)"
-msgstr ""
+msgstr "Filtro predefinito dell'azione integrata (se nessuno, nessun filtro)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__limit
@@ -22355,7 +22427,7 @@ msgstr "Nome integrato"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__embedded_parent_res_id
 msgid "Embedded Parent Res"
-msgstr ""
+msgstr "Ris principale integrata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__user_id
@@ -25916,6 +25988,8 @@ msgid ""
 "If True, the session file corresponding to this device\n"
 "                                    no longer exists on the filesystem."
 msgstr ""
+"Se vero, il file della sessione che corrisponde a questo dispositivo\n"
+"                                    non esiste più nel file system."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -26316,7 +26390,7 @@ msgstr "Importa/esporta fatture elettronice con UBL/CII"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_edi_ubl_bis3
 msgid "Import/Export electronic orders with UBL"
-msgstr ""
+msgstr "Importazione/esportazione ordini elettronici con UBL"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_base_import
@@ -26797,6 +26871,8 @@ msgstr "Integrazione tra Libro paga e Parco veicoli."
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock_inter_company_rules
 msgid "Inter Company Module for Sale/Purchase Orders (with Inventory link)"
 msgstr ""
+"Modulo interaziendale per ordini di vendita/acquisto (con collegamento al "
+"Magazzino)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
@@ -26817,7 +26893,7 @@ msgstr "Integrazione tra le regole"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock_inter_company_rules
 msgid "Intercompany SO/PO"
-msgstr ""
+msgstr "OdV/OdA interaziendale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_inter_company_rules
@@ -26917,7 +26993,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid Expression while parsing xpath “%s”"
-msgstr ""
+msgstr "Espressione non valida durante l'analisi di xpath \"%s\""
 
 #. module: base
 #. odoo-python
@@ -27066,7 +27142,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_sort_json
 msgid "Invalid sort definition"
-msgstr ""
+msgstr "Definizione di ordine non valida"
 
 #. module: base
 #. odoo-python
@@ -27078,7 +27154,7 @@ msgstr "\"%(value)s\" speciale non valido nel pulsante"
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid specification for moved nodes: “%s”"
-msgstr ""
+msgstr "Specifica non valida per i nodi spostati: \"%s\""
 
 #. module: base
 #. odoo-python
@@ -27255,7 +27331,7 @@ msgstr "È la valuta corrente della società"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__is_deletable
 msgid "Is Deletable"
-msgstr ""
+msgstr "È eliminabile"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_public
@@ -28026,6 +28102,7 @@ msgstr "Lesotho"
 #: model:ir.module.module,summary:base.module_website_sale_mass_mailing
 msgid "Let new customers sign up for a newsletter during checkout"
 msgstr ""
+"Consenti ai nuovi clienti di iscriversi alla newsletter durante il checkout"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_referral
@@ -28526,6 +28603,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Invio posta non riuscito con server SMTP \"%(server)s\".\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -28908,7 +28987,7 @@ msgstr "Gestisce account LinkedIn e programma i messaggi"
 #: model:ir.module.module,description:base.module_social_twitter
 #: model:ir.module.module,summary:base.module_social_twitter
 msgid "Manage your X accounts and schedule posts"
-msgstr ""
+msgstr "Gestisci gli account X e pianifica post"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_youtube
@@ -28998,7 +29077,7 @@ msgstr "Operazioni molti a molti"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Il molti a uno %(field)s sul modello %(model)s non esiste!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -29814,6 +29893,8 @@ msgid ""
 "Module for synchronization of Inventory Documents between several companies.\n"
 "   For example, this allows you to have a delivery receipt created automatically in the receiving company when another company of the system confirms a delivery order.\n"
 msgstr ""
+"Modulo per la sincronizzazione dei documenti del Magazzino tra varie aziende.\n"
+"   Ad esempio, consente di avere una ricevuta di consegna creata automaticamente nell'azienda di destinazione quando un'altra azienda del sistema conferma un ordine di consegna.\n"
 
 #. module: base
 #. odoo-python
@@ -32485,6 +32566,8 @@ msgid ""
 "Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
 " file(s)"
 msgstr ""
+"Odoo non è in grado di unire i PDF generati a causa di {num_errors} file "
+"corrotti"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -34425,7 +34508,7 @@ msgstr "Schermo di preparazione POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_preparation_display
 msgid "PoS Preparation Display HR"
-msgstr ""
+msgstr "Schermo di preparazione POS HR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
@@ -34602,7 +34685,7 @@ msgstr "Prepend"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter_wall
 msgid "Pretty Way to Display X for Event"
-msgstr ""
+msgstr "Modo carino per visualizzare post X per un evento"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
@@ -34710,7 +34793,7 @@ msgstr "Notifiche di disponibilità prodotto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_barcodelookup
 msgid "Product Barcode Lookup"
-msgstr ""
+msgstr "Ricerca codice a barre prodotto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -34819,7 +34902,7 @@ msgstr "Risultati analisi"
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
 msgid "Progress of Scheduled Actions"
-msgstr ""
+msgstr "Avanzamento azioni pianificate"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_project
@@ -35346,7 +35429,7 @@ msgstr "Metodo Python"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__python_method
 msgid "Python method returning an action"
-msgstr ""
+msgstr "Metodo Python che restituisce un'azione"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
@@ -35400,7 +35483,7 @@ msgstr "Gestione della qualità con MRP e IoT"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_repair
 msgid "Quality Management with Repair"
-msgstr ""
+msgstr "Gestione della qualità con Riparazioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_iot
@@ -35910,7 +35993,7 @@ msgstr "Gestione Stock Noleggio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_planning
 msgid "Rental/Planning Bridge"
-msgstr ""
+msgstr "Ponte Noleggio/Pianificazione"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_sign
@@ -35931,7 +36014,7 @@ msgstr "Riparazione prodotti danneggiati"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_repair
 msgid "Repair features for Quality Control"
-msgstr ""
+msgstr "Funzionalità Riparazioni per controllo qualità"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_repair
@@ -36005,6 +36088,9 @@ msgid ""
 "\n"
 "Cannot separate file to save as attachment because the report's template does not contain the attributes 'data-oe-model' and 'data-oe-id' as part of the div with 'article' classname."
 msgstr ""
+"Il modello del rendiconto \"%s\" non è corretto, contatta l'amministratore.\n"
+"\n"
+"Impossibile separare come allegato il file da salvare, il modello del documento è privo degli attributi \"data-oe-model\" e \"data-oe-id\" sul div con nome classe \"article\"."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
@@ -38303,7 +38389,7 @@ msgstr "Contabilità di magazzino"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_barcodelookup
 msgid "Stock Barcode - Barcode Lookup"
-msgstr ""
+msgstr "Codice a barre magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_intrastat
@@ -38313,17 +38399,17 @@ msgstr "Magazzino Intrastat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_fleet
 msgid "Stock Transport"
-msgstr ""
+msgstr "Trasporto Magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_fleet_enterprise
 msgid "Stock Transport Enterprise"
-msgstr ""
+msgstr "Trasporto Magazzino Enterprise"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_fleet
 msgid "Stock Transport: Dispatch Management System"
-msgstr ""
+msgstr "Trasporto Magazzino: sistema di gestione spedizioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
@@ -38333,12 +38419,12 @@ msgstr "Magazzino azienda"
 #. module: base
 #: model:ir.module.module,summary:base.module_cloud_storage_azure
 msgid "Store chatter attachments in the Azure cloud"
-msgstr ""
+msgstr "Salva gli allegati del chatter nel cloud Azure"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_cloud_storage_google
 msgid "Store chatter attachments in the Google cloud"
-msgstr ""
+msgstr "Salva gli allegati del chatter nel cloud Google"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_cloud_storage
@@ -39118,7 +39204,7 @@ msgstr "Testo"
 #. module: base
 #: model:ir.module.module,summary:base.module_whatsapp
 msgid "Text your Contacts on WhatsApp"
-msgstr ""
+msgstr "Scrivere ai contatti su WhatsApp"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -39156,6 +39242,8 @@ msgid ""
 "The \"editable\" attribute of list views must be \"top\" or \"bottom\", "
 "received %(value)s"
 msgstr ""
+"Il valore \"modificabile\" delle viste elenco deve essere \"massimo\" o "
+"\"minimo\", restituito %(value)s"
 
 #. module: base
 #. odoo-python
@@ -39350,7 +39438,7 @@ msgstr "I dati di dimostrazione di"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__embedded_action_id
 msgid "The embedded action this filter is applied to"
-msgstr ""
+msgstr "L'azione integrata alla quale è applicato il filtro"
 
 #. module: base
 #. odoo-python
@@ -39359,6 +39447,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Impossibile rimuovere il campo \"%(field)s\", è una dipendenza del campo "
+"\"%(other_field)s\"."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -39425,11 +39515,17 @@ msgid ""
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"Il valore del campo che stai salvando (%(model)s %(field)s) include "
+"contenuti con limitazioni per motivi di sicurezza. È possibile che qualcuno "
+"con privilegi più elevati lo abbia modificato in precedenza e quindi non è "
+"possibile apportare modifiche in autonomia preservando il contenuto."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
 msgid "The first time the cron failed. It is automatically reset on success."
 msgstr ""
+"Prima volta in cui il cron ha fallito. Viene resettato automaticamente in "
+"caso di successo."
 
 #. module: base
 #. odoo-python
@@ -39452,7 +39548,7 @@ msgstr "È possibile utilizzare le seguenti variabili:"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "The group “%(name)s” defined in view does not exist!"
-msgstr ""
+msgstr "Il gruppo \"%(name)s\" definito nella vista non esiste!"
 
 #. module: base
 #. odoo-python
@@ -39642,12 +39738,14 @@ msgid ""
 "The number of consecutive failures of this job. It is automatically reset on"
 " success."
 msgstr ""
+"Il numero di fallimenti consecutivi del lavoro. Viene resettato "
+"automaticamente in caso di successo."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "The ondelete policy \"%(policy)s\" is not valid for field \"%(field)s\""
-msgstr ""
+msgstr "Il criterio ondelete \"%(policy)s\" non è valido per il campo \"%(field)s\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -39847,6 +39945,8 @@ msgstr "Il valore di arrotondamento deve essere superiore a 0!"
 #: code:addons/base/models/ir_mail_server.py:0
 msgid "The server \"%(server_name)s\" doesn't return the maximum email size."
 msgstr ""
+"Il server \"%(server_name)s\" non restituisce la dimensione massima "
+"dell'e-mail."
 
 #. module: base
 #. odoo-python
@@ -39897,7 +39997,7 @@ msgstr "Il codice provincia."
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "The table “%s” is used by another, possibly incompatible field(s)."
-msgstr ""
+msgstr "La tabella \"%s\" è utilizzata da altri campi forse non compatibili."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__model
@@ -39945,6 +40045,8 @@ msgid ""
 "The value for the field '%(field)s' already exists (this is probably "
 "'%(other_field)s' in the current model)."
 msgstr ""
+"Valore già esistenti per il campo \"%(field)s\" (probabilmente "
+"\"%(other_field)s\" nel modello corrente)."
 
 #. module: base
 #. odoo-python
@@ -39959,6 +40061,8 @@ msgid ""
 "The values for the fields '%(fields)s' already exist (they are probably "
 "'%(other_fields)s' in the current model)."
 msgstr ""
+"Valori già esistenti per i campi \"%(fields)s\" (probabilmente "
+"\"%(other_fields)s\" nel modello corrente)."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme
@@ -40189,7 +40293,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_planning
 msgid "This module Integrate Planning with Rental"
-msgstr ""
+msgstr "Il modulo integra Pianificazione con Noleggio"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_account
@@ -40263,6 +40367,8 @@ msgid ""
 "This module allows you to create products from barcode using Barcode Lookup "
 "API Key"
 msgstr ""
+"Il modulo permette di creare prodotti dal codice a barre utilizzando la "
+"chiave API ricerca codice a barre"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_sms
@@ -40468,6 +40574,8 @@ msgid ""
 "This module enables product creation by scanning barcodes with a camera, "
 "utilizing the Barcode Lookup API Key."
 msgstr ""
+"Il modulo abilita la creazione di prodotti scansionando i codici a barre con"
+" una fotocamera utilizzando la chiave API ricerca codice a barre."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt
@@ -40521,7 +40629,7 @@ msgstr "Questo modulo integra le vendite con WhatsApp"
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sms
 msgid "This module integrates the Point of Sale with SMS"
-msgstr ""
+msgstr "Il modulo integra il Punto Vendita con gli SMS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_event
@@ -40590,6 +40698,8 @@ msgid ""
 "This seems to be a multi-company issue, but you do not have access to the "
 "proper company to access the record anyhow."
 msgstr ""
+"Sembra trattarsi di un problema relativo ad aziende multiple ma non hai "
+"accesso all'azienda giusta per accedere al record."
 
 #. module: base
 #. odoo-python
@@ -40598,6 +40708,8 @@ msgid ""
 "This seems to be a multi-company issue, you might be able to access the "
 "record by switching to the company: %s."
 msgstr ""
+"Sembra trattarsi di un problema relativo ad aziende multiple, è possibile "
+"accedere al record passando all'azienda: %s."
 
 #. module: base
 #. odoo-python
@@ -40612,6 +40724,15 @@ msgid ""
 "attributes for these fields, to make sure they are always available "
 "together."
 msgstr ""
+"La vista potrebbe non funzionare per tutti gli utenti: alcuni utenti "
+"potrebbero presentare una combinazione di gruppi dove gli elementi "
+"%(elements)s vengono visualizzati ma dipendono dal campo %(field)s che non è"
+" accessibile. È possibile sistemare la situazione modificando i gruppi "
+"utente per assicurarti che tutti gli utenti aventi accesso a tali elementi "
+"hanno anche accesso al campo, tipicamente tramite le implicazioni del "
+"gruppo. In alternativa, puoi sistemare gli attributi \"%(groups)s\" o "
+"\"%(invisible)s\" per questi campi, per assicurarti che siano sempre "
+"disponibili insieme."
 
 #. module: base
 #. odoo-python
@@ -40674,7 +40795,7 @@ msgstr "Gantt per ferie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__timed_out_counter
 msgid "Timed Out Counter"
-msgstr ""
+msgstr "Cassa in time out"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
@@ -40781,6 +40902,10 @@ msgid ""
 " tasks, use <code>env['ir.cron']._notify_progress(done=task_done_count, "
 "remaining=task_remaining_count)</code>"
 msgstr ""
+"Per indicare l'avanzamento della chiamata CRON e riattivare una chiamata se "
+"ci sono lavori rimanenti, utilizza "
+"<code>env['ir.cron']._notify_progress(done=task_done_count, "
+"remaining=task_remaining_count)</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -40862,7 +40987,7 @@ msgstr "Tour"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour_recorder
 msgid "Tours Recorder"
-msgstr ""
+msgstr "Registratore tour"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
@@ -40973,6 +41098,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_stock_fleet
 msgid "Transport Management: organize packs in your fleet, or carriers."
 msgstr ""
+"Gestione trasporto: organizza i pacchi con la tua flotta o con i corrieri."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -41043,12 +41169,12 @@ msgstr "Turchia-Rendiconti contabili"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
 msgid "Turkey - Payroll"
-msgstr ""
+msgstr "Turchia - Libro paga"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
 msgid "Turkey - Payroll with Accounting"
-msgstr ""
+msgstr "Turchia - Libro paga e Contabilità"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -41347,6 +41473,9 @@ msgid ""
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"Aiaiai! Sembra che ti sia imbattuto in record super segreti.\n"
+"\n"
+"Scusa, %(user)s non ha  '%(operation)s ' accesso a:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -42332,7 +42461,7 @@ msgstr "Visualizzazione sessioni chat dal vivo per lead CRM"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "View Problematic Record(s)"
-msgstr ""
+msgstr "Mostra record problematico(i)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -43729,7 +43858,7 @@ msgstr "delivery_mondialrelay"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_hr_contract_calendar
 msgid "display working hours from employee's contracts"
-msgstr ""
+msgstr "Mostra le ore di lavoro dai contratti del dipendente"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -43973,6 +44102,8 @@ msgid ""
 "id of the record the filter should be applied to. Only used in combination "
 "with embedded actions"
 msgstr ""
+"ID del record a cui applicare il filtro. Utilizzato solo in combinazione con"
+" azioni integrate"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__init
@@ -44325,7 +44456,7 @@ msgstr "settimana"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "wkhtmltoimage 0.12.0^ is required in order to render images from html"
-msgstr ""
+msgstr "wkhtmltoimage 0.12.0^ è richiesto per restituire immagini dall'html"
 
 #. module: base
 #. odoo-python

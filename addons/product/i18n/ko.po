@@ -70,7 +70,7 @@ msgstr ""
 msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
-msgstr ""
+msgstr "%(item_name)s: 종료 날짜 (%(end_date)s)는 시작 날짜 (%(start_date)s) 이후여야 합니다."
 
 #. module: product
 #. odoo-python
@@ -82,7 +82,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s 및 %(price)s의 추가 요금"
 
 #. module: product
 #. odoo-python
@@ -121,7 +121,7 @@ msgstr "예: 품목 설명, 전자책, 법적 고지 등"
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
-msgstr ""
+msgstr "- 바코드 \"%(barcode)s\"가 이미 제품에 할당되었습니다: %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -194,7 +194,7 @@ msgstr "4 x 7, 가격 표시"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>팁: 9.99달러로 반올림하고 싶으신가요?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -502,7 +502,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "고객이 직접 가치를 설정할 수 있도록 허용"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -3602,7 +3602,7 @@ msgstr "마이너스 할인을 설정하여 가격을 인상시킬 수 있습니
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "비용에 가격 인상을 적용할 수 있습니다."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -3696,6 +3696,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"가격 목록은 삭제할 수 없습니다:\n"
+"(%(pricelists)s)\n"
+"다음 가격 목록 내에서 사용됩니다:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -3870,7 +3874,7 @@ msgstr "품목"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "10.00으로 반올림하고 -0.01로 추가 설정합니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view

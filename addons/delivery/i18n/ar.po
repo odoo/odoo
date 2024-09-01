@@ -3,8 +3,8 @@
 # 	* delivery
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,6 +179,8 @@ msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
 msgstr ""
+"لا يمكن أن يكون لشركة الشحن %s نفس علامة التصنيف في كل من \"علامات التصنيف "
+"الضرورية\" و\"علامات التصنيف المستثناة\" "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -189,14 +191,14 @@ msgstr "وصف الناقل"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "قم بتحديد نقطة استلام "
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Choose this location"
-msgstr ""
+msgstr "اختر هذا الموقع "
 
 #. module: delivery
 #. odoo-javascript
@@ -440,6 +442,8 @@ msgid ""
 "Filling this form allows you to make the shipping method available according"
 " to the content of the order or its destination."
 msgstr ""
+"عندما تقوم بتعبئة هذه الاستمارة، ستتمكن من جعل طريقة الشحن متاحة بناءً وفقاً"
+" لمحتوى الطلبية أو وجهتها. "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -505,14 +509,14 @@ msgstr ""
 msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
-msgstr ""
+msgstr "إذا كان إجمالي حجم الطلبية أكبر من هذا الحجم، لن تكون الطريقة متاحة. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
 msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
-msgstr ""
+msgstr "إذا كان إجمالي وزن الطلبية أكبر من هذا الوزن، لن تكون الطريقة متاحة. "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -592,7 +596,7 @@ msgstr "إدارة بادئات الرمز البريدي للتوصيل "
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Map view"
-msgstr ""
+msgstr "عرض الخريطة "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -612,7 +616,7 @@ msgstr "الهامش في المعدل"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "الحد الأقصى للحجم "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
@@ -627,7 +631,7 @@ msgstr "أقصى قيمة"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "علامات التصنيف الضرورية "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -644,7 +648,7 @@ msgstr "مزودون جدد"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "لا توجد نقاط استلام متاحة لعنوان التوصيل هذا. "
 
 #. module: delivery
 #. odoo-javascript
@@ -663,7 +667,7 @@ msgstr "غير متاح للطلب الحالي "
 #: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Opening hours"
-msgstr ""
+msgstr "ساعات العمل "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -678,7 +682,7 @@ msgstr "الطلب"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "بيانات موقع الاستلام "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -863,6 +867,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"لن تكون الطريقة متاحة إذا كان لمنتج واحد على الأقل من الطلبية إحدى علامات "
+"التصنيف هذه. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -870,6 +876,8 @@ msgid ""
 "The method is available only if at least one product of the order has one of"
 " these tags."
 msgstr ""
+"ستكون الطريقة متاحة فقط إذا كان لمنتج واحد على الأقل من الطلبية إحدى علامات "
+"التصنيف هذه. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -897,7 +905,7 @@ msgstr "سوف يكون الشحن مجانياً بما أن قيمة الطل�
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "حدث خطأ أثناء تحميل الخريطة "
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -921,6 +929,9 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"يضيف هذا الخيار رابطاً للعميل في البوابة حتى يتمكن العميل من تتبع الطرد "
+"الخاص به بسهولة. استخدم <shipmenttrackingnumber> كعنصر نائب في رابط URL "
+"الخاص بك. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -935,7 +946,7 @@ msgstr "إجمالي وزن الطلب "
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "رابط التتبع "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1033,3 +1044,4 @@ msgstr "مثلًا: UPS السريع "
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+"مثال: https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber> "

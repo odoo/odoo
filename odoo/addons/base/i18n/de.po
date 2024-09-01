@@ -5346,7 +5346,7 @@ msgstr ""
 "\n"
 "Folgen Sie den nächsten Konfigurationsschritten für die Produktion:\n"
 "\n"
-"1. Gehen Sie zu Ihrem Unternehmen und konfigurieren Sie Ihre MwSt.-Nummer und den AFIP-Verantwortlichkeitstyp\n"
+"1. Gehen Sie zu Ihrem Unternehmen und konfigurieren Sie Ihre USt-IdNr. und den AFIP-Verantwortlichkeitstyp\n"
 "2. Gehen Sie auf Buchhaltung/Einstellungen und stellen Sie den Kontenplan ein, den Sie verwenden möchten.\n"
 "3. Erstellen Sie Ihre Verkaufsjournale unter Berücksichtigung der AFIP-Kassensystem-Informationen.\n"
 "\n"
@@ -11651,22 +11651,22 @@ msgid ""
 "only the country code will be validated.\n"
 msgstr ""
 "\n"
-"MwSt.-Validierung für MwSt.-Nummerm der Partner\n"
+"USt.-Validierung für USt-IdNr. der Partner\n"
 "===================================================================\n"
 "\n"
 "Nach der Installation dieses Moduls werden die eingegebenen Mehrwertsteuern der Partner für alle unterstützten Ländern validiert. Das Land\n"
-"wird abgeleitetet von dem 2-Buchstaben-Ländercode, der der MwSt.-Nummer\n"
+"wird abgeleitetet von dem 2-Buchstaben-Ländercode, der USt-IdNr.\n"
 "vorangestellt ist, z. B. wird BE0477472701 nach dem belgischen Format validiert.\n"
 "\n"
-"Es gibt zwei verschiedene Ebenen der Validierung der MwSt.-Nummer:\n"
+"Es gibt zwei verschiedene Ebenen der Validierung der USt-IdNr.:\n"
 "--------------------------------------------------------------------------------------------------------------------------\n"
 "  * Standardmäßig wird eine einfache Offline-Prüfung durchgeführt, unter Verwendung der\n"
 "      bekannten Validierungsregeln für das Land, in der Regel eine einfache Prüfziffer. Das geht schnell\n"
 "      und ist jederzeit möglich, aber erlaubt auch Nummern, die vielleicht nicht vergeben\n"
 "      oder nicht mehr gültig sind.\n"
 "      \n"
-"       * Wenn die „MwSt.-MIAS-Prüfung“-Option aktiviert ist (in der Konfiguration des Unternehmens des\n"
-"      Benutzers) wird die MwSt.-Nummer an die Online-EU-MIAS-Datenbank\n"
+"       * Wenn die „USt.-MIAS-Prüfung“-Option aktiviert ist (in der Konfiguration des Unternehmens des\n"
+"      Benutzers) wird die USt-IdNr. an die Online-EU-MIAS-Datenbank\n"
 "       übermittelt werden, die sicherstellt, dass die Zahl gültig und aktuell\n"
 "       einem EU-Unternehmen zugeordnet ist. Das ist ein wenig langsamer als die einfache\n"
 "       Offline-Prüfung, erfordert eine Internet-Verbindung und steht möglicherweise nicht jederzeit zur   \n"
@@ -32501,6 +32501,8 @@ msgid ""
 "Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
 " file(s)"
 msgstr ""
+"Odoo kann die erzeugten PDFs aufgrund von {num_errors} korrupten Datei(en) "
+"nicht zusammenzuführen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -42211,7 +42213,7 @@ msgstr "USt-IdNr."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "Validierung der MwSt.-Nummer"
+msgstr "Validierung der USt-IdNr."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_voip
@@ -42416,7 +42418,7 @@ msgstr "Livechat-Sitzungen für Leads anzeigen"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "View Problematic Record(s)"
-msgstr ""
+msgstr "Problematische Datensätze anzeigen"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view

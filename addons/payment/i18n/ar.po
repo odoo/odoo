@@ -28,7 +28,7 @@ msgstr "البيانات المحضرة "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
 msgid "(ID:"
-msgstr ""
+msgstr "(المعرّف: "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_7eleven
@@ -41,6 +41,8 @@ msgid ""
 "<br/>\n"
 "            If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<br/>\n"
+"            إذا كنت تظن أن هذا خطأ، يرجى التواصل مع مدير الموقع الإلكتروني. "
 
 #. module: payment
 #. odoo-python
@@ -50,6 +52,8 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: "
 "%(account_holder)s</li></ul>"
 msgstr ""
+"<h3>رجى الدفع إلى: </h3><ul><li>البنك: %(bank)s</li><li>رقم الحساب: "
+"%(account_number)s</li><li>صاحب الحساب: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -156,12 +160,12 @@ msgstr "<span><i class=\"fa fa-lock\"/> محمي بواسطة</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> View alternatives </strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> عرض البدائل </strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No suitable payment option could be found.</strong>"
-msgstr ""
+msgstr "<strong>لم نتمكن من العثور على خيار دفع مناسب.</strong> "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -251,12 +255,12 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
-msgstr ""
+msgstr "خصم ACH المباشر "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE STRIPE"
-msgstr ""
+msgstr "تفعيل STRIPE "
 
 #. module: payment
 #. odoo-python
@@ -299,17 +303,17 @@ msgstr "Adyen"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_affirm
 msgid "Affirm"
-msgstr ""
+msgstr "Affirm"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_afterpay_riverty
 msgid "AfterPay"
-msgstr ""
+msgstr "AfterPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_afterpay
 msgid "Afterpay"
-msgstr ""
+msgstr "Afterpay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_akulaku
@@ -354,7 +358,7 @@ msgstr "تم إبطاله بالفعل "
 #. module: payment
 #: model:payment.method,name:payment.payment_method_amazon_pay
 msgid "Amazon Pay"
-msgstr ""
+msgstr "Amazon Pay"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_aps
@@ -393,7 +397,7 @@ msgstr "حدث خطأ أثناء معالجة عملية الدفع الخاصة
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "An error occurred while saving your payment method."
-msgstr ""
+msgstr "حدث خطأ أثناء حفظ طريقة الدفع الخاصة بك. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -464,7 +468,7 @@ msgstr "التوافر"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 msgid "Availability report"
-msgstr ""
+msgstr "تقرير التوافر "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
@@ -479,7 +483,7 @@ msgstr "المحور "
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bacs_direct_debit
 msgid "BACS Direct Debit"
-msgstr ""
+msgstr "خصم BACS المباشر "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancomat_pay
@@ -494,7 +498,7 @@ msgstr "BCA"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_becs_direct_debit
 msgid "BECS Direct Debit"
-msgstr ""
+msgstr "خصم BECS المباشر "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_blik
@@ -585,7 +589,7 @@ msgstr "Bank of the Philippine Islands"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_reference
 msgid "Bank reference"
-msgstr ""
+msgstr "مرجع البنك "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_belfius
@@ -625,7 +629,7 @@ msgstr "Boleto"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_boost
 msgid "Boost"
-msgstr ""
+msgstr "Boost"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
@@ -731,7 +735,7 @@ msgstr "Cartes Bancaires"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cash_app_pay
 msgid "Cash App Pay"
-msgstr ""
+msgstr "الدفع عن طريق Cash App "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cashalo
@@ -924,7 +928,7 @@ msgstr "البطاقة الائتمانية وبطاقة الخصم (عن طري
 #. module: payment
 #: model:payment.method,name:payment.payment_method_credit
 msgid "Credit Payment"
-msgstr ""
+msgstr "الدفع عن طريق الائتمان "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
@@ -1010,7 +1014,7 @@ msgstr "Dolfin"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Don't hesitate to contact us if you don't receive it."
-msgstr ""
+msgstr "لا تتردد في التواصل معنا في حال لم تصلك. "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -1219,7 +1223,7 @@ msgstr "Hoolah"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "How to configure your PayPal account"
-msgstr ""
+msgstr "كيف تقوم بإعداد حسابك على paypal "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_humm
@@ -2008,12 +2012,12 @@ msgstr "معالج تهيئة مزود الدفع "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 msgid "Payment providers"
-msgstr ""
+msgstr "مزودو الدفع "
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 msgid "Payment: Post-process transactions"
-msgstr ""
+msgstr "الدفع: معاملات ما بعد العملية "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -2257,7 +2261,7 @@ msgstr "حفظ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Saving your payment method."
-msgstr ""
+msgstr "جاري حفظ طريقة الدفع الخاصة بك. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -2303,7 +2307,7 @@ msgstr "ShopeePay"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopping
 msgid "Shopping Card"
-msgstr ""
+msgstr "بطاقة التسوق "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_scb
@@ -2318,7 +2322,7 @@ msgstr "Sips"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Skip <i class=\"oi oi-arrow-right ms-1 small\"/>"
-msgstr ""
+msgstr "تخطي <i class=\"oi oi-arrow-right ms-1 small\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sofort
@@ -2393,7 +2397,7 @@ msgstr "مدعوم من قِبَل "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
 msgid "Supported providers:"
-msgstr ""
+msgstr "المزودون المدعومون: "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_swish
@@ -2627,7 +2631,7 @@ msgstr "المسار الذي تتم إعادة توجيه المستخدم إل
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "The saving of your payment method has been canceled."
-msgstr ""
+msgstr "لقد تم إلغاء حفظ طريقة الدفع الخاصة بك. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2729,7 +2733,7 @@ msgstr "لا يوجد شيء لدفعه. "
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method."
-msgstr ""
+msgstr "سيقوم هذا الإجراء أيضاً بأرشفة الرموز %s المسجلة مع طريقة الدفع هذه. "
 
 #. module: payment
 #. odoo-python
@@ -2737,7 +2741,7 @@ msgstr ""
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. "
-msgstr ""
+msgstr "سيقوم هذا الإجراء أيضاً بأرشفة الرموز %s المسجلة مع مزود الدفع هذا. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -3017,6 +3021,7 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
 msgstr ""
+"لا يمكنك إلغاء أرشفة الرموز المرتبطة بطرق دفع غير نشطة أو مزودي دفع معطلين. "
 
 #. module: payment
 #. odoo-python
@@ -3052,6 +3057,8 @@ msgid ""
 "You should receive an email confirming your payment within a few\n"
 "                                    minutes."
 msgstr ""
+"سوف تتلقى رسالة بريد إلكتروني لتأكيد الدفع خلال بضع\n"
+"                                    دقائق. "
 
 #. module: payment
 #. odoo-python
@@ -3149,7 +3156,7 @@ msgstr "لم تتم معالجة عملية الدفع بعد. "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "مدفوعاتك في الطريق! "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -3159,7 +3166,7 @@ msgstr "لقد تم حفظ طريقة الدفع الخاصة بك. "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Your payment methods"
-msgstr ""
+msgstr "طرق الدفع الخاصة بك "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -3191,7 +3198,7 @@ msgstr "eNETS"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "express checkout not supported"
-msgstr ""
+msgstr "خاصية الدفع والخروج السريع غير مدعومة "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
@@ -3207,37 +3214,37 @@ msgstr "in3"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible country"
-msgstr ""
+msgstr "الدولة غير متوافقة "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible currency"
-msgstr ""
+msgstr "العملة غير متوافقة "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible website"
-msgstr ""
+msgstr "الموقع الإلكتروني غير متوافق "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "manual capture not supported"
-msgstr ""
+msgstr "عملية التحصيل اليدوية غير مدعومة "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "maximum amount exceeded"
-msgstr ""
+msgstr "تم تجاوز الحد الأقصى للمبلغ "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "no supported provider available"
-msgstr ""
+msgstr "لا يوجد مزود دفع مدعوم متاح "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -3263,10 +3270,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "tokenization not supported"
-msgstr ""
+msgstr "الترميز الآلي غير مدعوم "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
-msgstr ""
+msgstr "الترميز الآلي دون الدفع غير مدعوم "

@@ -23,6 +23,12 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "'219999830019' (should be 12 digits)"
+msgstr "'219999830019' (sollten 12 Ziffern sein)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
@@ -109,8 +115,8 @@ msgstr "DO1-01-85004-3 oder 101850043"
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
-"Die europäischen MwSt.-Nummern werden automatisch in der MIAS-Datenbank "
-"überprüft."
+"Die europäischen Umsatzsteuer-Identifikationsnummern werden automatisch in "
+"der MIAS-Datenbank überprüft."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -201,9 +207,9 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
-"Das für diese ausländische MwSt.-Nummer ermittelte Land stimmt mit keinem "
-"der Länder überein, aus denen sich die Ländergruppe für diese Steuerposition"
-" zusammensetzt."
+"Das für diese ausländische USt-IdNr. ermittelte Land stimmt mit keinem der "
+"Länder überein, aus denen sich die Ländergruppe für diese Steuerposition "
+"zusammensetzt."
 
 #. module: base_vat
 #. odoo-python
@@ -212,7 +218,7 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
-"Das Land der ausländischen MwSt.-Nummer konnte nicht erkannt werden. Bitte "
+"Das Land der ausländischen USt-IdNr. konnte nicht erkannt werden. Bitte "
 "weisen Sie der Steuerposition ein Land zu oder legen Sie eine Ländergruppe "
 "fest"
 
@@ -236,12 +242,12 @@ msgstr "USt-IdNr."
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "MwSt.-Nummern überprüfen"
+msgstr "USt-Identifikationsnummern überprüfen"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "MwSt.-Nummern mit dem europäischen MIAS-Service überprüfen"
+msgstr "USt-IdNr. mit dem europäischen MIAS-Service überprüfen"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check

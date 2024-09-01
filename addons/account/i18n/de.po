@@ -3886,7 +3886,7 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Die MwSt.-Nummer darf nicht geändert werden, sobald eine Rechnung für Sie "
+"Die USt-IdNr. darf nicht geändert werden, sobald eine Rechnung für Sie "
 "erzeugt wurde. Bitte wenden Sie sich direkt an uns."
 
 #. module: account
@@ -4439,7 +4439,7 @@ msgstr "Gegenbuchungsregeln"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr "Länder, für die das Unternehmen eine MwSt.-Nummer hat"
+msgstr "Länder, für die das Unternehmen eine USt-IdNr. hat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -7023,6 +7023,10 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Formel in der Form line_code.expression_label. Damit kann das Ziel des "
+"Übertrags dieses Ausdrucks (bei einem Ausdruck mit der Bezeichnung "
+"_carryover_*) festgelegt werden, falls es sich von der übergeordneten Zeile "
+"unterscheidet."
 
 #. module: account
 msgid ""
@@ -9969,6 +9973,13 @@ msgstr "Steuerbilanz negieren"
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Negativer Wert des Betragsfeldes, wenn payment_type ausgehend ist"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr "Eingebettete Steuergruppen sind nicht erlaubt."
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -16739,6 +16750,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"Beim Übetrag eines Ausdrucks muss die Bezeichnung dieses Ausdrucks mit "
+"_applied_carryover_ beginnen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17189,8 +17202,8 @@ msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
 msgstr ""
-"Sie können in Ihrem Steuerland keine Steuerposition mit der gleichen "
-"MwSt.-Nummer wie die Hauptnummer Ihres Unternehmens anlegen."
+"Sie können in Ihrem Steuerland keine Steuerposition mit der gleichen USt-"
+"IdNr. wie die Hauptnummer Ihres Unternehmens anlegen."
 
 #. module: account
 #. odoo-python
@@ -17521,6 +17534,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"Sie können das Feld carryover_target nicht in einem Ausdruck verwenden, "
+"dessen Bezeichnung nicht mit _carryover_ beginnt"
 
 #. module: account
 #. odoo-python

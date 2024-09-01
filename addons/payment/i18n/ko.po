@@ -54,6 +54,8 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: "
 "%(account_holder)s</li></ul>"
 msgstr ""
+"<h3>다음 계좌로 결제하실 수 있습니다: </h3><ul><li>은행: %(bank)s</li><li>계좌번호: "
+"%(account_number)s</li><li>계좌 소유주: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -160,12 +162,12 @@ msgstr "<span><i class=\"fa fa-lock\"/> 보안 대상</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> View alternatives </strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/>다른 대안 보기 </strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No suitable payment option could be found.</strong>"
-msgstr ""
+msgstr "<strong>적합한 결제 옵션을 찾을 수 없습니다.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -392,7 +394,7 @@ msgstr "결제를 처리하는 중 오류가 발생했습니다."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "An error occurred while saving your payment method."
-msgstr ""
+msgstr "결제 방법을 저장하는 동안 오류가 발생했습니다."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -1007,7 +1009,7 @@ msgstr "Dolfin"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Don't hesitate to contact us if you don't receive it."
-msgstr ""
+msgstr "받지 못하신 경우 언제든지 문의해 주세요."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -1216,7 +1218,7 @@ msgstr "Hoolah"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "How to configure your PayPal account"
-msgstr ""
+msgstr "PayPal 계정을 설정하는 방법"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_humm
@@ -2309,7 +2311,7 @@ msgstr "Sips"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Skip <i class=\"oi oi-arrow-right ms-1 small\"/>"
-msgstr ""
+msgstr "건너뛰기 <i class=\"oi oi-arrow-right ms-1 small\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sofort
@@ -2610,7 +2612,7 @@ msgstr "거래 후 사용자를 이동시키는 경로"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "The saving of your payment method has been canceled."
-msgstr ""
+msgstr "결제 수단 저장이 취소되었습니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -3121,7 +3123,7 @@ msgstr "결제가 아직 처리되지 않았습니다."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "결제가 진행 중입니다!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header

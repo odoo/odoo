@@ -6937,6 +6937,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"معادلة في line_code.expression_label. يتيح لك ذلك إعداد الهدف من الترحيل "
+"لهذا التعبير (في تعبير بعنوان _carryover_*)، إذا كان مختلفاً عن البند "
+"الرئيسي. "
 
 #. module: account
 msgid ""
@@ -9830,6 +9833,13 @@ msgstr "نفي الرصيد الضريبي"
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
 msgstr "القيمة السالبة لحقل المبلغ إذا كان payment_type صادراً "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -16419,6 +16429,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"عندما تستهدف تعبيراً للترحيل، يجب أن يبدأ عنوان ذلك التعبير بـ "
+"_applied_carryover_ "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17132,6 +17144,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"لا يمكنك استخدام الحقل carryover_target في تعبير لا يبدأ عنوانه بـ "
+"_carryover_ "
 
 #. module: account
 #. odoo-python

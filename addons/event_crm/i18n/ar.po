@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +94,8 @@ msgstr "إسناد العملاء المهتمين إلى مندوب المبي�
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"أوه لا! لم يتم إنشاء أي عملاء مهتمين. ألقِ نظرة على قواعد إنشاء العملاء "
+"المهتمين ثم حاول مجدداً. "
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -167,11 +170,12 @@ msgstr "الفعالية"
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
 msgstr ""
+"إدارة علاقات العملاء للفعاليات: إنشاء العملاء المهتمين بناءً على القواعد "
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "طلب العملاء المهتمين للفعالية "
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -240,7 +244,7 @@ msgstr "إنشاء العملاء المهتمين "
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
-msgstr ""
+msgstr "حسناً! قمنا بتدوين طلبك. سيتم إنشاء عملائك المهتمين قريباً! "
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
@@ -343,13 +347,13 @@ msgstr "لم يتم العثور على أي تسجيل "
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr ""
+msgstr "طلب الإنشاء المستمر "
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
-msgstr ""
+msgstr "يُسمَح فقط لمدراء الفعاليات إعادة إنشاء كافة العملاء المهتمين. "
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -384,7 +388,7 @@ msgstr "لكل أمر "
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "تمت معالجة التسجيل "
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -449,6 +453,8 @@ msgstr "البحث في قواعد إنشاء العملاء المهتمين "
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
 msgstr ""
+"قم بتعيين القيمة كقيمة صحيحة عندما يكون طلب إنشاء العملاء المعتمين جارياً في"
+" الوقت الحالي. "
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -471,6 +477,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"معرّف آخر تسجيل تمت معالجته للفعالية. يُستخدَم لمعرفة المكان الذي يجب "
+"المتابعة منه. "
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -497,12 +505,13 @@ msgstr "الزمان"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "رائع! تم إنشاء %(leads_count)s من العملاء المهتمين! "
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
 msgstr ""
+"لا يمكن أن يكون لديك أكثر من طلب إنشاء واحد فقط لكل فعالية في الوقت ذاته. "
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

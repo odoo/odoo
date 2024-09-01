@@ -61,6 +61,8 @@ msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s مع خصم %(discount)s %% %(discount_type)s ورسوم إضافية %(surcharge)s\n"
+"مثال: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -69,6 +71,8 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
 msgstr ""
+"%(item_name)s: يجب أن يكون تاريخ الانتهاء (%(end_date)s) أكبر من تاريخ البدء"
+" (%(start_date)s) "
 
 #. module: product
 #. odoo-python
@@ -80,7 +84,7 @@ msgstr "%(percentage)s %% %(discount_type)s"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s و %(price)s رسوم إضافية "
 
 #. module: product
 #. odoo-python
@@ -120,6 +124,8 @@ msgstr "(مثال: وصف المنتج، الكتاب الإلكتروني، ا�
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- الباركود \"%(barcode)s\" تم تعيينه بالفعل للمنتج (المنتجات): "
+"%(product_list)s "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -192,7 +198,7 @@ msgstr "4 × 7 بالسعر "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>نصيحة: أترغب في التقريب عند 9.99؟</b> "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -218,6 +224,12 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            القواعد\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            القاعدة\n"
+"                                        </span> "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -229,6 +241,12 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        قوائم الأسعار\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        قائمة الأسعار\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -238,7 +256,7 @@ msgstr "<span class=\"o_stat_text\"> المنتجات</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">المنتجات</span> "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -261,6 +279,8 @@ msgid ""
 "<span>%</span>\n"
 "                                <span>on</span>"
 msgstr ""
+"<span>%</span>\n"
+"                                <span>في</span> "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -476,19 +496,19 @@ msgstr "تم رفع كافة الملفات "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "كافة المنتجات "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "كافة المتغيرات "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "السماح للعملاء بتعيين قيمهم الخاصة "
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -508,7 +528,7 @@ msgstr "التطبيق على "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply To"
-msgstr ""
+msgstr "تطبيق على "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -1120,7 +1140,7 @@ msgstr "السعر المخفض "
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
 msgid "Display Applied On"
-msgstr ""
+msgstr "عرض ما تم التطبيق عليه "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
