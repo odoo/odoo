@@ -2913,7 +2913,7 @@ msgstr ""
 "    Sau khi (các) khoản thanh toán được xác nhận, chúng sẽ hiển thị trong danh sách thanh toán.\n"
 "\n"
 "    Sử dụng bộ lọc hoặc sắp xếp, chọn các khoản thanh toán cần thiết. \n"
-"    **Hành động* chọn *Tạo thanh toán hàng loạt*.\n"
+"    **Tác vụ* chọn *Tạo thanh toán hàng loạt*.\n"
 "\n"
 "- *Nhà cung cấp > Thanh toán hàng loạt*\n"
 "\n"
@@ -3597,7 +3597,7 @@ msgid ""
 "Adds an action to sign documents attached to tasks.\n"
 msgstr ""
 "\n"
-"Thêm hành động để ký tài liệu đính kèm với nhiệm vụ.\n"
+"Thêm tác vụ để ký tài liệu đính kèm với nhiệm vụ.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -4618,7 +4618,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Cầu nối để thêm lịch hợp đồng theo các hành động tự động\n"
+"Cầu nối để thêm lịch hợp đồng theo các tác vụ tự động\n"
 "====================================================\n"
 "    "
 
@@ -4969,7 +4969,7 @@ msgstr ""
 "* Quản lý bài học và khóa học tích hợp\n"
 "* Điều hướng toàn màn hình\n"
 "* Hỗ trợ video Youtube, tài liệu Google, PDF, hình ảnh, bài viết\n"
-"* Kiểm tra kiến ​​thức với các câu đố\n"
+"* Kiểm tra kiến ​​thức với các quiz\n"
 "* Lọc và gắn thẻ\n"
 "* Số liệu thống kê\n"
 
@@ -7527,7 +7527,7 @@ msgstr ""
 "* Hỗ trợ CODA v1.\n"
 "* Hỗ trợ CODA v2.2.\n"
 "* Hỗ trợ ngoại tệ.\n"
-"* Hỗ trợ cho tất cả các loại tập dữ liệu (0, 1, 2, 3, 4, 8, 9).\n"
+"* Hỗ trợ cho tất cả các loại bản ghi (0, 1, 2, 3, 4, 8, 9).\n"
 "* Phân tích cú pháp & ghi nhật ký của tất cả các Mã Giao dịch và Giao tiếp Định dạng \n"
 "có Cấu trúc.\n"
 "* Gán Nhật ký Tài chính tự động thông qua các tham số cấu hình CODA.\n"
@@ -7535,7 +7535,7 @@ msgstr ""
 "* Hỗ trợ nhiều sao kê từ các tài khoản ngân hàng khác nhau trong một \n"
 "tệp CODA.\n"
 "* Hỗ trợ 'chỉ phân tích cú pháp' Tài khoản Ngân hàng CODA (được xác định là type='thông tin' trong\n"
-"tập dữ liệu cấu hình Tài khoản Ngân hàng CODA).\n"
+"bản ghi cấu hình Tài khoản Ngân hàng CODA).\n"
 "* Phân tích cú pháp CODA đa ngôn ngữ, dữ liệu cấu hình phân tích cú pháp được cung cấp cho tiếng Anh,\n"
 "tiếng Hà Lan, tiếng Pháp.\n"
 "\n"
@@ -8723,8 +8723,8 @@ msgstr ""
 "Addon này cho phép người dùng tùy chỉnh hầu hết các yếu tố giao diện người dùng, theo \n"
 "cách đơn giản mà đầy tính đồ họa. Addon này có hai tính năng chính:\n"
 "\n"
-"* tạo một ứng dụng mới (thêm phân hệ, mục menu cấp cao nhất và hành động mặc định)\n"
-"* tùy chỉnh một ứng dụng hiện có (chỉnh sửa menu, hành động, chế độ xem, bản dịch,...)\n"
+"* tạo một ứng dụng mới (thêm phân hệ, mục menu cấp cao nhất và tác vụ mặc định)\n"
+"* tùy chỉnh một ứng dụng hiện có (chỉnh sửa menu, tác vụ, chế độ xem, bản dịch,...)\n"
 "\n"
 "Lưu ý: Chỉ người dùng có vai trò quản trị viên được phép thực hiện các tùy chỉnh trên.\n"
 
@@ -9886,7 +9886,7 @@ msgid ""
 msgstr ""
 "\n"
 "Phân hệ này bổ sung hỗ trợ quét mã vạch vào hệ thống quản lý Sự kiện.\n"
-"Một mã vạch được tạo cho mỗi người tham dự và được in trên huy hiệu. Khi được quét,\n"
+"Một mã vạch được tạo cho mỗi người tham dự và được in trên thẻ. Khi được quét,\n"
 "lượt đăng ký sẽ được xác nhận.\n"
 "    "
 
@@ -12187,16 +12187,16 @@ msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
 msgstr ""
-"<code>model</code>: Model Odoo của tập dữ liệu mà hành động được kích hoạt; "
-"là một tập tập dữ liệu không còn hiệu lực"
+"<code>model</code>: Model Odoo của bản ghi mà hành động được kích hoạt; là "
+"một tập bản ghi không còn hiệu lực"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
 msgstr ""
-"<code>tập dữ liệu</code>: tập dữ liệu mà hành động được kích hoạt, có thể "
-"không còn hiệu lực"
+"<code>bản ghi</code>: bản ghi mà hành động được kích hoạt, có thể không còn "
+"hiệu lực"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12204,14 +12204,14 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
-"<code>các tập dữ liệu</code>: tập hợp tất cả các tập dữ liệu mà hành động "
-"được kích hoạt ở chế độ \"nhiều\"; có thể không còn hiệu lực"
+"<code>các bản ghi</code>: tập hợp tất cả các bản ghi mà hành động được kích "
+"hoạt ở chế độ \"nhiều\"; có thể không còn hiệu lực"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>self</code> (the set of records to compute)"
-msgstr "<code>self</code> (tập hợp các tập dữ liệu dùng để tính toán)"
+msgstr "<code>self</code> (tập hợp các bản ghi dùng để tính toán)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -13613,15 +13613,15 @@ msgstr "Thêm Ngôn ngữ"
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
 #: model:ir.module.module,summary:base.module_data_merge_helpdesk
 msgid "Add Merge action in contextual menu of helpdesk ticket model."
-msgstr "Thêm hành động Hợp nhất trong menu ngữ cảnh của model phiếu hỗ trợ."
+msgstr "Thêm tác vụ Hợp nhất trong menu ngữ cảnh của model phiếu hỗ trợ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_project
 #: model:ir.module.module,summary:base.module_data_merge_project
 msgid "Add Merge action in contextual menu of project task and tag models."
 msgstr ""
-"Thêm hành động Hợp nhất trong menu ngữ cảnh của các model nhiệm vụ và thẻ dự"
-" án."
+"Thêm tác vụ Hợp nhất trong menu ngữ cảnh của các model nhiệm vụ và thẻ dự "
+"án."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -14275,7 +14275,7 @@ msgstr "Cho phép sử dụng kiểm tra chất lượng trong chế độ xem m
 #. module: base
 #: model:ir.module.module,description:base.module_web_map
 msgid "Allows the viewing of records on a map"
-msgstr "Cho phép xem các tập dữ liệu trên bản đồ"
+msgstr "Cho phép xem các bản ghi trên bản đồ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_profile
@@ -15011,7 +15011,7 @@ msgstr "Quy tắc Hành động Tự động"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
 msgid "Automated Action based on Employee Contracts"
-msgstr "Hành động Tự động dựa trên Hợp đồng Nhân viên"
+msgstr "Tác vụ Tự động dựa trên Hợp đồng Nhân viên"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -15935,8 +15935,7 @@ msgstr "Phân hệ cầu nối để đẩy thông báo đến những người 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
-msgstr ""
-"Phân hệ cầu nối để hỗ trợ tính năng câu đố trong các sự kiện \"trực tiếp\"."
+msgstr "Phân hệ cầu nối để hỗ trợ tính năng quiz trong các sự kiện \"trực tiếp\"."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -16118,8 +16117,7 @@ msgstr "Cameroon"
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
 msgstr ""
-"Không thể gián tiếp tạo các tập dữ liệu Nhiều-Thành-Một, hãy nhập trường "
-"riêng"
+"Không thể gián tiếp tạo các bản ghi Nhiều-Thành-Một, hãy nhập trường riêng"
 
 #. module: base
 #. odoo-python
@@ -16218,8 +16216,8 @@ msgid ""
 "Cannot create new '%s' records from their name alone. Please create those "
 "records manually and try importing again."
 msgstr ""
-"Không thể tạo tập dữ liệu '%s' mới chỉ từ tên của nó. Vui lòng tạo các tập "
-"dữ liệu đó theo cách thủ công và thử nhập lại."
+"Không thể tạo bản ghi '%s' mới chỉ từ tên của nó. Vui lòng tạo các bản ghi "
+"đó theo cách thủ công và thử nhập lại."
 
 #. module: base
 #. odoo-python
@@ -16629,10 +16627,10 @@ msgid ""
 "Modules time, datetime, dateutil are available."
 msgstr ""
 "Mã dùng để tính giá trị của trường.\n"
-"Lặp lại tập tập dữ liệu 'self' và gán giá trị của trường:\n"
+"Lặp lại tập bản ghi 'self' và gán giá trị của trường:\n"
 "\n"
 "     để tự ghi lại:\n"
-"         tập dữ liệu ['size'] = len (record.name)\n"
+"         bản ghi ['size'] = len (record.name)\n"
 "\n"
 "Các phân hệ time, datetime, dateutil có sẵn."
 
@@ -16715,12 +16713,12 @@ msgstr "Cột 2"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column2
 msgid "Column referring to the record in the comodel table"
-msgstr "Cột đề cập đến tập dữ liệu trong bảng comodel"
+msgstr "Cột đề cập đến bản ghi trong bảng comodel"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
-msgstr "Cột đề cập đến tập dữ liệu trong bảng model"
+msgstr "Cột đề cập đến bản ghi trong bảng model"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -17528,7 +17526,7 @@ msgstr "Tạo chế độ xem tuỳ chỉnh"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_create
 msgid "Create a new Record"
-msgstr "Tạo một tập dữ liệu mới"
+msgstr "Tạo một bản ghi mới"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
@@ -18162,7 +18160,7 @@ msgid ""
 "Database ID of record to open in form view, when ``view_mode`` is set to "
 "'form' only"
 msgstr ""
-"ID cơ sở dữ liệu của tập dữ liệu để mở trong chế độ xem biểu mẫu, khi "
+"ID cơ sở dữ liệu của bản ghi để mở trong chế độ xem biểu mẫu, khi "
 "``view_mode`` chỉ được đặt thành 'biểu mẫu'"
 
 #. module: base
@@ -19101,7 +19099,7 @@ msgid ""
 "Due to security restrictions, you are not allowed to access "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Do các hạn chế về bảo mật, bạn không được phép truy cập các tập dữ liệu "
+"Do các hạn chế về bảo mật, bạn không được phép truy cập các bản ghi "
 "'%(document_kind)s' (%(document_model)s)."
 
 #. module: base
@@ -19112,7 +19110,7 @@ msgid ""
 "Due to security restrictions, you are not allowed to create "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Do các hạn chế về bảo mật, bạn không được phép tạo các tập dữ liệu "
+"Do các hạn chế về bảo mật, bạn không được phép tạo các bản ghi "
 "'%(document_kind)s' (%(document_model)s)."
 
 #. module: base
@@ -19123,7 +19121,7 @@ msgid ""
 "Due to security restrictions, you are not allowed to delete "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Do các hạn chế về bảo mật, bạn không được phép xóa các tập dữ liệu "
+"Do các hạn chế về bảo mật, bạn không được phép xóa các bản ghi "
 "'%(document_kind)s' (%(document_model)s)."
 
 #. module: base
@@ -19134,7 +19132,7 @@ msgid ""
 "Due to security restrictions, you are not allowed to modify "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Do các hạn chế về bảo mật, bạn không được phép chỉnh sửa các tập dữ liệu "
+"Do các hạn chế về bảo mật, bạn không được phép chỉnh sửa các bản ghi "
 "'%(document_kind)s' (%(document_model)s)."
 
 #. module: base
@@ -19236,8 +19234,8 @@ msgid ""
 "Easily format text data across multiple records. Find duplicate records and "
 "easily merge them."
 msgstr ""
-"Dễ dàng định dạng dữ liệu văn bản trên nhiều tập dữ liệu. Tìm các tập dữ "
-"liệu trùng lặp và dễ dàng gộp chúng."
+"Dễ dàng định dạng dữ liệu văn bản trên nhiều bản ghi. Tìm các bản ghi trùng "
+"lặp và dễ dàng gộp chúng."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_easypost
@@ -20743,7 +20741,7 @@ msgstr "Tài chính/Bảo hiểm"
 #: model:ir.module.module,summary:base.module_data_merge_crm
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
-msgstr "Tìm tập dữ liệu trùng lặp và hợp nhất chúng"
+msgstr "Tìm bản ghi trùng lặp và hợp nhất chúng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -20754,7 +20752,7 @@ msgstr "Tìm hình ảnh có độ phân giải cao miễn phí từ Unsplash"
 #: model:ir.module.module,description:base.module_data_recycle
 #: model:ir.module.module,summary:base.module_data_recycle
 msgid "Find old records and archive/delete them"
-msgstr "Tìm tập dữ liệu cũ và lưu trữ/xóa chúng"
+msgstr "Tìm bản ghi cũ và lưu trữ/xóa chúng"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__finished
@@ -20953,7 +20951,7 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
-"Đã tìm thấy hơn 10 lỗi và hơn một lỗi trên 10 tập dữ liệu, làm gián đoạn để "
+"Đã tìm thấy hơn 10 lỗi và hơn một lỗi trên 10 bản ghi, làm gián đoạn để "
 "tránh hiển thị quá nhiều lỗi."
 
 #. module: base
@@ -21805,7 +21803,7 @@ msgstr "Hỗ trợ Plugin Thư"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_helpdesk
 msgid "Helpdesk Merge action"
-msgstr "Hỗ trợ Hành động Hợp nhất"
+msgstr "Hỗ trợ Tác vụ Hợp nhất"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
@@ -22244,7 +22242,7 @@ msgstr "ID của hành động nếu được xác định trong tệp XML"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
 msgid "ID of the target record in the database"
-msgstr "ID của tập dữ liệu đích trong cơ sở dữ liệu"
+msgstr "ID của bản ghi đích trong cơ sở dữ liệu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__xml_id
@@ -22335,11 +22333,11 @@ msgid ""
 "of the field contains a lot of records; usually used on models with\n"
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
-"Nếu chọn, tất cả các tập dữ liệu của model đích sẽ được đưa vào\n"
+"Nếu chọn, tất cả các bản ghi của model đích sẽ được đưa vào\n"
 "kết quả được nhóm (ví dụ: bộ lọc 'Nhóm theo', cột Kanban,...).\n"
 "Lưu ý rằng điều này có thể làm giảm hiệu suất một cách đáng kể nếu model đích \n"
-"của trường chứa nhiều tập dữ liệu; thường được sử dụng trên các model\n"
-"có ít tập dữ liệu (ví dụ: Giai đoạn, Vị trí Công việc, Loại Sự kiện,...)."
+"của trường chứa nhiều bản ghi; thường được sử dụng trên các model\n"
+"có ít bản ghi (ví dụ: Giai đoạn, Vị trí Công việc, Loại Sự kiện,...)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -22494,9 +22492,9 @@ msgid ""
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
-"Nếu bạn bỏ chọn trường đang hoạt động, điều này sẽ vô hiệu hoá quy tắc tập "
-"dữ liệu mà không cần xoá (nếu bạn xoá bản quy tắc tập dữ liệu gốc, quy tắc "
-"này có thể tự động được tạo lại khi bạn tải lại phân hệ)."
+"Nếu bạn bỏ chọn trường đang hoạt động, điều này sẽ vô hiệu hoá quy tắc bản "
+"ghi mà không cần xoá (nếu bạn xoá bản quy tắc bản ghi gốc, quy tắc này có "
+"thể tự động được tạo lại khi bạn tải lại phân hệ)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -22922,8 +22920,8 @@ msgid ""
 "Inherited view cannot have 'Groups' define on the record. Use 'groups' "
 "attributes inside the view definition"
 msgstr ""
-"Không thể xác định 'Nhóm' trên tập dữ liệu cho chế độ xem kế thừa. Hãy sử "
-"dụng các thuộc tính 'nhóm' bên trong định nghĩa chế độ xem"
+"Không thể xác định 'Nhóm' trên bản ghi cho chế độ xem kế thừa. Hãy sử dụng "
+"các thuộc tính 'nhóm' bên trong định nghĩa chế độ xem"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
@@ -25723,8 +25721,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Model tạo/cập nhật tập dữ liệu. Chỉ đặt trường này để chỉ định một model "
-"khác với model cơ sở."
+"Model tạo/cập nhật bản ghi. Chỉ đặt trường này để chỉ định một model khác "
+"với model cơ sở."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_model
@@ -26313,8 +26311,8 @@ msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field "
 "'%%(field)s'"
 msgstr ""
-"Không tìm thấy tập dữ liệu phù hợp cho %(field_type)s '%(value)s' trong "
-"trường '%%(field)s'"
+"Không tìm thấy bản ghi phù hợp cho %(field_type)s '%(value)s' trong trường "
+"'%%(field)s'"
 
 #. module: base
 #. odoo-python
@@ -26325,8 +26323,8 @@ msgid ""
 "'%%(field)s' and the following error was encountered when we attempted to "
 "create one: %(error_message)s"
 msgstr ""
-"Không tìm thấy tập dữ liệu phù hợp cho%(field_type)s '%(value)s' trong "
-"trường '%%(field)s' và đã gặp lỗi sau khi chúng tôi cố gắng tạo "
+"Không tìm thấy bản ghi phù hợp cho%(field_type)s '%(value)s' trong trường "
+"'%%(field)s' và đã gặp lỗi sau khi chúng tôi cố gắng tạo "
 "một:%(error_message)s"
 
 #. module: base
@@ -28569,7 +28567,7 @@ msgstr "Odoo không thể hợp nhất các tệp PDF đã tạo."
 msgid ""
 "Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
 " file(s)"
-msgstr ""
+msgstr "Odoo không thể hợp nhất các tệp PDF đã tạo vì {num_errors} tệp bị lỗi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -28730,7 +28728,7 @@ msgstr "Chỉ Quản trị viên mới có thể thay đổi thiết lập"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Only administrators can execute this action."
-msgstr "Chỉ quản trị viên mới có thể chạy hành động này."
+msgstr "Chỉ quản trị viên mới có thể chạy tác vụ này."
 
 #. module: base
 #. odoo-python
@@ -29191,7 +29189,7 @@ msgstr ""
 "### Sắp xếp\n"
 "\n"
 "- Lập kế hoạch nâng cao\n"
-"- In huy hiệu\n"
+"- In thẻ\n"
 "- Tự động gửi email follow-up\n"
 "- Sức chứa tối thiểu/tối đa\n"
 "- Quản lý lớp học và tài nguyên\n"
@@ -30635,7 +30633,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_project
 msgid "Project Merge action"
-msgstr "Hành động hợp nhất dự án"
+msgstr "Tác vụ hợp nhất dự án"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_payroll_account
@@ -30774,7 +30772,7 @@ msgid ""
 "by the server action."
 msgstr ""
 "Cung cấp trường được sử dụng để liên kết bản ghi mới được tạo trên bản ghi "
-"được sử dụng bởi hành động máy chủ."
+"được sử dụng bởi tác vụ máy chủ."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_mobile
@@ -31025,17 +31023,17 @@ msgstr "Câu hỏi ở sự kiện"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet_quiz
 msgid "Quiz and Meet on community"
-msgstr "Kiểm tra và Họp mặt trên cộng đồng"
+msgstr "Quiz và Họp mặt trên cộng đồng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet_quiz
 msgid "Quiz and Meet on community route"
-msgstr "Kiểm tra và Họp mặt trên tuyến cộng đồng"
+msgstr "Quiz và Họp mặt trên tuyến cộng đồng"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
 msgid "Quiz on Live Event Tracks"
-msgstr "Kiểm tra Theo dõi Sự kiện Trực tiếp"
+msgstr "Quiz Theo dõi Sự kiện Trực tiếp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
@@ -31398,7 +31396,7 @@ msgstr "Đối tác liên quan"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__server_id
 msgid "Related Server Action"
-msgstr "Hành động máy chủ liên quan"
+msgstr "Tác vụ máy chủ liên quan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
@@ -31458,12 +31456,12 @@ msgstr "Gỡ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove 'More' top-menu contextual action related to this action"
-msgstr "Bỏ menu 'Thêm' trên cùng theo ngữ cảnh liên quan đến hành động này"
+msgstr "Bỏ menu 'Thêm' trên cùng theo ngữ cảnh liên quan đến tác vụ này"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove Contextual Action"
-msgstr "Bỏ bối cảnh hành động"
+msgstr "Bỏ bối cảnh tác vụ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -31473,7 +31471,7 @@ msgstr "Xóa khỏi phần 'In' hệ thống"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related to this report"
-msgstr "Xóa hành động theo ngữ cảnh liên quan đến báo cáo này"
+msgstr "Xóa tác vụ theo ngữ cảnh liên quan đến báo cáo này"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -31541,7 +31539,7 @@ msgstr "Báo cáo"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "Báo cáo hành động"
+msgstr "Báo cáo tác vụ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -31793,7 +31791,7 @@ msgstr "Chạy thủ công"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run this action manually."
-msgstr "Thực thi hành động này một cách thủ công."
+msgstr "Thực thi tác vụ này một cách thủ công."
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -32311,13 +32309,13 @@ msgstr "Hoạt động định kỳ"
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
-msgstr "Trình kích hoạt hành động đã lên lịch"
+msgstr "Trình kích hoạt tác vụ đã lên lịch"
 
 #. module: base
 #: code:addons/base/models/ir_cron.py:0
 #, python-format
 msgid "Scheduled action disabled"
-msgstr "Hành động đã lên lịch bị tắt"
+msgstr "Tác vụ đã lên lịch bị tắt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -32343,7 +32341,7 @@ msgstr "Tìm kiếm"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "Search Actions"
-msgstr "Hành động tìm kiếm"
+msgstr "Tác vụ tìm kiếm"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_bank_view_search
@@ -32447,8 +32445,8 @@ msgid ""
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
 "Chọn danh sách các trường được sử dụng để tìm kiếm\n"
-"                            các tập dữ liệu trùng lặp. Nếu bạn chọn nhiều trường,\n"
-"                            Odoo sẽ đề xuất bạn chỉ gộp những tập dữ liệu có\n"
+"                            các bản ghi trùng lặp. Nếu bạn chọn nhiều trường,\n"
+"                            Odoo sẽ đề xuất bạn chỉ gộp những bản ghi có\n"
 "                            tất cả các trường được chọn có giá trị giống nhau (không phải chỉ một trong số các trường)."
 
 #. module: base
@@ -32781,7 +32779,7 @@ msgstr "Máy chủ"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr "Hành động phía Máy chủ"
+msgstr "Tác vụ phía Máy chủ"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -32794,12 +32792,12 @@ msgstr "Giá trị tương ứng hoạt động máy chủ"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr "Hành động Phía máy chủ"
+msgstr "Tác vụ Phía máy chủ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
 msgid "Server action"
-msgstr "Hành động máy chủ"
+msgstr "Tác vụ máy chủ"
 
 #. module: base
 #. odoo-python
@@ -32869,7 +32867,7 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
-"Đặt giá trị làm cho hành động này có sẵn trong thanh bên cho mô hình đã cho."
+"Đặt giá trị làm cho tác vụ này có sẵn trong thanh bên cho mô hình đã cho."
 
 #. module: base
 #. odoo-python
@@ -34362,7 +34360,7 @@ msgstr "Thái Lan - Báo cáo kế toán"
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The \"%s\" action cannot be selected as home action."
-msgstr "Không thể chọn hành động \"%s\" làm hành động trang chủ."
+msgstr "Không thể chọn tác vụ \"%s\" làm tác vụ trang chủ."
 
 #. module: base
 #. odoo-python
@@ -34577,8 +34575,8 @@ msgid ""
 "                                                assignment."
 msgstr ""
 "Trường <strong>Tính toán</strong> là một mã Python\n"
-"                                                dùng để tính giá trị của trường trong tập dữ liệu. Giá trị của\n"
-"                                                trường phải được gán cho mỗi tập dữ liệu giống phương thức gán\n"
+"                                                dùng để tính giá trị của trường trong bản ghi. Giá trị của\n"
+"                                                trường phải được gán cho mỗi bản ghi giống phương thức gán\n"
 "                                                từ điển."
 
 #. module: base
@@ -34590,8 +34588,8 @@ msgid ""
 "                                    assignment."
 msgstr ""
 "Trường <strong>Tính toán</strong> là mã Python để \n"
-"                                    tính toán giá trị của trường trên một tập hợp các tập dữ liệu. Giá trị của\n"
-"                                    trường phải được gán cho từng tập dữ liệu với cách gán giống như \n"
+"                                    tính toán giá trị của trường trên một tập hợp các bản ghi. Giá trị của\n"
+"                                    trường phải được gán cho từng bản ghi với cách gán giống như \n"
 "                                    từ điển."
 
 #. module: base
@@ -34854,7 +34852,7 @@ msgid ""
 msgstr ""
 "Không thể hoàn tất thao tác:\n"
 "- Tạo/cập nhật: trường bắt buộc chưa được đặt.\n"
-"- Xóa: một model khác yêu cầu tập dữ liệu bị xóa. Nếu có thể, hãy lưu trữ tập dữ liệu này.\n"
+"- Xóa: một model khác yêu cầu bản ghi bị xóa. Nếu có thể, hãy lưu trữ bản ghi này.\n"
 "\n"
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Trường: %(field_name)s (%(field_tech_name)s)\n"
@@ -34876,7 +34874,7 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Constraint: %(constraint)s\n"
 msgstr ""
-"Không thể hoàn tất thao tác: một model khác yêu cầu tập dữ liệu bị xóa. Nếu có thể, hãy lưu trữ tập dữ liệu này.\n"
+"Không thể hoàn tất thao tác: một model khác yêu cầu bản ghi bị xóa. Nếu có thể, hãy lưu trữ bản ghi này.\n"
 "\n"
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Ràng buộc: %(constraint)s\n"
@@ -34977,11 +34975,11 @@ msgid ""
 "For example, __import__, resulting in the external id "
 "__import__.%(record_id)s."
 msgstr ""
-"Tập dữ liệu %(xml_id)s có tiền tố phân hệ %(module_name)s. Đây là phần trước"
-" dấu '.' trong id bên ngoài. Vì tiền tố này liên quan đến một phân hệ hiện "
-"có, nên tập dữ liệu sẽ bị xóa khi phân hệ được nâng cấp. Không sử dụng tiền "
-"tố và dấu chấm hoặc sử dụng một tiền tố không phải là một phân hệ hiện có. "
-"Ví dụ, __import__, dẫn đến id bên ngoài __import__.%(record_id)s."
+"Bản ghi %(xml_id)s có tiền tố phân hệ %(module_name)s. Đây là phần trước dấu"
+" '.' trong id bên ngoài. Vì tiền tố này liên quan đến một phân hệ hiện có, "
+"nên bản ghi sẽ bị xóa khi phân hệ được nâng cấp. Không sử dụng tiền tố và "
+"dấu chấm hoặc sử dụng một tiền tố không phải là một phân hệ hiện có. Ví dụ, "
+"__import__, dẫn đến id bên ngoài __import__.%(record_id)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -35685,8 +35683,8 @@ msgid ""
 "This scheduled action has been disabled because its interval number is not a"
 " strictly positive value."
 msgstr ""
-"Hành động được lên lịch này đã bị vô hiệu hóa vì chu kỳ của hoạt động đó "
-"không phải là một giá trị hoàn toàn dương."
+"Tác vụ được lên lịch này đã bị vô hiệu hóa vì chu kỳ của hoạt động đó không "
+"phải là một giá trị hoàn toàn dương."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -35852,7 +35850,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "To return an action, assign: <code>action = {...}</code>"
-msgstr "Để trả về một hành động, chỉ định: <code>action = {...}</code>"
+msgstr "Để trả về một tác vụ, chỉ định: <code>action = {...}</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -36166,11 +36164,11 @@ msgid ""
 msgstr ""
 "Loại hành động máy chủ. Các giá trị sau đây đã có:\n"
 "- 'Thực thi Mã Python': một khối mã python được thực thi\n"
-"- 'Tạo Bản ghi Mới': tạo tập dữ liệu mới với các giá trị mới\n"
-"- 'Cập nhật Bản ghi': cập nhật giá trị của tập dữ liệu\n"
+"- 'Tạo Bản ghi Mới': tạo bản ghi mới với các giá trị mới\n"
+"- 'Cập nhật Bản ghi': cập nhật giá trị của bản ghi\n"
 "- 'Thực hiện một số hành động': xác định một hành động kích hoạt một số hành động máy chủ khác\n"
 "- 'Gửi Email': gửi tin nhắn, ghi chú hoặc gửi email (Thảo luận)\n"
-"- 'Thêm Người theo dõi': thêm người theo dõi vào tập dữ liệu (Thảo luận)\n"
+"- 'Thêm Người theo dõi': thêm người theo dõi vào bản ghi (Thảo luận)\n"
 "- 'Tạo Hoạt động Tiếp theo': tạo hoạt động (Thảo luận)\n"
 "- 'Gửi Tin nhắn Văn bản SMS': gửi tin nhắn SMS, ghi chúng vào tài liệu (SMS)"
 
@@ -37236,7 +37234,7 @@ msgstr "Xem phiên trò chuyện của tiềm năng"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "View Problematic Record(s)"
-msgstr ""
+msgstr "Xem (các) bản ghi có vấn đề"
 
 #. module: base
 #. odoo-python
@@ -37734,7 +37732,7 @@ msgstr "Chiều rộng"
 #: model:ir.actions.act_window,name:base.ir_action_window
 #: model:ir.ui.menu,name:base.menu_ir_action_window
 msgid "Window Actions"
-msgstr "Hành động Cửa sổ"
+msgstr "Tác vụ Cửa sổ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id
@@ -38130,7 +38128,7 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
-msgstr "Bạn không thể xóa tập dữ liệu %s."
+msgstr "Bạn không thể xóa bản ghi %s."
 
 #. module: base
 #. odoo-python
@@ -38203,7 +38201,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr "Bạn không có quyền thực hiện hành động này."
+msgstr "Bạn không có quyền thực hiện tác vụ này."
 
 #. module: base
 #. odoo-python
@@ -38378,7 +38376,7 @@ msgstr "nhị phân"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "binary_field_real_user should be a res.users record."
-msgstr "binary_field_real_user phải là một tập dữ liệu res.users"
+msgstr "binary_field_real_user phải là một bản ghi res.users"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
