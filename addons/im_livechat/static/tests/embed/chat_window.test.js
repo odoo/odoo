@@ -73,3 +73,13 @@ test("internal users can upload file to temporary thread", async () => {
     await triggerHotkey("Enter");
     await contains(".o-mail-Message .o-mail-AttachmentCard", { text: "text.txt" });
 });
+
+test("Conversation name is operator livechat user name", async () => {
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
+    await start({ authenticateAs: false });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
+});
