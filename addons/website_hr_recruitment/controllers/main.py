@@ -351,16 +351,6 @@ class WebsiteHrRecruitment(WebsiteForm):
             return False
         return super()._should_log_authenticate_message(record)
 
-    def insert_record(self, request, model, values, custom, meta=None):
-        record_id = super().insert_record(request, model, values, custom, meta=meta)
-        model_name = model.sudo().model
-        default_field = model.website_form_default_field_id
-        if model_name == 'hr.applicant' and default_field:
-            # remove custom and authenticate message (warnings) from the description
-            applicant = request.env[model_name].sudo().browse(record_id)
-            applicant[default_field.name] = values.get(default_field.name, '')
-        return record_id
-
     def extract_data(self, model, values):
         data = super().extract_data(model, values)
         if model.model == 'hr.applicant':
