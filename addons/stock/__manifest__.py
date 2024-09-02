@@ -37,6 +37,7 @@
         'report/report_deliveryslip.xml',
         'report/report_stockinventory.xml',
         'report/report_stock_rule.xml',
+        'report/stock_lot_customer.xml',
         'report/package_templates.xml',
         'report/picking_templates.xml',
         'report/product_templates.xml',
