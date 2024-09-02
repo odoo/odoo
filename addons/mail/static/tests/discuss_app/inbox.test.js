@@ -6,6 +6,7 @@ import {
     insertText,
     onRpcBefore,
     openDiscuss,
+    scroll,
     start,
     startServer,
     step,
@@ -410,6 +411,39 @@ test("inbox: mark all messages as read", async () => {
     });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:disabled", { text: "Mark all read" });
+});
+
+test("inbox: mark as read should not display jump to present", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const msgIds = pyEnv["mail.message"].create(
+        Array(30)
+            .keys()
+            .map((i) => ({
+                body: "not empty".repeat(100),
+                model: "discuss.channel",
+                needaction: true,
+                res_id: channelId,
+            }))
+    );
+    pyEnv["mail.notification"].create(
+        Array(30)
+            .keys()
+            .map((i) => ({
+                mail_message_id: msgIds[i],
+                notification_type: "inbox",
+                res_partner_id: serverState.partnerId,
+            }))
+    );
+    await start();
+    await openDiscuss();
+    // scroll up so that there's the "Jump to Present".
+    // So that assertion of negative matches the positive assertion
+    await contains(".o-mail-Message", { count: 30 });
+    await scroll(".o-mail-Thread", 0);
+    await contains("[title='Jump to Present']");
+    await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
+    await contains("[title='Jump to Present']", { count: 0 });
 });
 
 test("click on (non-channel/non-partner) origin thread link should redirect to form view", async () => {
