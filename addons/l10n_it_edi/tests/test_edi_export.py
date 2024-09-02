@@ -387,3 +387,25 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
 
         self._assert_export_invoice(invoice, 'invoice_decimal_precision_product.xml')
+
+    def test_send_and_print_invoice_with_fallback_pdf(self):
+        self.italian_partner_a.zip = False  # invalid configuration for partner -> proforma pdf
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'partner_id': self.italian_partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Example Product',
+                    'price_unit': 500,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        template = self.env.ref(invoice._get_mail_template())
+        invoice._generate_pdf_and_send_invoice(template)
+        self.assertIn(
+            'INV_2024_00001_proforma.pdf',
+            invoice.attachment_ids.mapped('name'),
+            "The proforma PDF should have been generated.",
+        )
