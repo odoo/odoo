@@ -3162,6 +3162,61 @@ test(`selection box in grouped list, multi pages`, async () => {
     expect(".o_list_selection_box").toHaveText("All 4 selected");
 });
 
+test(`selection box: grouped list, select domain, open group`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+        groupBy: ["foo"],
+    });
+
+    expect(".o_group_header").toHaveCount(3);
+    expect(".o_data_row").toHaveCount(0);
+    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
+
+    // open first group and select all domain
+    await contains(".o_group_header").click();
+    await contains("thead .o_list_record_selector input").click();
+    await contains(".o_list_selection_box .o_list_select_domain").click();
+    expect(".o_data_row").toHaveCount(2);
+    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
+    expect(".o_list_selection_box").toHaveText("All 4 selected");
+
+    // open another group
+    await contains(queryAll(".o_group_header")[1]).click();
+    expect(".o_data_row").toHaveCount(3);
+    expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(3);
+});
+
+test(`selection box: grouped list, select domain, use pager`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+        groupBy: ["bar"],
+    });
+
+    expect(".o_group_header").toHaveCount(2);
+    expect(".o_data_row").toHaveCount(0);
+    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
+
+    // open second group and select all domain
+    await contains(queryAll(".o_group_header")[1]).click();
+    await contains("thead .o_list_record_selector input").click();
+    await contains(".o_list_selection_box .o_list_select_domain").click();
+    expect(".o_data_row").toHaveCount(2);
+    expect(".o_group_header .o_pager_value").toHaveText("1-2");
+    expect(".o_group_header .o_pager_limit").toHaveText("3");
+    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
+    expect(".o_list_selection_box").toHaveText("All 4 selected");
+
+    // click pager next in the opened group
+    await contains(".o_group_header .o_pager_next").click();
+    expect(".o_data_row").toHaveCount(1);
+    expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(1);
+    expect(".o_list_selection_box").toHaveText("All 4 selected");
+});
+
 test(`selection box is displayed as first action button`, async () => {
     await mountView({
         resModel: "foo",
