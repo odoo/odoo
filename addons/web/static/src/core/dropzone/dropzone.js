@@ -6,7 +6,7 @@ export class Dropzone extends Component {
         onDrop: { type: Function, optional: true },
         ref: Object,
     };
-    static template = "mail.Dropzone";
+    static template = "web.Dropzone";
 
     setup() {
         super.setup();
