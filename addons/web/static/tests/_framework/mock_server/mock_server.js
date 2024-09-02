@@ -972,12 +972,16 @@ export class MockServer {
                             .display_name,
                     };
                 }
+                if (action.views) {
+                    return { display_name: action.name, view_type: action.views[0][1] };
+                }
                 return { display_name: action.name };
             } else if (model) {
                 if (resId) {
                     return {
                         display_name: this.env[model].read([resId], ["display_name"])[0]
                             .display_name,
+                        view_type: "form",
                     };
                 }
                 throw new Error("Actions with a model should also have a resId");

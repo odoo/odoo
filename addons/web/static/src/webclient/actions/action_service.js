@@ -176,6 +176,9 @@ export function makeActionManager(env, router = _router) {
                     state: { ...actionState, actionStack: state.actionStack.slice(0, index + 1) },
                     currentState: {},
                 };
+                if (actionState.view_type) {
+                    controller.props.type = actionState.view_type;
+                }
                 if (actionState.action) {
                     controller.action.id = actionState.action;
 
@@ -242,7 +245,7 @@ export function makeActionManager(env, router = _router) {
     async function _loadBreadcrumbs(controllers) {
         const toFetch = [];
         const keys = [];
-        for (const { action, state, displayName } of controllers) {
+        for (const { action, state, displayName, props } of controllers) {
             if (action.id === "menu" || (action.type === "ir.actions.client" && !displayName)) {
                 continue;
             }
@@ -251,6 +254,9 @@ export function makeActionManager(env, router = _router) {
             keys.push(key);
             if (displayName) {
                 breadcrumbCache[key] = { display_name: displayName };
+                if (props.type) {
+                    breadcrumbCache[key].view_type = props.type;
+                }
             }
             if (key in breadcrumbCache) {
                 continue;
@@ -272,6 +278,9 @@ export function makeActionManager(env, router = _router) {
         for (const [controller, res] of zip(controllers, results)) {
             if ("display_name" in res) {
                 controller.displayName = res.display_name;
+                if ("view_type" in res) {
+                    controller.props.type = res.view_type;
+                }
             } else {
                 controllersToRemove.push(controller);
                 if ("error" in res) {
@@ -429,8 +438,8 @@ export function makeActionManager(env, router = _router) {
                     get name() {
                         return controller.displayName;
                     },
-                    get isFormView() {
-                        return controller.props?.type === "form";
+                    get viewType() {
+                        return controller.props?.type || "";
                     },
                     get url() {
                         return stateToUrl(controller.state);
@@ -1647,6 +1656,9 @@ export function makeActionManager(env, router = _router) {
         const actions = controllerStack.map((controller) => {
             const { action, props, displayName } = controller;
             const actionState = { displayName };
+            if (controller.virtual && props.type) {
+                actionState.view_type = props.type;
+            }
             if (action.path || action.id) {
                 actionState.action = action.path || action.id;
             } else if (action.type === "ir.actions.client") {

@@ -45,11 +45,13 @@ test.tags`desktop`("breadcrumbs", async () => {
                     jsId: "controller_7",
                     name: "Previous",
                     onSelected: () => expect.step("controller_7"),
+                    viewType: "kanban",
                 },
                 {
                     jsId: "controller_9",
                     name: "Current",
                     onSelected: () => expect.step("controller_9"),
+                    viewType: "form",
                 },
             ],
         }
@@ -60,6 +62,10 @@ test.tags`desktop`("breadcrumbs", async () => {
     expect(breadcrumbItems[0]).toHaveText("Previous");
     expect(breadcrumbItems[1]).toHaveText("Current");
     expect(breadcrumbItems[1]).toHaveClass("active");
+    expect(breadcrumbItems[0].children[0]).toHaveAttribute(
+        "data-tooltip",
+        'Back to "Previous" kanban'
+    );
 
     click(breadcrumbItems[0]);
     expect.verifySteps(["controller_7"]);

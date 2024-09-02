@@ -80,10 +80,11 @@ class Action(Controller):
                     if record_id:
                         # some actions may not have a res_model (e.g. a client action)
                         if record_id == 'new':
-                            results.append({'display_name': _("New")})
+                            results.append({'display_name': _("New"), 'view_typpe': 'form'})
                         elif act['res_model']:
-                            results.append({'display_name': request.env[act['res_model']].browse(record_id).display_name})
+                            results.append({'display_name': request.env[act['res_model']].browse(record_id).display_name, 'view_type': 'form'})
                         else:
+                            # If an action don't have a res_model, we don't put the view_type, is probably a clien action
                             results.append({'display_name': act['display_name']})
                     else:
                         if act['res_model'] and act['type'] != 'ir.actions.client':
@@ -92,14 +93,17 @@ class Action(Controller):
                             name = act['display_name'] if any(view[1] != 'form' and view[1] != 'search' for view in act['views']) else None
                         else:
                             name = act['display_name']
-                        results.append({'display_name': name})
+                        if act.get('views'):
+                            results.append({'display_name': name, 'view_type': act['views'][0][1]})
+                        else:
+                            results.append({'display_name': name})
                 elif action.get('model'):
                     Model = request.env[action.get('model')]
                     if record_id:
                         if record_id == 'new':
-                            results.append({'display_name': _("New")})
+                            results.append({'display_name': _("New"), 'view_type': 'form'})
                         else:
-                            results.append({'display_name': Model.browse(record_id).display_name})
+                            results.append({'display_name': Model.browse(record_id).display_name, 'view_type': 'form'})
                     else:
                         # This case cannot be produced by the web client
                         raise BadRequest('Actions with a model should also have a resId')
