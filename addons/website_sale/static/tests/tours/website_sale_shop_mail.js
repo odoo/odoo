@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('shop_mail', {
     {
         content: "Open recipients dropdown",
         trigger: ".modal .o_field_many2many_tags_email[name=partner_ids] input",
-        run: 'click',
+        run: 'edit Interior24',
     },
     {
         content: "Select azure interior",
