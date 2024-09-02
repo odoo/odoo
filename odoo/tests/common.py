@@ -912,6 +912,8 @@ class ChromeBrowser:
         else:
             self.sigxcpu_handler = None
 
+        test_class.browser_size = test_class.browser_size.replace('x', ',')
+
         self.chrome, self.devtools_port = self._chrome_start(
             user_data_dir=self.user_data_dir,
             window_size=test_class.browser_size,
