@@ -28,12 +28,14 @@ test("display banner when ptt extension is not enabled", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "General" });
     await click("[title='Open Actions Menu']");
-    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await click("button", { text: "Push to Talk" });
     await click("[title*='Close Chat Window']");
     await click("button", { text: "Start a meeting" });
+    await click("button[title='Close panel']"); // invitation panel automatically open
     await contains(".o-discuss-PttAdBanner");
-    await click("[title='Show Call Settings']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await click("button", { text: "Voice Detection" });
     await click("[title*='Close Chat Window']");
     await contains(".o-discuss-PttAdBanner", { count: 0 });

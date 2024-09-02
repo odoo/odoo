@@ -1,11 +1,29 @@
+.o-mail-ActionPanel .form-check-input {
+    --form-check-bg: #{$white};
+}
+
 .o-mail-ActionPanel:not(.o-mail-ActionPanel-chatter) {
-    max-width: 550px;
+    @media (min-width: 800px) {
+        max-width: 30vw;
+    }
+    @media (min-width: 1000px) {
+        max-width: 50vw;
+    }
+    @media (min-width: 1200px) {
+        max-width: 55vw;
+    }
+    @media (min-width: 1600px) {
+        max-width: 65vw;
+    }
+    @media (min-width: 2300px) {
+        max-width: 75vw;
+    }
 }
 
 .o-mail-ActionPanel-header {
     z-index: $o-mail-NavigableList-zIndex - 1;
-}
 
-.o-mail-ActionPanel-backButton {
-    color: $o-brand-odoo;
+    button:hover {
+        background-color: $gray-200;
+    }
 }

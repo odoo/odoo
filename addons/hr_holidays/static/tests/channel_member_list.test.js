@@ -26,7 +26,7 @@ test("on leave members are categorised correctly in online/offline", async () =>
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Show Member List']");
+    await click("[title='Members']");
     await contains(".o-discuss-ChannelMemberList h6", { text: "Online - 3" });
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
 });

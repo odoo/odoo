@@ -119,10 +119,10 @@
                 </span>
             </button>
             <t t-if="!store.discuss.isSidebarCompact">
-              <div class="flex-grow-1"/>
-              <t t-call="mail.DiscussSidebarChannel.commands"/>
-              <t t-foreach="indicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
-              <i t-if="thread.isMuted" class="fa fa-fw fa-bell-slash me-3"/>
+                <div class="flex-grow-1"/>
+                <t t-call="mail.DiscussSidebarChannel.commands"/>
+                <t t-foreach="indicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
+                <i t-if="thread.isMuted" class="fa fa-fw fa-bell-slash me-3"/>
             </t>
             <t t-else="">
                 <div t-if="indicators.length" class="position-absolute rounded-circle p-0 smaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">

@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatWindow">
-    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow-sm"
+    <t t-set="partitionedActions" t-value="threadActions.partition"/>
+    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow-sm bg-100"
         t-att-style="style"
         t-att-class="{
             'w-100 h-100 o-mobile': ui.isSmall,
@@ -13,29 +14,50 @@
         tabindex="1"
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and thread, 'pt-2': !thread }">
-            <t t-if="threadActions.actions.length > 3">
+            <t t-if="partitionedActions.group.length > 0 or partitionedActions.other.length > 0 or (ui.isSmall and partitionedActions.quick.length > 2) or (!ui.isSmall and partitionedActions.quick.length > 3)">
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
                         <button
-                            class="o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-1 py-2 m-0 w-100"
+                            class="o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-1 py-2 m-0 w-100 rounded-end-0"
                             t-att-class="{ 'ps-2 pe-1 rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
                             t-att-disabled="state.editingName"
                             t-att-title="actionsMenuTitleText"
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
-                            <i t-if="!state.editingName" class="fa fa-fw fa-caret-down opacity-50 ms-1"/>
+                            <i t-if="!state.editingName" class="fa fa-fw fa-caret-down ms-1"/>
                         </button>
                         <t t-set-slot="content">
-                            <t t-if="ui.isSmall" t-set="actions" t-value="threadActions.actions.slice(1, -1)"/>
-                            <t t-else="" t-set="actions" t-value="threadActions.actions.slice(1, -2)"/>
-                            <DropdownItem t-foreach="actions" t-as="action" t-key="action.id"
-                                class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0'"
-                                attrs="{ title: action.name }"
-                                onSelected="() => action.onSelect()"
-                            >
-                                <i t-att-class="action.icon"/>
-                                <span class="mx-2" t-out="action.name"/>
-                            </DropdownItem>
+                            <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 3)"/>
+                            <t t-if="quickActionsInDropdown.length > 0">
+                                <t t-set="groupBefore" t-value="true"/>
+                                <t t-foreach="quickActionsInDropdown" t-as="action" t-key="action.id">
+                                    <t t-call="mail.ChatWindow.dropdownAction">
+                                        <t t-set="action" t-value="action"/>
+                                    </t>
+                                </t>
+                            </t>
+                            <t t-else="" t-set="groupBefore" t-value="false"/>
+                            <t t-if="partitionedActions.group.length > 0">
+                                <hr t-if="groupBefore" class="mx-2 my-1"/>
+                                <t t-set="groupBefore" t-value="true"/>
+                                <t t-foreach="partitionedActions.group" t-as="group" t-key="group_index">
+                                    <t t-foreach="group" t-as="action" t-key="action.id">
+                                        <t t-call="mail.ChatWindow.dropdownAction">
+                                            <t t-set="action" t-value="action"/>
+                                        </t>
+                                    </t>
+                                    <hr t-if="!group_last" class="mx-2 my-1"/>
+                                </t>
+                            </t>
+                            <t t-else="" t-set="groupBefore" t-value="false"/>
+                            <t t-if="partitionedActions.other.length">
+                                <hr t-if="groupBefore" class="mx-2 my-1"/>
+                                <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id">
+                                    <t t-call="mail.ChatWindow.dropdownAction">
+                                        <t t-set="action" t-value="action"/>
+                                    </t>
+                                </t>
+                            </t>
                         </t>
                     </Dropdown>
                 </div>
@@ -56,17 +78,8 @@
             <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
                 <t t-out="thread.needactionCounter"/>
             </div>
-            <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.dropdownAction">
-                <t t-set="action" t-value="threadActions.actions[0]"/>
-            </t>
-            <t t-if="!ui.isSmall and threadActions.actions.length > 2">
-                <t t-call="mail.ChatWindow.dropdownAction">
-                    <t t-set="action" t-value="threadActions.actions.at(-2)"/>
-                </t>
-            </t>
-            <t t-call="mail.ChatWindow.dropdownAction">
-                <t t-set="action" t-value="threadActions.actions.at(-1)"/>
-                <t t-set="itemClass" t-value="'me-1'"/>
+            <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 3).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
+                <t t-if="action_last" t-set="itemClass" t-value="'me-1'"/>
             </t>
             <t t-if="this.store.inPublicPage and this.store.self.type === 'guest'">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
@@ -81,7 +94,7 @@
                 />
             </t>
         </div>
-        <div t-if="!props.chatWindow.folded or ui.isSmall" class="bg-100 d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="d-flex flex-column h-100 overflow-auto position-relative bg-inherit" t-att-class="{ 'opacity-50': state.editingName }" t-ref="content">
             <t t-if="thread" name="thread content">
                 <div t-if="threadActions.activeAction?.componentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}">
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
@@ -100,8 +113,15 @@
     </div>
 </t>
 
-<t t-name="mail.ChatWindow.dropdownAction">
+<t t-name="mail.ChatWindow.quickAction">
     <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-class="itemClass" t-att-title="action.name" t-on-click.stop="() => action.onSelect()"><i t-att-class="action.icon"/></button>
+</t>
+
+<t t-name="mail.ChatWindow.dropdownAction">
+    <DropdownItem class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="() => action.onSelect()">
+        <i t-att-class="action.icon"/>
+        <span class="mx-2" t-out="action.name"/>
+    </DropdownItem>
 </t>
 
 <t t-name="mail.ChatWindow.headerContent">

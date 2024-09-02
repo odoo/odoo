@@ -16,8 +16,8 @@ test("Empty attachment panel", async () => {
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(".o-mail-Discuss-inspector", {
+    await click(".o-mail-Discuss-header button[title='Attachments']");
+    await contains(".o-mail-ActionPanel", {
         text: "This channel doesn't have any attachments.",
     });
 });
@@ -41,7 +41,7 @@ test("Attachment panel sort by date", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Show Attachments']");
+    await click(".o-mail-Discuss-header button[title='Attachments']");
     await contains(".o-mail-AttachmentList", {
         text: "file2.pdf",
         after: [".o-mail-DateSection", { text: "September, 2023" }],
@@ -59,13 +59,13 @@ test("Can toggle allow public upload", async () => {
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
-    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: env1 });
+    await click(".o-mail-Discuss-header button[title='Attachments']", { target: env1 });
     await contains(".o-mail-ActionPanel", {
         contains: ["label", { text: "File upload is disabled for external users" }],
         target: env1,
     });
     await openDiscuss(channelId, { target: env2 });
-    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: env2 });
+    await click(".o-mail-Discuss-header button[title='Attachments']", { target: env2 });
     await contains(".o-mail-ActionPanel", {
         contains: ["label", { text: "File upload is disabled for external users" }],
         target: env2,

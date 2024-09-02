@@ -8,11 +8,6 @@
     background-color: $body-bg;
 }
 
-.o-mail-Discuss-inspector {
-    flex-basis: $o-mail-Discuss-inspector;
-    flex-shrink: 0;
-}
-
 .o-mail-Discuss-selfAvatar {
     height: $o-mail-Avatar-sizeSmall;
     width: $o-mail-Avatar-sizeSmall;
@@ -27,15 +22,24 @@
 }
 
 .o-mail-Discuss-headerActions button {
+    --btn-disabled-opacity: 0.25;
+
     &:not(.o-isActive):hover {
         background-color: $gray-200;
     }
     &.o-isActive {
         background-color: $gray-300;
+        outline: $border-width solid $gray-500;
+        outline-offset: -$border-width;
     }
     &.o-isActive:hover {
         background-color: $gray-300;
     }
+}
+
+.o-mail-Discuss-headerActionsGroup {
+    --border-opacity: .05;
+    background-color: mix($gray-100, $gray-200, 75%);
 }
 
 .o-mail-Discuss-headerCountry {

@@ -75,7 +75,7 @@ test("invite button should be present on livechat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss button[title='Add Users']");
+    await contains(".o-mail-Discuss button[title='Invite People']");
 });
 
 test("livechats are sorted by last activity time in the sidebar: most recent at the top", async () => {

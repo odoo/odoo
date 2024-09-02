@@ -41,7 +41,7 @@ test("bus subscription updated when joining locally pinned thread", async () => 
     await start();
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
-    await click("[title='Add Users']");
+    await click("[title='Invite People']");
     await click(".o-discuss-ChannelInvitation-selectable", {
         text: "Mitchell Admin",
     });

@@ -1,5 +1,6 @@
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -14,14 +15,19 @@ export class ActionPanel extends Component {
         title: { type: String, optional: true },
         resizable: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
+        initialWidth: { type: Number, optional: true },
+        minWidth: { type: Number, optional: true },
     };
-    static defaultProps = {
-        resizable: true,
-    };
+    static defaultProps = { resizable: true };
+
+    setup() {
+        super.setup();
+        this.store = useState(useService("mail.store"));
+    }
 
     get classNames() {
-        return `o-mail-ActionPanel overflow-auto d-flex flex-column flex-shrink-0 position-relative py-3 pt-0 h-100 ${
-            !this.env.inChatter ? " px-3 bg-view" : " o-mail-ActionPanel-chatter"
-        }`;
+        return `o-mail-ActionPanel overflow-auto d-flex flex-column flex-shrink-0 position-relative py-2 pt-0 h-100 bg-inherit ${
+            !this.env.inChatter ? " px-2" : " o-mail-ActionPanel-chatter"
+        } ${this.env.inDiscussApp ? " o-mail-discussSidebarBgColor" : ""}`;
     }
 }

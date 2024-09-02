@@ -72,8 +72,9 @@ test.tags("mobile")("show Push-to-Talk button on mobile", async () => {
     await click(".o-mail-NotificationItem", { text: "General" });
     await click("[title='Start a Call']");
     await click("[title='Open Actions Menu']");
-    await click("[title='Show Call Settings']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await click("button", { text: "Push to Talk" });
-    await click("[title='Hide Call Settings']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await contains("button", { text: "Push to talk" });
 });

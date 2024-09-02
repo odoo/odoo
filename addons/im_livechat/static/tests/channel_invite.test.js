@@ -31,13 +31,13 @@ test("Can invite a partner to a livechat channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Add Users']");
+    await click("button[title='Invite People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
     await click("button:enabled", { text: "Invite" });
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
-    await click("button[title='Show Member List']");
+    await click("button[title='Members']");
     await contains(".o-discuss-ChannelMember", { text: "James" });
 });
 
@@ -67,7 +67,7 @@ test("Available operators come first", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Add Users']");
+    await click("button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "Ron" });
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
@@ -115,11 +115,11 @@ test("Partners invited most frequently by the current user come first", async ()
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
-    await click("button[title='Add Users']");
+    await click("button[title='Invite People']");
     await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
     await click("button:enabled", { text: "Invite" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #2" });
-    await click("button[title='Add Users']");
+    await click("button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });

@@ -26,6 +26,7 @@ threadActionsRegistry
             return !component.props.chatWindow?.isOpen;
         },
         sequence: 99,
+        sequenceQuick: 20,
     })
     .add("rename-thread", {
         condition(component) {
@@ -36,11 +37,12 @@ threadActionsRegistry
             );
         },
         icon: "fa fa-fw fa-pencil",
-        name: _t("Rename"),
+        name: _t("Rename Thread"),
         open(component) {
             component.state.editingName = true;
         },
-        sequence: 17,
+        sequence: 30,
+        sequenceGroup: 20,
     })
     .add("close", {
         condition(component) {
@@ -52,6 +54,7 @@ threadActionsRegistry
             component.close();
         },
         sequence: 100,
+        sequenceQuick: 10,
     })
     .add("search-messages", {
         component: SearchMessagesPanel,
@@ -61,15 +64,13 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
-        panelOuterClass: "o-mail-SearchMessagesPanel",
+        panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
         icon: "oi oi-fw oi-search",
-        iconLarge: "oi oi-fw oi-search",
+        iconLarge: "oi oi-fw fa-lg oi-search",
         name: _t("Search Messages"),
         nameActive: _t("Close Search"),
-        sequence: (component) => {
-            const res = component.env.inDiscussApp ? 8 : 16;
-            return res;
-        },
+        sequence: 20,
+        sequenceGroup: 20,
         setup(action) {
             useSubEnv({
                 searchMenu: {
@@ -165,7 +166,11 @@ function transformAction(component, id, action) {
             }
             action.open?.(component, this);
         },
-        panelOuterClass: action.panelOuterClass,
+        get panelOuterClass() {
+            return typeof action.panelOuterClass === "function"
+                ? action.panelOuterClass(component)
+                : action.panelOuterClass;
+        },
         /** Determines whether this is a popover linked to this action. */
         popover: null,
         /** Determines the order of this action (smaller first). */
@@ -173,6 +178,16 @@ function transformAction(component, id, action) {
             return typeof action.sequence === "function"
                 ? action.sequence(component)
                 : action.sequence;
+        },
+        get sequenceGroup() {
+            return typeof action.sequenceGroup === "function"
+                ? action.sequenceGroup(component)
+                : action.sequenceGroup;
+        },
+        get sequenceQuick() {
+            return typeof action.sequenceQuick === "function"
+                ? action.sequenceQuick(component)
+                : action.sequenceQuick;
         },
         /** Component setup to execute when this action is registered. */
         setup: action.setup,
@@ -198,6 +213,31 @@ export function useThreadActions() {
             return transformedActions
                 .filter((action) => action.condition)
                 .sort((a1, a2) => a1.sequence - a2.sequence);
+        },
+        get partition() {
+            const actions = transformedActions.filter((action) => action.condition);
+            const quick = actions
+                .filter((a) => a.sequenceQuick)
+                .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
+            const grouped = actions.filter((a) => a.sequenceGroup);
+            const groups = {};
+            for (const a of grouped) {
+                if (!(a.sequenceGroup in groups)) {
+                    groups[a.sequenceGroup] = [];
+                }
+                groups[a.sequenceGroup].push(a);
+            }
+            const sortedGroups = Object.entries(groups).sort(
+                ([groupId1], [groupId2]) => groupId1 - groupId2
+            );
+            for (const [, actions] of sortedGroups) {
+                actions.sort((a1, a2) => a1.sequence - a2.sequence);
+            }
+            const group = sortedGroups.map(([groupId, actions]) => actions);
+            const other = actions
+                .filter((a) => !a.sequenceQuick & !a.sequenceGroup)
+                .sort((a1, a2) => a1.sequence - a2.sequence);
+            return { quick, group, other };
         },
         actionStack: [],
         activeAction: null,
