@@ -272,7 +272,7 @@ export class PosStore extends Reactive {
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (Object.keys(order.last_order_preparation_change).length > 0) {
-                    await this.sendOrderInPreparationUpdateLastChange(order, true);
+                    await this.sendOrderInPreparation(order, true);
                 }
 
                 const cancelled = this.removeOrder(order, true);
@@ -1019,7 +1019,7 @@ export class PosStore extends Reactive {
             const modelToAdd = {};
             const newData = {};
             for (const [model, records] of Object.entries(data)) {
-                const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
+                const modelKey = this.data.opts.databaseTable[model]?.key;
 
                 if (!modelKey) {
                     modelToAdd[model] = records;

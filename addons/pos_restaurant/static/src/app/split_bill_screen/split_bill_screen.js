@@ -56,8 +56,9 @@ export class SplitBillScreen extends Component {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
-        const newOrder = this.pos.add_new_order();
-        newOrder.note = `${newOrder.tracking_number} Split from ${originalOrder.table_id.table_number}`;
+        const newOrder = this.pos.createNewOrder();
+        const originalOrderName = originalOrder.getOrderName();
+        newOrder.note = `${newOrder.tracking_number} Split from ${originalOrderName}`;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;
 
@@ -65,9 +66,11 @@ export class SplitBillScreen extends Component {
         const lineToDel = [];
         for (const line of originalOrder.lines) {
             if (this.qtyTracker[line.uuid]) {
+                const data = line.serialize();
+                delete data.uuid;
                 this.pos.models["pos.order.line"].create(
                     {
-                        ...line.serialize(),
+                        ...data,
                         qty: this.qtyTracker[line.uuid],
                         order_id: newOrder.id,
                     },

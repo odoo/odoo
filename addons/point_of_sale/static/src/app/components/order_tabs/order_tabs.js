@@ -24,16 +24,24 @@ export class OrderTabs extends Component {
         this.pos.selectedTable = null;
         this.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
-        if (this.env.inDialog) {
-            this.dialog.closeAll();
-        }
+        this.dialog.closeAll();
     }
     selectFloatingOrder(order) {
         this.pos.set_order(order);
         this.pos.selectedTable = null;
         this.pos.showScreen("ProductScreen");
-        if (this.env.inDialog) {
-            this.dialog.closeAll();
-        }
+        this.dialog.closeAll();
+    }
+    get orders() {
+        return this.props.orders.sort((a, b) => {
+            // Orders with a note should be displayed first and alphabetically ordered
+            if (a.note && !b.note) {
+                return -1;
+            } else if (!a.note && b.note) {
+                return 1;
+            } else if (a.note && b.note) {
+                return a.note.localeCompare(b.note);
+            }
+        });
     }
 }
