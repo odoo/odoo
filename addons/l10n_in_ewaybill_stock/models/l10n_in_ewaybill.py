@@ -30,6 +30,7 @@ class Ewaybill(models.Model):
 
     state = fields.Selection(string='Status', selection=[
         ('pending', 'Pending'),
+        ('challan', 'Challan'),
         ('generated', 'Generated'),
         ('cancel', 'Cancelled'),
     ], required=True, readonly=True, copy=False, tracking=True, default='pending')
@@ -205,7 +206,11 @@ class Ewaybill(models.Model):
     @api.depends('name', 'state')
     def _compute_display_name(self):
         for ewaybill in self:
-            ewaybill.display_name = ewaybill.state == 'pending' and _('Pending') or ewaybill.name
+            ewaybill.display_name = (
+                (ewaybill.state == 'pending' and _('Pending'))
+                or (ewaybill.state == 'challan' and _('Challan'))
+                or ewaybill.name
+            )
 
     @api.depends('mode')
     def _compute_vehicle_type(self):
@@ -240,12 +245,21 @@ class Ewaybill(models.Model):
         }
 
     def reset_to_pending(self):
-        if self.state != 'cancel':
-            raise UserError(_("Only Cancelled E-waybill can be resent."))
+        self.ensure_one()
+        if self.state not in ('cancel', 'challan'):
+            raise UserError(_("Only Delivery Challan and Cancelled E-waybill can be reset to pending."))
         self.write({
             'state': 'pending',
             'cancel_reason': False,
             'cancel_remarks': False,
+        })
+
+    def action_set_to_challan(self):
+        self.ensure_one()
+        if self.state != 'pending':
+            raise UserError(_("The challan can only be generated in the Pending state."))
+        self.write({
+            'state': 'challan',
         })
 
     def _is_overseas(self):
