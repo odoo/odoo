@@ -239,7 +239,7 @@
                     <separator/>
                     <filter name="sales" string="Sales" domain="[('type', '=', 'sale')]"/>
                     <filter name="purchases" string="Purchases" domain="[('type', '=', 'purchase')]"/>
-                    <filter name="liquidity" string="Liquidity" domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank'), ('type', '=', 'credit')]"/> 
+                    <filter name="liquidity" string="Liquidity" domain="[('type', 'in', ('cash', 'bank', 'credit'))]"/>
                     <filter name="miscellaneous" string="Miscellaneous" domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank', 'credit'])]"/>
                     <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
