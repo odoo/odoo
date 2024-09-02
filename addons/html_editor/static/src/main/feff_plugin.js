@@ -117,7 +117,11 @@ export class FeffPlugin extends Plugin {
         // returning a list of them.
         const customFeffNodes = this.getResource("feff_providers").flatMap((p) => p(root, cursors));
         const feffNodesToKeep = new Set([...feffNodesBasedOnSelectors, ...customFeffNodes]);
-        this.removeFeffs(root, cursors, { exclude: (node) => feffNodesToKeep.has(node) });
+        this.removeFeffs(root, cursors, {
+            exclude: (node) =>
+                feffNodesToKeep.has(node) ||
+                this.getResource("legit_zwnbsp_predicates").some((predicate) => predicate(node)),
+        });
         cursors.restore();
     }
 
