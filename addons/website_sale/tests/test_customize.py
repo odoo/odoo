@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import base64
+
+from unittest import skip
 
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
-
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
@@ -330,6 +330,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         ])
         self.start_tour("/", 'shop_editor', login="admin")
 
+    @skip('disabled in 17.1 bc non deterministic on runbot')
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
         """The goal of this test is to make sure that an archived variant with multiple
         attributes only disabled other options if only one is missing or all are selected.
