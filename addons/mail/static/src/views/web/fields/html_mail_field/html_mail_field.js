@@ -6,14 +6,23 @@ import { ColumnPlugin } from "@html_editor/main/column_plugin";
 const cssRulesByElement = new WeakMap();
 
 export class HtmlMailField extends HtmlField {
-    async getEditorContent() {
-        if (!cssRulesByElement.has(this.editor.editable)) {
-            cssRulesByElement.set(this.editor.editable, getCSSRules(this.editor.document));
+    /**
+     * @param {WeakMap} cssRulesByElement
+     * @param {Editor} editor
+     * @param {HTMLElement} el
+     */
+    static async getInlinedEditorContent(cssRulesByElement, editor, el) {
+        if (!cssRulesByElement.has(editor.editable)) {
+            cssRulesByElement.set(editor.editable, getCSSRules(editor.document));
         }
-        const cssRules = cssRulesByElement.get(this.editor.editable);
-        const el = await super.getEditorContent();
+        const cssRules = cssRulesByElement.get(editor.editable);
         el.classList.remove("odoo-editor-editable");
         await toInline(el, cssRules);
+    }
+
+    async getEditorContent() {
+        const el = await super.getEditorContent();
+        await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
         return el;
     }
 
