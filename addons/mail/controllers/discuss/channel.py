@@ -23,7 +23,7 @@ class DiscussChannelWebclientController(WebclientController):
 
 
 class ChannelController(http.Controller):
-    @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -38,7 +38,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         channel.write({"image_128": data})
 
-    @http.route("/discuss/channel/info", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/info", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_info(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -69,7 +69,7 @@ class ChannelController(http.Controller):
             "messages": Store.many_ids(messages),
         }
 
-    @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_pins(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -111,7 +111,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         member._notify_typing(is_typing)
 
-    @http.route("/discuss/channel/attachments", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/attachments", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def load_attachments(self, channel_id, limit=30, before=None):
         """Load attachments of a channel. If before is set, load attachments
