@@ -567,18 +567,18 @@ test("composer: drop attachments", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
-    await contains(".o-mail-Dropzone", { count: 0 });
+    await contains(".o-Dropzone", { count: 0 });
     await contains(".o-mail-AttachmentCard", { count: 0 });
     const files = [text, text2];
     await dragenterFiles(".o-mail-Composer-input", files);
-    await contains(".o-mail-Dropzone");
+    await contains(".o-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
-    await dropFiles(".o-mail-Dropzone", files);
-    await contains(".o-mail-Dropzone", { count: 0 });
+    await dropFiles(".o-Dropzone", files);
+    await contains(".o-Dropzone", { count: 0 });
     await contains(".o-mail-AttachmentCard", { count: 2 });
     const extraFiles = [text3];
     await dragenterFiles(".o-mail-Composer-input", extraFiles);
-    await dropFiles(".o-mail-Dropzone", extraFiles);
+    await dropFiles(".o-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
