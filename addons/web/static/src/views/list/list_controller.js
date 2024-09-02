@@ -433,6 +433,10 @@ export class ListController extends Component {
         return this.props.className;
     }
 
+    get hasSelectedRecords() {
+        return this.nbSelected || this.isDomainSelected;
+    }
+
     get nbSelected() {
         return this.model.root.selection.length;
     }
@@ -470,7 +474,7 @@ export class ListController extends Component {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                layoutActions: !this.nbSelected,
+                layoutActions: !this.hasSelectedRecords,
             },
         };
     }

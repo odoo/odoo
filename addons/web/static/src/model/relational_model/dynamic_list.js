@@ -187,7 +187,9 @@ export class DynamicList extends DataPoint {
 
     toggleSelection() {
         return this.model.mutex.exec(() => {
-            if (this.selection.length === this.records.length) {
+            if (!this.records.length) {
+                this.isDomainSelected = !this.isDomainSelected;
+            } else if (this.selection.length === this.records.length) {
                 this.records.forEach((record) => {
                     record._toggleSelection(false);
                 });

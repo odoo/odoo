@@ -43,7 +43,7 @@
                     <CogMenu t-if="!nbSelected"/>
                 </t>
                 <t t-set-slot="control-panel-selection-actions">
-                    <div t-if="nbSelected" class="d-flex gap-1">
+                    <div t-if="hasSelectedRecords" class="d-flex gap-1">
                         <t t-call="web.ListView.Selection"/>
                         <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
                             <MultiRecordViewButton
