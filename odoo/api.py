@@ -942,6 +942,8 @@ class Environment(Mapping):
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
+    __slots__ = ('_Transaction__file_open_tmp_paths', 'cache', 'envs', 'protected', 'registry', 'tocompute')
+
     def __init__(self, registry):
         self.registry = registry
         # weak set of environments
@@ -953,6 +955,8 @@ class Transaction:
         self.protected = StackMap()
         # pending computations {field: ids}
         self.tocompute = defaultdict(OrderedSet)
+        # temporary directories (managed in odoo.tools.file_open_temporary_directory)
+        self.__file_open_tmp_paths = ()  # noqa: PLE0237
 
     def flush(self):
         """ Flush pending computations and updates in the transaction. """
