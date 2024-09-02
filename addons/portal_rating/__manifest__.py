@@ -36,7 +36,14 @@ inclusion of rating directly within the customer portal discuss widget.
         ],
         'portal.assets_chatter_style': [
             'portal_rating/static/src/scss/portal_rating.scss',
-        ]
+        ],
+        'portal.assets_widget_xml': [
+            # 'portal_rating/static/src/xml/portal_chatter.xml', converted to interaction
+            # 'portal_rating/static/src/xml/portal_tools.xml',
+        ],
+        'portal_rating.assets_widget_xml': [
+            # 'portal_rating/static/src/xml/portal_rating_composer.xml', converted to interaction
+        ],
     },
     'license': 'LGPL-3',
 }

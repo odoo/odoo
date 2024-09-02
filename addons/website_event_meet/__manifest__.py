@@ -38,7 +38,9 @@
         ],
         'web.assets_unit_tests_setup': [
             'website_event_meet/static/src/interactions/**/*.js',
-            'website_event_meet/static/src/xml/website_event_meeting_room.xml',
+        ],
+        'website_event_meet.assets_widget_xml': [
+            # 'website_event_meet/static/src/xml/website_event_meeting_room.xml', interaction
         ],
     },
     'license': 'LGPL-3',

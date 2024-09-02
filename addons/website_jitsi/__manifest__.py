@@ -23,6 +23,9 @@
             'website_jitsi/static/src/js/chat_room.js',
             'website_jitsi/static/src/xml/chat_room_modal.xml',
         ],
+        'website_jitsi.assets_widget_xml': [
+            # 'website_jitsi/static/src/xml/chat_room_modal.xml', interaction
+        ],
     },
     'license': 'LGPL-3',
 }

@@ -41,7 +41,6 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/js/portal.js',
             'portal/static/src/xml/portal_chatter.xml',
             'portal/static/src/js/portal_security.js',
-            'portal/static/src/xml/portal_security.xml',
             'portal/static/src/js/components/**/*',
             'portal/static/src/signature_form/**/*',
             'portal/static/src/chatter/boot/boot_service.js',
@@ -49,6 +48,10 @@ a dependency towards website editing and customization capabilities.""",
         'web.assets_unit_tests_setup': [
             'portal/static/src/interactions/**/*',
             'portal/static/src/xml/**/*',
+        ],
+        'portal.assets_widget_xml': [
+            'portal/static/src/xml/portal_security.xml',
+            # 'portal/static/src/xml/portal_chatter.xml', converted to interaction
         ],
         'web.assets_tests': [
             'portal/static/tests/**/*',

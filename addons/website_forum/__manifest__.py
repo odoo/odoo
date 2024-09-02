@@ -88,6 +88,9 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/interactions/website_forum_spam.js',
             'website_forum/static/src/xml/public_templates.xml',
         ],
+        'website_forum.assets_widget_xml': [
+            # 'website_forum/static/src/xml/public_templates.xml', interaction
+        ],
     },
     'license': 'LGPL-3',
 }
