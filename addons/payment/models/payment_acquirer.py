@@ -198,6 +198,9 @@ class PaymentAcquirer(models.Model):
             pay_method_line.journal_id = self.journal_id
         elif allow_create:
             default_payment_method_id = self._get_default_payment_method_id()
+            if not default_payment_method_id:
+                return
+
             create_values = {
                 'name': self.name,
                 'payment_method_id': default_payment_method_id,
@@ -242,7 +245,7 @@ class PaymentAcquirer(models.Model):
 
     def _get_default_payment_method_id(self):
         self.ensure_one()
-        return self.env.ref('account.account_payment_method_manual_in').id
+        return None
 
     #=== CONSTRAINT METHODS ===#
 
