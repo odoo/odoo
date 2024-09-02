@@ -88,18 +88,6 @@
 
         <!-- PARTNERS -->
 
-        <record model="ir.ui.view" id="view_partner_tree">
-            <field name="name">res.partner.list.form.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_tree"/>
-            <field name="arch" type="xml">
-                <field name="category_id" position="after">
-                    <field name="membership_state" optional="hide" decoration-info="membership_state =='waiting'"
-                           decoration-success="membership_state in ['invoiced', 'free', 'paid']" widget="badge"/>
-                </field>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_partner_form">
             <field name="name">res.partner.form.inherit</field>
             <field name="model">res.partner</field>
