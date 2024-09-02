@@ -664,7 +664,7 @@ test("basic top bar rendering", async () => {
     await contains("button:disabled", { text: "Unstar all" });
     await contains(".o-mail-Discuss-threadName", { value: "Starred" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Discuss-header button[title='Add Users']");
+    await contains(".o-mail-Discuss-header button[title='Invite People']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
 });
 
@@ -1313,7 +1313,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
 });
 
-test("'Add Users' button should be displayed in the topbar of channels", async () => {
+test("'Invite People' button should be displayed in the topbar of channels", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -1321,10 +1321,10 @@ test("'Add Users' button should be displayed in the topbar of channels", async (
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button[title='Add Users']");
+    await contains("button[title='Invite People']");
 });
 
-test("'Add Users' button should be displayed in the topbar of chats", async () => {
+test("'Invite People' button should be displayed in the topbar of chats", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1336,10 +1336,10 @@ test("'Add Users' button should be displayed in the topbar of chats", async () =
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button[title='Add Users']");
+    await contains("button[title='Invite People']");
 });
 
-test("'Add Users' button should be displayed in the topbar of groups", async () => {
+test("'Invite People' button should be displayed in the topbar of groups", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1351,14 +1351,14 @@ test("'Add Users' button should be displayed in the topbar of groups", async () 
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button[title='Add Users']");
+    await contains("button[title='Invite People']");
 });
 
-test("'Add Users' button should not be displayed in the topbar of mailboxes", async () => {
+test("'Invite People' button should not be displayed in the topbar of mailboxes", async () => {
     await start();
     await openDiscuss("mail.box_starred");
     await contains("button", { text: "Unstar all" });
-    await contains("button[title='Add Users']", { count: 0 });
+    await contains("button[title='Invite People']", { count: 0 });
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'channel' limited to a group", async () => {
@@ -1866,7 +1866,7 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await click(".o_main_navbar i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "General" });
     await click("[title='Open Actions Menu']");
-    await click("[title='Open in Discuss']");
+    await click(".o-dropdown-item", { text: "Open in Discuss" });
     await click("[title='Channel settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "General" }],
     });

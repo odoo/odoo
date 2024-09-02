@@ -58,5 +58,6 @@ threadActionsRegistry
             });
             component.props.chatWindow.close();
         },
-        sequence: 50,
+        sequence: 40,
+        sequenceGroup: 20,
     });

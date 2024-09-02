@@ -2,21 +2,27 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel title.translate="Member List">
-            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-secondary m-3 mt-0">Invite a User</button>
+        <ActionPanel title.translate="Members" minWidth="200">
+            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-secondary m-2 mt-0">Invite a User</button>
             <t t-if="props.thread.onlineMembers.length > 0">
-                <h6 class="mx-3 text-700">
+                <h6 class="text-muted pt-2 text-uppercase smaller">
                     Online -
                     <t t-esc="props.thread.onlineMembers.length"/>
                 </h6>
-                <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                <div class="d-flex flex-column bg-inherit gap-1">
+                    <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                </div>
             </t>
             <t name="offlineMembers" t-if="props.thread.offlineMembers.length > 0">
-                <h6 class="mx-3 text-700">
+                <h6 class="text-muted pt-2 text-uppercase smaller">
                     Offline -
                     <t t-esc="props.thread.offlineMembers.length"/>
                 </h6>
-                <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                <div class="d-flex flex-column bg-inherit gap-1">
+                    <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member">
+                        <t t-set="offline" t-value="1"/>
+                    </t>
+                </div>
             </t>
             <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
             <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
@@ -27,8 +33,8 @@
     </t>
 
     <t t-name="discuss.channel_member">
-        <div class="o-discuss-ChannelMember d-flex align-items-center p-2 bg-inherit" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
-            <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
+        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded" t-att-class="{ 'cursor-pointer': canOpenChatWith(member), 'o-offline': offline }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
+            <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex flex-shrink-0">
                 <img class="w-100 h-100 rounded o_object_fit_cover"
                      t-att-src="member.persona.avatarUrl"/>
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>

@@ -11,7 +11,7 @@ patch(Discuss.prototype, {
             () => {
                 if (this.thread && this.thread === this.store.openInviteThread) {
                     this.threadActions.actions
-                        .find((action) => action.id === "add-users")
+                        .find((action) => action.id === "invite-people")
                         ?.onSelect();
                     this.store.openInviteThread = null;
                 }

@@ -1,5 +1,9 @@
-.o-mail-MessageCardList .card-body:hover .o-mail-MessageCard-jump {
-    opacity: 100 !important;
+.o-mail-MessageCardList .card-body {
+    background-color: var(--mail-MessageCardList-cardBodyBg, $o-view-background-color);
+
+    &:hover .o-mail-MessageCard-jump {
+        opacity: 100 !important;
+    }
 }
 
 .o-mail-MessageCard-jump {

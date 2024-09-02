@@ -42,7 +42,7 @@ test("Renders the call settings", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "test" });
     await click("[title='Open Actions Menu']");
-    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await contains(".o-discuss-CallSettings");
     await contains("label[aria-label='Input device']");
     await contains("option[value=mockAudioDeviceId]");
@@ -62,7 +62,7 @@ test("activate push to talk", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "test" });
     await click("[title='Open Actions Menu']");
-    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await click("button", { text: "Push to Talk" });
     await contains("i[aria-label='Register new key']");
     await contains("label", { text: "Delay after releasing push-to-talk" });
@@ -77,7 +77,7 @@ test("activate blur", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "test" });
     await click("[title='Open Actions Menu']");
-    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await click("input[title='Blur video background']");
     await contains("label", { text: "Blur video background" });
     await contains("label", { text: "Edge blur intensity" });
@@ -115,7 +115,7 @@ test("local storage for call settings", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "test" });
     await click("[title='Open Actions Menu']");
-    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await click(".o-dropdown-item", { text: "Call Settings" });
     await contains("input[title='Show video participants only']:checked");
     await contains("input[title='Blur video background']:checked");
     await contains("label[title='Background blur intensity']", { text: "15%" });

@@ -43,6 +43,7 @@ export class DiscussApp extends Record {
         return super.insert(...arguments);
     }
 
+    INSPECTOR_WIDTH = 300;
     /** @type {'main'|'channel'|'chat'|'livechat'} */
     activeTab = "main";
     searchTerm = "";

@@ -19,6 +19,7 @@ threadActionsRegistry.add("restart", {
         component.props.chatWindow.open();
     },
     sequence: 99,
+    sequenceQuick: 15,
 });
 
 const callSettingsAction = threadActionsRegistry.get("settings");
