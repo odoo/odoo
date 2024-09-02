@@ -36,7 +36,7 @@ test("Session is reset after failing to persist the channel", async () => {
             return false;
         }
     });
-    await start({ authenticateAs: false, env: { zzz: true } });
+    await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
