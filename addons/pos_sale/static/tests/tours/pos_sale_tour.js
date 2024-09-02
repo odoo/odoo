@@ -294,3 +294,20 @@ registry.category("web_tour.tours").add("PosOrdersListDifferentCurrency", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.downPaymentFirstOrder("+20"),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "20.0",
+            }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
