@@ -176,7 +176,7 @@ test("keep new message separator when switching between chat window and discuss 
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage");
     await click("[title='Open Actions Menu']");
-    await click("[title='Open in Discuss']");
+    await click(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await contains(".o-mail-Thread-newMessage");
     await openFormView("res.partner", serverState.partnerId);

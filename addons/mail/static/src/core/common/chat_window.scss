@@ -22,6 +22,9 @@
     &:hover, &.o-active {
         background-color: rgba(0, 0, 0, 0.05);
     }
+    &:not(:hover):not(.o-active) .fa-caret-down {
+        opacity: 50%;
+    }
 }
 
 .o-mail-ChatWindow-closePanel {

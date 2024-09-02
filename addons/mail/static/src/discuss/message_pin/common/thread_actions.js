@@ -13,12 +13,13 @@ threadActionsRegistry.add("pinned-messages", {
             (!component.props.chatWindow || component.props.chatWindow.isOpen)
         );
     },
-    panelOuterClass: "o-discuss-PinnedMessagesPanel",
+    panelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
     icon: "fa fa-fw fa-thumb-tack",
     iconLarge: "fa fa-fw fa-lg fa-thumb-tack",
     name: _t("Pinned Messages"),
     nameActive: _t("Hide Pinned Messages"),
     sequence: 20,
+    sequenceGroup: 10,
     setup(action) {
         useChildSubEnv({
             pinMenu: {

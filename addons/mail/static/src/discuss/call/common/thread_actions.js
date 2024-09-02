@@ -20,6 +20,7 @@ threadActionsRegistry
             component.rtc.toggleCall(component.thread);
         },
         sequence: 10,
+        sequenceQuick: 30,
         setup() {
             const component = useComponent();
             component.rtc = useState(useService("discuss.rtc"));
@@ -38,13 +39,9 @@ threadActionsRegistry
         },
         icon: "fa fa-fw fa-gear",
         iconLarge: "fa fa-fw fa-lg fa-gear",
-        name: _t("Show Call Settings"),
-        nameActive: _t("Hide Call Settings"),
-        sequence(component) {
-            return component.props.chatWindow && component.thread?.eq(component.rtc.state.channel)
-                ? 6
-                : 60;
-        },
+        name: _t("Call Settings"),
+        sequence: 20,
+        sequenceGroup: 30,
         setup() {
             const component = useComponent();
             component.rtc = useState(useService("discuss.rtc"));

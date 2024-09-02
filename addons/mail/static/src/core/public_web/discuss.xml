@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
+    <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
         <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
         <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
@@ -42,10 +43,29 @@
                         </t>
                     </div>
                     <div class="o-mail-Discuss-headerActions flex-shrink-0 d-flex align-items-center ms-1">
-                        <t t-foreach="threadActions.actions" t-as="action" t-key="action.id">
-                            <button class="btn px-1" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
-                                <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>
-                            </button>
+                        <span t-if="partitionedActions.quick.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                            <t t-set="groupBefore" t-value="true"/>
+                            <t t-foreach="partitionedActions.quick" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
+                                <t t-set="action" t-value="action"/>
+                            </t>
+                        </span>
+                        <t t-else="" t-set="groupBefore" t-value="false"/>
+                        <span t-if="groupBefore" class="text-muted align-self-stretch ms-2 me-1"/>
+                        <span t-if="partitionedActions.other.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                         <t t-set="groupBefore" t-value="true"/>
+                            <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
+                                <t t-set="action" t-value="action"/>
+                            </t>
+                        </span>
+                        <t t-else="" t-set="groupBefore" t-value="false"/>
+                        <span t-if="groupBefore" class="text-muted align-self-stretch ms-2 me-1"/>
+                        <t t-foreach="partitionedActions.group.slice().reverse()" t-as="group" t-key="group_index">
+                            <span t-if="group.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                                <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
+                                    <t t-set="action" t-value="action"/>
+                                </t>
+                            </span>
+                            <span t-if="!group_last" class="text-muted align-self-stretch ms-2 me-1"/>
                         </t>
                         <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                             <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
@@ -71,7 +91,7 @@
                             <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
                             <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
                         </div>
-                        <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start o-mail-Discuss-inspector">
+                        <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start flex-shrink-0">
                             <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
                         </div>
                     </t>
@@ -83,6 +103,12 @@
         </div>
         <MessagingMenu t-if="ui.isSmall"/>
     </div>
+</t>
+
+<t t-name="mail.Discuss.action">
+    <button class="btn px-1 btn-group-item btn-secondary bg-inherit m-0 border-0" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
+        <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>
+    </button>
 </t>
 
 <t t-name="mail.MobileMailbox">
