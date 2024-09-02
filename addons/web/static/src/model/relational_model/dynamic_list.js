@@ -46,6 +46,10 @@ export class DynamicList extends DataPoint {
         return this.records.find((record) => record.isInEdition);
     }
 
+    get isRecordCountTrustable() {
+        return true;
+    }
+
     get limit() {
         return this.config.limit;
     }

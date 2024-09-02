@@ -100,8 +100,13 @@
                 <span t-if="isDomainSelected">All <b t-esc="nbTotal"/> selected</span>
                 <t t-else="">
                     <b class="me-1" t-esc="nbSelected"/> selected
-                    <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-3 btn btn-sm btn-info p-1 me-n2 border-0 fw-normal" t-on-click="onSelectDomain">
-                        <i class="oi oi-fw oi-arrow-right"/> Select all <span t-esc="nbTotal"/>
+                    <a t-if="isPageSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                        href="#"
+                        class="o_list_select_domain ms-3 btn btn-sm btn-info p-1 me-n2 border-0 fw-normal"
+                        title="Select all records matching the search"
+                        t-on-click="onSelectDomain">
+                        <i class="oi oi-fw oi-arrow-right"/>
+                        Select all <span t-if="model.root.isRecordCountTrustable" t-esc="nbTotal"/>
                     </a>
                 </t>
                 <a href="#" title="Unselect All" class="o_list_unselect_all btn btn-link py-0" t-on-click="onUnselectAll">
