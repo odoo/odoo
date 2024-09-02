@@ -47,6 +47,9 @@ class PaymentPostProcessing(http.Controller):
         if not monitored_tx:  # The session might have expired, or the tx has never existed.
             raise Exception('tx_not_found')
 
+        if request.env.user._is_public():
+            monitored_tx = monitored_tx.with_company(monitored_tx.company_id)
+
         # Finalize the post-processing of the transaction before redirecting the user to the landing
         # route and its document.
         if monitored_tx.state == 'done' and not monitored_tx.is_post_processed:
