@@ -345,12 +345,7 @@ export class PosData extends Reactive {
                     }
                 }
 
-                if (nonExistentRecords.length) {
-                    console.warn(
-                        "Warning, attempt to load a non-existent record with limited fields."
-                    );
-                    result = nonExistentRecords;
-                }
+                result = nonExistentRecords;
             }
 
             if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
