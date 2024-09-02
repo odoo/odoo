@@ -19,9 +19,10 @@ publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
      */
     _onAddTagClick: function (ev) {
         ev.preventDefault();
+        const channelTagIds = ev.currentTarget.dataset.channelTagIds;
         this.call("dialog", "add", CourseTagAddDialog, {
             channelId: parseInt(ev.currentTarget.dataset.channelId, 10),
-            tagIds: JSON.parse(ev.currentTarget.dataset.channelTagIds),
+            tagIds: channelTagIds ? JSON.parse(channelTagIds) : [],
         });
     },
 });
