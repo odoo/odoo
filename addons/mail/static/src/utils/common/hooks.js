@@ -206,7 +206,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
             if (el && ready) {
                 observer.observe(el);
                 return () => {
-                    setValue(false);
+                    setValue(undefined);
                     observer.unobserve(el);
                 };
             }
