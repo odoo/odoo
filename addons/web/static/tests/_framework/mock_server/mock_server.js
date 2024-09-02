@@ -932,13 +932,25 @@ export class MockServer {
             if (actionId) {
                 const action = this.getAction(actionId);
                 if (resId) {
-                    return this.env[action.res_model].read([resId], ["display_name"])[0]
-                        .display_name;
+                    return {
+                        display_name: this.env[action.res_model].read([resId], ["display_name"])[0]
+                            .display_name,
+                        view_type: "form",
+                    };
                 }
-                return action.name;
+                const res = {};
+                res.display_name = action.name;
+                if (action.views) {
+                    res.view_type = action.views[0][1];
+                }
+                return res;
             } else if (model) {
                 if (resId) {
-                    return this.env[model].read([resId], ["display_name"])[0].display_name;
+                    return {
+                        display_name: this.env[model].read([resId], ["display_name"])[0]
+                            .display_name,
+                        view_type: "form",
+                    };
                 }
                 throw new Error("Actions with a model should also have a resId");
             }

@@ -176,6 +176,9 @@ export function makeActionManager(env, router = _router) {
                     state: { ...actionState, actionStack: state.actionStack.slice(0, index + 1) },
                     currentState: {},
                 };
+                if (actionState.view_type) {
+                    controller.props.type = actionState.view_type;
+                }
                 if (actionState.action) {
                     controller.action.id = actionState.action;
 
@@ -236,6 +239,7 @@ export function makeActionManager(env, router = _router) {
             ) {
                 controllers.at(-1).displayName = action.display_name || action.name || "";
                 controllers.at(-1).action = action;
+                controllers.at(-1).props.type = action.views[0][1];
                 return [...bcControllers, controllers.at(-1)];
             }
 
@@ -260,7 +264,7 @@ export function makeActionManager(env, router = _router) {
     async function _loadBreadcrumbs(controllers) {
         const toFetch = [];
         const keys = [];
-        for (const { action, state, displayName } of controllers) {
+        for (const { action, state, displayName, props } of controllers) {
             if (action.id === "menu" || (action.type === "ir.actions.client" && !displayName)) {
                 continue;
             }
@@ -268,7 +272,10 @@ export function makeActionManager(env, router = _router) {
             const key = JSON.stringify(actionInfo);
             keys.push(key);
             if (displayName) {
-                breadcrumbCache[key] = displayName;
+                breadcrumbCache[key] = { display_name: displayName };
+                if (props.type) {
+                    breadcrumbCache[key].view_type = props.type;
+                }
             }
             if (key in breadcrumbCache) {
                 continue;
@@ -285,20 +292,23 @@ export function makeActionManager(env, router = _router) {
                 });
             }
         }
-        const displayNames = await Promise.all(keys.map((k) => breadcrumbCache[k]));
+        const results = await Promise.all(keys.map((k) => breadcrumbCache[k]));
         const controllersToRemove = [];
-        for (const [controller, displayName] of zip(controllers, displayNames)) {
-            if (typeof displayName === "string") {
-                controller.displayName = displayName;
-            } else {
+        for (const [controller, res] of zip(controllers, results)) {
+            if ("error" in res) {
                 controllersToRemove.push(controller);
-                if (displayName?.error) {
+                if (res?.error) {
                     console.warn(
                         "The following element was removed from the breadcrumb and from the url.\n",
                         controller.state,
                         "\nThis could be because the action wasn't found or because the user doesn't have the right to access to the record, the original error is :\n",
-                        displayName.error
+                        res.error
                     );
+                }
+            } else {
+                controller.displayName = res.display_name;
+                if ("view_type" in res) {
+                    controller.props.type = res.view_type;
                 }
             }
         }
@@ -446,6 +456,9 @@ export function makeActionManager(env, router = _router) {
                     jsId: controller.jsId,
                     get name() {
                         return controller.displayName;
+                    },
+                    get viewType() {
+                        return controller.props?.type || "";
                     },
                     get url() {
                         return stateToUrl(controller.state);
@@ -1594,6 +1607,9 @@ export function makeActionManager(env, router = _router) {
         const actions = controllerStack.map((controller) => {
             const { action, props, displayName } = controller;
             const actionState = { displayName };
+            if (controller.virtual && props.type) {
+                actionState.view_type = props.type;
+            }
             if (action.path || action.id) {
                 actionState.action = action.path || action.id;
             } else if (action.type === "ir.actions.client") {

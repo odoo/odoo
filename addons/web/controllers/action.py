@@ -60,7 +60,7 @@ class Action(Controller):
 
     @route('/web/action/load_breadcrumbs', type='json', auth='user', readonly=True)
     def load_breadcrumbs(self, actions):
-        display_names = []
+        results = []
         for idx, action in enumerate(actions):
             record_id = action.get('resId')
             try:
@@ -70,7 +70,7 @@ class Action(Controller):
                         if act['path']:
                             act = request.env['ir.actions.server'].browse(act['id']).run()
                         else:
-                            display_names.append({'error': 'A server action must have a path to be restored'})
+                            results.append({'error': 'A server action must have a path to be restored'})
                             continue
                     if not act.get('display_name'):
                         act['display_name'] = act['name']
@@ -80,28 +80,33 @@ class Action(Controller):
                     if record_id:
                         # some actions may not have a res_model (e.g. a client action)
                         if record_id == 'new':
-                            display_names.append(_("New"))
+                            results.append({'display_name': _("New"), 'view_typpe': 'form'})
                         elif act['res_model']:
-                            display_names.append(request.env[act['res_model']].browse(record_id).display_name)
+                            results.append({'display_name': request.env[act['res_model']].browse(record_id).display_name, 'view_type': 'form'})
                         else:
-                            display_names.append(act['display_name'])
+                            # If an action don't have a res_model, we don't put the view_type, is probably a clien action
+                            results.append({'display_name': act['display_name']})
                     else:
+                        res = {}
                         if act['res_model'] and act['type'] != 'ir.actions.client':
                             request.env[act['res_model']].check_access_rights('read')
                             # action shouldn't be available on its own if it doesn't have multi-record views
                             name = act['display_name'] if any(view[1] != 'form' and view[1] != 'search' for view in act['views']) else None
                         else:
                             name = act['display_name']
-                        display_names.append(name)
+                        res['display_name'] = name
+                        if act.get('views'):
+                            res['view_type'] = act['views'][0][1]
+                        results.append(res)
                 elif action.get('model'):
                     Model = request.env[action.get('model')]
                     if record_id:
-                        display_names.append(Model.browse(record_id).display_name)
+                        results.append({'display_name': Model.browse(record_id).display_name, 'view_type': 'form'})
                     else:
                         # This case cannot be produced by the web client
                         raise BadRequest('Actions with a model should also have a resId')
                 else:
                     raise BadRequest('Actions should have either an action (id or path) or a model')
             except (MissingActionError, MissingError, AccessError) as exc:
-                display_names.append({'error': str(exc)})
-        return display_names
+                results.append({'error': str(exc)})
+        return results

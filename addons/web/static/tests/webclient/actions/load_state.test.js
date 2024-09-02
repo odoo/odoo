@@ -27,7 +27,7 @@ import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import { queryAllAttributes, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -748,6 +748,10 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-3/new", {
             message: "the url did not change",
         });
+        expect(`.o_breadcrumb li.breadcrumb-item a`).toHaveAttribute(
+            "data-tooltip",
+            'Back to "Partners" list'
+        );
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -793,6 +797,10 @@ describe(`new urls`, () => {
             "Partners",
             "Second record",
         ]);
+        expect(`.o_breadcrumb li.breadcrumb-item a`).toHaveAttribute(
+            "data-tooltip",
+            'Back to "Partners" list'
+        );
         expect(browser.location.href).toBe("http://example.com/odoo/action-3/2", {
             message: "the url did not change",
         });
@@ -986,6 +994,10 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect(`.o_form_view`).toHaveCount(1);
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual(["Partner", "New"]);
+        expect(`.o_breadcrumb li.breadcrumb-item a`).toHaveAttribute(
+            "data-tooltip",
+            'Back to "Partner" list'
+        );
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -1228,11 +1240,19 @@ describe(`new urls`, () => {
 
         await contains(`.breadcrumb .dropdown-toggle`).click();
         expect(`.o-overlay-container .dropdown-menu`).toHaveText("Partners Action 27");
+        expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
+            "data-tooltip",
+            'Back to "Partners Action 27" list'
+        );
         expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
             "",
             "Second record",
             "Partners Action 28",
             "First record",
+        ]);
+        expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
+            'Back to "Second record" form',
+            'Back to "Partners Action 28" kanban',
         ]);
     });
 
@@ -1257,6 +1277,10 @@ describe(`new urls`, () => {
             "Partners",
             "Second record",
         ]);
+        expect(`.o_breadcrumb li.breadcrumb-item a`).toHaveAttribute(
+            "data-tooltip",
+            'Back to "Partners" list'
+        );
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
