@@ -11,7 +11,7 @@
                                     <t t-if="lang.id !== currentLanguage.id">
                                         <div class="btn btn-light d-flex flex-row align-items-center rounded border p-4" t-on-click="() => this.onClickLanguage(lang)">
                                             <img class="rounded-2" t-attf-src="{{lang.flag_image_url}}" />
-                                            <span class="fs-5 ms-4" t-esc="lang.display_name" />
+                                            <span class="fs-5 ms-4" t-esc="lang.name" />
                                         </div>
                                     </t>
                                 </t>
