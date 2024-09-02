@@ -47,3 +47,93 @@ class NotifyTests(BaseCase):
                          "as it contains only 1 channel")
         with self.assertRaises(AssertionError):
             check_payloads_size(payloads)
+<<<<<<< saas-17.2
+||||||| 775827b8f7fa95f2afd77a9b42d6cd8e436ea690
+
+    def test_postcommit(self):
+        """Asserts all ``postcommit`` channels are fetched with a single listen."""
+        channels = []
+
+        def single_listen():
+            nonlocal channels
+            with odoo.sql_db.db_connect(
+                "postgres"
+            ).cursor() as cr, selectors.DefaultSelector() as sel:
+                cr.execute("listen imbus")
+                cr.commit()
+                conn = cr._cnx
+                sel.register(conn, selectors.EVENT_READ)
+                while sel.select(timeout=5):
+                    conn.poll()
+                    if notify_channels := [
+                        c
+                        for c in json.loads(conn.notifies.pop().payload)
+                        if c[0] == self.env.cr.dbname
+                    ]:
+                        channels = notify_channels
+                        break
+
+        thread = threading.Thread(target=single_listen)
+        thread.start()
+
+        self.env["bus.bus"].search([]).unlink()
+        self.env["bus.bus"]._sendone("channel 1", "test 1", {})
+        self.env["bus.bus"]._sendone("channel 2", "test 2", {})
+        self.env["bus.bus"]._sendone("channel 1", "test 3", {})
+        self.assertEqual(self.env["bus.bus"].search_count([]), 0)
+        self.assertEqual(channels, [])
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.assertEqual(self.env["bus.bus"].search_count([]), 3)
+        self.assertEqual(channels, [])
+        self.env.cr.postcommit.run()  # notify
+        self.assertEqual(self.env["bus.bus"].search_count([]), 3)
+        self.assertEqual(
+            channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
+        )
+        thread.join()
+=======
+
+    def test_postcommit(self):
+        """Asserts all ``postcommit`` channels are fetched with a single listen."""
+        channels = []
+        stop_event = threading.Event()
+
+        def single_listen():
+            nonlocal channels
+            with odoo.sql_db.db_connect(
+                "postgres"
+            ).cursor() as cr, selectors.DefaultSelector() as sel:
+                cr.execute("listen imbus")
+                cr.commit()
+                conn = cr._cnx
+                sel.register(conn, selectors.EVENT_READ)
+                while sel.select(timeout=5) and not stop_event.is_set():
+                    conn.poll()
+                    if notify_channels := [
+                        c
+                        for c in json.loads(conn.notifies.pop().payload)
+                        if c[0] == self.env.cr.dbname
+                    ]:
+                        channels = notify_channels
+                        break
+
+        thread = threading.Thread(target=single_listen)
+        thread.start()
+
+        self.env["bus.bus"].search([]).unlink()
+        self.env["bus.bus"]._sendone("channel 1", "test 1", {})
+        self.env["bus.bus"]._sendone("channel 2", "test 2", {})
+        self.env["bus.bus"]._sendone("channel 1", "test 3", {})
+        self.assertEqual(self.env["bus.bus"].search_count([]), 0)
+        self.assertEqual(channels, [])
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.assertEqual(self.env["bus.bus"].search_count([]), 3)
+        self.assertEqual(channels, [])
+        self.env.cr.postcommit.run()  # notify
+        thread.join(timeout=5)
+        stop_event.set()
+        self.assertEqual(self.env["bus.bus"].search_count([]), 3)
+        self.assertEqual(
+            channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
+        )
+>>>>>>> 96d1ce9050b79d8e1782b7426055c4e6e2d5d21e
