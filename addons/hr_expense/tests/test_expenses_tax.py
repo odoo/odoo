@@ -30,6 +30,10 @@ class TestExpensesTax(TestExpenseCommon):
     def test_expense_by_company_with_caba_tax(self):
         """When using cash basis tax in an expense paid by the company, the transition account should not be used."""
 
+        caba_tag = self.env['account.account.tag'].create({
+            'name': 'Cash Basis Tag Final Account',
+            'applicability': 'taxes',
+        })
         caba_transition_account = self.env['account.account'].create({
             'name': 'Cash Basis Tax Transition Account',
             'account_type': 'asset_current',
@@ -40,6 +44,17 @@ class TestExpensesTax(TestExpenseCommon):
             'tax_exigibility': 'on_payment',
             'amount': 15,
             'cash_basis_transition_account_id': caba_transition_account.id,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': caba_tag.ids,
+                }),
+            ]
         })
 
         expense_sheet = self.env['hr.expense.sheet'].create({
@@ -60,3 +75,4 @@ class TestExpensesTax(TestExpenseCommon):
         moves = expense_sheet.account_move_ids
         tax_lines = moves.line_ids.filtered(lambda line: line.tax_line_id == caba_tax)
         self.assertNotEqual(tax_lines.account_id, caba_transition_account, "The tax should not be on the transition account")
+        self.assertEqual(tax_lines.tax_tag_ids, caba_tag, "The tax should still retrieve its tags")
