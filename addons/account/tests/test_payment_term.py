@@ -397,3 +397,25 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                     'discount_amount_currency': 362.30,
                 },
             ])
+
+    def test_payment_term_multi_company(self):
+        """
+        Ensure that the payment term is determined by `move.company_id` rather than `user.company_id`.
+        OdooBot has `res.company(1)` set as the default company. The test checks that the payment term correctly reflects
+        the company associated with the move, independent of the user's default company.
+        """
+        user_company, other_company = self.company_data_2.get('company'), self.company_data.get('company')
+        self.env.user.write({
+            'company_ids': [user_company.id, other_company.id],
+            'company_id': user_company.id,
+        })
+        self.pay_terms_a.company_id = user_company
+        self.partner_a.with_company(user_company).property_payment_term_id = self.pay_terms_a
+        self.partner_a.with_company(other_company).property_payment_term_id = False
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'company_id': other_company.id
+        })
+        self.assertFalse(invoice.invoice_payment_term_id)
