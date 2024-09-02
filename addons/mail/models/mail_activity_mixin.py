@@ -289,7 +289,7 @@ class MailActivityMixin(models.AbstractModel):
             today_utc=pytz.utc.localize(datetime.utcnow()),
             tz=tz,
         )
-        alias = query.join(self._table, "id", sql_join, "res_id", "last_activity_state")
+        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
 
         return SQL.identifier(alias, 'activity_state'), ['activity_state']
 
