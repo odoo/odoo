@@ -10,8 +10,8 @@ import { mockService } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/core/common/record";
 import { AND, Markup } from "@mail/model/misc";
-import { registry } from "@web/core/registry";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
 
 describe.current.tags("desktop");
 defineMailModels();
