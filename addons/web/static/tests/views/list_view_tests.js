@@ -2814,6 +2814,35 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test('selection box in grouped list, multi pages)', async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ['int_field'],
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsNone(target, ".o_list_selection_box");
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+
+        // open first group and select all records of first page
+        await click(target.querySelector(".o_group_header"));
+        assert.containsOnce(target, ".o_data_row");
+        await click(target.querySelector("thead .o_list_record_selector input"));
+        assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsOnce(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
+        assert.strictEqual(target.querySelector(".o_list_selection_box").innerText.replace(/\s+/g, " ").trim(),
+            "1 selected Select all"); // we don't know the total count, so we don't display it
+
+        // select all domain
+        await click(target.querySelector(".o_list_selection_box .o_list_select_domain"));
+        assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.strictEqual(target.querySelector(".o_list_selection_box").innerText.replace(/\s+/g, " ").trim(), "All 4 selected");
+    });
+
     QUnit.test("selection box is displayed after header buttons", async function (assert) {
         await makeView({
             type: "list",

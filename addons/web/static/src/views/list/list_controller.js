@@ -53,6 +53,7 @@ export class ListController extends Component {
         this.notificationService = useService("notification");
         this.userService = useService("user");
         this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -297,6 +298,10 @@ export class ListController extends Component {
     }
 
     async onSelectDomain() {
+        if (!this.isTotalTrustable) {
+            const limit = DynamicRecordList.WEB_SEARCH_READ_COUNT_LIMIT;
+            this.nbRecordsMatchingDomain = await this.orm.searchCount(this.props.resModel, this.model.root.domain, { limit })
+        }
         this.model.root.selectDomain(true);
         if (this.props.onSelectionChanged) {
             const resIds = await this.model.root.getResIds(true);
@@ -319,6 +324,10 @@ export class ListController extends Component {
 
     get isDomainSelected() {
         return this.model.root.isDomainSelected;
+    }
+
+    get isTotalTrustable() {
+        return !this.model.root.isGrouped || this.model.root.count <= this.model.root.limit;
     }
 
     get nbTotal() {
