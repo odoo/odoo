@@ -56,6 +56,7 @@ class NotifyTests(TransactionCase):
     def test_postcommit(self):
         """Asserts all ``postcommit`` channels are fetched with a single listen."""
         channels = []
+        stop_event = threading.Event()
 
         def single_listen():
             nonlocal channels
@@ -66,7 +67,7 @@ class NotifyTests(TransactionCase):
                 cr.commit()
                 conn = cr._cnx
                 sel.register(conn, selectors.EVENT_READ)
-                while sel.select(timeout=5):
+                while sel.select(timeout=5) and not stop_event.is_set():
                     conn.poll()
                     if notify_channels := [
                         c
@@ -89,8 +90,9 @@ class NotifyTests(TransactionCase):
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(channels, [])
         self.env.cr.postcommit.run()  # notify
+        thread.join(timeout=5)
+        stop_event.set()
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(
             channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
         )
-        thread.join()
