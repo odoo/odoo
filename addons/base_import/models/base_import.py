@@ -483,7 +483,11 @@ class Import(models.TransientModel):
                     else:
                         values.append(str(cell.value))
                 elif isinstance(cell.value, datetime.datetime):
-                    values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                    value = cell.value
+                    if value.hour == 0 and value.minute == 0 and value.second == 0 and value.microsecond == 0:
+                        values.append(value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                    else:
+                        values.append(value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
                 elif isinstance(cell.value, datetime.date):
                     values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
                 else:
