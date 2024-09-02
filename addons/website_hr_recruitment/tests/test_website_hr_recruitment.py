@@ -72,3 +72,39 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             response = WebsiteHrRecruitmentController.jobs()
         self.assertEqual(response.status, '200 OK')
+
+    def test_apply_job(self):
+        """ Test a user can apply to a job via the website form and add extra information inside custom field """
+        research_and_development_department = self.env['hr.department'].create({
+            'name': 'R&D',
+        })
+        developer_job = self.env['hr.job'].create({
+            'name': 'Developer',
+            'is_published': True,
+            'department_id': research_and_development_department.id
+        })
+        applicant_data = {
+            'partner_name': 'Georges',
+            'email_from': 'georges@test.com',
+            'partner_phone': '12345678',
+            'job_id': developer_job.id,
+            'department_id': research_and_development_department.id,
+            'description': 'This is a short introduction',
+            'Additional info': 'Test',
+        }
+        self.authenticate(None, None)
+        response = self.url_open('/website/form/hr.applicant', data=applicant_data)
+        applicant = self.env['hr.applicant'].browse(response.json().get('id'))
+        self.assertTrue(applicant.exists())
+        self.assertEqual(applicant.job_id, developer_job)
+        self.assertEqual(applicant.department_id, research_and_development_department)
+        self.assertEqual(applicant.partner_name, 'Georges')
+        self.assertEqual(applicant.email_from, 'georges@test.com')
+        self.assertEqual(applicant.partner_phone, '12345678')
+        self.assertTrue(
+            any(
+                html2plaintext(message.body) == 'Other Information:\n___________\n\ndescription : This is a short introduction\nAdditional info : Test'
+                for message in applicant.message_ids
+            ),
+            "One message in the chatter should contain the extra information filled in by the applicant"
+        )
