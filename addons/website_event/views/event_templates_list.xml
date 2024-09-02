@@ -93,13 +93,13 @@
                                     <button class="accordion-button collapsed"
                                         type="button"
                                         data-bs-toggle="collapse"
-                                        t-attf-aria-controls="o_wevent_offcanvas_cat_#{category.name}"
-                                        t-att-data-bs-target="'.o_wevent_offcanvas_cat_%s' % category.name"
+                                        t-attf-aria-controls="o_wevent_offcanvas_cat_#{category.id}"
+                                        t-att-data-bs-target="'.o_wevent_offcanvas_cat_%s' % category.id"
                                         aria-expanded="false">
                                         <t t-out="category.name"/>
                                     </button>
                                 </h2>
-                                <div t-attf-id="o_wevent_offcanvas_cat_#{category.name}" t-attf-class="o_wevent_offcanvas_cat_#{category.name} accordion-collapse collapse">
+                                <div t-attf-id="o_wevent_offcanvas_cat_#{category.id}" t-attf-class="o_wevent_offcanvas_cat_#{category.id} accordion-collapse collapse">
                                     <div class="accordion-body pt-0">
                                         <ul class="list-group list-group-flush">
                                             <t t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" t-foreach="category.tag_ids" t-as="tag">
