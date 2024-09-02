@@ -164,9 +164,7 @@ export class DynamicList extends DataPoint {
     }
 
     selectDomain(value) {
-        return this.model.mutex.exec(() => {
-            this.isDomainSelected = value;
-        });
+        return this.model.mutex.exec(() => this._selectDomain(value));
     }
 
     sortBy(fieldName) {
@@ -411,6 +409,10 @@ export class DynamicList extends DataPoint {
                 dp[handleField] = dpData[handleField];
             }
         }
+    }
+
+    _selectDomain(value) {
+        this.isDomainSelected = value;
     }
 
     async _toggleArchive(isSelected, state) {
