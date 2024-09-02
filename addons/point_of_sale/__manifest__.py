@@ -156,7 +156,6 @@
             # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
             "web_tour/static/src/tour_pointer/**/*",
             ("include", "point_of_sale.base_tests"),
-            'web/static/src/legacy/js/libs/jquery.js',
             # account
             'account/static/src/helpers/*.js',
             'account/static/src/services/account_move_service.js',
@@ -170,10 +169,8 @@
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'web/static/src/webclient/company_service.js',
-            "web/static/lib/jquery/jquery.js",
         ],
         'point_of_sale.base_tests': [
-            "web/static/lib/jquery/jquery.js",
             "web/static/lib/hoot-dom/**/*",
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
