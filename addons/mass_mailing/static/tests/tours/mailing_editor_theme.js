@@ -103,10 +103,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             trigger: '#toolbar #oe-text-color',
         },
         {
-            content: "Switch back to solid tab from custom tab",
-            trigger: '.colorpicker button[data-target="theme-colors"]',// Switch back to solid tab
-        },
-        {
             content: "Pick a color",
             trigger: '#toolbar button[data-color="o-color-1"]',
         },

@@ -60,10 +60,6 @@ function checkAndUpdateBackgroundColor({
 }) {
     const steps = [
         wTourUtils.changeBackgroundColor(),
-        {
-            content: "Switch back to theme tab from custom tab",
-            trigger: ".colorpicker button[data-target='color-combinations']", // Switch back to theme tab
-        },
     ];
 
     addCheck(steps, checkCC, checkNoCC, 'cc', true);
