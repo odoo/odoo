@@ -40,8 +40,8 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         // 1) Valid Form Inputs
         this.$('.form-control').each(function () {
             var $formControl = $(this);
-            // Validate current input, if not select2 field.
-            var inputs = $formControl.not('.o_wetrack_select2_tags');
+            // Validate current input, if not SelectMenu field.
+            var inputs = $formControl.not(".o_wetrack_select_tags");
             var invalidInputs = inputs.toArray().filter(function (input) {
                 return !input.checkValidity();
             });

@@ -58,7 +58,6 @@ if (window.QUnit) {
             attr: "class",
             value: "tooltip tooltip-field-info fade bs-tooltip-auto show",
         },
-        { tagName: "SPAN", attr: "class", value: "select2-hidden-accessible" },
 
         // Due to a Document Kanban bug (already present in 12.0)
         { tagName: "DIV", attr: "class", value: "ui-helper-hidden-accessible" },

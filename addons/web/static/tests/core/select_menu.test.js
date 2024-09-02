@@ -1081,3 +1081,83 @@ test("Can add custom data to choices", async () => {
     await open();
     expect(".coolClass").toHaveText("hi");
 });
+
+test("placeholder added succesfully", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                choices="this.choices"
+                value="this.state.value"
+                placeholder="'Choose any option'"
+            />
+        `;
+        setup() {
+            this.choices = [
+                { label: "Z", value: "world" },
+                { label: "A", value: "company" },
+            ];
+            this.placeholder = "";
+            this.state = useState({ value: "" });
+        }
+    }
+    await mountSingleApp(MyParent);
+    expect(".o_select_menu_toggler_slot").toHaveText("Choose any option");
+    await open();
+    expect(".o_select_menu_toggler_slot").toHaveText("Choose any option");
+});
+
+test("disabled select list", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                choices="this.choices"
+                value="this.state.value"
+                disabled="true"
+            />
+        `;
+        setup() {
+            this.choices = [
+                { label: "Z", value: "world" },
+                { label: "A", value: "company" },
+            ];
+            this.state = useState({ value: "" });
+        }
+    }
+    await mountSingleApp(MyParent);
+    expect(".o_select_menu_toggler[disabled]").toHaveCount(1);
+});
+
+test("Fetch choices", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                value="this.state.value"
+                onInput.bind="loadChoice"
+                choices="state.choices"
+            />
+        `;
+        setup() {
+            this.state = useState({ choices: [] }, { value: "" });
+        }
+        loadChoice(searchString) {
+            if (searchString === 'test') {
+                this.state.choices = [{ label: "test", value: "test" }];
+            } else {
+                this.state.choices = [];
+            }
+        }
+    }
+    await mountSingleApp(MyParent);
+    await open();
+    click("input");
+    edit("test");
+    await runAllTimers();
+    await animationFrame();
+    expect(queryAllTexts(".o_select_menu_item_label")).toEqual(["test"]);
+});

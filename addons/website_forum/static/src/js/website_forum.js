@@ -1,6 +1,5 @@
 /** @odoo-module **/
-
-import { markup } from "@odoo/owl";
+import { Component, useState, markup, onWillStart } from "@odoo/owl";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { cookie } from "@web/core/browser/cookie";;
@@ -8,10 +7,79 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
+import { get } from "@web/core/network/http_service";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
+import { attachComponent } from "@web_editor/js/core/owl_utils";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+
+class WebsiteForumTagsWrapper extends Component {
+    static template = "website_forum.WebsiteForumTagsWrapper";
+    static components = { SelectMenu, DropdownItem };
+    static defaultProps = {
+        isReadOnly: false,
+    };
+    static props = {
+        defaulValue: { optional: true, type: Array },
+        isReadOnly: { optional: true, Type: Boolean },
+    };
+
+    setup() {
+        this.state = useState({
+            value: this.props.defaulValue || [],
+        });
+        onWillStart(async () => {
+            await this.loadChoices();
+        });
+    }
+
+    get showCreateOption() {
+        // The "Create" option should not be visible if:
+        // 1. Tag length is less than 2.
+        // 2. The tag already exists (tags are created on form submission, so
+        // consider the current value).
+        // 3. There is insufficient karma.
+        const searchValue = this.select.data.searchValue;
+        const karma = document.querySelector("#karma").value;
+        const editKarma = document.querySelector("#karma_edit_retag").value;
+        const hasEnoughKarma = parseInt(karma) >= parseInt(editKarma);
+
+        return hasEnoughKarma && searchValue.length >= 2
+            && !this.state.choices.some(c => c.label === searchValue)
+            && !this.state.value.some(v => v === `_${searchValue.trim()}`);
+    }
+
+    onCreateOption(string) {
+        const choice = {
+            label: string.trim(),
+            value: `_${string.trim()}`,
+        };
+        this.state.choices.push(choice);
+        this.onSelect([...this.state.value, choice.value]);
+    }
+
+    onSelect(values) {
+        this.state.value = values;
+    }
+
+    async loadChoices(searchString = "") {
+        const forumID = document.querySelector("#wrapwrap").dataset.forum_id;
+        const choices = await new Promise((resolve, reject) => {
+            get(`/forum/get_tags?query=${searchString}&limit=${50}&forum_id=${forumID}`).then(
+                (result) => {
+                    result.forEach((choiceEl) => {
+                        choiceEl.value = choiceEl.id;
+                        choiceEl.label = choiceEl.name;
+                    });
+                    resolve(result);
+                }
+            );
+        });
+        this.state.choices = choices;
+    }
+}
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -45,8 +113,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    async start() {
         var self = this;
+        const _super = this._super.bind(this);
 
         this.lastsearch = [];
 
@@ -61,66 +130,17 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
 
-        $('input.js_select2').select2({
-            tags: true,
-            tokenSeparators: [',', ' ', '_'],
-            maximumInputLength: 35,
-            minimumInputLength: 2,
-            maximumSelectionSize: 5,
-            lastsearch: [],
-            createSearchChoice: function (term) {
-                if (self.lastsearch.filter(s => s.text.localeCompare(term) === 0).length === 0) {
-                    //check Karma
-                    if (parseInt($('#karma').val()) >= parseInt($('#karma_edit_retag').val())) {
-                        return {
-                            id: '_' + $.trim(term),
-                            text: $.trim(term) + ' *',
-                            isNew: true,
-                        };
-                    }
-                }
-            },
-            createSearchChoicePosition: "bottom",
-            formatResult: function (term) {
-                if (term.isNew) {
-                    return '<span class="badge bg-primary">New</span> ' + escape(term.text);
-                } else {
-                    return escape(term.text);
-                }
-            },
-            ajax: {
-                url: '/forum/get_tags',
-                dataType: 'json',
-                data: function (term) {
-                    return {
-                        query: term,
-                        limit: 50,
-                        forum_id: $('#wrapwrap').data('forum_id'),
-                    };
-                },
-                results: function (data) {
-                    var ret = [];
-                    data.forEach((x) => {
-                        ret.push({
-                            id: x.id,
-                            text: x.name,
-                            isNew: false,
-                        });
-                    });
-                    self.lastsearch = ret;
-                    return {results: ret};
-                }
-            },
+        const selectMenuWrapperEl = document.querySelector("div.js_select_menu_wrapper");
+        if (selectMenuWrapperEl) {
+            const isReadOnly = Boolean(selectMenuWrapperEl.dataset.readonly);
             // Take default tags from the input value
-            initSelection: function (element, callback) {
-                var data = [];
-                element.data("init-value").forEach((x) => {
-                    data.push({id: x.id, text: x.name, isNew: false});
-                });
-                element.val('');
-                callback(data);
-            },
-        });
+            const defaulValue = JSON.parse(selectMenuWrapperEl.dataset.initValue || "[]").map((x) => x.id);
+
+            await attachComponent(this, selectMenuWrapperEl, WebsiteForumTagsWrapper, {
+                defaulValue: defaulValue,
+                disabled: isReadOnly,
+            });
+        }
 
         $('textarea.o_wysiwyg_loader').toArray().forEach((textarea) => {
             var $textarea = $(textarea);
@@ -184,7 +204,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     .fromSQL(post.dataset.lastActivity, {zone: 'utc'})
                     .toRelative();
             });
-        return this._super.apply(this, arguments);
+        return _super(...arguments);
     },
 
     /**

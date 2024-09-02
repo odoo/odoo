@@ -212,19 +212,6 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
                 .data('translation', translation);
         });
-        $edited = $edited.add(textEdit);
-
-        $edited.each(function () {
-            var $node = $(this);
-            var select2 = $node.data('select2');
-            if (select2) {
-                select2.blur();
-                $node.on('translate', function () {
-                    select2.blur();
-                });
-                $node = select2.container.find('input');
-            }
-        });
 
         // Hack: we add a temporary element to handle option's text
         // translations from the linked <select/>. The final values are

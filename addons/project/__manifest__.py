@@ -115,8 +115,6 @@
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
-            'web/static/lib/select2/select2.css',
-            'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
             'web/static/src/core/colorpicker/colorpicker.scss',
@@ -160,7 +158,6 @@
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
-            'web/static/lib/select2/select2.js',
             'web/static/src/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
 

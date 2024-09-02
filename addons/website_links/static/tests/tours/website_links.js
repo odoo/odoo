@@ -3,26 +3,27 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
-function fillSelect2(inputID, search) {
+function fillSelectMenu(inputID, search) {
     return [
         {
-            content: "Click select2 form item",
-            trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} > .select2-choice`,
+            content: "Click selectMenu form item",
+            trigger: `.o_website_links_utm_forms div#${inputID} .o_select_menu_toggler`,
             run: "click",
         },
         {
-            content: "Enter select2 search query",
-            trigger: '.select2-drop .select2-input',
+            content: "Enter selectMenu search query",
+            trigger: ".o_popover input.o_select_menu_sticky",
             run: `edit ${search}`,
         },
         {
-            content: "Select found select2 item",
-            trigger: `.select2-drop li:only-child .select2-match:contains("/^${search}$/")`,
+            content: "Select found selectMenu item",
+            trigger: `.o_popover span.o_select_menu_item div.o_select_menu_item_label:contains("/^${search}$/")`,
             run: "click",
         },
         {
-            content: "Check that select2 is properly filled",
-            trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} .select2-chosen:contains("/^${search}$/")`,
+            content: "Check that selectMenu is properly filled",
+            trigger: `#${inputID} .o_select_menu_toggler span.o_select_menu_toggler_slot:contains('/^${search}$/')`,
+            run: () => null,
         },
     ];
 }
@@ -50,28 +51,28 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         // First try to create a new UTM campaign from the UI
         {
-            content: "Click select2 form item",
-            trigger: ".o_website_links_utm_forms div.select2-container#s2id_campaign-select > .select2-choice",
+            content: "Click select menu form item",
+            trigger: ".o_website_links_utm_forms div#campaign-select-wrapper .o_select_menu_toggler",
             run: "click",
         },
         {
-            content: "Enter select2 search query",
-            trigger: '.select2-drop .select2-input',
+            content: "Enter select menu search query",
+            trigger: '.o_popover input.o_select_menu_sticky',
             run: "edit Some new campaign",
         },
         {
-            content: "Select found select2 item",
-            trigger: ".select2-drop li:only-child div:contains(Create ') .select2-match:contains(/^Some new campaign$/)",
-            run: "click",
+            content: "Select found select menu item",
+            trigger: ".o_popover.o_select_menu_menu .o_select_menu_item span:contains('Some new campaign')",
+            run: 'click',
         },
         {
-            content: "Check that select2 is properly filled",
-            trigger: ".o_website_links_utm_forms div.select2-container#s2id_campaign-select .select2-chosen:contains(/^Create 'Some new campaign'$/)",
+            content: "Check that select menu is properly filled",
+            trigger: "#campaign-select-wrapper .o_select_menu_toggler span.o_select_menu_toggler_slot:contains('Some new campaign')"
         },
         // Then proceed by using existing ones
-        ...fillSelect2('campaign-select', campaignValue),
-        ...fillSelect2('channel-select', mediumValue),
-        ...fillSelect2('source-select', sourceValue),
+        ...fillSelectMenu("campaign-select-wrapper", campaignValue),
+        ...fillSelectMenu("channel-select-wrapper", mediumValue),
+        ...fillSelectMenu("source-select-wrapper", sourceValue),
         {
             content: "Copy tracker link",
             trigger: '#btn_shorten_url',

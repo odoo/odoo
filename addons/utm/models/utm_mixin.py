@@ -79,8 +79,10 @@ class UtmMixin(models.AbstractModel):
         for create is not called anymore we have to manually return an id
         instead of a recordset. """
         if model_name in self._tracking_models():
-            return self._find_or_create_record(model_name, name).id
-        return self.env[model_name].create({self.env[model_name]._rec_name: name}).id
+            record = self._find_or_create_record(model_name, name)
+        else:
+            record = self.env[model_name].create({self.env[model_name]._rec_name: name})
+        return {'id': record.id, 'name': record.display_name}
 
     def _find_or_create_record(self, model_name, name):
         """Based on the model name and on the name of the record, retrieve the corresponding record or create it."""
