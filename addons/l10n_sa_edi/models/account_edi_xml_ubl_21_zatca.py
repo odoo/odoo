@@ -209,7 +209,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         downpayment_lines = False if invoice._is_downpayment() else invoice.line_ids.filtered(lambda l: l._get_downpayment_lines())
         if downpayment_lines:
             tax_vals = invoice._prepare_invoice_aggregated_taxes(
-                filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t['id']).l10n_sa_is_retention
+                filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t.get('id')).l10n_sa_is_retention
             )
             base_amount = abs(sum(tax_vals['tax_details_per_record'][l]['base_amount_currency'] for l in downpayment_lines))
             tax_amount = abs(sum(tax_vals['tax_details_per_record'][l]['tax_amount_currency'] for l in downpayment_lines))
@@ -375,10 +375,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             customer = line.move_id.commercial_partner_id
             supplier = line.move_id.company_id.partner_id.commercial_partner_id
             tax = tax_values['tax_repartition_line'].tax_id
-            tax_category_vals = self._get_tax_category_list(customer, supplier, tax)[0]
+            tax_category_vals = next(iter(self._get_tax_category_list(customer, supplier, tax)), {})
             grouping_key = {
-                'tax_category_id': tax_category_vals['id'],
-                'tax_category_percent': tax_category_vals['percent'],
+                'tax_category_id': tax_category_vals.get('id'),
+                'tax_category_percent': tax_category_vals.get('percent'),
                 '_tax_category_vals_': tax_category_vals,
                 'tax_amount_type': tax.amount_type,
             }
