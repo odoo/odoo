@@ -49,6 +49,9 @@
                             <setting id="reception_report" help="View and allocate received quantities.">
                                 <field name="group_stock_reception_report"/>
                             </setting>
+                            <setting id="stock.replenishment_info_period" help="Modify the way stocks are grouped in the stock replenishment info wizard.">
+                                <field name="stock_replenishment_info_periods" class="o_light_label" widget="selection"/>
+                            </setting>
                         </block>
                         <block title="Barcode" name="barcode_setting_container">
                             <setting id="process_operations_barcodes" help="Process operations faster with barcodes" company_dependent="1" documentation="/applications/inventory_and_mrp/inventory/barcode/setup/software.html">
