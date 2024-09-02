@@ -44,7 +44,7 @@ patch(Navbar.prototype, {
         return true;
     },
     getOrderTabs() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
+        return this.pos.getOpenOrders().filter((order) => !order.table_id);
     },
     setFloatingOrder(floatingOrder) {
         this.pos.selectedTable = null;
@@ -73,7 +73,7 @@ patch(Navbar.prototype, {
                     return this.pos.setTableFromUi(table);
                 }
                 const floating_order = this.pos
-                    .get_open_orders()
+                    .getOpenOrders()
                     .find((o) => o.getFloatingOrderName() === table_number);
                 if (floating_order) {
                     return this.setFloatingOrder(floating_order);
@@ -89,7 +89,7 @@ patch(Navbar.prototype, {
         });
     },
     getOrderToDisplay() {
-        const currentOrder = this.pos.get_order();
+        const currentOrder = this.pos.getOrder();
         const orderToTransfer = this.pos.models["pos.order"].find((order) => {
             return order.uuid === this.pos.orderToTransferUuid;
         });

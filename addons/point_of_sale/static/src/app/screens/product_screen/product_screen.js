@@ -82,6 +82,18 @@ export class ProductScreen extends Component {
             useWithBarcode: true,
         });
     }
+    get viewMode() {
+        const smallMode = this.pos.productListView;
+        return smallMode && this.ui.isSmall ? smallMode : "grid";
+    }
+    get productListViewMode() {
+        return this.viewMode === "grid" ? "d-grid gap-2" : "";
+    }
+    get productViewMode() {
+        return this.viewMode === "grid"
+            ? "flex-column"
+            : "flex-row-reverse justify-content-between m-1";
+    }
     getAncestorsAndCurrent() {
         const selectedCategory = this.pos.selectedCategory;
         return selectedCategory
@@ -152,7 +164,7 @@ export class ProductScreen extends Component {
         this.numberBuffer.sendKey(buttonValue);
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
     get total() {
         return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
@@ -187,7 +199,7 @@ export class ProductScreen extends Component {
 
             if (records && records["product.product"].length > 0) {
                 product = records["product.product"][0];
-                await this.pos._loadMissingPricelistItems([product]);
+                await this.pos.loadMissingPricelistItems([product]);
             }
         }
 

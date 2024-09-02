@@ -11,11 +11,11 @@ patch(PosStore.prototype, {
             }
         });
     },
-    create_printer(config) {
+    createPrinter(config) {
         if (config.printer_type === "epson_epos") {
             return new EpsonPrinter({ ip: config.epson_printer_ip });
         } else {
-            return super.create_printer(...arguments);
+            return super.createPrinter(...arguments);
         }
     },
 });

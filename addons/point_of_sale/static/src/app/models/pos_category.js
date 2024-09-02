@@ -1,6 +1,8 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 
+const { DateTime } = luxon;
+
 export class PosCategory extends Base {
     static pythonModel = "pos.category";
 
@@ -29,6 +31,12 @@ export class PosCategory extends Base {
         }
 
         return parents.reverse();
+    }
+
+    get isAvailable() {
+        const now = DateTime.now();
+        const nowDecimal = now.hour + now.minute / 60;
+        return nowDecimal > this.hour_after && nowDecimal < this.hour_until;
     }
 }
 

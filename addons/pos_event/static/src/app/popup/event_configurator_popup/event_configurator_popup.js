@@ -88,7 +88,7 @@ export class EventConfiguratorPopup extends Component {
     }
     getOrderAlreadyBooked(ticket) {
         return this.pos
-            .get_order()
+            .getOrder()
             .lines.filter((l) => l.event_ticket_id?.id === ticket.id)
             .reduce((acc, l) => (acc += l.qty), 0);
     }

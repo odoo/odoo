@@ -29,7 +29,7 @@ export class OrderSummary extends Component {
         });
         useEffect(
             () => {
-                const lines = this.pos.get_order().lines;
+                const lines = this.pos.getOrder().lines;
                 if (lines.length && !lines.some((l) => l.isSelected())) {
                     this.pos.selectOrderLine(this.currentOrder, lines.at(-1));
                 }
@@ -39,7 +39,7 @@ export class OrderSummary extends Component {
     }
 
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
 
     async editPackLotLines(line) {
@@ -62,13 +62,13 @@ export class OrderSummary extends Component {
             this.pos.selectOrderLine(this.currentOrder, orderline);
         } else {
             this.singleClick = setTimeout(() => {
-                this.pos.get_order().uiState.selected_orderline_uuid = null;
+                this.pos.getOrder().uiState.selected_orderline_uuid = null;
             }, 300);
         }
     }
 
     async updateSelectedOrderline({ buffer, key }) {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const selectedLine = order.get_selected_orderline();
         // This validation must not be affected by `disallowLineQuantityChange`
         if (selectedLine && selectedLine.isTipLine() && this.pos.numpadMode !== "price") {
@@ -95,7 +95,7 @@ export class OrderSummary extends Component {
         ) {
             const orderlines = order.lines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).uuid;
-            const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
+            const currentQuantity = this.pos.getOrder().get_selected_orderline().get_quantity();
 
             if (selectedLine.noDecrease) {
                 this.dialog.add(AlertDialog, {
@@ -165,7 +165,7 @@ export class OrderSummary extends Component {
         });
         const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
         if (newQuantity !== null) {
-            const order = this.pos.get_order();
+            const order = this.pos.getOrder();
             const selectedLine = order.get_selected_orderline();
             const currentQuantity = selectedLine.get_quantity();
             if (newQuantity >= currentQuantity) {

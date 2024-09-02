@@ -17,7 +17,7 @@ patch(PaymentAdyen.prototype, {
     },
 
     send_payment_adjust(uuid) {
-        var order = this.pos.get_order();
+        var order = this.pos.getOrder();
         var line = order.get_paymentline_by_uuid(uuid);
         var data = {
             originalReference: line.transaction_id,
@@ -35,7 +35,7 @@ patch(PaymentAdyen.prototype, {
     },
 
     canBeAdjusted(uuid) {
-        var order = this.pos.get_order();
+        var order = this.pos.getOrder();
         var line = order.get_paymentline_by_uuid(uuid);
         return ["mc", "visa", "amex", "discover"].includes(line.card_type);
     },

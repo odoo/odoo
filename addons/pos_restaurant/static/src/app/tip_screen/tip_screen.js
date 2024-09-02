@@ -33,7 +33,7 @@ export class TipScreen extends Component {
         return this._totalAmount;
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
     get percentageTips() {
         return [
@@ -44,7 +44,7 @@ export class TipScreen extends Component {
     }
     async validateTip() {
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const serverId = typeof order.id === "number" && order.id;
 
         if (!serverId) {
@@ -76,10 +76,10 @@ export class TipScreen extends Component {
         }
 
         order.state = "draft";
-        await this.pos.set_tip(amount);
+        await this.pos.setTip(amount);
         order.state = "paid";
 
-        const paymentline = this.pos.get_order().payment_ids[0];
+        const paymentline = this.pos.getOrder().payment_ids[0];
         if (paymentline.payment_method_id.payment_terminal) {
             paymentline.amount += amount;
             await paymentline.payment_method_id.payment_terminal.send_payment_adjust(
@@ -98,7 +98,7 @@ export class TipScreen extends Component {
     }
     goNextScreen() {
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.add_new_order();
+            this.pos.addNewOrder();
         }
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);

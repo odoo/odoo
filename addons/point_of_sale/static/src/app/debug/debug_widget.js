@@ -121,8 +121,8 @@ export class DebugWidget extends Component {
                     this.pos.data.localDeleteCascade(order, true);
                 }
 
-                if (!this.pos.get_order()) {
-                    this.pos.add_new_order();
+                if (!this.pos.getOrder()) {
+                    this.pos.addNewOrder();
                 }
             },
         });

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100">
-            <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
+            <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'd-none': ui.isSmall and pos.mobilePane !== 'left'}"
                 class="leftpane d-flex flex-column p-2">
                 <OrderSummary />
                 <div class="pads">
@@ -10,7 +10,7 @@
                         <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
-                        <Numpad t-if="!currentOrder?.is_empty() and pos.get_order()?.uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                        <Numpad t-if="!currentOrder?.is_empty() and pos.getOrder()?.uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
                         <ActionpadWidget 
                             partner="currentOrder?.get_partner()" 
                             onClickMore.bind="displayAllControlPopup"
@@ -21,16 +21,16 @@
                     </div>
                 </div>
             </div>
-            <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+            <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobilePane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-y-auto">
                     <CategorySelector class="'p-2'" categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
+                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"
                             product="product"
-                            class="pos.productViewMode"
+                            class="this.productViewMode"
                             name="getProductName(product)"
                             color="product.pos_categ_ids?.at(-1)?.color"
                             price="this.getProductPrice(product)"
@@ -47,7 +47,7 @@
                         <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
                     </div>
                     <t t-if="ui.isSmall">
-                        <div class="product-reminder position-absolute bottom-0 d-flex justify-content-center align-items-center w-100 py-1 px-2" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
+                        <div class="product-reminder position-absolute bottom-0 d-flex justify-content-center align-items-center w-100 py-1 px-2" t-if="pos.getOrder().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
                             <span class="flex-fill py-2 rounded-3 text-bg-info text-center fw-bolder"><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                         </div>
                     </t>

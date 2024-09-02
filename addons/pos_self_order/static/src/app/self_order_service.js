@@ -181,8 +181,6 @@ export class SelfOrder extends Reactive {
     }
 
     computeAvailableCategories() {
-        let now = luxon.DateTime.now();
-        now = now.hour + now.minute / 60;
         const prodByCategIds = this.productByCategIds;
         const availableCategories = this.productCategories
             .sort((a, b) => a.sequence - b.sequence)
@@ -190,12 +188,8 @@ export class SelfOrder extends Reactive {
             .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id));
 
         this.categoryList = new Set(availableCategories);
-        this.availableCategories = availableCategories.filter((c) => {
-            return now > c.hour_after && now < c.hour_until;
-        });
-
-        this.currentCategory =
-            this.models["pos.category"].length > 0 ? [...this.categoryList][0] : null;
+        this.availableCategories = availableCategories.filter((c) => c.isAvailable);
+        this.currentCategory = Array.from(this.categoryList).find((c) => c.isAvailable);
     }
 
     isCategoryAvailable(categId) {
@@ -444,7 +438,7 @@ export class SelfOrder extends Reactive {
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {
-            const printer = this.create_printer(printerConfig);
+            const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig;
                 this.kitchenPrinters.push(printer);
@@ -452,7 +446,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    create_printer(printer) {
+    createPrinter(printer) {
         const url = deduceUrl(printer.proxy_ip || "");
         return new HWPrinter({ url });
     }

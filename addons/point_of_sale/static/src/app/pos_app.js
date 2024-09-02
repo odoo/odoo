@@ -34,7 +34,7 @@ export class Chrome extends Component {
             body.classList.add("big-scrollbars");
         }
 
-        onWillStart(this.pos._loadFonts);
+        onWillStart(this.pos.loadFonts);
         onMounted(this.props.disableLoader);
         if (this.pos.config.customer_display_type === "none") {
             return;

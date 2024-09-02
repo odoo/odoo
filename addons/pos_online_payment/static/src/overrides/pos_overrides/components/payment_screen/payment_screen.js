@@ -220,7 +220,7 @@ patch(PaymentScreen.prototype, {
         }
         this.pos.removePendingOrder(this.currentOrder);
         this.currentOrder.state = "paid";
-        this.pos.validated_orders_name_server_id_map[this.currentOrder.name] = this.currentOrder.id;
+        this.pos.validatedOrdersNameServerIdMap[this.currentOrder.name] = this.currentOrder.id;
 
         // Now, do practically the normal flow
         if (

@@ -57,13 +57,13 @@ patch(PosStore.prototype, {
         await this.updateRewards();
     },
     async resetPrograms() {
-        const order = this.get_order();
+        const order = this.getOrder();
         order._resetPrograms();
         await this.orderUpdateLoyaltyPrograms();
         await this.updateRewards();
     },
     async orderUpdateLoyaltyPrograms() {
-        if (!this.get_order()) {
+        if (!this.getOrder()) {
             return;
         }
 
@@ -76,7 +76,7 @@ patch(PosStore.prototype, {
             return;
         }
 
-        const order = this.get_order();
+        const order = this.getOrder();
         if (order.finalized) {
             return;
         }
@@ -105,7 +105,7 @@ patch(PosStore.prototype, {
         });
     },
     async couponForProgram(program) {
-        const order = this.get_order();
+        const order = this.getOrder();
         if (program.is_nominative) {
             return await this.fetchLoyaltyCard(program.id, order.get_partner().id);
         }
@@ -122,7 +122,7 @@ patch(PosStore.prototype, {
      * Update our couponPointChanges, meaning the points/coupons each program give etc.
      */
     async updatePrograms() {
-        const order = this.get_order();
+        const order = this.getOrder();
         if (!order) {
             return;
         }
@@ -236,7 +236,7 @@ patch(PosStore.prototype, {
         order.update({ _code_activated_coupon_ids: [["unlink", ...toUnlink]] });
     },
     async activateCode(code) {
-        const order = this.get_order();
+        const order = this.getOrder();
         const rule = this.models["loyalty.rule"].find((rule) => {
             return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
         });
@@ -330,7 +330,7 @@ patch(PosStore.prototype, {
     },
     async checkMissingCoupons() {
         // This function must stay sequential to avoid potential concurrency errors.
-        const order = this.get_order();
+        const order = this.getOrder();
         await mutex.exec(async () => {
             if (!order.invalidCoupons) {
                 return;
@@ -363,7 +363,7 @@ patch(PosStore.prototype, {
     },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         const product = vals.product_id;
-        const order = this.get_order();
+        const order = this.getOrder();
         const linkedPrograms =
             this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
         let selectedProgram = null;
@@ -383,7 +383,7 @@ patch(PosStore.prototype, {
             selectedProgram = linkedPrograms[0];
         }
 
-        const orderTotal = this.get_order().get_total_with_tax();
+        const orderTotal = this.getOrder().get_total_with_tax();
         if (
             selectedProgram &&
             ["gift_card", "ewallet"].includes(selectedProgram.program_type) &&
@@ -392,7 +392,7 @@ patch(PosStore.prototype, {
             opt.price_unit = -orderTotal;
         }
         if (selectedProgram && selectedProgram.program_type == "gift_card") {
-            const shouldProceed = await this._setupGiftCardOptions(selectedProgram, opt);
+            const shouldProceed = await this.setupGiftCardOptions(selectedProgram, opt);
             if (!shouldProceed) {
                 return;
             }
@@ -435,7 +435,7 @@ patch(PosStore.prototype, {
      * @param {object} options
      * @returns {Promise<boolean>} whether to proceed with adding the product or not
      */
-    async _setupGiftCardOptions(program, options) {
+    async setupGiftCardOptions(program, options) {
         options.quantity = 1;
         options.merge = false;
         options.eWalletGiftCardProgram = program;
@@ -454,7 +454,7 @@ patch(PosStore.prototype, {
      * it comes with the corresponding reward product line.
      */
     async pay() {
-        const currentOrder = this.get_order();
+        const currentOrder = this.getOrder();
         const eWalletLine = currentOrder
             .get_orderlines()
             .find((line) => line.getEWalletGiftCardProgramType() === "ewallet");
@@ -472,7 +472,7 @@ patch(PosStore.prototype, {
         }
     },
     getPotentialFreeProductRewards() {
-        const order = this.get_order();
+        const order = this.getOrder();
         const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
             .map((pe) => {
                 return {
@@ -536,7 +536,6 @@ patch(PosStore.prototype, {
         }
         return result;
     },
-
     //@override
     async processServerData() {
         await super.processServerData();
@@ -573,7 +572,6 @@ patch(PosStore.prototype, {
             this.compute_discount_product_ids(reward, products);
         }
     },
-
     compute_discount_product_ids(reward, products) {
         const reward_product_domain = JSON.parse(reward.reward_product_domain);
         if (!reward_product_domain) {

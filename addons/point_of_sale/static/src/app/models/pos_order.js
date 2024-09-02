@@ -264,7 +264,7 @@ export class PosOrder extends Base {
         return this.lines.length === 0;
     }
 
-    generate_unique_id() {
+    generateUniqueId() {
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
         // to fit into EAN-13 barcodes, should it be needed

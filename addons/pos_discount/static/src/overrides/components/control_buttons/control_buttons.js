@@ -20,7 +20,7 @@ patch(ControlButtons.prototype, {
     },
     // FIXME business method in a compoenent, maybe to move in pos_store
     async apply_discount(pc) {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const lines = order.get_orderlines();
         const product = this.pos.config.discount_product_id;
 

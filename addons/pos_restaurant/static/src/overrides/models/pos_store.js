@@ -123,7 +123,7 @@ patch(PosStore.prototype, {
     async actionAfterIdle() {
         if (!document.querySelector(".modal-open")) {
             const table = this.selectedTable;
-            const order = this.get_order();
+            const order = this.getOrder();
             if (order && order.get_screen_data().name === "ReceiptScreen") {
                 // When the order is finalized, we can safely remove it from the memory
                 // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
@@ -147,7 +147,7 @@ patch(PosStore.prototype, {
     },
     shouldResetIdleTimer() {
         const stayPaymentScreen =
-            this.mainScreen.component === PaymentScreen && this.get_order().payment_ids.length > 0;
+            this.mainScreen.component === PaymentScreen && this.getOrder().payment_ids.length > 0;
         return (
             this.config.module_pos_restaurant &&
             !stayPaymentScreen &&
@@ -159,7 +159,7 @@ patch(PosStore.prototype, {
         this.setIdleTimer();
     },
     closeScreen() {
-        if (this.config.module_pos_restaurant && !this.get_order()) {
+        if (this.config.module_pos_restaurant && !this.getOrder()) {
             return this.showScreen("FloorScreen");
         }
         return super.closeScreen(...arguments);
@@ -191,8 +191,8 @@ patch(PosStore.prototype, {
         return res;
     },
     //@override
-    add_new_order() {
-        const order = super.add_new_order(...arguments);
+    addNewOrder() {
+        const order = super.addNewOrder(...arguments);
         this.addPendingOrder([order.id]);
         return order;
     },
@@ -223,8 +223,8 @@ patch(PosStore.prototype, {
         };
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
-            this.get_order().setBooked(true);
+        if (this.config.module_pos_restaurant && !this.getOrder().uiState.booked) {
+            this.getOrder().setBooked(true);
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
@@ -269,7 +269,7 @@ patch(PosStore.prototype, {
             );
 
             if (currentOrder) {
-                this.set_order(currentOrder);
+                this.setOrder(currentOrder);
             } else {
                 const potentialsOrders = this.models["pos.order"].filter(
                     (o) => !o.table_id && !o.finalized && o.lines.length === 0
@@ -280,7 +280,7 @@ patch(PosStore.prototype, {
                     currentOrder.update({ table_id: table });
                     this.selectedOrderUuid = currentOrder.uuid;
                 } else {
-                    this.add_new_order();
+                    this.addNewOrder();
                 }
             }
         }
@@ -299,17 +299,17 @@ patch(PosStore.prototype, {
             this.tableSyncing = false;
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
-                this.set_order(orders[0]);
+                this.setOrder(orders[0]);
                 this.orderToTransferUuid = null;
                 this.showScreen(orders[0].get_screen_data().name);
             } else {
-                this.add_new_order();
+                this.addNewOrder();
                 this.showScreen("ProductScreen");
             }
         }
     },
     getTableOrders(tableId) {
-        return this.get_open_orders().filter((order) => order.table_id?.id === tableId);
+        return this.getOpenOrders().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
         try {
@@ -321,11 +321,11 @@ patch(PosStore.prototype, {
             Promise.reject(e);
         }
         this.selectedTable = null;
-        const order = this.get_order();
+        const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
         }
-        this.set_order(null);
+        this.setOrder(null);
     },
     getActiveOrdersOnTable(table) {
         return this.models["pos.order"].filter(
@@ -342,13 +342,13 @@ patch(PosStore.prototype, {
         this.orderToTransferUuid = null;
         this.alert.dismiss();
         if (destinationTable.id === originalTable?.id) {
-            this.set_order(order);
+            this.setOrder(order);
             this.setTable(destinationTable);
             return;
         }
         if (!this.tableHasOrders(destinationTable)) {
             order.update({ table_id: destinationTable });
-            this.set_order(order);
+            this.setOrder(order);
         } else {
             const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
             for (const orphanLine of order.lines) {
@@ -361,7 +361,7 @@ patch(PosStore.prototype, {
                     orphanLine.update({ order_id: destinationOrder });
                 }
             }
-            this.set_order(destinationOrder);
+            this.setOrder(destinationOrder);
             await this.deleteOrders([order]);
         }
         await this.setTable(destinationTable);
@@ -387,7 +387,7 @@ patch(PosStore.prototype, {
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
     },
-    _shouldLoadOrders() {
-        return super._shouldLoadOrders() || this.config.module_pos_restaurant;
+    shouldLoadOrders() {
+        return super.shouldLoadOrders() || this.config.module_pos_restaurant;
     },
 });

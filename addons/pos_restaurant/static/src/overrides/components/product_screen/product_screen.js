@@ -10,11 +10,11 @@ patch(ProductScreen.prototype, {
         super.setup(...arguments);
 
         onMounted(() => {
-            this.pos.addPendingOrder([this.pos.get_order().id]);
+            this.pos.addPendingOrder([this.pos.getOrder().id]);
         });
     },
     get selectedOrderlineQuantity() {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const orderline = order.get_selected_orderline();
         const isForPreparation = orderline.product_id.pos_categ_ids
             .map((categ) => categ.id)
@@ -46,7 +46,7 @@ patch(ProductScreen.prototype, {
     get primaryReviewButton() {
         return (
             !this.primaryOrderButton &&
-            !this.pos.get_order().is_empty() &&
+            !this.pos.getOrder().is_empty() &&
             this.pos.config.module_pos_restaurant
         );
     },
