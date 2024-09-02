@@ -321,6 +321,14 @@ const priorityRestoreStateRules = [
         },
         { brVisibility: false, extraBRRemovalCondition: (brNode) => isFakeLineBreak(brNode) },
     ],
+    [
+        {
+            direction: DIRECTIONS.LEFT,
+            cType1: CTYPES.CONTENT,
+            cType2: CTYPES.CONTENT,
+        },
+        { lineBreak: true },
+    ],
 ];
 function restoreStateRuleHashCode(direction, cType1, cType2) {
     return `${direction}-${cType1}-${cType2}`;
@@ -521,7 +529,13 @@ export function enforceWhitespace(el, offset, direction, rule) {
         }
     }
 
-    if (rule.spaceVisibility === undefined) {
+    if (rule.spaceVisibility === undefined && rule.lineBreak === undefined) {
+        return;
+    }
+    if (rule.lineBreak &&
+        !(el.childNodes[offset].previousSibling?.nodeType === Node.ELEMENT_NODE &&
+        closestElement(el.childNodes[offset].previousSibling, '[data-oe-inline-line-break]'))
+    ) {
         return;
     }
     if (!rule.spaceVisibility) {
@@ -546,7 +560,7 @@ export function enforceWhitespace(el, offset, direction, rule) {
     }
     const spaceNode = foundVisibleSpaceTextNode || invisibleSpaceTextNodes[0];
     if (spaceNode) {
-        let spaceVisibility = rule.spaceVisibility;
+        let spaceVisibility = rule.spaceVisibility || rule.lineBreak;
         // In case we are asked to replace the space by a &nbsp;, disobey and
         // do the opposite if that space is currently not visible
         // TODO I'd like this to not be needed, it feels wrong...
