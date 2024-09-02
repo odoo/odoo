@@ -48,7 +48,12 @@ patch(Thread.prototype, {
         }
         return super.avatarUrl;
     },
-
+    get displayName() {
+        if (this.channel_type === "livechat" && this.operator) {
+            return this.operator.user_livechat_username || this.operator.name;
+        }
+        return super.displayName;
+    },
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
