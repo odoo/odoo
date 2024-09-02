@@ -254,7 +254,7 @@ patch(PosStore.prototype, {
 
         const ordersStatus =
             syncedOrderIds.length > 0
-                ? await this.data.read("pos.order", syncedOrderIds, ["state"])
+                ? await this.data.read("pos.order", [...new Set(syncedOrderIds)], ["state"])
                 : [];
 
         // cancelled, posted, paid and invoiced orders can be removed
