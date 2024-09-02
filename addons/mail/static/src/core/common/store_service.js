@@ -364,7 +364,13 @@ export class Store extends BaseStore {
                         insertData.push(vals);
                     }
                 }
-                res[modelName] = store[modelName].insert(insertData, options);
+                const records = store[modelName].insert(insertData, options);
+                if (!res[modelName]) {
+                    res[modelName] = records;
+                } else {
+                    const knownRecordIds = new Set(res[modelName].map((r) => r.localId));
+                    res[modelName].push(...records.filter((r) => !knownRecordIds.has(r.localId)));
+                }
             }
             // Delete after all inserts to make sure a relation potentially registered before the
             // delete doesn't re-add the deleted record by mistake.
