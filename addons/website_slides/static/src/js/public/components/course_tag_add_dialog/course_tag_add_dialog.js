@@ -48,7 +48,7 @@ export class CourseTagAddDialog extends Component {
 
         if (this.props.defaultTag) {
             // Note: when a default tag is passed to the props we want the tag SelectMenu to behave
-            // like a 'readonly' select2 dropdown (can see the options but cannot change the selection)
+            // like a 'readonly' selectMenu dropdown (can see the options but cannot change the selection)
             this.createChoice(this.props.defaultTag);
             this.state.canCreateTag = false;
         }

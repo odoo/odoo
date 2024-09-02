@@ -27,6 +27,7 @@ export class SelectMenu extends Component {
         searchPlaceholder: _t("Search..."),
         choices: [],
         groups: [],
+        disabled: false,
     };
 
     static props = {
@@ -69,12 +70,14 @@ export class SelectMenu extends Component {
         required: { type: Boolean, optional: true },
         searchable: { type: Boolean, optional: true },
         autoSort: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -99,6 +102,9 @@ export class SelectMenu extends Component {
 
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
+            if (this.state.choices !== nextProps.choices) {
+                this.state.choices = nextProps.choices;
+            }
             if (this.props.value !== nextProps.value) {
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
@@ -124,11 +130,7 @@ export class SelectMenu extends Component {
     }
 
     get multiSelectChoices() {
-        const choices = [
-            ...this.props.choices,
-            ...this.props.groups.flatMap((g) => g.choices),
-        ].filter((c) => this.props.value.includes(c.value));
-        return choices.map((c) => {
+        return this.selectedChoice.map((c) => {
             return {
                 id: c.value,
                 text: c.label,
@@ -210,7 +212,18 @@ export class SelectMenu extends Component {
 
     getSelectedChoice(props) {
         const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
-        return choices.find((c) => c.value === props.value);
+        if (!this.props.multiSelect) {
+            return choices.find((c) => c.value === props.value);
+        }
+
+        const valueSet = new Set(props.value);
+        // Combine previously selected choices + newly selected choice from
+        // the searched choices and then filter the choices based on
+        // props.value i.e. valueSet.
+        return [...(this.selectedChoice || []), ...choices].filter((c, index, self) =>
+            valueSet.has(c.value)
+            && self.findIndex((t) => t.value === c.value) === index
+        );
     }
 
     onItemSelected(value) {
@@ -226,6 +239,10 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
+        }
+        if (this.inputRef.el) {
+            this.inputRef.el.value = "";
+            this.state.searchValue = "";
         }
     }
 

@@ -1,158 +1,132 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { attachComponent } from "@web_editor/js/core/owl_utils";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { useService } from "@web/core/utils/hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-var SelectBox = publicWidget.Widget.extend({
-    events: {
-        'change': '_onChange',
-    },
+class WebsiteLinksTagsWrapper extends Component {
+    static template = "website_links.WebsiteLinksTagsWrapper";
+    static components = { SelectMenu, DropdownItem };
+    static props = {
+        placeholder: { optional: true, type: String },
+        model: { optional: true, type: String },
+    };
 
-    /**
-     * @constructor
-     * @param {Object} parent
-     * @param {Object} obj
-     * @param {String} placeholder
-     */
-    init: function (parent, obj, placeholder) {
-        this._super.apply(this, arguments);
-        this.obj = obj;
-        this.placeholder = placeholder;
-
-        this.orm = this.bindService("orm");
+    setup() {
+        this.orm = useService("orm");
         this.keepLast = new KeepLast();
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$el.select2({
-            placeholder: self.placeholder,
-            allowClear: true,
-            formatNoMatches: false,
-            createSearchChoice: function (term) {
-                if (self._objectExists(term)) {
-                    return null;
-                }
-                return { id: term, text: `Create '${term}'` };
-            },
-            createSearchChoicePosition: 'bottom',
-            multiple: false,
-            ajax: {
-                dataType: 'json',
-                data: term => term,
-                transport: (params, success, failure) => {
-                    // Do not search immediately: wait for the user to stop
-                    // typing (basically, this is a debounce).
-                    clearTimeout(this._loadDataTimeout);
-                    this._loadDataTimeout = setTimeout(() => {
-                        // We want to search with a limit and not care about any
-                        // pagination implementation. To make this work, we
-                        // display the exact match first though, which requires
-                        // an extra RPC (could be refactored into a new
-                        // controller in master but... see TODO).
-                        // TODO at some point this whole app will be moved as a
-                        // backend screen, with real m2o fields etc... in which
-                        // case the "exact match" feature should be handled by
-                        // the ORM somehow ?
-                        const limit = 100;
-                        const searchReadParams = [
-                            ['id', 'name'],
-                            {
-                                limit: limit,
-                                order: 'name, id desc', // Allows to have exact match first
-                            },
-                        ];
-                        const proms = [];
-                        proms.push(this.orm.searchRead(
-                            this.obj,
-                            // Exact match + results that start with the search
-                            [['name', '=ilike', `${params.data}%`]],
-                            ...searchReadParams
-                        ));
-                        proms.push(this.orm.searchRead(
-                            this.obj,
-                            // Results that contain the search but do not start
-                            // with it
-                            [['name', '=ilike', `%_${params.data}%`]],
-                            ...searchReadParams
-                        ));
-                        // Keep last is there in case a RPC takes longer than
-                        // the debounce delay + next rpc delay for some reason.
-                        this.keepLast.add(Promise.all(proms)).then(([startingMatches, endingMatches]) => {
-                            // We loaded max a 2 * limit amount of records but
-                            // ensure that we do not display "ending matches" if
-                            // we may not have loaded all "starting matches".
-                            if (startingMatches.length < limit) {
-                                const startingMatchesId = startingMatches.map((value) => value.id);
-                                const extraEndingMatches = endingMatches.filter(
-                                    (value) => !startingMatchesId.includes(value.id)
-                                );
-                                return startingMatches.concat(extraEndingMatches);
-                            }
-                            // In that case, we made one RPC too much but this
-                            // was chosen over not making them go in parallel.
-                            // We don't want to display "ending matches" if not
-                            // all "starting matches" have been loaded.
-                            return startingMatches;
-                        })
-                        .then(params.success)
-                        .catch(params.error);
-                    }, 400);
+        this.state = useState({
+            placeholder: this.props.placeholder,
+            choices: [],
+            value: undefined,
+        });
+        onWillStart(async () => {
+            await this.loadChoice();
+        });
+    }
+
+    get showCreateOption() {
+        return !this.state.choices.some(c => c.label === this.select.data.searchValue);
+    }
+
+    onSelect(value) {
+        this.state.value = value;
+    }
+
+    async onCreateOption(string, closeFn) {
+        const record = await this.orm.call("utm.mixin", "find_or_create_record", [
+            this.props.model,
+            string,
+        ]);
+        const choice = {
+            label: record.name,
+            value: record.id,
+        };
+        this.state.choices.push(choice);
+        this.onSelect(choice.value);
+    }
+
+    loadChoice(searchString = "") {
+        return new Promise((resolve, reject) => {
+            // We want to search with a limit and not care about any
+            // pagination implementation. To make this work, we
+            // display the exact match first though, which requires
+            // an extra RPC (could be refactored into a new
+            // controller in master but... see TODO).
+            // TODO at some point this whole app will be moved as a
+            // backend screen, with real m2o fields etc... in which
+            // case the "exact match" feature should be handled by
+            // the ORM somehow ?
+            const limit = 100;
+            const searchReadParams = [
+                ["id", "name"],
+                {
+                    limit: limit,
+                    order: "name, id desc", // Allows to have exact match first
                 },
-                results: data => {
-                    this.objects = data.map(x => ({
-                        id: x.id,
-                        text: x.name,
-                    }));
-                    return {
-                        results: this.objects,
+            ];
+            const proms = [];
+            proms.push(
+                this.orm.searchRead(
+                    this.props.model,
+                    // Exact match + results that start with the search
+                    [["name", "=ilike", `${searchString}%`]],
+                    ...searchReadParams
+                )
+            );
+            proms.push(
+                this.orm.searchRead(
+                    this.props.model,
+                    // Results that contain the search but do not start
+                    // with it
+                    [["name", "=ilike", `%_${searchString}%`]],
+                    ...searchReadParams
+                )
+            );
+            // Keep last is there in case a RPC takes longer than
+            // the debounce delay + next rpc delay for some reason.
+            this.keepLast
+                .add(Promise.all(proms))
+                .then(([startingMatches, endingMatches]) => {
+                    const formatChoice = (choice) => {
+                        choice.value = choice.id;
+                        choice.label = choice.name;
+                        return choice;
                     };
-                },
-            },
+                    startingMatches.map(formatChoice);
+
+                    // We loaded max a 2 * limit amount of records but
+                    // ensure that we do not display "ending matches" if
+                    // we may not have loaded all "starting matches".
+                    if (startingMatches.length < limit) {
+                        const startingMatchesId = startingMatches.map((value) => value.id);
+                        const extraEndingMatches = endingMatches.filter(
+                            (value) => !startingMatchesId.includes(value.id)
+                        );
+                        extraEndingMatches.map(formatChoice);
+                        return startingMatches.concat(extraEndingMatches);
+                    }
+                    // In that case, we made one RPC too much but this
+                    // was chosen over not making them go in parallel.
+                    // We don't want to display "ending matches" if not
+                    // all "starting matches" have been loaded.
+                    return startingMatches;
+                })
+                .then((result) => {
+                    this.state.choices = result;
+                    resolve();
+                })
+                .catch(reject);
         });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {String} query
-     */
-    _objectExists: function (query) {
-        return this.objects.find(val => val.text.toLowerCase() === query.toLowerCase()) !== undefined;
-    },
-    /**
-     * @private
-     * @param {String} name
-     */
-    _createObject: function (name) {
-        return this.orm.call("utm.mixin", "find_or_create_record", [this.obj, name]).then(record => {
-            this.$el.attr('value', record);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Object} ev
-     */
-    _onChange: function (ev) {
-        if (!ev.added || typeof ev.added.id !== "string") {
-            return;
-        }
-        this._createObject(ev.added.id);
-    },
-});
+    }
+}
 
 var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
@@ -394,15 +368,32 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
     start: async function () {
         var defs = [this._super.apply(this, arguments)];
 
-        // UTMS selects widgets
-        const campaignSelect = new SelectBox(this, "utm.campaign", _t("e.g. June Sale, Paris Roadshow, ..."));
-        defs.push(campaignSelect.attachTo($('#campaign-select')));
+        async function attachSelectComponent(model, placeholderText, el) {
+            const props = {
+                placeholder: placeholderText,
+                model: model,
+            };
+            await attachComponent(this, el, WebsiteLinksTagsWrapper, props);
+        }
 
-        const mediumSelect = new SelectBox(this, "utm.medium", _t("e.g. InMails, Ads, Social, ..."));
-        defs.push(mediumSelect.attachTo($('#channel-select')));
-
-        const sourceSelect = new SelectBox(this, "utm.source", _t("e.g. LinkedIn, Facebook, Leads, ..."));
-        defs.push(sourceSelect.attachTo($('#source-select')));
+        attachSelectComponent.call(
+            this,
+            "utm.campaign",
+            _t("e.g. June Sale, Paris Roadshow, ..."),
+            this.el.querySelector("#campaign-select-wrapper"),
+        );
+        attachSelectComponent.call(
+            this,
+            "utm.medium",
+            _t("e.g. InMails, Ads, Social, ..."),
+            this.el.querySelector("#channel-select-wrapper"),
+        );
+        attachSelectComponent.call(
+            this,
+            "utm.source",
+            _t("e.g. LinkedIn, Facebook, Leads, ..."),
+            this.el.querySelector("#source-select-wrapper"),
+        );
 
         // Recent Links Widgets
         this.recentLinks = new RecentLinks(this);
@@ -509,21 +500,21 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         ev.stopPropagation();
 
         // Get URL and UTMs
-        const campaignID = document.querySelector('#campaign-select').value;
-        const mediumID = document.querySelector('#channel-select').value;
-        const sourceID = document.querySelector('#source-select').value;
+        const campaignInputEl = document.querySelector("input[name='campaign-select']");
+        const mediumInputEl = document.querySelector("input[name='medium-select']");
+        const sourceInputEl = document.querySelector("input[name='source-select']");
 
         const label = document.querySelector('#label');
         const params = { label: label.value || undefined };
         params.url = $('#url').val();
-        if (campaignID !== '') {
-            params.campaign_id = parseInt(campaignID);
+        if (campaignInputEl.value !== "") {
+            params.campaign_id = parseInt(campaignInputEl.value);
         }
-        if (mediumID !== '') {
-            params.medium_id = parseInt(mediumID);
+        if (mediumInputEl.value !== "") {
+            params.medium_id = parseInt(mediumInputEl.value);
         }
-        if (sourceID !== '') {
-            params.source_id = parseInt(sourceID);
+        if (sourceInputEl.value !== "") {
+            params.source_id = parseInt(sourceInputEl.value);
         }
 
         $('#btn_shorten_url').text(_t("Generating link..."));
@@ -552,9 +543,9 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                 self.recentLinks._addLink(link);
 
                 // Clean URL and UTM selects
-                $('#campaign-select').select2('val', '');
-                $('#channel-select').select2('val', '');
-                $('#source-select').select2('val', '');
+                campaignInputEl.value = "";
+                mediumInputEl.value = "";
+                sourceInputEl.value = "";
                 label.value = '';
                 $('.o_website_links_utm_forms').hide();
             }
@@ -563,7 +554,6 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 });
 
 export default {
-    SelectBox: SelectBox,
     RecentLinkBox: RecentLinkBox,
     RecentLinks: RecentLinks,
 };
