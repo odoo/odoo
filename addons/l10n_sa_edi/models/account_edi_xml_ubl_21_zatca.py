@@ -371,10 +371,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
-            tax_category_vals = self._get_tax_category_list(line.move_id, tax)[0]
+            tax_category_vals = next(iter(self._get_tax_category_list(line.move_id, tax)), {})
             grouping_key = {
-                'tax_category_id': tax_category_vals['id'],
-                'tax_category_percent': tax_category_vals['percent'],
+                'tax_category_id': tax_category_vals.get('id'),
+                'tax_category_percent': tax_category_vals.get('percent'),
                 '_tax_category_vals_': tax_category_vals,
                 'tax_amount_type': tax.amount_type,
             }
