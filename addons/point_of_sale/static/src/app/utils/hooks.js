@@ -8,8 +8,8 @@ import {
     useComponent,
     useRef,
     useState,
-    useEffect,
     onWillUnmount,
+    useExternalListener,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -152,23 +152,55 @@ export function useTrackedAsync(asyncFn) {
     };
 }
 
-export function useIsChildLarger(child) {
+export function useIsChildLarger(container) {
     const state = useState({
         isLarger: false,
+        maxItems: 0,
     });
-    useEffect(
-        (child) => {
-            const resizeObserver = new ResizeObserver(() => {
-                state.isLarger = child.el.scrollWidth > child.el.parentElement.clientWidth;
-            });
-            resizeObserver.observe(child.el);
-            return () => {
-                resizeObserver.unobserve(child.el);
-            };
+
+    const computeSize = () => {
+        if (!container.el || !container.el.children.length) {
+            return;
+        }
+
+        let acc = 0;
+        let nbrItems = 0;
+        let isLarger = false;
+        const oldLargerState = state.isLarger;
+        const containerWidth = container.el.clientWidth - 10;
+
+        for (const child of container.el.children) {
+            acc += child.clientWidth;
+            if (acc < containerWidth) {
+                nbrItems++;
+            } else {
+                isLarger = true;
+                break;
+            }
+        }
+
+        state.isLarger = isLarger;
+        state.maxItems = nbrItems;
+        if (!oldLargerState && state.isLarger) {
+            state.maxItems--;
+        }
+    };
+
+    useExternalListener(window, "resize", () => {
+        computeSize();
+    });
+
+    return {
+        get isLarger() {
+            return state.isLarger;
         },
-        () => [child]
-    );
-    return () => state.isLarger;
+        get maxItems() {
+            return state.maxItems;
+        },
+        reload: () => {
+            computeSize();
+        },
+    };
 }
 
 /**

@@ -132,7 +132,7 @@
                             <Orderline line="line.getDisplayData()"
                                 class="{'selected': line.id === getSelectedOrderlineId()}"
                                 t-on-click="() => this.onClickOrderline(line)">
-                                <t t-set="toRefundDetail" t-value="line.order_id.uiState.lineToRefund[line.uuid]" />
+                                <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
                                 <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
                                     class="info refund-note mt-1">
                                     <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />

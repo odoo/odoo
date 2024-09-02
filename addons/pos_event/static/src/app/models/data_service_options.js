@@ -3,10 +3,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(DataServiceOptions.prototype, {
     get databaseTable() {
-        return [
+        return {
             ...super.databaseTable,
-            {
-                name: "event.registration",
+            "event.registration": {
                 key: "id",
                 condition: (record) => {
                     return (
@@ -14,8 +13,7 @@ patch(DataServiceOptions.prototype, {
                     );
                 },
             },
-            {
-                name: "event.registration.answer",
+            "event.registration.answer": {
                 key: "id",
                 condition: (record) => {
                     return (
@@ -24,6 +22,6 @@ patch(DataServiceOptions.prototype, {
                     );
                 },
             },
-        ];
+        };
     },
 });

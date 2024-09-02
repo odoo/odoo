@@ -416,7 +416,9 @@ export class TicketScreen extends Component {
      * Hide the delete button if one of the payments is a 'done' electronic payment.
      */
     shouldHideDeleteButton(order) {
+        const orders = this.pos.models["pos.order"].filter((o) => !o.finalized);
         return (
+            (orders.length === 1 && orders[0].lines.length === 0) ||
             (this.ui.isSmall && order != this.state.selectedOrder) ||
             this.isDefaultOrderEmpty(order) ||
             order.payment_ids.some(

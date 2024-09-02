@@ -3,17 +3,15 @@ import { patch } from "@web/core/utils/patch";
 
 patch(DataServiceOptions.prototype, {
     get databaseTable() {
-        return [
-            {
-                name: "pos.order",
+        return {
+            "pos.order": {
                 key: "uuid",
                 condition: (record) => false,
             },
-            {
-                name: "pos.order.line",
+            "pos.order.line": {
                 key: "uuid",
                 condition: (record) => false,
             },
-        ];
+        };
     },
 });
