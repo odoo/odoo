@@ -1862,6 +1862,73 @@ class TestPacking(TestPackingCommon):
             {'package_id': pack3.id, 'state': 'assigned', 'is_done': True},
         ])
 
+    def test_reusable_package_weight(self):
+        """
+        Check that the shipping_weight of a done picking is not recomputed
+        """
+        reusable_box = self.env['stock.quant.package'].create({
+            'name': 'Reusable Box',
+            'package_use': 'reusable',
+        })
+
+        self.productA.weight = 4.0
+        delivery_a = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids_without_package': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.stock_location.id,
+                'product_uom': self.productA.uom_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+            'move_line_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'result_package_id': reusable_box.id,
+                'quantity': 5.0,
+                'product_id': self.productA.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.productA.uom_id.id,
+            })],
+        })
+        delivery_a.action_confirm()
+        self.assertEqual(delivery_a.shipping_weight, 20.0)
+        reusable_box.shipping_weight = 19.0
+        self.assertEqual(delivery_a.shipping_weight, 19.0)
+        delivery_a.button_validate()
+
+        reusable_box.unpack()
+        reusable_box.shipping_weight = 0.0
+        self.assertEqual(delivery_a.shipping_weight, 19.0)
+
+        delivery_b = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids_without_package': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 3.0,
+                'location_id': self.stock_location.id,
+                'product_uom': self.productA.uom_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+            'move_line_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'result_package_id': reusable_box.id,
+                'quantity': 3.0,
+                'product_id': self.productA.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.productA.uom_id.id,
+            })],
+        })
+        delivery_b.action_confirm()
+        delivery_b.button_validate()
+        self.assertEqual(delivery_b.shipping_weight, 12.0)
+        self.assertEqual(delivery_a.shipping_weight, 19.0)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):

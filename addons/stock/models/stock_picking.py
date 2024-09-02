@@ -668,7 +668,7 @@ class Picking(models.Model):
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
     shipping_weight = fields.Float(
-        "Weight for Shipping", compute='_compute_shipping_weight',
+        "Weight for Shipping", compute='_compute_shipping_weight', store=True,
         help="Total weight of packages and products not in a package. "
         "Packages with no shipping weight specified will default to their products' total weight. "
         "This is the weight used to compute the cost of the shipping.")
@@ -851,12 +851,9 @@ class Picking(models.Model):
     @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
-            # if shipping weight is not assigned => default to calculated product weight
-            packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
-            picking.shipping_weight = (
-                picking.weight_bulk +
-                sum(pack.shipping_weight or packages_weight[pack] for pack in picking.move_line_ids.result_package_id)
-            )
+            if picking.state == 'done':
+                continue
+            picking.shipping_weight = picking._get_shipping_weight()
 
     def _compute_shipping_volume(self):
         for picking in self:
@@ -1220,6 +1217,9 @@ class Picking(models.Model):
                 picking.move_line_ids.write({'owner_id': picking.owner_id.id})
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
+        # recompute the shipping weight now that it can't be altered by its compute method
+        for picking in self:
+            picking.shipping_weight = picking._get_shipping_weight()
 
         # if incoming/internal moves make other confirmed/partially_available moves available, assign them
         done_incoming_moves = self.filtered(lambda p: p.picking_type_id.code in ('incoming', 'internal')).move_ids.filtered(lambda m: m.state == 'done')
@@ -2003,3 +2003,10 @@ class Picking(models.Model):
                 clean_action(action, self.env)
                 report_actions.append(action)
         return report_actions
+
+    def _get_shipping_weight(self):
+        # if shipping weight is not assigned => default to calculated product weight
+        self.ensure_one()
+        packages_weight = self.move_line_ids.result_package_id.sudo()._get_weight(self.id)
+        packing_weight = sum(pack.shipping_weight or packages_weight[pack] for pack in self.move_line_ids.result_package_id)
+        return self.weight_bulk + packing_weight
