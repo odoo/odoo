@@ -28,6 +28,9 @@ Display your booths on your website for the users to register.
             '/website_event_booth/static/src/scss/website_event_booth.scss',
             '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
         ],
+        'website_event_booth.assets_widget_xml': [
+            # 'website_event_booth/static/src/xml/event_booth_registration_templates.xml', interaction
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
