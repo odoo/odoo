@@ -82,16 +82,16 @@ class StockReplenishmentInfo(models.TransientModel):
                 ('state', '=', 'done'),
                 ('company_id', '=', replenishment_report.orderpoint_id.company_id.id)
             ]
-            quantity_by_period_out = self.env['stock.move'].read_group(
+            quantity_by_period_out = self.env['stock.move']._read_group(
                 AND([domain, [('location_dest_id.usage', '=', 'customer')]]),
-                ['date', 'product_qty'], [group_period])
-            quantity_by_period_returned = self.env['stock.move'].read_group(
+                [group_period], ['product_qty:sum'])
+            quantity_by_period_returned = dict(self.env['stock.move']._read_group(
                 AND([domain, [('location_id.usage', '=', 'customer')]]),
-                ['date', 'product_qty'], [group_period])
+                [group_period], ['product_qty:sum']))
             quantity_by_period_returned = {
                 g[group_period]: g['product_qty'] for g in quantity_by_period_returned}
             locale = get_lang(self.env).code
-            fmt = models.READ_GROUP_DISPLAY_FORMAT['month'] if period_setting == 'month' else models.READ_GROUP_DISPLAY_FORMAT['year']
+            fmt = models.READ_GROUP_DISPLAY_FORMAT[period_setting]
             for period, product_qty_sum in quantity_by_period_out:
                 replenishment_history.append({
                     'name': babel.dates.format_datetime(period, format=fmt, locale=locale),
