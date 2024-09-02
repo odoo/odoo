@@ -5000,11 +5000,7 @@ class BaseModel(metaclass=MetaModel):
                     columns.append(fname)
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
-                            colval = field.convert_to_column(stored[fname], self, stored)
-                            if field.translate is True and colval:
-                                if 'en_US' not in colval.adapted:
-                                    colval.adapted['en_US'] = next(iter(colval.adapted.values()))
-                            row.append(colval)
+                            row.append(field.convert_to_column(stored[fname], self, stored))
                         else:
                             row.append(SQL_DEFAULT)
                 else:
