@@ -31,7 +31,10 @@
                             </span>
                         </div>
                         <div class="pay-button">
-                            <div class="button btn btn-lg btn-primary py-3 py-lg-5 w-100" t-on-click="createSplittedOrder">
+                            <div class="button btn btn-lg py-3 py-lg-5 w-100"
+                                t-att-class="(this.qtyTrackerLength == 0 ? 'disabled btn-light' : 'btn-primary')"
+                                t-on-click="createSplittedOrder"
+                            >
                                 <span>Split Order</span>
                             </div>
                         </div>
