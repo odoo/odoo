@@ -1,18 +1,29 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import collections
 import datetime
 import time
 
-from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import _request_stack
-
 import odoo
 import odoo.tools
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.exceptions import AccessDenied, AccessError
+from odoo.http import _request_stack
+from odoo.service import common as auth
+from odoo.service import model
 from odoo.tests import common
-from odoo.service import common as auth, model
 from odoo.tools import DotDict
 from odoo.api import call_kw
+
+
+class TestExternalAPI(SavepointCaseWithUserDemo):
+
+    def test_call_kw(self):
+        """kwargs is not modified by the execution of the call"""
+        partner = self.env['res.partner'].create({'name': 'MyPartner1'})
+        args = (partner.ids, ['name'])
+        kwargs = {'context': {'test': True}}
+        model.call_kw(self.env['res.partner'], 'read', args, kwargs)
+        self.assertEqual(kwargs, {'context': {'test': True}})
 
 
 @common.tagged('post_install', '-at_install')

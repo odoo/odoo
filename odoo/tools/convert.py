@@ -185,7 +185,7 @@ def _eval_xml(self, node, env):
         # merge current context with context in kwargs
         kwargs['context'] = {**env.context, **kwargs.get('context', {})}
         # invoke method
-        return odoo.api.call_kw(model, method_name, args, kwargs)
+        return odoo.service.model.call_kw(model, method_name, args, kwargs)
     elif node.tag == "test":
         return node.text
 

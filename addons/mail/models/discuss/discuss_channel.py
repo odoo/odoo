@@ -742,7 +742,6 @@ class DiscussChannel(models.Model):
     def _get_allowed_message_post_params(self):
         return super()._get_allowed_message_post_params() | {"special_mentions", "parent_id"}
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         if (not self.env.user or self.env.user._is_public()) and self.is_member:
             # sudo: discuss.channel - guests don't have access for creating mail.message

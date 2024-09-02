@@ -918,7 +918,6 @@ class ResPartner(models.Model):
         return partner.id, partner.display_name
 
     @api.model
-    @api.returns('self', lambda value: value.id)
     def find_or_create(self, email, assert_valid_email=False):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
         to create a new one.
