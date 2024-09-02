@@ -190,12 +190,8 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p><b>abc[]</b> def</p>",
                 stepFunction: insertLineBreak,
-                // The space is converted to a non-breaking space so
-                // it is visible (because it's after a <br>).
-                // Visually, the caret does show _after_ the line
-                // break.
                 // JW cAfter: '<p><b>abc[]<br></b>&nbsp;def</p>',
-                contentAfter: "<p><b>abc<br>[]</b>&nbsp;def</p>",
+                contentAfter: "<p><b>abc<br>[]</b> def</p>",
             });
             await testEditor({
                 contentBefore: "<p><b>abc []</b>def</p>",
@@ -249,6 +245,21 @@ describe("Selection collapsed", () => {
             });
         });
 
+        test("should insert <br> and \u200b at the end of format node", async () => {
+            await testEditor({
+                contentBefore: "<p><b>abc[]</b></p>",
+                stepFunction: insertLineBreak,
+                contentAfterEdit: `<p><b data-oe-inline-line-break="">abc<br>[]\u200B</b></p>`,
+                contentAfter: "<p><b>abc<br>[]</b></p>",
+            });
+            await testEditor({
+                contentBefore: "<p><b>abc[]</b><br><br></p>",
+                stepFunction: insertLineBreak,
+                contentAfterEdit: `<p><b data-oe-inline-line-break="">abc<br>[]\u200B</b><br><br></p>`,
+                contentAfter: "<p><b>abc<br>[]</b><br><br></p>",
+            });
+        });
+
         test("should insert a line break (2 <br>) at the end of a format node", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]</p>",
@@ -257,14 +268,6 @@ describe("Selection collapsed", () => {
                 // one visible.
                 // JW cAfter: '<p><b>abc<br>[]<br></b></p>',
                 contentAfter: "<p><b>abc</b><br>[]<br></p>",
-            });
-            await testEditor({
-                // That selection is equivalent to </b>[]
-                contentBefore: "<p><b>abc[]</b></p>",
-                stepFunction: insertLineBreak,
-                // The second <br> is needed to make the first
-                // one visible.
-                contentAfter: "<p><b>abc<br>[]<br></b></p>",
             });
             await testEditor({
                 contentBefore: "<p><b>abc[] </b></p>",

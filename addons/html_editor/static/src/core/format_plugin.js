@@ -370,11 +370,21 @@ export class FormatPlugin extends Plugin {
                 }
             }
         }
+        for (const el of selectElements(root, "[data-oe-inline-line-break]")) {
+            const splitBr = el.innerHTML.split("<br>");
+            const splitTextContent = splitBr[splitBr.length - 1];
+            if (!allWhitespaceRegex.test(splitTextContent)) {
+                delete el.dataset.oeInlineLineBreak;
+                this.cleanZWS(el);
+            }
+        }
         this.mergeAdjacentInlines(root);
     }
 
     cleanForSave({ root, preserveSelection = false } = {}) {
-        for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+        for (const element of root.querySelectorAll(
+            "[data-oe-zws-empty-inline], [data-oe-inline-line-break]"
+        )) {
             let currentElement = element.parentElement;
             this.cleanElement(element, { preserveSelection });
             while (
@@ -395,6 +405,7 @@ export class FormatPlugin extends Plugin {
 
     cleanElement(element, { preserveSelection }) {
         delete element.dataset.oeZwsEmptyInline;
+        delete element.dataset.oeInlineLineBreak;
         if (!allWhitespaceRegex.test(element.textContent)) {
             // The element has some meaningful text. Remove the ZWS in it.
             this.cleanZWS(element, { preserveSelection });
