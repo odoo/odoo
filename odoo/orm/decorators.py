@@ -29,43 +29,9 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger('odoo.api')
 
 
-class Params(object):
-    def __init__(self, args, kwargs):
-        self.args = args
-        self.kwargs = kwargs
-
-    def __str__(self):
-        params = []
-        for arg in self.args:
-            params.append(repr(arg))
-        for item in sorted(self.kwargs.items()):
-            params.append("%s=%r" % item)
-        return ', '.join(params)
-
-
-class Meta(type):
-    """ Metaclass that automatically decorates traditional-style methods by
-        guessing their API. It also implements the inheritance of the
-        :func:`returns` decorators.
-    """
-
-    def __new__(meta, name, bases, attrs):
-        # dummy parent class to catch overridden methods decorated with 'returns'
-        parent = type.__new__(meta, name, bases, {})
-
-        for key, value in list(attrs.items()):
-            if not key.startswith('__') and callable(value):
-                # make the method inherit from decorators
-                value = propagate(getattr(parent, key, None), value)
-                attrs[key] = value
-
-        return type.__new__(meta, name, bases, attrs)
-
-
 # The following attributes are used, and reflected on wrapping methods:
 #  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
-#  - method._returns: set by @returns, specifies return model
 #  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
 #  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
@@ -77,17 +43,6 @@ class Meta(type):
 def attrsetter(attr, value):
     """ Return a function that sets ``attr`` on its argument and returns it. """
     return lambda method: setattr(method, attr, value) or method
-
-
-def propagate(method1, method2):
-    """ Propagate decorators from ``method1`` to ``method2``, and return the
-        resulting method.
-    """
-    if method1:
-        for attr in ('_returns',):
-            if hasattr(method1, attr) and not hasattr(method2, attr):
-                setattr(method2, attr, getattr(method1, attr))
-    return method2
 
 
 def constrains(*args: str) -> Callable[[T], T]:
@@ -287,57 +242,6 @@ def depends_context(*args):
     return attrsetter('_depends_context', args)
 
 
-def returns(model, downgrade=None, upgrade=None):
-    """ Return a decorator for methods that return instances of ``model``.
-
-        :param model: a model name, or ``'self'`` for the current model
-
-        :param downgrade: a function ``downgrade(self, value, *args, **kwargs)``
-            to convert the record-style ``value`` to a traditional-style output
-
-        :param upgrade: a function ``upgrade(self, value, *args, **kwargs)``
-            to convert the traditional-style ``value`` to a record-style output
-
-        The arguments ``self``, ``*args`` and ``**kwargs`` are the ones passed
-        to the method in the record-style.
-
-        The decorator adapts the method output to the api style: ``id``, ``ids`` or
-        ``False`` for the traditional style, and recordset for the record style::
-
-            @model
-            @returns('res.partner')
-            def find_partner(self, arg):
-                ...     # return some record
-
-            # output depends on call style: traditional vs record style
-            partner_id = model.find_partner(cr, uid, arg, context=context)
-
-            # recs = model.browse(cr, uid, ids, context)
-            partner_record = recs.find_partner(arg)
-
-        Note that the decorated method must satisfy that convention.
-
-        Those decorators are automatically *inherited*: a method that overrides
-        a decorated existing method will be decorated with the same
-        ``@returns(model)``.
-    """
-    return attrsetter('_returns', (model, downgrade, upgrade))
-
-
-def downgrade(method, value, self, args, kwargs):
-    """ Convert ``value`` returned by ``method`` on ``self`` to traditional style. """
-    spec = getattr(method, '_returns', None)
-    if not spec:
-        return value
-    _, convert, _ = spec
-    if convert and len(signature(convert).parameters) > 1:
-        return convert(self, value, *args, **kwargs)
-    elif convert:
-        return convert(value)
-    else:
-        return value.ids
-
-
 def autovacuum(method):
     """
     Decorate a method so that it is called by the daily vacuum cron job (model
@@ -425,34 +329,3 @@ def model_create_multi(method: CreateCallee[S]) -> CreateCaller[S]:
     wrapper = typing.cast('CreateCaller[S]', _model_create_multi(method))  # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
-
-
-def call_kw(model, name, args, kwargs):
-    """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(model, name, None)
-    if not method:
-        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
-    api = getattr(method, '_api', None)
-
-    if api:
-        # @api.model, @api.model_create -> no ids
-        recs = model
-    else:
-        ids, args = args[0], args[1:]
-        recs = model.browse(ids)
-
-    # altering kwargs is a cause of errors, for instance when retrying a request
-    # after a serialization error: the retry is done without context!
-    kwargs = dict(kwargs)
-    context = kwargs.pop('context', None) or {}
-    recs = recs.with_context(context)
-
-    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = getattr(recs, name)(*args, **kwargs)
-    if api == "model_create":
-        # special case for method 'create'
-        result = result.id if isinstance(args[0], Mapping) else result.ids
-    else:
-        result = downgrade(method, result, recs, args, kwargs)
-
-    return result

@@ -198,7 +198,6 @@ class IrUiMenu(models.Model):
         return new_menus
 
     @api.model
-    @api.returns('self')
     def get_user_roots(self):
         """ Return all root menu ids visible for the user.
 

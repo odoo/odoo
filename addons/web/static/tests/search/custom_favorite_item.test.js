@@ -107,7 +107,7 @@ test("save filter", async () => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.context).toEqual({ group_by: [], someKey: "foo" });
-        return 7; // fake serverSideId
+        return [7]; // fake serverSideId
     });
 
     const component = await mountWithSearch(TestComponent, {
@@ -134,7 +134,7 @@ test("dynamic filters are saved dynamic", async () => {
         expect(irFilter.domain).toBe(
             `[("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d"))]`
         );
-        return 7; // fake serverSideId
+        return [7]; // fake serverSideId
     });
 
     await mountWithSearch(SearchBar, {
@@ -163,7 +163,7 @@ test("save filters created via autocompletion works", async () => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.domain).toBe(`[("foo", "ilike", "a")]`);
-        return 7; // fake serverSideId
+        return [7]; // fake serverSideId
     });
 
     await mountWithSearch(SearchBar, {
@@ -209,7 +209,7 @@ test("favorites have unique descriptions (the submenus of the favorite menu are 
             embedded_parent_res_id: false,
             user_id: 7,
         });
-        return 2; // fake serverSideId
+        return [2]; // fake serverSideId
     });
 
     await mountWithSearch(SearchBar, {
@@ -257,7 +257,7 @@ test("undefined name for filter shows notification and not error", async () => {
         },
     });
 
-    onRpc("create_or_replace", () => 7); // fake serverSideId
+    onRpc("create_or_replace", () => [7]); // fake serverSideId
 
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",

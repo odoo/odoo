@@ -603,7 +603,6 @@ class MailTemplate(models.Model):
             email_layout_xmlid=email_layout_xmlid
         )[0].id  # TDE CLEANME: return mail + api.returns ?
 
-    @api.returns('self', lambda value: value.ids)
     def send_mail_batch(self, res_ids, force_send=False, raise_exception=False, email_values=None,
                   email_layout_xmlid=False):
         """ Generates new mail.mails. Batch version of 'send_mail'.'
