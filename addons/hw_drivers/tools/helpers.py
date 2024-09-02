@@ -411,22 +411,43 @@ def download_iot_handlers(auto=True):
     Get the drivers from the configured Odoo server
     """
     server = get_odoo_server_url()
-    if server:
-        urllib3.disable_warnings()
-        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        server = server + '/iot/get_handlers'
-        try:
-            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
-            if resp.data:
-                delete_iot_handlers()
-                with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
-                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                    zip_file.extractall(path)
-        except Exception as e:
-            _logger.error('Could not reach configured server')
-            _logger.error('A error encountered : %s ' % e)
+    if not server:
+        _logger.info('Ignoring the download of IoT handlers as no Odoo connected database')
+        return
+    handler_code_url = server + '/iot/get_handlers_code'
+
+    handlers_etag_config_name = 'handlers_etag'
+    try:
+        previous_handler_etag = get_conf(handlers_etag_config_name)
+        request_headers = None
+        if auto and previous_handler_etag:
+            request_headers = {'If-None-Match': previous_handler_etag}
+
+        handlers_code_reponse = requests.post(
+            handler_code_url,
+            {'mac': get_mac_address(), 'auto': auto},
+            headers=request_headers,
+            timeout=8
+        )
+        handlers_code_reponse.raise_for_status()
+        if handlers_code_reponse.status_code == 304:
+            _logger.info('No new IoT handlers available. Existing handlers code will be used.')
+            return
+
+        # Update the ETag in the config if it has changed
+        current_handlers_etag = handlers_code_reponse.headers.get('ETag')
+        if previous_handler_etag != current_handlers_etag:
+            update_conf({handlers_etag_config_name: current_handlers_etag})
+
+        # Update IoT handlers code
+        _logger.info('Updating IoT handlers')
+        delete_iot_handlers()
+        path = path_file(str(Path().joinpath('odoo', 'addons', 'hw_drivers', 'iot_handlers'))) # TODO: equivalent to Path('odoo', 'addons', 'hw_drivers', 'iot_handlers') ?
+        with writable(), zipfile.ZipFile(io.BytesIO(handlers_code_reponse.content)) as handlers_zip_file:
+            handlers_zip_file.extractall(path)
+
+    except Exception:
+        _logger.exception("Failed to download IoT handlers")
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
