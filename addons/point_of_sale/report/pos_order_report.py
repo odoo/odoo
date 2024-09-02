@@ -23,6 +23,7 @@ class PosOrderReport(models.Model):
     user_id = fields.Many2one('res.users', string='User', readonly=True)
     price_total = fields.Float(string='Total Price', readonly=True)
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
+    price_subtotal_excl = fields.Float(string='Subtotal w/o Tax', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)
     average_price = fields.Float(string='Average Price', readonly=True, aggregator="avg")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
@@ -31,6 +32,7 @@ class PosOrderReport(models.Model):
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     delay_validation = fields.Integer(string='Delay Validation', readonly=True)
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
+    pos_categ_id = fields.Many2one('pos.category', string='Point of Sale Category', readonly=True)
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
@@ -47,6 +49,7 @@ class PosOrderReport(models.Model):
                 SUM(l.qty) AS product_qty,
                 SUM(l.qty * l.price_unit / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS price_sub_total,
                 SUM(ROUND((l.price_subtotal_incl) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places)) AS price_total,
+                SUM(ROUND((l.price_subtotal) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places)) AS price_subtotal_excl,
                 SUM((l.qty * l.price_unit) * (l.discount / 100) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS total_discount,
                 CASE
                     WHEN SUM(l.qty * u.factor) = 0 THEN NULL
@@ -67,7 +70,8 @@ class PosOrderReport(models.Model):
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
                 SUM(l.price_subtotal - COALESCE(l.total_cost,0) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin,
-                pm.payment_method_id AS payment_method_id
+                pm.payment_method_id AS payment_method_id,
+                pc.id AS pos_categ_id
         """
 
     def _from(self):
@@ -82,6 +86,8 @@ class PosOrderReport(models.Model):
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
                 LEFT JOIN pos_payment pm ON (pm.pos_order_id=s.id)
                 LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
+                LEFT JOIN pos_category_product_template_rel pcpt ON (pt.id = pcpt.product_template_id)
+                LEFT JOIN pos_category pc ON (pcpt.pos_category_id = pc.id)
         """
 
     def _group_by(self):
@@ -95,7 +101,8 @@ class PosOrderReport(models.Model):
                 p.product_tmpl_id,
                 ps.config_id,
                 pm.payment_method_id,
-                ppm.id
+                ppm.id,
+                pc.id
         """
 
     def init(self):
