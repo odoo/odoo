@@ -177,11 +177,13 @@ def exec_pg_environ():
         env['PGPASSWORD'] = odoo.tools.config['db_password']
     return env
 
-#----------------------------------------------------------
-# File paths
-#----------------------------------------------------------
 
-def file_path(file_path, filter_ext=('',), env=None):
+# ----------------------------------------------------------
+# File paths
+# ----------------------------------------------------------
+
+
+def file_path(file_path: str, filter_ext: tuple[str, ...] = ('',), env: Environment | None = None) -> str:
     """Verify that a file exists under a known `addons_path` directory and return its full path.
 
     Examples::
@@ -199,9 +201,8 @@ def file_path(file_path, filter_ext=('',), env=None):
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     root_path = os.path.abspath(config['root_path'])
-    addons_paths = [*odoo.addons.__path__, root_path]
-    if env and hasattr(env.transaction, '__file_open_tmp_paths'):
-        addons_paths += env.transaction.__file_open_tmp_paths
+    temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else ()
+    addons_paths = [*odoo.addons.__path__, root_path, *temporary_paths]
     is_abs = os.path.isabs(file_path)
     normalized_path = os.path.normpath(os.path.normcase(file_path))
 
@@ -223,7 +224,8 @@ def file_path(file_path, filter_ext=('',), env=None):
 
     raise FileNotFoundError("File not found: " + file_path)
 
-def file_open(name, mode="r", filter_ext=None, env=None):
+
+def file_open(name: str, mode: str = "r", filter_ext: tuple[str, ...] = (), env: Environment | None = None):
     """Open a file from within the addons_path directories, as an absolute or relative path.
 
     Examples::
@@ -257,7 +259,7 @@ def file_open(name, mode="r", filter_ext=None, env=None):
 
 
 @contextmanager
-def file_open_temporary_directory(env):
+def file_open_temporary_directory(env: Environment):
     """Create and return a temporary directory added to the directories `file_open` is allowed to read from.
 
     `file_open` will be allowed to open files within the temporary directory
@@ -276,13 +278,13 @@ def file_open_temporary_directory(env):
     :param env: environment for which the temporary directory is created.
     :return: the absolute path to the created temporary directory
     """
-    assert not hasattr(env.transaction, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
+    assert not env.transaction._Transaction__file_open_tmp_paths, 'Reentrancy is not implemented for this method'
     with tempfile.TemporaryDirectory() as module_dir:
         try:
-            env.transaction.__file_open_tmp_paths = (module_dir,)
+            env.transaction._Transaction__file_open_tmp_paths = (module_dir,)
             yield module_dir
         finally:
-            del env.transaction.__file_open_tmp_paths
+            env.transaction._Transaction__file_open_tmp_paths = ()
 
 
 #----------------------------------------------------------
