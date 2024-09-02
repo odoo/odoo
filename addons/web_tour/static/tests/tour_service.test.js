@@ -12,7 +12,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Component, useState, xml } from "@odoo/owl";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -738,13 +738,13 @@ test("scrolling to next step should update the pointer's height", async (assert)
         },
     });
 
-    const stepContent = "Click this pretty button to increment this magnificent counter !";
+    const content = "Click this pretty button to increment this magnificent counter !";
     registry.category("web_tour.tours").add("tour_de_france", {
         sequence: 10,
         steps: () => [
             {
                 trigger: "button.inc",
-                content: stepContent,
+                content,
                 run: "click",
             },
         ],
@@ -764,46 +764,47 @@ test("scrolling to next step should update the pointer's height", async (assert)
     await mountWithCleanup(Root);
     getService("tour_service").startTour("tour_de_france", { mode: "manual" });
     await animationFrame();
-    const pointer = queryFirst(".o_tour_pointer");
-    expect(pointer).toHaveCount(1);
-    expect(pointer.textContent).toBe(stepContent);
-    expect(pointer).not.toHaveClass("o_open");
-    expect(pointer.style.height).toBe("28px");
-    expect(pointer.style.width).toBe("28px");
+    expect(".o_tour_pointer").toHaveCount(1);
+    expect(".o_tour_pointer").not.toHaveClass("o_open");
+    const firstOpenHeight = queryFirst(".o_tour_pointer").style.height;
+    const firstOpenWidth = queryFirst(".o_tour_pointer").style.width;
+    expect(firstOpenHeight).toBe("28px");
+    expect(firstOpenWidth).toBe("28px");
 
     await contains("button.inc").hover();
-    const firstOpenHeight = pointer.style.height;
-    const firstOpenWidth = pointer.style.width;
-
-    expect(pointer).toHaveClass("o_open");
+    expect(".o_tour_pointer").toHaveText(content);
+    expect(".o_tour_pointer").toHaveClass("o_open");
     await contains(".interval input").hover();
-
     expect(".o_tour_pointer").not.toHaveClass("o_open");
 
     await contains(".scrollable-parent").scroll({ top: 1000 });
-    await advanceTime(1000);
+    await runAllTimers();
     await animationFrame(); // awaits the intersection observer to update after the scroll
     // now the scroller pointer should be shown
-    expect(pointer).toHaveCount(1);
-    expect(pointer.textContent).toBe("Scroll up to reach the next step.");
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o_tour_pointer").hover();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveText("Scroll up to reach the next step.");
+    await contains(".o_tour_pointer").click();
 
-    await contains(".scrollable-parent").scroll({ top: 0 });
-    await advanceTime(1000);
+    await runAllTimers();
     // awaits the intersection observer to update after the scroll
     await animationFrame();
     // now the true step pointer should be shown again
-    expect(pointer).toHaveCount(1);
-    expect(pointer.textContent).toBe(stepContent);
+    expect(".o_tour_pointer").toHaveCount(1);
+    expect(".o_tour_pointer").not.toHaveClass("o_open");
 
-    await contains(".o_tour_pointer").hover();
-    await animationFrame(); // awaits the intersection observer to update after the scroll
-    expect(pointer).toHaveClass("o_open");
-    const secondOpenHeight = pointer.style.height;
-    const secondOpenWidth = pointer.style.width;
+    await contains("button.inc").hover();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveClass("o_open");
+    expect(".o_tour_pointer").toHaveText(content);
+    await contains(".interval input").hover();
+    const secondOpenHeight = queryFirst(".o_tour_pointer").style.height;
+    const secondOpenWidth = queryFirst(".o_tour_pointer").style.width;
     expect(secondOpenHeight).toEqual(firstOpenHeight);
     expect(secondOpenWidth).toEqual(firstOpenWidth);
 
-    click("button.inc");
+    await contains("button.inc").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
