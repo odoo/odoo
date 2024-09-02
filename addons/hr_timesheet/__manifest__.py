@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
-    'name': 'Task Logs',
+    'name': 'Time Tracking',
     'version': '1.0',
     'category': 'Services/Timesheets',
     'sequence': 23,

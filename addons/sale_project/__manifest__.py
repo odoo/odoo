@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': "Sales - Project",
-    'summary': "Task Generation from Sales Orders",
+    'name': 'Project Auto-Generation on Sales Orders',
+    'summary': 'Automatically generate a project and/or a task upon confirmation of sales orders.',
     'description': """
 Allows to create task from your sales order
 =============================================
 This module allows to generate a project/task from sales orders.
 """,
-    'category': 'Hidden',
+    'category': 'Services/Project',
     'depends': ['sale_management', 'sale_service', 'project_account'],
     'auto_install': ['sale_management', 'project_account'],
     'data': [

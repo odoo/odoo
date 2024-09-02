@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': "Project - Account",
-    'summary': "project profitability items computation",
+    'name': 'Other Costs and Revenues in Project Updates',
+    'summary': 'Get insights into additional project costs and revenues affecting profitability in the project update view.',
     'description': """
 Allows the computation of some section for the project profitability
 ==================================================================================================
 This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.
 """,
-    'category': 'Hidden',
+    'category': 'Services/Project',
     'depends': ['account', 'project'],
     'auto_install': True,
     'license': 'LGPL-3',

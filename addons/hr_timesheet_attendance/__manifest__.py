@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "Timesheets/attendances reporting",
+    'name': 'Timesheets and Attendance Analysis',
+    'summary': 'Compare attendance hours with hours recorded in timesheets.',
     'description': """
-    Module linking the attendance module to the timesheet app.
+    Compare attendance hours with hours recorded in timesheets.
     """,
-    'category': 'Hidden',
+    'category': 'Services/Timesheets',
     'version': '1.1',
 
     'depends': ['hr_timesheet', 'hr_attendance'],
