@@ -1039,12 +1039,6 @@ class expression(object):
                     ))
 
                 else:
-                    if operator in ('ilike', 'not ilike'):
-                        right = f'%{right}%'
-                        unaccent = self._unaccent
-                    else:
-                        unaccent = lambda x: x
-
                     sql_field = model._field_to_sql(alias, field.name, self.query)
 
                     if operator in ('in', 'not in'):
@@ -1054,10 +1048,15 @@ class expression(object):
                         sql_right = SQL("%s", json.dumps(right))
                         push_result(SQL(
                             "(%s (%s) %s (%s))",
-                            sql_not, unaccent(sql_left), sql_operator, unaccent(sql_right),
+                            sql_not, sql_left, sql_operator, sql_right,
                         ))
 
                     elif isinstance(right, str):
+                        if operator in ('ilike', 'not ilike'):
+                            right = f'%{right}%'
+                            unaccent = self._unaccent
+                        else:
+                            unaccent = lambda x: x  # noqa: E731
                         sql_left = SQL("%s ->> %s", sql_field, property_name)  # JSONified value
                         sql_operator = SQL_OPERATORS[operator]
                         sql_right = SQL("%s", right)
@@ -1072,7 +1071,7 @@ class expression(object):
                         sql_right = SQL("%s", json.dumps(right))
                         push_result(SQL(
                             "((%s) %s (%s))",
-                            unaccent(sql_left), sql_operator, unaccent(sql_right),
+                            sql_left, sql_operator, sql_right,
                         ))
             elif field.type in ('datetime', 'date') and len(path) == 2:
                 if path[1] not in READ_GROUP_NUMBER_GRANULARITY:
