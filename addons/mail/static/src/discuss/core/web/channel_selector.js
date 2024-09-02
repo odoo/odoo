@@ -155,7 +155,7 @@ export class ChannelSelector extends Component {
         if (this.props.category.id === "channels") {
             if (option.channelId === "__create__") {
                 this.env.services.orm
-                    .call("discuss.channel", "channel_create", [
+                    .call("discuss.channel", "channel_create_store", [
                         option.label,
                         this.store.internalUserGroupId,
                     ])

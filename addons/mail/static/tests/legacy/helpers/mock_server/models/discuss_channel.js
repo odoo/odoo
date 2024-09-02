@@ -53,7 +53,7 @@ patch(MockServer.prototype, {
             const ids = args.args[0];
             return this._mockDiscussChannelChannelFetched(ids);
         }
-        if (args.model === "discuss.channel" && args.method === "channel_create") {
+        if (args.model === "discuss.channel" && args.method === "channel_create_store") {
             const name = args.args[0];
             const groupId = args.args[1];
             return this._mockDiscussChannelChannelCreate(name, groupId);
@@ -65,7 +65,7 @@ patch(MockServer.prototype, {
                 args.kwargs.pinned
             );
         }
-        if (args.model === "discuss.channel" && args.method === "channel_get") {
+        if (args.model === "discuss.channel" && args.method === "channel_get_store") {
             const partners_to = args.args[0] || args.kwargs.partners_to;
             const pin =
                 args.args[1] !== undefined
@@ -119,7 +119,7 @@ patch(MockServer.prototype, {
             const name = args.args[1] || args.kwargs.name;
             return this._mockDiscussChannelChannelSetCustomName(ids, name);
         }
-        if (args.model === "discuss.channel" && args.method === "create_group") {
+        if (args.model === "discuss.channel" && args.method === "create_group_store") {
             const partners_to = args.args[0] || args.kwargs.partners_to;
             return this._mockDiscussChannelCreateGroup(partners_to);
         }
@@ -463,7 +463,7 @@ patch(MockServer.prototype, {
         }
     },
     /**
-     * Simulates 'channel_create' on 'discuss.channel'.
+     * Simulates 'channel_create_store' on 'discuss.channel'.
      *
      * @private
      * @param {string} name
@@ -492,7 +492,7 @@ patch(MockServer.prototype, {
         return this._mockDiscussChannelChannelInfo([id])[0];
     },
     /**
-     * Simulates 'channel_get' on 'discuss.channel'.
+     * Simulates 'channel_get_store' on 'discuss.channel'.
      *
      * @private
      * @param {integer[]} [partners_to=[]]
@@ -758,7 +758,7 @@ patch(MockServer.prototype, {
         });
     },
     /**
-     * Simulates the `create_group` on `discuss.channel`.
+     * Simulates the `create_group_store` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} partners_to

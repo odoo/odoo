@@ -262,7 +262,6 @@ class Company(models.Model):
         return expression.AND([domain, constraint])
 
     @api.model
-    @api.returns('self', lambda value: value.id)
     def _company_default_get(self, object=False, field=False):
         """ Returns the user's company
             - Deprecated

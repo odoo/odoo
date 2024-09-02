@@ -129,7 +129,6 @@ class IrUiMenu(models.Model):
 
         return set(visible.ids)
 
-    @api.returns('self')
     def _filter_visible_menus(self):
         """ Filter `self` to only keep the menu items that should be visible in
             the menu hierarchy of the current user.
@@ -210,7 +209,6 @@ class IrUiMenu(models.Model):
         return new_menus
 
     @api.model
-    @api.returns('self')
     def get_user_roots(self):
         """ Return all root menu ids visible for the user.
 
