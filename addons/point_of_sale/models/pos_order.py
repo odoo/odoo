@@ -913,7 +913,6 @@ class PosOrder(models.Model):
                     'currency_id': self.currency_id.id,
                     'amount_currency': payment_id.amount,
                     'balance': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
-                    'blocked': False,  # Payment related entries should not be excluded from follow-ups
                 })
 
         return aml_vals_list_per_nature
