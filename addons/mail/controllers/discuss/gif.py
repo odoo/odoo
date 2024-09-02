@@ -15,7 +15,7 @@ class DiscussGifController(Controller):
         return response
 
     @route("/discuss/gif/search", type="json", auth="user")
-    def search(self, search_term, locale="en", country="US", position=None):
+    def search(self, search_term, locale="en", country="US", position=None, readonly=True):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
@@ -35,7 +35,7 @@ class DiscussGifController(Controller):
         if response:
             return response.json()
 
-    @route("/discuss/gif/categories", type="json", auth="user")
+    @route("/discuss/gif/categories", type="json", auth="user", readonly=True)
     def categories(self, locale="en", country="US"):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
@@ -72,7 +72,7 @@ class DiscussGifController(Controller):
         if response:
             return response.json()["results"]
 
-    @route("/discuss/gif/favorites", type="json", auth="user")
+    @route("/discuss/gif/favorites", type="json", auth="user", readonly=True)
     def get_favorites(self, offset=0):
         tenor_gif_ids = request.env["discuss.gif.favorite"].search(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset

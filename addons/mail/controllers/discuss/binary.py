@@ -10,7 +10,11 @@ from odoo.addons.web.controllers.binary import Binary
 
 class BinaryController(Binary):
     @http.route(
-        "/discuss/channel/<int:channel_id>/attachment/<int:attachment_id>", methods=["GET"], type="http", auth="public"
+        "/discuss/channel/<int:channel_id>/attachment/<int:attachment_id>",
+        methods=["GET"],
+        type="http",
+        auth="public",
+        readonly=True,
     )
     @add_guest_to_context
     def discuss_channel_attachment(self, channel_id, attachment_id, download=None, **kwargs):
@@ -36,6 +40,7 @@ class BinaryController(Binary):
         methods=["GET"],
         type="http",
         auth="public",
+        readonly=True,
     )
     @add_guest_to_context
     def fetch_image(self, channel_id, attachment_id, width=0, height=0, **kwargs):
