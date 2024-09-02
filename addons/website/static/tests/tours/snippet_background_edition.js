@@ -71,11 +71,6 @@ function checkAndUpdateBackgroundColor({
 }) {
     const steps = [
         changeBackgroundColor(),
-        {
-            content: "Switch back to theme tab from custom tab",
-            trigger: ".colorpicker button[data-target='color-combinations']", // Switch back to theme tab
-            run: "click",
-        },
     ];
 
     addCheck(steps, checkCC, checkNoCC, 'cc', true);

@@ -119,13 +119,7 @@ export class ColorPalette extends Component {
         });
         onWillUpdateProps((newProps) => {
             this._updateColorToColornames();
-            // check if the color is selected from theme tab or common grays.
-            // if true, then select the default tab.
-            const selectedSolidColor = ['theme', 'common', 'common_grays'].every(picker =>
-                this.pickers[picker]?.querySelector('button.selected')
-            );
-
-            if (this.props.resetTabCount !== newProps.resetTabCount && selectedSolidColor) {
+            if (this.props.resetTabCount !== newProps.resetTabCount) {
                 this._selectDefaultTab();
             }
             if (this.props.selectedCC !== newProps.selectedCC || this.props.selectedColor !== newProps.selectedColor) {
@@ -334,15 +328,6 @@ export class ColorPalette extends Component {
                 defaultColor = 'rgba(0, 0, 0, ' + this.props.opacity + ')';
             }
             this.state.customDefaultColor = defaultColor;
-        }
-        // check if the color is not selected from theme tab or common grays.
-        // if true, then switch tab from solid or theme to custom-colors tab.
-        const notSelectedSolidColor = ['theme', 'common', 'common_grays'].every(picker =>
-            !this.pickers[picker]?.querySelector('button.selected')
-        );
-
-        if (notSelectedSolidColor) {
-            this._selectTabFromButton(this.el.querySelectorAll('button')[1]);
         }
     }
     //--------------------------------------------------------------------------
