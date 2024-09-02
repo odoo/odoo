@@ -1875,7 +1875,7 @@ class Lead(models.Model):
 
         for record in self.filtered('email_normalized'):
             values = email_normalized_to_values.setdefault(record.email_normalized, {})
-            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0]
+            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0] or record.email_from
             # Note that we don't attempt to create the parent company even if partner name is set
             values.update(record._prepare_customer_values(contact_name, is_company=False))
             values['company_name'] = record.partner_name

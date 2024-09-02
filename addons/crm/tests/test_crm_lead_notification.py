@@ -174,6 +174,7 @@ class NewLeadNotification(TestCrmCommon):
             (False, 'Test', 'test_default_create@example.com'),
             ('Delivery Boy company', 'Test With Company', 'default_create_with_partner@example.com'),
             ('Delivery Boy company', '', 'default_create_with_partner_no_name@example.com'),
+            ('', '', 'lenny.bar@gmail.com'),
         ]:
             formatted_email = formataddr((name, email)) if name else formataddr((partner_name, email))
             with self.subTest(partner_name=partner_name):
@@ -197,7 +198,7 @@ class NewLeadNotification(TestCrmCommon):
                 self.assertEqual(create_vals, lead1._get_customer_information().get(email, {}))
                 for field, value in lead_details_for_contact.items():
                     self.assertEqual(create_vals.get(field), value)
-                expected_name = partner_name if partner_name and not name else name
+                expected_name = name or partner_name or email
                 self.assertEqual(create_vals['name'], expected_name)
                 self.assertEqual(create_vals['comment'], description)  # description -> comment
                 # Parent company not created even if partner_name is set
