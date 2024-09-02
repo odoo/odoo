@@ -2618,7 +2618,7 @@ test(`ordered target, sort attribute in context`, async () => {
     onRpc("create_or_replace", ({ args }) => {
         const favorite = args[0];
         expect.step(favorite.sort);
-        return 7;
+        return [7];
     });
 
     await mountView({

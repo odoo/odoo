@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, Command
+from odoo import models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tools import mute_logger, unique, lazy
 from odoo.tools.constants import PREFETCH_MAX
@@ -710,14 +710,3 @@ class TestAPI(SavepointCaseWithUserDemo):
             # group), so should be nothing here
             with self.assertQueries([]):
                 _ = byfn['host'].name
-
-
-class TestExternalAPI(SavepointCaseWithUserDemo):
-
-    def test_call_kw(self):
-        """kwargs is not modified by the execution of the call"""
-        partner = self.env['res.partner'].create({'name': 'MyPartner1'})
-        args = (partner.ids, ['name'])
-        kwargs = {'context': {'test': True}}
-        api.call_kw(self.env['res.partner'], 'read', args, kwargs)
-        self.assertEqual(kwargs, {'context': {'test': True}})

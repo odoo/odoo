@@ -792,7 +792,6 @@ class SlideChannel(models.Model):
         to_activate.with_context(active_test=False).slide_ids.action_unarchive()
         return super(SlideChannel, to_activate).action_unarchive()
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a

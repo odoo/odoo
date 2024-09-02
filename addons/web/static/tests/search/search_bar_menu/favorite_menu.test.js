@@ -246,7 +246,7 @@ test("shared favorites are grouped under a dropdown if there are more than 10", 
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.domain).toBe(`[]`);
-        return 10; // fake serverSideId
+        return [10]; // fake serverSideId
     });
     const irFilters = [];
     for (let i = 1; i < 11; i++) {

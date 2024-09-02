@@ -753,7 +753,6 @@ class ForumPost(models.Model):
 
         return groups
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post

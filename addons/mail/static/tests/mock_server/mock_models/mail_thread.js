@@ -157,7 +157,7 @@ export class MailThread extends models.ServerModel {
             });
         }
         MailThread._notify_thread.call(this, ids, messageId, kwargs.context?.temporary_id);
-        return messageId;
+        return [messageId];
     }
 
     /**

@@ -80,7 +80,6 @@ class MaintenanceEquipment(models.Model):
 class MaintenanceRequest(models.Model):
     _inherit = 'maintenance.request'
 
-    @api.returns('self')
     def _default_employee_get(self):
         return self.env.user.employee_id
 

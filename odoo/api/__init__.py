@@ -4,7 +4,6 @@
 from odoo.orm.identifiers import NewId
 from odoo.orm.decorators import (
     autovacuum,
-    call_kw,
     constrains,
     depends,
     depends_context,
@@ -13,7 +12,6 @@ from odoo.orm.decorators import (
     onchange,
     ondelete,
     readonly,
-    returns,
 )
 from odoo.orm.environments import Environment
 

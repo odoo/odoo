@@ -715,7 +715,6 @@ class SlideSlide(models.Model):
     # Mail/Rating
     # ---------------------------------------------------------
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         self.ensure_one()
         if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma

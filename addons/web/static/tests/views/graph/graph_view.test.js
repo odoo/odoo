@@ -1320,7 +1320,7 @@ test("save params succeeds", async () => {
     let serverId = 1;
     onRpc("create_or_replace", ({ args }) => {
         expect(args[0].context).toEqual(expectedContexts.shift());
-        return serverId++;
+        return [serverId++];
     });
 
     await mountView({
