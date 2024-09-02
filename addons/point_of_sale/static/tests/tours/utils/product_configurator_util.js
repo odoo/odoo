@@ -40,7 +40,7 @@ export function numberRadioOptions(number) {
         {
             trigger: `.attribute-name-cell`,
             run: () => {
-                const radio_options = $(".attribute-name-cell").length;
+                const radio_options = document.querySelectorAll(".attribute-name-cell").length;
                 if (radio_options !== number) {
                     throw new Error(`Expected ${number} radio options, got ${radio_options}`);
                 }
