@@ -50,7 +50,8 @@ class IrActionsReport(models.Model):
         return collected_streams
 
     def _is_invoice_report(self, report_ref):
-        return self._get_report(report_ref).is_invoice_report
+        report = self._get_report(report_ref)
+        return report.is_invoice_report or report.model == 'account.move'
 
     def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         # Check for reports only available for invoices.
