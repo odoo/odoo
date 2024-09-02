@@ -7,7 +7,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "@mail/core/web/recipient_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useDropzone } from "@mail/core/common/dropzone_hook";
+import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 
 import { markup, useEffect } from "@odoo/owl";
