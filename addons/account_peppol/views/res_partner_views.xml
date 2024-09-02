@@ -45,19 +45,6 @@
         </field>
     </record>
 
-    <record id="res_partner_view_tree" model="ir.ui.view">
-        <field name="name">res.partner.list.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='ubl_cii_format']" position="after">
-                <field name="peppol_eas" string="Peppol EAS" optional="hide"/>
-                <field name="peppol_endpoint" string="Peppol Endpoint" optional="hide"/>
-                <field name="peppol_verification_state" string="Peppol Validity" optional="hide"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="partner_action_verify_peppol" model="ir.actions.server">
         <field name="name">Verify Peppol</field>
         <field name="model_id" ref="account_peppol.model_res_partner"/>

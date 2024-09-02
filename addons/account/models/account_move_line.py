@@ -419,12 +419,6 @@ class AccountMoveLine(models.Model):
     )
 
     # === Misc Information === #
-    blocked = fields.Boolean(
-        string='No Follow-up',
-        compute='_compute_blocked', store=True, readonly=False, precompute=True,
-        help="You can check this box to mark this journal item as a litigation with the "
-             "associated partner",
-    )
     is_refund = fields.Boolean(compute='_compute_is_refund')
 
     _sql_constraints = [
@@ -471,11 +465,6 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
-
-    @api.depends('journal_id.type')
-    def _compute_blocked(self):
-        for line in self:
-            line.blocked = line.journal_id and line.journal_id.type == 'general'
 
     @api.depends('move_id')
     def _compute_display_type(self):
