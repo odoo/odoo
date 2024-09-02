@@ -13,6 +13,11 @@ import { user } from "@web/core/user";
 export class RatingPopupComposer extends Interaction {
     static selector = ".o_rating_popup_composer";
 
+    assetLibs = [
+        "portal.assets_widget_xml",
+        "portal_rating.assets_widget_xml",
+    ];
+
     setup() {
         const options = this.el.dataset;
         this.rating_avg = Math.round(options["rating_avg"] * 100) / 100 || 0.0;

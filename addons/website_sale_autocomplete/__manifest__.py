@@ -23,6 +23,9 @@
         'web.assets_tests': [
             'website_sale_autocomplete/static/tests/**/*.js'
         ],
+        'website_sale_autocomplete.assets_widget_xml': [
+            # 'website_sale_autocomplete/static/src/xml/autocomplete.xml', interaction
+        ],
     },
     'auto_install': True,
     'installable': True,

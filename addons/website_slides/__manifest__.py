@@ -93,13 +93,21 @@ Featuring
             'website_slides/static/src/js/slides_course_quiz.js',
             'website_slides/static/src/js/slides_course_quiz_question_form.js',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
-            'website_slides/static/src/xml/website_slides_fullscreen.xml',
+            # 'website_slides/static/src/xml/website_slides_fullscreen.xml', widget
             'website_slides/static/src/xml/slide_management.xml',
-            'website_slides/static/src/xml/slide_course_join.xml',
+            # 'website_slides/static/src/xml/slide_course_join.xml', widget
             'website_slides/static/src/xml/slide_course_prerequisite.xml',
-            'website_slides/static/src/xml/slide_quiz_create.xml',
-            'website_slides/static/src/xml/slide_quiz.xml',
+            # 'website_slides/static/src/xml/slide_quiz_create.xml', widget
+            # 'website_slides/static/src/xml/slide_quiz.xml', widget
             'website_slides/static/src/js/public/**/*',
+        ],
+        'website_slides.assets_widget_xml': [
+            # 'website_slides/static/src/xml/slide_course_prerequisite.xml', interaction
+            'website_slides/static/src/xml/slide_quiz.xml',
+            'website_slides/static/src/xml/slide_quiz_create.xml',
+            'website_slides/static/src/xml/website_slides_sidebar.xml', # interaction and widget
+            'website_slides/static/src/xml/website_slides_fullscreen.xml',
+            'website_slides/static/src/xml/slide_course_join.xml',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

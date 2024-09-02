@@ -38,6 +38,10 @@ export class PortalSecurity extends Interaction {
         },
     };
 
+    assetLibs = [
+        "portal.assets_widget_xml",
+    ];
+
     setup() {
         // Show the "deactivate your account" modal if needed
         const modalEl = document.querySelector(".modal.show#portal_deactivate_account_modal");

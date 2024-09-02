@@ -18,6 +18,10 @@ This module allow your customer to choose a Point Relais® and use it as shippin
     'assets': {
         'web.assets_frontend': [
             'website_sale_mondialrelay/static/src/**/*',
+            ('remove', 'website_sale_mondialrelay/static/src/xml/website_sale_mondialrelay.xml'),
+        ],
+        'website_sale_mondialrelay.assets_widget_xml': [
+            'website_sale_mondialrelay/static/src/xml/website_sale_mondialrelay.xml',
         ],
     },
     'author': 'Odoo S.A.',
