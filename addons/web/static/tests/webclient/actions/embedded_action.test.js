@@ -323,7 +323,7 @@ test("a view coming from a embedded can be saved in the embedded actions", async
         expect(args[0].domain).toBe(`[["name", "=", "Applejack"]]`);
         expect(args[0].embedded_action_id).toBe(4);
         expect(args[0].user_id).toBe(false);
-        return 5; // Fake new filter id
+        return [5]; // Fake new filter id
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);

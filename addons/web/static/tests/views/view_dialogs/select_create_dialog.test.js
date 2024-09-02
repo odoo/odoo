@@ -563,7 +563,7 @@ test("SelectCreateDialog: save current search on desktop", async () => {
             expect(irFilter.context).toEqual(expectedContext, {
                 message: "should save the correct context",
             });
-            return 7; // fake serverSideId
+            return [7]; // fake serverSideId
         }
     });
 

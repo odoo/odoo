@@ -125,7 +125,6 @@ class MailThread(models.AbstractModel):
                 }
         return result
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *args, body='', message_type='notification', **kwargs):
         # When posting an 'SMS' `message_type`, make sure that the body is used as-is in the sms,
         # and reformat the message body for the notification (mainly making URLs clickable).

@@ -145,7 +145,6 @@ class IrFilters(models.Model):
         raise UserError(self.env._("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default", model=vals.get('model_id')))
 
     @api.model
-    @api.returns('self', lambda value: value.id)
     def create_or_replace(self, vals):
         action_id = vals.get('action_id')
         embedded_action_id = vals.get('embedded_action_id')

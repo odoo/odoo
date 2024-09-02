@@ -3,7 +3,7 @@
 import datetime
 import markupsafe
 
-from odoo import _, api, fields, models, tools
+from odoo import _, fields, models, tools
 
 
 class MailThread(models.AbstractModel):
@@ -161,7 +161,6 @@ class MailThread(models.AbstractModel):
                 )
         return rating
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         rating_id = kwargs.pop('rating_id', False)
         rating_value = kwargs.pop('rating_value', False)

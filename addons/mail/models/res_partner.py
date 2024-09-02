@@ -86,7 +86,6 @@ class ResPartner(models.Model):
         return key + (self._context.get('force_email'),)
 
     @api.model
-    @api.returns('self', lambda value: value.id)
     def find_or_create(self, email, assert_valid_email=False):
         """ Override to use the email_normalized field. """
         if not email:

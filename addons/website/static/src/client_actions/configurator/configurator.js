@@ -738,7 +738,7 @@ export class Configurator extends Component {
         useSubEnv({ store });
 
         onWillStart(async () => {
-            this.websiteId = (await this.orm.call('website', 'get_current_website')).match(/\d+/)[0];
+            this.websiteId = (await this.orm.call('website', 'get_current_website'))[0];
 
             await store.start(() => this.getInitialState());
             this.updateStorage(store);

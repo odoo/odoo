@@ -379,7 +379,6 @@ class PurchaseOrder(models.Model):
     # MAIL.THREAD
     # ------------------------------------------------------------
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('mark_rfq_as_sent'):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
