@@ -53,6 +53,15 @@ class PaymentProvider(models.Model):
             pay_method_line.journal_id = self.journal_id
             pay_method_line.name = self.name
         elif allow_create:
+<<<<<<< 17.0
+||||||| bf8587f8b7e6d9606188b7e679ec65bf6d4a6486
+            default_payment_method_id = self._get_default_payment_method_id(self.code)
+=======
+            default_payment_method_id = self._get_default_payment_method_id(self.code)
+            if not default_payment_method_id:
+                return
+
+>>>>>>> 85cdef82b4695024faa8866f21e22fa1b9e914e4
             create_values = {
                 'name': self.name,
                 'payment_method_id': default_payment_method.id,
@@ -96,6 +105,24 @@ class PaymentProvider(models.Model):
             provider._ensure_payment_method_line()
 
     @api.model
+<<<<<<< 17.0
+||||||| bf8587f8b7e6d9606188b7e679ec65bf6d4a6486
+    def _get_default_payment_method_id(self, code):
+        provider_payment_method = self._get_provider_payment_method(code)
+        if provider_payment_method:
+            return provider_payment_method.id
+        return self.env.ref('account.account_payment_method_manual_in').id
+
+    @api.model
+=======
+    def _get_default_payment_method_id(self, code):
+        provider_payment_method = self._get_provider_payment_method(code)
+        if provider_payment_method:
+            return provider_payment_method.id
+        return None
+
+    @api.model
+>>>>>>> 85cdef82b4695024faa8866f21e22fa1b9e914e4
     def _get_provider_payment_method(self, code):
         return self.env['account.payment.method'].search([('code', '=', code)], limit=1)
 
