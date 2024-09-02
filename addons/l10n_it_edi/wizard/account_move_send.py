@@ -121,7 +121,11 @@ class AccountMoveSend(models.TransientModel):
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
-        if invoice_data.get('l10n_it_edi_checkbox_xml_export') and invoice._l10n_it_edi_ready_for_xml_export():
+        if (
+            invoice_data.get('l10n_it_edi_checkbox_xml_export')
+            and invoice._l10n_it_edi_ready_for_xml_export()
+            and invoice_data.get('pdf_attachment_values')
+        ):
             invoice_data['l10n_it_edi_values'] = invoice._l10n_it_edi_get_attachment_values(
                 pdf_values=invoice_data['pdf_attachment_values'])
 
