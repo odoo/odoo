@@ -100,7 +100,7 @@
                         </div>
                         <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-3 p-3': pos.floorPlanStyle == 'kanban'}">
                            <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
-                                <t t-set="isOccupied" t-value="table.getOrder() || table.uiState.orderCount > 0"/>
+                                <t t-set="isOccupied" t-value="table.hasOrder || table.uiState.orderCount > 0"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
                                 <div

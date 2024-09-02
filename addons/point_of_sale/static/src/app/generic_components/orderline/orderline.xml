@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <t t-set="line" t-value="props.line" />
-        <li class="orderline position-relative d-flex align-items-center p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'orderline-combo ms-2' : '' }}" t-att-class="props.class">
+        <li class="orderline position-relative d-flex align-items-center p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'orderline-combo ms-4 fst-italic' : '' }}" t-att-class="props.class">
             <div class="product-order"></div>
             <div t-if="line.imageSrc" class="o_line_container d-flex align-items-center justify-content-center">
                 <img t-attf-style="border-radius: 1rem;" t-att-src="line.imageSrc"/>

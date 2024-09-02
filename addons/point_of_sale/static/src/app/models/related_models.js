@@ -1,4 +1,5 @@
 import { reactive, toRaw } from "@odoo/owl";
+import { uuidv4 } from "@point_of_sale/utils";
 
 const ID_CONTAINER = {};
 
@@ -281,10 +282,10 @@ export class Base {
 
         return serializedData;
     }
-    _getCacheSet(fieldName) {
+    getCacheMap(fieldName) {
         const cacheName = `_${fieldName}`;
         if (!(cacheName in this)) {
-            this[cacheName] = new Set();
+            this[cacheName] = new Map();
         }
         return this[cacheName];
     }
@@ -293,7 +294,7 @@ export class Base {
     }
 }
 
-export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) {
+export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}, database = {}) {
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
     const records = mapObj(processedModelDefs, () => reactive({}));
     const orderedRecords = mapObj(processedModelDefs, () => reactive([]));
@@ -328,18 +329,28 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     }
 
     function removeItem(record, fieldName, item) {
-        const cacheSet = record._getCacheSet(fieldName);
-        if (cacheSet.has(toRaw(item))) {
-            cacheSet.delete(toRaw(item));
-            const index = record[fieldName].indexOf(item);
+        const cacheMap = record.getCacheMap(fieldName);
+        const key = database[item.model.modelName]?.key || "id";
+        const keyVal = item[key];
+
+        if (cacheMap.has(keyVal)) {
+            cacheMap.delete(keyVal);
+            const index = record[fieldName].findIndex((r) => r[key] === keyVal);
             record[fieldName].splice(index, 1);
         }
     }
 
     function addItem(record, fieldName, item) {
-        const cacheSet = record._getCacheSet(fieldName);
-        if (!cacheSet.has(toRaw(item))) {
-            cacheSet.add(toRaw(item));
+        const cacheMap = record.getCacheMap(fieldName);
+        const key = database[item.model.modelName]?.key || "id";
+        const keyVal = item[key];
+
+        if (!keyVal) {
+            console.warn(`Key ${key} not found in ${item.model.modelName}`);
+        }
+
+        if (!cacheMap.has(keyVal)) {
+            cacheMap.set(keyVal, item);
             record[fieldName].push(item);
         }
     }
@@ -422,6 +433,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         const record = reactive(new Model({ models, records, model: models[model] }));
         const id = vals["id"];
         record.id = id;
+        if (!vals.uuid && database[model]?.key === "uuid") {
+            record.uuid = uuidv4();
+            vals.uuid = record.uuid;
+        }
 
         if (!baseData[model][id]) {
             baseData[model][id] = vals;

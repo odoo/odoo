@@ -380,8 +380,8 @@ export class FloorScreen extends Component {
 
             tableByIds[table.id].uiState.orderCount = tableOrders.length;
             tableByIds[table.id].uiState.changeCount = qtyChange.changed;
+            await this.pos.unsetTable();
         }
-        await this.pos.unsetTable();
     }
     get floorBackround() {
         return this.activeFloor.floor_background_image

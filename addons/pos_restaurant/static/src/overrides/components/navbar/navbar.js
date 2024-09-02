@@ -95,10 +95,6 @@ patch(Navbar.prototype, {
         });
         return currentOrder || orderToTransfer;
     },
-    getOrderName() {
-        const order = this.getOrderToDisplay();
-        return order.table_id?.table_number || order.getFloatingOrderName();
-    },
     onClickPlanButton() {
         this.pos.orderToTransferUuid = null;
         this.pos.showScreen("FloorScreen", { floor: this.floor });

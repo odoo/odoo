@@ -86,6 +86,10 @@ export class PosOrder extends Base {
         return this.state !== "draft";
     }
 
+    getOrderName() {
+        return this.getFloatingOrderName() || "";
+    }
+
     getEmailItems() {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
@@ -1060,7 +1064,7 @@ export class PosOrder extends Base {
         };
     }
     getFloatingOrderName() {
-        return this.note || this.tracking_number;
+        return this.note || this.tracking_number.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {

@@ -54,3 +54,9 @@ class PosOrder(models.Model):
                 messages.append(('TABLE_ORDER_COUNT', order_count))
         if messages:
             a_config._notify(*messages, private=False)
+
+    def action_pos_order_cancel(self):
+        res = super().action_pos_order_cancel()
+        if self.table_id:
+            self.send_table_count_notification(self.table_id)
+        return res

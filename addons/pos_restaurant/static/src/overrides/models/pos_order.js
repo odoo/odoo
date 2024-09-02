@@ -35,4 +35,7 @@ patch(PosOrder.prototype, {
     setBooked(booked) {
         this.uiState.booked = booked;
     },
+    getOrderName() {
+        return this.table_id?.table_number.toString() || this.getFloatingOrderName() || "";
+    },
 });
