@@ -3133,6 +3133,35 @@ test(`selection box is properly displayed (group list)`, async () => {
     });
 });
 
+test(`selection box in grouped list, multi pages`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>',
+        groupBy: ["int_field"],
+    });
+
+    expect(".o_group_header").toHaveCount(2);
+    expect(".o_list_selection_box").toHaveCount(0);
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("4");
+
+    // open first group and select all records of first page
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(1);
+    await contains("thead .o_list_record_selector input").click();
+    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
+    expect(".o_list_selection_box .o_list_select_domain").toHaveCount(1);
+    expect(queryOne(".o_list_selection_box").innerText.replace(/\s+/g, " ").trim()).toBe(
+        "1 selected Select all" // we don't know the total count, so we don't display it
+    );
+
+    // select all domain
+    await contains(".o_list_selection_box .o_list_select_domain").click();
+    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
+    expect(".o_list_selection_box").toHaveText("All 4 selected");
+});
+
 test(`selection box is displayed as first action button`, async () => {
     await mountView({
         resModel: "foo",
