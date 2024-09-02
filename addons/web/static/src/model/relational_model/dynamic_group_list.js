@@ -326,6 +326,13 @@ export class DynamicGroupList extends DynamicList {
         return Promise.all(proms);
     }
 
+    _selectDomain(value) {
+        for (const group of this.groups) {
+            group.list._selectDomain(value);
+        }
+        super._selectDomain(value);
+    }
+
     _unlinkGroups(groups) {
         const groupResIds = groups.map((g) => g.value);
         return this.model.orm.unlink(this.groupByField.relation, groupResIds, {
