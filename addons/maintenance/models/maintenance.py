@@ -196,7 +196,6 @@ class MaintenanceRequest(models.Model):
     _order = "id desc"
     _check_company_auto = True
 
-    @api.returns('self')
     def _default_stage(self):
         return self.env['maintenance.stage'].search([], limit=1)
 

@@ -192,7 +192,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      * @param {string} [group_id]
      */
-    channel_create(name, group_id) {
+    channel_create_store(name, group_id) {
         const kwargs = getKwArgs(arguments, "name", "group_id");
         name = kwargs.name;
         group_id = kwargs.group_id;
@@ -316,7 +316,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} partners_to
      * @param {boolean} [pin=true]
      */
-    channel_get(partners_to, pin) {
+    channel_get_store(partners_to, pin) {
         const kwargs = getKwArgs(arguments, "partners_to", "pin");
         partners_to = kwargs.partners_to || [];
         pin = kwargs.pin ?? true;
@@ -537,7 +537,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} partners_to
      * @param {string} name
      * */
-    create_group(partners_to, name) {
+    create_group_store(partners_to, name) {
         const kwargs = getKwArgs(arguments, "partners_to", "name");
         partners_to = kwargs.partners_to || [];
         name = kwargs.name || "";
@@ -827,7 +827,7 @@ export class DiscussChannel extends models.ServerModel {
             ]).map((member) => member.partner_id);
         }
         delete kwargs.special_mentions;
-        const messageId = MailThread.message_post.call(this, [id], kwargs);
+        const messageIds = MailThread.message_post.call(this, [id], kwargs);
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         const otherMembers = DiscussChannelMember._filter([
@@ -839,7 +839,7 @@ export class DiscussChannel extends models.ServerModel {
                 message_unread_counter: member.message_unread_counter + 1,
             });
         }
-        return messageId;
+        return messageIds;
     }
 
     /**

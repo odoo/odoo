@@ -1,17 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import warnings
 from werkzeug.exceptions import NotFound
 
 from odoo import http
-from odoo.api import call_kw
 from odoo.http import request
 from odoo.models import check_method_name
+from odoo.service.model import call_kw
+
 from .utils import clean_action
-
-
-_logger = logging.getLogger(__name__)
 
 
 class DataSet(http.Controller):
