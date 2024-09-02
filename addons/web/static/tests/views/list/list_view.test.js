@@ -3260,6 +3260,39 @@ test(`selection box is properly displayed (group list)`, async () => {
     });
 });
 
+test(`selection box: grouped list, all groups folded`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        groupBy: ["foo"],
+    });
+    expect(`.o_group_header`).toHaveCount(3);
+    expect(`.o_data_row`).toHaveCount(0);
+    expect(`.o_searchview`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+
+    // click on the checkbox in the thead
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_searchview`).toHaveCount(0);
+    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+
+    // remove selection by clicking on the cross in the selection box
+    await contains(`.o_list_unselect_all`).click();
+    expect(`.o_list_selection_box`).toHaveCount(0);
+
+    // click again on the checkbox in the thead
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+
+    // remove selection by clicking on the checkbox in the thead
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_searchview`).toHaveCount(1);
+    expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+});
+
 test(`selection box is displayed as first action button`, async () => {
     await mountView({
         resModel: "foo",
