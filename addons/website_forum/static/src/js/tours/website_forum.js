@@ -33,17 +33,28 @@ registerBackendAndFrontendTour("question", {
     trigger: `.note-editable p:not(:contains(/^<br>$/))`,
 },
 {
-    trigger: ".select2-choices",
+    trigger: ".o_select_menu_toggler",
     content: _t("Insert tags related to your question."),
     tooltipPosition: "top",
+    run: "click",
 }, 
 {
-    trigger: "input[id=s2id_autogen2]",
+    trigger: ".o_select_menu_sticky",
     run: "edit Test",
 },
 {
     isActive: ["auto"],
-    trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
+    trigger: `.o_popover input.o_select_menu_sticky:not(:contains(Please enter 2 or more characters))`,
+},
+{
+    content: "Select found select menu item",
+    trigger: ".o_popover.o_select_menu_menu .o_select_menu_item span:contains('Test')",
+    run: 'click',
+},
+{
+    content: "Close search bar",
+    trigger: "body",
+    run: 'click',
 },
 {
     trigger: "button:contains(/^Post/)",
