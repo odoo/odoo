@@ -344,3 +344,21 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
             ProductScreen.totalAmountIs(22.0),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.downPayment20PercentFirstOrder(),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "20.0",
+            }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
