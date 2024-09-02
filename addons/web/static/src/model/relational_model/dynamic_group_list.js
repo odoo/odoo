@@ -21,6 +21,7 @@ export class DynamicGroupList extends DynamicList {
         /** @type {import("./group").Group[]} */
         this.groups = data.groups.map((g) => this._createGroupDatapoint(g));
         this.count = data.length;
+        this._nbRecordsMatchingDomain = null;
     }
 
     // -------------------------------------------------------------------------
@@ -39,6 +40,10 @@ export class DynamicGroupList extends DynamicList {
         return this.groups.some((group) => group.hasData);
     }
 
+    get isRecordCountTrustable() {
+        return this.count <= this.limit || this._nbRecordsMatchingDomain !== null;
+    }
+
     /**
      * List of loaded records inside groups.
      * @returns {import("./record").Record[]}
@@ -54,6 +59,9 @@ export class DynamicGroupList extends DynamicList {
      * @returns {number}
      */
     get recordCount() {
+        if (this._nbRecordsMatchingDomain !== null) {
+            return this._nbRecordsMatchingDomain;
+        }
         return this.groups.reduce((acc, group) => acc + group.count, 0);
     }
 
@@ -157,6 +165,19 @@ export class DynamicGroupList extends DynamicList {
                 movedGroupId,
                 targetGroupId
             );
+        });
+    }
+
+    async selectDomain(value) {
+        return this.model.mutex.exec(async () => {
+            if (!this.isRecordCountTrustable) {
+                this._nbRecordsMatchingDomain = await this.model.orm.searchCount(
+                    this.resModel,
+                    this.domain,
+                    { limit: this.model.initialCountLimit }
+                );
+            }
+            this._selectDomain(value);
         });
     }
 
