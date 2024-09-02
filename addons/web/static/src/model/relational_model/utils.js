@@ -389,6 +389,11 @@ export function getFieldsSpec(activeFields, fields, evalContext, { withInvisible
                         evalContext
                     );
                 }
+                if (fieldName === 'shortcut_document_id') {
+                    fieldsSpec[fieldName].fields.access_token = {};
+                    fieldsSpec[fieldName].fields.mimetype = {};
+                    fieldsSpec[fieldName].fields.attachment_id = {fields: {display_name: {}}};
+                }
                 break;
             }
             case "many2one_reference": {
