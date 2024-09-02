@@ -77,11 +77,16 @@
                     <span class="fa-2x">&#215;</span>
                 </button>
             </t>
-            <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="nbTotal"/> selected</span>
+            <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="isTotalTrustable ? nbTotal : nbRecordsMatchingDomain"/> selected</span>
             <t t-else="">
                 <span class="font-monospace me-1" t-esc="nbSelected"/> selected
-                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal" t-on-click="onSelectDomain">
-                    <i class="fa fa-arrow-right"/> Select all <span class="font-monospace" t-esc="nbTotal"/>
+                <a t-if="isPageSelected and (nbTotal > nbSelected or !isTotalTrustable)"
+                    href="#"
+                    class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal"
+                    title="Select all records matching the search"
+                    t-on-click="onSelectDomain">
+                    <i class="fa fa-arrow-right"/>
+                    Select all <span t-if="isTotalTrustable" class="font-monospace" t-esc="nbTotal"/>
                 </a>
             </t>
         </div>
