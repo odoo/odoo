@@ -11,6 +11,7 @@ class ResCompany(models.Model):
     l10n_in_edi_password = fields.Char("E-invoice (IN) Password", groups="base.group_system")
     l10n_in_edi_token = fields.Char("E-invoice (IN) Token", groups="base.group_system")
     l10n_in_edi_token_validity = fields.Datetime("E-invoice (IN) Valid Until", groups="base.group_system")
+    l10n_in_edi_start_date = fields.Date("Sending E-Invoice from this date")
 
     def _l10n_in_edi_token_is_valid(self):
         self.ensure_one()

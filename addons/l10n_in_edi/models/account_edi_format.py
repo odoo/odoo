@@ -47,7 +47,8 @@ class AccountEdiFormat(models.Model):
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
-        if self.code != 'in_einvoice_1_03':
+        einvoice_sending_start_date = move.company_id.l10n_in_edi_start_date
+        if self.code != 'in_einvoice_1_03' or (einvoice_sending_start_date and move.invoice_date < einvoice_sending_start_date):
             return super()._get_move_applicability(move)
         is_under_gst = any(move_line_tag.id in self._get_l10n_in_gst_tags() for move_line_tag in move.line_ids.tax_tag_ids)
         if move.is_sale_document(include_receipts=True) and move.country_code == 'IN' and is_under_gst and move.l10n_in_gst_treatment in (

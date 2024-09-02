@@ -10,6 +10,7 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_in_edi_username = fields.Char("Indian EDI username", related="company_id.l10n_in_edi_username", readonly=False)
     l10n_in_edi_password = fields.Char("Indian EDI password", related="company_id.l10n_in_edi_password", readonly=False)
+    l10n_in_edi_start_date = fields.Date("Sending E-Invoice from this date", related="company_id.l10n_in_edi_start_date", readonly=False)
 
     def l10n_in_check_gst_number(self):
         if not self.company_id.vat:

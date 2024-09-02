@@ -7,7 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@name='electronic_invoices_in']" position="inside">
                     <div class="content-group" invisible="not module_l10n_in_edi">
-                        <div class="mt16 row">
+                        <div class="mt16 row" title="If a date is selected, then only invoices starting from that day will be send for E-Invoicing.">
+                            <label for="l10n_in_edi_start_date" string="Start Date" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="l10n_in_edi_start_date"/>
+                        </div>
+                        <div class="row">
                             <label for="l10n_in_edi_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
                             <field name="l10n_in_edi_username" nolabel="1"/>
                         </div>
