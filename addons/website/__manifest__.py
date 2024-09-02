@@ -80,6 +80,7 @@
         'views/snippets/s_company_team_shapes.xml',
         'views/snippets/s_company_team_detail.xml',
         'views/snippets/s_company_team_spotlight.xml',
+        'views/snippets/s_company_team_grid.xml',
         'views/snippets/s_call_to_action.xml',
         'views/snippets/s_references.xml',
         'views/snippets/s_references_social.xml',
