@@ -101,7 +101,7 @@ class RtcController(http.Controller):
         # sudo: discuss.channel.rtc.session - can cancel invitations in accessible channel
         channel.sudo()._rtc_cancel_invitations(member_ids=member_ids)
 
-    @http.route("/mail/rtc/audio_worklet_processor", methods=["GET"], type="http", auth="public")
+    @http.route("/mail/rtc/audio_worklet_processor", methods=["GET"], type="http", auth="public", readonly=True)
     def audio_worklet_processor(self):
         """Returns a JS file that declares a WorkletProcessor class in
         a WorkletGlobalScope, which means that it cannot be added to the
