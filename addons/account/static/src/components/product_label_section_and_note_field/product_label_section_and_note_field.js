@@ -185,7 +185,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     get isProductClickable() {
-        return this.props.record.model.root.data.state !== "draft";
+        return this.props.record.evalContext.parent.state !== "draft";
     }
 
     get isSectionOrNote() {
