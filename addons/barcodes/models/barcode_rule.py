@@ -41,3 +41,7 @@ class BarcodeRule(models.Model):
                 raise ValidationError(_("There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces.", pattern=rule.pattern))
             elif p == '*':
                 raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"))
+            try:
+                re.compile(re.sub('{N+D*}', '', p))
+            except re.error:
+                raise ValidationError(_("The barcode pattern %(pattern)s does not lead to a valid regular expression.", pattern=rule.pattern))
