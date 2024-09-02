@@ -1,4 +1,5 @@
-import { Component, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
+import { closestBlock } from "@html_editor/utils/blocks";
+import { Component, useEffect, useExternalListener, useRef, useState, xml } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { omit } from "@web/core/utils/objects";
@@ -6,7 +7,7 @@ import { omit } from "@web/core/utils/objects";
 export class EditorOverlay extends Component {
     static template = xml`
         <div t-ref="root" class="overlay">
-            <t t-component="props.Component" t-props="props.props"/>
+            <t t-if="state.display" t-component="props.Component" t-props="props.props"/>
         </div>`;
 
     static props = {
@@ -22,8 +23,16 @@ export class EditorOverlay extends Component {
     setup() {
         this.lastSelection = this.props.initialSelection;
         let getTarget, position;
+
+        this.state = useState({
+            display: true,
+        });
         if (this.props.target) {
-            getTarget = () => this.props.target;
+            getTarget = () => {
+                const target = this.props.target;
+                this.updateVisibility(target.getBoundingClientRect(), target);
+                return target;
+            };
         } else {
             useExternalListener(this.props.bus, "updatePosition", () => {
                 position.unlock();
@@ -55,6 +64,32 @@ export class EditorOverlay extends Component {
         position = usePosition("root", getTarget, positionConfig);
     }
 
+    updateVisibility(rect, focusNode) {
+        const centerX = rect.left + rect.width / 2;
+        const topY = rect.top + 1;
+
+        const document = this.props.editable.ownerDocument;
+        const visibleElTop = document.elementFromPoint(centerX, topY);
+
+        const target = closestBlock(focusNode);
+
+        if (!visibleElTop) {
+            this.state.display = false;
+            return;
+        }
+
+        const topIsOverlay = visibleElTop.closest(".overlay");
+        if (topIsOverlay) {
+            const { bottom } = topIsOverlay.getBoundingClientRect();
+            const el = document.elementFromPoint(centerX, bottom + 1);
+            this.state.display = this.props.editable.contains(el);
+            return;
+        }
+
+        const targetIsVisible = target.contains(visibleElTop);
+        this.state.display = targetIsVisible;
+    }
+
     getCurrentRect() {
         const doc = this.props.editable.ownerDocument;
         const selection = doc.getSelection();
@@ -83,6 +118,7 @@ export class EditorOverlay extends Component {
             shadowCaret.remove();
             clonedRange.detach();
         }
+        this.updateVisibility(rect, focusNode);
         this.lastSelection = {
             range,
             focusNode,
