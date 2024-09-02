@@ -35,14 +35,14 @@ patch(PosStore.prototype, {
             this.getTableOrderCount();
         }
     },
-    afterOrderDeletion() {
+    async onDeleteOrder(order) {
         if (
             this.config.module_pos_restaurant &&
             this.mainScreen.component.name !== "TicketScreen"
         ) {
-            return this.showScreen("FloorScreen");
+            this.showScreen("FloorScreen");
         }
-        return super.afterOrderDeletion();
+        return super.onDeleteOrder(...arguments);
     },
     async getTableOrderCount() {
         const result = await this.data.call(
