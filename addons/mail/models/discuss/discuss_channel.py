@@ -1073,6 +1073,7 @@ class Channel(models.Model):
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel
 
+    @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first channels' id, name, channel_type and authorizedGroupFullName fields such that the

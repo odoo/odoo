@@ -250,6 +250,7 @@ class Partner(models.Model):
                     data["notification_preference"] = main_user.notification_type
             store.add(partner, data)
 
+    @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
@@ -290,6 +291,7 @@ class Partner(models.Model):
             partners |= self.browse(query)
         return partners
 
+    @api.readonly
     @api.model
     def im_search(self, name, limit=20, excluded_ids=None):
         """ Search partner with a name and return its id, name and im_status.
