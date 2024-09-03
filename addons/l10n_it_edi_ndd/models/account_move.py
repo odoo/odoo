@@ -21,13 +21,17 @@ class AccountMove(models.Model):
 
     @api.depends('line_ids.matching_number', 'payment_state')
     def _compute_l10n_it_payment_method(self):
+        if self.env.company.account_fiscal_country_id.code != 'IT':
+            return
+
         move_lines_per_matching_number = self.env['account.move.line'].search([
-            ('matching_number', 'in', self.line_ids.filtered('matching_number').mapped('matching_number'))
+            ('matching_number', 'in', self.line_ids.filtered('matching_number').mapped('matching_number')),
+            ('company_id', '=', self.env.company.id),
         ]).grouped('matching_number')
 
         for move in self:
             matching_numbers = move.line_ids.filtered('matching_number').mapped('matching_number')
-            if matching_numbers and move.payment_state in {'in_payment', 'partial'}:
+            if matching_numbers:
                 # We use matching_numbers[0] directly, assuming there's a valid key in the dictionary.
                 matching_lines = move_lines_per_matching_number.get(matching_numbers[0])
                 if matching_lines and matching_lines.payment_id:
@@ -43,10 +47,10 @@ class AccountMove(models.Model):
     def _compute_l10n_it_document_type(self):
         document_type = self.env['l10n_it.document.type'].search([]).grouped('code')
         for move in self:
-            if move.state == 'posted':
-                move.l10n_it_document_type = move.l10n_it_document_type or document_type.get(move._l10n_it_edi_get_document_type())
-            else:
-                move.l10n_it_document_type = False
+            if move.country_code != 'IT' or move.l10n_it_document_type or move.state != 'posted':
+                continue
+
+            move.l10n_it_document_type = document_type.get(move._l10n_it_edi_get_document_type())
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
         # EXTENDS 'l10n_it_edi'
