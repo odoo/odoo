@@ -13,6 +13,8 @@ const EXPRESSION_VALID_OPERATORS = [
     "!=",
     "set",
     "not_set",
+    "starts_with",
+    "ends_with",
     "is",
     "is_not",
 ];

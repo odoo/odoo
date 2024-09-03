@@ -255,7 +255,7 @@ test("building a domain with an invalid operator", async () => {
     await clearNotSupported();
     expect(getCurrentPath()).toBe("Foo");
     expect(".o_model_field_selector_warning").toHaveCount(0);
-    expect(getOperatorOptions()).toHaveLength(8);
+    expect(getOperatorOptions()).toHaveLength(10);
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe("abc");
 });
@@ -1024,6 +1024,8 @@ test("support properties", async () => {
                 "is not in",
                 "is set",
                 "is not set",
+                "starts with",
+                "ends with",
             ],
         },
         {
@@ -1552,6 +1554,8 @@ test("many2one field operators (edit)", async () => {
         "does not contain",
         "is set",
         "is not set",
+        "starts with",
+        "ends with",
         "matches",
         "matches none of",
     ]);
@@ -1774,6 +1778,8 @@ test("x2many field operators (edit)", async () => {
         "does not contain",
         "is set",
         "is not set",
+        "starts with",
+        "ends with",
         "match",
         "match none of",
     ]);

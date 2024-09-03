@@ -932,6 +932,14 @@ export function createVirtualOperators(tree, options = {}) {
                 }
             }
         }
+        if (operator === "=ilike") {
+            if (value.endsWith?.("%")) {
+                return { ...tree, operator: "starts_with", value: value.slice(0, -1) };
+            }
+            if (value.startsWith?.("%")) {
+                return { ...tree, operator: "ends_with", value: value.slice(1) };
+            }
+        }
         return tree;
     }
     if (tree.type === "complex_condition") {
@@ -947,12 +955,19 @@ export function createVirtualOperators(tree, options = {}) {
  */
 export function removeVirtualOperators(tree) {
     if (tree.type === "condition") {
-        const { operator } = tree;
+        const { operator, value } = tree;
         if (["is", "is_not"].includes(operator)) {
             return { ...tree, operator: operator === "is" ? "=" : "!=" };
         }
         if (["set", "not_set"].includes(operator)) {
             return { ...tree, operator: operator === "set" ? "!=" : "=" };
+        }
+        if (["starts_with", "ends_with"].includes(operator)) {
+            return {
+                ...tree,
+                value: operator === "starts_with" ? `${value}%` : `%${value}`,
+                operator: "=ilike",
+            };
         }
         return tree;
     }
