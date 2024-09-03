@@ -46,8 +46,16 @@
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex justify-content-start flex-wrap gap-2 w-100">
+<<<<<<< master
                     <button t-if="ui.isSmall" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
+||||||| 82ef7426cf977b4d2c16c2f01d378b9beafca697
+                    <button t-if="ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
+                        t-on-click="createPartner"
+=======
+                    <button t-if="ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
+                        t-on-click="() => this.pos.editPartner()"
+>>>>>>> 4416e9ba321012388a905042fd6a0d24b8988902
                         title="Add a customer">
                     New 
                     </button>
