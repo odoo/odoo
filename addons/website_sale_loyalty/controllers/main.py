@@ -41,6 +41,9 @@ class WebsiteSale(main.WebsiteSale):
     @http.route()
     def cart(self, **post):
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order:
             order._update_programs_and_rewards()
             order._auto_apply_rewards()
