@@ -27,6 +27,7 @@ export const browser = Object.assign({}, owl.browser, {
     cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
     console: window.console,
     history: window.history,
+    matchMedia: window.matchMedia.bind(window),
     navigator: navigator,
     open: window.open.bind(window),
     XMLHttpRequest: window.XMLHttpRequest,
