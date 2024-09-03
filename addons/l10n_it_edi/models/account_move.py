@@ -5,6 +5,7 @@ from datetime import datetime
 import logging
 from lxml import etree
 import uuid
+from operator import itemgetter
 
 from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
@@ -280,9 +281,10 @@ class AccountMove(models.Model):
                 line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
 
         dispatch_result = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        if dispatch_result['orphan_negative_lines']:
-            raise UserError(_("You have negative lines that we can't dispatch on others. They need to have the same tax."))
-        base_lines = sorted(dispatch_result['result_lines'] + dispatch_result['nulled_candidate_lines'], key=lambda line: line['sequence'])
+        base_lines = sorted(
+            dispatch_result['result_lines'] + dispatch_result['orphan_negative_lines'] + dispatch_result['nulled_candidate_lines'],
+            key=itemgetter('sequence')
+        )
 
         for num, line_dict in enumerate(base_lines):
             line = line_dict['record']

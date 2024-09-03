@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -363,9 +362,8 @@ class TestItEdiExport(TestItEdi):
             ],
         })
         invoice.action_post()
-
-        with self.assertRaises(UserError, msg="You have negative lines that we can't dispatch on others. They need to have the same tax."):
-            self._assert_export_invoice(invoice, 'invoice_negative_price.xml')
+        with self.subTest('invoice_different_taxes'):
+            self._assert_export_invoice(invoice, 'invoice_negative_price_different_taxes.xml')
 
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
