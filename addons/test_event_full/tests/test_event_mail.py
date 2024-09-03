@@ -91,8 +91,8 @@ class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_mail_before_trigger_sent_count(self):
-        """ Emails are sent to both confirmed and unconfirmed attendees.
-        This test checks that the count of sent emails includes the emails sent to unconfirmed ones.
+        """ Emails are only sent to confirmed attendees.
+        This test checks that the count of sent emails does not include the emails sent to unconfirmed ones.
 
         Time in the test is frozen to simulate the following state:
 
@@ -155,7 +155,7 @@ class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
         with self.mock_mail_gateway(), self.mockSMSGateway():
             mail_scheduler.execute()
 
-        self.assertEqual(len(self._new_mails), 2, 'Mails were not created')
+        self.assertEqual(len(self._new_mails), 1, 'Mails were not created')
         self.assertEqual(len(self._new_sms), 2, 'SMS were not created')
 
         self.assertEqual(test_event.seats_expected, 2, 'Wrong number of expected seats (attendees)')

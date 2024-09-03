@@ -54,7 +54,7 @@ class EventMailScheduler(models.Model):
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
                     self.env['event.registration']._message_sms_schedule_mass(
                         template=scheduler.template_ref,
-                        active_domain=[('event_id', '=', scheduler.event_id.id), ('state', '!=', 'cancel')],
+                        active_domain=[('event_id', '=', scheduler.event_id.id), ('state', 'not in', ('cancel', 'draft'))],
                         mass_keep_log=True
                     )
                     scheduler.update({
