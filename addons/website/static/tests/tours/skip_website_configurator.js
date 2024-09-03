@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('skip_website_configurator', {
     },
     {
         content: "validate the website creation modal",
-        trigger: 'button.btn-primary',
+        trigger: '.modal button.btn-primary',
         run: "click",
     },
     {
