@@ -121,9 +121,6 @@
         <field name="model">stock.warehouse.orderpoint</field>
         <field name="arch" type="xml">
             <form string="Reordering Rules">
-                <div class="alert alert-info" role="alert">
-                    <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
-                </div>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">

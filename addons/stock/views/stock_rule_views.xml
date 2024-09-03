@@ -143,5 +143,8 @@
         <menuitem action="action_rules_form" id="menu_action_rules_form"
         parent="menu_warehouse_config" sequence="5" groups="stock.group_adv_location"/>
 
+        <menuitem id="stock.menu_procurement_compute"
+        parent="menu_stock_warehouse_mgmt" sequence="135" groups="base.group_no_one"
+        action="ir_cron_scheduler_action_ir_actions_server"/>
     </data>
 </odoo>
