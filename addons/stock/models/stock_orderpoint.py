@@ -188,7 +188,7 @@ class StockWarehouseOrderpoint(models.Model):
     def create(self, vals_list):
         if any(val.get('snoozed_until', False) and val.get('trigger', self.default_get(['trigger'])['trigger']) == 'auto' for val in vals_list):
             raise UserError(_("You can not create a snoozed orderpoint that is not manually triggered."))
-        return super().create(vals_list)
+        return super(StockWarehouseOrderpoint, self.with_context(no_set_qty_to_order=True)).create(vals_list)
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -290,6 +290,8 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.qty_to_order = orderpoint.qty_to_order_manual if orderpoint.qty_to_order_manual else orderpoint.qty_to_order_computed
 
     def _inverse_qty_to_order(self):
+        if self.env.context.get('no_set_qty_to_order'):
+            return
         for orderpoint in self:
             orderpoint.qty_to_order_manual = orderpoint.qty_to_order
 
