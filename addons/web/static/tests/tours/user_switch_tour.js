@@ -21,6 +21,19 @@ registry.category("web_tour.tours").add("test_user_switch", {
     steps: () => [
         ...logout(),
         {
+            content: "check if the login input is empty",
+            trigger: "input#login:empty",
+        },
+        {
+            content: "check if the password input is empty",
+            trigger: "input#password:empty",
+        },
+        {
+            content: "Should contains the user switch button",
+            trigger: ".oe_login_form .o_user_switch_btn",
+            run: "click",
+        },
+        {
             content: "Click on Marc Demo on the quick login page",
             trigger:
                 ".o_user_switch:not(:has(.list-group-item:nth-child(2))) .list-group-item:contains('Marc Demo')",
