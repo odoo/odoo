@@ -37,6 +37,19 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     if (isUnbreakable(this)) {
         throw UNBREAKABLE_ROLLBACK_CODE;
     }
+    if (
+        !this.textContent &&
+        ['BLOCKQUOTE', 'PRE'].includes(this.parentElement.nodeName) &&
+        !this.nextSibling
+    ) {
+        const parent = this.parentElement;
+        const index = childNodeIndex(this);
+        if (this.previousElementSibling) {
+            this.remove();
+            return parent.oEnter(index, !didSplit);
+        }
+        return parent.oEnter(index + 1, !didSplit);
+    }
     let restore;
     if (firstSplit) {
         restore = prepareUpdate(this, offset);
@@ -92,7 +105,7 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
  */
 HTMLHeadingElement.prototype.oEnter = function () {
     const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
-    if ([...newEl.textContent].every(char => char === '\u200B')) { // empty or all invisible
+    if (newEl && [...newEl.textContent].every(char => char === '\u200B')) { // empty or all invisible
         const node = setTagName(newEl, 'P');
         node.replaceChildren(document.createElement('br'));
         setCursorStart(node);
