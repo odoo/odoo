@@ -238,9 +238,6 @@ export class Message extends Record {
             }
             return this.author.eq(this.store.self);
         },
-        // FIXME necessary to not trigger double-rendering of messages
-        // lazy-compute on-the-fly notifies the current reactive again
-        eager: true,
     });
 
     isPending = false;

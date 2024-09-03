@@ -4,7 +4,7 @@ import { busModels } from "@bus/../tests/bus_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { after, before, getFixture } from "@odoo/hoot";
 import { hover as hootHover, resize } from "@odoo/hoot-dom";
-import { Component, onRendered, onWillDestroy, status } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import {
     MockServer,
     authenticate,
@@ -563,14 +563,16 @@ let nextObserveRenderResults = 0;
 export function prepareObserveRenders() {
     patchWithCleanup(Component.prototype, {
         setup(...args) {
-            onRendered(() => {
+            const cb = () => {
                 for (const result of observeRenderResults.values()) {
                     if (!result.has(this.constructor)) {
                         result.set(this.constructor, 0);
                     }
                     result.set(this.constructor, result.get(this.constructor) + 1);
                 }
-            });
+            };
+            onMounted(cb);
+            onPatched(cb);
             onWillDestroy(() => {
                 for (const result of observeRenderResults.values()) {
                     // owl could invoke onrendered and cancel immediately to re-render, so should compensate
