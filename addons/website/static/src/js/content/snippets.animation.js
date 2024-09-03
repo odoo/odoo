@@ -1064,10 +1064,13 @@ registry.anchorSlide = publicWidget.Widget.extend({
             // parameter, the "scrollTo" function handles the scroll to the top
             // or to the bottom of the document even if the header or the
             // footer is removed from the DOM.
-            scrollTo(hash, {
-                behavior: "smooth",
-                offset: this._computeExtraOffset(),
-            });
+            const element = document.querySelector(hash);
+            if (element) {
+                scrollTo(element, {
+                    behavior: "smooth",
+                    offset: this._computeExtraOffset(),
+                });
+            }
         } else {
             this._scrollTo($anchor, scrollValue);
         }
