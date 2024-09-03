@@ -36,6 +36,14 @@ test("domainFromTree", () => {
             result: `["!", ("foo", "=?", False)]`,
         },
         {
+            tree: condition("foo", "starts_with", "hello"),
+            result: `[("foo", "=ilike", "hello%")]`,
+        },
+        {
+            tree: condition("foo", "ends_with", "hello"),
+            result: `[("foo", "=ilike", "%hello")]`,
+        },
+        {
             tree: condition("foo", "between", [1, 3]),
             result: `["&", ("foo", ">=", 1), ("foo", "<=", 3)]`,
         },
@@ -98,6 +106,10 @@ test("domainFromTree . treeFromDomain", () => {
         {
             domain: `["!", ("foo", "=?", False)]`,
             result: `["!", ("foo", "=?", False)]`,
+        },
+        {
+            domain: `[("foo", "=ilike", "%hello")]`,
+            result: `[("foo", "=ilike", "%hello")]`,
         },
         {
             domain: `["&", ("foo", ">=", 1), ("foo", "<=", 3)]`,
