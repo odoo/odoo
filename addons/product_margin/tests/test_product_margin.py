@@ -7,16 +7,23 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestProductMargin(AccountTestInvoicingCommon):
 
-    def test_product_margin(self):
-        ''' In order to test the product_margin module '''
-
-        supplier = self.env['res.partner'].create({'name': 'Supplier'})
-        customer = self.env['res.partner'].create({'name': 'Customer'})
-        ipad = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.supplier = cls.env['res.partner'].create({'name': 'Supplier'})
+        cls.customer = cls.env['res.partner'].create({'name': 'Customer'})
+        cls.ipad = cls.env['product.product'].create({
             'name': 'Ipad',
             'standard_price': 500.0,
             'list_price': 750.0,
         })
+
+    def test_product_margin(self):
+        ''' In order to test the product_margin module '''
+
+        supplier = self.supplier
+        customer = self.customer
+        ipad = self.ipad
 
         invoices = self.env['account.move'].create([
             {
@@ -65,3 +72,26 @@ class TestProductMargin(AccountTestInvoicingCommon):
 
         # Check expected margin
         self.assertEqual(result[ipad.id]['expected_margin'], expected_margin, "Wrong Expected Margin.")
+
+    def test_sale_avg_price(self):
+        customer = self.customer
+        ipad = self.ipad
+        tax_exclude = ipad.taxes_id
+        tax_include = tax_exclude.copy({'price_include': True, 'amount': 10.0})
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0, 'tax_ids': [(6, 0, tax_exclude.ids)]})],
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 110.0, 'tax_ids': [(6, 0, tax_include.ids)]})],
+            },
+        ])
+        invoices.invoice_date = invoices[0].date
+        invoices.action_post()
+        result = ipad._compute_product_margin_fields_values()
+        sale_avg_price = ((20.0 * 750.0) + (10.0 * 100)) / 30.0
+        self.assertEqual(result[ipad.id]['sale_avg_price'], sale_avg_price)
