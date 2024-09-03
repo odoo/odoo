@@ -413,14 +413,7 @@ export class SelectionPlugin extends Plugin {
         const selection = this.getEditableSelection();
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
-
-        let externalRangeToRestore, documentSelection;
-        if (!selection.inEditable) {
-            documentSelection = this.document.getSelection();
-            if (documentSelection && documentSelection.rangeCount) {
-                externalRangeToRestore = documentSelection.getRangeAt(0);
-            }
-        }
+        const activeElement = this.document.activeElement;
         return {
             restore: () => {
                 if (selection.isDefault) {
@@ -437,15 +430,8 @@ export class SelectionPlugin extends Plugin {
                     { normalize: false }
                 );
 
-                if (!selection.inEditable && externalRangeToRestore) {
-                    const { startContainer, startOffset, endContainer, endOffset } =
-                        externalRangeToRestore;
-                    documentSelection.setBaseAndExtent(
-                        startContainer,
-                        startOffset,
-                        endContainer,
-                        endOffset
-                    );
+                if (!selection.inEditable && activeElement) {
+                    activeElement.focus();
                 }
             },
             update(callback) {
