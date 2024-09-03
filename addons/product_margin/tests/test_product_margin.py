@@ -17,27 +17,32 @@ class TestProductMargin(AccountTestInvoicingCommon):
             'standard_price': 500.0,
             'list_price': 750.0,
         })
+        tax = ipad.tax
+        tax.price_include = True
+
+        def _get_net_price(quantity, price_unit):
+            return tax.compute_all(price_unit, quantity=quantity, product=ipad)["total_excluded"]
 
         invoices = self.env['account.move'].create([
             {
                 'move_type': 'in_invoice',
                 'partner_id': supplier.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 300.0})],
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 300.0, 'tax_ids': [(6, 0, tax.ids)]})],
             },
             {
                 'move_type': 'in_invoice',
                 'partner_id': supplier.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 4.0, 'price_unit': 450.0})],
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 4.0, 'price_unit': 450.0, 'tax_ids': [(6, 0, tax.ids)]})],
             },
             {
                 'move_type': 'out_invoice',
                 'partner_id': customer.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0})],
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0, 'tax_ids': [(6, 0, tax.ids)]})],
             },
             {
                 'move_type': 'out_invoice',
                 'partner_id': customer.id,
-                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 550.0})],
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 550.0, 'tax_ids': [(6, 0, tax.ids)]})],
             },
         ])
         invoices.invoice_date = invoices[0].date
@@ -46,13 +51,13 @@ class TestProductMargin(AccountTestInvoicingCommon):
         result = ipad._compute_product_margin_fields_values()
 
         # Sale turnover ( Quantity * Price Subtotal / Quantity)
-        sale_turnover = ((20.0 * 750.00) + (10.0 * 550.00))
+        sale_turnover = (_get_net_price(20.0, 750.00) + _get_net_price(10.0, 550.00))
 
         # Expected sale (Total quantity * Sale price)
         sale_expected = (750.00 * 30.0)
 
         # Purchase total cost (Quantity * Unit price)
-        purchase_total_cost = ((10.0 * 300.00) + (4.0 * 450.00))
+        purchase_total_cost = (_get_net_price(10.0, 300.00) + _get_net_price(4.0, 450.00))
 
         # Purchase normal cost ( Total quantity * Cost price)
         purchase_normal_cost = (14.0 * 500.00)
