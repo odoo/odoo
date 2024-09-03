@@ -86,9 +86,9 @@
                         </group>
                         <group>
                             <label for="quantity" string="Quantity"/>
-                            <div class="o_row">
-                                <field name="quantity"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                            <div class="row">
+                                <div class="col-3"><field name="quantity"/></div>
+                                <div class="col-3"><field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/></div>
                             </div>
                             <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}"
                                    invisible="tracking == 'none' or not lot_id and lot_name"/>

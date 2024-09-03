@@ -37,9 +37,9 @@
                     <group>
                         <field name="product_id" context="{'default_is_storable': True, 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <label for="product_qty" invisible="not display_complete"/>
-                        <div class="o_row" invisible="not display_complete">
-                            <field name="product_qty"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        <div class="row" invisible="not display_complete">
+                            <div class="col-2"><field name="product_qty"/></div>
+                            <div class="col-2"><field name="product_uom_id" groups="uom.group_uom"/></div>
                         </div>
                         <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company"/>
