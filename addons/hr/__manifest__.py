@@ -13,6 +13,7 @@
     ],
     'depends': [
         'base_setup',
+        'digest',
         'phone_validation',
         'resource_mail',
         'web',
@@ -20,6 +21,7 @@
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'data/report_paperformat.xml',
         'wizard/hr_departure_wizard_views.xml',
         'wizard/mail_activity_schedule_views.xml',
