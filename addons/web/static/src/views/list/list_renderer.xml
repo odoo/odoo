@@ -201,7 +201,7 @@
                             </t>
                         </t>
                     </div>
-                    <div t-if="showGroupPager(group)" class="ms-auto">
+                    <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
                         <Pager t-props="getGroupPagerProps(group)"/>
                     </div>
                 </div>
