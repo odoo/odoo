@@ -40,7 +40,7 @@ class LinkPreview(models.Model):
             preview.source_url: preview for preview in message.sudo().link_preview_ids
         }
         ignore_pattern = (
-            re.compile(f"{re.escape(request_url)}(odoo|web)(/|$|#|\\?)") if request_url else None
+            re.compile(f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)") if request_url else None
         )
         for url in urls:
             if ignore_pattern and ignore_pattern.match(url):
