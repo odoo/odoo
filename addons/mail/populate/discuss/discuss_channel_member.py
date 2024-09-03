@@ -25,15 +25,20 @@ class ChannelMember(models.Model):
         big_done = 0
         big = min(300, len(users))
         chat_with_admin = 0
+        group_with_admin = 0
         admin_dm_size = {"small": 25, "medium": 100, "large": 500}[size]
+        admin_group_size = {"small": 5, "medium": 50, "large": 100}[size]
         for channel in channels:
             allowed_users = users
             if channel.channel_type == "channel" and channel.group_public_id:
                 if random.randint(1, 2) == 1 and channel.group_public_id in admin.groups_id:
                     users_by_channel[channel].append(admin)
                 allowed_users = users.filtered(lambda user: channel.group_public_id in user.groups_id)
-            elif random.randint(1, 2) == 1 and channel.channel_type in ["channel", "group"]:
+            elif random.randint(1, 2) == 1 and channel.channel_type == "channel":
                 users_by_channel[channel].append(admin)
+            elif group_with_admin < admin_group_size and random.randint(1, 2) == 1 and channel.channel_type == "group":
+                users_by_channel[channel].append(admin)
+                group_with_admin += 1
             if allowed_users:
                 # arbitrary limit of 20 for non-channel type to have a functionally significant number
                 max_users = len(allowed_users) if channel.channel_type == "channel" else min(20, len(allowed_users))
