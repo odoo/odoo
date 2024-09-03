@@ -3,6 +3,7 @@
 
     <t t-name="web.ListRenderer">
         <t t-set="_canSelectRecord" t-value="canSelectRecord"/>
+        <t t-set="_editedRecord" t-value="props.list.editedRecord"/>
         <div
             class="o_list_renderer o_renderer table-responsive"
             t-att-class="uniqueRendererClass"
@@ -116,7 +117,7 @@
                             href="#"
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
-                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-att-tabindex="_editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: create.context })"
                         >
                             <t t-esc="create.string"/>
@@ -129,7 +130,7 @@
                             record="props.list"
                             string="create.string"
                             title="create.title"
-                            tabindex="props.list.editedRecord ? '-1' : '0'"
+                            tabindex="_editedRecord ? '-1' : '0'"
                         />
                     </t>
                 </td>
@@ -258,7 +259,7 @@
                                 record="record"
                                 string="button.string"
                                 title="button.title"
-                                tabindex="props.list.editedRecord ? '-1' : '0'"
+                                tabindex="_editedRecord ? '-1' : '0'"
                                 onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
                             />
                         </t>
