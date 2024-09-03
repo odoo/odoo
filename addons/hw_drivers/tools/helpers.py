@@ -429,7 +429,7 @@ def load_iot_handlers():
         filesList = list_file_by_os(path)
         for file in filesList:
             spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), str(Path(path).joinpath(file)))
-            if spec:
+            if spec and spec.origin.endswith(("PrinterInterface_L.py", "PrinterDriver_L.py")):
                 module = util.module_from_spec(spec)
                 try:
                     spec.loader.exec_module(module)
