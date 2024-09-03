@@ -725,15 +725,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/web/login')
 
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order and order.carrier_id:
             # Express checkout is based on the amout of the sale order. If there is already a
             # delivery line, Express Checkout form will display and compute the price of the
             # delivery two times (One already computed in the total amount of the SO and one added
             # in the form while selecting the delivery carrier)
             order._remove_delivery_line()
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.website.sale_get_order()
 
         request.session['website_sale_cart_quantity'] = order.cart_quantity
 
