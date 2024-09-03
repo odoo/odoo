@@ -1484,7 +1484,7 @@ class Lead(models.Model):
                     subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
                 else:
                     subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
+                message.sudo().write({
                     'res_id': self.id,
                     'subject': subject,
                 })

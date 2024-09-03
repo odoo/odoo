@@ -4472,11 +4472,11 @@ class MailThread(models.AbstractModel):
         msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
         if new_parent_message:
             msg_vals["parent_id"] = new_parent_message.id
-        msg_comment.write(msg_vals)
+        msg_comment.sudo().write(msg_vals)
 
         # other than comment: reset subtype
         msg_vals["subtype_id"] = None
-        msg_not_comment.write(msg_vals)
+        msg_not_comment.sudo().write(msg_vals)
         return True
 
     def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None,
