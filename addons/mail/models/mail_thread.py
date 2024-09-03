@@ -4385,6 +4385,7 @@ class MailThread(models.AbstractModel):
 
         return True
 
+    @api.readonly
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
         self.ensure_one()
         store = Store()
