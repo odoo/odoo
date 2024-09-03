@@ -23,10 +23,9 @@ class TestConfigManager(TransactionCase):
         self.config = configmanager()
 
     def parse_reset(self, args=None):
-        options = dict(self.config.options)
-        with patch.dict(self.config.options, options):
+        with patch.dict(self.config.options, {}):
             cli = self.config._parse_config(args)
-        return cli, options
+            return cli, dict(self.config.options)
 
     def test_00_setUp(self):
         self.assertEqual(self.config.rcfile, EMPTY_CONFIG_PATH)
@@ -429,3 +428,15 @@ class TestConfigManager(TransactionCase):
         self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-i', 'base'])
         self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-u', 'base'])
         error.assert_has_calls(4 * [call("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")])
+
+    def test_11_auto_stop_after_init_after_test(self):
+        for args, stop_after_init in [
+            ([], False),
+            (['--stop'], True),
+            (['--test-enable'], True),
+            (['--test-tags', 'tag'], True),
+            (['--test-file', 'file'], True),
+        ]:
+            with self.subTest(args=args):
+                _, options = self.parse_reset(args)
+                self.assertEqual(options['stop_after_init'], stop_after_init)
