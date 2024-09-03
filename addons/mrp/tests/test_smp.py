@@ -246,6 +246,45 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         mo.procurement_group_id.mrp_production_ids.button_mark_done()
         self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped('state'), ['done', 'done'])
 
+    def test_mass_produce_with_tracked_product_2(self):
+        """
+        Check that the components are correclty consumed during mass
+        production of a tracked product.
+        """
+        mo = self.generate_mo(tracking_final='serial', qty_final=3, qty_base_1=1, qty_base_2=1)[0]
+        comp1, comp2 = mo.move_raw_ids.mapped('product_id')
+        self.env['stock.quant']._update_available_quantity(comp1, mo.warehouse_id.lot_stock_id, 5)
+        # Generate an SN using the action_generate_serial
+        mo.action_generate_serial()
+        # In the end mass produce the SN's
+        action = mo.action_serial_mass_produce_wizard()
+        wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
+        # Let the wizard generate all serial numbers
+        wizard.next_serial_number = "sn#5"
+        wizard.next_serial_count = 3
+        action = wizard.save().generate_serial_numbers_production()
+        # Reload the wizard to apply generated serial numbers
+        wizard = Form(self.env['stock.assign.serial'].browse(action['res_id']))
+        wizard.save().apply()
+        # Initial MO should have a backorder-sequenced name and be in to_close state
+        self.assertIn("-001", mo.name)
+        self.assertEqual(mo.state, "to_close")
+        # Each generated serial number should have its own mo
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#5", "sn#6", "sn#7"])
+        # check the component quantity
+        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
+            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+        ])
+        mo.procurement_group_id.mrp_production_ids.button_mark_done()
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped('state'), ['done', 'done', 'done'])
+        self.assertEqual(comp1.qty_available, 2.0)
+        self.assertEqual(comp2.qty_available, -3.0)
+
     def test_mass_produce_with_tracked_product_3(self):
         """
         Check that the components are correclty reserved during mass
