@@ -78,13 +78,23 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
     () => [
         // 1. Open Html Editor and select a scss file
         {
+            trigger: ":iframe #wrap:visible", // ensure state for later
+        },
+        {
+            trigger: ":iframe h1:contains(contact us)",
+        },
+        {
+            trigger: ":iframe input[name=company]:value(yourcompany)",
+        },
+        {
             content: "open site menu",
-            extra_trigger: ':iframe #wrap:visible', // ensure state for later
-            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            trigger: 'nav button[data-menu-xmlid="website.menu_site"]:contains(site)',
+            run: "click",
         },
         {
             content: "open html editor",
-            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            trigger: '.o_popover a[data-menu-xmlid="website.menu_ace_editor"]:contains(/^HTML/)',
+            run: "click",
         },
         {
             content: "open type switcher",
@@ -169,7 +179,8 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         },
         {
             content: "open html editor",
-            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            trigger: '.o_popover a[data-menu-xmlid="website.menu_ace_editor"]:contains(/^HTML/)',
+            run: "click",
         },
         {
             content: "open type switcher",
