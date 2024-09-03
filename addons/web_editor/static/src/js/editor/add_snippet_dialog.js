@@ -143,7 +143,7 @@ export class AddSnippetDialog extends Component {
         this.iframeDocumentEl.body.scrollTop = 0;
         this.iframeDocumentEl.body.innerHTML = "";
         const rowEl = document.createElement("div");
-        rowEl.classList.add("row", "g-0", "o_snippets_preview_row", "p-5");
+        rowEl.classList.add("row", "g-0", "o_snippets_preview_row");
         const leftColEl = document.createElement("div");
         leftColEl.classList.add("col-lg-6");
         rowEl.appendChild(leftColEl);
@@ -174,7 +174,7 @@ export class AddSnippetDialog extends Component {
             }
             clonedSnippetEl.classList.remove("oe_snippet_body");
             const snippetPreviewWrapEl = document.createElement("div");
-            snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "m-5", "position-relative", "fade");
+            snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative", "fade");
             snippetPreviewWrapEl.dataset.snippetId = snippet.name;
             snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
             snippetPreviewWrapEl.appendChild(clonedSnippetEl);
@@ -194,6 +194,8 @@ export class AddSnippetDialog extends Component {
             // Replace the snippet with an image preview if one exists.
             const imagePreview = snippet.imagePreview || originalSnippet?.imagePreview;
             if (imagePreview) {
+                // Enforce no-padding for image previews
+                clonedSnippetEl.style.setProperty("padding", "0", "important");
                 const previewImgDivEl = document.createElement("div");
                 previewImgDivEl.classList.add("s_dialog_preview", "s_dialog_preview_image");
                 const previewImgEl = document.createElement("img");

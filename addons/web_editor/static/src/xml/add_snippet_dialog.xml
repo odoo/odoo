@@ -9,15 +9,15 @@
         size="'xl'">
         <div class="overflow-hidden w-100">
             <div class="d-flex w-100 h-100 vertical flex-row">
-                <div class="border-end overflow-auto">
-                    <div class="input-group p-2 bg-100">
-                        <input type="search" class="form-control bg-white" placeholder="Search for a block"
+                <aside class="border-end overflow-auto">
+                    <div class="d-block position-relative p-2 bg-100 border-bottom">
+                        <input type="search" class="form-control bg-white pe-4" placeholder="Search for a block"
                             aria-label="Search for a block" t-model="state.search" t-ref="search-input"/>
-                        <span class="input-group-text border-0">
-                            <i class="fa fa-search" aria-hidden="true"></i>
+                        <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
+                            <i class="oi oi-search" aria-hidden="true"></i>
                         </span>
                     </div>
-                    <div class="list-group flex-column flex-nowrap overflow-y-auto" role="tablist">
+                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
                         <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.name">
                             <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"
                                 t-att-class="{ 'active': this.state.groupSelected === snippetGroup.name}"
@@ -26,9 +26,12 @@
                             </button>
                         </t>
                     </div>
-                </div>
+                </aside>
                 <div class="position-relative flex-grow-1 flex-shrink-1">
-                    <iframe class="border-0 fade bg-200 o_add_snippet_iframe" tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%"/>
+                    <div class="spinner-grow position-absolute top-50 start-50 translate-middle" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe" tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%"/>
                 </div>
             </div>
         </div>
