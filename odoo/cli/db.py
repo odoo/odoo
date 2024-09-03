@@ -115,7 +115,7 @@ class Db(Command):
                     else f'--{k}',
                 v,
             ]
-        ])
+        ], setup_logging=True)
         # force db management active to bypass check when only a
         # `check_db_management_enabled` version is available.
         config['list_db'] = True

@@ -21,7 +21,7 @@ class Neutralize(Command):
         group.add_option("--stdout", action="store_true", dest="to_stdout",
                          help="Output the neutralization SQL instead of applying it")
         parser.add_option_group(group)
-        opt = odoo.tools.config.parse_config(args)
+        opt = odoo.tools.config.parse_config(args, setup_logging=True)
 
         dbname = odoo.tools.config['db_name']
         if not dbname:

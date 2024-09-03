@@ -21,6 +21,11 @@ from . import tools
 _logger = logging.getLogger(__name__)
 
 def log(logger, level, prefix, msg, depth=None):
+    warnings.warn(
+        "odoo.netsvc.log is deprecated starting Odoo 18, use normal logging APIs",
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
     indent=''
     indent_after=' '*len(prefix)
     for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
@@ -141,19 +146,26 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
-_logger_init = False
-def init_logger():
-    global _logger_init
-    if _logger_init:
-        return
-    _logger_init = True
 
-    old_factory = logging.getLogRecordFactory()
-    def record_factory(*args, **kwargs):
-        record = old_factory(*args, **kwargs)
-        record.perf_info = ""
-        return record
-    logging.setLogRecordFactory(record_factory)
+class LogRecord(logging.LogRecord):
+    def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None):
+        super().__init__(name, level, pathname, lineno, msg, args, exc_info, func, sinfo)
+        self.perf_info = ""
+
+
+showwarning = None
+def init_logger():
+    global showwarning  # noqa: PLW0603
+    if logging.getLogRecordFactory() is LogRecord:
+        return
+
+    logging.setLogRecordFactory(LogRecord)
+
+    logging.captureWarnings(True)
+    # must be after `loggin.captureWarnings` so we override *that* instead of
+    # the other way around
+    showwarning = warnings.showwarning
+    warnings.showwarning = showwarning_with_traceback
 
     # enable deprecation warnings (disabled by default)
     warnings.simplefilter('default', category=DeprecationWarning)
@@ -161,11 +173,9 @@ def init_logger():
     warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
     # ofxparse use an html parser to parse ofx xml files and triggers a warning since bs4 4.11.0
     # https://github.com/jseutter/ofxparse/issues/170
-    try:
+    with contextlib.suppress(ImportError):
         from bs4 import XMLParsedAsHTMLWarning
         warnings.filterwarnings('ignore', category=XMLParsedAsHTMLWarning)
-    except ImportError:
-        pass
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
         'babel.util', # deprecated parser module, no release yet
@@ -286,10 +296,6 @@ PSEUDOCONFIG_MAPPER = {
 
 logging.RUNBOT = 25
 logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
-logging.captureWarnings(True)
-# must be after `loggin.captureWarnings` so we override *that* instead of the
-# other way around
-showwarning = warnings.showwarning
 IGNORE = {
     'Comparison between bytes and int', # a.foo != False or some shit, we don't care
 }
@@ -309,7 +315,6 @@ def showwarning_with_traceback(message, category, filename, lineno, file=None, l
         file=file,
         line=''.join(traceback.format_list(filtered))
     )
-warnings.showwarning = showwarning_with_traceback
 
 def runbot(self, message, *args, **kws):
     self.log(logging.RUNBOT, message, *args, **kws)

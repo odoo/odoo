@@ -38,7 +38,7 @@ class Populate(Command):
                          dest='separator',
                          help="Single character separator for char/text fields.",
                          default=DEFAULT_SEPARATOR)
-        opt = odoo.tools.config.parse_config(cmdargs)
+        opt = odoo.tools.config.parse_config(cmdargs, setup_logging=True)
 
         # deduplicate models if necessary, and keep the last corresponding
         # factor for each model

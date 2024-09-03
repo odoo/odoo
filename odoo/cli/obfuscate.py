@@ -149,7 +149,7 @@ class Obfuscate(Command):
             sys.exit(parser.print_help())
 
         try:
-            opt = odoo.tools.config.parse_config(cmdargs)
+            opt = odoo.tools.config.parse_config(cmdargs, setup_logging=True)
             if not opt.pwd:
                 _logger.error("--pwd is required")
                 sys.exit("ERROR: --pwd is required")
