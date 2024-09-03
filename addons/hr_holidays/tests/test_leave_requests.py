@@ -569,7 +569,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_leave_with_public_holiday_other_company(self):
         other_company = self.env['res.company'].create({
-            'name': 'Test Company',
+            'name': 'Test Company 2',
         })
         # Create a public holiday for the second company
         p_leave = self.env['resource.calendar.leaves'].create({
