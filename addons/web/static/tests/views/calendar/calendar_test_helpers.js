@@ -1,7 +1,7 @@
 import { click, drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, advanceFrame, animationFrame } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
 
 import { createElement } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
@@ -320,7 +320,9 @@ export async function pickDate(date) {
  */
 export async function clickAllDaySlot(date) {
     const slot = findAllDaySlot(date);
+
     instantScrollTo(slot);
+
     click(slot);
     await animationFrame();
 }
@@ -331,7 +333,9 @@ export async function clickAllDaySlot(date) {
  */
 export async function clickDate(date) {
     const cell = findDateCell(date);
+
     instantScrollTo(cell);
+
     click(cell);
     await advanceTime(500);
 }
@@ -341,10 +345,21 @@ export async function clickDate(date) {
  * @returns {Promise<void>}
  */
 export async function clickEvent(eventId) {
-    const event = findEvent(eventId);
-    instantScrollTo(event);
-    click(event);
+    const eventEl = findEvent(eventId);
+
+    instantScrollTo(eventEl);
+
+    click(eventEl);
     await advanceTime(500); // wait for the popover to open (debounced)
+}
+
+export function expandCalendarView() {
+    // Expends Calendar view and FC too
+    let tmpElement = queryFirst(".fc");
+    do {
+        tmpElement = tmpElement.parentElement;
+        tmpElement.classList.add("h-100");
+    } while (!tmpElement.classList.contains("o_view_controller"));
 }
 
 /**
@@ -361,6 +376,7 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const endHour = Number(endTime.slice(0, 2));
     const midHour = Math.floor((startHour + endHour) / 2);
     const midTime = `${String(midHour).padStart(2, "0")}:00:00`;
+
     instantScrollTo(
         queryFirst(`.fc-timegrid-slot[data-time="${midTime}"]:eq(1)`, { visible: false })
     );
@@ -369,16 +385,18 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const startRow = queryFirst(`.fc-timegrid-slot[data-time="${startTime}"]:eq(1)`);
     const endColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${endDate}"]`);
     const endRow = queryFirst(`.fc-timegrid-slot[data-time="${endTime}"]:eq(1)`);
-
-    const { moveTo, drop } = drag(startRow, {
+    const optionStart = {
         relative: true,
         position: { y: 1, x: startColumnRect.left },
-    });
-    moveTo(endRow, {
+    };
+    hover(startRow, optionStart);
+    await animationFrame();
+    const { drop } = drag(startRow, optionStart);
+    await animationFrame();
+    drop(endRow, {
         relative: true,
         position: { y: -1, x: endColumnRect.left },
     });
-    drop();
 
     await animationFrame();
 }
@@ -393,10 +411,17 @@ export async function selectDateRange(startDate, endDate) {
     const endCell = findDateCell(endDate);
 
     instantScrollTo(startCell);
-    const { moveTo, drop } = drag(startCell);
-    moveTo(endCell);
-    drop();
 
+    hover(startCell);
+    await animationFrame();
+
+    const { moveTo, drop } = drag(startCell);
+    await animationFrame();
+
+    moveTo(endCell);
+    await animationFrame();
+
+    drop();
     await animationFrame();
 }
 
@@ -410,28 +435,45 @@ export async function selectAllDayRange(startDate, endDate) {
     const end = findAllDaySlot(endDate);
 
     instantScrollTo(start);
-    const { moveTo, drop } = drag(start);
-    moveTo(end);
-    drop();
 
+    hover(start);
+    await animationFrame();
+
+    const { drop } = drag(start);
+    await animationFrame();
+
+    drop(end);
     await animationFrame();
 }
-
+export async function closeCwPopOver() {
+    if (getMockEnv().isSmall) {
+        await contains(`.oi-arrow-left`).click();
+    } else {
+        await contains(`.o_cw_popover_close`).click();
+    }
+}
 /**
  * @param {number} eventId
  * @param {string} date
  * @param {{ disableDrop: boolean }} [options]
  * @returns {Promise<void>}
  */
-export async function moveEventToDate(eventId, date, options = {}) {
-    const event = findEvent(eventId);
+export async function moveEventToDate(eventId, date, options) {
+    const eventEl = findEvent(eventId);
     const cell = findDateCell(date);
 
-    instantScrollTo(event);
-    const { moveTo, drop } = drag(event);
-    moveTo(cell);
+    instantScrollTo(eventEl);
 
-    if (!options.disableDrop) {
+    hover(eventEl);
+    await animationFrame();
+
+    const { drop, moveTo } = drag(eventEl);
+    await animationFrame();
+
+    moveTo(cell);
+    await animationFrame();
+
+    if (!options?.disableDrop) {
         drop();
     }
 
@@ -445,17 +487,41 @@ export async function moveEventToDate(eventId, date, options = {}) {
  * @returns {Promise<void>}
  */
 export async function moveEventToTime(eventId, dateTime) {
-    const event = findEvent(eventId);
+    const eventEl = findEvent(eventId);
     const [date, time] = dateTime.split(" ");
-    const columnRect = queryRect(findDateColumn(date));
+
     const row = findTimeRow(time);
+    const rowRect = queryRect(row);
 
-    instantScrollTo(event);
-    const { moveTo, drop } = drag(event, { relative: true, position: { y: 0, x: 0 } });
-    moveTo(row, { relative: true, position: { y: 0, x: columnRect.x } });
-    drop();
+    const column = findDateColumn(date);
+    const columnRect = queryRect(column);
 
+    instantScrollTo(eventEl);
+
+    hover(eventEl, {
+        position: { y: 0 },
+        relative: true,
+    });
     await animationFrame();
+
+    const { drop, moveTo } = drag(eventEl);
+    await animationFrame();
+
+    moveTo(row, {
+        position: {
+            y: rowRect.y + 1,
+            x: columnRect.x + columnRect.width / 2,
+        },
+    });
+    await animationFrame();
+
+    drop();
+    await advanceFrame(5);
+}
+
+export async function selectHourOnPicker(selectedValue) {
+    await contains(`.o_time_picker_select:eq(0)`).select(selectedValue);
+    await contains(".o_datetime_picker .o_apply").click();
 }
 
 /**
@@ -464,15 +530,33 @@ export async function moveEventToTime(eventId, dateTime) {
  * @returns {Promise<void>}
  */
 export async function moveEventToAllDaySlot(eventId, date) {
-    const event = findEvent(eventId);
+    const eventEl = findEvent(eventId);
     const slot = findAllDaySlot(date);
 
-    instantScrollTo(event);
-    const { moveTo, drop } = drag(event);
-    moveTo(slot);
-    drop();
+    const columnRect = queryRect(eventEl);
+    const slotRect = queryRect(slot);
 
+    instantScrollTo(eventEl);
+
+    hover(eventEl, {
+        position: { y: 0 },
+        relative: true,
+    });
     await animationFrame();
+
+    const { drop, moveTo } = drag(eventEl);
+    await animationFrame();
+
+    moveTo(slot, {
+        position: {
+            x: columnRect.x + columnRect.width / 2,
+            y: slotRect.y,
+        },
+    });
+    await animationFrame();
+
+    drop();
+    await advanceFrame(5);
 }
 
 /**
@@ -481,21 +565,31 @@ export async function moveEventToAllDaySlot(eventId, date) {
  * @returns {Promise<void>}
  */
 export async function resizeEventToTime(eventId, dateTime) {
-    const event = findEvent(eventId);
-    instantScrollTo(event);
-    hover(queryFirst(`.fc-event-main`, { root: event }));
+    const eventEl = findEvent(eventId);
+
+    instantScrollTo(eventEl);
+
+    hover(`.fc-event-main:first`, { root: eventEl });
     await animationFrame();
 
-    const resizer = queryFirst(`.fc-event-resizer-end`, { root: event });
-    Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
+    const resizer = queryFirst(`.fc-event-resizer-end`, { root: eventEl });
+    Object.assign(resizer.style, {
+        display: "block",
+        height: "1px",
+        bottom: "0",
+    });
+
     const [date, time] = dateTime.split(" ");
-    const columnRect = queryRect(findDateColumn(date));
+
     const row = findTimeRow(time);
 
-    const { moveTo, drop } = drag(resizer, { relative: true, position: { y: 0, x: 0 } });
-    moveTo(row, { relative: true, position: { y: -1, x: columnRect.x } });
-    drop();
+    const column = findDateColumn(date);
+    const columnRect = queryRect(column);
 
+    drag(resizer).drop(row, {
+        position: { x: columnRect.x, y: -1 },
+        relative: true,
+    });
     await advanceTime(500);
 }
 
@@ -505,29 +599,40 @@ export async function resizeEventToTime(eventId, dateTime) {
  * @returns {Promise<void>}
  */
 export async function resizeEventToDate(eventId, date) {
-    const event = findEvent(eventId);
+    const eventEl = findEvent(eventId);
     const slot = findAllDaySlot(date);
 
-    instantScrollTo(event);
-    hover(queryFirst('.fc-event-main', { root: event }));
+    instantScrollTo(eventEl);
+
+    hover(".fc-event-main", { root: eventEl });
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst('.fc-event-resizer-end', { root: event });
+    const resizer = queryFirst(".fc-event-resizer-end", { root: eventEl });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
 
     instantScrollTo(slot);
 
+    const rowRect = queryRect(resizer);
+
     // Find the date cell and calculate the positions for dragging
     const dateCell = findDateCell(date);
     const columnRect = queryRect(dateCell);
-    const startRow = queryRect(resizer);
 
     // Perform the drag-and-drop operation
-    const { moveTo, drop } = drag(resizer, { relative: true, position: { y: 0, x: 0 } });
-    moveTo(dateCell, { relative: true, position: { y: startRow.y - columnRect.y, x: 0 } });
-    drop();
+    hover(resizer, {
+        position: { x: 0 },
+        relative: true,
+    });
+    await animationFrame();
 
+    const { drop } = drag(resizer);
+    await animationFrame();
+
+    drop(dateCell, {
+        position: { y: rowRect.y - columnRect.y },
+        relative: true,
+    });
     await advanceTime(500);
 }
 
@@ -540,12 +645,33 @@ export async function changeScale(scale) {
     await contains(`.o-dropdown--menu .o_scale_button_${scale}`).click();
 }
 
+export async function displayCalendarPanel() {
+    if (getMockEnv().isSmall) {
+        await contains(".o_calendar_container .o_other_calendar_panel").click();
+    }
+}
+
+export async function hideCalendarPanel() {
+    if (getMockEnv().isSmall) {
+        await contains(".o_calendar_container .o_other_calendar_panel").click();
+    }
+}
+
 /**
  * @param {"prev" | "next"} direction
  * @returns {Promise<void>}
  */
 export async function navigate(direction) {
-    await contains(`.o_calendar_navigation_buttons .o_calendar_button_${direction}`).click();
+    if (getMockEnv().isSmall) {
+        if (direction === "next") {
+            await swipeLeft(".o_calendar_widget");
+        } else {
+            await swipeRight(".o_calendar_widget");
+        }
+        await advanceFrame(16);
+    } else {
+        await contains(`.o_calendar_navigation_buttons .o_calendar_button_${direction}`).click();
+    }
 }
 
 /**
@@ -554,11 +680,23 @@ export async function navigate(direction) {
  * @returns {Promise<void>}
  */
 export async function toggleFilter(sectionName, filterValue) {
+    const otherCalendarPanel = queryFirst(".o_other_calendar_panel");
+    if (otherCalendarPanel) {
+        click(otherCalendarPanel);
+        await animationFrame();
+    }
     const root = findFilterPanelFilter(sectionName, filterValue);
     const input = queryFirst(`input`, { root });
+
     instantScrollTo(input);
+
     click(input);
     await animationFrame();
+
+    if (otherCalendarPanel) {
+        click(otherCalendarPanel);
+        await animationFrame();
+    }
 }
 
 /**
@@ -566,11 +704,23 @@ export async function toggleFilter(sectionName, filterValue) {
  * @returns {Promise<void>}
  */
 export async function toggleSectionFilter(sectionName) {
+    const otherCalendarPanel = queryFirst(".o_other_calendar_panel");
+    if (otherCalendarPanel) {
+        click(otherCalendarPanel);
+        await animationFrame();
+    }
     const root = findFilterPanelSectionFilter(sectionName);
     const input = queryFirst(`input`, { root });
+
     instantScrollTo(input);
+
     click(input);
     await animationFrame();
+
+    if (otherCalendarPanel) {
+        click(otherCalendarPanel);
+        await animationFrame();
+    }
 }
 
 /**
@@ -581,7 +731,9 @@ export async function toggleSectionFilter(sectionName) {
 export async function removeFilter(sectionName, filterValue) {
     const root = findFilterPanelFilter(sectionName, filterValue);
     const button = queryFirst(`.o_remove`, { root });
+
     instantScrollTo(button);
+
     click(button);
     await animationFrame();
 }
