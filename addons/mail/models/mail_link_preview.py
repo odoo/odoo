@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import requests
 
 from datetime import timedelta
@@ -27,7 +28,7 @@ class LinkPreview(models.Model):
     create_date = fields.Datetime(index=True)
 
     @api.model
-    def _create_from_message_and_notify(self, message):
+    def _create_from_message_and_notify(self, message, request_url=None):
         if tools.is_html_empty(message.body):
             return self
         urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
@@ -37,7 +38,12 @@ class LinkPreview(models.Model):
         link_previews_by_url = {
             preview.source_url: preview for preview in message.sudo().link_preview_ids
         }
+        ignore_pattern = (
+            re.compile(f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)") if request_url else None
+        )
         for url in urls:
+            if ignore_pattern and ignore_pattern.match(url):
+                continue
             if url in link_previews_by_url:
                 preview = link_previews_by_url.pop(url)
                 if not preview.is_hidden:

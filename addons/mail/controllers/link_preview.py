@@ -17,7 +17,9 @@ class LinkPreviewController(http.Controller):
             return
         if not message.is_current_user_or_guest_author and not guest.env.user._is_admin():
             return
-        guest.env["mail.link.preview"].sudo()._create_from_message_and_notify(message)
+        guest.env["mail.link.preview"].sudo()._create_from_message_and_notify(
+            message, request_url=request.httprequest.url_root
+        )
 
     @http.route("/mail/link_preview/hide", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
