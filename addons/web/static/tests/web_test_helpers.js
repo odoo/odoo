@@ -67,6 +67,7 @@ export {
     validateKanbanRecord,
 } from "./_framework/kanban_test_helpers";
 export { Command } from "./_framework/mock_server/mock_model";
+export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export {
     MockServer,
     authenticate,

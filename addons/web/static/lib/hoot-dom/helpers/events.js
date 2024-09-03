@@ -1706,6 +1706,10 @@ export function dblclick(target, options) {
  *  dispatch(document.querySelector("input"), "paste"); // Dispatches a "paste" event on the given <input>
  */
 export function dispatch(target, type, eventInit) {
+    if (type.startsWith("touch") && runTime.currentPointerDownTarget) {
+        target = runTime.currentPointerDownTarget;
+    }
+
     if (type in DEPRECATED_EVENTS) {
         throw new HootDomError(
             `cannot dispatch "${type}" event: this event type is deprecated, use "${DEPRECATED_EVENTS[type]}" instead`
