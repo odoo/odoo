@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import formatLang
@@ -200,3 +202,15 @@ class EventTicket(models.Model):
             raise UserError(_(
                 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n- %s",
                 '\n- '.join(self.mapped('name'))))
+
+    def _get_ticket_printing_color(self):
+        self.ensure_one()
+        default_color = '#000000'
+        color_overrides_json = self.env['ir.config_parameter'].sudo().get_param('event.ticket_text_colors')
+        if color_overrides_json:
+            try:
+                color_overrides = json.loads(color_overrides_json)
+                return color_overrides.get(self.name, default_color)
+            except (json.JSONDecodeError, AttributeError):
+                pass
+        return default_color
