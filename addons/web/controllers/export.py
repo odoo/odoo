@@ -281,9 +281,9 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
             column += 1
             aggregated_value = aggregates.get(field['name'])
             header_style = self.header_bold_style
-            if field.get('type') == 'monetary':
+            if field['type'] == 'monetary':
                 header_style = self.header_bold_style_monetary
-            elif field.get('type') == 'float':
+            elif field['type'] == 'float':
                 header_style = self.header_bold_style_float
             else:
                 aggregated_value = str(aggregated_value if aggregated_value is not None else '')
@@ -368,20 +368,11 @@ class Export(http.Controller):
 
     @http.route('/web/export/namelist', type='json', auth='user', readonly=True)
     def namelist(self, model, export_id):
-        # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
-        export = request.env['ir.exports'].browse([export_id]).read()[0]
-        export_fields_list = request.env['ir.exports.line'].browse(export['export_fields']).read()
-
-        fields_data = self.fields_info(
-            model, [f['name'] for f in export_fields_list])
-
-        return [
-            {'name': field['name'], 'label': fields_data[field['name']]}
-            for field in export_fields_list
-        ]
+        export = request.env['ir.exports'].browse([export_id])
+        return self.fields_info(model, export.export_fields.mapped('name'))
 
     def fields_info(self, model, export_fields):
-        info = {}
+        field_info = []
         fields = self.fields_get(model)
         if ".id" in export_fields:
             fields['.id'] = fields.get('id', {'string': 'ID'})
@@ -420,20 +411,31 @@ class Export(http.Controller):
             subfields = list(subfields)
             if length == 2:
                 # subfields is a seq of $base/*rest, and not loaded yet
-                info.update(self.graft_subfields(
-                    fields[base]['relation'], base, fields[base]['string'],
-                    subfields
-                ))
+                field_info.extend(
+                    self.graft_subfields(
+                        fields[base]['relation'], base, fields[base]['string'], subfields
+                    ),
+                )
             elif base in fields:
-                info[base] = fields[base]['string']
+                field_dict = fields[base]
+                field_info.append({
+                    'id': field_dict['name'],
+                    'string': field_dict['string'],
+                    'field_type': field_dict['type'],
+                })
 
-        return info
+        return field_info
 
     def graft_subfields(self, model, prefix, prefix_string, fields):
         export_fields = [field.split('/', 1)[1] for field in fields]
         return (
-            (prefix + '/' + k, prefix_string + '/' + v)
-            for k, v in self.fields_info(model, export_fields).items())
+            dict(
+                field_info,
+                id=f"{prefix}/{field_info['id']}",
+                string=f"{prefix_string}/{field_info['string']}",
+            )
+            for field_info in self.fields_info(model, export_fields)
+        )
 
 
 class ExportFormat(object):

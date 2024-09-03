@@ -386,9 +386,9 @@ class TestGroupedExport(XlsxCreatorCase):
             params={
                 'groupby': ['int_sum', 'date_max:month'],
                 'fields': [
-                    {'name': 'int_sum', 'label': 'Int Sum'},
-                    {'name': 'date_max', 'label': 'Date Max'},
-                    {'name': 'many2one/value', 'label': 'Many2One/Value'},
+                    {'name': 'int_sum', 'label': 'Int Sum', 'type': 'integer'},
+                    {'name': 'date_max', 'label': 'Date Max', 'type': 'date'},
+                    {'name': 'many2one/value', 'label': 'Many2One/Value', 'type': 'many2one'},
                 ],
             },
         )
@@ -420,8 +420,8 @@ class TestGroupedExport(XlsxCreatorCase):
             params={
                 'groupby': ['int_sum'],
                 'fields': [
-                    {'name': 'int_sum', 'label': 'Int Sum'},
-                    {'name': 'one2many/value', 'label': 'One2many/Value'},
+                    {'name': 'int_sum', 'label': 'Int Sum', 'type': 'integer'},
+                    {'name': 'one2many/value', 'label': 'One2many/Value', 'type': 'integer'},
                 ],
             },
         )
