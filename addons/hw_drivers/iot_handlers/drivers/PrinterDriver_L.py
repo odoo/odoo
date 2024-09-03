@@ -89,7 +89,7 @@ class PrinterDriver(Driver):
 
         if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
-        elif "COMMAND SET:ZPL;" in device['device-id']:
+        elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
             self.device_subtype = "label_printer"
         else:
             self.device_subtype = "office_printer"

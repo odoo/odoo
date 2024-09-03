@@ -7,14 +7,14 @@
             <div class="row">
                 <div class="col-lg-10 w-100 fs-2">
                     <div t-if="registrationStatus.value === 'confirmed_registration'" class="alert alert-success text-center" role="alert">
-                        <i class="fa fa-solid fa-check-circle"/><br/>
+                        <i class="fa fa-solid fa-check-circle me-2"/>
                         <span>Successfully registered!</span>
                     </div>
                     <div t-else="" class="alert alert-warning text-center" role="alert">
-                        <i class="fa fa-solid fa-exclamation-circle"/><br/>
+                        <i class="fa fa-solid fa-exclamation-circle me-2"/>
                         <t t-if="registrationStatus.value === 'need_manual_confirmation'">
                             <span>This ticket is for another event!<br/>
-                            Confirm attendance ?</span>
+                            Confirm attendance?</span>
                         </t>
                         <t t-elif="registrationStatus.value === 'not_ongoing_event'">
                             <span>This ticket is not for an ongoing event</span>
@@ -59,18 +59,23 @@
                     </table>
                 </div>
             </div>
-            <div class="d-flex flex-column align-items-start">
-                <span class="fs-2 btn btn-link ps-0" role="button" t-on-click="() => this.onRegistrationPrintPdf()">
-                    <i class="fa fa-solid fa-print"/><span > Print Ticket</span>
-                </span>
-                <span class="fs-2 btn btn-link ps-0" role="button" t-on-click="() => this.onRegistrationView()">
-                    <i class="fa fa-external-link"/><span> Open Details</span>
-                </span>
+            <div class="d-flex justify-content-between">
+                <select t-if="registration.iot_printers.length > 1" type="select" class="form-select w-75" t-model.number="printSettings.iotPrinterId" t-on-change="savePrintSettings">
+                    <option value="" disabled="true" t-att-selected="!printSettings.iotPrinterId">Select printer...</option>
+                    <option t-foreach="registration.iot_printers" t-as="printer" t-key="printer.id" t-att-value="printer.id">
+                        <t t-esc="printer.name" />
+                    </option>
+                </select>
+                <div t-if="useIotPrinter" class="form-check">
+                    <input id="autoprint" type="checkbox" class="form-check-input" t-model="printSettings.autoPrint" t-on-change="savePrintSettings"></input>
+                    <label for="autoprint" class="form-check-label">Auto-Print</label>
+                </div>
             </div>
             <t t-set-slot="footer">
                 <button t-if="needManualConfirmation" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Confirm</button>
-                <button t-elif="isBarcodeScannerSupported" class="btn btn-primary" t-on-click="() => this.onScanNext()">Scan Next</button>
-                <button class="btn btn-secondary" t-on-click="() => this.props.close()">Close</button>
+                <button t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onScanNext()">Continue</button>
+                <button t-att-disabled="!hasSelectedPrinter()" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
+                <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
             </t>
         </Dialog>
     </t>
