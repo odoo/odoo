@@ -1081,3 +1081,19 @@ class TestPoSBasicConfig(TestPoSCommon):
             {'account_id': self.tax_received_account.id, 'balance': -9.72, 'reconciled': False},
             {'account_id': self.receivable_account.id, 'balance': 117.72, 'reconciled': True},
         ])
+
+    def test_pos_payment_method_copy(self):
+        """
+        Test POS payment method copy:
+            - Create two payment methods in which one of the payment method's journal type be cash
+            - Copy multiple payment methods
+            - Check the duplicated cash payment method journal should be empty
+        """
+        pm_1 = self.cash_pm1
+        pm_2 = self.bank_pm1
+        pm_3, pm_4 = (pm_1 + pm_2).copy()
+
+        self.assertTrue(pm_3)
+        self.assertFalse(pm_3.journal_id)
+        self.assertTrue(pm_4)
+        self.assertEqual(pm_4.journal_id.type, "bank")
