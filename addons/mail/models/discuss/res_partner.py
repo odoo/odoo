@@ -18,6 +18,7 @@ class ResPartner(models.Model):
         copy=False,
     )
 
+    @api.readonly
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
         """Returns partners matching search_term that can be invited to a channel.
@@ -59,6 +60,7 @@ class ResPartner(models.Model):
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         store.add(self)
 
+    @api.readonly
     @api.model
     def get_mention_suggestions_from_channel(self, channel_id, search, limit=8):
         """Return 'limit'-first partners' such that the name or email matches a 'search' string.

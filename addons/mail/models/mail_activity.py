@@ -577,6 +577,7 @@ class MailActivity(models.Model):
             if activity.active:
                 activity.unlink()
 
+    @api.readonly
     def activity_format(self):
         return Store(self).get_result()
 
@@ -591,6 +592,7 @@ class MailActivity(models.Model):
             data["persona"] = Store.one(activity.user_id.partner_id)
             store.add(activity, data)
 
+    @api.readonly
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):
         """ Get aggregate data about records and their activities.
