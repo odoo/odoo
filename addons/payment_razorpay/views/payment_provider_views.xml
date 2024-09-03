@@ -21,17 +21,30 @@
                         <field
                             name="razorpay_webhook_secret"
                             string="Webhook Secret"
-                            required="code == 'razorpay' and state != 'disabled'"
+                            groups="base.group_no_one"
                             password="True"
                         />
                         <button
-                            string="Refresh Webhook"
+                            string="Create your webhook"
                             name="action_razorpay_create_or_update_webhook"
                             type="object"
                             help="If you change the your base url, you will need to update the
                                   webhook else payment state will not be updated in odoo."
                             class="btn-primary"
-                            invisible="not razorpay_access_token or not razorpay_webhook_secret"
+                            invisible="razorpay_webhook_secret"
+                        />
+                    </div>
+                    <label for="razorpay_account_id"/>
+                    <div class="o_row">
+                        <field name="razorpay_account_id"
+                           groups="base.group_no_one"/>
+                        <button
+                            string="Reset your Razorpay account"
+                            name="action_razorpay_create_or_update_webhook"
+                            type="object"
+                            class="btn-link"
+                            confirm="Are you sure you want to disconnect?"
+                            invisible="not razorpay_account_id"
                         />
                     </div>
                 </group>
@@ -47,14 +60,6 @@
                         type="object"
                         class="btn-primary"
                         invisible="razorpay_public_token"
-                    />
-                    <button
-                        string="Disconnect"
-                        name="action_razorpay_revoked_token"
-                        type="object"
-                        class="btn-secondary"
-                        confirm="Are you sure you want to disconnect?"
-                        invisible="not razorpay_public_token"
                     />
                 </div>
             </group>

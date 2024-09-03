@@ -12,7 +12,6 @@
         'views/payment_provider_views.xml',
         'views/payment_razorpay_templates.xml',
 
-        'data/ir_cron_data.xml',
         'data/payment_provider_data.xml',  # Depends on views/payment_razorpay_templates.xml
     ],
     'assets': {

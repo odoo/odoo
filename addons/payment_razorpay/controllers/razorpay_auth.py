@@ -31,20 +31,14 @@ class RazorpayController(http.Controller):
         :return: Redirect to the related Razorpay form view.
         :rtype: Response
         """
-        state = data.get('state')
-        if not state:
-            _logger.error("Oauth callback without state.")
-            raise Forbidden()
+        razorpay_id = data.get('id')
 
         razorpay_provider = request.env['payment.provider'].sudo().search([
             ('code', '=', 'razorpay'),
-            ('razorpay_authorization_state', '=', state),
+            ('id', '=', razorpay_id),
         ], limit=1)
         if not razorpay_provider:
-            _logger.warning(
-                "Can't find any Razorpay provider for the given state %s",
-                state
-            )
+            _logger.warning("Can't find any Razorpay provider")
             raise Forbidden()
 
         action = request.env.ref('payment.action_payment_provider')
