@@ -73,6 +73,28 @@
         <field name="paperformat_id" ref="paperformat_event_badge"/>
     </record>
 
+    <record id="action_report_event_registration_badge_96x82" model="ir.actions.report">
+        <field name="name">Badge (96x82mm)</field>
+        <field name="model">event.registration</field>
+        <field name="groups_id" eval="[Command.link(ref('base.group_no_one'))]"/>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">event.event_report_template_esc_label_96x82_badge</field>
+        <field name="report_file">event.event_report_template_esc_label_96x82_badge</field>
+        <field name="binding_model_id" ref="model_event_registration"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_event_registration_badge_96x134" model="ir.actions.report">
+        <field name="name">Badge (96x134mm)</field>
+        <field name="model">event.registration</field>
+        <field name="groups_id" eval="[Command.link(ref('base.group_no_one'))]"/>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">event.event_report_template_esc_label_96x134_badge</field>
+        <field name="report_file">event.event_report_template_esc_label_96x134_badge</field>
+        <field name="binding_model_id" ref="model_event_registration"/>
+        <field name="binding_type">report</field>
+    </record>
+
     <record id="action_report_event_event_badge" model="ir.actions.report">
         <field name="name">Badge Example</field>
         <field name="model">event.event</field>
