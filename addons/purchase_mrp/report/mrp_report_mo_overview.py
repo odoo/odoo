@@ -11,7 +11,8 @@ class ReportMoOverview(models.AbstractModel):
         domain = [('state', 'in', ['draft', 'sent', 'to approve']), ('product_id', '=', product.id)]
         warehouse_id = self.env.context.get('warehouse', False)
         if warehouse_id:
-            domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
+            warehouse_id = warehouse_id if isinstance(warehouse_id, list) else [warehouse_id]
+            domain += [('order_id.picking_type_id.warehouse_id', 'in', warehouse_id)]
         po_lines = self.env['purchase.order.line'].search(domain, order='date_planned, id')
 
         for po_line in po_lines:
