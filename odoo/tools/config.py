@@ -178,7 +178,7 @@ class configmanager:
                          help="Launch a python test file.")
         group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
                          dest='test_enable',
-                         help="Enable unit tests.")
+                         help="Enable unit tests. Implies --stop-after-init")
         group.add_option("--test-tags", dest="test_tags",
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
                          "A filter spec has the format: [-][tag][/module][:class][.method] "
@@ -196,7 +196,7 @@ class configmanager:
                          "after each module installation/update and at the end "
                          "of the modules loading. At each stage tests are filtered "
                          "by --test-tags specs and additionally by dynamic specs "
-                         "'at_install' and 'post_install' correspondingly.")
+                         "'at_install' and 'post_install' correspondingly. Implies --stop-after-init")
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',
@@ -562,6 +562,8 @@ class configmanager:
         self.options['dev_mode'] = dev_split + (['reload', 'qweb', 'xml'] if 'all' in dev_split else [])
 
         self.options['test_enable'] = bool(self.options['test_tags'])
+        if self.options['test_enable'] or self.options['test_file']:
+            self.options['stop_after_init'] = True
 
         if opt.save:
             self.save()
