@@ -288,6 +288,10 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             {
                 trigger: ".section-financials :contains('Margin')",
             },
+            {
+                trigger: ".section-product-info-title:not(:contains('On hand:'))",
+                run: () => {},
+            },
         ].flat(),
 });
 

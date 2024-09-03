@@ -5,7 +5,7 @@
             class="section-product-info-title d-flex text-info bg-opacity-25 mx-n3 mt-n3 px-3 pb-2 pt-3 mb-3">
             <div class="d-flex flex-column">
                 <span class="h4" t-esc="props.product.name"/>
-                <span t-if="this.props.product.type !== 'service'" class="h4">
+                <span t-if="this.props.product.is_storable" class="h4">
                     <span>On hand: </span>
                     <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
                     <span t-elif="this.fetchStock.status === 'error'">N/A</span>

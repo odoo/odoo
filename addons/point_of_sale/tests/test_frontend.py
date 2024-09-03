@@ -611,6 +611,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_admin.write({
             'groups_id': [Command.link(self.env.ref('base.group_system').id)],
         })
+        self.assertFalse(self.product_a.is_storable)
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
 
