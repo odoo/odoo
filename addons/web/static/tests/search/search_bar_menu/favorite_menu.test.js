@@ -300,54 +300,40 @@ test("edit a favorite with a groupby", async () => {
     expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(0);
 });
 
-test("shared favorites are grouped under a dropdown if there are more than 3", async () => {
+test("shared favorites are grouped under a dropdown if there are more than 10", async () => {
     onRpc("create_or_replace", ({ args, route }) => {
         expect.step(route);
         const irFilter = args[0];
         expect(irFilter.domain).toBe(`[]`);
         return 10; // fake serverSideId
     });
+    const irFilters = [];
+    for (let i = 1; i < 11; i++) {
+        irFilters.push({
+            context: "{}",
+            domain: "[('foo', '=', 'a')]",
+            id: i,
+            is_default: false,
+            name: "My favorite" + i,
+            sort: "[]",
+        });
+    }
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["favorite"],
         searchViewId: false,
-        irFilters: [
-            {
-                context: "{}",
-                domain: "[('foo', '=', 'a')]",
-                id: 7,
-                is_default: false,
-                name: "My favorite1",
-                sort: "[]",
-            },
-            {
-                context: "{}",
-                domain: "[('foo', '=', 'a')]",
-                id: 8,
-                is_default: false,
-                name: "My favorite2",
-                sort: "[]",
-            },
-            {
-                context: "{}",
-                domain: "[('foo', '=', 'a')]",
-                id: 9,
-                is_default: false,
-                name: "My favorite3",
-                sort: "[]",
-            },
-        ],
+        irFilters,
         activateFavorite: false,
     });
     await toggleSearchBarMenu();
-    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(3);
+    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(10);
     await toggleSaveFavorite();
-    await editFavoriteName("My favorite4");
+    await editFavoriteName("My favorite11");
     await contains(".o-checkbox:eq(1)").click();
     await saveFavorite();
     expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
     expect(".o_favorite_menu .o-dropdown-item").toHaveCount(0);
     expect(".o_favorite_menu .o_menu_item:contains(Shared filters)").toHaveCount(1);
     await contains(".o_favorite_menu .o_menu_item:contains(Shared filters)").click();
-    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(4);
+    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(11);
 });
