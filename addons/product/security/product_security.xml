@@ -16,6 +16,19 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_product_manager" model="res.groups">
+        <field name="name">Product Creation</field>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[Command.link(ref('group_product_manager'))]"/>
+    </record>
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_product_manager'))]"/>
+    </record>
+
 <data noupdate="1">
 
     <record id="product_comp_rule" model="ir.rule">
