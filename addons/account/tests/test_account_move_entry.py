@@ -762,7 +762,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         tax_line.unlink()
 
         # But creating unbalanced misc entry shouldn't be allowed otherwise
-        with self.assertRaisesRegex(UserError, r"The move \(.*\) is not balanced\."):
+        with self.assertRaisesRegex(UserError, r"Unbalanced move alert! The move \(.*\) is feeling a bit unbalanced"):
             self.env["account.move"].create({
                 "move_type": "entry",
                 "line_ids": [
@@ -1048,17 +1048,17 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
         honest_move.action_post()
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'unbalanced'), self.env.cr.savepoint():
             self.env['account.move'].create({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'unbalanced'), self.env.cr.savepoint():
             self.env['account.move'].create({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
 
         stealer_move = self.env['account.move'].create({})
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'unbalanced'), self.env.cr.savepoint():
             stealer_move.write({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'unbalanced'), self.env.cr.savepoint():
             stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
 
     def test_validate_move_wizard_with_auto_post_entry(self):

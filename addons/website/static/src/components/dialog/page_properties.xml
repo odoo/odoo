@@ -25,7 +25,7 @@
             </div>
         </t>
         <t t-else="">
-            <p class="text-warning">We found these ones:</p>
+            <p class="text-warning">We found these links:</p>
             <div t-foreach="state.dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
                 <a class="collapsed" data-bs-toggle="collapse"
                 t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
@@ -65,13 +65,12 @@
 
 <t t-name="website.DeletePageDialog">
     <WebsiteDialog title.translate="Delete Page" close="props.close">
-        <p t-if="props.resIds.length > 1">Are you sure you want to delete those pages?</p>
-        <p t-else="">Are you sure you want to delete this page?</p>
-        <p t-if="props.hasNewPageTemplate" class="text-warning">
-            <t t-if="props.resIds.length > 1">Some of these pages are used as new page templates.</t>
-            <t t-else="">This page is used as a new page template.</t>
+        <p t-if="props.resIds.length > 1">Ready to make those web pages disappear into thin air? Are you sure?\n It will be gone forever!\n
+            <p class="text-warning">But before deleting them, make sure you update all links referring to them. That way, your customers won't bump into the not-so-famous 404 error page.</p>
         </p>
-        <p class="text-warning">Don't forget to update all links referring to it.</p>
+        <p t-else="">Ready to make this web page disappear into thin air? Are you sure?\n It will be gone forever!\n
+            <p class="text-warning">But before deleting it, make sure you update all links referring to it. That way, your customers won't bump into the not-so-famous 404 error page.</p>
+        </p>
         <PageDependencies resIds="props.resIds" resModel="props.resModel" mode="'collapse'"/>
         <CheckBox value="state.confirm" onChange.bind="onConfirmCheckboxChange">
             <p class="text-warning">I am sure about this.</p>
@@ -79,10 +78,10 @@
 
         <t t-set-slot="footer">
             <button class="btn btn-primary" t-on-click="() => this.onClickDelete()"  t-att-disabled="!this.state.confirm">
-                Ok
+                Delete
             </button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()">
-                Cancel
+                No, keep it
             </button>
         </t>
     </WebsiteDialog>

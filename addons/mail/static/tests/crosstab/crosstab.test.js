@@ -51,7 +51,7 @@ test("Delete starred message updates counter", async () => {
     await contains("button", { target: env2, text: "Starred1" });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']", { target: env2 });
     await click(".o-mail-Message-moreMenu [title='Delete']", { target: env2 });
-    await click("button", { text: "Confirm" }, { target: env2 });
+    await click("button", { text: "Delete" }, { target: env2 });
     await contains("button", { count: 0, target: env2, text: "Starred1" });
 });
 

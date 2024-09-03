@@ -5,21 +5,14 @@
         <field name="model">stock.backorder.confirmation</field>
         <field name="arch" type="xml">
             <form string="Backorder creation">
-                <group>
-                    <group>
-                        <div colspan="2"><p name="explanation-text">
-                            You have processed less products than the initial demand.
-                        </p></div>
-                    </group>
-                    <group>
-                        <div colspan="2" class="text-muted">
-                            Create a backorder if you expect to process the remaining
-                            products later. Do not create a backorder if you will not
-                            process the remaining products.
-                        </div>
-                    </group>
-                </group>
-
+                <p name="explanation-text">
+                    You have processed less products than the initial demand.
+                </p>
+                <p class="text-muted">
+                    Create a backorder if you expect to process the remaining
+                    products later. Do not create a backorder if you will not
+                    process the remaining products.
+                </p>
                 <!-- Added to ensure a correct default_get behavior
 
                 The wizard is always opened with default_pick_ids values in context,

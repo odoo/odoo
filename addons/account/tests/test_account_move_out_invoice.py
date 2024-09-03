@@ -3857,12 +3857,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invalid_invoice_1.state, 'draft')
 
         self.assertTrue(any(
-            message.body == "<p>The move could not be posted for the following reason: The field 'Customer' is required, please complete it to validate the Customer Invoice.</p>"
+            message.body == "<p>The move could not be posted for the following reason: The 'Customer' field is required to validate the invoice.\n"
+                        "You probably don't want to explain to your auditor that you invoiced the invisible man :)</p>"
             for message in invalid_invoice_1.message_ids))
 
         self.assertEqual(invalid_invoice_2.state, 'draft')
         self.assertTrue(any(
-            message.body == "<p>The move could not be posted for the following reason: You need to add a line before posting.</p>"
+            message.body == "<p>The move could not be posted for the following reason: Make sure you add a line before posting the invoice. Invoices can't be created from thin air.\n"
+                    "You'll thank me later for avoiding a weird explanation to your auditor :)</p>"
             for message in invalid_invoice_2.message_ids))
 
     def test_no_taxes_on_payment_term_line(self):

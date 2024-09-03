@@ -146,7 +146,7 @@ class AutomaticEntryWizard(models.TransientModel):
         if any(move.state != 'posted' for move in move_line_ids.mapped('move_id')):
             raise UserError(_('You can only change the period/account for posted journal items.'))
         if any(move_line.reconciled for move_line in move_line_ids):
-            raise UserError(_('You can only change the period/account for items that are not yet reconciled.'))
+            raise UserError(_("Oops! You can't change the period/account for already reconciled items! Only the unreconciled ones are up for such an adventure!"))
         if any(line.company_id.root_id != move_line_ids[0].company_id.root_id for line in move_line_ids):
             raise UserError(_('You cannot use this wizard on journal entries belonging to different companies.'))
         res['company_id'] = move_line_ids[0].company_id.root_id.id

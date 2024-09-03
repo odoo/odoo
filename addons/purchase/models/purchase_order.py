@@ -652,7 +652,10 @@ class PurchaseOrder(models.Model):
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
-            raise UserError(_('There is no invoiceable line. If a product has a control policy based on received quantity, please make sure that a quantity has been received.'))
+            raise UserError(_(
+                    'There’s nothing to be billed for!\n'
+                    'Make sure you receive products before creating the bill. Sometimes control policies are useful :)'
+                ))
 
         # 2) group by (company_id, partner_id, currency_id) for batch creation
         new_invoice_vals_list = []

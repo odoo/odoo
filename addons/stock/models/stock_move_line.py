@@ -493,7 +493,11 @@ class StockMoveLine(models.Model):
     def _unlink_except_done_or_cancel(self):
         for ml in self:
             if ml.state in ('done', 'cancel'):
-                raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
+                raise UserError(_(
+                    "Deleting product moves after a picking is done?\n\n"
+                    "That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be! So let's not do it.\n\n"
+                    "Instead, try changing the “done” quantity to 0."
+                ))
 
     def unlink(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

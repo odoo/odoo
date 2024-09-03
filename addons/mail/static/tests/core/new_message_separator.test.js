@@ -55,7 +55,7 @@ test("keep new message separator when message is deleted", async () => {
         parent: [".o-mail-Message", { text: "message 0" }],
     });
     await click(".o-mail-Message-moreMenu [title='Delete']");
-    await click("button", { text: "Confirm" });
+    await click("button", { text: "Delete" });
     await contains(".o-mail-Message", { text: "message 0", count: 0 });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 1" });
 });

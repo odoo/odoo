@@ -663,7 +663,7 @@ export class Composer extends Component {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
                 onConfirm: () => this.message.remove(),
-                prompt: _t("Are you sure you want to delete this message?"),
+                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
             });
         }
         this.suggestion?.clearRawMentions();

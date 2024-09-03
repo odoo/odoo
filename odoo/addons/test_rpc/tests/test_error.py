@@ -46,13 +46,10 @@ class TestError(common.HttpCase):
                 self.rpc("test_rpc.model_b", "unlink", b1)
             raise
         except Exception as e:
-            self.assertIn("The operation cannot be completed:", e.faultString)
-            self.assertIn(
-                "another model requires the record being deleted. If possible, archive it instead.",
-                e.faultString,
-            )
-            self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
-            self.assertIn("Constraint: test_rpc_model_a_field_b1_fkey", e.faultString)
+            self.assertIn("Another model is using the record you are trying to delete.", e.faultString)
+            self.assertIn("Our troublemaker is: Model A (test_rpc.model_a)", e.faultString)
+            self.assertIn("Blame the following constraint: test_rpc_model_a_field_b1_fkey", e.faultString)
+            self.assertIn("How about archiving the record instead?", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
         try:
@@ -60,13 +57,10 @@ class TestError(common.HttpCase):
                 self.rpc("test_rpc.model_b", "unlink", b2)
             raise
         except Exception as e:
-            self.assertIn("The operation cannot be completed:", e.faultString)
-            self.assertIn(
-                " another model requires the record being deleted. If possible, archive it instead.",
-                e.faultString,
-            )
-            self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
-            self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
+            self.assertIn("Another model is using the record you are trying to delete.", e.faultString)
+            self.assertIn("Our troublemaker is: Model A (test_rpc.model_a)", e.faultString)
+            self.assertIn("Blame the following constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
+            self.assertIn("How about archiving the record instead?", e.faultString)
 
     def test_03_sql_constraint(self):
         with mute_logger("odoo.sql_db"):

@@ -1467,8 +1467,8 @@ class Picking(models.Model):
         :rtype: str
         """
         return _(
-            'You cannot validate a transfer if no quantities are reserved. '
-            'To force the transfer, encode quantities.'
+            "Transfer trouble alert! Zero quantity transfer? That's like trying to move air around!\n"
+            "Set some quantities, and let the magic happen!"
         )
 
     def _action_generate_backorder_wizard(self, show_transfers=False):

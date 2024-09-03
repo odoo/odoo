@@ -68,7 +68,7 @@ test("Deleted messages are not pinned", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item", { text: "Delete" });
-    await click("button", { text: "Confirm" });
+    await click("button", { text: "Delete" });
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 

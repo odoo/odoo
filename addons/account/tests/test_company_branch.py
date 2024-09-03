@@ -212,7 +212,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                 record[company_field] = self.branch_a
 
                 # Can't use in main if owned by a branch
-                with self.assertRaisesRegex(UserError, 'belongs to another company'):
+                with self.assertRaisesRegex(UserError, 'belongs to a totally different company'):
                     self.env['account.move'].create({'company_id': self.root_company.id, 'line_ids': lines})
 
                 # Can still switch to main

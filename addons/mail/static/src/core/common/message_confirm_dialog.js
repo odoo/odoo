@@ -18,9 +18,9 @@ export class MessageConfirmDialog extends Component {
     ];
     static defaultProps = {
         confirmColor: "btn-primary",
-        confirmText: _t("Confirm"),
+        confirmText: _t("Delete"),
         size: "xl",
-        title: _t("Confirmation"),
+        title: _t("Not proud of your message?"),
     };
     static template = "mail.MessageConfirmDialog";
 

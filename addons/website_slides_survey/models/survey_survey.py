@@ -42,7 +42,8 @@ class Survey(models.Model):
                 for certi in certifications
             ]
             raise ValidationError(_(
-                'Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n%s',
+                'Uh-oh! You can’t delete a survey used as a Course Certification! Otherwise, students might think diplomas just grow on trees.\n'
+                'The courses that need it are:\n%s',
                 '\n'.join(certifications_course_mapping)))
 
     # ---------------------------------------------------------
