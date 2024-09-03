@@ -2112,6 +2112,10 @@ export class DynamicRecordList extends DynamicList {
             this.count = length;
         }
 
+        if (this.isDomainSelected) {
+            records.forEach((r) => r.selected = true);
+        }
+
         return records;
     }
 }

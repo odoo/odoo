@@ -65,6 +65,9 @@ class WebsiteSaleDelivery(WebsiteSale):
     @http.route()
     def cart(self, **post):
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order and order.carrier_id:
             # Express checkout is based on the amout of the sale order. If there is already a
             # delivery line, Express Checkout form will display and compute the price of the
