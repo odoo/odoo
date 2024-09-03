@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
-import { cleanTextNode, unwrapContents } from "../utils/dom";
+import { cleanTextNode, unwrapContents, fillEmpty } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
@@ -375,7 +375,20 @@ export class FormatPlugin extends Plugin {
 
     cleanForSave({ root, preserveSelection = false } = {}) {
         for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+            let currentElement = element.parentElement;
             this.cleanElement(element, { preserveSelection });
+            while (
+                currentElement &&
+                !isBlock(currentElement) &&
+                !currentElement.childNodes.length
+            ) {
+                const parentElement = currentElement.parentElement;
+                currentElement.remove();
+                currentElement = parentElement;
+            }
+            if (currentElement && isBlock(currentElement)) {
+                fillEmpty(currentElement);
+            }
         }
         this.mergeAdjacentInlines(root, { preserveSelection });
     }

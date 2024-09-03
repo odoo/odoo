@@ -242,7 +242,7 @@ describe("with italic", () => {
             contentBefore: `<p>ab${u(em(`cd`))}${em(`[]\u200b`)}${u(em(`ef`))}</p>`,
             stepFunction: underline,
             contentAfterEdit: `<p>ab${u(em(`cd`))}${em(u(`[]\u200b`, "last"))}${u(em(`ef`))}</p>`,
-            contentAfter: `<p>ab${u(em(`cd`))}${em(`[]`)}${u(em(`ef`))}</p>`,
+            contentAfter: `<p>ab${u(em(`cd[]ef`))}</p>`,
         });
     });
 
