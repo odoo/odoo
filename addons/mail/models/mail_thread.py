@@ -2873,6 +2873,14 @@ class MailThread(models.AbstractModel):
     def _message_create(self, values_list):
         """ Low-level helper to create mail.message records. It is mainly used
         to hide the cleanup of given values, for mail gateway or helpers."""
+        values_list = [
+            {
+                key: val
+                for key, val in values.items()
+                if key not in self._get_message_create_ignore_field_names()
+            }
+            for values in values_list
+        ]
         create_values_list = []
 
         # preliminary value safety check
@@ -2928,6 +2936,12 @@ class MailThread(models.AbstractModel):
             'subtype_id',
             'tracking_value_ids',
         }
+
+    def _get_message_create_ignore_field_names(self):
+        """Some fields should be silently ignored when creating a mail.message,
+        without raising an exception. Those fields are generally handled in
+        _message_post_after_hook, which also receives message values."""
+        return set()
 
     def _get_source_from_ref(self, source_ref):
         """ From a source_reference, return either a mail template, either

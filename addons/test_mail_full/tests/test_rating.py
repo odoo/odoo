@@ -203,8 +203,12 @@ class TestRatingPerformance(TestRatingCommon):
             self.assertTrue(all(vals), "The last rating is kept.")
 
 
-@tagged('rating')
+@tagged("rating", "rating_portal")
 class TestRatingRoutes(HttpCase, TestRatingCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._create_portal_user()
 
     def test_open_rating_route(self):
         for record_rating, is_rating_mixin_test in ((self.record_rating_thread, False),
@@ -218,3 +222,51 @@ class TestRatingRoutes(HttpCase, TestRatingCommon):
                 self.assertEqual(rating.rating, 5)
                 if is_rating_mixin_test:
                     self.assertEqual(record_rating.rating_last_value, 5)
+
+    def test_portal_user_can_post_message_with_rating(self):
+        """Test portal user can post a message with a rating on a thread with
+        _mail_post_access as read. In this case, sudo() is not necessary for
+        message_post itself, but it is necessary for adding the rating. This
+        tests covers the rating part is properly allowed."""
+        record_rating = self.env["mail.test.rating.thread.read"].create(
+            {
+                "customer_id": self.partner_1.id,
+                "name": "Test read access post + rating",
+                "user_id": self.user_admin.id,
+            }
+        )
+        # from model
+        message = record_rating.with_user(self.user_portal).message_post(
+            body="Not bad",
+            message_type="comment",
+            rating_value=3,
+            subtype_xmlid="mail.mt_comment",
+        )
+        rating = message.sudo().rating_id
+        self.assertEqual(rating.rating, 3, "rating was properly set")
+        # stealing attempt from another user
+        message2 = record_rating.message_post(
+            body="Attempt to steal rating with another user",
+            message_type="comment",
+            rating_id=rating.id,
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.assertEqual(message.sudo().rating_id, rating, "rating was not removed from m1")
+        self.assertFalse(message2.rating_id, "rating was not added to m2")
+        # from controller
+        self.authenticate("portal_test", "portal_test")
+        res = self.make_jsonrpc_request(
+            "/mail/message/post",
+            {
+                "post_data": {
+                    "body": "Good service",
+                    "message_type": "comment",
+                    "rating_value": 5,
+                    "subtype_xmlid": "mail.mt_comment",
+                },
+                "thread_id": record_rating.id,
+                "thread_model": "mail.test.rating.thread.read",
+            },
+        )
+        self.assertEqual(len(res["rating.rating"]), 1)
+        self.assertEqual(res["rating.rating"][0]["rating"], 5)
