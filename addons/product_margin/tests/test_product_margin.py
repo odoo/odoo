@@ -10,6 +10,7 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestProductMargin(AccountTestInvoicingCommon):
 
+<<<<<<< 86fee5323d8572a54255c15b7e606be9c51d6119
     def test_aggregates(self):
         model = self.env['product.product']
         field_names = [
@@ -29,10 +30,32 @@ class TestProductMargin(AccountTestInvoicingCommon):
         supplier = self.env['res.partner'].create({'name': 'Supplier'})
         customer = self.env['res.partner'].create({'name': 'Customer'})
         ipad = self.env['product.product'].create({
+||||||| 5ea09d68a8ac8cf2b8bb62330875728772849d49
+    def test_product_margin(self):
+        ''' In order to test the product_margin module '''
+
+        supplier = self.env['res.partner'].create({'name': 'Supplier'})
+        customer = self.env['res.partner'].create({'name': 'Customer'})
+        ipad = self.env['product.product'].create({
+=======
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.supplier = cls.env['res.partner'].create({'name': 'Supplier'})
+        cls.customer = cls.env['res.partner'].create({'name': 'Customer'})
+        cls.ipad = cls.env['product.product'].create({
+>>>>>>> 0ebab21151d2a58085825132380b2781e2a4ee0b
             'name': 'Ipad',
             'standard_price': 500.0,
             'list_price': 750.0,
         })
+
+    def test_product_margin(self):
+        ''' In order to test the product_margin module '''
+
+        supplier = self.supplier
+        customer = self.customer
+        ipad = self.ipad
 
         invoices = self.env['account.move'].create([
             {
@@ -96,13 +119,9 @@ class TestProductMargin(AccountTestInvoicingCommon):
         Test that product margins are calculated correctly when move lines
         include negative quantities or prices.
         """
-        supplier = self.env['res.partner'].create({'name': 'Supplier'})
-        customer = self.env['res.partner'].create({'name': 'Customer'})
-        ipad = self.env['product.product'].create({
-            'name': 'Ipad',
-            'standard_price': 1000.0,
-            'list_price': 1000.0,
-        })
+        supplier = self.supplier
+        customer = self.customer
+        ipad = self.ipad
 
         customer_invoice = self.env['account.move'].create([{
                 'move_type': 'out_invoice',
@@ -149,3 +168,36 @@ class TestProductMargin(AccountTestInvoicingCommon):
         results = ipad._compute_product_margin_fields_values()
         self.assertEqual(results[ipad.id]['total_cost'], 250)
         self.assertEqual(results[ipad.id]['total_margin'], 750)
+
+    def test_sale_avg_price(self):
+        customer = self.customer
+        ipad = self.ipad
+        tax_exclude, tax_include = self.env['account.tax'].create([
+            {
+                'name': 'Tax Exclude',
+                'amount': 10.0,
+                'price_include': False,
+            },
+            {
+                'name': 'Tax Include',
+                'amount': 10.0,
+                'price_include': True,
+            },
+        ])
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0, 'tax_ids': [(6, 0, tax_exclude.ids)]})],
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 110.0, 'tax_ids': [(6, 0, tax_include.ids)]})],
+            },
+        ])
+        invoices.invoice_date = invoices[0].date
+        invoices.action_post()
+        result = ipad._compute_product_margin_fields_values()
+        sale_avg_price = ((20.0 * 750.0) + (10.0 * 100)) / 30.0
+        self.assertEqual(result[ipad.id]['sale_avg_price'], sale_avg_price)
