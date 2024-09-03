@@ -155,6 +155,14 @@ class SetupBarBankConfigWizard(models.TransientModel):
         """Called by the validation button of this wizard. Serves as an
         extension hook in account_bank_statement_import.
         """
+<<<<<<< saas-17.4
+||||||| 546fd00a696ec4992b0a45c08cb39ddf317068ec
+        self.env["onboarding.onboarding.step"].action_validate_step("account.onboarding_onboarding_step_bank_account")
+=======
+        self.env["onboarding.onboarding.step"].sudo().action_validate_step(
+            "account.onboarding_onboarding_step_bank_account"
+        )
+>>>>>>> 9a11fb0256bb7a716699e29042c13c6da3d48920
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def _compute_company_id(self):
