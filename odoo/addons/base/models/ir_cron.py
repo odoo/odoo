@@ -558,8 +558,13 @@ class ir_cron(models.Model):
                 self.env.reset()
                 self = self.env()[self._name]
 
-            log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-            odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self.env.cr.dbname, self._uid, '*', cron_name, server_action_id), depth=log_depth)
+            _logger.debug(
+                "cron.object.execute(%r, %d, '*', %r, %d)",
+                self.env.cr.dbname,
+                self._uid,
+                cron_name,
+                server_action_id,
+            )
             _logger.info('Job %r (%s) starting', cron_name, self.id)
             start_time = time.time()
             self.env['ir.actions.server'].browse(server_action_id).run()

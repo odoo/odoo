@@ -369,7 +369,7 @@ class configmanager(object):
         # generate default config
         self._parse_config()
 
-    def parse_config(self, args=None):
+    def parse_config(self, args: list[str] | None = None, *, setup_logging: bool | None = None) -> None:
         """ Parse the configuration file (if any) and the command-line
         arguments.
 
@@ -385,7 +385,18 @@ class configmanager(object):
             odoo.tools.config.parse_config(sys.argv[1:])
         """
         opt = self._parse_config(args)
-        odoo.netsvc.init_logger()
+        if setup_logging is not False:
+            odoo.netsvc.init_logger()
+            # warn after having done setup, so it has a chance to show up
+            # (mostly once this warning is bumped to DeprecationWarning proper)
+            if setup_logging is None:
+                warnings.warn(
+                    "As of Odoo 18, it's recommended to specify whether"
+                    " you want Odoo to setup its own logging (or want to"
+                    " handle it yourself)",
+                    category=PendingDeprecationWarning,
+                    stacklevel=2,
+                )
         self._warn_deprecated_options()
         odoo.modules.module.initialize_sys_path()
         return opt
