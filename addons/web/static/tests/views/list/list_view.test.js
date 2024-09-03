@@ -1824,6 +1824,36 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
     ]);
 });
 
+test(`grouped list with (disabled) pager inside group`, async () => {
+    let def;
+    onRpc("web_search_read", () => def);
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree limit="2">
+                <field name="foo"/>
+            </tree>
+        `,
+        groupBy: ["m2o"],
+    });
+
+    expect(".o_group_header").toHaveCount(2);
+
+    await contains(".o_group_header:first").click();
+    expect(".o_data_row").toHaveCount(2);
+    expect(".o_group_header .o_pager").toHaveCount(1);
+
+    def = new Deferred();
+    await contains(".o_group_header .o_pager_next").click();
+    expect(".o_group_header .o_pager_next").toHaveAttribute("disabled");
+
+    await contains(".o_group_header .o_pager_next").click();
+    await contains(".o_group_header .o_pager_next").click();
+    expect(".o_data_row").toHaveCount(2);
+});
+
 test(`list view with multiple groupbys`, async () => {
     await mountView({
         resModel: "foo",
