@@ -34,6 +34,9 @@ const OPERATOR_DESCRIPTIONS = {
     set: _t("is set"),
     not_set: _t("is not set"),
 
+    starts_with: _t("starts with"),
+    ends_with: _t("ends with"),
+
     // virtual operator (equivalent to a couple (>=,<=))
     between: _t("is between"),
     within: _t("is within"),

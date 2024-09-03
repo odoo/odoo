@@ -23,7 +23,18 @@ export function getDomainDisplayedOperators(fieldDef) {
         case "char":
         case "text":
         case "html":
-            return ["=", "!=", "ilike", "not ilike", "in", "not in", "set", "not_set"];
+            return [
+                "=",
+                "!=",
+                "ilike",
+                "not ilike",
+                "in",
+                "not in",
+                "set",
+                "not_set",
+                "starts_with",
+                "ends_with",
+            ];
         case "date":
         case "datetime":
             return ["=", "!=", ">", ">=", "<", "<=", "between", "within", "set", "not_set"];
@@ -55,6 +66,8 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "not ilike",
                 "set",
                 "not_set",
+                "starts_with",
+                "ends_with",
                 "any",
                 "not any",
             ];
