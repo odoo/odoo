@@ -172,7 +172,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
 
         current_session = self.pos_config.current_session_id
-        current_session.set_cashbox_pos(0, None)
+        current_session.set_opening_control(0, None)
 
         # Simulate a cashier saving an unpaid order on the server
         product = self.letter_tray

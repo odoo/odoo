@@ -53,7 +53,6 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
 
 registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -69,7 +68,6 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -105,7 +103,6 @@ registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
 
 registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),

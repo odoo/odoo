@@ -11,7 +11,7 @@ import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
-import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
+import { OpeningControlPopup } from "@point_of_sale/app/store/opening_control_popup/opening_control_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -1462,6 +1462,17 @@ export class PosStore extends Reactive {
             this.redirectToBackend();
         }
 
+        if (this.session.state === "opening_control") {
+            const data = await this.data.call("pos.session", "delete_opening_control_session", [
+                this.session.id,
+            ]);
+
+            if (data.status === "success") {
+                await this.data.resetIndexedDB();
+                this.redirectToBackend();
+            }
+        }
+
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.push_orders_with_closing_popup();
         if (syncSuccess) {
@@ -1561,14 +1572,17 @@ export class PosStore extends Reactive {
         }
     }
 
-    openCashControl() {
-        if (this.shouldShowCashControl()) {
+    openOpeningControl() {
+        if (this.shouldShowOpeningControl()) {
             this.dialog.add(
-                CashOpeningPopup,
+                OpeningControlPopup,
                 {},
                 {
                     onClose: () => {
-                        if (this.session.state !== "opened") {
+                        if (
+                            this.session.state !== "opened" &&
+                            this.mainScreen.component === ProductScreen
+                        ) {
                             this.closePos();
                         }
                     },
@@ -1576,8 +1590,8 @@ export class PosStore extends Reactive {
             );
         }
     }
-    shouldShowCashControl() {
-        return this.config.cash_control && this.session.state == "opening_control";
+    shouldShowOpeningControl() {
+        return this.session.state == "opening_control";
     }
 
     /**

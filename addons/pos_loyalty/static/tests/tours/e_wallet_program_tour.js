@@ -112,7 +112,6 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

@@ -18,6 +18,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
 
         # Kiosk, each, table
@@ -42,6 +43,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             'self_ordering_pay_after': 'each',
         })
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_simple_order")
         orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', self.pos_config.id), ('config_id', 'in', self.pos_config.trusted_config_ids.ids)])
@@ -56,6 +58,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_order_price_null")
 

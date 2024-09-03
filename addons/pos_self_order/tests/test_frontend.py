@@ -39,6 +39,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
         })
 
         self.pos_config.open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
 
         response = self.url_open(
             "/pos-self-order/process-order/kiosk",

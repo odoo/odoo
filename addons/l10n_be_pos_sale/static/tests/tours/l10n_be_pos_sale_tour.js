@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add("PosSettleOrderIsInvoice", {
 
 registry.category("web_tour.tours").add("PosSettleOrderTryInvoice", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

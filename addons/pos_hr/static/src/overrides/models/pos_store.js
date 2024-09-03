@@ -10,6 +10,11 @@ patch(PosStore.prototype, {
             }
         }
     },
+    showLoginScreen() {
+        this.reset_cashier();
+        this.showScreen("LoginScreen");
+        this.dialog.closeAll();
+    },
     get employeeIsAdmin() {
         const cashier = this.get_cashier();
         return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
@@ -109,10 +114,10 @@ patch(PosStore.prototype, {
     /**
      * @override
      */
-    shouldShowCashControl() {
+    shouldShowOpeningControl() {
         if (this.config.module_pos_hr) {
-            return super.shouldShowCashControl(...arguments) && this.hasLoggedIn;
+            return super.shouldShowOpeningControl(...arguments) && this.hasLoggedIn;
         }
-        return super.shouldShowCashControl(...arguments);
+        return super.shouldShowOpeningControl(...arguments);
     },
 });

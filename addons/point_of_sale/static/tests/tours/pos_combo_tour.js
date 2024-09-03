@@ -74,7 +74,6 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
 
 registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

@@ -167,7 +167,6 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
 
 registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -182,7 +181,6 @@ registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
 
 registry.category("web_tour.tours").add("PosSettleDraftOrder", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -193,7 +191,6 @@ registry.category("web_tour.tours").add("PosSettleDraftOrder", {
 
 registry.category("web_tour.tours").add("PosSettleCustomPrice", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

@@ -199,7 +199,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
 
 registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
