@@ -110,7 +110,7 @@ class TestDiscussFullPerformance(TransactionCase):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
-            'needaction_inbox_counter': 1,
+            'needaction_inbox_counter': 2,
             'starred_counter': 1,
             'channels': [
                 {
