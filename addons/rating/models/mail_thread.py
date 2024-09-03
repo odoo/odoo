@@ -3,7 +3,7 @@
 import datetime
 import markupsafe
 
-from odoo import _, api, Command, fields, models, tools
+from odoo import _, api, fields, models, tools
 
 
 class MailThread(models.AbstractModel):
@@ -22,8 +22,8 @@ class MailThread(models.AbstractModel):
         self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
         return result
 
-    def _get_message_create_valid_field_names(self):
-        return super()._get_message_create_valid_field_names() | {'rating_ids'}
+    def _get_message_create_ignore_field_names(self):
+        return super()._get_message_create_ignore_field_names() | {"rating_id"}
 
     # RATING CONFIGURATION
     # --------------------------------------------------
@@ -179,5 +179,15 @@ class MailThread(models.AbstractModel):
             }
             rating_id = self.env["rating.rating"].sudo().create(rating_vals).id
         if rating_id:
-            kwargs["rating_ids"] = [Command.set(rating_id)]
+            kwargs["rating_id"] = rating_id
         return super().message_post(**kwargs)
+
+    def _message_post_after_hook(self, message, msg_values):
+        """Override to link rating to message as sudo. This is done in
+        _message_post_after_hook to be before _notify_thread."""
+        # sudo: rating.rating - can link rating to message from same author and thread
+        rating = self.env["rating.rating"].browse(msg_values.get("rating_id")).sudo()
+        same_author = rating.partner_id and rating.partner_id == message.author_id
+        if same_author and rating.res_model == message.model and rating.res_id == message.res_id:
+            rating.message_id = message.id
+        super()._message_post_after_hook(message, msg_values)

@@ -26,7 +26,7 @@ class ChannelMember(models.Model):
     def _to_store(self, store: Store, **kwargs):
         super()._to_store(store, **kwargs)
         for member in self.filtered(lambda m: m.channel_id.channel_type == "livechat"):
-            # sudo: mail.channel - reading livechat channel to check whether current member is a bot is allowed
+            # sudo: discuss.channel - reading livechat channel to check whether current member is a bot is allowed
             store.add(
                 member,
                 {
