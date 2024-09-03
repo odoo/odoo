@@ -17,11 +17,13 @@ from odoo import http, tools
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices, manager
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import route
 
 _logger = logging.getLogger(__name__)
 
 
 class DriverController(http.Controller):
+    @route.protect
     @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def action(self, session_id, device_identifier, data):
         """
@@ -55,6 +57,7 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
+    @route.protect
     @http.route('/hw_drivers/event', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def event(self, listener):
         """
