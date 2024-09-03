@@ -35,6 +35,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
 
         # Mobile, each, table

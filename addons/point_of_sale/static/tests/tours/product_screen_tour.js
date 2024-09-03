@@ -197,6 +197,7 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.cashDifferenceIs("-1.00"),
             Dialog.confirm("Close Register"),
             Dialog.confirm("Proceed Anyway", ".btn-primary"),
+            Dialog.confirm("Backend", ".btn-secondary"),
             ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });
@@ -297,7 +298,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
 
 registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

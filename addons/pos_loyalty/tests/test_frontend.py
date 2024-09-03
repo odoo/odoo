@@ -2008,11 +2008,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.product_b.active = False
         product_c.active = False
 
-        self.main_pos_config.open_ui()
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyArchivedRewardProductsInactive",
-            login="pos_user"
+            login="pos_user",
         )
 
         product_c.active = True

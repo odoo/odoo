@@ -184,6 +184,15 @@ class PosSession(models.Model):
 
         return response
 
+    def delete_opening_control_session(self):
+        self.ensure_one()
+        if self.state != 'opening_control':
+            raise UserError(_("You can only cancel a session that is in opening control state."))
+        self.sudo().unlink()
+        return {
+            'status': 'success',
+        }
+
     def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
         pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(config_id)
         pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(config_id)
@@ -365,8 +374,6 @@ class PosSession(models.Model):
             if session.config_id.cash_control and not session.rescue:
                 last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
                 session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
-            else:
-                values['state'] = 'opened'
             session.write(values)
         return True
 
@@ -1615,12 +1622,19 @@ class PosSession(models.Model):
             return {}
         return self.config_id.open_ui()
 
-    def set_cashbox_pos(self, cashbox_value: int, notes: str):
+    def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
-        self.opening_notes = notes
-        difference = cashbox_value - self.cash_register_balance_start
-        self._post_cash_details_message('Opening', self.cash_register_balance_start, difference, notes)
-        self.cash_register_balance_start = cashbox_value
+
+        cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
+        if cash_payment_method_ids:
+            self.opening_notes = notes
+            difference = cashbox_value - self.cash_register_balance_start
+            self.cash_register_balance_start = cashbox_value
+            self._post_cash_details_message('Opening cash', self.cash_register_balance_start, difference, notes)
+        elif notes:
+            message = _('Opening control message: ')
+            message += notes
+            self.message_post(body=plaintext2html(message))
 
     def _post_cash_details_message(self, state, expected, difference, notes):
         message = (state + " difference: " + self.currency_id.format(difference) + '\n' +
@@ -1628,6 +1642,7 @@ class PosSession(models.Model):
            state + " counted: " + self.currency_id.format(expected + difference) + '\n')
 
         if notes:
+            message += _('Opening control message: ')
             message += notes
         if message:
             self.message_post(body=plaintext2html(message))

@@ -222,7 +222,6 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
 
 registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             ProductScreen.confirmOpeningPopup(),

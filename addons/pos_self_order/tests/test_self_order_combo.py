@@ -25,6 +25,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         })
         self.pos_admin.groups_id += self.env.ref('account.group_account_invoice')
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
 
         self.start_tour(self_route, "self_combo_selector")

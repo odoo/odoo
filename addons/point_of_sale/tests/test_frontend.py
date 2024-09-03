@@ -1416,7 +1416,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCustomerAllFieldsDisplayed', login="pos_user")
+        self.start_pos_tour('PosCustomerAllFieldsDisplayed')
 
     def test_product_combo_change_fp(self):
         """

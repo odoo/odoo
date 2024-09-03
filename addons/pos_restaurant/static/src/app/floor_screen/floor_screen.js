@@ -236,7 +236,7 @@ export class FloorScreen extends Component {
         });
         this.useResizeHook();
         onMounted(() => {
-            this.pos.openCashControl();
+            this.pos.openOpeningControl();
         });
         onWillStart(this.onWillStart);
         useEffect(

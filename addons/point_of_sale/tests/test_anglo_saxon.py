@@ -73,7 +73,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
-        current_session.set_cashbox_pos(0, None)
+        current_session.set_opening_control(0, None)
 
         # I create a PoS order with 1 unit of New product at 450 EUR
         self.pos_order_pos0 = self.PosOrder.create({
@@ -155,7 +155,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id
-        pos_session.set_cashbox_pos(0, None)
+        pos_session.set_opening_control(0, None)
 
         pos_order_values = {
             'company_id': self.company.id,
@@ -235,7 +235,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
-        current_session.set_cashbox_pos(0, None)
+        current_session.set_opening_control(0, None)
 
         # 2 step delivery method
         self.warehouse.delivery_steps = 'pick_ship'

@@ -38,7 +38,7 @@
                                             <div t-if="_totalAmount != 0">
                                                 <PaymentMethodBreakdown title.translate="Cash in/out" total_amount="_totalAmount" transactions="props.default_cash_details.moves_per_employee"/>
                                             </div>
-                                            <div t-if="props.default_cash_details.payment_amount">
+                                            <div t-if="props.default_cash_details.payment_amount and paymentMethodBreakdownTitle">
                                                 <PaymentMethodBreakdown title="paymentMethodBreakdownTitle" total_amount="props.default_cash_details.payment_amount" transactions="props.default_cash_details.amount_per_employee"/>
                                             </div>
                                         </div>

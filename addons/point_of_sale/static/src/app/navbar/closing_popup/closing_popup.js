@@ -50,7 +50,6 @@ export class ClosePosPopup extends Component {
         });
         return initialState;
     }
-
     async confirm() {
         if (!this.pos.config.cash_control || this.env.utils.floatIsZero(this.getMaxDifference())) {
             await this.closeSession();
@@ -206,7 +205,7 @@ export class ClosePosPopup extends Component {
             if (!response.successful) {
                 return this.handleClosingError(response);
             }
-            this.pos.redirectToBackend();
+            location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 // Cannot redirect to backend when offline, let error handlers show the offline popup

@@ -185,7 +185,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
 
 registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrderLines", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),

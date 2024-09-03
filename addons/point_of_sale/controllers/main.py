@@ -51,8 +51,14 @@ class PosController(PortalAccount):
                 ('config_id', '=', int(config_id)),
             ]
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
-        if not pos_session or config_id and not pos_config.active:
+
+        if not config_id or not pos_config.active or pos_config.has_active_session and not pos_session:
             return request.redirect('/odoo/action-point_of_sale.action_client_pos_menu')
+
+        if not pos_config.has_active_session:
+            pos_config.open_ui()
+            pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+
         # The POS only works in one company, so we enforce the one of the session in the context
         company = pos_session.company_id
         session_info = request.env['ir.http'].session_info()
