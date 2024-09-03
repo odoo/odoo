@@ -1,7 +1,7 @@
 import { url } from "@web/core/utils/urls";
 
 export const FileModelMixin = T => class extends T {
-    accessToken;
+    access_token;
     checksum;
     extension;
     filename;
@@ -102,7 +102,7 @@ export const FileModelMixin = T => class extends T {
             return {};
         }
         const params = {
-            access_token: this.accessToken,
+            access_token: this.access_token,
             filename: this.name,
             unique: this.checksum,
         };
