@@ -132,7 +132,7 @@ def import_translation():
 
 def main(args):
     check_root_user()
-    odoo.tools.config.parse_config(args)
+    odoo.tools.config.parse_config(args, setup_logging=True)
     check_postgres_user()
     report_configuration()
 
