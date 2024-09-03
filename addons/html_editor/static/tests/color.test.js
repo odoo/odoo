@@ -63,7 +63,7 @@ test("should apply a color on empty selection", async () => {
             '<p>[<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
             '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
             '<p>]<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>',
-        contentAfter: "<p>[</p><p></p><p>]</p>",
+        contentAfter: "<p>[<br></p><p><br></p><p>]<br></p>",
     });
 });
 
@@ -75,7 +75,7 @@ test("should apply a background color on empty selection", async () => {
             '<p>[<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
             '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
             '<p>]<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>',
-        contentAfter: "<p>[</p><p></p><p>]</p>",
+        contentAfter: "<p>[<br></p><p><br></p><p>]<br></p>",
     });
 });
 
