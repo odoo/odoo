@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussUserPanel">
+        <Dropdown position="'top-end'" menuClass="'my-0'">
+            <div class="o-mail-DiscussUserPanel bg-inherit d-flex align-items-center">
+                <button class="o-mail-DiscussUserPanel-imgContainer btn border-0 position-relative m-1 ms-3 bg-inherit">
+                    <img class="rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+                    <ImStatus persona="store.self" className="'o-mail-DiscussUserPanel-imStatus position-absolute top-100 start-100 translate-middle'"/>
+                </button>
+                <span class="text-truncate fw-bolder small" t-esc="store.self.name" t-att-title="store.self.name"/>
+                <span class="flex-grow-1"/>
+                <span class="ms-1 me-3"><i class="fa fa-bars"/></span>
+            </div>
+            <t t-set-slot="content">
+                <DropdownItem>Starred messages</DropdownItem>
+                <DropdownItem>Message History</DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>
