@@ -3676,7 +3676,37 @@ X[]
                         contentAfter: '<pre>abc</pre><p>[]<br></p>',
                     });
                 });
+                it('should insert a new line within the pre', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<pre><p>abc</p><p>def[]</p></pre>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<pre><p>abc</p><p>def</p><p>[]<br></p></pre>',
+                    });
+                });
+                it('should insert a new line after pre', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<pre><p>abc</p><p>def</p><p>[]<br></p></pre>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<pre><p>abc</p><p>def</p></pre><p>[]<br></p>',
+                    });
+                });
             });
+            describe('Blockquote', () => {
+                it('should insert a new line within the blockquote', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<blockquote><h1>abc</h1><h2>def[]</h2></blockquote>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<blockquote><h1>abc</h1><h2>def</h2><p>[]<br></p></blockquote>',
+                    });
+                });
+                it('should insert a new line after blockquote', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<blockquote><h1>abc</h1><h2>def</h2><p>[]<br></p></blockquote>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<blockquote><h1>abc</h1><h2>def</h2></blockquote><p>[]<br></p>',
+                    });
+                });
+            })
             describe('Consecutive', () => {
                 it('should duplicate an empty paragraph twice', async () => {
                     await testEditor(BasicEditor, {
