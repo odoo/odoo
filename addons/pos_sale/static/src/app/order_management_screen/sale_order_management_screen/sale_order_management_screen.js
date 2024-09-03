@@ -444,15 +444,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
 
-        if (sale_order.picking_ids[0]) {
-            const [picking] = await this.orm.read(
-                "stock.picking",
-                [sale_order.picking_ids[0]],
-                ["scheduled_date"]
-            );
-            sale_order.shipping_date = picking.scheduled_date;
-        }
-
         return sale_order;
     }
 
