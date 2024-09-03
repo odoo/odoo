@@ -117,6 +117,22 @@ const findPropertyOwner = (object, property) => {
     return object;
 };
 
+function mockedElementFromPoint() {
+    return mockedElementsFromPoint.call(this, ...arguments)[0];
+}
+
+function mockedElementsFromPoint() {
+    const { value: elementsFromPoint } = findOriginalDescriptor(document, "elementsFromPoint");
+    const elements = elementsFromPoint
+        .call(this, ...arguments)
+        .filter(
+            (el) =>
+                !el.tagName.startsWith("HOOT") && el !== this.body && el !== this.documentElement
+        );
+    elements.push(this.body, this.documentElement);
+    return elements;
+}
+
 const EVENT_TARGET_PROTOTYPES = new Map(
     [
         // Top level objects
@@ -149,6 +165,8 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
         get: () => mockCookie.get(),
         set: (value) => mockCookie.set(value),
     },
+    elementFromPoint: { value: mockedElementFromPoint },
+    elementsFromPoint: { value: mockedElementsFromPoint },
     title: {
         get: () => mockTitle,
         set: (value) => (mockTitle = value),
