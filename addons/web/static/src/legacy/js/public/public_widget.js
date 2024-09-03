@@ -3,7 +3,6 @@
  */
 
 import { Component } from "@odoo/owl";
-import dom from '@web/legacy/js/core/dom';
 import Class from "@web/legacy/js/core/class";
 import { loadBundle, loadCSS, loadJS } from '@web/core/assets';
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
@@ -875,104 +874,12 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 /**
- * Specialized Widget which automatically instantiates child widgets to attach
- * to internal DOM elements once it is started. The widgets to instantiate are
- * known thanks to a linked registry which contains info about the widget
- * classes and jQuery selectors to use to find the elements to attach them to.
- *
- * @todo Merge with 'PublicWidget' ?
- */
-var RootWidget = PublicWidget.extend({
-    /**
-     * @constructor
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this._widgets = [];
-    },
-    /**
-     * @override
-     * @see _attachComponents
-     */
-    start: function () {
-        var defs = [this._super.apply(this, arguments)];
-
-        defs.push(this._attachComponents());
-        this._getRegistry().addEventListener("UPDATE", ({ detail }) => {
-            const { operation, value } = detail;
-            if (operation === "add") {
-                this._attachComponent(value);
-            }
-        });
-
-        return Promise.all(defs);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Instantiates a child widget according to the given registry data.
-     *
-     * @private
-     * @param {Object} childInfo
-     * @param {function} childInfo.Widget - the widget class to instantiate
-     * @param {string} childInfo.selector
-     *        the jQuery selector to use to find the internal DOM element which
-     *        needs to be attached to the instantiated widget
-     * @param {jQuery} [$from] - only check DOM elements which are descendant of
-     *                         the given one. If not given, use this.$el.
-     * @returns {Deferred}
-     */
-    _attachComponent: function (childInfo, $from) {
-        var self = this;
-        var $elements = dom.cssFind($from || this.$el, childInfo.selector);
-        var defs = Array.from($elements).map((element) => {
-            var w = new childInfo.Widget(self);
-            self._widgets.push(w);
-            return w.attachTo(element);
-        });
-        return Promise.all(defs);
-    },
-    /**
-     * Instantiates the child widgets that need to be according to the linked
-     * registry.
-     *
-     * @private
-     * @param {jQuery} [$from] - only check DOM elements which are descendant of
-     *                         the given one. If not given, use this.$el.
-     * @returns {Deferred}
-     */
-    _attachComponents: function ($from) {
-        var self = this;
-        var childInfos = this._getRegistry().getAll();
-        var defs = childInfos.map((childInfo) => {
-            return self._attachComponent(childInfo, $from);
-        });
-        return Promise.all(defs);
-    },
-    /**
-     * Returns the `RootWidgetRegistry` instance that is linked to this
-     * `RootWidget` instance.
-     *
-     * @abstract
-     * @private
-     * @returns {RootWidgetRegistry}
-     */
-    _getRegistry: function () {},
-});
-
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-/**
  * The registry object contains the list of widgets that should be instantiated
  * thanks to their selector property if any.
  */
 var registry = {};
 
 export default {
-    RootWidget: RootWidget,
     Widget: PublicWidget,
     registry: registry,
 

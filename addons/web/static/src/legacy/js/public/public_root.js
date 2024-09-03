@@ -1,7 +1,6 @@
 import dom from '@web/legacy/js/core/dom';
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { registry } from '@web/core/registry';
 
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
@@ -30,18 +29,18 @@ const lang = cookie.get('frontend_lang') || getLang(); // FIXME the cookie value
  * this Class instance. Its main role will be to retrieve RPC demands from its
  * children and handle them.
  */
-export const PublicRoot = publicWidget.RootWidget.extend({
-    events: Object.assign({}, publicWidget.RootWidget.prototype.events || {}, {
+export const PublicRoot = publicWidget.Widget.extend({
+    events: {
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
-    }),
-    custom_events: Object.assign({}, publicWidget.RootWidget.prototype.custom_events || {}, {
+    },
+    custom_events: {
         call_service: '_onCallService',
         context_get: '_onContextGet',
         main_object_request: '_onMainObjectRequest',
         widgets_start_request: '_onWidgetsStartRequest',
         widgets_stop_request: '_onWidgetsStopRequest',
-    }),
+    },
 
     /**
      * @constructor
@@ -112,17 +111,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      */
     _getPublicWidgetsRegistry: function (options) {
         return publicWidget.registry;
-    },
-    /**
-     * As the root instance is designed to be unique, the associated
-     * registry has been instantiated outside of the class and is simply
-     * returned here.
-     *
-     * @private
-     * @override
-     */
-    _getRegistry: function () {
-        return registry.category("public_root_widgets");
     },
     /**
      * Creates an PublicWidget instance for each DOM element which matches the
