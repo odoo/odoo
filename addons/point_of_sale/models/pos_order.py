@@ -110,6 +110,13 @@ class PosOrder(models.Model):
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
             pos_order = self.env['pos.order'].browse(order.get('id'))
+
+            # Save line before to avoid exception if a line is deleted
+            # when vals change the state to 'paid'
+            if order.get('lines'):
+                pos_order.write({'lines': order.get('lines')})
+                order['lines'] = []
+
             pos_order.write(order)
 
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
