@@ -429,3 +429,8 @@ class TestConfigManager(TransactionCase):
         self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-i', 'base'])
         self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-u', 'base'])
         error.assert_has_calls(4 * [call("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")])
+
+    def test_11_auto_stop_after_init_after_test(self):
+        config = configmanager()
+        config._parse_config(['--test-enable'])
+        self.assertTrue(config['stop_after_init'])
