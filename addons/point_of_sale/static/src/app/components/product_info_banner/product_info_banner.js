@@ -55,7 +55,7 @@ export class ProductInfoBanner extends Component {
     }
 
     get bannerBackground() {
-        if (this.props.product.type === "service" || this.state.available_quantity > 10) {
+        if (!this.props.product.is_storable || this.state.available_quantity > 10) {
             return "bg-info";
         }
 
