@@ -99,9 +99,10 @@ export class StockForecasted extends Component {
     }
 
     get graphDomain() {
+        const warehouseIds = Array.isArray(this.context.warehouse) ? this.context.warehouse : [this.context.warehouse];
         const domain = [
             ["state", "=", "forecast"],
-            ["warehouse_id", "=", this.context.warehouse],
+            ["warehouse_id", "in", warehouseIds],
         ];
         if (this.resModel === "product.template") {
             domain.push(["product_tmpl_id", "=", this.productId]);
