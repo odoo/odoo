@@ -1,7 +1,14 @@
 /** @odoo-module **/
 
 import { Component, onMounted, useState, useRef } from "@odoo/owl";
+<<<<<<< master
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
+||||||| 5f8d6c3316e9f16658bf33a85ec9b384c94d56b1
+import { Component, onMounted, useState } from "@odoo/owl";
+import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
+=======
+import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
+>>>>>>> 59382fa4c49cafb5da9050b624bfe0c8b4a1c74d
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
