@@ -1062,8 +1062,8 @@ describe("Disconnect & reconnect", () => {
     });
 });
 
-describe("Destroy odoo collaboration plugin", () => {
-    test("should destroy snapshot interval", async () => {
+describe("Snapshot", () => {
+    test("should destroy snapshot interval when the editor is destroyed", async () => {
         const pool = await createPeers(["p1"]);
         const peers = pool.peers;
         const editor = peers.p1.editor;
@@ -1072,6 +1072,27 @@ describe("Destroy odoo collaboration plugin", () => {
         editor.destroy();
         await advanceTime(2 * HISTORY_SNAPSHOT_INTERVAL);
         expect(peers.p1.plugins.collaboration._snapshotInterval).toBe(false);
+    });
+    test("should get the steps from the first made snapshot of a reseted peer", async () => {
+        const pool = await createPeers(["p1", "p2", "p3"]);
+        const peers = pool.peers;
+
+        await peers.p1.focus();
+        await peers.p2.focus();
+        await peers.p3.focus();
+
+        await peers.p1.openDataChannel(peers.p2);
+
+        insertEditorText(peers.p1.editor, "b");
+        await animationFrame();
+
+        await advanceTime(HISTORY_SNAPSHOT_INTERVAL);
+
+        await peers.p2.openDataChannel(peers.p3);
+
+        expect(peers.p3.getValue()).toBe(`<p>[]ab</p>`, {
+            message: "p3 should have the steps from the first snapshot of p2",
+        });
     });
 });
 

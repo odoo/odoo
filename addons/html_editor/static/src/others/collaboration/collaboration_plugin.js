@@ -281,6 +281,7 @@ export class CollaborationPlugin extends Plugin {
     resetFromSteps(steps, branchStepIds) {
         this.shared.resetSelection();
         this.shared.historyResetFromSteps(steps);
+        this.snapshots = [{ step: steps[0] }];
         this.branchStepIds = branchStepIds;
         this.postProcessExternalSteps();
         this.shared.enableObserver();

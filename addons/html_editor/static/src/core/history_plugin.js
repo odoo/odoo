@@ -184,7 +184,6 @@ export class HistoryPlugin extends Plugin {
         for (const step of steps) {
             this.applyMutations(step.mutations);
         }
-        this.snapshots = [{ step: steps[0] }];
         this.steps = steps;
         // todo: to test
         this.resources.historyResetFromSteps?.forEach((cb) => cb());
