@@ -546,14 +546,14 @@ overridden by modules), because:
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="pt0 o_cc3 o_colored_level" remove="o_cc1 pt80" separator=" "/>
     </xpath>
-    <xpath expr="//h6" position="replace">
-        <h6 class="lead" style="text-align: center;">Clients</h6>
+    <xpath expr="//span[hasclass('h5-fs')]" position="replace" mode="inner">
+        Clients
     </xpath>
-    <xpath expr="(//h6)[2]" position="replace">
-        <h6 class="lead" style="text-align: center;">Amazing Pages</h6>
+    <xpath expr="(//span[hasclass('h5-fs')])[2]" position="replace" mode="inner">
+        Growth Rate
     </xpath>
-    <xpath expr="(//h6)[3]" position="replace">
-        <h6 class="lead" style="text-align: center;">Websites</h6>
+    <xpath expr="(//span[hasclass('h5-fs')])[3]" position="replace" mode="inner">
+        Websites
     </xpath>
 </template>
 
