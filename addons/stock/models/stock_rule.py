@@ -555,7 +555,10 @@ class ProcurementGroup(models.Model):
         # ones of the company. This is not useful as a regular user since there is a record
         # rule to filter out the rules based on the company.
         if self.env.su and values.get('company_id'):
-            domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', values['company_id'].ids)]
+            company_ids = set(values.get('company_id').ids)
+            if values.get('route_ids'):
+                company_ids |= set(values['route_ids'].company_id.ids)
+            domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', list(company_ids))]
             domain = expression.AND([domain, domain_company])
         return domain
 
