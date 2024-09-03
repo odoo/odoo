@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.CharWithPlaceholderField" t-inherit="web.CharField">
+        <xpath expr="//span" position="attributes">
+            <attribute name="t-att-class">{'text-muted': !this.props.record.data[props.name]}</attribute>
+        </xpath>
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-att-placeholder">placeholder</attribute>
+        </xpath>
+    </t>
+
+</templates>
