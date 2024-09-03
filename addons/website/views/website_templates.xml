@@ -3310,6 +3310,34 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                             </t>
                         </div>
                     </div>
+<<<<<<< 97fcff936a867d3ff1b1023104d5ff0aa24ced4d
+||||||| a398ade607940a281552f8cba2c1cf80bb0e77f6
+                </t>
+                <t t-elif="fuzzy_search">
+                    <div class="alert alert-warning mt8" role="alert">
+                        Your search '<t t-esc="search" />' did not match anything.
+                        Results are displayed for '<t t-esc="fuzzy_search"/>'.
+                    </div>
+                </t>
+                <div t-if="results" class="table-responsive">
+                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" t-key="result_index"/>
+                </div>
+                <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
+                    <t t-call="website.pager"/>
+=======
+                </t>
+                <t t-elif="fuzzy_search">
+                    <div class="alert alert-warning mt8" role="alert">
+                        Your search '<t t-esc="search" />' did not match anything.
+                        Results are displayed for '<t t-esc="fuzzy_search"/>'.
+                    </div>
+                </t>
+                <div t-if="results" class="table-responsive">
+                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" />
+                </div>
+                <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
+                    <t t-call="website.pager"/>
+>>>>>>> fe44120eaeac6c099eadfcc8a2c52e8bd950b9db
                 </div>
             </div>
         </div>
