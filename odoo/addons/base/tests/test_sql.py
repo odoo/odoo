@@ -92,6 +92,10 @@ class TestSQL(BaseCase):
         self.assertEqual(sql.code, '"foo"')
         self.assertEqual(sql.params, [])
 
+        sql = SQL.identifier('année')
+        self.assertEqual(sql.code, '"année"')
+        self.assertEqual(sql.params, [])
+
         sql = SQL.identifier('foo', 'bar')
         self.assertEqual(sql.code, '"foo"."bar"')
         self.assertEqual(sql.params, [])
