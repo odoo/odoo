@@ -117,8 +117,6 @@
                 <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg" group="content">
                     <keywords>celebration, launch</keywords>
                 </t>
-                <t t-snippet="website.s_embed_code" string="Embed Code" t-forbid-sanitize="true"
-                    t-image-preview="/website/static/src/img/snippets_previews/s_embed_code_preview.png" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" group="content"/>
                 <t t-snippet="website.s_numbers" string="Numbers" group="content">
                     <keywords>statistics, stats, KPI</keywords>
                 </t>
@@ -144,6 +142,11 @@
                 <t t-snippet="website.s_accordion_image" string="Accordion Image" group="content">
                     <keywords>common answers, common questions, faq, QA, collapse, expandable, toggle, collapsible, hide-show, movement, information, image, picture, photo, illustration, media, visual</keywords>
                 </t>
+
+                <!-- Keep `s_embed_code` snippet at the very end of the "Content" group -->
+                <t t-snippet="website.s_embed_code" string="Embed Code" t-forbid-sanitize="true"
+                    t-image-preview="/website/static/src/img/snippets_previews/s_embed_code_preview.png" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" group="content"/>
+
 
                 <!-- Images group -->
                 <t t-snippet="website.s_picture" string="Title - Image" group="images">

@@ -2811,7 +2811,29 @@ we-select.o_grid we-toggler {
         display: flex;
         padding: 0;
 
+        aside {
+            input[type="search"] {
+                // Chromium-based browsers render a "cancel" button by default.
+                // When visible, adapt its position in order to visually
+                // "replace" the magnify icon.
+                &::-webkit-search-cancel-button {
+                    transform: translateX(map-get($spacers, 3));
+                }
+
+                &:not(:placeholder-shown) + .input-group-text {
+                    display: none;
+
+                    // Preserve Firefox from chromium adaptations
+                    @media screen and (min--moz-device-pixel-ratio:0) {
+                        display: block;
+                    }
+                }
+            }
+        }
+
         .list-group {
+            --list-group-border-radius: 0;
+
             min-width: 200px;
             max-width: 250px;
 
@@ -2829,6 +2851,7 @@ we-select.o_grid we-toggler {
     width: 30%;
     height: 30%;
     background-color: unset;
+    scrollbar-gutter: stable both-edges;
 
     .o_snippets_preview_row {
         transform: scale(0.3);
@@ -2838,10 +2861,10 @@ we-select.o_grid we-toggler {
 
         .o_snippet_preview_wrap {
             min-height: 100px;
-            transition: all 150ms cubic-bezier(0.65, 0.05, 0.36, 1);
-            box-shadow: 0 0.5rem 6rem rgba(0, 0, 0, 0.2);
-            margin-bottom: 96px !important;
+            box-shadow: 0 0 6rem rgba(0, 0, 0, 0.16);
+            margin: map-get($spacers, 5) (map-get($spacers, 5) * .5) (map-get($spacers, 3) * 4);
             background-color: var(--body-bg);
+            transform: scale(.98);
             cursor: pointer;
 
             [data-snippet="s_carousel"],
@@ -2862,13 +2885,14 @@ we-select.o_grid we-toggler {
             .o_half_screen_height {
                 aspect-ratio: 8 / 3;
             }
-            [data-snippet="s_map"], [data-snippet="s_google_map"] {
-                padding: 0 !important;
-            }
             > [data-snippet] {
                 isolation: isolate;
                 pointer-events: none;
                 user-select: none;
+
+                &[data-snippet="s_text_block"] {
+                    font-size: 1.6rem;
+                }
 
                 &.s_popup {
                     min-height: 660px;
@@ -2892,11 +2916,10 @@ we-select.o_grid we-toggler {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
                 outline: 6px solid transparent;
-                transition: all 150ms;
                 z-index: 1;
             }
             &:hover {
-                box-shadow: 0 1rem 6rem rgba(0, 0, 0, 0.25);
+                box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
                 &::after {
                     outline: 6px solid $o-we-handles-accent-color;
                 }
