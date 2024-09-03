@@ -138,25 +138,39 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
             })
+            reg3_draft = self.env['event.registration'].with_user(self.user_eventuser).create({
+                'event_id': test_event.id,
+                'name': 'Reg3',
+                'email': 'reg3_draft@example.com',
+            })
+            reg4_cancel = self.env['event.registration'].with_user(self.user_eventuser).create({
+                'event_id': test_event.id,
+                'name': 'Reg4',
+                'email': 'reg4_cancel@example.com',
+            })
+
+        reg3_draft.action_set_draft()
+        reg4_cancel.action_cancel()
+        registrations = reg1 + reg2 + reg3_draft + reg4_cancel
 
         # REGISTRATIONS / PRE SCHEDULERS
         # --------------------------------------------------
 
         # check registration state
-        self.assertTrue(all(reg.state == 'open' for reg in reg1 + reg2), 'Registrations: should be auto-confirmed')
-        self.assertTrue(all(reg.create_date == now for reg in reg1 + reg2), 'Registrations: should have open date set to confirm date')
+        self.assertListEqual(registrations.mapped('state'), ['open', 'open', 'draft', 'cancel'], 'Registrations: should be auto-confirmed')
+        self.assertListEqual(registrations.mapped('create_date'), [now] * 4, 'Registrations: should have open date set to confirm date')
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / registration)')
         for mail_registration in after_sub_scheduler.mail_registration_ids:
             self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0))
             self.assertTrue(mail_registration.mail_sent, 'event: registration mail should be sent at registration creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'event: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler.mail_state, 'running')
-        self.assertEqual(after_sub_scheduler.mail_count_done, 2)
+        self.assertEqual(after_sub_scheduler.mail_count_done, 4)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 4, 'event: should have 4 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
@@ -167,7 +181,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             })
 
         # same for second scheduler: scheduled but not sent
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / registration)')
         for mail_registration in after_sub_scheduler_2.mail_registration_ids:
             self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0) + relativedelta(hours=1))
             self.assertFalse(mail_registration.mail_sent, 'event: registration mail should be scheduled, not sent')
@@ -188,14 +202,14 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             after_sub_scheduler_2.execute()
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
-        self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / open registration)')
+        self.assertListEqual(after_sub_scheduler_2.mail_registration_ids.mapped('mail_sent'), [True, True, False, False])
         self.assertTrue(after_sub_scheduler_2.mail_done, 'event: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 2)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / open registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
@@ -268,14 +282,14 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             reg3.action_confirm()
 
         # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 3, 'event: should have 3 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 5, 'event: should have 5 scheduled communication (1 / registration)')
         new_mail_reg = after_sub_scheduler.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
         self.assertEqual(new_mail_reg.scheduled_date, now_start.replace(microsecond=0))
         self.assertTrue(new_mail_reg.mail_sent, 'event: registration mail should be sent at registration creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'event: all subscription mails should have been sent')
-        self.assertEqual(after_sub_scheduler.mail_count_done, 3)
+        self.assertEqual(after_sub_scheduler.mail_count_done, 5)
         # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 3, 'event: should have 3 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 5, 'event: should have 5 scheduled communication (1 / registration)')
         new_mail_reg = after_sub_scheduler_2.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
         self.assertEqual(new_mail_reg.scheduled_date, now_start.replace(microsecond=0) + relativedelta(hours=1))
         self.assertTrue(new_mail_reg.mail_sent, 'event: registration mail should be sent at registration creation')
