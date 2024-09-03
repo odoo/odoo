@@ -286,7 +286,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour9", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour10", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -311,7 +310,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour10", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour11.1", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -327,7 +325,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.1", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickPartnerButton(),
@@ -348,7 +345,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
 
 registry.category("web_tour.tours").add("PosLoyaltyMinAmountAndSpecificProductTour", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -369,7 +365,6 @@ registry.category("web_tour.tours").add("PosLoyaltyMinAmountAndSpecificProductTo
 
 registry.category("web_tour.tours").add("PosLoyaltyTour12", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -407,25 +402,21 @@ function createOrderCoupon(totalAmount, couponName, couponAmount, loyaltyPoints)
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsDiscountNoDomainProgramNoDomain", {
     test: true,
-    url: "/pos/web",
     steps: () => [createOrderCoupon("135.00", "10% on your order", "-15.00", "135")].flat(),
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsDiscountNoDomainProgramDomain", {
     test: true,
-    url: "/pos/web",
     steps: () => [createOrderCoupon("135.00", "10% on your order", "-15.00", "100")].flat(),
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsDiscountWithDomainProgramDomain", {
     test: true,
-    url: "/pos/web",
     steps: () => [createOrderCoupon("140.00", "10% on food", "-10.00", "90")].flat(),
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNoDomain", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -441,7 +432,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNo
 
 registry.category("web_tour.tours").add("ChangeRewardValueWithLanguage", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -459,7 +449,6 @@ registry.category("web_tour.tours").add("ChangeRewardValueWithLanguage", {
 
 registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsInactive", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -475,7 +464,6 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsInactiv
 
 registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsActive", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickDisplayedProduct("Test Product A"),

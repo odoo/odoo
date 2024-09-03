@@ -835,7 +835,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         current_session = self.pos_config.current_session_id
         num_starting_orders = len(current_session.order_ids)
 
-        current_session.set_cashbox_pos(0, None)
+        current_session.set_opening_control(0, None)
 
         untax, atax = self.compute_tax(self.led_lamp, 0.9)
         carrot_order = {

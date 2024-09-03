@@ -629,7 +629,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         self.pos_session = self.config.current_session_id
         self.currency = self.pos_session.currency_id
         self.pricelist = self.pos_session.config_id.pricelist_id
-        self.pos_session.set_cashbox_pos(opening_cash, None)
+        self.pos_session.set_opening_control(opening_cash, None)
         return self.pos_session
 
     def _run_test(self, args):
