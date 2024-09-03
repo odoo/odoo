@@ -1,5 +1,4 @@
 import {
-    assertSteps,
     contains,
     defineMailModels,
     insertText,
@@ -8,13 +7,12 @@ import {
     prepareObserveRenders,
     start,
     startServer,
-    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, test } from "@odoo/hoot";
-import { onWillRender } from "@odoo/owl";
+import { onMounted, onPatched } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -28,7 +26,7 @@ test("posting new message should only render relevant part", async () => {
     for (let i = 0; i < 10; i++) {
         messageIds.push(
             pyEnv["mail.message"].create({
-                body: "not empty",
+                body: `not_empty_${i}`,
                 model: "discuss.channel",
                 res_id: channelId,
             })
@@ -39,34 +37,34 @@ test("posting new message should only render relevant part", async () => {
     prepareObserveRenders();
     patchWithCleanup(Message.prototype, {
         setup() {
-            onWillRender(() => {
+            const cb = () => {
                 if (posting) {
                     if (messageIds.includes(this.message.id)) {
                         throw new Error(
                             "Should not re-render old messages again on posting a new message"
                         );
                     }
-                } else {
-                    if (messageIds.includes(this.message.id)) {
-                        step(`${this.message.id}`);
-                    }
                 }
-            });
+            };
+            onMounted(cb);
+            onPatched(cb);
             return super.setup();
         },
     });
     await start();
+    const stopObserve1 = observeRenders();
     await openDiscuss(channelId);
-    await assertSteps(messageIds.map((id) => `${id}`)); // all messages rendered
     await contains(".o-mail-Message", { count: 10 });
     await insertText(".o-mail-Composer-input", "Test");
-    const stopObserve = observeRenders();
+    const result1 = stopObserve1();
+    // LessThan because renders could be batched
+    expect(result1.get(Message)).toBeLessThan(11); // 10: all messages initially
+    const stopObserve2 = observeRenders();
     posting = true;
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 11 });
     posting = false;
-    const result = stopObserve();
-    // LessThan because renders could be batched
-    expect(result.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
-    expect(result.get(Message)).toBeLessThan(4); // 3|2: (new temp msg) + new genuine msg + prev msg -- new temp msg usually batched destroyed
+    const result2 = stopObserve2();
+    expect(result2.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
+    expect(result2.get(Message)).toBeLessThan(4); // 3: new temp msg + new genuine msg + prev msg
 });
