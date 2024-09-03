@@ -115,7 +115,7 @@
     </template>
 
     <template id="layout" inherit_id="website.layout">
-        <body position="inside">
+        <xpath expr="//*[@id='wrapwrap']" position="inside">
             <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
             <t t-set="pending_coupon_code" t-value="request.session.get('pending_coupon_code')"/>
             <t t-if="coupon_error and pending_coupon_code">
@@ -128,7 +128,7 @@
             <div t-if="notify_coupon" class="d-none coupon-message coupon-info-message">
                 <span class="coupon-message-content">The following promo code was applied on your order: <t t-out="notify_coupon"/></span>
             </div>
-        </body>
+        </xpath>
     </template>
 
     <template id="cart_discount" name="Show Discount in Subtotal" active="False" inherit_id="website_sale.total">
