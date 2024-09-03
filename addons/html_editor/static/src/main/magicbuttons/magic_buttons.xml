@@ -1,0 +1,70 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.MagicButtons">
+        <div class="o_we_magic_buttons d-flex justify-content-center">
+            <!-- Map the commands from the plugins resourse.powerboxItem where the object contains the proper
+                 magicBtn set as true (this can also handle the callback of all the commands)
+                 OR
+                 Define your own magicBtnItems (will exploit DRY principle)
+            -->
+            <!-- Numbered List Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-list-ol cursor-pointer"
+                role="button"
+                data-call="toggleList"
+                data-arg1="OL"
+                aria-label="Numbered list"
+                title="Numbered list">
+            </div>
+            <!-- Bulleted List Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-list-ul cursor-pointer"
+                role="button"
+                data-call="toggleList"
+                data-arg1="UL"
+                aria-label="Bulleted list"
+                title="Bulleted list">
+            </div>
+            <!-- Checklist Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-check-square cursor-pointer"
+                role="button"
+                data-call="toggleList"
+                data-arg1="CL"
+                aria-label="Checklist"
+                title="Checklist">
+            </div>
+            <!-- Table Insert Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-table cursor-pointer"
+                role="button"
+                data-call="insertTable"
+                aria-label="Table"
+                title="Table">
+            </div>
+            <!-- Image Insert Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-file-image-o cursor-pointer"
+                role="button"
+                id="insert-image"
+                aria-label="Insert Image"
+                title="Insert Image">
+            </div>
+            <!-- Link Creation Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-link cursor-pointer"
+                role="button"
+                id="create-magic-link"
+                aria-label="Create Link"
+                title="Create Link">
+            </div>
+            <!-- More Options Button -->
+            <div
+                class="magic_button btn px-2 py-2 fa fa-ellipsis-v cursor-pointer"
+                role="button"
+                id="more-options"
+                aria-label="More Options"
+                title="More Options">
+            </div>
+        </div>
+    </t>
+</templates>

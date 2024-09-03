@@ -26,6 +26,7 @@ export class MediaPlugin extends Plugin {
                 description: _t("Insert an image"),
                 category: "media",
                 fontawesome: "fa-file-image-o",
+                magicBtn: true,
                 action() {
                     p.openMediaDialog();
                 },

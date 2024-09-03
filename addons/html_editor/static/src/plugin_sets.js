@@ -31,6 +31,7 @@ import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
 import { IconPlugin } from "./main/media/icon_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
+import { MagicButtonPlugin } from "./main/magicbuttons/magic_button_plugin";
 import { MediaPlugin } from "./main/media/media_plugin";
 import { MoveNodePlugin } from "./main/movenode_plugin";
 import { PositionPlugin } from "./main/position_plugin";
@@ -98,6 +99,7 @@ export const MAIN_PLUGINS = [
     LinkSelectionPlugin,
     OdooLinkSelectionPlugin,
     MoveNodePlugin,
+    MagicButtonPlugin,
     LocalOverlayPlugin,
     PositionPlugin,
     TextDirectionPlugin,

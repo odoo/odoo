@@ -20,6 +20,7 @@ export class TableUIPlugin extends Plugin {
                 description: _t("Insert a table"),
                 category: "structure",
                 fontawesome: "fa-table",
+                magicBtn: true,
                 action(dispatch) {
                     if (p.services.ui.isSmall) {
                         dispatch("INSERT_TABLE", { cols: 3, rows: 3 });

@@ -141,6 +141,7 @@ export class LinkPlugin extends Plugin {
                 description: _t("Add a link"),
                 category: "navigation",
                 fontawesome: "fa-link",
+                magicBtn: true,
                 action(dispatch) {
                     dispatch("TOGGLE_LINK");
                 },

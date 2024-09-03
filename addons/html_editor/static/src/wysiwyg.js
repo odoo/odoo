@@ -2,7 +2,7 @@ import { Component, onMounted, onWillDestroy, onWillStart, useRef, useState } fr
 import { ensureJQuery } from "@web/core/ensure_jquery";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
-
+import { MagicButtons } from "./main/magicbuttons/magic_buttons";
 /**
  * @typedef { import("./editor").EditorConfig } EditorConfig
  **/
@@ -22,7 +22,7 @@ function copyCssRules(sourceDoc, targetDoc) {
 
 export class Wysiwyg extends Component {
     static template = "html_editor.Wysiwyg";
-    static components = { Toolbar };
+    static components = { Toolbar, MagicButtons };
     static props = {
         config: { type: Object, optional: true },
         class: { type: String, optional: true },

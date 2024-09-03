@@ -86,6 +86,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Create a simple bulleted list"),
                 category: "structure",
                 fontawesome: "fa-list-ul",
+                magicBtn: true,
                 action(dispatch) {
                     dispatch("TOGGLE_LIST", { mode: "UL" });
                 },
@@ -95,6 +96,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Create a list with numbering"),
                 category: "structure",
                 fontawesome: "fa-list-ol",
+                magicBtn: true,
                 action(dispatch) {
                     dispatch("TOGGLE_LIST", { mode: "OL" });
                 },
@@ -103,8 +105,8 @@ export class ListPlugin extends Plugin {
                 name: _t("Checklist"),
                 description: _t("Track tasks with a checklist"),
                 category: "structure",
-
                 fontawesome: "fa-check-square-o",
+                magicBtn: true,
                 action(dispatch) {
                     dispatch("TOGGLE_LIST", { mode: "CL" });
                 },
