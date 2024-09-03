@@ -1077,7 +1077,8 @@ class MailComposer(models.TransientModel):
             ]
             # email_mode: prepare processed attachments as commands for mail.mail
             if email_mode:
-                mail_values['attachment_ids'] = record._process_attachments_for_post(
+                process_record = record if hasattr(record, "_process_attachments_for_post") else record.env["mail.thread"]
+                mail_values['attachment_ids'] = process_record._process_attachments_for_post(
                     decoded_attachments,
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
