@@ -2720,7 +2720,7 @@ export class Order extends PosModel {
         return false;
     }
     is_paid() {
-        return this.get_due() <= 0 && this.check_paymentlines_rounding();
+        return this.get_due() <= 0;
     }
     is_paid_with_cash() {
         return !!this.paymentlines.find(function (pl) {
