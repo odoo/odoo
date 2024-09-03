@@ -1188,3 +1188,19 @@ class TestPoSBasicConfig(TestPoSCommon):
         for i in session_account_move.line_ids:
             if i.product_id and expected_product_quantity.get(i.product_id):
                 self.assertEqual(i.quantity, expected_product_quantity.get(i.product_id), f"Unexpected quantity for {i.product_id.name}")
+
+    def test_pos_payment_method_copy(self):
+        """
+        Test POS payment method copy:
+            - Create two payment methods in which one of the payment method's journal type be cash
+            - Copy multiple payment methods
+            - Check the duplicated cash payment method journal should be empty
+        """
+        pm_1 = self.cash_pm1
+        pm_2 = self.bank_pm1
+        pm_3, pm_4 = (pm_1 + pm_2).copy()
+
+        self.assertTrue(pm_3)
+        self.assertFalse(pm_3.journal_id)
+        self.assertTrue(pm_4)
+        self.assertEqual(pm_4.journal_id.type, "bank")
