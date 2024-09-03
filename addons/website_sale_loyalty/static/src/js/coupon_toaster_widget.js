@@ -1,9 +1,8 @@
-/** @odoo-module **/
-
 import publicWidget from '@web/legacy/js/public/public_widget';
-import {registry} from "@web/core/registry";
 
 const CouponToasterWidget = publicWidget.Widget.extend({
+    selector: '.coupon-message',
+
     init() {
         this._super(...arguments);
         this.notification = this.bindService("notification");
@@ -36,9 +35,6 @@ const CouponToasterWidget = publicWidget.Widget.extend({
     },
 });
 
-registry.category("public_root_widgets").add("CouponToasterWidget", {
-    Widget: CouponToasterWidget,
-    selector: '.coupon-message',
-});
+publicWidget.registry.CouponToasterWidget = CouponToasterWidget;
 
 export default CouponToasterWidget;
