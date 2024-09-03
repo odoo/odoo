@@ -47,7 +47,7 @@
             <t t-set-slot="footer">
                 <div class="d-flex justify-content-start flex-wrap gap-2 w-100">
                     <button t-if="ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
-                        t-on-click="createPartner"
+                        t-on-click="() => this.pos.editPartner()"
                         title="Add a customer">
                     New 
                     </button>
