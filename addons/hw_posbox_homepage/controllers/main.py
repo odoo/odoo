@@ -237,7 +237,7 @@ class IoTboxHomepage(Home):
 
     @http.route('/wifi_clear', type='http', auth='none', cors='*', csrf=False)
     def clear_wifi_configuration(self):
-        helpers.unlink_file('wifi_network.txt')
+        helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
 
     @http.route('/server_clear', type='http', auth='none', cors='*', csrf=False)
