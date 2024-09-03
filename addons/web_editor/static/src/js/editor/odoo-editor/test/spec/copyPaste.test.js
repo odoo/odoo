@@ -451,6 +451,15 @@ describe('Paste', () => {
                     contentAfter: '<div><span style="font-size: 9px;">ab<br>c<br>d[]</span></div>',
                 });
             });
+            it('should paste text and understand \\n newlines within PRE element', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>[]<br></div>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'a\nb\nc');
+                    },
+                    contentAfter: '<pre>a<br>b<br>c[]</pre>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste a text in a p', async () => {
