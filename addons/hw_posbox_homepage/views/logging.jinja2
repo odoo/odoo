@@ -1,0 +1,30 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Logging</h2>
+<h3>Log Files</h3>
+<a class="btn" href="/hw_drivers/download_logs">Download log file</a>
+{% if os == 'Linux' %}
+    {#
+    Don't use a normal link as if use with :8069 it will not work as the route is served by nginx, see:
+    https://github.com/odoo/odoo/pull/165765/files
+    #}
+    <a class="btn" targer="_blank" href="http://{{ip}}/odoo-logs/">Logs Folder</a>
+{% endif %}
+
+<h3>Log Level Table</h3>
+<p>
+    This tool allows you to adjust the level of detail in the IoT log file.<br>
+    It will <b>NOT</b> change the behavior of the IoT, only the amount of information that is store in the log file while the IoT runs.<br>
+    Used for debugging/troubleshooting purposes, should be used with caution.
+</p>
+<iframe src="/technical/logging/logging-table" style="width: 100%; height: 300px; border: none;"></iframe>
+
+<h3>Other configuration</h3>
+<form method="POST">
+    <input type="checkbox" id="log-to-server" name="log-to-server" {{ "checked" if is_log_to_server_activated }} onchange="this.form.submit()"  />
+    <label for="log-to-server">IoT logs automatically send to server logs</label>
+</form>
+
+{% endblock %}
