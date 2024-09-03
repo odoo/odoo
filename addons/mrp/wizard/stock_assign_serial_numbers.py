@@ -64,6 +64,7 @@ class StockAssignSerialNumbers(models.TransientModel):
 
     def _assign_serial_numbers(self, cancel_remaining_quantity=False):
         serial_numbers = self._get_serial_numbers()
+        self._reset_production_qties()
         productions = self.production_id._split_productions(
             {self.production_id: [1] * len(serial_numbers)}, cancel_remaining_quantity, set_consumed_qty=True)
         production_lots_vals = []
@@ -91,3 +92,9 @@ class StockAssignSerialNumbers(models.TransientModel):
 
     def no_backorder(self):
         self._assign_serial_numbers(True)
+
+    def _reset_production_qties(self):
+        if self.production_id.qty_producing:
+            self.production_id.qty_producing = 0.0
+            self.production_id.move_raw_ids.picked = False
+            self.production_id.move_raw_ids.quantity = 0.0
