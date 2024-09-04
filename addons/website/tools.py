@@ -10,7 +10,6 @@ from werkzeug.test import EnvironBuilder
 
 import odoo.http
 from odoo.tools.misc import hmac, DotDict, frozendict
-from odoo.tools import config
 
 HOST = '127.0.0.1'
 
@@ -240,12 +239,11 @@ def create_image_attachment(env, image_path, image_name):
     :param image_name: the name to give to the image (e.g. 's_banner_default_image.jpg')
     :return: the image attachment
     """
-    IrAttachment = env['ir.attachment']
-    base = 'http://%s:%s' % (HOST, config['http_port'])
-    img = IrAttachment.create({
+    Attachments = env['ir.attachment']
+    img = Attachments.create({
         'public': True,
         'name': image_name,
         'type': 'url',
-        'url': base + image_path,
+        'url': Attachments.get_base_url() + image_path,
     })
     return img

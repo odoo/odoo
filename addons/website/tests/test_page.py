@@ -294,7 +294,7 @@ class WithContext(HttpCase):
         # Set another page (/page_1) as homepage
         website.write({
             'homepage_url': self.page.url,
-            'domain': f"http://{HOST}:{config['http_port']}",
+            'domain': self.base_url(),
         })
         assert self.page.url != '/'
 
@@ -323,7 +323,7 @@ class WithContext(HttpCase):
         # If one has set the `homepage_url` to a specific page URL..
         website.write({
             'name': 'Test Website',
-            'domain': f'http://{HOST}:{config["http_port"]}',
+            'domain': self.base_url(),
             'homepage_url': test_page.url,
         })
         home_url_full = website.domain + '/'
@@ -362,7 +362,7 @@ class WithContext(HttpCase):
         website = self.env['website'].browse([1])
         website.write({
             'name': 'Test Website',
-            'domain': f'http://{HOST}:{config["http_port"]}',
+            'domain': self.base_url(),
             'homepage_url': False,
         })
         contactus_url = '/contactus'
