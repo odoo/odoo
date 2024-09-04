@@ -3,7 +3,6 @@
 import { clamp } from "@web/core/utils/numbers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService, useBus } from "@web/core/utils/hooks";
-import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
 import options from "@web_editor/js/editor/snippets.options";
@@ -3283,7 +3282,7 @@ class SnippetsMenu extends Component {
                 return $from.closest(selector, parentNode).filter(filterFunc);
             };
             functions.all = function ($from) {
-                return ($from ? dom.cssFind($from, selector) : self.$body.find(selector)).filter(filterFunc);
+                return ($from ? self.cssFind($from, selector) : self.$body.find(selector)).filter(filterFunc);
             };
         } else {
             functions.is = function ($from) {
@@ -3305,10 +3304,10 @@ class SnippetsMenu extends Component {
                 }).filter(filterFunc);
             };
             functions.all = isChildren ? function ($from) {
-                return dom.cssFind($from || self.getEditableArea(), selector).filter(filterFunc);
+                return self.cssFind($from || self.getEditableArea(), selector).filter(filterFunc);
             } : function ($from) {
                 $from = $from || self.getEditableArea();
-                return $from.filter(selector).add(dom.cssFind($from, selector)).filter(filterFunc);
+                return $from.filter(selector).add(self.cssFind($from, selector)).filter(filterFunc);
             };
         }
         return functions;
@@ -3540,6 +3539,33 @@ class SnippetsMenu extends Component {
         }).then(function () {
             return snippetEditor;
         });
+    }
+    /**
+     * jQuery find function behavior is:
+     *
+     *     $('A').find('B C') <=> $('A B C')
+     *
+     * The searches behavior to find options' DOM needs to be:
+     *
+     *     $('A').find('B C') <=> $('A B C, B A C, AB C')
+     *
+     * This is what this function does.
+     *
+     * @todo get rid of this function and use a simple querySelectorAll, which
+     *       does not have this problem. The only issue is that jQuery selectors
+     *       support more things than querySelectorAll ones but we could stop
+     *       relying on that and/or add other filtering systems.
+     * @param {jQuery} $from - the jQuery element(s) from which to search
+     * @param {string} selector - the CSS selector to match
+     * @returns {jQuery}
+     */
+    cssFind($from, selector) {
+        // No way to correctly parse a complex jQuery selector but having no
+        // spaces should be a good-enough condition to use a simple find
+        if (selector.indexOf(' ') >= 0) {
+            return $from.closest('body').find(selector).filter((i, $el) => $from.has($el).length);
+        }
+        return $from.find(selector);
     }
     /**
      * There may be no location where some snippets might be dropped. This mades

@@ -226,7 +226,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/core/class.js',
-            'web/static/src/legacy/js/core/dom.js',
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files

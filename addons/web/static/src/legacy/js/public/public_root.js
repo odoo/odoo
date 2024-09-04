@@ -1,4 +1,3 @@
-import dom from '@web/legacy/js/core/dom';
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
@@ -143,14 +142,35 @@ export const PublicRoot = publicWidget.Widget.extend({
         this._stopWidgets($from);
 
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
-            var selector = PublicWidget.prototype.selector || '';
-            var $target = dom.cssFind($from, selector, true);
-            var defs = Array.from($target).map((el) => {
+            const selector = PublicWidget.prototype.selector;
+            if (!selector) {
+                return;
+            }
+            const selectorHas = PublicWidget.prototype.selectorHas;
+            const selectorFunc = typeof selector === 'function'
+                ? selector
+                : fromEl => {
+                    const els = [...fromEl.querySelectorAll(selector)];
+                    if (fromEl.matches(selector)) {
+                        els.push(fromEl);
+                    }
+                    return els;
+                };
+
+            let targetEls = [];
+            for (const fromEl of $from) {
+                targetEls.push(...selectorFunc(fromEl));
+            }
+            if (selectorHas) {
+                targetEls = targetEls.filter(el => !!el.querySelector(selectorHas));
+            }
+
+            const proms = targetEls.map(el => {
                 var widget = new PublicWidget(self, options);
                 self.publicWidgets.push(widget);
                 return widget.attachTo(el);
             });
-            return Promise.all(defs);
+            return Promise.all(proms);
         });
         return Promise.all(defs);
     },
