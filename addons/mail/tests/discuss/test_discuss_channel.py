@@ -85,7 +85,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "data": {
                                 "mail.message": self._filter_messages_fields(
                                     {
-                                        "attachments": [],
+                                        "attachment_ids": [],
                                         "author": {
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",

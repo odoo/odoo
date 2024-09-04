@@ -114,10 +114,10 @@
                                     <t t-if="!message.is_note and !message.isPending and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
                                 </div>
                                 <AttachmentList
-                                    t-if="message.attachments.length > 0"
-                                    attachments="message.attachments.map((a) => a)"
+                                    t-if="message.attachment_ids.length > 0"
+                                    attachments="message.attachment_ids.map((a) => a)"
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
-                                    imagesHeight="message.attachments.length === 1 ? 300 : 75"
+                                    imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="props.message.editable"/>
                             </div>

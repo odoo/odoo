@@ -4542,7 +4542,7 @@ class MailThread(models.AbstractModel):
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
         res = {
-            "attachments": Store.many(message.attachment_ids.sorted("id")),
+            "attachment_ids": Store.many(message.attachment_ids.sorted("id")),
             "body": message.body,
             "pinned_at": message.pinned_at,
             "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
