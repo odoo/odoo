@@ -57,9 +57,11 @@ export class PageDependencies extends Component {
             boundary: 'viewport',
             placement: 'right',
             trigger: 'focus',
-            content: renderToFragment("website.PageDependencies.Tooltip", {
-                dependencies: this.state.dependencies,
-            }),
+            content: () => {
+                return renderToFragment("website.PageDependencies.Tooltip", {
+                    dependencies: this.state.dependencies,
+                });
+            },
         }).popover('toggle');
     }
 }
