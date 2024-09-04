@@ -182,7 +182,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         }
 
         const submitButton = ev.currentTarget;
-        if (!ev.isDefaultPrevented() && !submitButton.disabled) {
+        if (!ev.defaultPrevented && !submitButton.disabled) {
             ev.preventDefault();
 
             submitButton.disabled = true;
