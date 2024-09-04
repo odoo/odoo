@@ -8,6 +8,7 @@ import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dial
 import { Mutex } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
+import { serializeDate } from "@web/core/l10n/dates";
 
 let nextId = -1;
 const mutex = new Mutex();
@@ -210,10 +211,12 @@ patch(PosStore.prototype, {
                         barcode: pa.barcode,
                         appliedRules: pointsForProgramsCountedRules[program.id],
                     };
-
                     if (program && program.program_type === "gift_card") {
                         couponPointChange.product_id =
                             order.get_selected_orderline()?.product_id.id;
+                        couponPointChange.expiration_date = serializeDate(
+                            luxon.DateTime.now().plus({ year: 1 })
+                        );
                     }
 
                     order.uiState.couponPointChanges[coupon.id] = couponPointChange;
