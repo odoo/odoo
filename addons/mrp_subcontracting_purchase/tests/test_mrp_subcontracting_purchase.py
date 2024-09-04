@@ -533,8 +533,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.env.company.po_lead = 5
         self.env.company.days_to_purchase = 5
 
-        rule = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1)
-        (self.finished | self.comp1 | self.comp2).route_ids = [(6, None, [rule.route_id.id])]
+        buy_route_id = self.ref('purchase_stock.route_warehouse0_buy')
+        (self.finished | self.comp1 | self.comp2).route_ids = [(6, None, [buy_route_id])]
         self.comp2_bom.active = False
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,

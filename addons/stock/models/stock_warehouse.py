@@ -589,10 +589,6 @@ class Warehouse(models.Model):
                     'company_id': self.company_id.id,
                     'sequence': 20,
                 },
-                'rules_values': {
-                    'active': True,
-                    'procure_method': 'make_to_order'
-                }
             }
         }
 
@@ -796,8 +792,8 @@ class Warehouse(models.Model):
                     self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.qc_type_id, 'push'),
                     self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push')],
                 'crossdock': [
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.xdock_type_id, 'pull'),
-                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
+                    self.Routing(supplier_loc, customer_loc, warehouse.in_type_id, 'pull'),
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.xdock_type_id, 'push')],
                 'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
                 'pick_ship': [
                     self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.pick_type_id, 'pull'),
@@ -824,6 +820,7 @@ class Warehouse(models.Model):
             'three_steps': [
                 self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.qc_type_id, 'push'),
                 self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push')],
+            'crossdock': [self.Routing(self.wh_input_stock_loc_id, self.wh_output_stock_loc_id, self.xdock_type_id, 'push')],
         }
 
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
