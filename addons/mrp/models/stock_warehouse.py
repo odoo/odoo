@@ -29,13 +29,12 @@ class StockWarehouse(models.Model):
 
     manufacture_steps = fields.Selection([
         ('mrp_one_step', 'Manufacture (1 step)'),
-        ('pbm', 'Pick components, then manufacture (2 steps)'),
+        ('pbm', 'Pick components then manufacture (2 steps)'),
         ('pbm_sam', 'Pick components, manufacture, then store products (3 steps)')],
         'Manufacture', default='mrp_one_step', required=True,
-        help="Produce: Move the components to the production location\
-        directly and start the manufacturing process.\nPick / Produce: Unload\
-        the components from the Stock to Input location first, and then\
-        transfer it to the Production location.")
+        help="1 Step: Consume components from stock and produce.\n\
+              2 Steps: Pick components from stock and then produce.\n\
+              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock.")
 
     pbm_route_id = fields.Many2one('stock.route', 'Picking Before Manufacturing Route', ondelete='restrict', copy=False)
 
