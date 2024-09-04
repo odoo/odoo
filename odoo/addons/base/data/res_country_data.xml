@@ -1617,6 +1617,18 @@
                 ref('es'),ref('se')])]"/>
         </record>
 
+        <record id="europe_prefix" model="res.country.group">
+            <field name="name">European Union Prefixed Countries</field>
+            <field name="code">EU_PREFIX</field>
+            <field name="country_ids" eval="[Command.set([
+                ref('at'),ref('be'),ref('bg'),ref('hr'),ref('cy'),
+                ref('cz'),ref('dk'),ref('ee'),ref('fi'),ref('fr'),
+                ref('de'),ref('gr'),ref('hu'),ref('ie'),ref('it'),
+                ref('lv'),ref('lt'),ref('lu'),ref('mt'),ref('nl'),
+                ref('pl'),ref('pt'),ref('ro'),ref('sk'),ref('si'),
+                ref('es'),ref('se'),
+                ref('ch'),ref('no'),ref('uk'),ref('sm')])]"/>
+        </record>
         <record id="south_america" model="res.country.group">
             <field name="name">South America</field>
             <field name="code">SA</field>

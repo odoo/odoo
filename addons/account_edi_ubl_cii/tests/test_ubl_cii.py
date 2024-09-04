@@ -151,12 +151,14 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
         partner.vat = 'DE123456788'
+        partner.country_id = self.env.ref('base.de')
 
         self.assertRecordValues(partner, [{
             'peppol_eas': '9930',
             'peppol_endpoint': 'DE123456788',
         }])
 
+        partner.country_id = self.env.ref('base.fr')
         partner.vat = 'FR23334175221'
 
         self.assertRecordValues(partner, [{
@@ -168,12 +170,13 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
         self.assertRecordValues(partner, [{
             'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
+            'peppol_endpoint': '23334175221',
         }])
 
         partner.write({
             'vat': 'BE0477472701',
             'company_registry': '0477472701',
+            'country_id': self.env.ref('base.be'),
         })
 
         self.assertRecordValues(partner, [{
