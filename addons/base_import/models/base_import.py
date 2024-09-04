@@ -56,6 +56,7 @@ except ImportError:
     odf_ods_reader = None
 
 try:
+    os.environ['OPENPYXL_DEFUSEDXML'] = 'False'
     from openpyxl import load_workbook
 except ImportError:
     load_workbook = None
