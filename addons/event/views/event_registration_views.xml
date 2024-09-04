@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
             <tree string="Registration" multi_edit="1" sample="1"
                   expand="1" default_order="create_date desc"
-                  class="o_event_registration_view_tree">
+                  class="o_event_registration_view_tree" js_class="registration_summary_dialog_list">
+                <field name="barcode" column_invisible="True"/>
                 <field name="active" column_invisible="True"/>
                 <field name="create_date" optional="show" string="Registration Date"/>
                 <field name="name"/>
@@ -132,15 +133,17 @@
         <field name="model">event.registration</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <kanban class="o_event_attendee_kanban_view" default_order="name, create_date desc" sample="1">
+            <kanban class="o_event_attendee_kanban_view" default_order="name, create_date desc" sample="1" js_class="registration_summary_dialog_kanban">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="state"/>
                 <field name="email"/>
                 <field name="event_ticket_id"/>
                 <field name="active"/>
+                <field name="barcode"/>
                 <templates>
                     <t t-name="event_attendees_kanban_icons_desktop">
+                        <!-- Will be removed in master -->
                         <div class="d-none d-md-block h-100">
                             <div id="event_attendees_kanban_icons_desktop" class="h-100 float-end p-2 d-flex align-items-end flex-column gap-1">
                                 <t t-if="record.active.raw_value">
@@ -157,6 +160,7 @@
                         </div>
                     </t>
                     <t t-name="event_attendees_kanban_icons_mobile">
+                        <!-- Will be removed in master -->
                         <div id="event_attendees_kanban_icons_mobile" class="d-md-none d-flex align-items-end flex-column gap-1 h-100 ps-4">
                             <t t-if="record.active.raw_value">
                                 <a class="btn btn-secondary d-flex justify-content-center align-items-center h-100 w-100"
@@ -180,6 +184,7 @@
                                     <div class="oe_kanban_content h-100">
                                         <div class="o_kanban_record_body h-100 d-flex flex-column">
                                             <b class="o_kanban_record_title"><field name="name"/></b>
+                                            <field name="state" widget="badge" decoration-success="state == 'done'" class="position-absolute top-0 end-0 o_event_registration_kanban_badge"/>
                                             <div class="o_kanban_event_registration_event_name">
                                                 <field class="o_text_overflow text-primary" name="event_id" invisible="context.get('default_event_id')"/>
                                             </div>
@@ -195,10 +200,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div id="event_attendees_kanban_icons" class="col-4 col-md-3">
-                                    <t t-call="event_attendees_kanban_icons_desktop"/>
-                                    <t t-call="event_attendees_kanban_icons_mobile"/>
                                 </div>
                             </div>
                         </div>
@@ -336,7 +337,7 @@
     <record id="event_registration_action_kanban" model="ir.actions.act_window">
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
         <field name="context">{'default_event_id': active_id}</field>
         <field name="help" type="html">
@@ -351,7 +352,8 @@
     <record id="event_registration_action" model="ir.actions.act_window">
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_filter_is_ongoing': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Attendees expected yet!

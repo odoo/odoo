@@ -89,7 +89,7 @@ class EventController(Controller):
             }
         else:
             return {
-                'name': _('Registration Desk'),
+                'name': _('Event Registrations'),
                 'country': False,
                 'city': False,
                 'company_name': request.env.company.name,
