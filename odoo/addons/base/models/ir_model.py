@@ -164,7 +164,6 @@ def upsert_en(model, fnames, rows, conflict):
 #
 class Base(models.AbstractModel):
     """ The base model, which is implicitly inherited by all models. """
-    _name = 'base'
     _description = 'Base'
 
 
@@ -178,7 +177,6 @@ class Unknown(models.AbstractModel):
 
 
 class IrModel(models.Model):
-    _name = 'ir.model'
     _description = "Models"
     _order = 'model'
     _rec_names_search = ['name', 'model']
@@ -495,7 +493,6 @@ FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 
 
 class IrModelFields(models.Model):
-    _name = 'ir.model.fields'
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
@@ -1356,8 +1353,7 @@ class IrModelFields(models.Model):
         return [(sel.value, sel.name) for sel in field.selection_ids]
 
 
-class ModelInherit(models.Model):
-    _name = "ir.model.inherit"
+class IrModelInherit(models.Model):
     _description = "Model Inheritance Tree"
     _log_access = False
 
@@ -1443,8 +1439,7 @@ class ModelInherit(models.Model):
         self.env["ir.model.data"]._update_xmlids(data_list)
 
 
-class IrModelSelection(models.Model):
-    _name = 'ir.model.fields.selection'
+class IrModelFieldsSelection(models.Model):
     _order = 'sequence, id'
     _description = "Fields Selection"
     _allow_sudo_commands = False
@@ -1754,7 +1749,6 @@ class IrModelConstraint(models.Model):
     This model tracks PostgreSQL foreign keys and constraints used by Odoo
     models.
     """
-    _name = 'ir.model.constraint'
     _description = 'Model Constraint'
     _allow_sudo_commands = False
 
@@ -1909,7 +1903,6 @@ class IrModelRelation(models.Model):
     This model tracks PostgreSQL tables used to implement Odoo many2many
     relations.
     """
-    _name = 'ir.model.relation'
     _description = 'Relation Model'
     _allow_sudo_commands = False
 
@@ -1971,7 +1964,6 @@ class IrModelRelation(models.Model):
 
 
 class IrModelAccess(models.Model):
-    _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
     _allow_sudo_commands = False
@@ -2155,7 +2147,6 @@ class IrModelData(models.Model):
              modules themselves, thus making it possible to later
              update them seamlessly.
     """
-    _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
     _allow_sudo_commands = False
@@ -2633,8 +2624,7 @@ class IrModelData(models.Model):
                 xid.noupdate = not xid.noupdate
 
 
-class WizardModelMenu(models.TransientModel):
-    _name = 'wizard.ir.model.menu.create'
+class WizardIrModelMenuCreate(models.TransientModel):
     _description = 'Create Menu Wizard'
 
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')

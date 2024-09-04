@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.addons.base.models.res_partner import Partner
+from odoo.addons.base.models.res_partner import ResPartner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.tests import Form
@@ -28,7 +28,7 @@ class TestPartner(TransactionCaseWithUserDemo):
 
     @contextmanager
     def mockPartnerCalls(self):
-        _original_create = Partner.create
+        _original_create = ResPartner.create
         self._new_partners = self.env['res.partner']
 
         def _res_partner_create(model, *args, **kwargs):
@@ -36,7 +36,7 @@ class TestPartner(TransactionCaseWithUserDemo):
             self._new_partners += records.sudo()
             return records
 
-        with patch.object(Partner, 'create',
+        with patch.object(ResPartner, 'create',
                           autospec=True, side_effect=_res_partner_create):
             yield
 

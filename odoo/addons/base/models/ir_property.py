@@ -23,8 +23,7 @@ TYPE2FIELD = {
 }
 
 
-class Property(models.Model):
-    _name = 'ir.property'
+class IrProperty(models.Model):
     _description = 'Company Property'
     _allow_sudo_commands = False
 
@@ -127,7 +126,7 @@ class Property(models.Model):
     def create(self, vals_list):
         vals_list = [self._update_values(vals) for vals in vals_list]
         created_default = any(not v.get('res_id') for v in vals_list)
-        r = super(Property, self).create(vals_list)
+        r = super().create(vals_list)
         if created_default:
             # DLE P44: test `test_27_company_dependent`
             self.env.flush_all()

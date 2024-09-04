@@ -3,7 +3,8 @@ from odoo import models, fields
 
 from .hr_homeworking import DAYS
 
-class User(models.Model):
+
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     monday_location_id = fields.Many2one("hr.work.location", related="employee_id.monday_location_id", readonly=False, string='Monday')

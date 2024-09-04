@@ -17,9 +17,8 @@ def is_autovacuum(func):
     return callable(func) and getattr(func, '_autovacuum', False)
 
 
-class AutoVacuum(models.AbstractModel):
+class IrAutovacuum(models.AbstractModel):
     """ Helper model to the ``@api.autovacuum`` method decorator. """
-    _name = 'ir.autovacuum'
     _description = 'Automatic Vacuum'
 
     def _run_vacuum_cleaner(self):

@@ -5,7 +5,6 @@ from odoo import models, fields
 
 
 class ImageMixin(models.AbstractModel):
-    _name = 'image.mixin'
     _description = "Image Mixin"
 
     # all image fields are base64 encoded and PIL-supported

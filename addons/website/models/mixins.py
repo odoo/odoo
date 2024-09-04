@@ -234,10 +234,8 @@ class WebsitePublishedMixin(models.AbstractModel):
         return _("You do not have the rights to publish/unpublish")
 
 
-class WebsitePublishedMultiMixin(WebsitePublishedMixin):
+class WebsitePublishedMultiMixin(models.AbstractModel, WebsitePublishedMixin, WebsiteMultiMixin):
 
-    _name = 'website.published.multi.mixin'
-    _inherit = ['website.published.mixin', 'website.multi.mixin']
     _description = 'Multi Website Published Mixin'
 
     website_published = fields.Boolean(compute='_compute_website_published',

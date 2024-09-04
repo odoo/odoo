@@ -16,7 +16,6 @@ _logger = logging.getLogger(__name__)
 
 
 class IrBinary(models.AbstractModel):
-    _name = 'ir.binary'
     _description = "File streaming helper model for controllers"
 
     def _find_record(

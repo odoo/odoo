@@ -49,8 +49,7 @@ class LoggerProxy:
         _server_action_logger.exception(message, *args, stack_info=stack_info, exc_info=exc_info)
 
 
-class IrActions(models.Model):
-    _name = 'ir.actions.actions'
+class IrActionsActions(models.Model):
     _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
@@ -103,13 +102,13 @@ class IrActions(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrActions, self).create(vals_list)
+        res = super().create(vals_list)
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
-        res = super(IrActions, self).write(vals)
+        res = super().write(vals)
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
         return res
@@ -121,7 +120,7 @@ class IrActions(models.Model):
         todos.unlink()
         filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
         filters.unlink()
-        res = super(IrActions, self).unlink()
+        res = super().unlink()
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
         return res
@@ -252,11 +251,10 @@ class IrActions(models.Model):
         }
 
 
-class IrActionsActWindow(models.Model):
+class IrActionsActWindow(models.Model, IrActionsActions):
     _name = 'ir.actions.act_window'
     _description = 'Action Window'
     _table = 'ir_act_window'
-    _inherit = 'ir.actions.actions'
     _order = 'name'
     _allow_sudo_commands = False
 
@@ -426,10 +424,9 @@ class IrActionsActWindowView(models.Model):
         return res
 
 
-class IrActionsActWindowclose(models.Model):
+class IrActionsActWindowClose(models.Model, IrActionsActions):
     _name = 'ir.actions.act_window_close'
     _description = 'Action Window Close'
-    _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
     _allow_sudo_commands = False
 
@@ -443,11 +440,10 @@ class IrActionsActWindowclose(models.Model):
         }
 
 
-class IrActionsActUrl(models.Model):
+class IrActionsActUrl(models.Model, IrActionsActions):
     _name = 'ir.actions.act_url'
     _description = 'Action URL'
     _table = 'ir_act_url'
-    _inherit = 'ir.actions.actions'
     _order = 'name'
     _allow_sudo_commands = False
 
@@ -481,7 +477,7 @@ WEBHOOK_SAMPLE_VALUES = {
 }
 
 
-class IrActionsServer(models.Model):
+class IrActionsServer(models.Model, IrActionsActions):
     """ Server actions model. Server action work on a base model and offer various
     type of actions that can be executed automatically, for example using base
     action rules, of manually, by adding the action in the 'More' contextual
@@ -500,10 +496,8 @@ class IrActionsServer(models.Model):
     - 'Execute several actions': define an action that triggers several other
       server actions
     """
-    _name = 'ir.actions.server'
     _description = 'Server Actions'
     _table = 'ir_act_server'
-    _inherit = 'ir.actions.actions'
     _order = 'sequence,name'
     _allow_sudo_commands = False
 
@@ -1076,7 +1070,6 @@ class IrActionsTodo(models.Model):
     """
     Configuration Wizards
     """
-    _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
     _rec_name = 'action_id'
     _order = "sequence, id"
@@ -1151,10 +1144,8 @@ class IrActionsTodo(models.Model):
         return self.write({'state': 'open'})
 
 
-class IrActionsActClient(models.Model):
-    _name = 'ir.actions.client'
+class IrActionsClient(models.Model, IrActionsActions):
     _description = 'Client Action'
-    _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
     _order = 'name'
     _allow_sudo_commands = False
@@ -1185,7 +1176,7 @@ class IrActionsActClient(models.Model):
             record.params_store = repr(params) if isinstance(params, dict) else params
 
     def _get_default_form_view(self):
-        doc = super(IrActionsActClient, self)._get_default_form_view()
+        doc = super()._get_default_form_view()
         params = doc.find(".//field[@name='params']")
         params.getparent().remove(params)
         params_store = doc.find(".//field[@name='params_store']")

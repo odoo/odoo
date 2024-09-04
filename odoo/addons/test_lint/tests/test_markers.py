@@ -26,7 +26,7 @@ class TestConflictMarkers(lint_case.LintCase):
         counter = 0
 
         odoo_path = os.path.abspath(os.path.dirname(odoo.__file__))
-        paths = odoo.addons.__path__ + [odoo_path]
+        paths = [*odoo.addons.__path__, odoo_path]
         paths.remove(os.path.join(odoo_path, 'addons'))  # avoid checking odoo/addons twice
 
         for p in paths:

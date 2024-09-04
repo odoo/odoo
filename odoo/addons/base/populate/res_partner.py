@@ -1,15 +1,14 @@
 
+from odoo.addons import base
 import collections
 import logging
 
-from odoo import models
 from odoo.tools import populate
 
 _logger = logging.getLogger(__name__)
 
 
-class Partner(models.Model):
-    _inherit = "res.partner"
+class ResPartner(base.ResPartner):
     _populate_dependencies = ["res.company", "res.partner.industry"]
 
     _populate_sizes = {
@@ -146,8 +145,8 @@ class Partner(models.Model):
             partners.write({'parent_id': company.id})
             partners._onchange_company_id()
 
-class ResPartnerIndustry(models.Model):
-    _inherit = "res.partner.industry"
+
+class ResPartnerIndustry(base.ResPartnerIndustry):
 
     _populate_sizes = {
         'small': 15,

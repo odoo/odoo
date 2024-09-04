@@ -1,10 +1,9 @@
 from odoo import api, fields, _
 from odoo.exceptions import UserError, AccessDenied
-from odoo.addons.base.models.res_users import CheckIdentity
+from odoo.addons.base.models.res_users import ResUsersIdentitycheck
 
 
-class CheckIdentityPasskeys(CheckIdentity):
-    _inherit = 'res.users.identitycheck'
+class ResUsersIdentitycheck(ResUsersIdentitycheck):
 
     auth_method = fields.Selection(selection_add=[('webauthn', 'Passkey')])
 

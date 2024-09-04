@@ -3,7 +3,8 @@
 
 from odoo import models, fields, _
 
-class User(models.Model):
+
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     hours_last_month = fields.Float(related='employee_id.hours_last_month')

@@ -19,8 +19,7 @@ except ImportError:
     num2words = None
 
 
-class Currency(models.Model):
-    _name = "res.currency"
+class ResCurrency(models.Model):
     _description = "Currency"
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
@@ -327,8 +326,7 @@ class Currency(models.Model):
         return arch, view
 
 
-class CurrencyRate(models.Model):
-    _name = "res.currency.rate"
+class ResCurrencyRate(models.Model):
     _description = "Currency Rate"
     _rec_names_search = ['name', 'rate']
     _order = "name desc"

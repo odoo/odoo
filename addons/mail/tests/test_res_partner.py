@@ -7,7 +7,7 @@ from unittest.mock import patch
 from uuid import uuid4
 
 from odoo import tools
-from odoo.addons.base.models.res_partner import Partner
+from odoo.addons.base.models.res_partner import ResPartner
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
@@ -35,8 +35,8 @@ class TestPartner(MailCommon):
         ]
     @contextmanager
     def mockPartnerCalls(self):
-        _original_create = Partner.create
-        _original_search = Partner.search
+        _original_create = ResPartner.create
+        _original_search = ResPartner.search
         self._new_partners = self.env['res.partner']
 
         def _res_partner_create(model, *args, **kwargs):
@@ -44,9 +44,9 @@ class TestPartner(MailCommon):
             self._new_partners += records.sudo()
             return records
 
-        with patch.object(Partner, 'create',
+        with patch.object(ResPartner, 'create',
                           autospec=True, side_effect=_res_partner_create) as mock_partner_create, \
-             patch.object(Partner, 'search',
+             patch.object(ResPartner, 'search',
                           autospec=True, side_effect=_original_search) as mock_partner_search:
             self._mock_partner_create = mock_partner_create
             self._mock_partner_search = mock_partner_search
