@@ -153,12 +153,24 @@
                                     </group>
                                     <!-- email alias -->
                                     <group class="oe_read_only" name="group_alias_ro"
-                                           string="Create Invoices upon Emails" invisible="type not in ('sale', 'purchase', 'general')">
+                                           string="Create Invoices upon Emails" invisible="type not in ('sale', 'purchase')">
+                                       <field name="alias_id"/>
+                                    </group>
+                                    <group class="oe_read_only" name="group_alias_ro_general"
+                                           string="Create Entries upon Emails" invisible="type != 'general'">
                                        <field name="alias_id"/>
                                     </group>
                                     <field name="display_alias_fields" invisible="1"/>
                                     <group name="group_alias_no_domain" string="Create Invoices upon Emails"
-                                           invisible="type not in ('sale', 'purchase', 'general') or display_alias_fields">
+                                           invisible="type not in ('sale', 'purchase') or display_alias_fields">
+                                        <div class="content-group" colspan="2">
+                                            <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
+                                                <i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Alias Domain
+                                            </a>
+                                        </div>
+                                    </group>
+                                    <group name="group_alias_no_domain_general" string="Create Entries upon Emails"
+                                           invisible="type != 'general' or display_alias_fields">
                                         <div class="content-group" colspan="2">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
                                                 <i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Alias Domain
@@ -166,7 +178,16 @@
                                         </div>
                                     </group>
                                     <group class="oe_edit_only" name="group_alias_edit" string="Create Invoices upon Emails"
-                                           invisible="type not in ('sale', 'purchase', 'general') or not display_alias_fields">
+                                           invisible="type not in ('sale', 'purchase') or not display_alias_fields">
+                                        <label string="Email Alias" for="alias_name"/>
+                                        <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr" >
+                                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                                   options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                    </group>
+                                    <group class="oe_edit_only" name="group_alias_edit_general" string="Create Entries upon Emails"
+                                           invisible="type != 'general' or not display_alias_fields">
                                         <label string="Email Alias" for="alias_name"/>
                                         <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr" >
                                             <field name="alias_name" placeholder="alias" class="oe_inline"/>@
