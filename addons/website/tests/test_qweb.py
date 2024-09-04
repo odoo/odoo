@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
+from odoo.tests import HttpCase, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.website.tools import MockRequest
 from odoo.tests.common import TransactionCase
@@ -108,3 +109,73 @@ class TestQwebProcessAtt(TransactionCase):
             match.reset_calls()
             self._test_att('/x?y#z', {'href': '/x?y#z'})
             match.assert_called_with('/x', method='POST', query_args='y')
+
+
+@tagged('-at_install', 'post_install')
+class TestQwebWebsite(HttpCase):
+    def setUp(self):
+        super(HttpCase, self).setUp()
+        self.website = self.env.ref('website.default_website')
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
+        self.website.default_lang_id = self.env.ref('base.lang_en')
+
+    def test_translation_cache(self):
+        View = self.env['ir.ui.view']
+        Page = self.env['website.page']
+
+        home_1 = View.create({
+            'name': 'Test Home',
+            'type': 'qweb',
+            'arch': '''
+                <section>
+                    <div>content <a href="/view-en">test</a> and <a href="/view-en">test</a></div>
+                </section>''',
+            'key': 'test.view_1',
+        })
+        page_home_1 = Page.create({
+            'view_id': home_1.id,
+            'website_id': self.website.id,
+            'url': '/page_home_1',
+            'is_published': True,
+        })
+
+        view_data = View.create({
+            'name': 'Test View 1',
+            'type': 'qweb',
+            'arch': '''
+                <section>
+                    <div>content <a href="">test</a> rest</div>
+                </section>''',
+            'key': 'test.view_data',
+        })
+        Page.create({
+            'view_id': view_data.id,
+            'url': '/view-en',
+            'is_published': True,
+        })
+
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
+            self.authenticate('admin', 'admin')
+
+            # read with debug (or use 2 different websites with different values
+            # for block_third_party_domains). Method _post_processing_att
+            # changes the value but the result is put in a static string. When
+            # the user goes to an other page with other post-processing
+            # information, the result can be wrong.
+            self.session.debug = '1'
+            http.root.session_store.save(self.session)
+
+            # load french static node
+            r = self.url_open(f'/fr{page_home_1.url}')
+            # because debug => no post-processing
+            self.assertIn('href="/view-en"', r.text)
+
+            # read with t-cache
+            self.session.debug = ''
+            http.root.session_store.save(self.session)
+
+            # use french static node cache
+            r = self.url_open(f'/fr{page_home_1.url}')
+            self.assertIn('href="/fr/view-en"', r.text)
+            self.assertNotIn('href="/view-fr"', r.text)
