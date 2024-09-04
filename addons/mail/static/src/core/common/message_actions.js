@@ -175,13 +175,13 @@ messageActionsRegistry
         sequence: 90,
     })
     .add("download_files", {
-        condition: (component) => component.message.attachments.length > 1,
+        condition: (component) => component.message.attachment_ids.length > 1,
         icon: "fa-download",
         title: _t("Download Files"),
         onClick: (component) =>
             download({
                 data: {
-                    file_ids: component.message.attachments.map((rec) => rec.id),
+                    file_ids: component.message.attachment_ids.map((rec) => rec.id),
                     zip_name: `attachments_${DateTime.local().toFormat("HHmmddMMyyyy")}.zip`,
                 },
                 url: "/mail/attachment/zip",

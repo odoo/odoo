@@ -145,7 +145,7 @@ export class MailMessage extends models.ServerModel {
                 );
             }
             Object.assign(data, {
-                attachments: mailDataHelpers.Store.many(
+                attachment_ids: mailDataHelpers.Store.many(
                     IrAttachment.browse(message.attachment_ids).sort((a1, a2) => a1.id - a2.id)
                 ),
                 default_subject:

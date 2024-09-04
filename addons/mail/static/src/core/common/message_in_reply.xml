@@ -15,7 +15,7 @@
                             <t t-if="!props.message.parentMessage.isBodyEmpty">
                                 <t t-out="props.message.parentMessage.body"/>
                             </t>
-                            <t t-elif="props.message.parentMessage.attachments.length > 0">
+                            <t t-elif="props.message.parentMessage.attachment_ids.length > 0">
                                 <span class="me-2 fst-italic">Click to see the attachments</span>
                                 <i class="fa fa-image"/>
                             </t>

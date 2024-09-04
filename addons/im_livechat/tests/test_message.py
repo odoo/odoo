@@ -91,7 +91,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
             {
                 "mail.message": self._filter_messages_fields(
                     {
-                        "attachments": [],
+                        "attachment_ids": [],
                         "author": {"id": self.users[1].partner_id.id, "type": "partner"},
                         "body": message.body,
                         "date": fields.Datetime.to_string(message.date),
@@ -194,7 +194,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                             "data": {
                                 "mail.message": self._filter_messages_fields(
                                     {
-                                        "attachments": [],
+                                        "attachment_ids": [],
                                         "author": {
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
