@@ -24,6 +24,30 @@
         max-width: 200px;
         max-height: 100px;
     }
+    .o_barcode_mobile_container {
+        margin-top: 40px;
+        margin-bottom: -40px;
+        img {
+            height: 185px;
+            width: 275px;
+        }
+        // In order to have the o_mobile_barcode button on both the image and the label,
+        // We use negative margin at the bottom and 0 opacity (since not needed in the view)
+        .o_mobile_barcode {
+            opacity: 0;
+            height: 225px;
+            width: 275px;
+            bottom: -40px;
+        }
+        .o_barcode_laser {
+            height: 3px;
+            width: 125%;
+            left: -12.5%;
+        }
+    }
+    @include media-breakpoint-down(md) {
+        padding: 0 1em 1em .75em;
+    }
     @include media-breakpoint-up(md) {
         flex: 0 0 auto;
         width: 550px;
@@ -32,7 +56,7 @@
         -moz-border-radius: 10px;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
         font-size: 1.2em;
-        padding: 3em;
+        padding: 0 1em 1em .75em;
     }
 }
 .o_notification_manager {
