@@ -11,7 +11,7 @@ Nigerian localization.
     'icon': '/account/static/description/l10n.png',
     'countries': ['ng'],
     'category': 'Accounting/Localizations/Account Charts',
-    'depends': ['base_vat'],
+    'depends': ['base_vat', 'account'],
     'data': [
         'data/tax_report.xml',
         'data/withholding_vat_report.xml',

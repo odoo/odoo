@@ -2,7 +2,6 @@
 
 import logging
 import re
-import time
 
 from collections import defaultdict
 
@@ -44,9 +43,9 @@ class AccountFiscalPosition(models.Model):
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')
     fiscal_country_codes = fields.Char(string="Company Fiscal Country Code", related='company_country_id.code')
-    country_id = fields.Many2one('res.country', string='Country',
+    country_id = fields.Many2one('res.country', string='Country', inverse='_inverse_foreign_vat',
         help="Apply only if delivery country matches.")
-    country_group_id = fields.Many2one('res.country.group', string='Country Group',
+    country_group_id = fields.Many2one('res.country.group', string='Country Group', inverse='_inverse_foreign_vat',
         help="Apply only if delivery country matches the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Char(string='Zip Range From')
@@ -60,10 +59,6 @@ class AccountFiscalPosition(models.Model):
     foreign_vat_header_mode = fields.Selection(
         selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
         compute='_compute_foreign_vat_header_mode')
-
-    def _inverse_foreign_vat(self):
-        # Hook for extension
-        pass
 
     def _compute_states_count(self):
         for position in self:
@@ -110,6 +105,8 @@ class AccountFiscalPosition(models.Model):
     def _validate_foreign_vat_country(self):
         for record in self:
             if record.foreign_vat:
+                if not record.country_id:
+                    raise ValidationError(_("The country of the foreign VAT number could not be detected. Please assign a country to the fiscal position."))
                 if record.country_id == record.company_id.account_fiscal_country_id:
                     if not record.state_ids:
                         if record.company_id.account_fiscal_country_id.state_ids:
@@ -140,6 +137,19 @@ class AccountFiscalPosition(models.Model):
                 similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
                 if similar_fpos_count:
                     raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
+
+    @api.onchange('country_id', 'country_group_id', 'foreign_vat')
+    def _onchange_foreign_vat(self):
+        self.foreign_vat, _country_code = self.env['res.partner']._run_vat_checks(self.country_id, self.foreign_vat, validation=False)
+
+    def _inverse_foreign_vat(self):
+        for record in self:
+            if not record.foreign_vat:
+                continue
+
+            if record.country_id:
+                fp_label = _("fiscal position [%s]", record.name)
+                record.foreign_vat, _country_code = self.env['res.partner']._run_vat_checks(record.country_id, record.foreign_vat, partner_name=fp_label)
 
     def map_tax(self, taxes):
         return self.env['account.tax'].browse(unique(
@@ -191,9 +201,14 @@ class AccountFiscalPosition(models.Model):
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
 
-    def _get_vat_valid(self, delivery, company=None):
-        """ Hook for determining VAT validity with more complex VAT requirements """
-        return bool(delivery.vat)
+    def _local_fp_exists_for_extra_eu(self):
+        # OVERRIDE
+        fp_exists = self.search([
+            *self._check_company_domain(self.env.company),
+            ('foreign_vat', '!=', False),
+            ('country_id', '=', self.country_id.id),
+        ], limit=1)
+        return fp_exists and True or False
 
     def _get_fpos_ranking_functions(self, partner):
         """Get comparison functions to rank fiscal positions.
@@ -214,7 +229,7 @@ class AccountFiscalPosition(models.Model):
         return [
             ('vat_required', lambda fpos: (
                 not fpos.vat_required
-                or (self._get_vat_valid(partner, self.env.company) and 2)
+                or (partner._get_vat_required_valid(company=self.env.company) and 2)
             )),
             ('company_id', lambda fpos: len(fpos.company_id.parent_ids)),
             ('zipcode', lambda fpos:(
@@ -817,35 +832,6 @@ class ResPartner(models.Model):
         for record in records:
             record[field] += n
 
-    @api.model
-    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
-        """ Checks a VAT number syntactically to ensure its validity upon saving.
-
-        :param vat_number: a string with the VAT number to check.
-        :param default_country: a res.country object
-        :param partner_is_company: True if the partner is a company, else False.
-            .. deprecated:: 16.0
-                Will be removed in 16.2
-
-        :return: The country code (in lower case) of the country the VAT number
-                 was validated for, if it was validated. False if it could not be validated
-                 against the provided or guessed country. None if no country was available
-                 for the check, and no conclusion could be made with certainty.
-        """
-        return default_country.code.lower()
-
-    @api.model
-    def _build_vat_error_message(self, country_code, wrong_vat, record_label):
-        """ Prepare an error message for the VAT number that failed validation
-
-        :param country_code: string of lowercase country code
-        :param wrong_vat: the vat number that was validated
-        :param record_label: a string to desribe the record that failed a VAT validation check
-
-        :return: The error message string
-        """
-        return ""
-
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
         frontend_writable_fields.update({'invoice_sending_method', 'invoice_edi_format'})
@@ -998,11 +984,8 @@ class ResPartner(models.Model):
         - if the VAT number has no ISO country code, use the country_code in that case.
         """
         self.ensure_one()
-
-        country_code = self.country_code
-        if self.vat and self.vat[:2].isalpha():
-            country_code = self.vat[:2].upper()
-        return country_code
+        _vat, country_code = self._run_vat_checks(self.country_id, self.vat, validation=False)
+        return country_code or self.country_code
 
     @api.depends('country_id')
     def _compute_partner_vat_placeholder(self):
