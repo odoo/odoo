@@ -1808,8 +1808,16 @@ class HttpCase(TransactionCase):
         ICP.set_param('web.base.url', cls.base_url())
         ICP.env.flush_all()
         # v8 api with correct xmlrpc exception handling.
-        cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
+        cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+
+    @classmethod
+    def base_url(cls):
+        return f"http://{HOST}:{cls.http_port():d}"
+
+    @classmethod
+    def http_port(cls):
+        return odoo.service.server.server.httpd.server_port
 
     def setUp(self):
         super().setUp()
@@ -2010,10 +2018,6 @@ class HttpCase(TransactionCase):
         finally:
             browser.stop()
             self._wait_remaining_requests()
-
-    @classmethod
-    def base_url(cls):
-        return f"http://{HOST}:{odoo.tools.config['http_port']}"
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import odoo.tests
-
-from odoo.tests.common import HOST
-from odoo.tools import config
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -22,7 +18,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         self.start_tour(url, 'website_page_manager_session_forced', login="admin")
 
         alternate_website = self.env['website'].search([('name', '=', 'My Website 2')], limit=1)
-        alternate_website.domain = f'http://{HOST}:{config["http_port"]}'
+        alternate_website.domain = self.base_url()
         self.start_tour('/odoo/action-website.action_website_pages_list', 'website_page_manager_direct_access', login='admin')
 
     def test_generic_page_diverged_not_shown(self):

@@ -1,7 +1,5 @@
 import odoo.tests
-from odoo.tests.common import HOST
-from odoo.tools import config
-from odoo.addons.website.tools import create_image_attachment
+from ..tools import create_image_attachment
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -30,11 +28,10 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
         req = self.url_open('/web/image/test.an_image_url')
         self.assertEqual(req.status_code, 200)
 
-        base = "http://%s:%s" % (HOST, config['http_port'])
-
+        base = self.base_url()
         req = self.opener.get(base + '/web/image/test.an_image_redirect_301', allow_redirects=False)
         self.assertEqual(req.status_code, 301)
-        self.assertURLEqual(req.headers.get('Location'), '/web/image/test.an_image_url')
+        self.assertURLEqual(req.headers['Location'], '/web/image/test.an_image_url')
 
         req = self.opener.get(base + '/web/image/test.an_image_redirect_301', allow_redirects=True)
         self.assertEqual(req.status_code, 200)
