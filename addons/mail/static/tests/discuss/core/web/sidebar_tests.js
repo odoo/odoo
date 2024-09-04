@@ -6,6 +6,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { click, contains, insertText } from "@web/../tests/utils";
+import { waitForChannels } from "@bus/../tests/helpers/websocket_event_deferred";
 
 QUnit.module("discuss sidebar");
 
@@ -68,7 +69,7 @@ QUnit.test("unknown channel can be displayed and interacted with", async () => {
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await openDiscuss(channelId);
+    await Promise.all([waitForChannels([`discuss.channel_${channelId}`]), openDiscuss(channelId)]);
     await contains(
         ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active",
         {

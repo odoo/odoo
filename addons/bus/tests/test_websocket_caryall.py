@@ -277,9 +277,16 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
         # Version not passed, User-Agent not present, should not be considered
         # as outdated
-        with patch.object(WebsocketConnectionHandler, "_VERSION", None), patch.object(
+        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
             self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
         ):
             websocket = self.websocket_connect()
             websocket.ping()
             websocket.recv_data_frame(control_frame=True)  # pong
+
+    def test_trigger_on_websocket_closed(self):
+        with patch('odoo.addons.bus.models.ir_websocket.IrWebsocket._on_websocket_closed') as mock:
+            ws = self.websocket_connect()
+            ws.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
+            self.assertTrue(mock.called)

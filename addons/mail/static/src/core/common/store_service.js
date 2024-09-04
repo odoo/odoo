@@ -77,13 +77,6 @@ export class Store extends BaseStore {
     hasMessageTranslationFeature;
     imStatusTrackedPersonas = Record.many("Persona", {
         inverse: "storeAsTrackedImStatus",
-        /** @this {import("models").Store} */
-        onUpdate() {
-            this.env.services["im_status"].registerToImStatus(
-                "res.partner",
-                this.imStatusTrackedPersonas.map((p) => p.id)
-            );
-        },
     });
     hasLinkPreviewFeature = true;
     // messaging menu

@@ -39,9 +39,26 @@ export class Persona extends Record {
     storeAsTrackedImStatus = Record.one("Store", {
         /** @this {import("models").Persona} */
         compute() {
-            if (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public) {
+            if (
+                this.type === "guest" ||
+                (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public)
+            ) {
                 return this._store;
             }
+        },
+        onAdd() {
+            if (!this._store.env.services.bus_service.isActive) {
+                return;
+            }
+            const model = this.type === "partner" ? "res.partner" : "mail.guest";
+            this._store.env.services.bus_service.addChannel(`odoo-presence-${model}_${this.id}`);
+        },
+        onDelete() {
+            if (!this._store.env.services.bus_service.isActive) {
+                return;
+            }
+            const model = this.type === "partner" ? "res.partner" : "mail.guest";
+            this._store.env.services.bus_service.deleteChannel(`odoo-presence-${model}_${this.id}`);
         },
         eager: true,
         inverse: "imStatusTrackedPersonas",
