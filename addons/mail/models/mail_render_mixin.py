@@ -451,7 +451,7 @@ class MailRenderMixin(models.AbstractModel):
         return results
 
     @api.model
-    def _render_template_postprocess(self, rendered):
+    def _render_template_postprocess(self, model, rendered):
         """ Tool method for post processing. In this method we ensure local
         links ('/shop/Basil-1') are replaced by global links ('https://www.
         mygarden.com/shop/Basil-1').
@@ -460,8 +460,12 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: updated version of rendered per record ID;
         """
+        res_ids = list(rendered.keys())
         for res_id, rendered_html in rendered.items():
-            rendered[res_id] = self._replace_local_links(rendered_html)
+            base_url = None
+            if model:
+                base_url = self.env[model].browse(res_id).with_prefetch(res_ids).get_base_url()
+            rendered[res_id] = self._replace_local_links(rendered_html, base_url)
         return rendered
 
     @api.model
@@ -533,7 +537,7 @@ class MailRenderMixin(models.AbstractModel):
                                                              add_context=add_context, options=options)
 
         if options.get('post_process'):
-            rendered = self._render_template_postprocess(rendered)
+            rendered = self._render_template_postprocess(model, rendered)
 
         return rendered
 
