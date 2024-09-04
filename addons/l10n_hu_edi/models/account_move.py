@@ -318,7 +318,7 @@ class AccountMove(models.Model):
     # === EDI: Flow === #
 
     def _l10n_hu_edi_check_invoices(self):
-        hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
+        hu_vat_regex = re.compile(r'(HU)?\d{8}-[1-5]-\d{2}')
         hu_bank_account_regex = re.compile(r'\d{8}-\d{8}-\d{8}|\d{8}-\d{8}|[A-Z]{2}\d{2}[0-9A-Za-z]{11,30}')
 
         # This contains all the advance invoices that correspond to final invoices in `self`.
@@ -454,7 +454,6 @@ class AccountMove(models.Model):
                 'action_text': _('Open Accounting Settings'),
                 'action': self.env.ref('account.action_account_config').with_company(companies_missing_credentials[0])._get_action_dict(),
             }
-
         return errors
 
     def _l10n_hu_edi_upload(self, connection):
