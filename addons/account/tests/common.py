@@ -1010,3 +1010,79 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             new_taxes,
             product,
         )
+
+
+class TestAccountMergeCommon(AccountTestInvoicingCommon):
+    def _create_account_merge_wizard(self, accounts):
+        """ Open an account.merge.wizard with the given accounts. """
+        return self.env['account.merge.wizard'].with_context({
+            'allowed_company_ids': accounts.company_ids.ids,
+            'active_model': 'account.account',
+            'active_ids': accounts.ids
+        }).create({'is_group_by_name': False})
+
+    def _create_references_to_account(self, account):
+        """ Create records that reference the given account using different types
+        of reference fields: Many2one, Many2many, company-dependent Many2one,
+        and Many2oneReference.
+
+        The Many2one, Many2many and Many2oneReference records are created with a
+        `company_id` set to `account.company_ids`.
+
+        The company-dependent Many2one record is created with the context company
+        set to `account.company_ids`.
+
+        This allows correct testing of merging and de-merging accounts.
+
+        :return: a dict {record: account_field} of all created records and the
+                 field names on the records that reference the account.
+        """
+        # Many2one
+        move = self.env['account.move'].create({
+            'journal_id': self.env['account.journal'].search([('company_id', '=', account.company_ids.id)], limit=1).id,
+            'date': '2024-07-20',
+            'line_ids': [
+                Command.create({
+                    'account_id': account.id,
+                    'balance': 10.0,
+                }),
+                Command.create({
+                    'account_id': self.env['account.account'].search([('company_ids', '=', account.company_ids.id)], limit=1).id,
+                    'balance': -10.0,
+                })
+            ]
+        })
+
+        # Many2many (note that merging the accounts will technically
+        # break the check_company constraint on journal.account_control_ids,
+        # but we still test this as this is the easiest way to test that
+        # M2M fields are merged correctly.)
+        journal = self.env['account.journal'].create({
+            'name': f'For account {account.id}',
+            'code': f'T{account.id}',
+            'type': 'general',
+            'company_id': account.company_ids.id,
+            'account_control_ids': [Command.set(account.ids)],
+        })
+
+        # Company-dependent Many2one.
+        # We must set (and check) the 'property_account_receivable_id' on the right company.
+        partner = self.env['res.partner'].with_company(account.company_ids).create({
+            'name': 'Some Partner name',
+            'property_account_receivable_id': account.id,
+        })
+
+        # Many2oneReference
+        attachment = self.env['ir.attachment'].create({
+            'res_model': 'account.account',
+            'res_id': account.id,
+            'name': 'attachment',
+            'company_id': account.company_ids.id,
+        })
+
+        return {
+            move.line_ids[0]: 'account_id',
+            journal: 'account_control_ids',
+            partner: 'property_account_receivable_id',
+            attachment: 'res_id',
+        }

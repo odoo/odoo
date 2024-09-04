@@ -81,7 +81,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/tests_shared_js_python.xml',
         'views/base_document_layout_views.xml',
         'views/account_lock_exception_views.xml',
-        'views/report_templates.xml'
+        'views/report_templates.xml',
+        'wizard/account_merge_wizard_views.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
