@@ -848,9 +848,8 @@ class Message(models.Model):
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
 
-    def _message_reaction(self, content, action):
+    def _message_reaction(self, content, action, partner, guest, store: Store):
         self.ensure_one()
-        partner, guest = self.env["res.partner"]._get_current_persona()
         # search for existing reaction
         domain = [
             ("message_id", "=", self.id),
@@ -870,9 +869,17 @@ class Message(models.Model):
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
             reaction.unlink()
+        # fill the store to use for non logged in portal users in mail_message_reaction()
+        self._reaction_group_to_store(store, content)
+        # send the reaction group to bus for logged in users
         self._bus_send_reaction_group(content)
 
     def _bus_send_reaction_group(self, content):
+        store = Store()
+        self._reaction_group_to_store(store, content)
+        self._bus_send_store(store)
+
+    def _reaction_group_to_store(self, store: Store, content):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         reactions = self.env["mail.message.reaction"].search(group_domain)
         reaction_group = (
@@ -880,7 +887,7 @@ class Message(models.Model):
             if reactions
             else [("DELETE", {"message": self.id, "content": content})]
         )
-        self._bus_send_store(self, {"reactions": reaction_group})
+        store.add(self, {"reactions": reaction_group})
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
