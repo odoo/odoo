@@ -57,7 +57,7 @@ export class PageDependencies extends Component {
     }
 
     showDependencies() {
-        $(this.action.el).popover({
+        const popover = window.Popover.getOrCreateInstance(this.action.el, {
             title: _t("Dependencies"),
             boundary: 'viewport',
             placement: 'right',
@@ -67,7 +67,8 @@ export class PageDependencies extends Component {
                     dependencies: this.state.dependencies,
                 });
             },
-        }).popover('toggle');
+        });
+        popover.toggle();
     }
 }
 
