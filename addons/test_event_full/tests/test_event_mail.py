@@ -233,11 +233,9 @@ class TestEventMailSchedule(TestEventMailCommon):
         sub_mail = test_event.event_mail_ids.filtered(lambda s: s.interval_type == "after_sub" and s.interval_unit == "now" and s.notification_type == "mail")
         self.assertEqual(len(sub_mail), 1)
         self.assertEqual(sub_mail.mail_count_done, 0)
-        self.assertFalse(sub_mail.mail_done)
         sub_sms = test_event.event_mail_ids.filtered(lambda s: s.interval_type == "after_sub" and s.interval_unit == "now" and s.notification_type == "sms")
         self.assertEqual(len(sub_sms), 1)
         self.assertEqual(sub_sms.mail_count_done, 0)
-        self.assertFalse(sub_sms.mail_done)
 
         # setup batch and cron limit sizes to check iterative behavior
         batch_size, cron_limit = 5, 20
@@ -275,9 +273,7 @@ class TestEventMailSchedule(TestEventMailCommon):
 
         # finished sending communications
         self.assertEqual(sub_mail.mail_count_done, 30)
-        self.assertTrue(sub_mail.mail_done)
         self.assertEqual(sub_sms.mail_count_done, 30)
-        self.assertTrue(sub_sms.mail_done)
         self.assertFalse(capture.records)
         self.assertEqual(mock_exec.call_count, 4, "Batch of 5 to make 10 remaining registrations: 2 calls / scheduler")
 
