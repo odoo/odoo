@@ -10,7 +10,7 @@ from odoo.addons.sms.models.sms_sms import SmsApi, SmsSms
 from odoo.tests import common
 
 
-class MockSMS(common.BaseCase):
+class MockSMS(common.TransactionCase):
 
     def tearDown(self):
         super(MockSMS, self).tearDown()
