@@ -476,15 +476,37 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
     assetLibs: null,
     /**
      * The selector attribute, if defined, allows to automatically create an
-     * instance of this widget on page load for each DOM element which matches
+     * instance of this widget on page load for each DOM element according to
      * this selector. The `PublicWidget.$el / el` element will then be that
      * particular DOM element. This should be the main way of instantiating
      * `PublicWidget` elements.
      *
+     * The value can either be a string in which case it is considered as a
+     * `querySelectorAll` selector to match, or a function expecting to return
+     * all DOM elements to consider, which are inside the element received as
+     * parameter of the function (or that element itself).
+     *
+     * @see selectorHas
+     *
      * @todo do not make this part of the Widget but rather an info to give when
      * registering the widget.
+     *
+     * @type {string|function|false}
      */
     selector: false,
+    /**
+     * The `selectorHas` attribute, if defined, allows to filter elements found
+     * through the `selector` attribute by only considering those which contain
+     * at least an element which matches this `selectorHas` selector.
+     *
+     * Note that this is the equivalent of setting up a `selector` using the
+     * `:has` pseudo-selector but that pseudo-selector is known to not be fully
+     * supported in all browsers. To prevent useless crashes, using this
+     * `selectorHas` attribute should be preferred.
+     *
+     * @type {string|false}
+     */
+    selectorHas: false,
     /**
      * Extension of @see Widget.events
      *

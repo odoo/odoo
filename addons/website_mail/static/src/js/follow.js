@@ -6,7 +6,8 @@ import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.follow = publicWidget.Widget.extend({
-    selector: '#wrapwrap:has(.js_follow)',
+    selector: '#wrapwrap',
+    selectorHas: '.js_follow',
     disabledInEditableMode: false,
 
     init() {
