@@ -7,7 +7,8 @@ import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.AddressForm = publicWidget.Widget.extend({
-    selector: '.oe_cart .checkout_autoformat:has(input[name="street"][data-autocomplete-enabled="1"])',
+    selector: '.oe_cart .checkout_autoformat',
+    selectorHas: 'input[name="street"][data-autocomplete-enabled="1"]',
     events: {
         'input input[name="street"]': '_onChangeStreet',
         'click .js_autocomplete_result': '_onClickAutocompleteResult'

@@ -6,7 +6,8 @@ import { parseDate, formatDate, serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
-    selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
+    selector: '#wrapwrap',
+    selectorHas: '.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form',
     events: {
         'click .interested_partner_assign_confirm': '_onInterestedPartnerAssignConfirm',
         'click .desinterested_partner_assign_confirm': '_onDesinterestedPartnerAssignConfirm',

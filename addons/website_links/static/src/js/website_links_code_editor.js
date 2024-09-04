@@ -5,7 +5,8 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
-    selector: '#wrapwrap:has(.o_website_links_edit_code)',
+    selector: '#wrapwrap',
+    selectorHas: '.o_website_links_edit_code',
     events: {
         'click .o_website_links_edit_code': '_onEditCodeClick',
         'click .o_website_links_cancel_edit': '_onCancelEditClick',

@@ -1164,7 +1164,8 @@ registry.ScrollButton = registry.anchorSlide.extend({
 });
 
 registry.FooterSlideout = publicWidget.Widget.extend({
-    selector: '#wrapwrap:has(.o_footer_slideout)',
+    selector: '#wrapwrap',
+    selectorHas: '.o_footer_slideout',
     disabledInEditableMode: false,
 
     /**
