@@ -36,11 +36,6 @@ class CryptContext:
     def __init__(self, *args, **kwargs):
         self.__obj__ = _CryptContext(*args, **kwargs)
 
-    @property
-    def encrypt(self):
-        # deprecated alias
-        return self.hash
-
     def copy(self):
         """
             The copy method must create a new instance of the
