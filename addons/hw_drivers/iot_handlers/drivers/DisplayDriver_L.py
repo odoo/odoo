@@ -115,6 +115,10 @@ class DisplayDriver(Driver):
             self.browser.refresh()
 
     def set_orientation(self, orientation=Orientation.NORMAL):
+        if self.device_identifier == 'distant_display':
+            # Avoid calling xrandr if no display is connected
+            return
+
         if type(orientation) is not Orientation:
             raise TypeError("orientation must be of type Orientation")
         subprocess.run(['xrandr', '-o', orientation.value], check=True)
