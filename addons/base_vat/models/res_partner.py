@@ -268,6 +268,7 @@ class ResPartner(models.Model):
 
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
 
+        print(country_code)
         # Catch use case where the record label is about the public user (name: False)
         if 'False' not in record_label:
             return '\n' + _(
@@ -698,7 +699,7 @@ class ResPartner(models.Model):
 
     def write(self, values):
         print(self.ids, values)
-        if values.get('vat') or values.get('country_id'):
+        if self and (values.get('vat') or values.get('country_id')):
             only_vat_problem = values.get('vat') and not values.get('country_id') and len(self.mapped('country_id')) > 1
             only_country_problem = values.get('country_id') and not values.get('vat') and len(self.mapped('vat')) > 1
             if not (only_vat_problem or only_country_problem):
