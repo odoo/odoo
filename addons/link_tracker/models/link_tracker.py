@@ -316,7 +316,7 @@ class LinkTrackerClick(models.Model):
 
     campaign_id = fields.Many2one(
         'utm.campaign', 'UTM Campaign', index='btree_not_null',
-        related="link_id.campaign_id", store=True, ondelete="set null")
+        default="link_id.campaign_id", store=True, ondelete="set null")
     link_id = fields.Many2one(
         'link.tracker', 'Link',
         index=True, required=True, ondelete='cascade')
