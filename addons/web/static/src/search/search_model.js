@@ -10,6 +10,7 @@ import {
     DEFAULT_INTERVAL,
     getIntervalOptions,
     getPeriodOptions,
+    INTERVAL_OPTIONS,
     rankInterval,
     yearSelected,
 } from "./utils/dates";
@@ -23,6 +24,7 @@ import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_
 import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 
 const { DateTime } = luxon;
+const SPECIAL = Symbol("special");
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 /** @typedef {import("../views/utils").OrderTerm} OrderTerm */
@@ -211,6 +213,7 @@ export class SearchModel extends EventBus {
 
         this.searchMenuTypes = new Set(config.searchMenuTypes || ["filter", "groupBy", "favorite"]);
         this.canOrderByCount = config.canOrderByCount;
+        this.defaultGroupBy = config.defaultGroupBy;
 
         let { irFilters, loadIrFilters, searchViewArch, searchViewFields, searchViewId } = config;
         const loadSearchView =
@@ -584,6 +587,11 @@ export class SearchModel extends EventBus {
      * with given groupId.
      */
     deactivateGroup(groupId) {
+        if (groupId === SPECIAL) {
+            delete this.defaultGroupBy;
+            this._notify();
+            return;
+        }
         this.query = this.query.filter((queryElem) => {
             const searchItem = this.searchItems[queryElem.searchItemId];
             return searchItem.groupId !== groupId;
@@ -1605,8 +1613,8 @@ export class SearchModel extends EventBus {
                     case "dateGroupBy": {
                         type = "groupBy";
                         for (const intervalId of activeItem.intervalIds) {
-                            const option = this.intervalOptions.find((o) => o.id === intervalId);
-                            values.push(`${searchItem.description}: ${option.description}`);
+                            const { description } = INTERVAL_OPTIONS[intervalId];
+                            values.push(`${searchItem.description}: ${description}`);
                         }
                         break;
                     }
@@ -1648,7 +1656,25 @@ export class SearchModel extends EventBus {
             }
             facets.push(facet);
         }
-
+        const hasAGroupByFacet = facets.some((f) => f.type === "groupBy");
+        if (!hasAGroupByFacet && !this.globalGroupBy.length && this.defaultGroupBy) {
+            facets.push({
+                groupId: SPECIAL,
+                type: "groupBy",
+                values: this.defaultGroupBy.map((gb) => {
+                    const [fieldName, interval] = gb.split(":");
+                    const { string } = this.searchViewFields[fieldName];
+                    if (interval) {
+                        const { description } = INTERVAL_OPTIONS[interval];
+                        return `${string}:${description}`;
+                    }
+                    return string;
+                }),
+                separator: ">",
+                icon: FACET_ICONS.groupBy,
+                color: FACET_COLORS.groupBy,
+            });
+        }
         return facets;
     }
 
@@ -1748,7 +1774,11 @@ export class SearchModel extends EventBus {
                 }
             }
         }
-        const groupBy = groupBys.length ? groupBys : this.globalGroupBy.slice();
+        const groupBy = groupBys.length
+            ? groupBys
+            : this.globalGroupBy.length
+            ? this.globalGroupBy.slice()
+            : this.defaultGroupBy?.slice() || [];
         return typeof groupBy === "string" ? [groupBy] : groupBy;
     }
 
