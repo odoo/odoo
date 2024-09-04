@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from unittest.mock import patch
 
 from odoo.addons.mail.tests import common
 from odoo.exceptions import AccessError
@@ -254,6 +255,29 @@ class TestMailRender(TestMailRenderCommon):
                 engine='inline_template',
             )[partner.id]
             self.assertEqual(rendered, expected)
+
+    @users('employee')
+    def test_render_template_inline_template_w_post_process_custom_local_links(self):
+        def _mock_get_base_url(recordset):
+            return f"http://www.render-object-{recordset._name}-{recordset.id}-{recordset.display_name}.com"
+        partner_ids = self.env['res.partner'].sudo().create([{
+            'name': f'test partner {n}'
+        } for n in range(20)]).ids
+        with patch('odoo.models.Model.get_base_url', new=_mock_get_base_url), self.assertQueryCount(8):
+            # make sure name isn't already in cache
+            self.env['res.partner'].browse(partner_ids).invalidate_recordset(['name', 'display_name'])
+            render_results = self.env['mail.render.mixin']._render_template(
+                '<a href="/test/destination"><img src="/test/image"></a>',
+                'res.partner',
+                partner_ids,
+                engine='inline_template',
+                options={'post_process': True},
+            )
+        Partner = self.env['res.partner'].with_prefetch(partner_ids)
+        for partner_id, render_result in render_results.items():
+            partner = Partner.browse(partner_id)
+            expected_base_url = f"http://www.render-object-{partner._name}-{partner.id}-{partner.name}.com"
+            self.assertEqual(render_result, f'<a href="{expected_base_url}/test/destination"><img src="{expected_base_url}/test/image"></a>')
 
     @users('employee')
     def test_render_template_qweb(self):
