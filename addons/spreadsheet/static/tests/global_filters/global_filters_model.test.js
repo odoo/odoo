@@ -48,7 +48,6 @@ import {
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
 
@@ -1582,7 +1581,7 @@ test("Date filter automatic default value at model loading", async function () {
 
 test("Relative date filter at model loading", async function () {
     const label = "Last Month";
-    const defaultValue = RELATIVE_DATE_RANGE_TYPES[1].type;
+    const defaultValue = { reference: "last", unit: "day", interval: 30 };
     const model = new Model({
         globalFilters: [
             {
@@ -1595,13 +1594,14 @@ test("Relative date filter at model loading", async function () {
             },
         ],
     });
-    expect(model.getters.getGlobalFilterValue("1")).toBe(defaultValue);
+    expect(model.getters.getGlobalFilterValue("1")).toEqual(defaultValue);
 });
 
 test("Relative date filter display value", async function () {
+    mockTimeZone();
     mockDate("2022-05-16 00:00:00");
     const label = "Last Month";
-    const defaultValue = RELATIVE_DATE_RANGE_TYPES[1].type;
+    const defaultValue = { reference: "last", unit: "day", interval: 30 };
     const { model } = await createSpreadsheetWithPivot();
     await addGlobalFilter(model, {
         id: "42",
@@ -1610,9 +1610,11 @@ test("Relative date filter display value", async function () {
         defaultValue,
         rangeType: "relative",
     });
-    expect(model.getters.getFilterDisplayValue(label)[0][0].value).toBe(
-        RELATIVE_DATE_RANGE_TYPES[1].description.toString()
-    );
+    const values = model.getters.getFilterDisplayValue(label);
+    expect(values[0][0].value).toBe(44667);
+    expect(values[0][0].format).toBe("m/d/yyyy");
+    expect(values[1][0].value).toBe(44696);
+    expect(values[1][0].format).toBe("m/d/yyyy");
 });
 
 test("Relative date filter domain value", async function () {
@@ -1624,7 +1626,7 @@ test("Relative date filter domain value", async function () {
         id: "42",
         type: "date",
         label,
-        defaultValue: "last_week",
+        defaultValue: { reference: "last", unit: "day", interval: 7 },
         rangeType: "relative",
     };
     await addGlobalFilter(model, filter, {
@@ -1632,36 +1634,54 @@ test("Relative date filter domain value", async function () {
     });
     let computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(getDateDomainDurationInDays(computedDomain)).toBe(7);
-    assertDateDomainEqual("date", "2022-05-10", "2022-05-16", computedDomain);
+    assertDateDomainEqual("date", "2022-05-09", "2022-05-15", computedDomain);
 
-    await setGlobalFilterValue(model, { id: "42", value: "year_to_date" });
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "this", unit: "year_to_date" },
+    });
     computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    assertDateDomainEqual("date", "2022-01-01", "2022-05-16", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_month" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(30);
-    assertDateDomainEqual("date", "2022-04-17", "2022-05-16", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_three_months" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(90);
-    assertDateDomainEqual("date", "2022-02-16", "2022-05-16", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_six_months" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(180);
-    assertDateDomainEqual("date", "2021-11-18", "2022-05-16", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_year" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(365);
     assertDateDomainEqual("date", "2021-05-17", "2022-05-16", computedDomain);
 
-    await setGlobalFilterValue(model, { id: "42", value: "last_three_years" });
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 30 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(30);
+    assertDateDomainEqual("date", "2022-04-16", "2022-05-15", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 90 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(90);
+    assertDateDomainEqual("date", "2022-02-15", "2022-05-15", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 180 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(180);
+    assertDateDomainEqual("date", "2021-11-17", "2022-05-15", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 365 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(365);
+    assertDateDomainEqual("date", "2021-05-16", "2022-05-15", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 3 * 365 },
+    });
     computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(getDateDomainDurationInDays(computedDomain)).toBe(3 * 365);
-    assertDateDomainEqual("date", "2019-05-18", "2022-05-16", computedDomain);
+    assertDateDomainEqual("date", "2019-05-17", "2022-05-15", computedDomain);
 });
 
 test("Relative date filter with offset domain value", async function () {
@@ -1673,7 +1693,7 @@ test("Relative date filter with offset domain value", async function () {
         id: "42",
         type: "date",
         label,
-        defaultValue: "last_week",
+        defaultValue: { reference: "last", unit: "day", interval: 7 },
         rangeType: "relative",
     };
     await addGlobalFilter(model, filter, {
@@ -1681,36 +1701,54 @@ test("Relative date filter with offset domain value", async function () {
     });
     let computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(getDateDomainDurationInDays(computedDomain)).toBe(7);
-    assertDateDomainEqual("date", "2022-05-03", "2022-05-09", computedDomain);
+    assertDateDomainEqual("date", "2022-05-02", "2022-05-08", computedDomain);
 
-    await setGlobalFilterValue(model, { id: "42", value: "year_to_date" });
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "this", unit: "year_to_date" },
+    });
     computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    assertDateDomainEqual("date", "2021-01-01", "2021-05-16", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_month" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(30);
-    assertDateDomainEqual("date", "2022-03-18", "2022-04-16", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_three_months" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(90);
-    assertDateDomainEqual("date", "2021-11-18", "2022-02-15", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_six_months" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(180);
-    assertDateDomainEqual("date", "2021-05-22", "2021-11-17", computedDomain);
-
-    await setGlobalFilterValue(model, { id: "42", value: "last_year" });
-    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
-    expect(getDateDomainDurationInDays(computedDomain)).toBe(365);
     assertDateDomainEqual("date", "2020-05-17", "2021-05-16", computedDomain);
 
-    await setGlobalFilterValue(model, { id: "42", value: "last_three_years" });
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 30 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(30);
+    assertDateDomainEqual("date", "2022-03-17", "2022-04-15", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 90 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(90);
+    assertDateDomainEqual("date", "2021-11-17", "2022-02-14", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 180 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(180);
+    assertDateDomainEqual("date", "2021-05-21", "2021-11-16", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 365 },
+    });
+    computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
+    expect(getDateDomainDurationInDays(computedDomain)).toBe(365);
+    assertDateDomainEqual("date", "2020-05-16", "2021-05-15", computedDomain);
+
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: { reference: "last", unit: "day", interval: 3 * 365 },
+    });
     computedDomain = model.getters.getPivotComputedDomain("PIVOT#1");
     expect(getDateDomainDurationInDays(computedDomain)).toBe(3 * 365);
-    assertDateDomainEqual("date", "2016-05-18", "2019-05-17", computedDomain);
+    assertDateDomainEqual("date", "2016-05-17", "2019-05-16", computedDomain);
 });
 
 test("from_to date filter at model loading", async function () {

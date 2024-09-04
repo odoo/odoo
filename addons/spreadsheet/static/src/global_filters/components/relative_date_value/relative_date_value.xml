@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_edition.RelativeDateValue">
+        <div class="d-flex">
+            <select class="o_input o-gf-reference-selection" t-on-change="onReferenceChanged">
+                <option value="" t-att-selected="!props.value">No value</option>
+                <option t-foreach="relativeDateRangesReferences"
+                        t-as="reference"
+                        t-key="reference.type"
+                        t-att-value="reference.type"
+                        t-att-selected="reference.type === props.value?.reference"
+                        t-esc="reference.description"/>
+            </select>
+            <input t-att-disabled="!props.value || props.value.reference === 'this'"
+                   t-on-change="onIntervalChanged"
+                   type="number"
+                   min="1"
+                   class="o_input mx-2 o-gf-interval-value"
+                   t-att-value="inputIntervalValue"
+            />
+            <select class="o_input o-gf-unit-selection" t-on-change="onUnitChanged" t-att-disabled="!props.value">
+                <option t-if="!props.value" value="" t-att-selected="true"></option>
+                <option t-foreach="relativeDateRangesUnits"
+                        t-as="range"
+                        t-key="range.type"
+                        t-att-value="range.type"
+                        t-att-selected="range.type === props.value?.unit"
+                        t-esc="range.description"/>
+            </select>
+        </div>
+        <t t-set="info" t-value="computedDate"/>
+        <div class="mt-2 text-muted fst-italic relative-value-helper" t-if="info">
+          <i class="fa fa-info pe-1"/><t t-esc="info"/>
+        </div>
+    </t>
+</templates>

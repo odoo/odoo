@@ -19,14 +19,11 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
-import {
-    checkFilterValueIsValid,
-    getRelativeDateDomain,
-} from "@spreadsheet/global_filters/helpers";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
+import { checkFilterValueIsValid } from "@spreadsheet/global_filters/helpers";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
+import { getRelativeDateInterval, getRelativeDateDomain } from "../relative_date_helpers";
 
 const { DateTime } = luxon;
 
@@ -278,12 +275,21 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                     };
                     return [[from], [to]];
                 }
-                if (value && typeof value === "string") {
-                    const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-                    if (!type) {
+                if (filter.rangeType === "relative") {
+                    if (!value) {
                         return [[{ value: "" }]];
                     }
-                    return [[{ value: type.description.toString() }]];
+                    const interval = getRelativeDateInterval(DateTime.local(), value, 0);
+                    const locale = this.getters.getLocale();
+                    const from = {
+                        value: toNumber(interval.start.toLocaleString(), locale),
+                        format: locale.dateFormat,
+                    };
+                    const to = {
+                        value: toNumber(interval.end.toLocaleString(), locale),
+                        format: locale.dateFormat,
+                    };
+                    return [[from], [to]];
                 }
                 if (!value || value.yearOffset === undefined) {
                     return [[{ value: "" }]];
@@ -467,7 +473,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         }
         const field = fieldMatching.chain;
         const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
-        const offset = fieldMatching.offset || 0;
+        const periodOffset = fieldMatching.offset || 0;
         const now = DateTime.local();
 
         if (filter.rangeType === "from_to") {
@@ -487,7 +493,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         }
 
         if (filter.rangeType === "relative") {
-            return getRelativeDateDomain(now, offset, value, field, type);
+            return getRelativeDateDomain(now, periodOffset, value, field, type);
         }
         const noPeriod = !value.period || value.period === "empty";
         const noYear = value.yearOffset === undefined;
@@ -499,7 +505,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         const plusParam = { years: yearOffset };
         if (noPeriod) {
             granularity = "year";
-            plusParam.years += offset;
+            plusParam.years += periodOffset;
         } else {
             // value.period is can be "first_quarter", "second_quarter", etc. or
             // full month name (e.g. "january", "february", "march", etc.)
@@ -507,11 +513,11 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             switch (granularity) {
                 case "month":
                     setParam.month = MONTHS[value.period].value;
-                    plusParam.month = offset;
+                    plusParam.month = periodOffset;
                     break;
                 case "quarter":
                     setParam.quarter = QUARTER_OPTIONS[value.period].setParam.quarter;
-                    plusParam.quarter = offset;
+                    plusParam.quarter = periodOffset;
                     break;
             }
         }

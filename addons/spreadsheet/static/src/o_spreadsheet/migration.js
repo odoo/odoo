@@ -5,7 +5,7 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry, migrationStepRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 12;
+export const ODOO_VERSION = 13;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -28,6 +28,13 @@ migrationStepRegistry.add("odoo_migration", {
     versionFrom: "16.1",
     migrate(data) {
         return migrateOdooData(data);
+    },
+});
+
+migrationStepRegistry.add("relative_date_filter", {
+    versionFrom: "21.1",
+    migrate(data) {
+        return migrateRelativeDateFilters(data);
     },
 });
 
@@ -376,6 +383,94 @@ function migrate11to12(data) {
         }
     }
     return data;
+}
+
+function migrateRelativeDateFilters(data) {
+    for (const filter of data.globalFilters || []) {
+        if (filter.type !== "date" || filter.rangeType !== "relative" || !filter.defaultValue) {
+            continue;
+        }
+        filter.defaultValue = migrateDefaultValue(filter.defaultValue);
+    }
+    return data;
+}
+
+/**
+ * Get the relative date value equivalent from the old way of storing the
+ * default value of a relative date filter.
+ * @param {string} value
+ * @returns {import("@spreadsheet").RelativeDateValue}
+ */
+function migrateDefaultValue(value) {
+    switch (value) {
+        case "last_month": {
+            return {
+                unit: "day",
+                reference: "last",
+                interval: 30,
+            };
+        }
+        case "last_week": {
+            return {
+                unit: "day",
+                reference: "last",
+                interval: 7,
+            };
+        }
+        case "last_three_months": {
+            return {
+                unit: "day",
+                reference: "last",
+                interval: 90,
+            };
+        }
+        case "last_six_months": {
+            return {
+                unit: "day",
+                reference: "last",
+                interval: 180,
+            };
+        }
+        case "last_year": {
+            return {
+                unit: "day",
+                reference: "last",
+                interval: 365,
+            };
+        }
+        case "last_three_years": {
+            return {
+                unit: "day",
+                reference: "last",
+                interval: 3 * 365,
+            };
+        }
+        case "year_to_date": {
+            return {
+                unit: "year",
+                reference: "this",
+            };
+        }
+        case "this_month": {
+            return {
+                unit: "month",
+                reference: "this",
+            };
+        }
+        case "this_quarter": {
+            return {
+                unit: "quarter",
+                reference: "this",
+            };
+        }
+        case "this_year": {
+            return {
+                unit: "year",
+                reference: "this",
+            };
+        }
+    }
+    return undefined;
 }
 
 export class OdooVersion extends OdooCorePlugin {

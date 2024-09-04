@@ -393,7 +393,11 @@ test("group year/quarter/month filters to a single filter type", () => {
             type: "date",
             label: "a relative date filter",
             rangeType: "relative",
-            defaultValue: "last_week",
+            defaultValue: {
+                interval: 7,
+                reference: "last",
+                unit: "day",
+            },
         },
     ]);
 });
@@ -507,6 +511,214 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
         `=ODOO.PIVOT.POSITION("1","account_id",14)`
     );
     expect(migratedData.sheets[0].cells.A4.content).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
+});
+
+test("Relative date global filters are migrated (12 to 13)", () => {
+    const data = {
+        version: 16,
+        odooVersion: 12,
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "Last month",
+                defaultValue: "last_month",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "2",
+                type: "date",
+                label: "Last week",
+                defaultValue: "last_week",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "3",
+                type: "date",
+                label: "Last three months",
+                defaultValue: "last_three_months",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "4",
+                type: "date",
+                label: "Last six months",
+                defaultValue: "last_six_months",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "5",
+                type: "date",
+                label: "Last year",
+                defaultValue: "last_year",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "6",
+                type: "date",
+                label: "Last three years",
+                defaultValue: "last_three_years",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "7",
+                type: "date",
+                label: "Year to date",
+                defaultValue: "year_to_date",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: false,
+            },
+            {
+                id: "8",
+                type: "date",
+                label: "This month",
+                defaultValue: "this_month",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: true,
+            },
+            {
+                id: "9",
+                type: "date",
+                label: "This year",
+                defaultValue: "this_year",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: true,
+            },
+            {
+                id: "10",
+                type: "date",
+                label: "Quarter",
+                defaultValue: "this_quarter",
+                rangeType: "relative",
+                defaultsToCurrentPeriod: true,
+            },
+        ],
+    };
+    const migratedGlobalFilters = [
+        {
+            id: "1",
+            type: "date",
+            label: "Last month",
+            defaultValue: {
+                unit: "day",
+                reference: "last",
+                interval: 30,
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "2",
+            type: "date",
+            label: "Last week",
+            defaultValue: {
+                unit: "day",
+                reference: "last",
+                interval: 7,
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "3",
+            type: "date",
+            label: "Last three months",
+            defaultValue: {
+                unit: "day",
+                reference: "last",
+                interval: 90,
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "4",
+            type: "date",
+            label: "Last six months",
+            defaultValue: {
+                unit: "day",
+                reference: "last",
+                interval: 180,
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "5",
+            type: "date",
+            label: "Last year",
+            defaultValue: {
+                unit: "day",
+                reference: "last",
+                interval: 365,
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "6",
+            type: "date",
+            label: "Last three years",
+            defaultValue: {
+                unit: "day",
+                reference: "last",
+                interval: 3 * 365,
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "7",
+            type: "date",
+            label: "Year to date",
+            defaultValue: {
+                unit: "year",
+                reference: "this",
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: false,
+        },
+        {
+            id: "8",
+            type: "date",
+            label: "This month",
+            defaultValue: {
+                unit: "month",
+                reference: "this",
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: true,
+        },
+        {
+            id: "9",
+            type: "date",
+            label: "This year",
+            defaultValue: {
+                unit: "year",
+                reference: "this",
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: true,
+        },
+        {
+            id: "10",
+            type: "date",
+            label: "Quarter",
+            defaultValue: {
+                unit: "quarter",
+                reference: "this",
+            },
+            rangeType: "relative",
+            defaultsToCurrentPeriod: true,
+        },
+    ];
+    expect(load(data).globalFilters).toEqual(migratedGlobalFilters);
 });
 
 test("Odoo version is exported", () => {
