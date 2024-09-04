@@ -23,7 +23,7 @@
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
-                    <CategorySelector class="'p-2'" categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
+                    <CategorySelector t-if="!ui.isSmall || !pos.scanning" class="'p-2'" categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
                     <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
