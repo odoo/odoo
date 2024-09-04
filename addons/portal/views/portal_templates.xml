@@ -128,7 +128,7 @@
                     <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                 </a>
                 <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
-                    <a groups="base.group_user" href="/web" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
+                    <a groups="base.group_user" href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
                         <i class="fa fa-fw fa-th me-1 small text-primary"/> Apps
                     </a>
                     <div id="o_logout_divider" class="dropdown-divider"/>
