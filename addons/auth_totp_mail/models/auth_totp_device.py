@@ -22,12 +22,12 @@ class AuthTotpDevice(models.Model):
 
         return super().unlink()
 
-    def _generate(self, scope, name):
+    def _generate(self, scope, name, expiration_date):
         """ Notify users when trusted devices are added onto their account.
         We override this method instead of 'create' as those records are inserted directly into the
         database using raw SQL. """
 
-        res = super()._generate(scope, name)
+        res = super()._generate(scope, name, expiration_date)
 
         self.env.user._notify_security_setting_update(
             _("Security Update: Device Added"),
