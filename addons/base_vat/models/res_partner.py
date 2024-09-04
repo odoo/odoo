@@ -667,7 +667,7 @@ class ResPartner(models.Model):
         return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
-        if not country_id:
+        if not country_id or not vat:
             return vat
         country = self.env['res.country'].browse(country_id)
         vat_country = False
