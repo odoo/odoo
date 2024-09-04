@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import tourUtils from "@sale/js/tours/tour_utils";
 
-import { markup } from "@odoo/owl";
 import { queryText } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
@@ -18,8 +17,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 {
     trigger: 'div[name="product_uom_qty"] input',
     content: "Add 10 hours as ordered quantity for this product.",
-    run: "edit 10 && press Tab",
-}, {
+    run: "edit 10 && click body",
+},
+{
     trigger: '.o_field_cell[name=price_subtotal]:contains(2,500.00)',
 }, {
     trigger: "button[name=action_confirm]:enabled",
@@ -65,11 +65,10 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'button.o_kanban_edit',
     content: 'Click on Edit button to enter to the form view of the task.',
-    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
+    content: 'Select the customer of your Sales Order (e.g. Brandon Freeman). Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.',
     run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -163,7 +162,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     }
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
+    content: 'Add the customer for this project to select an SO and SOL for this customer (e.g. Brandon Freeman).',
     run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -200,7 +199,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
-    tooltipPosition: 'bottom',
     run: "edit S",
 }, {
     trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
@@ -225,7 +223,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     // timer: 300,
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
+    content: 'Add the customer for this project to select an SO and SOL for this customer (e.g. Brandon Freeman).',
     run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',

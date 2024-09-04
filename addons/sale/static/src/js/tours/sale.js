@@ -93,7 +93,8 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_field_widget[name='price_unit'] input",
             content: _t("add the price of your product."),
             tooltipPosition: "right",
-            run: "edit 10.0 && click .o_selected_row",
+            run: "fill 10 && press Tab",
+            pause: true,
         },
         {
             isActive: ["auto"],

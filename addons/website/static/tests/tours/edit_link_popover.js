@@ -6,18 +6,20 @@ import {
 } from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
-import { waitFor } from "@odoo/hoot-dom";
 
 const FIRST_PARAGRAPH = ':iframe #wrap .s_text_image p:nth-child(2)';
 
-const clickFooter = [{
-    content: "Save the link by clicking outside the URL input (not on a link element)",
-    trigger: ':iframe footer h5:first',
-    run: "click",
-}, {
-    content: "Wait delayed click on footer",
-    trigger: '.o_we_customize_panel we-title:contains("Footer")',
-}];
+const clickFooter = [
+    {
+        content: "Save the link by clicking outside the URL input (not on a link element)",
+        trigger: ":iframe footer h5:first",
+        run: "click",
+    },
+    {
+        content: "Wait delayed click on footer",
+        trigger: ".o_we_customize_panel we-title:contains(Footer)",
+    },
+];
 
 const clickEditLink = [{
     content: "Click on Edit Link in Popover",
@@ -28,7 +30,7 @@ const clickEditLink = [{
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
 }];
 
-registerWebsitePreviewTour('edit_link_popover_1', {
+registerWebsitePreviewTour('edit_link_popover', {
     test: true,
     url: '/',
     edition: true,
@@ -111,7 +113,7 @@ registerWebsitePreviewTour('edit_link_popover_1', {
     },
     {
         content: "Save the Edit Menu modal",
-        trigger: '.modal-footer .btn-primary',
+        trigger: ".modal .modal-footer .btn-primary",
         run: "click",
     },
     {
@@ -143,20 +145,7 @@ registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Check that the modal is closed",
         trigger: ":iframe html:not(.modal-body)",
-    }
-]);
-
-registerWebsitePreviewTour('edit_link_popover_2', {
-    test: true,
-    url: '/',
-    edition: true,
-}, () => [
-    // 1. Test links in page content (web_editor)
-    ...dragNDrop({
-        id: 's_text_image',
-        name: 'Text - Image',
-        groupName: "Content",
-    }),
+    },
     // 3. Test other links (CTA in navbar & links in footer)
     {
         content: "Click CTA in navbar",
@@ -174,24 +163,21 @@ registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Click 'Home' link in footer",
         trigger: ':iframe footer a[href="/"]',
-        run(helpers) {
-            helpers.click();
-            waitFor(`:iframe .o_edit_menu_popover .o_we_url_link:contains("Home")`, { timeout: 5000 });
-        }
+        run: "click",
     },
     {
         content: "Toolbar should be shown (4)",
-        trigger: `.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:value('/'))`,
+        trigger: `.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:value(/))`,
     },
     // 4. Popover should close when clicking non-link element
     ...clickFooter,
-    // 5. Double click should not open popover but should open toolbar link
     {
+        content: "Double click should not open popover but should open toolbar link",
         trigger: ":iframe html:not(:has(.o_edit_menu_popover))", // popover should be closed
     },
     {
         content: "Double click on link",
-        trigger: ':iframe footer a[href="/"]',
+        trigger: ':iframe footer a[href="/"]:contains(home)',
         run(actions) {
             // Create range to simulate real double click, see pull request
             const range = document.createRange();
@@ -204,11 +190,12 @@ registerWebsitePreviewTour('edit_link_popover_2', {
         },
     },
     {
-        trigger: ":iframe html:has(.o_edit_menu_popover)",
+        content: "ensure popover is opened and loaded",
+        trigger: ":iframe html:has(.o_edit_menu_popover:contains(/^Home/))",
     },
     {
-        content: "Ensure popover is opened on double click, and so is right panel edit link",
-        trigger: 'html:has(#o_link_dialog_url_input)',
+        content: "So is right panel edit link",
+        trigger: "html:has(#o_link_dialog_url_input)",
     },
     {
         trigger: ':iframe .o_edit_menu_popover a.o_we_full_url[target="_blank"]',
