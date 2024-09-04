@@ -60,6 +60,8 @@ class WebclientController(http.Controller):
                     [channels_domain, [("channel_type", "in", channel_types)]]
                 )
             store.add(request.env["discuss.channel"].search(channels_domain))
+        if "messages" in kwargs:
+            store.add(request.env["mail.message"].search([('id', 'in', kwargs["messages"])]))
 
     def _process_request_for_logged_in_user(self, store, **kwargs):
         if kwargs.get("failures"):

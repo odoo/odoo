@@ -33,7 +33,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
@@ -128,6 +128,7 @@ export class Message extends Component {
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        // onPatched(() => console.log("Patched: ", this.message.id, this.message.body));
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -189,6 +190,23 @@ export class Message extends Component {
                 this.props.messageSearch?.searchTerm,
                 this.message.body,
             ]
+        );
+        useEffect(
+            () => {
+                if (this.message.messagesToLinkify.length !== 0) {
+                    this.message.messagesToLinkify = [];
+                }
+                this.prettifyMessageLinks();
+            },
+            () => [this.message.body]
+        );
+        useEffect(
+            () => {
+                if (this.message.messagesToLinkify.map((msg) => msg.thread?.name).join() !== "") {
+                    this.prettifyMessageLinks(false);
+                }
+            },
+            () => [this.message.messagesToLinkify.map((msg) => msg.thread?.name).join()]
         );
     }
 
@@ -400,6 +418,42 @@ export class Message extends Component {
 
     /** @param {HTMLElement} bodyEl */
     prepareMessageBody(bodyEl) {}
+
+    prettifyMessageLinks(fetchIfNotFound = true) {
+        /** @param {HTMLAnchorElement} el */
+        function getMsgLinkorigin(el) {
+            return `${el.protocol}//${el.host}`;
+        }
+
+        if (this.messageBody.el) {
+            const linkEls = this.messageBody.el.getElementsByTagName("a");
+            const msgIds = [];
+            for (const linkEl of linkEls) {
+                if (getMsgLinkorigin(linkEl) === getOrigin()) {
+                    const match = linkEl.pathname.match(/^\/mail\/message\/(\d+)$/);
+                    if (match) {
+                        const msg = this.store.Message.insert(parseInt(match[1]));
+                        if (fetchIfNotFound) {
+                            if (!msg.thread?.name) {
+                                msgIds.push(msg.id);
+                            }
+                            this.message.messagesToLinkify.push(msg);
+                        }
+                        const threadName = msg.thread?.name ?? _t("Unknown");
+                        const angleRight = "<i class='fa fa-angle-right ms-1' aria-hidden='true'/>";
+                        const commentIcon = "<i class='fa fa-comment' aria-hidden='true'/>";
+                        linkEl.innerHTML = `<span>${threadName} ${angleRight} ${commentIcon}</span>`;
+                        linkEl.classList.add("o_message_redirect");
+                    }
+                }
+            }
+            if (msgIds.length) {
+                this.store.fetchData({
+                    messages: [...(this.store.fetchParams.messages ?? []), ...msgIds],
+                });
+            }
+        }
+    }
 
     getAuthorAttClass() {
         return { "opacity-50": this.message.isPending };
