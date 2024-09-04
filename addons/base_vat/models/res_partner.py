@@ -226,27 +226,27 @@ class ResPartner(models.Model):
         # OVERRIDE account
         check_result = None
 
-        # First check with country code as prefix of the TIN
-        vat_country_code, vat_number_split = self._split_vat(vat_number)
-
-        if vat_country_code == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
+        if len(vat_number) > 2 and vat_number[:2].lower() == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
             # may have a VATIN starting with "EU" instead of a country code.
             return True
 
-        vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())], limit=1)
-        if not vat_has_legit_country_code:
-            vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
-        if vat_has_legit_country_code:
-            check_result = self.simple_vat_check(vat_country_code, vat_number_split)
-            if check_result:
-                return vat_country_code
+        country_code_to_check = default_country and default_country.code.lower()
+        vat_number_split = vat_number
+        if default_country and default_country in self.env.ref('base.europe').country_ids | self.env.ref('base.jp'):
+            # First check with country code as prefix of the TIN
+            vat_country_code, vat_number_split = self._split_vat(vat_number)
+            vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())],
+                                                                        limit=1)
+            if not vat_has_legit_country_code:
+                vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
+            if vat_has_legit_country_code:
+                country_code_to_check = vat_country_code
 
-        # If it fails, check with default_country (if it exists)
-        if default_country:
-            check_result = self.simple_vat_check(default_country.code.lower(), vat_number)
+        if country_code_to_check:
+            check_result = self.simple_vat_check(country_code_to_check, vat_number_split)
             if check_result:
-                return default_country.code.lower()
+                return country_code_to_check
 
         # We allow any number if it doesn't start with a country code and the partner has no country.
         # This is necessary to support an ORM limitation: setting vat and country_id together on a company
