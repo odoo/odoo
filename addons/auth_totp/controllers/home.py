@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
 
+from datetime import datetime, timedelta
+
 from odoo import http, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request
@@ -58,7 +60,11 @@ class Home(web_home.Home):
                     if request.geoip.city.name:
                         name += f" ({request.geoip.city.name}, {request.geoip.country_name})"
 
-                    key = request.env['auth_totp.device']._generate("browser", name)
+                    key = request.env['auth_totp.device'].sudo()._generate(
+                        "browser",
+                        name,
+                        datetime.now() + timedelta(seconds=TRUSTED_DEVICE_AGE)
+                    )
                     response.set_cookie(
                         key=TRUSTED_DEVICE_COOKIE,
                         value=key,

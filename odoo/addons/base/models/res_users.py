@@ -191,9 +191,12 @@ class Groups(models.Model):
     color = fields.Integer(string='Color Index')
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
+    api_key_duration = fields.Float(string='API Keys maximum duration days',
+        help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
     _sql_constraints = [
-        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
+        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!'),
+        ('check_api_key_duration', 'CHECK(api_key_duration >= 0)', 'The api key duration cannot be a negative value.'),
     ]
 
     @api.constrains('users')
@@ -2288,6 +2291,7 @@ class APIKeys(models.Model):
     user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")
     scope = fields.Char("Scope", readonly=True)
     create_date = fields.Datetime("Creation Date", readonly=True)
+    expiration_date = fields.Datetime("Expiration Date", readonly=True)
 
     def init(self):
         table = SQL.identifier(self._table)
@@ -2297,6 +2301,7 @@ class APIKeys(models.Model):
             name varchar not null,
             user_id integer not null REFERENCES res_users(id) ON DELETE CASCADE,
             scope varchar,
+            expiration_date timestamp without time zone,
             index varchar(%(index_size)s) not null CHECK (char_length(index) = %(index_size)s),
             key varchar not null,
             create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
@@ -2336,28 +2341,52 @@ class APIKeys(models.Model):
         self.env.cr.execute('''
             SELECT user_id, key
             FROM {} INNER JOIN res_users u ON (u.id = user_id)
-            WHERE u.active and index = %s AND (scope IS NULL OR scope = %s)
+            WHERE
+                u.active and index = %s
+                AND (scope IS NULL OR scope = %s)
+                AND (
+                    expiration_date IS NULL OR
+                    expiration_date >= now() at time zone 'utc'
+                )
         '''.format(self._table),
         [index, scope])
         for user_id, current_key in self.env.cr.fetchall():
             if KEY_CRYPT_CONTEXT.verify(key, current_key):
                 return user_id
 
-    def _generate(self, scope, name):
+    def _check_expiration_date(self, date):
+        # To be in a sudoed environment or to be an administrator
+        # to create a persistent key (no expiration date) or
+        # to exceed the maximum duration determined by the user's privileges.
+        if self.env.is_system():
+            return
+        if not date:
+            raise UserError(_("The API key must have an expiration date"))
+        max_duration = max(group.api_key_duration for group in self.env.user.groups_id) or 1.0
+        if date > datetime.datetime.now() + datetime.timedelta(days=max_duration):
+            raise UserError(_("You cannot exceed %(duration)s days.", duration=max_duration))
+
+    def _generate(self, scope, name, expiration_date):
         """Generates an api key.
         :param str scope: the scope of the key. If None, the key will give access to any rpc.
         :param str name: the name of the key, mainly intended to be displayed in the UI.
+        :param date expiration_date: the expiration date of the key.
         :return: str: the key.
 
+        Note:
+        This method must be called in sudo to use a duration
+        greater than that allowed by the user's privileges.
+        For a persistent key (infinite duration), no value for expiration date.
         """
+        self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
         k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
         self.env.cr.execute("""
-        INSERT INTO {table} (name, user_id, scope, key, index)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO {table} (name, user_id, scope, expiration_date, key, index)
+        VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING id
         """.format(table=self._table),
-        [name, self.env.user.id, scope, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]])
+        [name, self.env.user.id, scope, expiration_date or None, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]])
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",
@@ -2365,11 +2394,68 @@ class APIKeys(models.Model):
 
         return k
 
+    @api.autovacuum
+    def _gc_user_apikeys(self):
+        self.env.cr.execute(SQL("""
+            DELETE FROM %s
+            WHERE
+                expiration_date IS NOT NULL AND
+                expiration_date < now() at time zone 'utc'
+        """, SQL.identifier(self._table)))
+        _logger.info("GC %r delete %d entries", self._name, self.env.cr.rowcount)
+
 class APIKeyDescription(models.TransientModel):
     _name = 'res.users.apikeys.description'
     _description = 'API Key Description'
 
+    def _selection_duration(self):
+        # duration value is a string representing the number of days.
+        durations = [
+            ('1', '1 Day'),
+            ('7', '1 Week'),
+            ('30', '1 Month'),
+            ('90', '3 Months'),
+            ('180', '6 Months'),
+            ('365', '1 Year'),
+        ]
+        persistent_duration = ('0', 'Persistent Key')  # Magic value to detect an infinite duration
+        custom_duration = ('-1', 'Custom Date')  # Will force the user to enter a date manually
+        if self.env.is_system():
+            return durations + [persistent_duration, custom_duration]
+        max_duration = max(group.api_key_duration for group in self.env.user.groups_id) or 1.0
+        return list(filter(
+            lambda duration: int(duration[0]) <= max_duration, durations
+        )) + [custom_duration]
+
     name = fields.Char("Description", required=True)
+    duration = fields.Selection(
+        selection='_selection_duration', string='Duration', required=True,
+        default=lambda self: self._selection_duration()[0][0]
+    )
+    expiration_date = fields.Datetime('Expiration Date', compute='_compute_expiration_date', store=True, readonly=False)
+
+    @api.depends('duration')
+    def _compute_expiration_date(self):
+        for record in self:
+            duration = int(record.duration)
+            if duration >= 0:
+                record.expiration_date = (
+                    fields.Date.today() + datetime.timedelta(days=duration)
+                    if int(record.duration)
+                    else None
+                )
+
+    @api.onchange('expiration_date')
+    def _onchange_expiration_date(self):
+        try:
+            self.env['res.users.apikeys']._check_expiration_date(self.expiration_date)
+        except UserError as error:
+            warning = {
+                'type': 'notification',
+                'title': _('The API key duration is not correct.'),
+                'message': error.args[0]
+            }
+            return {'warning': warning}
 
     @check_identity
     def make_key(self):
@@ -2377,7 +2463,7 @@ class APIKeyDescription(models.TransientModel):
         self.check_access_make_key()
 
         description = self.sudo()
-        k = self.env['res.users.apikeys']._generate(None, self.sudo().name)
+        k = self.env['res.users.apikeys']._generate(None, description.name, self.expiration_date)
         description.unlink()
 
         return {
