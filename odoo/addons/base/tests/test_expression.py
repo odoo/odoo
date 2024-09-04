@@ -1381,7 +1381,7 @@ class TestQueries(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
-            ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
+            ORDER BY "res_partner"."complete_name" ASC,"res_partner"."id" DESC
         ''']):
             Model.search([('name', 'like', 'foo')])
 
@@ -1392,6 +1392,25 @@ class TestQueries(TransactionCase):
             ORDER BY "res_partner"."id"
         ''']):
             Model.search([('name', 'like', 'foo')], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
+            ORDER BY "res_partner"."company_id"
+        ''']):
+            Model.search([('name', 'like', 'foo')], order='company_id.id')
+
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name" LIKE %s))
+            ORDER BY "res_partner"."company_id" DESC
+        ''']):
+            Model.search([('name', 'like', 'foo')], order='company_id.id DESC')
+
+        with self.assertRaises(ValueError):
+            Model.search([('name', 'like', 'foo')], order='company_id.name')
 
     def test_count(self):
         Model = self.env['res.partner']

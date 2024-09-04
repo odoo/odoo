@@ -99,9 +99,8 @@ class SaleOrderLine(models.Model):
         domain = args or []
         # optimization for a SOL services name_search, to avoid joining on sale_order with too many lines
         if domain and ('is_service', '=', True) in domain and operator in ('like', 'ilike') and limit is not None:
-            query = self._search(domain, limit=limit)
-            query.order = f'{query.table}.order_id DESC, {query.table}.sequence, {query.table}.id'
-            fields_to_fetch = self._determine_fields_to_fetch(['display_name'])
-            sols = self._fetch_query(query, fields_to_fetch)
-            return [(sol.id, sol.display_name) for sol in sols.sudo()]
+            sols = self.search_fetch(
+                domain, ['display_name'], limit=limit, order='order_id.id DESC, sequence, id',
+            )
+            return [(sol.id, sol.display_name) for sol in sols]
         return super().name_search(name, domain, operator, limit)
