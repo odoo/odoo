@@ -189,7 +189,9 @@ export async function setupWysiwyg(props = {}) {
     const content = props.content;
     delete props.content;
     const wysiwyg = await mountWithCleanup(Wysiwyg, { props });
-    const el = /** @type {HTMLElement} **/ (queryOne(".odoo-editor-editable"));
+    const el = /** @type {HTMLElement} **/ (
+        queryOne(`${props.iframe ? ":iframe " : ""}.odoo-editor-editable`)
+    );
     if (content) {
         // force selection to be put properly
         setContent(el, content);
