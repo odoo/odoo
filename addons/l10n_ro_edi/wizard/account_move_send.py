@@ -25,7 +25,7 @@ class AccountMoveSend(models.TransientModel):
             wizard.l10n_ro_edi_send_enable = any(
                 (move._need_ubl_cii_xml() or move.ubl_cii_xml_id) and
                 move.country_code == 'RO' and
-                move.l10n_ro_edi_state in (False, 'invoice_sending')
+                move.l10n_ro_edi_state in (False, 'invoice_sent')
                 for move in wizard.move_ids
             )
 
@@ -35,7 +35,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.l10n_ro_edi_send_readonly = (
                 not wizard.l10n_ro_edi_send_enable
-                or 'invoice_sending' in wizard.move_ids.mapped('l10n_ro_edi_state')
+                or 'invoice_sent' in wizard.move_ids.mapped('l10n_ro_edi_state')
             )
 
     @api.depends('l10n_ro_edi_send_readonly')
@@ -48,7 +48,7 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account'
         super()._compute_warnings()
         for wizard in self:
-            if waiting_moves := wizard.move_ids.filtered(lambda m: m.l10n_ro_edi_state == 'invoice_sending'):
+            if waiting_moves := wizard.move_ids.filtered(lambda m: m.l10n_ro_edi_state == 'invoice_sent'):
                 wizard.warnings = {
                     **(wizard.warnings or {}),
                     'l10n_ro_edi_warning_waiting_moves': {
