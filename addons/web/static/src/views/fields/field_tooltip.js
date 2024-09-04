@@ -21,7 +21,6 @@ export function getTooltipInfo(params) {
             column_invisible: params.fieldInfo.column_invisible,
             readonly: params.fieldInfo.readonly,
             required: params.fieldInfo.required,
-            changeDefault: params.field.change_default,
             relation: params.field.relation,
             model_field: params.field.model_field,
             selection: params.field.selection,

@@ -316,7 +316,6 @@ class Field(MetaField('DummyField', (object,), {})):
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     groups = None                       # csv list of group xml ids
-    change_default = False              # whether the field may trigger a "user-onchange"
 
     related_field = None                # corresponding related field
     aggregator = None                   # operator for aggregating values
@@ -891,7 +890,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_readonly = property(attrgetter('readonly'))
     _description_required = property(attrgetter('required'))
     _description_groups = property(attrgetter('groups'))
-    _description_change_default = property(attrgetter('change_default'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
     _description_exportable = property(attrgetter('exportable'))
 

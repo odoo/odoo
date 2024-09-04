@@ -26,7 +26,6 @@ declare module "fields" {
     // ------------------------------------------------------------------------
 
     export interface IFieldDefinition<T extends FieldType> {
-        change_default: boolean;
         groupable: boolean;
         groups?: string;
         help?: string;

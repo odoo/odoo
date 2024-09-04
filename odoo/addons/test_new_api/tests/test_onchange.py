@@ -401,28 +401,6 @@ class TestOnchange(SavepointCaseWithUserDemo):
             [(Command.LINK, demo.id, {'id': demo.id, 'display_name': demo.display_name})],
         )
 
-    def test_onchange_default(self):
-        """ test the effect of a conditional user-default on a field """
-        Foo = self.env['test_new_api.foo']
-        fields_spec = Foo._get_fields_spec()
-        self.assertTrue(type(Foo).value1.change_default)
-        self.assertIn('value1', Foo._onchange_methods)
-
-        # create a user-defined default based on 'value1'
-        self.env['ir.default'].set('test_new_api.foo', 'value2', 666, condition='value1=42')
-
-        # setting 'value1' to 42 should trigger the change of 'value2'
-        self.env.invalidate_all()
-        values = {'name': 'X', 'value1': 42, 'value2': False}
-        result = Foo.onchange(values, ['value1'], fields_spec)
-        self.assertEqual(result['value'], {'value2': 666})
-
-        # setting 'value1' to 24 should not trigger the change of 'value2'
-        self.env.invalidate_all()
-        values = {'name': 'X', 'value1': 24, 'value2': False}
-        result = Foo.onchange(values, ['value1'], fields_spec)
-        self.assertEqual(result['value'], {})
-
     def test_onchange_one2many_first(self):
         partner = self.env['res.partner'].create({
             'name': 'X',

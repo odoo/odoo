@@ -42,11 +42,6 @@
                 },
             },
             {
-                content: "Check that there are conditions",
-                trigger: '#formview_default_conditions',
-                run: "click",
-            },
-            {
                 content: "Save the new default",
                 trigger: 'footer button:contains(Save default)',
                 run: "click",

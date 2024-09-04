@@ -64,7 +64,8 @@ class SaleOrder(models.Model):
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Customer",
-        required=True, change_default=True, index=True,
+        required=True,
+        index=True,
         tracking=1,
         check_company=True)
     state = fields.Selection(
@@ -202,7 +203,7 @@ class SaleOrder(models.Model):
         string="Sales Team",
         compute='_compute_team_id',
         store=True, readonly=False, precompute=True, ondelete="set null",
-        change_default=True, check_company=True,  # Unrequired company
+        check_company=True,  # Unrequired company
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
