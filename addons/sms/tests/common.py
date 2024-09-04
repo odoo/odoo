@@ -113,6 +113,12 @@ class SMSCase(MockSMS):
     """ Main test class to use when testing SMS integrations. Contains helpers and tools related
     to notification sent by SMS. """
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # This is called to make sure that an iap_account for sms already exists or if not is created.
+        cls.env['iap.account'].get('sms')
+
     def _find_sms_sent(self, partner, number):
         if number is None and partner:
             number = partner._phone_format()
