@@ -95,4 +95,12 @@ describe("Wysiwyg Component", () => {
         expect(getContent(el)).toBe("<p>test <strong>[some]</strong> text</p>");
         await waitFor(".o-we-toolbar .btn[name='bold'].active");
     });
+
+    test("Wysiwyg in iframe with a contentClass that need to be trim", async () => {
+        await setupWysiwyg({
+            iframe: true,
+            contentClass: "test ",
+        });
+        expect(":iframe .test.odoo-editor-editable").toHaveCount(1);
+    });
 });
