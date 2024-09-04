@@ -16,7 +16,7 @@ export class AttendanceBarcodeDialog extends BarcodeDialog {
      */
     setup() {
         super.setup();
-        this.state = useState({
+        this.barcodeState = useState({
             barcode: false,
         });
         this.notification = useService("notification");
@@ -33,7 +33,7 @@ export class AttendanceBarcodeDialog extends BarcodeDialog {
     }
 
     async setBadgeID() {
-        let barcode = this.state.barcode;
+        let barcode = this.barcodeState.barcode;
         if (barcode) {
             const result = await rpc("/hr_attendance/set_user_barcode", { token: this.props.token, barcode, });
             if (result) {
