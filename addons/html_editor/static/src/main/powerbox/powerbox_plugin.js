@@ -69,7 +69,7 @@ export class PowerboxPlugin extends Plugin {
             applyCommand: this.applyCommand.bind(this),
         };
 
-        this.addDomListener(this.editable, "keydown", this.onKeyDown);
+        this.addDomListener(this.editable.ownerDocument, "keydown", this.onKeyDown);
     }
 
     /**
