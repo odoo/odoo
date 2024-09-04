@@ -164,7 +164,8 @@ PIP_TO_INSTALL="
     screeninfo==0.8.1 \
     zeep==4.2.1 \
     num2words==0.5.13 \
-    freezegun==1.2.1"
+    freezegun==1.2.1 \
+    schedule==1.2.1"
 
 pip3 install ${PIP_TO_INSTALL} --break-system-package
 
