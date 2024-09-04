@@ -2858,6 +2858,10 @@ class BaseModel(metaclass=MetaModel):
         if field.type == 'properties' and property_name:
             return SQL("%s -> %s", self._field_to_sql(alias, fname, query, flush), property_name)
 
+        if property_name:
+            fname = f"{fname}.{property_name}"
+            raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
+
         self.check_field_access_rights('read', [field.name])
 
         field_to_flush = field if flush and fname != 'id' else None
@@ -5388,13 +5392,18 @@ class BaseModel(metaclass=MetaModel):
         if field.type == 'many2one':
             seen = self.env.context.get('__m2o_order_seen', ())
             if field in seen:
-                return
+                return SQL()
             self = self.with_context(__m2o_order_seen=frozenset((field, *seen)))
 
             # figure out the applicable order_by for the m2o
+            # special case: ordering by "x_id.id" doesn't recurse on x_id's comodel
             comodel = self.env[field.comodel_name]
-            coorder = comodel._order
-            sql_field = self._field_to_sql(alias, field_name, query)
+            if field_name.endswith('.id'):
+                coorder = 'id'
+                sql_field = self._field_to_sql(alias, fname, query)
+            else:
+                coorder = comodel._order
+                sql_field = self._field_to_sql(alias, field_name, query)
 
             if coorder == 'id':
                 return SQL("%s %s %s", sql_field, direction, nulls)
