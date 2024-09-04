@@ -2,54 +2,16 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="sale_project.ProjectProfitability" t-inherit="project.ProjectProfitability" t-inherit-mode="extension">
-        <xpath expr="//a[hasclass('revenue_section')]" position="before">
-            <t t-if="revenue.isFolded">
-                <button class="btn o_group_caret fa fa-fw fa-caret-right me-1" t-on-click="() => this.toggleSaleItems(revenue)"/>
-            </t>
-            <t t-if="!revenue.isFolded and revenue.isFolded !== undefined">
-                <button name="displaySaleItems" class="btn o_group_caret fa fa-fw fa-caret-down me-1" t-on-click="() => this.toggleSaleItems(revenue)"/>
-            </t>
-        </xpath>
-        <xpath expr="//tr[hasclass('revenue_section')]" position="after">
-            <t t-if="!revenue.isFolded and revenue.isFolded !== undefined">
-                <tr>
-                    <td colspan="4" class="p-0 m-0">
-                        <table class="table table-sm table-striped table-hover mb-0">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th style="padding-left:30px">Sales Order Items</th>
-                                    <th class="text-end">Sold</th>
-                                    <th class="text-end">Delivered</th>
-                                    <th class="text-end">Invoiced</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-light" t-foreach="revenue.sale_items" t-as="sale_item" t-key="sale_item.id">
-                                    <t t-set="uom_name" t-value="sale_item.product_uom and sale_item.product_uom[1]"/>
-                                    <td style="padding-left: 30px">
-                                        <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
-                                            <t t-esc="sale_item.name"/>
-                                        </a>
-                                        <t t-else="" t-esc="sale_item.name"/>
-                                    </td>
-                                    <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
-                                    <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
-                                    <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-esc="uom_name"/></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr class="border-0 bg-light" t-if="revenue.displayLoadMore">
-                                    <td class="text-center" colspan="4">
-                                        <a class="cursor-pointer btn-link w-100" t-on-click="() => this.onLoadMoreClick(revenue)">
-                                            Load more
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </td>
-                </tr>
-            </t>
+       <xpath expr="//tr[hasclass('revenue_section')]" position="replace">
+            <ProjectProfitabilitySection
+                revenue="revenue"
+                labels="props.labels"
+                formatMonetary="props.formatMonetary.bind(this)"
+                onProjectActionClick="props.onProjectActionClick.bind(this)"
+                onClick="(params) => this.props.onProjectActionClick(params)"
+                projectId="this.props.projectId"
+                context="this.props.context"
+            />
         </xpath>
     </t>
 </templates>

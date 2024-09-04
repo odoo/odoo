@@ -395,44 +395,32 @@ class ProjectProject(models.Model):
 
     def get_panel_data(self):
         panel_data = super().get_panel_data()
-        if self.allow_billable:
-            sale_items = self.get_sale_items_data(limit=5)
-            revenues = panel_data['profitability_items']['revenues']['data']
-            for section in revenues:
-                if section['id'] in sale_items:
-                    section['sale_items'] = sale_items[section['id']]['data']
-                    section['displayLoadMore'] = sale_items[section['id']]['displayLoadMore']
-                    section['isFolded'] = True
+        foldable_sections = self._get_foldable_section()
+        if self._show_profitability() and 'revenues' in panel_data['profitability_items']:
+            for section in panel_data['profitability_items']['revenues']['data']:
+                if section['id'] in foldable_sections:
+                    section['isSectionFoldable'] = True
         return {
             **panel_data,
             'show_sale_items': self.allow_billable,
         }
 
+    def _get_foldable_section(self):
+        return ['materials', 'service_revenues']
+
     def get_sale_items_data(self, offset=0, limit=None, with_action=True, section_id=None):
         if not self.env.user.has_group('project.group_project_user'):
             return {}
 
-        all_sols = self.env['sale.order.line']
-        sols_per_section_id = self._get_items_id_per_section_id()
-
-        if section_id:
-            all_sols = self.env['sale.order.line'].sudo().search(
-                self._get_domain_from_section_id(section_id),
-                offset=offset,
-                limit=limit,
-            )
-        else:
-            for section in sols_per_section_id:
-                sols = self.env['sale.order.line'].sudo().search(
-                    self._get_domain_from_section_id(section),
-                    offset=offset,
-                    limit=limit and limit + 1,
-                )
-                if limit and len(sols) == limit + 1:
-                    sols = sols - sols[5]
-                    sols_per_section_id[section]['displayLoadMore'] = True
-                sols_per_section_id[section]['data'] = sols
-                all_sols |= sols
+        all_sols = self.env['sale.order.line'].sudo().search(
+            self._get_domain_from_section_id(section_id),
+            offset=offset,
+            limit=limit + 1,
+        )
+        display_load_more = False
+        if len(all_sols) > limit:
+            all_sols = all_sols - all_sols[limit]
+            display_load_more = True
 
         # filter to only get the action for the SOLs that the user can read
         action_per_sol = all_sols.sudo(False)._filtered_access('read')._get_action_per_item() if with_action else {}
@@ -442,19 +430,13 @@ class ProjectProject(models.Model):
             action, res_id = action_per_sol.get(sol_id, (None, None))
             return {'action': {'name': action, 'resId': res_id, 'buttonContext': json.dumps({'active_id': sol_id, 'default_project_id': self.id})}} if action else {}
 
-        if section_id:
-            # The 'section_id' param is set, which means the method was called with the 'load more' button. We don't have to sort the result.
-            return [{
+        return {
+            'sol_items': [{
                 **sol_read,
                 **get_action(sol_read['id']),
-            } for sol_read in all_sols.with_context(with_price_unit=True)._read_format(['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id'])]
-
-        for section in sols_per_section_id:
-            sols = []
-            for sol_read in sols_per_section_id[section]['data'].with_context(with_price_unit=True)._read_format(['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id']):
-                sols.append({**sol_read, **get_action(sol_read['id'])})
-            sols_per_section_id[section]['data'] = sols
-        return sols_per_section_id
+            } for sol_read in all_sols.with_context(with_price_unit=True)._read_format(['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id'])],
+            'displayLoadMore': display_load_more,
+        }
 
     def _get_sale_items_domain(self, additional_domain=None):
         sale_items = self.sudo()._get_sale_order_items()
@@ -470,12 +452,6 @@ class ProjectProject(models.Model):
         if additional_domain:
             domain = expression.AND([domain, additional_domain])
         return domain
-
-    def _get_items_id_per_section_id(self):
-        return {
-            'materials': {'data': [], 'displayLoadMore': False},
-            'service_revenues': {'data': [], 'displayLoadMore': False},
-        }
 
     def _get_domain_from_section_id(self, section_id):
         #  When the sale_timesheet module is not installed, all service products are grouped under the 'service revenues' section.
