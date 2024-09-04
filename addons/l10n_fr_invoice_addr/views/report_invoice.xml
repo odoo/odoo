@@ -20,7 +20,7 @@
         <xpath expr="//div[@id='informations']" position="inside">
             <t t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id != o.partner_id and o.move_type.startswith('out_')">
                 <t t-set="partner" t-value="o.partner_id.commercial_partner_id"/>
-                <div class="col mb-2" name="customer_address">
+                <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" name="customer_address">
                     <strong>Customer Address:</strong>
                     <br/>
                     <address t-field="partner.self" class="m-0" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>

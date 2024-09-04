@@ -284,7 +284,6 @@ class IrModule(models.Model):
                         path = opj(module_dir, mod_name)
                         self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
-                        _logger.exception('Error while importing module')
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=exception_to_unicode(e),

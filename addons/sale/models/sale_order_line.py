@@ -1291,3 +1291,6 @@ class SaleOrderLine(models.Model):
 
     def has_valued_move_ids(self):
         return self.move_ids
+
+    def _sellable_lines_domain(self):
+        return [('is_downpayment', '=', False)]

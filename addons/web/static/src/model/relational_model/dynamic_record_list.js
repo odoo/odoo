@@ -17,6 +17,9 @@ export class DynamicRecordList extends DynamicList {
     _setData(data) {
         /** @type {import("./record").Record[]} */
         this.records = data.records.map((r) => this._createRecordDatapoint(r));
+        if (this.isDomainSelected) {
+            this.records.forEach((r) => (r.selected = true));
+        }
         this._updateCount(data);
     }
 
