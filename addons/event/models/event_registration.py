@@ -313,7 +313,6 @@ class EventRegistration(models.Model):
         if not onsubscribe_schedulers:
             return
 
-        onsubscribe_schedulers.update({'mail_done': False})
         # either trigger the cron, either run schedulers immediately (scaling choice)
         async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async')
         if async_scheduler:

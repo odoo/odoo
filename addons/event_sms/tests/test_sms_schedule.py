@@ -81,7 +81,6 @@ class TestSMSSchedule(EventCase, SMSCase):
             self.assertSMSOutgoing(
                 self.env['res.partner'], reg_sanitized_number,
                 content='%s registration confirmation.' % test_event.organizer_id.name)
-        self.assertTrue(sub_scheduler.mail_done)
         self.assertEqual(sub_scheduler.mail_count_done, 3)
 
         # clear notification queue to avoid conflicts when checking next notifications
