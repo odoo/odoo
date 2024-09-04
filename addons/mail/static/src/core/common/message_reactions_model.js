@@ -20,14 +20,16 @@ export class MessageReactions extends Record {
     message = Record.one("Message");
 
     async remove() {
-        await rpc(
-            "/mail/message/reaction",
-            {
-                action: "remove",
-                content: this.content,
-                message_id: this.message.id,
-            },
-            { silent: true }
+        this.store.insert(
+            await rpc(
+                "/mail/message/reaction",
+                {
+                    action: "remove",
+                    content: this.content,
+                    message_id: this.message.id,
+                },
+                { silent: true }
+            )
         );
     }
 }
