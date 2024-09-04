@@ -20,3 +20,4 @@ from . import test_views
 from . import test_web_read_group
 from . import test_web_save
 from . import test_autovacuum
+from . import test_reference
