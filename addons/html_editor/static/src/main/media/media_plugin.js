@@ -21,12 +21,13 @@ const getPowerboxItems = (plugin) => {
     const powerboxItems = [];
     if (!plugin.config.disableImage) {
         powerboxItems.push({
+            id: "image",
             name: _t("Image"),
             description: _t("Insert an image"),
             category: "media",
             fontawesome: "fa-file-image-o",
-            action() {
-                plugin.openMediaDialog();
+            async action() {
+                await plugin.openMediaDialog();
             },
         });
     }
@@ -72,6 +73,7 @@ export class MediaPlugin extends Plugin {
             },
         ],
         isUnsplittable: isIconElement, // avoid merge
+        powerButtons: ["image"],
     };
 
     get recordInfo() {
@@ -166,7 +168,7 @@ export class MediaPlugin extends Plugin {
 
     openMediaDialog(params = {}) {
         const { resModel, resId, field, type } = this.recordInfo;
-        this.shared.addDialog(MediaDialog, {
+        const mediaDialogClosedPromise = this.shared.addDialog(MediaDialog, {
             resModel,
             resId,
             useMediaLibrary: !!(
@@ -183,6 +185,7 @@ export class MediaPlugin extends Plugin {
             ...this.config.mediaModalParams,
             ...params,
         });
+        return mediaDialogClosedPromise;
     }
 
     async savePendingImages() {

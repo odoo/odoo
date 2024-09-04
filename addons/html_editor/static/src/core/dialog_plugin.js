@@ -6,11 +6,14 @@ export class DialogPlugin extends Plugin {
     static shared = ["addDialog"];
 
     addDialog(dialogClass, props, options = {}) {
-        this.services.dialog.add(dialogClass, props, {
-            onClose: () => {
-                this.shared.focusEditable();
-            },
-            ...options,
+        return new Promise((resolve) => {
+            this.services.dialog.add(dialogClass, props, {
+                onClose: () => {
+                    this.shared.focusEditable();
+                    resolve();
+                },
+                ...options,
+            });
         });
     }
 }

@@ -16,7 +16,7 @@ export class TablePicker extends Component {
             cols: 3,
             rows: 3,
         });
-        useExternalListener(this.props.editable, "keydown", (ev) => {
+        useExternalListener(this.props.editable.ownerDocument, "keydown", (ev) => {
             const key = ev.key;
             const isRTL = this.props.direction === "rtl";
             switch (key) {

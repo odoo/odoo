@@ -85,6 +85,7 @@ export class ColumnPlugin extends Plugin {
                 text: _t("Empty column"),
             },
         ],
+        showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_text_columns"),
     };
 
     handleCommand(command, payload) {

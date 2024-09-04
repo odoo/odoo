@@ -77,6 +77,7 @@ export class ListPlugin extends Plugin {
         ],
         powerboxItems: [
             {
+                id: "bulleted_list",
                 name: _t("Bulleted list"),
                 description: _t("Create a simple bulleted list"),
                 category: "structure",
@@ -86,6 +87,7 @@ export class ListPlugin extends Plugin {
                 },
             },
             {
+                id: "numbered_list",
                 name: _t("Numbered list"),
                 description: _t("Create a list with numbering"),
                 category: "structure",
@@ -95,6 +97,7 @@ export class ListPlugin extends Plugin {
                 },
             },
             {
+                id: "checklist",
                 name: _t("Checklist"),
                 description: _t("Track tasks with a checklist"),
                 category: "structure",
@@ -107,6 +110,7 @@ export class ListPlugin extends Plugin {
         ],
         hints: [{ selector: "LI", text: _t("List") }],
         onInput: this.onInput.bind(this),
+        powerButtons: ["bulleted_list", "numbered_list", "checklist"],
     };
 
     setup() {
