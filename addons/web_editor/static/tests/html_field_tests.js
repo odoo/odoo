@@ -1139,6 +1139,33 @@ export const uploadTestModule = QUnit.module(
                         },
                     ],
                 },
+                "html_editor.media": {
+                    fields: {
+                        "name": {
+                            type: "char",
+                        },
+                        url: {
+                            type: "char",
+                        },
+                        media_type: {
+                            type: "char",
+                        },
+                        res_id: {
+                            type: "integer",
+                        },
+                        res_model: {
+                            type: "char",
+                        },
+                        public: {
+                            type: "boolean",
+                        },
+                        attachment_id: {
+                            type: "many2one",
+                            relation: "ir.attachment",
+                        },
+                    },
+                    records: [],
+                },
             });
         },
     },
@@ -1209,18 +1236,25 @@ export const uploadTestModule = QUnit.module(
                     webSaveTriggered.resolve();
                 }
                 if (route === "/web_editor/media/add_data") {
-                    const attachment = {
+                    const media = {
                         id: 2,
-                        attachment_id: 5,
+                        name: "test.jpg",
+                        url: false,
+                        res_id: 0,
+                        res_model: "mail.compose.message",
+                        public: false,
+                        media_type: "image",
+                    };
+                    const attachment = {
+                        id: 5,
                         name: "test.jpg",
                         description: false,
                         mimetype: "image/jpeg",
-                        media_type: "image",
                         checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
                         url: false,
                         type: "binary",
-                        res_id: 0,
-                        res_model: "mail.compose.message",
+                        res_id: 2,
+                        res_model: "html_editor.media",
                         public: false,
                         access_token: false,
                         image_src: "/web/image/1-a0e63e61/test.jpg",
@@ -1228,7 +1262,7 @@ export const uploadTestModule = QUnit.module(
                         image_height: 1,
                         original_id: false,
                     };
-                    // TODO @media-model: what's the right way to deal with next line?
+                    serverData.models["html_editor.media"].records.push({ ...media });
                     serverData.models["ir.attachment"].records.push({ ...attachment });
                     return Promise.resolve(attachment);
                 } else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {

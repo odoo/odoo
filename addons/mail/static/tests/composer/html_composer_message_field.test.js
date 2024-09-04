@@ -15,8 +15,11 @@ import {
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
+    defineModels,
+    fields,
     makeMockServer,
     mockService,
+    models,
     mountView,
     mountViewInDialog,
     onRpc,
@@ -28,6 +31,20 @@ import { defineMailModels, mailModels } from "../mail_test_helpers";
 mailModels.MailComposeMessage._views = {};
 
 defineMailModels([]);
+
+class Media extends models.Model {
+    _name = "html_editor.media";
+    name = fields.Char();
+    url = fields.Char();
+    media_type = fields.Char();
+    res_id = fields.Integer();
+    res_model = fields.Char();
+    public = fields.Boolean();
+    attachment_id = fields.Many2one({ relation: "ir.attachment" });
+
+    _records = [];
+}
+defineModels([Media]);
 
 let htmlEditor;
 beforeEach(() => {
@@ -57,14 +74,22 @@ test("media dialog: upload", async function () {
         attachment_ids: [],
     });
 
-    let newAttachmentId;
+    let newMediaId, newAttachmentId;
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
         const createVals = args[1];
         expect(createVals.attachment_ids[0][0]).toBe(4); // link command
+        expect(newMediaId).not.toBe(newAttachmentId); // be sure next step checks the right one
         expect(createVals.attachment_ids[0][1]).toBe(newAttachmentId); // on attachment id "5"
     });
     onRpc("/html_editor/media/add_data", () => {
+        const media = {
+            name: "test.jpg",
+            url: false,
+            res_id: 0,
+            res_model: "mail.compose.message",
+            public: false,
+        };
         const attachment = {
             name: "test.jpg",
             description: false,
@@ -72,8 +97,7 @@ test("media dialog: upload", async function () {
             checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
             url: false,
             type: "binary",
-            res_id: 0,
-            res_model: "mail.compose.message",
+            res_model: "html_editor.media",
             public: false,
             access_token: false,
             image_src: "/web/image/1-a0e63e61/test.jpg",
@@ -81,9 +105,12 @@ test("media dialog: upload", async function () {
             image_height: 1,
             original_id: false,
         };
+        // Dummy media to make sure the media and attachment have different ids
+        newMediaId = env["html_editor.media"].create([{}, media])[1];
         newAttachmentId = env["ir.attachment"].create(attachment);
-        attachment.id = newAttachmentId;
-        return attachment;
+        media.id = attachment.res_id = newMediaId;
+        attachment.id = media.attachment_id = newAttachmentId;
+        return {...media, ...attachment};
     });
 
     onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => {

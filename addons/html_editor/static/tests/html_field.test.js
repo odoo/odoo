@@ -85,9 +85,48 @@ class IrAttachment extends models.Model {
             image_width: 256,
             image_height: 256,
         },
+        {
+            id: 2,
+            name: "image2",
+            description: "",
+            mimetype: "image/png",
+            checksum: false,
+            url: "/web/image/123/transparent.png",
+            type: "url",
+            res_id: 1,
+            res_model: "html_editor.media",
+            public: true,
+            access_token: false,
+            image_src: "/web/image/123/transparent.png",
+            image_width: 256,
+            image_height: 256,
+        },
     ];
 }
-defineModels([Partner, IrAttachment]);
+class Media extends models.Model {
+    _name = "html_editor.media";
+    name = fields.Char();
+    url = fields.Char();
+    media_type = fields.Char();
+    res_id = fields.Integer();
+    res_model = fields.Char();
+    public = fields.Boolean();
+    attachment_id = fields.Many2one({ relation: "ir.attachment" });
+
+    _records = [
+        {
+            id: 1,
+            name: "image2",
+            url: "/web/image/123/transparent.png",
+            media_type: "image",
+            res_id: 0,
+            res_model: false,
+            public: true,
+            attachment_id: 2,
+        },
+    ];
+}
+defineModels([Partner, IrAttachment, Media]);
 
 let htmlEditor;
 beforeEach(() => {
@@ -1934,7 +1973,7 @@ describe("save image", () => {
             expect.step(`add_data: ${res_model} ${res_id}`);
             return {
                 image_src: "/test_image_url.png",
-                id: 123,
+                attachment_id: 123,
                 public: false,
             };
         });
