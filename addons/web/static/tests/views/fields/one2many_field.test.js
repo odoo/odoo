@@ -12868,3 +12868,45 @@ test("onchange on x2many add and delete x2m record, returning to initial state",
     expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(1);
     expect.verifySteps(["get_views", "web_read", "onchange", "onchange", "onchange"]);
 });
+
+test.tags("desktop")("expand record in dialog", async () => {
+    Turtle._views["form, false"] = `<form><field name="name"/></form>`;
+    mockService("action", {
+        doAction(actionRequest) {
+            expect.step([
+                actionRequest.res_id,
+                actionRequest.res_model,
+                actionRequest.type,
+                actionRequest.views,
+            ]);
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="turtles"><list><field name="name"/></list></field></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(1);
+    expect(".o_data_cell").toHaveText("donatello");
+    await contains(queryFirst(".o_field_widget[name=turtles] .o_data_cell")).click();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
+    await contains(".o_dialog .modal-header .btn-close").click();
+    await contains(".o_field_widget[name=turtles] .o_field_x2many_list_row_add a").click();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
+    await contains("[name='name'] input").edit("new turtle");
+    await contains(".o_dialog .o_form_button_save").click();
+    expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(2);
+    await contains(queryLast(".o_field_widget[name=turtles] .o_data_cell")).click();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
+    await contains(".o_dialog .modal-header .btn-close").click();
+    await clickSave();
+    await contains(queryLast(".o_field_widget[name=turtles] .o_data_cell")).click();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
+    await contains(".o_dialog .modal-header .o_expand_button").click();
+    expect.verifySteps([[4, "turtle", "ir.actions.act_window", [[false, "form"]]]]);
+});
