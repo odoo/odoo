@@ -20,8 +20,6 @@ export const kanbanView = {
         const { arch, relatedModels, resModel } = genericProps;
         const { ArchParser } = view;
         const archInfo = new ArchParser().parse(arch, relatedModels, resModel);
-        const defaultGroupBy =
-            genericProps.searchMenuTypes.includes("groupBy") && archInfo.defaultGroupBy;
 
         return {
             ...genericProps,
@@ -30,7 +28,6 @@ export const kanbanView = {
             Renderer: view.Renderer,
             buttonTemplate: view.buttonTemplate,
             archInfo,
-            defaultGroupBy,
         };
     },
 };

@@ -14,7 +14,6 @@ export class KanbanArchParser {
         const className = xmlDoc.getAttribute("class") || null;
         const canOpenRecords = exprToBoolean(xmlDoc.getAttribute("can_open"), true);
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
-        const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
         const countLimit = xmlDoc.getAttribute("count_limit");
         const recordsDraggable = exprToBoolean(xmlDoc.getAttribute("records_draggable"), true);
@@ -145,7 +144,6 @@ export class KanbanArchParser {
             cardColorField: xmlDoc.getAttribute("highlight_color"),
             className,
             creates,
-            defaultGroupBy,
             fieldNodes,
             widgetNodes,
             handleField,

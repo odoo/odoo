@@ -14915,15 +14915,61 @@ test(`list view with default_group_by`, async () => {
     });
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
     expect(`.o_group_header`).toHaveCount(2);
+    // open search bar in mobile
+    if (queryAll(".o_control_panel_navigation > button").length) {
+        await contains(".o_control_panel_navigation > button").click();
+    }
+    expect(`.o_searchview_facet`).toHaveCount(1);
+    expect(`.o_searchview_facet`).toHaveText("Bar");
     expect.verifySteps(["web_read_group1"]);
 
     await selectGroup("m2m");
     expect(`.o_group_header`).toHaveCount(4);
+    expect(`.o_searchview_facet`).toHaveCount(1);
+    expect(`.o_searchview_facet`).toHaveText("M2m");
     expect.verifySteps(["web_read_group2"]);
 
     await toggleMenuItem("M2m");
     expect(`.o_group_header`).toHaveCount(2);
+    expect(`.o_searchview_facet`).toHaveCount(1);
+    expect(`.o_searchview_facet`).toHaveText("Bar");
     expect.verifySteps(["web_read_group3"]);
+});
+
+test(`list view with multi-fields default_group_by`, async () => {
+    let readGroupCount = 0;
+    onRpc("web_read_group", ({ kwargs }) => {
+        readGroupCount++;
+        expect.step(`web_read_group${readGroupCount}`);
+        switch (readGroupCount) {
+            case 1:
+                return expect(kwargs.groupby).toEqual(["foo"]);
+            case 2:
+                return expect(kwargs.groupby).toEqual(["bar"]);
+        }
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_group_by="foo,bar">
+                <field name="bar"/>
+            </list>
+        `,
+    });
+    expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
+    expect(`.o_group_header`).toHaveCount(3);
+    // open search bar in mobile
+    if (queryAll(".o_control_panel_navigation > button").length) {
+        await contains(".o_control_panel_navigation > button").click();
+    }
+    expect(`.o_searchview_facet`).toHaveCount(1);
+    expect(`.o_searchview_facet`).toHaveText("Foo\n>\nBar");
+    expect.verifySteps(["web_read_group1"]);
+    await contains(`.o_group_header`).click();
+    expect(`.o_group_header`).toHaveCount(5);
+    expect.verifySteps(["web_read_group2"]);
 });
 
 test(`ungrouped list, apply filter, decrease limit`, async () => {

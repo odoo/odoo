@@ -206,7 +206,6 @@ export class ListArchParser {
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 
-                treeAttr.defaultGroupBy = xmlDoc.getAttribute("default_group_by");
                 treeAttr.defaultOrder = stringToOrderBy(
                     xmlDoc.getAttribute("default_order") || null
                 );
