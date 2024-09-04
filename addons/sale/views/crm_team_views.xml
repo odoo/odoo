@@ -80,7 +80,7 @@
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <label for="invoiced_target"/>
-                <div class="o_row">
+                <div class="o_row" id="invoiced_target">
                     <field name="invoiced_target" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                     <span class="flex-grow-1">/ Month</span>
                 </div>
