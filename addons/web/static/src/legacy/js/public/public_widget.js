@@ -630,7 +630,7 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
      */
     attachTo: function (target) {
         var self = this;
-        this.setElement(target.$el || target);
+        this.setElement(target);
         return this.willStart().then(function () {
             if (self.__parentedDestroyed) {
                 return;
@@ -693,7 +693,7 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
     /**
      * Renders the current widget and replaces the given jQuery object.
      *
-     * @param target A jQuery object or a Widget instance.
+     * @param {jQuery} target
      * @returns {Promise}
      */
     replace: function (target) {
