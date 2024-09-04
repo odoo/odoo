@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_website_form_info" name="Form Info">
+    <section class="s_website_form_info pb24 pt24 o_cc o_cc2">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="12">
+                <div class="o_grid_item o_grid_item_image g-col-lg-5 g-height-4 col-lg-5 col-10 offset-1" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 16px; grid-area: 1 / 1 / 5 / 6; z-index: 1;">
+                    <img class="img img-fluid rounded" src="/web/image/website.s_cover_default_image" alt=""/>
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-4 col-lg-5 col-10 offset-1" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 0px; grid-area: 5 / 1 / 9 / 6; z-index: 2;">
+                    <h2 style="text-align: left;">Contact Us</h2>
+                    <p style="text-align: left;">We'd love to hear from you! Whether you have questions, feedback, or need support, our team is here to help. Simply fill out the form below, and we aim to respond to all inquiries within 24 hours. Thank you for getting in touch!</p>
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-1 col-lg-5 col-10 offset-1" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 8px; grid-area: 10 / 1 / 11 / 6; z-index: 3;">
+                    <i class="fa fa-fw fa-envelope o_not-animable" role="img"/>
+                    &#160;&#160;yourcompany@example.com
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-1 col-lg-5 col-10 offset-1" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 8px; grid-area: 11 / 1 / 12 / 6; z-index: 4;">
+                    <i class="fa fa-fw fa-phone o_not-animable" role="img"/>
+                    &#160;&#160; +32(0)499 123 456
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-1 col-lg-5 col-10 offset-1" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 8px; grid-area: 12 / 1 / 13 / 6; z-index: 5;">
+                    <i class="fa fa-fw fa-map-marker o_not-animable" role="img"/>
+                    &#160;&#160;Brussels, Belgium
+                </div>
+                <div class="o_grid_item g-col-lg-6 g-height-12 col-lg-6 col-10 offset-1" style="--grid-item-padding-x: 0px; --grid-item-padding-y: 16px; grid-area: 1 / 7 / 13 / 13; z-index: 6;">
+                    <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
+                                <label class="s_website_form_label" style="width: 200px" for="obij2aulqyau">
+                                    <span class="s_website_form_label_content">Your Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input class="form-control s_website_form_input" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
+                            </div>
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 col-lg-6 s_website_form_model_required" data-type="email">
+                                <label class="s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input class="form-control s_website_form_input" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
+                            </div>
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 col-lg-6 s_website_form_custom" data-type="tel">
+                                <label class="s_website_form_label" style="width: 200px" for="ozp7022vqhe">
+                                    <span class="s_website_form_label_content">Phone Number</span>
+                                </label>
+                                <input class="form-control s_website_form_input" type="tel" name="phone" data-fill-with="phone" id="ozp7022vqhe"/>
+                            </div>
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                                <label class="s_website_form_label" style="width: 200px" for="o291di1too2s">
+                                    <span class="s_website_form_label_content">Your Company</span>
+                                </label>
+                                <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="commercial_company_name" id="o291di1too2s"/>
+                            </div>
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
+                                <label class="s_website_form_label" style="width: 200px" for="oqsf4m51acj">
+                                    <span class="s_website_form_label_content">Subject</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input class="form-control s_website_form_input" type="text" name="subject" required="" id="oqsf4m51acj"/>
+                            </div>
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="text">
+                                <label class="s_website_form_label" style="width: 200px" for="oyeqnysxh10b">
+                                    <span class="s_website_form_label_content">Message</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
+                            </div>
+                            <div class="mb-0 py-2 col-12 s_website_form_submit text-start s_website_form_no_submit_label" data-name="Submit Button">
+                                <div style="width: 200px;" class="s_website_form_label"/>
+                                <span id="s_website_form_result"/>
+                                <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
