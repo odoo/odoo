@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 import odoo
 from odoo.modules.registry import Registry, DummyRLock
-from odoo.tests import HOST
 from odoo.tests.common import BaseCase, tagged, get_db_name
 
 
@@ -58,15 +57,13 @@ class TestAuthLDAP(BaseCase):
             cr.execute("SELECT id FROM res_users WHERE login = 'test_ldap_user'")
             self.assertFalse(cr.rowcount, "User should not be present")
 
-        body = self.opener.get(
-            f"http://{HOST}:{odoo.tools.config['http_port']}/web/login"
-        ).text
+        body = self.url_open("/web/login").text
         csrf = re.search(r'csrf_token: "(\w*?)"', body).group(1)
 
         with patch.object(self.registry["res.company.ldap"], "_get_ldap_dicts", _get_ldap_dicts),\
             patch.object(self.registry["res.company.ldap"], "_authenticate", _authenticate):
             res = self.opener.post(
-                f"http://{HOST}:{odoo.tools.config['http_port']}/web/login",
+                f"{self.base_url()}/web/login",
                 data={
                     "login": "test_ldap_user",
                     "password": "test",
