@@ -907,6 +907,7 @@ describe("Selection collapsed", () => {
                     await press("Enter");
                     deleteBackward(editor);
                     deleteBackward(editor);
+                    deleteBackward(editor);
                 },
                 contentAfter: "<ul><li>abc[]</li></ul>",
             });
