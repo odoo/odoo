@@ -75,6 +75,7 @@
                         <field name="category_id"/>
                         <field name="name"/>
                         <field name="share"/>
+                        <field name="api_key_duration" groups="base.group_no_one"/>
                     </group>
                     <notebook>
                         <page string="Users" name="users">
@@ -371,6 +372,14 @@
                         and complete, <strong>it will be the only way to
                         identify the key once created</strong>.
                     </p>
+                    <h3 class="fw-bold">
+                        Give a duration for the key's validity
+                    </h3>
+                    <field name="duration"/>
+                    <field name="expiration_date" invisible="duration != '-1'"/>
+                    <p>
+                        The key will be deleted once this period has elapsed.
+                    </p>
                     <footer>
                         <button name="make_key" type="object" string="Generate key" class="btn-primary" data-hotkey="q"/>
                         <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
@@ -471,6 +480,7 @@
                                             <field name="name"/>
                                             <field name="scope"/>
                                             <field name="create_date"/>
+                                            <field name="expiration_date"/>
                                             <button type="object" name="remove"
                                                     string="Delete API key." icon="fa-trash"/>
                                         </list>
