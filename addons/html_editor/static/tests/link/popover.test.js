@@ -20,6 +20,9 @@ import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
 
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 describe("should open a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
         const { el } = await setupEditor("<p>this is a <a>link</a></p>");
@@ -786,6 +789,92 @@ describe("link in templates", () => {
         await waitUntil(() => !queryFirst(".o-we-linkpopover"));
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-att-href="/test/1">link</a></p>'
+        );
+    });
+});
+
+describe("links with inline image", () => {
+    test("can add link to inline image + text", async () => {
+        const { el } = await setupEditor(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">cd<img src="${base64Img}">ef[]</a>g</p>`
+        );
+    });
+    test("can undo add link to inline image + text", async () => {
+        const { editor, el } = await setupEditor(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">cd<img src="${base64Img}">ef[]</a>g</p>`
+        );
+        undo(editor);
+        await animationFrame();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
+    });
+    test("can remove link from an inline image", async () => {
+        const { el } = await setupEditor(`<p>ab<a href="#">cd<img src="${base64Img}">ef</a>g</p>`);
+        click("img");
+        await waitFor(".o-we-toolbar");
+        expect("button[name='unlink']").toHaveCount(1);
+        click("button[name='unlink']");
+        await animationFrame();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">cd[</a><img src="${base64Img}"><a href="#">]ef</a>g</p>`
+        );
+        expect(".o-we-linkpopover").toHaveCount(0);
+    });
+    test("can remove link from a selection of an inline image + text", async () => {
+        const { el } = await setupEditor(
+            `<p>ab<a href="#">c[d<img src="${base64Img}">e]f</a>g</p>`
+        );
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-unlink");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">c</a>[d<img src="${base64Img}">e]<a href="#">f</a>g</p>`
+        );
+    });
+    test("can remove link from a selection (ltr) with multiple inline images", async () => {
+        const { el } = await setupEditor(
+            `<p>ab<a href="#">c[d<img src="${base64Img}">e<img src="${base64Img}">f]g</a>h</p>`
+        );
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-unlink");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">c</a>[d<img src="${base64Img}">e<img src="${base64Img}">f]<a href="#">g</a>h</p>`
+        );
+    });
+    test("can remove link from a selection (rtl) with multiple inline images", async () => {
+        const { el } = await setupEditor(
+            `<p>ab<a href="#">c]d<img src="${base64Img}">e<img src="${base64Img}">f[g</a>h</p>`
+        );
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-unlink");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">c</a>]d<img src="${base64Img}">e<img src="${base64Img}">f[<a href="#">g</a>h</p>`
+        );
+    });
+    test("can remove link from a selection (ltr) with multiple inline images acrossing different links", async () => {
+        const { el } = await setupEditor(
+            `<p>ab<a href="#">c[d<img src="${base64Img}">e</a>xx<a href="#">f<img src="${base64Img}">g]h</a>i</p>`
+        );
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-unlink");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">c</a>[d<img src="${base64Img}">exxf<img src="${base64Img}">g]<a href="#">h</a>i</p>`
+        );
+    });
+    test("can remove link from a selection (rtl) with multiple inline images acrossing different links", async () => {
+        const { el } = await setupEditor(
+            `<p>ab<a href="#">c]d<img src="${base64Img}">e</a>xx<a href="#">f<img src="${base64Img}">g[h</a>i</p>`
+        );
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .fa-unlink");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            `<p>ab<a href="#">c</a>]d<img src="${base64Img}">exxf<img src="${base64Img}">g[<a href="#">h</a>i</p>`
         );
     });
 });
