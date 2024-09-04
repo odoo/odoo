@@ -2510,6 +2510,11 @@ class AccountMove(models.Model):
 
         _apply_cash_rounding(self, diff_balance, diff_amount_currency, existing_cash_rounding_line)
 
+    def _get_automatic_balancing_account(self):
+        """ Small helper for special cases where we want to auto balance a move with a specific account. """
+        self.ensure_one()
+        return self.company_id.account_journal_suspense_account_id.id
+
     @contextmanager
     def _sync_unbalanced_lines(self, container):
         def has_tax(move):
@@ -2546,8 +2551,10 @@ class AccountMove(models.Model):
                     vals.update({
                         'name': balance_name,
                         'move_id': move.id,
-                        'account_id': move.company_id.account_journal_suspense_account_id.id,
+                        'account_id': move._get_automatic_balancing_account(),
                         'currency_id': move.currency_id.id,
+                        # A balancing line should never have default taxes applied to it, it doesn't work well and wouldn't make much sense.
+                        'tax_ids': False,
                     })
                     self.env['account.move.line'].create(vals)
 
