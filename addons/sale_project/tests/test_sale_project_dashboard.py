@@ -64,41 +64,8 @@ class TestDashboardProject(TestProjectDashboardCommon):
     Since the data is different for the same input when the timesheet module is installed, those tests have to be run at_install
     """
 
-    def test_get_sale_item_data_limit_and_load_more(self):
-        """This test ensures that when more than 5 sols are present, only 5 are computed on the first call.
-        It also ensures that the call from the 'load more' button is correctly computed"""
-
-        sols = self.dashboardSaleOrderLine.create([{
-            'product_id': self.dashboard_product_delivery_service.id,
-            'product_uom_qty': i,
-        } for i in range(1, 8)])
-        sale_item_data = self.dashboard_project.get_sale_items_data(limit=5)
-        expected_dict = {
-            'materials': {'data': [], 'displayLoadMore': False},
-            'service_revenues': {
-                'data':
-                    [
-                        {'id': sols[0].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-                        {'id': sols[1].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 2.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-                        {'id': sols[2].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 3.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-                        {'id': sols[3].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 4.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-                        {'id': sols[4].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 5.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-                    ],
-                'displayLoadMore': True,
-            },
-        }
-        self.assertEqual(sale_item_data, expected_dict)
-        # add a new call with the 'section_id' to ensure that the 2 extra sol are fetched correctly.
-        sale_item_data = self.dashboard_project.get_sale_items_data(offset=5, limit=5, section_id='service_revenues')
-        expected_list = [
-            {'id': sols[5].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 6.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-            {'id': sols[6].id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 7.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-        ]
-        self.assertEqual(sale_item_data, expected_list)
-
     def test_get_sale_item_data_various_sols(self):
         """This test ensures that the sols are computed and put into the correct profitability sections"""
-        self.dashboard_project.allow_billable = True
         sol_service_1, sol_service_2, sol_service_3, sol_service_4 = self.dashboardSaleOrderLine.create([{
                 'product_id': self.product_milestone.id,
                 'product_uom_qty': 1,
@@ -112,22 +79,13 @@ class TestDashboardProject(TestProjectDashboardCommon):
                 'product_id': self.dashboard_product_delivery_service.id,
                 'product_uom_qty': 1,
         }])
-        expected_dict = {
-            'materials': {
-                'data': [
-                    {'id': sol_service_3.id, 'name': 'Material', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (1, 'Units'), 'product_id': (self.material_product.id, 'Material')}
-                ],
-                'displayLoadMore': False,
-            },
-            'service_revenues': {
-                'data': [
-                     {'id': sol_service_1.id, 'name': '[SERV-ORDERED2] Service Milestone', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.product_milestone.id, '[SERV-ORDERED2] Service Milestone')},
-                     {'id': sol_service_2.id, 'name': '[SERV-ORDERED2] Product prepaid', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.product_prepaid.id, '[SERV-ORDERED2] Product prepaid')},
-                     {'id': sol_service_4.id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-                ],
-                'displayLoadMore': False,
-            },
-        }
-
-        sale_item_data = self.dashboard_project.get_sale_items_data(limit=5)
-        self.assertEqual(sale_item_data, expected_dict)
+        expected_dict = [{'id': sol_service_3.id, 'name': 'Material', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (1, 'Units'), 'product_id': (self.material_product.id, 'Material')}]
+        sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='materials')
+        self.assertEqual(sale_item_data['sol_items'], expected_dict)
+        expected_dict = [
+             {'id': sol_service_1.id, 'name': '[SERV-ORDERED2] Service Milestone', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.product_milestone.id, '[SERV-ORDERED2] Service Milestone')},
+             {'id': sol_service_2.id, 'name': '[SERV-ORDERED2] Product prepaid', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.product_prepaid.id, '[SERV-ORDERED2] Product prepaid')},
+             {'id': sol_service_4.id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
+        ]
+        sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='service_revenues')
+        self.assertEqual(sale_item_data['sol_items'], expected_dict)

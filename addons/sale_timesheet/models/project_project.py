@@ -287,6 +287,15 @@ class ProjectProject(models.Model):
             'account_id': self.account_id.id,
         }
 
+    def _get_foldable_section(self):
+        foldable_section = super()._get_foldable_section()
+        return foldable_section + [
+            'billable_fixed',
+            'billable_milestones',
+            'billable_time',
+            'billable_manual',
+        ]
+
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
             domain_per_model = {'project.task': [('allow_billable', '=', True)]}
@@ -331,15 +340,6 @@ class ProjectProject(models.Model):
             employee_mapping_sql,
         ]))
         return query
-
-    def _get_items_id_per_section_id(self):
-        return {
-            'materials': {'data': [], 'displayLoadMore': False},
-            'billable_fixed': {'data': [], 'displayLoadMore': False},
-            'billable_milestones': {'data': [], 'displayLoadMore': False},
-            'billable_time': {'data': [], 'displayLoadMore': False},
-            'billable_manual': {'data': [], 'displayLoadMore': False},
-        }
 
     def _get_domain_from_section_id(self, section_id):
         section_domains = {
