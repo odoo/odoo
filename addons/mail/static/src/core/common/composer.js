@@ -584,7 +584,7 @@ export class Composer extends Component {
         } else if (
             this.props.composer.text.trim() ||
             attachments.length > 0 ||
-            (this.message && this.message.attachments.length > 0)
+            (this.message && this.message.attachment_ids.length > 0)
         ) {
             if (!this.state.active) {
                 return;
@@ -652,7 +652,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachments.length > 0) {
+        if (composer.text || composer.message.attachment_ids.length > 0) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,

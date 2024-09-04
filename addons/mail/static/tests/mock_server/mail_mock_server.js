@@ -681,7 +681,7 @@ async function mail_message_update_content(request) {
         MailMessage._bus_notification_target(message.id),
         "mail.record/insert",
         new mailDataHelpers.Store(MailMessage.browse(message.id), {
-            attachments: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
+            attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
             body: message.body,
             pinned_at: message.pinned_at,
             recipients: mailDataHelpers.Store.many(

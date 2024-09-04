@@ -281,7 +281,7 @@ patch(MockServer.prototype, {
                 });
             }
             const response = Object.assign({}, message, {
-                attachments: formattedAttachments,
+                attachment_ids: formattedAttachments,
                 author,
                 default_subject:
                     message.model &&

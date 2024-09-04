@@ -1206,7 +1206,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         guest = member_g.guest_id
         if channel == self.channel_general:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
                 "body": "<p>test</p>",
                 "create_date": create_date,
@@ -1242,7 +1242,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": user_2.partner_id.id, "type": "partner"},
                 "body": "<p>test</p>",
                 "create_date": create_date,
@@ -1278,7 +1278,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
                 "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">@test9</a> to the channel</div>',
                 "create_date": create_date,
@@ -1310,7 +1310,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
                 "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">@test12</a> to the channel</div>',
                 "create_date": create_date,
@@ -1342,7 +1342,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
                 "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">@test13</a> to the channel</div>',
                 "create_date": create_date,
@@ -1374,7 +1374,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": user_1.partner_id.id, "type": "partner"},
                 "body": "<p>test</p>",
                 "create_date": create_date,
@@ -1405,7 +1405,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2:
             return {
-                "attachments": [],
+                "attachment_ids": [],
                 "author": {"id": guest.id, "type": "guest"},
                 "body": "<p>test</p>",
                 "create_date": create_date,

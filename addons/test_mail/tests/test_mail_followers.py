@@ -884,7 +884,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
         expected = {
             "mail.message": self._filter_messages_fields(
                 {
-                    "attachments": [],
+                    "attachment_ids": [],
                     "author": {"id": self.user_admin.partner_id.id, "type": "partner"},
                     "body": "<p>test message</p>",
                     "create_date": fields.Datetime.to_string(message.create_date),

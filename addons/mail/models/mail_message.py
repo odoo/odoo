@@ -1021,7 +1021,7 @@ class Message(models.Model):
             data["default_subject"] = default_subject
             vals = {
                 # sudo: mail.message - reading attachments on accessible message is allowed
-                "attachments": Store.many(message.sudo().attachment_ids.sorted("id")),
+                "attachment_ids": Store.many(message.sudo().attachment_ids.sorted("id")),
                 # sudo: mail.message - reading link preview on accessible message is allowed
                 "linkPreviews": Store.many(
                     message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
