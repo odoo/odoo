@@ -160,7 +160,7 @@ export class LinkPlugin extends Plugin {
         handle_insert_line_break_element: { callback: p.handleInsertLineBreak.bind(p) },
     });
     setup() {
-        this.overlay = this.shared.createOverlay(LinkPopover);
+        this.overlay = this.shared.createOverlay(LinkPopover, { hasAutofocus: true });
         this.addDomListener(this.editable, "click", (ev) => {
             if (ev.target.tagName === "A" && ev.target.isContentEditable) {
                 ev.preventDefault();

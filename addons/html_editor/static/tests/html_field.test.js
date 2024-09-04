@@ -6,6 +6,7 @@ import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     click,
+    getActiveElement,
     press,
     queryAll,
     queryAllTexts,
@@ -719,6 +720,25 @@ test("link preview in Link Popover", async () => {
     expect(".test_target a").toHaveText("New label", {
         message: "The link's label should be updated",
     });
+});
+
+test("label input should take the focus when you open a link popover (in dialog)", async () => {
+    await mountViewInDialog({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+    insertText(htmlEditor, "/link");
+    await waitFor(".o-we-powerbox");
+    press("enter");
+    await animationFrame();
+    expect(getActiveElement()).toBe(queryOne("input.o_we_label_link"));
 });
 
 test("html field with a placeholder", async () => {
