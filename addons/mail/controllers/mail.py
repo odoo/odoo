@@ -215,17 +215,8 @@ class MailController(http.Controller):
             else:
                 raise Unauthorized()
 
-        url_params = {
-            'highlight_message_id': message_id,
-        }
         if message.model == 'discuss.channel':
-            url_params['active_id'] = message.res_id
-            url_params['action'] = 'mail.action_discuss'
+            url = f'/odoo/action-mail.action_discuss?active_id={message.res_id}&highlight_message_id={message_id}'
         else:
-            url_params.update({
-                'model': message.model,
-                'id': message.res_id,
-                'view_type': 'form',
-            })
-        url = '/web#%s' % url_encode(url_params)
+            url = f'/odoo/{message.model}/{message.res_id}?highlight_message_id={message_id}'
         return request.redirect(url)

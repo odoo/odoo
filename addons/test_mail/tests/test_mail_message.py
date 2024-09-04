@@ -3,7 +3,6 @@
 import base64
 from markupsafe import Markup
 from unittest.mock import patch
-from werkzeug.urls import url_encode
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.tools.discuss import Store
@@ -575,22 +574,11 @@ class TestMessageLinks(MailCommon, HttpCase):
         ).id
         self.authenticate('employee', 'employee')
         with self.subTest(thread_message=thread_message):
-            url_params = {
-                'highlight_message_id': thread_message.id,
-                'model': thread_message.model,
-                'id': thread_message.res_id,
-                'view_type': 'form',
-            }
-            expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
+            expected_url = self.base_url() + f'/odoo/{thread_message.model}/{thread_message.res_id}?highlight_message_id={thread_message.id}'
             res = self.url_open(f'/mail/message/{thread_message.id}')
             self.assertEqual(res.url, expected_url)
         with self.subTest(channel_message=channel_message):
-            url_params = {
-                'highlight_message_id': channel_message.id,
-                'active_id': channel_message.res_id,
-                'action': 'mail.action_discuss',
-            }
-            expected_url = self.base_url() + '/web#%s' % url_encode(url_params)
+            expected_url = self.base_url() + f'/odoo/action-mail.action_discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}'
             res = self.url_open(f'/mail/message/{channel_message.id}')
             self.assertEqual(res.url, expected_url)
         with self.subTest(deleted_message=deleted_message):

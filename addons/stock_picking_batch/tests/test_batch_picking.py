@@ -1176,7 +1176,7 @@ class TestBatchPickingSynchronization(HttpCase):
         })
 
         action_id = self.env.ref('stock_picking_batch.stock_picking_batch_menu').action
-        url = f'/web#model=stock.picking.batch&view_type=form&action={action_id.id}&id={batch.id}'
+        url = f'/odoo/action-{action_id.id}/{batch.id}'
         self.start_tour(url, "test_stock_picking_batch_sm_to_sml_synchronization", login="admin", timeout=100)
         self.assertEqual(batch.picking_ids.move_ids.quantity, 7)
         self.assertEqual(batch.picking_ids.move_ids.move_line_ids.quantity, 7)
