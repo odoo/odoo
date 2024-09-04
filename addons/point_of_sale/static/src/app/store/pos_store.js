@@ -981,7 +981,7 @@ export class PosStore extends Reactive {
         return true;
     }
 
-    getSyncAllOrdersContext(orders) {
+    getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
         };
@@ -996,7 +996,7 @@ export class PosStore extends Reactive {
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
             this.preSyncAllOrders(orders);
-            const context = this.getSyncAllOrdersContext(orders);
+            const context = this.getSyncAllOrdersContext(orders, options);
 
             if (this.pendingOrder.delete.size) {
                 await this.deleteOrders([], Array.from(this.pendingOrder.delete));
@@ -1371,11 +1371,12 @@ export class PosStore extends Reactive {
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         const uuid = o.uuid;
         this.addPendingOrder([o.id]);
-        await this.syncAllOrders();
+        await this.syncAllOrders({ cancel_table_notification: true });
 
         const order = this.models["pos.order"].find((order) => order.uuid === uuid);
         await this.sendOrderInPreparation(order, cancelled);
         order.updateLastOrderChange();
+        await this.syncAllOrders();
     }
     closeScreen() {
         this.addOrderIfEmpty();
