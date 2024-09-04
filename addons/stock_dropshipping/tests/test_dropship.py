@@ -89,6 +89,7 @@ class TestDropship(common.TransactionCase):
         self.assertAlmostEqual(pol2.product_qty, sol2.product_uom_qty)
 
     def test_00_dropship(self):
+        self.dropship_product.description_purchase = "description_purchase"
         # Required for `route_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
@@ -115,6 +116,7 @@ class TestDropship(common.TransactionCase):
         # Check a quotation was created to a certain vendor and confirm so it becomes a confirmed purchase order
         purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        self.assertIn("description_purchase", purchase.order_line.name)
         purchase.button_confirm()
         self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
 
@@ -127,6 +129,7 @@ class TestDropship(common.TransactionCase):
         # Send the 200 pieces
         purchase.picking_ids.move_ids.quantity = purchase.picking_ids.move_ids.product_qty
         purchase.picking_ids.move_ids.picked = True
+        self.assertNotIn("description_purchase", purchase.picking_ids.move_ids.description_picking)
         purchase.picking_ids.button_validate()
 
         # Check one move line was created in Customers location with 200 pieces
