@@ -6,12 +6,15 @@
        <Dialog size="'md'" title="'Home'">
             <div class="row">
                 <div class="col-lg-10 w-100 fs-2">
-                    <div t-if="registrationStatus.value === 'confirmed_registration'" class="alert alert-success text-center" role="alert">
-                        <i class="fa fa-solid fa-check-circle me-2"/>
+                    <div t-if="['confirmed_registration', 'unconfirmed_registration'].includes(registrationStatus.value)" class="alert alert-success d-flex justify-content-center" role="alert">
+                        <i class="fa fa-solid fa-check-circle align-self-center me-2 ms-0 ms-sm-5"/>
                         <span>Successfully registered!</span>
+                        <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
+                            Undo
+                        </button>
                     </div>
-                    <div t-else="" class="alert alert-warning text-center" role="alert">
-                        <i class="fa fa-solid fa-exclamation-circle me-2"/>
+                    <div t-else="" class="alert alert-warning d-flex justify-content-center" role="alert">
+                        <i class="fa fa-solid fa-exclamation-circle me-2 align-self-center ms-0 ms-sm-5"/>
                         <t t-if="registrationStatus.value === 'need_manual_confirmation'">
                             <span>This ticket is for another event!<br/>
                             Confirm attendance?</span>
@@ -25,6 +28,9 @@
                         <t t-elif="registrationStatus.value == 'already_registered'">
                             <span>Ticket already scanned!</span>
                         </t>
+                        <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
+                            Undo
+                        </button>
                     </div>
                 </div>
             </div>
@@ -72,8 +78,7 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button t-if="needManualConfirmation" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Confirm</button>
-                <button t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onScanNext()">Continue</button>
+                <button t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
                 <button t-att-disabled="!hasSelectedPrinter()" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
                 <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
             </t>

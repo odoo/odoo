@@ -23,7 +23,7 @@
         <field name="inherit_id" ref="event.event_registration_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_kanban_event_registration_event_name')]" position="inside">
-                <span invisible="context.get('default_event_id')" class="text-muted"> - </span><field name="sale_status"/>
+                <!-- This is a dummy record and will be removed in the master -->
             </xpath>
         </field>
     </record>
