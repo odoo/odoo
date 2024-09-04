@@ -342,16 +342,10 @@ class CustomerPortal(Controller):
         if data.get("vat") and partner and partner.vat != data.get("vat"):
             # Check the VAT if it is the public user too.
             if partner_creation or partner.can_edit_vat():
-                if hasattr(partner, "check_vat"):
-                    if data.get("country_id"):
-                        data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
-                    partner_dummy = partner.new({
-                        'vat': data['vat'],
-                        'country_id': (int(data['country_id'])
-                                       if data.get('country_id') else False),
-                    })
+                if data.get('country_id'):
+                    country = request.env['res.country'].browse(int(data['country_id']))
                     try:
-                        partner_dummy.check_vat()
+                        data['vat'], _country_code = request.env['res.partner']._run_vat_checks(country, data['vat'], partner_name=partner.name)
                     except ValidationError as e:
                         error["vat"] = 'error'
                         error_message.append(e.args[0])

@@ -4,9 +4,9 @@
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.base.vat</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="eu_service" position="after">
+            <setting id="partner_autocomplete" position="after">
                 <setting id="vies_service_setting"
                          help="Verify VAT numbers using the European VIES service"
                          company_dependent="1"

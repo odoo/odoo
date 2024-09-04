@@ -3,7 +3,7 @@
 
 {
     'name': 'VAT Number Validation',
-    'version': '1.0',
+    'version': '2.0',
     'category': 'Accounting/Accounting',
     'description': """
 VAT validation for Partner's VAT numbers.
@@ -34,7 +34,7 @@ Supported countries currently include EU countries, and a few non-EU countries
 such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
 only the country code will be validated.
     """,
-    'depends': ['account'],
+    'depends': ['base_setup', 'mail'],
     'data': [
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
