@@ -8,6 +8,8 @@ from odoo import api, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
 
+from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
+
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -70,6 +72,41 @@ class HrContract(models.Model):
         if rc_leave:
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
+
+    def _get_leaves_over_interval(self, interval, leaves, bypassing_codes):
+        """
+        Return a list of leave intervals (start, stop, work_entry_type) over a work interval according to the priority
+        between the different types of leaves. This is necessary in case leaves are taken in shorter durations than the
+        work entry they overlap (i.e. Two 1h leaves over the 4h morning shift...)
+        """
+        self.ensure_one()
+        if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id.code in bypassing_codes:
+            return [(interval[0], interval[1], interval[2].work_entry_type_id)]
+
+        interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
+        interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
+        work_entries_to_create = []
+        leaves_over_interval = [
+            l for l in leaves if l[2]
+            and (interval[0] <= l[0] and interval[1] >= l[1])
+            or (interval[0] >= l[0] and interval[1] <= l[1])
+        ]
+
+        # Priority rules if leaves overlap (Example: In CP200: Long term sick (which is bypassing) > Public Holidays (which is global))
+        bypassing_leaves = WorkIntervals([l for l in leaves_over_interval if self._get_leave_work_entry_type(l[2]).code in bypassing_codes])
+        global_leaves = WorkIntervals([l for l in leaves_over_interval if not l[2].holiday_id]) - bypassing_leaves
+        other_leaves = WorkIntervals(leaves_over_interval) - bypassing_leaves - global_leaves
+
+        for leave in bypassing_leaves | global_leaves | other_leaves:
+            if leave[1] <= interval[0] or leave[0] >= interval[1]:
+                continue
+            if leave[2]:
+                entry_type = self._get_leave_work_entry_type_dates(leave[2][0], interval_start, interval_stop, self.employee_id)
+            else:
+                entry_type = self.env.ref('hr_work_entry_contract.work_entry_type_leave')
+            work_entries_to_create.append((max(leave[0], interval[0]), min(leave[1], interval[1]), entry_type))
+
+        return work_entries_to_create
 
     def _get_sub_leave_domain(self):
         domain = super()._get_sub_leave_domain()
