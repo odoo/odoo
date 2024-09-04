@@ -41,7 +41,8 @@ class PosOrder(models.Model):
 
     def _process_saved_order(self, draft):
         order_id = super()._process_saved_order(draft)
-        self.send_table_count_notification(self.table_id)
+        if not self.env.context.get('cancel_table_notification'):
+            self.send_table_count_notification(self.table_id)
         return order_id
 
     def send_table_count_notification(self, table_ids):
@@ -51,7 +52,12 @@ class PosOrder(models.Model):
             if config.current_session_id:
                 a_config = config
                 order_count = config.get_tables_order_count_and_printing_changes()
-                messages.append(('TABLE_ORDER_COUNT', order_count))
+                messages.append(
+                    (
+                        "TABLE_ORDER_COUNT",
+                        {"order_count": order_count, "table_ids": table_ids.ids},
+                    )
+                )
         if messages:
             a_config._notify(*messages, private=False)
 
