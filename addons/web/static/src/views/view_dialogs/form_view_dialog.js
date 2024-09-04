@@ -1,5 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { CallbackRecorder } from "@web/search/action_hook";
 import { View } from "@web/views/view";
 
 import { Component, onMounted } from "@odoo/owl";
@@ -37,12 +38,15 @@ export class FormViewDialog extends Component {
     setup() {
         super.setup();
 
+        this.actionService = useService("action");
         this.modalRef = useChildRef();
         this.env.dialogData.dismiss = () => this.discardRecord();
 
         const buttonTemplate = this.props.isToMany
             ? "web.FormViewDialog.ToMany.buttons"
             : "web.FormViewDialog.ToOne.buttons";
+
+        this.currentResId = this.props.resId;
 
         this.viewProps = {
             type: "form",
@@ -60,6 +64,7 @@ export class FormViewDialog extends Component {
             saveRecord: async (record, { saveAndNew }) => {
                 const saved = await record.save({ reload: false });
                 if (saved) {
+                    this.currentResId = record.resId;
                     await this.props.onRecordSaved(record);
                     if (saveAndNew) {
                         const context = Object.assign({}, this.props.context);
@@ -68,6 +73,7 @@ export class FormViewDialog extends Component {
                                 delete context[k];
                             }
                         });
+                        this.currentResId = false;
                         await record.model.load({ resId: false, context });
                     } else {
                         this.props.close();
@@ -75,6 +81,8 @@ export class FormViewDialog extends Component {
                 }
                 return saved;
             },
+
+            __beforeLeave__: new CallbackRecorder(),
         };
         if (this.props.removeRecord) {
             this.viewProps.removeRecord = async () => {
@@ -100,5 +108,18 @@ export class FormViewDialog extends Component {
             await this.props.onRecordDiscarded();
         }
         this.props.close();
+    }
+
+    async onExpand() {
+        const beforeLeaveCallbacks = this.viewProps.__beforeLeave__.callbacks;
+        const res = await Promise.all(beforeLeaveCallbacks.map((callback) => callback()));
+        if (!res.includes(false)) {
+            this.actionService.doAction({
+                type: "ir.actions.act_window",
+                res_model: this.props.resModel,
+                res_id: this.currentResId,
+                views: [[false, "form"]],
+            });
+        }
     }
 }
