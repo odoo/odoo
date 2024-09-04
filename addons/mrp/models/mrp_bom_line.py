@@ -175,7 +175,7 @@ class MrpBomLine(models.Model):
             # Prepare all values to check the attribute values
             product_tmpl_id = self.env["product.template"].browse(values["product_tmpl_id"])
             if not product_tmpl_id:
-                raise UserError(_('You need to specify a product_tmpl_id'))
+                raise UserError(_('You need to specify a product template'))
 
             bom_id = self.env["mrp.bom"].browse(values.get("bom_id"))
             possible_bom_ptavs = bom_id.possible_product_template_attribute_value_ids if bom_id else False
@@ -203,7 +203,7 @@ class MrpBomLine(models.Model):
             self.selected_product_template_attribute_value_ids
         )
         if self and not self.product_id and not self.product_tmpl_id:
-            raise UserError(_('You need to specify a product_tmpl_id'))
+            raise UserError(_('You need to specify a product template'))
         return res
 
     def _skip_bom_line(self, product, never_attribute_values=False):
@@ -329,8 +329,9 @@ class MrpBomLine(models.Model):
                 .filtered(lambda v: v.product_attribute_value_id == bptav.product_attribute_value_id)
 
             if not pptav:
-                raise UserError(_("Missing attribute value for %(att_name)s on the component %(tmpl_name)s",
-                                    att_name=bptav.attribute_id.name,
+                raise UserError(_("The line with component \"%(tmpl_name)s\" selected is invalid. \
+                                    Either select your specific component using the product catalog,\
+                                    or refine your search via the product attribute column",
                                     tmpl_name=self.product_tmpl_id.name))
             ptav |= pptav
         return ptav, common_pa
@@ -345,10 +346,10 @@ class MrpBomLine(models.Model):
         for pa in compo_additional_pa:
             ptavs = ptavs_grouped_by_attribute.get(pa)
             if not ptavs:
-                raise UserError(_("Missing attribute value for %(pal)s on the component %(tmpl_name)s",
-                    pal=pa.name,
-                    tmpl_name=self.product_tmpl_id.name)
-                )
+                raise UserError(_("The line with component \"%(tmpl_name)s\" selected is invalid. \
+                    Either select your specific component using the product catalog,\
+                    or refine your search via the product attribute column",
+                    tmpl_name=self.product_tmpl_id.name))
             if len(ptavs) > 1:
                 raise UserError(_("Too many attribute values for %(pal)s on the component %(tmpl_name)s",
                                     pal=pa.name, tmpl_name=self.product_tmpl_id.name))
@@ -494,10 +495,10 @@ class MrpBomLine(models.Model):
         missing_pal = possible_ptavs.attribute_id\
             .filtered(lambda cpal: cpal not in bom_id.product_tmpl_id.attribute_line_ids.attribute_id and cpal not in selected_ptavs.attribute_id)
         if missing_pal:
-            raise UserError(_("Missing attribute value for %(pal_name)s on the component %(tmpl_name)s",
-                pal_name=missing_pal.name if len(missing_pal) == 1 else missing_pal[0].name,
-                tmpl_name=product_tmpl_id.name)
-            )
+            raise UserError(_("The line with component %(tmpl_name)s selected is invalid. \
+                    Either select your specific component using the product catalog,\
+                    or refine your search via the product attribute column",
+                    tmpl_name=product_tmpl_id.name))
 
     def _many_attribute_values_of_same_attribute_validity_check(self, product_tmpl_id, bom_id, possible_bom_ptavs, bom_ptavs, selected_ptavs):
         """
