@@ -70,7 +70,7 @@ registerWebsitePreviewTour('automatic_editor_on_new_website', {
     },
     {
         content: "validate the website creation modal",
-        trigger: 'button.btn-primary',
+        trigger: ".modal button.btn-primary:contains(create)",
         run: "click",
     },
     {
@@ -96,6 +96,7 @@ registerWebsitePreviewTour('automatic_editor_on_new_website', {
     },
     {
         trigger: ".o_menu_systray .o_user_menu",
+        timeout: 30000, //in localhost, it can takes a long time ...
     },
     {
         content: "Check that the homepage is loaded",

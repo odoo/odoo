@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryFirst } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
@@ -85,38 +86,48 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     return base_steps;
 };
 
-var addArticleToSection = function (sectionName, pageName, backend) {
-    const prefix = backend ? ':iframe ' : '';
-	return [
-{
-	content: 'eLearning: add content to section',
-	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
-    run: "click",
-}, {
-	content: 'eLearning: click on article',
-	trigger: prefix + 'a[data-slide-category=article]',
-    run: "click",
-}, {
-	content: 'eLearning: fill article title',
-	trigger: prefix + 'input[name=name]',
-	run: `edit ${pageName}`,
-}, {
-    content: 'eLearning: click on tags',
-    trigger: prefix + 'button.o_select_menu_toggler:last',
-    run: "click",
-}, {
-    content: 'eLearning: select Practice tag',
-    trigger: prefix + 'div.o_select_menu_item_label:contains("Practice")',
-    run: "click",
-}, {
-	content: 'eLearning: fill article completion time',
-	trigger: prefix + 'input[name=duration]',
-	run: "edit 4",
-}, {
-    content: 'eLearning: create and publish slide',
-    trigger: prefix + 'footer.modal-footer button:contains("Publish")',
-    run: "click",
-}];
+var addArticleToSection = function (sectionName, pageName) {
+    return [
+        {
+            content: "eLearning: add content to section",
+            trigger: `:iframe div.o_wslides_slide_list_category_header:contains(${sectionName}) a:contains(Add Content)`,
+            run: "click",
+        },
+        {
+            content: "eLearning: click on article",
+            trigger: ":iframe a[data-slide-category=article]",
+            run: "click",
+        },
+        {
+            content: "eLearning: fill article title",
+            trigger: ":iframe input[name=name]",
+            run: `fill ${pageName}`,
+        },
+        {
+            content: "eLearning: click on tags",
+            trigger: ":iframe button.o_select_menu_toggler:last",
+            run: "click",
+        },
+        {
+            content: "eLearning: select Practice tag",
+            trigger: ":iframe div.o_select_menu_item_label:contains(Practice)",
+            run: "click",
+        },
+        {
+            content: "eLearning: fill article completion time",
+            trigger: ":iframe input[name=duration]",
+            run: "fill 4",
+        },
+        {
+            content: "eLearning: create and publish slide",
+            trigger: ":iframe footer.modal-footer button:contains(Publish)",
+            run: "click",
+        },
+        {
+            content: "wait the modal is closed",
+            trigger: "body:not(:has(.modal))",
+        },
+    ];
 };
 
 const fillInFileInput = async (input, name, type, content) => {
@@ -138,67 +149,91 @@ const compareBase64Content = async (url, name, type, expectedContent) => {
 /**
  * Test the upload of an image file as a new content and especially the binary content of the uploaded image.
  */
-const addImageToSection = (sectionName, pageName, backend) => {
-    const prefix = backend ? ':iframe ' : '';
+function addImageToSection(sectionName) {
     return [
-{
-    content: 'eLearning: add content to section',
-    trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
-    run: "click",
-}, {
-    content: 'eLearning: click on image',
-    trigger: `${prefix}a[data-slide-category=infographic]`,
-    run: "click",
-}, {
-    content: 'eLearning: choose upload from device',
-    trigger: `${prefix}#source_type_local_file`,
-    run: "click",
-}, {
-    content: 'eLearning: load image',
-    trigger: 'body',
-    run: async () => {
-        const uploadInput = backend ?
-            document.getElementsByTagName('iframe')[0].contentWindow.document.getElementById('upload') :
-            document.getElementById('upload');
-        await fillInFileInput(uploadInput, 'Overview.png', 'image/png', testPngImage);
-    },
-}, {
-    content: 'eLearning: ensure that the preview is displayed which means that data is loaded and can be submitted',
-    trigger: `${prefix}#slide-image[src*="data:"]`,
-    run: "click",
-}, {
-    content: 'eLearning: create and publish slide',
-    trigger: `${prefix}footer.modal-footer button:contains("Publish")`,
-    run: "click",
-}, {
-    content: 'eLearning: launch content',
-    trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Overview")`,
-    run: "click",
-}, {
-    content: 'eLearning: check uploaded image presence and perform comparison',
-    trigger: prefix + '.o_wslides_fs_player img',
-    run: async () => {
-        const baseElement = backend ? document.querySelector('iframe').contentDocument : document;
-        const img = baseElement.querySelector('.o_wslides_fs_player img');
-        if (await compareBase64Content(img.getAttribute('src'), 'Overview.png', 'image/png', testPngImage)) {
-            img.classList.add('o_wslides_tour_img_upload_success');
-        }
-    }
-}, {
-    content: 'eLearning: check uploaded image content',
-    trigger: `${prefix}.o_wslides_fs_player img.o_wslides_tour_img_upload_success`,
-    run: "click",
-},
-{
-    content: 'eLearning: back to course',
-    trigger: `${prefix}.o_wslides_fs_sidebar_header a:contains("Déboulonnate")`,
-    run: "click",
-},
-{
-    content: 'eLearning: check course page',
-    trigger: `${prefix}.o_wslides_course_main`,
-}];
-};
+        {
+            content: "eLearning: add content to section",
+            trigger: `:iframe  div.o_wslides_slide_list_category_header:contains(${sectionName}) a:contains(Add Content)`,
+            run: "click",
+        },
+        {
+            content: "eLearning: click on image",
+            trigger: `:iframe a[data-slide-category=infographic]`,
+            run: "click",
+        },
+        {
+            content: "eLearning: choose upload from device",
+            trigger: `:iframe #source_type_local_file`,
+            run: "click",
+        },
+        {
+            content: "eLearning: load image",
+            trigger: ":iframe #upload",
+            async run() {
+                await fillInFileInput(this.anchor, "Overview.png", "image/png", testPngImage);
+            },
+        },
+        {
+            content:
+                "eLearning: ensure that the preview is displayed which means that data is loaded and can be submitted",
+            trigger: `:iframe #slide-image[src*="data:"]`,
+        },
+        {
+            content: "eLearning: create and publish slide",
+            trigger: `:iframe footer.modal-footer button:contains(Publish)`,
+            run: "click",
+        },
+        {
+            content: "eLearning: wait the modal is closed before click on the next step.",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            // We want to open overview in fullscreen previous mode.
+            // But sometimes, when we click on
+            // :iframe a.o_wslides_js_slides_list_slide_link:contains(Overview)
+            // fullscreen mode is open and sometimes not. => UNDETERMINISTIC
+            // To prevent this behavior, we can add step to select "Preview" before to click on the link
+            content: "Hover on overview to select 'preview'",
+            trigger:
+                ":iframe .o_wslides_js_slides_list_container li.o_wslides_slides_list_slide:contains(overview)",
+            run(helpers) {
+                helpers.hover();
+                const preview = queryFirst("a[aria-label=Preview]", { root: this.anchor });
+                helpers.click(preview);
+            },
+        },
+        {
+            content: "eLearning: launch content",
+            trigger: `:iframe a.o_wslides_js_slides_list_slide_link:contains(Overview)`,
+            run: "click",
+        },
+        {
+            content: "eLearning: check uploaded image presence and perform comparison",
+            trigger: ":iframe .o_wslides_fs_player img",
+            timeout: 20000,
+            async run() {
+                const check = await compareBase64Content(
+                    this.anchor.getAttribute("src"),
+                    "Overview.png",
+                    "image/png",
+                    testPngImage
+                );
+                if (!check) {
+                    console.error(`wslides tour image not uploaded with success`);
+                }
+            },
+        },
+        {
+            content: "eLearning: back to course",
+            trigger: `:iframe .o_wslides_fs_sidebar_header a:contains(Déboulonnate)`,
+            run: "click",
+        },
+        {
+            content: "eLearning: check course page",
+            trigger: `:iframe .o_wslides_course_main`,
+        },
+    ];
+}
 
 /**
  * Test the upload of a pdf file as a new content and especially the binary content of the uploaded pdf.
@@ -230,7 +265,6 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: ensure that the preview is displayed which means that data is loaded and can be submitted',
     trigger: `${prefix}#slide-image[src*="data:"]`,
-    run: "click",
 }, {
     content: 'eLearning: create and publish slide',
     trigger: `${prefix}footer.modal-footer button:contains("Publish")`,
@@ -255,7 +289,6 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: check uploaded pdf content',
     trigger: `${prefix}.o_wslides_fs_content.o_wslides_tour_pdf_upload_success`,
-    run: "click",
 }, {
     content: 'eLearning: back to course',
     trigger: `${prefix}.o_wslides_fs_sidebar_header a:contains("Déboulonnate")`,
@@ -288,7 +321,6 @@ var addExistingCourseTag = function (backend = false) {
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: prefix + 'body:not(.modal-open)',
-    run: "click",
 }];
 };
 
@@ -326,16 +358,15 @@ var addNewCourseTag = function (courseTagName, backend) {
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: prefix + 'body:not(.modal-open)',
-    run: "click",
 }];
 };
 
 export default {
-	addSection: addSection,
-	addImageToSection: addImageToSection,
-	addPdfToSection: addPdfToSection,
-	addVideoToSection: addVideoToSection,
-	addArticleToSection: addArticleToSection,
-	addExistingCourseTag: addExistingCourseTag,
-	addNewCourseTag: addNewCourseTag,
+    addSection,
+    addImageToSection,
+    addPdfToSection,
+    addVideoToSection,
+    addArticleToSection,
+    addExistingCourseTag,
+    addNewCourseTag,
 };

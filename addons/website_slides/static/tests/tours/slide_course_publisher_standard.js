@@ -104,7 +104,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     trigger: ':iframe .o_wslides_course_nav a:contains("Déboulonnate")',
     run: "click",
 }],
-    slidesTourTools.addImageToSection('Introduction', 'Overview', true),
+    slidesTourTools.addImageToSection("Introduction"),
     slidesTourTools.addPdfToSection('Introduction', 'Exercise', true),
 //     [
 // {
