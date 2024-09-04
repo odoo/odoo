@@ -208,7 +208,7 @@ class ResourceCalendar(models.Model):
             ]
 
             self.two_weeks_calendar = True
-            default_attendance = self.default_get('attendance_ids')['attendance_ids']
+            default_attendance = self.default_get(['attendance_ids'])['attendance_ids']
             for idx, att in enumerate(default_attendance):
                 att[2]["week_type"] = '0'
                 att[2]["sequence"] = idx + 1
@@ -220,7 +220,7 @@ class ResourceCalendar(models.Model):
         else:
             self.two_weeks_calendar = False
             self.attendance_ids.unlink()
-            self.attendance_ids = self.default_get('attendance_ids')['attendance_ids']
+            self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):
