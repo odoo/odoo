@@ -22,6 +22,8 @@ export class EventScanView extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.pwaService = useService("pwa");
+        this.home = useService("home_menu");
 
         const { default_event_id, active_model, active_id } = this.props.action.context;
         this.eventId = default_event_id || (active_model === "event.event" && active_id);
@@ -127,16 +129,6 @@ export class EventScanView extends Component {
                     search_default_confirmed: true,
                 },
             });
-        }
-    }
-
-    onClickBackToEvents() {
-        if (this.isMultiEvent) {
-            // define action from scratch instead of using existing 'action_event_view' to avoid
-            // messing with menu bar
-            this.actionService.doAction("event.action_event_view", { clearBreadcrumbs: true });
-        } else {
-            this.actionService.restore();
         }
     }
 }

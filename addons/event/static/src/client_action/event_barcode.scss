@@ -24,6 +24,33 @@
         max-width: 200px;
         max-height: 100px;
     }
+    .o_barcode_mobile_container {
+        transform: scale(2.5);
+        margin-top: 75px;
+        margin-bottom: 20px;
+
+        img {
+            height: 70px;
+        }
+
+        .o_mobile_barcode{
+            opacity: 0;
+            height: 70px;
+        }
+        .o_barcode_laser{
+            height: 2px;
+        }
+    }
+    @media (max-width: 750px) {
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+    }
+
     @include media-breakpoint-up(md) {
         flex: 0 0 auto;
         width: 550px;
@@ -32,12 +59,25 @@
         -moz-border-radius: 10px;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
         font-size: 1.2em;
-        padding: 3em;
+        padding-top: 0;
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-bottom: 0.75em;
     }
 }
 .o_notification_manager {
     .o_event_success {
         color: white;
         background-color: #5BC236;
+    }
+}
+
+.register_attendee{
+    justify-content: center;
+    margin-left: 40px;
+}
+@media (max-width: 750px) {
+    .register_attendee{
+        margin-left: 0px;
     }
 }
