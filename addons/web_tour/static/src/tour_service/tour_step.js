@@ -1,6 +1,7 @@
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
 import * as hoot from "@odoo/hoot-dom";
+import { pick } from "@web/core/utils/objects";
 
 /**
  * @typedef TourStep
@@ -12,15 +13,11 @@ import * as hoot from "@odoo/hoot-dom";
  * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
- * @property {string} [title]
  */
 export class TourStep {
     constructor(data, tour) {
         Object.assign(this, data);
         this.tour = tour;
-        if (!this.tour) {
-            throw new Error(`TourStep instance must have a tour`);
-        }
     }
 
     /**
@@ -29,6 +26,7 @@ export class TourStep {
      * When a step is not active, it's just skipped and the tour continues to the next step.
      */
     get active() {
+        this.checkHasTour();
         const mode = this.tour.mode;
         const isSmall = utils.isSmall();
         const standardKeyWords = ["enterprise", "community", "mobile", "desktop", "auto", "manual"];
@@ -63,10 +61,33 @@ export class TourStep {
         return checkEdition && checkDevice && checkMode;
     }
 
+    checkHasTour() {
+        if (!this.tour) {
+            throw new Error(`TourStep instance must have a tour`);
+        }
+    }
+
     get describeMe() {
+        this.checkHasTour();
         return (
             `[${this.index + 1}/${this.tour.steps.length}] Tour ${this.tour.name} → Step ` +
             (this.content ? `${this.content} (trigger: ${this.trigger})` : this.trigger)
+        );
+    }
+
+    get stringify() {
+        return (
+            JSON.stringify(
+                pick(this, "isActive", "content", "trigger", "run", "tooltipPosition", "timeout"),
+                (_key, value) => {
+                    if (typeof value === "function") {
+                        return "[function]";
+                    } else {
+                        return value;
+                    }
+                },
+                2
+            ) + ","
         );
     }
 }
