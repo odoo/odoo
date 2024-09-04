@@ -164,6 +164,7 @@ test("press 'ctrl+a' in 'contenteditable' should only select his content", async
 test("restore a selection when you are not in the editable shouldn't move the focus", async () => {
     class TestInput extends Component {
         static template = xml`<input t-ref="input" t-att-value="'eee'" class="test"/>`;
+        static props = ["*"];
 
         setup() {
             useAutofocus({ refName: "input" });
