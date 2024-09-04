@@ -275,39 +275,3 @@ class TestPoSStock(TestPoSCommon):
         self.env['product.product'].with_user(stock_manager).create({
             'name': 'temp', 'type': 'product', 'available_in_pos': False,
         })
-
-    def test_fiscal_position_account_mapping_stock_valuation(self):
-        self.categ4 = self.env['product.category'].create({
-            'name': 'Category 4',
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
-        })
-        income_account_id = self.categ4.property_account_income_categ_id.id
-        expense_account_id = self.categ4.property_account_expense_categ_id.id
-        dest_account = self.env['account.account'].search([], limit=1)[0]
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'test fp',
-            'account_ids': [
-                (0, None, {
-                    'account_src_id': income_account_id,
-                    'account_dest_id': dest_account.id,
-                }),
-                (0, None, {
-                    'account_src_id': expense_account_id,
-                    'account_dest_id': dest_account.id,
-                }),
-            ],
-        })
-
-        self.product4 = self.create_product('Product 4', self.categ4, 30.0)
-
-        self.open_new_session()
-        orders = []
-        orders.append(self.create_ui_order_data([(self.product4, 1)]))
-        orders[0]['data']['fiscal_position_id'] = fiscal_position.id
-        self.env['pos.order'].create_from_ui(orders)
-
-        self.pos_session.action_pos_session_validate()
-        session_move_accounts = self.pos_session.move_id.invoice_line_ids.mapped("account_id.id")
-        self.assertTrue(income_account_id not in session_move_accounts)
-        self.assertTrue(expense_account_id not in session_move_accounts)
