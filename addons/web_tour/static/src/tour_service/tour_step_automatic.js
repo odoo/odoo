@@ -6,7 +6,6 @@ import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { callWithUnloadCheck } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
-import { pick } from "@web/core/utils/objects";
 
 export class TourStepAutomatic extends TourStep {
     triggerFound = false;
@@ -47,7 +46,11 @@ export class TourStepAutomatic extends TourStep {
             },
             {
                 action: async () => {
-                    console.log(this.describeMe);
+                    console.groupCollapsed(this.describeMe);
+                    if (debugMode !== false) {
+                        console.log(this.stringify);
+                    }
+                    console.groupEnd();
                     this._timeout = browser.setTimeout(
                         () => this.throwError(),
                         (this.timeout || 10000) + this.tour.stepDelay
@@ -152,26 +155,7 @@ export class TourStepAutomatic extends TourStep {
         const end = Math.min(this.index + offset, this.tour.steps.length - 1);
         const result = [];
         for (let i = start; i <= end; i++) {
-            const stepString =
-                JSON.stringify(
-                    pick(
-                        this.tour.steps[i],
-                        "isActive",
-                        "content",
-                        "trigger",
-                        "run",
-                        "tooltipPosition",
-                        "timeout"
-                    ),
-                    (_key, value) => {
-                        if (typeof value === "function") {
-                            return "[function]";
-                        } else {
-                            return value;
-                        }
-                    },
-                    2
-                ) + ",";
+            const stepString = new TourStep(this.tour.steps[i]).stringify;
             const text = [stepString];
             if (i === this.index) {
                 const line = "-".repeat(10);
@@ -208,11 +192,7 @@ export class TourStepAutomatic extends TourStep {
         tourState.set(this.tour.name, "stepState", "errored");
         const debugMode = tourState.get(this.tour.name, "debug");
         // console.error notifies the test runner that the tour failed.
-        const errors = [
-            `FAILED: ${this.describeMe}.`,
-            this.describeWhyIFailed,
-            error,
-        ]
+        const errors = [`FAILED: ${this.describeMe}.`, this.describeWhyIFailed, error];
         console.error(errors.filter(Boolean).join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.

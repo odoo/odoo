@@ -3,7 +3,6 @@
 import { EventBus, markup, whenReady, reactive, validate } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { MacroEngine } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
@@ -127,7 +126,6 @@ export const tourService = {
         });
 
         const bus = new EventBus();
-        const macroEngine = new MacroEngine({ target: document });
 
         const pointers = reactive({});
         /** @type {Set<string>} */
@@ -265,7 +263,7 @@ export const tourService = {
 
             if (!willUnload) {
                 if (options.mode === "auto") {
-                    new TourAutomatic(tour, macroEngine).start(pointer, () => {
+                    new TourAutomatic(tour).start(pointer, () => {
                         pointer.stop();
                         endTour(tour);
                     });
@@ -292,7 +290,7 @@ export const tourService = {
                 bounce: !(mode === "auto" && keepWatchBrowser),
             });
             if (mode === "auto") {
-                new TourAutomatic(tour, macroEngine).start(pointer, () => {
+                new TourAutomatic(tour).start(pointer, () => {
                     pointer.stop();
                     endTour(tour);
                 });
