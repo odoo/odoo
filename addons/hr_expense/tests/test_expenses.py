@@ -1473,3 +1473,28 @@ class TestExpenses(TestExpenseCommon):
         tax_lines = moves.line_ids.filtered(lambda line: line.tax_line_id == caba_tax)
         self.assertNotEqual(tax_lines.account_id, caba_transition_account, "The tax should not be on the transition account")
         self.assertEqual(tax_lines.tax_tag_ids, caba_tag, "The tax should still retrieve its tags")
+
+    def test_expense_set_total_amount_to_0(self):
+        """Checks that amount fields are correctly updating when setting total_amount to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount': 100.0,
+            'tax_ids': self.tax_purchase_a.ids,
+        })
+        expense.total_amount = 0.0
+        self.assertTrue(expense.currency_id.is_zero(expense.amount_tax))
+        self.assertTrue(expense.company_currency_id.is_zero(expense.total_amount_company))
+
+    def test_expense_set_quantity_to_0(self):
+        """Checks that amount fields except for unit_amount are correctly updating when setting quantity to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_b.id,
+            'quantity': 10
+        })
+        expense.quantity = 0
+        self.assertTrue(expense.currency_id.is_zero(expense.total_amount))
+        self.assertEqual(expense.company_currency_id.compare_amounts(expense.unit_amount, self.product_b.standard_price), 0)
