@@ -108,7 +108,11 @@ const dispatchEventSequence = (target, eventSequence, eventInit) => {
         if (!eventType) {
             continue;
         }
-        const event = dispatch(target, eventType, eventInit);
+        // "touch" events all trigger on the same target as "touchstart"
+        // (i.e. currentPointerDownTarget)
+        const eventTarget =
+            (eventType.startsWith("touch") && runTime.currentPointerDownTarget) || target;
+        const event = dispatch(eventTarget, eventType, eventInit);
         if (isPrevented(event)) {
             return true;
         }
