@@ -282,7 +282,7 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
         var event = $.Event("keydown", keypress);
         $target.trigger(event);
 
-        if (!event.isDefaultPrevented()) {
+        if (!event.defaultPrevented) {
             if (keypress.key.length === 1) {
                 textInput($target[0], keypress.key);
             } else {
@@ -555,7 +555,7 @@ var keydown = function (key, $editable, options) {
     var event = $.Event("keydown", keyPress);
     $target.trigger(event);
 
-    if (!event.isDefaultPrevented()) {
+    if (!event.defaultPrevented) {
         if (keyPress.key.length === 1) {
             textInput($target[0], keyPress.key);
         } else {
