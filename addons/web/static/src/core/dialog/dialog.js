@@ -54,6 +54,7 @@ export class Dialog extends Component {
             },
         },
         withBodyPadding: { type: Boolean, optional: true },
+        onExpand: { type: Function, optional: true },
     };
     static defaultProps = {
         contentClass: "",

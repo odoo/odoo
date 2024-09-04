@@ -7,6 +7,8 @@ import {
     mountWithCleanup,
     mountViewInDialog,
     onRpc,
+    mockService,
+    fieldInput,
 } from "@web/../tests/web_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
@@ -381,4 +383,112 @@ test("Save a FormViewDialog when a required field is empty don't close the dialo
     click('.modal button[name="save"]');
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "modal should be closed" });
+});
+
+test.tags("desktop")("new record has an expand button", async () => {
+    Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
+    Partner._records = [];
+    onRpc("web_save", async () => {
+        expect.step("save");
+    });
+    mockService("action", {
+        doAction(actionRequest) {
+            expect.step([
+                actionRequest.res_id,
+                actionRequest.res_model,
+                actionRequest.type,
+                actionRequest.views,
+            ]);
+        },
+    });
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+    });
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
+    await fieldInput("foo").edit("new");
+    click(".o_dialog .modal-header .o_expand_button");
+    await animationFrame();
+    expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
+});
+
+test.tags("desktop")("existing record has an expand button", async () => {
+    Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
+    onRpc("web_save", async () => {
+        expect.step("save");
+    });
+    mockService("action", {
+        doAction(actionRequest) {
+            expect.step([
+                actionRequest.res_id,
+                actionRequest.res_model,
+                actionRequest.type,
+                actionRequest.views,
+            ]);
+        },
+    });
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+    });
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
+    await fieldInput("foo").edit("hola");
+    click(".o_dialog .modal-header .o_expand_button");
+    await animationFrame();
+    expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
+});
+
+test.tags("mobile")("no expand button on mobile", async () => {
+    Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+    });
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
+});
+
+test.tags("desktop")("expand button with save and new", async () => {
+    Instrument._views["form,false"] = /* xml */ `<form><field name="name"/></form>`;
+    Instrument._records = [{ id: 1, name: "Violon" }];
+    onRpc("web_save", async () => {
+        expect.step("save");
+    });
+    mockService("action", {
+        doAction(actionRequest) {
+            expect.step([
+                actionRequest.res_id,
+                actionRequest.res_model,
+                actionRequest.type,
+                actionRequest.views,
+            ]);
+        },
+    });
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "instrument",
+        resId: 1,
+        isToMany: true,
+    });
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
+    await fieldInput("name").edit("Violoncelle");
+    click(".o_dialog .modal-footer .o_form_button_save_new");
+    await animationFrame();
+    await fieldInput("name").edit("Flute");
+    click(".o_dialog .modal-header .o_expand_button");
+    await animationFrame();
+    expect.verifySteps([
+        "save",
+        "save",
+        [2, "instrument", "ir.actions.act_window", [[false, "form"]]],
+    ]);
 });

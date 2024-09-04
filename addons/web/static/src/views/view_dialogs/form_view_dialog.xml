@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.FormViewDialog">
-    <Dialog size="props.size" title="props.title" withBodyPadding="false" modalRef="modalRef">
+    <Dialog size="props.size" title="props.title" withBodyPadding="false" modalRef="modalRef" onExpand.bind="onExpand">
       <View t-props="viewProps"/>
       <t t-set-slot="footer">
         <t t-if="props.preventEdit and props.preventCreate">

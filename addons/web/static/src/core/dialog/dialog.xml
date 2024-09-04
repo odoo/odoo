@@ -14,6 +14,7 @@
                             <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
                                 <t t-call="web.Dialog.header">
                                     <t t-set="fullscreen" t-value="isFullscreen"/>
+                                    <t t-set="onExpand" t-value="props.onExpand"/>
                                 </t>
                             </t>
                         </header>
@@ -37,9 +38,12 @@
         <t t-if="fullscreen">
             <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="dismiss" />
         </t>
-        <h4 class="modal-title text-break" t-att-class="{ 'me-auto': fullscreen }">
+        <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen }">
             <t t-esc="props.title"/>
         </h4>
+        <t t-if="!isFullscreen and onExpand">
+            <button type="button" class="fa fa-expand btn o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
+        </t>
         <t t-if="!fullscreen">
             <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
         </t>

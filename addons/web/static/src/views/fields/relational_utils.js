@@ -539,6 +539,7 @@ export class X2ManyFieldDialog extends Component {
         config: Object,
     };
     setup() {
+        this.actionService = useService("action");
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
         this.title = this.props.title;
@@ -593,6 +594,27 @@ export class X2ManyFieldDialog extends Component {
                 () => [this.record.isInEdition]
             );
         }
+    }
+
+    get dialogProps() {
+        const props = {
+            title: this.title,
+            withBodyPadding: false,
+            modalRef: this.modalRef,
+            contentClass: this.contentClass,
+        };
+        if (!this.record.isNew) {
+            props.onExpand = async () => {
+                await this.save({ saveAndNew: false });
+                this.actionService.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: this.props.record.resModel,
+                    res_id: this.props.record.resId,
+                    views: [[false, "form"]],
+                });
+            };
+        }
+        return props;
     }
 
     async beforeExecuteActionButton(clickParams) {
