@@ -164,7 +164,7 @@ class ImBus(models.Model):
             domain.append(("id", "not in", ignore_ids))
         channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
         domain.append(('channel', 'in', channels))
-        notifications = self.sudo().search_read(domain)
+        notifications = self.sudo().search_read(domain, ["message"])
         # list of notification to return
         result = []
         for notif in notifications:

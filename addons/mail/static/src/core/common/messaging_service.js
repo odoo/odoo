@@ -23,7 +23,13 @@ export class Messaging {
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.isReady = new Deferred();
-        this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
+        if (user.partnerId) {
+            this.store.Persona.insert({
+                id: user.partnerId,
+                type: "partner",
+                isAdmin: user.isAdmin,
+            });
+        }
         this.store.discuss.inbox = {
             id: "inbox",
             model: "mail.box",

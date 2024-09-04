@@ -9,6 +9,8 @@ import { patch } from "@web/core/utils/patch";
 import { makeMockXHR, mocks, patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
+import { imStatusService } from "@bus/im_status_service";
+import { imStatusServicePatch } from "@mail/core/common/im_status_service_patch";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -81,6 +83,8 @@ function getCreateXHR() {
     };
 }
 
+let imStatusServicePatched = false;
+
 export const setupManager = {
     /**
      * Add required components to the main component registry.
@@ -113,6 +117,10 @@ export const setupManager = {
      * to the webClient as a legacy parameter.
      */
     setupServiceRegistries({ services = {} } = {}) {
+        if (!imStatusServicePatched) {
+            patch(imStatusService, imStatusServicePatch);
+            imStatusServicePatched = true;
+        }
         const OriginalAudio = window.Audio;
         patchWithCleanup(window, {
             Audio: function () {

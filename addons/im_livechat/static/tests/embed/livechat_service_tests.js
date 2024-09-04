@@ -61,9 +61,15 @@ QUnit.test("Only necessary requests are made when creating a new chat", async (a
     await startServer();
     await loadDefaultConfig();
     const linkPreviewDeferred = new Deferred();
+    // Ignore set_last_seen_message: the "/discuss/channels" route is called
+    // because discuss_core_common_service_patch is loaded in the qunit bundle.
+    // This can cause a race condition: seen message id of the user is set when
+    // the message is posted, but the server might not be aware of it when
+    // computing the result of the "/discuss/channel" route.
+    const excludedRoutes = ["/discuss/channels", "/discuss/channel/set_last_seen_message"];
     await start({
         mockRPC(route) {
-            if (!route.includes("assets")) {
+            if (!route.includes("assets") && !excludedRoutes.includes(route)) {
                 assert.step(route);
             }
             if (route === "/mail/link_preview") {

@@ -255,9 +255,11 @@ class Websocket:
     # How many seconds between each request.
     RL_DELAY = float(config['websocket_rate_limit_delay'])
 
-    def __init__(self, sock, session):
+    def __init__(self, sock, session, cookies):
         # Session linked to the current websocket connection.
         self._session = session
+        # Cookies linked to the current websocket connection.
+        self._cookies = cookies
         self._db = session.db
         self.__socket = sock
         self._close_sent = False
@@ -577,6 +579,9 @@ class Websocket:
         self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
+        with acquire_cursor(self._db) as cr:
+            env = api.Environment(cr, self._session.uid, self._session.context)
+            env["ir.websocket"]._on_websocket_closed(self._cookies)
 
     def _handle_control_frame(self, frame):
         if frame.opcode is Opcode.PING:
@@ -874,7 +879,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "17.0-1"
+    _VERSION = "17.1-1"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -898,7 +903,7 @@ class WebsocketConnectionHandler:
             socket = request.httprequest._HTTPRequest__environ['socket']
             session, db, httprequest = (public_session or request.session), request.db, request.httprequest
             response.call_on_close(lambda: cls._serve_forever(
-                Websocket(socket, session),
+                Websocket(socket, session, httprequest.cookies),
                 db,
                 httprequest,
                 version
