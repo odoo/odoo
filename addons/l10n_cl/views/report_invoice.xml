@@ -162,7 +162,7 @@
             <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
         </xpath>
 
-        <th name="th_priceunit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
+        <th name="th_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
             <th name="th_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                 <span>Disc.</span>
             </th>
