@@ -69,10 +69,8 @@ class TestStructure(TransactionCase):
         test_partner.write({'vat': 'BE0477472701', 'country_id': None})
 
         with self.assertRaises(ValidationError):
-            test_partner.write({'vat': 'BE42', 'country_id': self.env.ref('base.fr').id})
-
-        with self.assertRaises(ValidationError):
-            test_partner.write({'vat': 'BE42', 'country_id': None})
+            # A French VAT with a BE prefix that is not a valid BE number should raise
+            test_partner.write({'vat': 'BE23334175221', 'country_id': self.env.ref('base.fr').id})
 
         # No country code in VAT: use the partner's country
         test_partner.write({'vat': '0477472701', 'country_id': self.env.ref('base.be').id})
@@ -80,9 +78,11 @@ class TestStructure(TransactionCase):
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': '42', 'country_id': self.env.ref('base.be').id})
 
-        # If no country can be guessed: VAT number should always be considered valid
-        # (for technical reasons due to ORM and res.company making related fields towards res.partner for country_id and vat)
+        # If no country set on the partner: VAT number should always be considered valid
+        test_partner.write({'vat': 'BE42', 'country_id': None})  # Invalid in BE
         test_partner.write({'vat': '0477472701', 'country_id': None})
+        test_partner.write({'vat': 'BE0477472701', 'country_id': None})  # Even with BE prefix, it should not be checked
+        test_partner.write({'vat': 'BE0477472702', 'country_id': None})  # also invalid in BE
 
     def test_vat_eu(self):
         """ Foreign companies that trade with non-enterprises in the EU may have a VATIN starting with "EU" instead of
@@ -120,8 +120,11 @@ class TestStructure(TransactionCase):
         test_partner.write({"vat": "215521750017"})
         test_partner.write({"vat": "220018800014"})
         test_partner.write({"vat": "21-55217500-17"})
+        self.assertEqual(test_partner.vat, '215521750017')
         test_partner.write({"vat": "21 55217500 17"})
+        self.assertEqual(test_partner.vat, '215521750017')
         test_partner.write({"vat": "UY215521750017"})
+        self.assertEqual(test_partner.vat, '215521750017')
 
         # Test invalid VAT (should raise a ValidationError)
         msg = "The VAT number.*does not seem to be valid"
@@ -131,6 +134,41 @@ class TestStructure(TransactionCase):
             test_partner.vat = "21.55217500.17"
         with self.assertRaisesRegex(ValidationError, msg):
             test_partner.vat = "2155 ABC 21750017"
+
+    def test_company_changes(self):
+        ro_country = self.env.ref('base.ro').id
+        test_partner_1 = self.env['res.company'].create({'name': 'Roman', 'country_id': self.env.ref('base.es').id})
+        test_partner_2 = self.env['res.company'].create({'name': 'Roman2', 'country_id': ro_country, 'vat': '1234567897'})
+        companies = test_partner_1 + test_partner_2
+        companies.write({'country_id': ro_country})
+
+    def test_cl_hyphen(self):
+        cl_country = self.env.ref('base.cl').id
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': cl_country, 'vat': 'CL 760864285'})
+        self.assertEqual(test_partner_1.vat, '76086428-5')
+
+    def test_co_hyphen(self):
+        co_country = self.env.ref('base.co').id
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': co_country, 'vat': '213.123.4321'})
+        self.assertEqual(test_partner_1.vat, '213123432-1')
+
+    def test_xi_works(self):
+        uk_country = self.env.ref('base.uk').id
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': uk_country, 'vat': 'XI123456782'})
+        self.assertEqual(test_partner_1.vat, 'XI123456782')
+
+    def test_gr_changes(self):
+        """ As GR is not associated to another country, it can change magically to EL"""
+        gr_country = self.env.ref('base.gr').id
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': gr_country, 'vat': 'GR123456783'})
+        self.assertEqual(test_partner_1.vat, 'EL123456783')
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': gr_country, 'vat': 'EL123456783'})
+        self.assertEqual(test_partner_1.vat, 'EL123456783')
+
+    def test_weird_roro_input(self):
+        be_country = self.env.ref('base.be').id
+        with self.assertRaises(ValidationError):
+            self.env['res.partner'].create({'name': 'Roman', 'country_id': be_country, 'vat': 'RORORORO1234567897'})
 
 
 @tagged('-standard', 'external')

@@ -44,7 +44,7 @@ class TestFiscalPosition(common.TransactionCase):
                                            country_id=fr.id))
         cls.alberto = cls.res_partner.create(dict(
                                            name="Alberto",
-                                           vat="BE0477472701",
+                                           vat="ZUÑ920208KL4",
                                            country_id=mx.id))
         cls.be_nat = cls.fp.create(dict(
                                          name="BE-NAT",
@@ -335,6 +335,15 @@ class TestFiscalPosition(common.TransactionCase):
             'zip_from': '123',
             'zip_to': '456',
         }])
+
+    def test_fiscal_position_different_vat_country(self):
+        """ If the country is European, we need to be able to put the VAT of another country through the prefix"""
+        fiscal_position = self.fp.create({
+            'name': 'Special Delivery Case',
+            'country_id': self.env.ref('base.fr').id,
+            'foreign_vat': 'BE0477472701',
+        })
+        self.assertEqual(fiscal_position.foreign_vat, 'BE0477472701')
 
     def test_get_first_fiscal_position(self):
         fiscal_positions = self.fp.create([{
