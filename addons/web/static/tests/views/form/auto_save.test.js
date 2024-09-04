@@ -18,12 +18,16 @@ import {
 
 import { WebClient } from "@web/webclient/webclient";
 
-const hideTab = () => {
+const hideTab = async () => {
+    const prop = Object.getOwnPropertyDescriptor(Document.prototype, "visibilityState")
     Object.defineProperty(document, "visibilityState", {
         value: "hidden",
+        configurable: true,
+        writable: true,
     });
     document.dispatchEvent(new Event("visibilitychange"));
-    return tick();
+    await tick();
+    Object.defineProperty(document, "visibilityState", prop);
 };
 
 onRpc("has_group", () => true);
