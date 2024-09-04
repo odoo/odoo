@@ -344,18 +344,25 @@ export class MailMessage extends models.ServerModel {
     /**
      * @param {number} id
      * @param {string} content
+     * @param {number} partner_id
+     * @param {number} guest_id
      * @param {string} action
+     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
      */
-    _message_reaction(id, content, action) {
-        ({ id, content, action } = getKwArgs(arguments, "id", "content", "action"));
+    _message_reaction(id, content, partner_id, guest_id, action, store) {
+        ({ id, content, partner_id, guest_id, action, store } = getKwArgs(
+            arguments,
+            "id",
+            "content",
+            "partner_id",
+            "guest_id",
+            "action",
+            "store"
+        ));
 
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").MailMessageReaction} */
         const MailMessageReaction = this.env["mail.message.reaction"];
 
-        const partner_id = this.env.user?.partner_id ?? false;
-        const guest_id = this.env.cookie.get("dgid") ?? false;
         const [reaction] = MailMessageReaction.search_read([
             ["content", "=", content],
             ["message_id", "=", id],
@@ -373,6 +380,26 @@ export class MailMessage extends models.ServerModel {
         if (action === "remove" && reaction) {
             MailMessageReaction.unlink(reaction.id);
         }
+        this._reaction_group_to_store(id, store, content);
+        this._bus_send_reaction_group(id, content);
+    }
+
+    _bus_send_reaction_group(id, content) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        const store = new mailDataHelpers.Store();
+        this._reaction_group_to_store(id, store, content);
+        BusBus._sendone(
+            this._bus_notification_target(id),
+            "mail.record/insert",
+            store.get_result()
+        );
+    }
+
+    _reaction_group_to_store(id, store, content) {
+        /** @type {import("mock_models").MailMessageReaction} */
+        const MailMessageReaction = this.env["mail.message.reaction"];
+
         const reactions = MailMessageReaction.search([
             ["message_id", "=", id],
             ["content", "=", content],
@@ -384,13 +411,7 @@ export class MailMessage extends models.ServerModel {
         if (reactions.length === 0) {
             reaction_group = [["DELETE", { message: this.browse(id), content: content }]];
         }
-        BusBus._sendone(
-            this._bus_notification_target(id),
-            "mail.record/insert",
-            new mailDataHelpers.Store(this.browse(id), {
-                reactions: reaction_group,
-            }).get_result()
-        );
+        store.add(this.browse(id), { reactions: reaction_group });
     }
 
     /**

@@ -628,14 +628,17 @@ export async function mail_message_post(request) {
     ).get_result();
 }
 
-registerRoute("/mail/message/reaction", mail_message_add_reaction);
+registerRoute("/mail/message/reaction", mail_message_reaction);
 /** @type {RouteCallback} */
-async function mail_message_add_reaction(request) {
+async function mail_message_reaction(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
-
     const { action, content, message_id } = await parseRequestParams(request);
-    return MailMessage._message_reaction(message_id, content, action);
+    const partner_id = this.env.user?.partner_id ?? false;
+    const guest_id = this.env.cookie.get("dgid") ?? false;
+    const store = new mailDataHelpers.Store();
+    MailMessage._message_reaction(message_id, content, partner_id, guest_id, action, store);
+    return store.get_result();
 }
 
 registerRoute("/mail/message/translate", translate);

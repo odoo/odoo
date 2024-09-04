@@ -418,14 +418,16 @@ export class Message extends Record {
     }
 
     async react(content) {
-        await rpc(
-            "/mail/message/reaction",
-            {
-                action: "add",
-                content,
-                message_id: this.id,
-            },
-            { silent: true }
+        this.store.insert(
+            await rpc(
+                "/mail/message/reaction",
+                {
+                    action: "add",
+                    content,
+                    message_id: this.id,
+                },
+                { silent: true }
+            )
         );
     }
 
