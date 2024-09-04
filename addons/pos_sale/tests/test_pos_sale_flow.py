@@ -469,7 +469,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
               'sale_order_origin_id': sale_order.id,
               'qty': 1,
               'tax_ids': []}]],
-           'name': 'Order 00044-003-0014',
            'session_id': current_session.id,
            'sequence_number': self.main_pos_config.journal_id.id,
            'payment_ids': [[0,

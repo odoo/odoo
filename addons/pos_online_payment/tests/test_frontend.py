@@ -177,12 +177,12 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         # Simulate a cashier saving an unpaid order on the server
         product = self.letter_tray
         order_uid = '00055-001-0001'
-        order_pos_reference = 'Order ' + order_uid
+        order_name = 'Order ' + order_uid
 
         untax, atax = self.compute_tax(product, product.list_price)
         order_data = {
             'uuid': order_uid,
-            'name': order_pos_reference,
+            'name': order_name,
             'session_id': current_session.id,
             'sequence_number': 1,
             'user_id': self.pos_user.id,
@@ -210,7 +210,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
         create_result = self.env['pos.order'].with_user(self.pos_user).sync_from_ui([order_data])
         self.assertEqual(len(current_session.order_ids), 1)
-        order_id = next(result_order_data for result_order_data in create_result['pos.order'] if result_order_data['name'] == order_pos_reference)['id']
+        order_id = next(result_order_data for result_order_data in create_result['pos.order'] if result_order_data['name'] == order_name)['id']
 
         order = self.env['pos.order'].search([('id', '=', order_id)])
         self.assertEqual(order.state, 'draft')

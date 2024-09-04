@@ -331,16 +331,16 @@ class PosSession(models.Model):
         sessions.action_pos_session_open()
 
         date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': self.env.company.id,
-            })
+        # ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
+        # if not ir_sequence:
+        #     self.env['ir.sequence'].sudo().create({
+        #         'name': _("PoS Order"),
+        #         'padding': 0,
+        #         'code': f'pos.order_{date_string}',
+        #         'number_next': 1,
+        #         'number_increment': 1,
+        #         'company_id': self.env.company.id,
+        #     })
 
         return sessions
 
@@ -1805,7 +1805,7 @@ class PosSession(models.Model):
             invoice = {
                 'total': order.account_move.amount_total,
                 'name': order.account_move.name,
-                'order_ref': order.pos_reference,
+                'order_ref': order.name,
             }
             invoice_list.append(invoice)
 

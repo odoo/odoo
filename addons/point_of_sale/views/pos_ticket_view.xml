@@ -15,7 +15,7 @@
                             <hr class="mt-1 mb-0"/>
                         </div>
                         <div class="row">
-                            <h4 class="mt-2"><t t-out="pos_order.pos_reference"/></h4>
+                            <h4 class="mt-2"><t t-out="pos_order.name"/></h4>
                         </div>
                         <div class="row">
                             <div class="col-12 fw-bold">
@@ -152,10 +152,10 @@
                                 <div class="col-lg-12">
                                     <div class="row">
                                         <div t-attf-class="col-12 mb-6 col-xl-8">
-                                            <label class="col-form-label" for="pos_reference">Ticket Nr</label>
-                                            <input type="text" name="pos_reference" placeholder="00014-001-0001"
-                                                   t-attf-class="form-control #{errors.get('pos_reference') and 'is-invalid' or ''}"
-                                                   t-att-value="form_values.get('pos_reference')"/>
+                                            <label class="col-form-label" for="name">Ticket Nr</label>
+                                            <input type="text" name="name" placeholder="00014-001-0001"
+                                                   t-attf-class="form-control #{errors.get('name') and 'is-invalid' or ''}"
+                                                   t-att-value="form_values.get('name')"/>
                                             <label class="col-form-label" for="date_order">Date</label>
                                             <input type="date" name="date_order"
                                                    t-attf-class="form-control #{errors.get('date_order') and 'is-invalid' or ''}"

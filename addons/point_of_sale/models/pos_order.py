@@ -265,7 +265,8 @@ class PosOrder(models.Model):
         price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
         return price_unit
 
-    name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
+    # TODO: figure out if we should store this
+    name = fields.Char(string='Order Ref', compute='_compute_name', default="/", store=True)
     last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
@@ -288,7 +289,6 @@ class PosOrder(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
-
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
         domain="[('state', '=', 'opened')]")
@@ -310,7 +310,6 @@ class PosOrder(models.Model):
 
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
-    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
@@ -336,15 +335,26 @@ class PosOrder(models.Model):
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
 
+    @api.depends('date_order', 'config_id')
+    def _compute_name(self):
+        for order in self:
+            # TODO: optimize this
+            order_is_nth_order_in_the_config_in_that_year = self.search_count([
+                ('date_order', '>=', datetime(order.date_order.year, 1, 1)),
+                ('date_order', '<=', order.date_order),
+                ('config_id', '=', order.config_id.id)
+            ])
+            order.name = f"{str(order.date_order.year)[2:]}-{order.config_id.id}-{order_is_nth_order_in_the_config_in_that_year}"
+
     def _search_tracking_number(self, operator, value):
-        #search is made over the pos_reference field
-        #The pos_reference field is like 'Order 00001-001-0001'
+        # search is made over the name field
+        # The name field is like 'Order 00001-001-0001'
         if operator in ['ilike', '='] and isinstance(value, str):
             if value[0] == '%' and value[-1] == '%':
                 value = value[1:-1]
             value = value.zfill(3)
             search = '% ____' + value[0] + '-___-__' + value[1:]
-            return [('pos_reference', operator, search or '')]
+            return [('name', operator, search or '')]
         else:
             raise NotImplementedError(_("Unsupported search operation"))
 
@@ -484,8 +494,6 @@ class PosOrder(models.Model):
 
     @api.model
     def _complete_values_from_session(self, session, values):
-        if values.get('state') and values['state'] == 'paid' and not values.get('name'):
-            values['name'] = self._compute_order_name()
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
@@ -493,8 +501,6 @@ class PosOrder(models.Model):
 
     def write(self, vals):
         for order in self:
-            if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
-                vals['name'] = self._compute_order_name()
             if vals.get('mobile'):
                 vals['mobile'] = order._phone_format(number=vals.get('mobile'),
                         country=order.partner_id.country_id or self.env.company.country_id)
@@ -581,12 +587,6 @@ class PosOrder(models.Model):
             body += Markup("</li>")
         body += Markup("</ul>")
         return body
-
-    def _compute_order_name(self):
-        if self.refunded_order_id.exists():
-            return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
-        else:
-            return self.session_id.config_id.sequence_id._next()
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -1045,7 +1045,7 @@ class PosOrder(models.Model):
             if existing_draft_order:
                 order_ids.append(self._process_order(order, existing_draft_order))
             else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
+                existing_orders = self.env['pos.order'].search([('name', '=', order.get('name', False))])
                 if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
                     order_ids.append(self._process_order(order, False))
 
@@ -1123,10 +1123,8 @@ class PosOrder(models.Model):
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
         return {
-            'name': _('%(name)s REFUND', name=self.name),
             'session_id': current_session.id,
             'date_order': fields.Datetime.now(),
-            'pos_reference': self.pos_reference,
             'lines': False,
             'amount_tax': -self.amount_tax,
             'amount_total': -self.amount_total,
@@ -1291,8 +1289,9 @@ class PosOrderLine(models.Model):
     _rec_name = "product_id"
     _inherit = ['pos.load.mixin']
 
+    # TODO: can we remove the name here ?
+    name = fields.Char('Line Description', default="Order Line")
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
-    name = fields.Char(string='Line No', required=True, copy=False)
     skip_change = fields.Boolean('Skip line when sending ticket to kitchen printers.')
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
@@ -1373,7 +1372,6 @@ class PosOrderLine(models.Model):
         """
         self.ensure_one()
         return {
-            'name': _('%(name)s REFUND', name=self.name),
             'qty': -(self.qty - self.refunded_qty),
             'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
@@ -1382,19 +1380,6 @@ class PosOrderLine(models.Model):
             'is_total_cost_computed': False,
             'refunded_orderline_id': self.id,
         }
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('order_id') and not vals.get('name'):
-                # set name based on the sequence specified on the config
-                config = self.env['pos.order'].browse(vals['order_id']).session_id.config_id
-                if config.sequence_line_id:
-                    vals['name'] = config.sequence_line_id._next()
-            if not vals.get('name'):
-                # fallback on any pos.order sequence
-                vals['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
-        return super().create(vals_list)
 
     def write(self, values):
         if values.get('pack_lot_line_ids'):

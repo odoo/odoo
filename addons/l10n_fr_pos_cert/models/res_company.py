@@ -54,7 +54,7 @@ class ResCompany(models.Model):
         """
         def build_order_info(order):
             entry_reference = _('(Receipt ref.: %s)')
-            order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
+            order_reference_string = order.name and entry_reference % order.name or ''
             return [ctx_tz(order, 'date_order'), order.l10n_fr_hash, order.name, order_reference_string, ctx_tz(order, 'write_date')]
 
         msg_alert = ''

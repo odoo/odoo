@@ -273,7 +273,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         rendering_context.update(
             pos_order_id=pos_order_sudo.id,
-            order_reference=pos_order_sudo.pos_reference,
+            order_reference=pos_order_sudo.name,
             tx_reference=tx_sudo.reference,
             amount=tx_sudo.amount,
             currency=tx_sudo.currency_id,

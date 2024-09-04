@@ -21,7 +21,7 @@ class PaymentTransaction(models.Model):
         if pos_order_id:
             pos_order = self.env['pos.order'].sudo().browse(pos_order_id).exists()
             if pos_order:
-                return pos_order.pos_reference
+                return pos_order.name
         return super()._compute_reference_prefix(provider_code, separator, **values)
 
     def _post_process(self):

@@ -253,11 +253,11 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTipScreenTour')
 
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
-        order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')], limit=1, order='id desc')
-        order3 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0003')], limit=1, order='id desc')
-        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')], limit=1, order='id desc')
-        order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0005')], limit=1, order='id desc')
+        order1 = self.env['pos.order'].search([('name', 'ilike', '%-0001')], limit=1, order='id desc')
+        order2 = self.env['pos.order'].search([('name', 'ilike', '%-0002')], limit=1, order='id desc')
+        order3 = self.env['pos.order'].search([('name', 'ilike', '%-0003')], limit=1, order='id desc')
+        order4 = self.env['pos.order'].search([('name', 'ilike', '%-0004')], limit=1, order='id desc')
+        order5 = self.env['pos.order'].search([('name', 'ilike', '%-0005')], limit=1, order='id desc')
 
         self.assertTrue(order1.is_tipped and order1.tip_amount == 0.40)
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
@@ -296,7 +296,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.write({'order_edit_tracking': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OrderTrackingTour')
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
+        order1 = self.env['pos.order'].search([('name', 'ilike', '%-0001')], limit=1, order='id desc')
         self.assertTrue(order1.is_edited)
 
     def test_13_category_check(self):

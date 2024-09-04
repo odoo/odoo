@@ -47,7 +47,7 @@ class PosMercadoPagoWebhook(http.Controller):
         # If and only if this webhook is related with a payment intend (see payment_mercado_pago.js)
         # then the field data['additional_info']['external_reference'] contains a string
         # formated like "XXX_YYY_ZZZ" where "XXX" is the session_id, "YYY" is the payment_method_id,
-        # and ZZZ is the pos_reference/uid for customer identification (Format ZZZZ-ZZZZ-ZZZZ)
+        # and ZZZ is the name/uid for customer identification (Format ZZZZ-ZZZZ-ZZZZ)
         external_reference = data.get('additional_info', {}).get('external_reference')
 
         if not external_reference or not re.fullmatch(r'\d+_\d+[_\d-]*', external_reference):

@@ -16,7 +16,7 @@
                             <div class="o_so_order_header p-3" t-on-click="() => this.editOrder(order)">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex flex-column">
-                                        <h6 class="m-0" t-esc="order.pos_reference"/>
+                                        <h6 class="m-0" t-esc="order.name"/>
                                         <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="getOrderDate(order)" /></span>
                                     </div>
                                     <div class="d-flex justify-content-around gap-5 align-items-center">

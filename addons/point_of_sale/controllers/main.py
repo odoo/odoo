@@ -89,7 +89,7 @@ class PosController(PortalAccount):
         errors = {}
         form_values = {}
         if request.httprequest.method == 'POST':
-            for field in ['pos_reference', 'date_order', 'ticket_code']:
+            for field in ['name', 'date_order', 'ticket_code']:
                 if not kwargs.get(field):
                     errors[field] = " "
                 else:
@@ -97,12 +97,12 @@ class PosController(PortalAccount):
 
             if errors:
                 errors['generic'] = _("Please fill all the required fields.")
-            elif len(form_values['pos_reference']) < 14:
-                errors['pos_reference'] = _("The Ticket Number should be at least 14 characters long.")
+            elif len(form_values['name']) < 14:
+                errors['name'] = _("The Ticket Number should be at least 14 characters long.")
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
-                    ('pos_reference', '=like', '%' + form_values['pos_reference'].strip().replace('%', r'\%').replace('_', r'\_')),
+                    ('name', '=like', '%' + form_values['name'].strip().replace('%', r'\%').replace('_', r'\_')),
                     ('date_order', '>=', date_order),
                     ('date_order', '<', date_order + timedelta(days=1)),
                     ('ticket_code', '=', form_values['ticket_code']),

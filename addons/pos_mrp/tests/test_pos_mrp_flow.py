@@ -223,7 +223,6 @@ class TestPosMrp(TestPointOfSaleCommon):
                     'qty': 1,
                     'tax_ids': [(6, 0, self.kit_2.taxes_id.ids)]}
             ]],
-            'name': 'Order 00042-003-0014',
             'partner_id': self.partner1.id,
             'session_id': self.pos_config.current_session_id.id,
             'sequence_number': 2,
@@ -311,7 +310,6 @@ class TestPosMrp(TestPointOfSaleCommon):
                         'qty': 2,
                         'tax_ids': []}],
                         ],
-                'name': 'Order 00042-003-0014',
                 'partner_id': self.partner1.id,
                 'session_id': self.pos_config.current_session_id.id,
                 'sequence_number': 2,

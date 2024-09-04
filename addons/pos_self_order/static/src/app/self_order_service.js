@@ -479,7 +479,7 @@ export class SelfOrder extends Reactive {
                     new: orderlines,
                     tracker: this.currentOrder.table_stand_number,
                     trackingNumber: this.currentOrder.trackingNumber || "unknown number",
-                    name: this.currentOrder.pos_reference || "unknown order",
+                    name: this.currentOrder.name || "unknown order",
                     time: {
                         hours,
                         minutes,

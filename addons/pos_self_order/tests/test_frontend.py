@@ -53,7 +53,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
                         "config_id": self.pos_config.id,
                         "session_id": self.pos_config.current_session_id.id,
                         "access_token": None,
-                        "pos_reference": None,
+                        "name": None,
                         "state": "draft",
                         "amount_total": 0,
                         "amount_tax": 0,

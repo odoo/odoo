@@ -177,7 +177,7 @@
                                 <field name="session_move_id" readonly="1" />
                             </group>
                             <group string="Other Information">
-                                <field name="pos_reference"/>
+                                <field name="name"/>
                                 <field name="tracking_number"/>
                                 <field name="country_code" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -225,7 +225,7 @@
                                 </span>
                                 <field name="amount_total" widget="monetary" class="fw-bolder ms-auto"/>
                             </div>
-                            <field name="pos_reference" />
+                            <field name="name" />
                             <div class="d-flex">
                                 <field name="date_order" class="text-muted"/>
                                 <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
@@ -289,7 +289,6 @@
                 <field name="session_id"  readonly="state != 'draft'" optional="hide"/>
                 <field name="date_order"/>
                 <field name="config_id" optional="hide"/>
-                <field name="pos_reference" optional="hide"/>
                 <field name="tracking_number"/>
                 <field name="partner_id"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']" optional="hide"/>
@@ -405,7 +404,6 @@
         <field name="arch" type="xml">
             <search string="Search Sales Order">
                 <field name="name"/>
-                <field name="pos_reference"/>
                 <field name="date_order"/>
                 <field name="tracking_number"/>
                 <field name="user_id"/>

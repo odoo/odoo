@@ -4,7 +4,7 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='pos_reference']" position='after'>
+            <xpath expr="//field[@name='name']" position='after'>
                 <field string='Hash' name="l10n_fr_hash" groups="base.group_no_one"/>
             </xpath>
             <field name="payment_ids" position="attributes">

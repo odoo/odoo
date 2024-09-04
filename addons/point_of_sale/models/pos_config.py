@@ -125,12 +125,6 @@ class PosConfig(models.Model):
     active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
-    sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
-        help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders.", copy=False, ondelete='restrict')
-    sequence_line_id = fields.Many2one('ir.sequence', string='Order Line IDs Sequence', readonly=True,
-        help="This sequence is automatically created by Odoo but you can change it "
-        "to customize the reference numbers of your orders lines.", copy=False)
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
@@ -387,21 +381,6 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            self._check_header_footer(vals)
-            IrSequence = self.env['ir.sequence'].sudo()
-            val = {
-                'name': _('POS Order %s', vals['name']),
-                'padding': 4,
-                'prefix': "%s/" % vals['name'],
-                'code': "pos.order",
-                'company_id': vals.get('company_id', False),
-            }
-            # force sequence_id field to new pos.order sequence
-            vals['sequence_id'] = IrSequence.create(val).id
-
-            val.update(name=_('POS order line %s', vals['name']), code='pos.order.line')
-            vals['sequence_line_id'] = IrSequence.create(val).id
         pos_configs = super().create(vals_list)
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
@@ -544,13 +523,6 @@ class PosConfig(models.Model):
                           'limit_categories', 'iface_available_categ_ids', 'use_pricelist', 'module_pos_discount',
                           'payment_method_ids', 'iface_tipproduc']
         return forbidden_keys
-
-    def unlink(self):
-        # Delete the pos.config records first then delete the sequences linked to them
-        sequences_to_delete = self.sequence_id | self.sequence_line_id
-        res = super(PosConfig, self).unlink()
-        sequences_to_delete.unlink()
-        return res
 
     # TODO-JCB: Maybe we can move this logic in `_reset_default_on_vals`
     def _set_fiscal_position(self):

@@ -16,7 +16,6 @@ class PosSelfOrderController(http.Controller):
         # Create the order
         ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
         sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
-        order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
         fiscal_position = (
             pos_config.takeaway_fp_id
             if is_takeaway
@@ -26,8 +25,6 @@ class PosSelfOrderController(http.Controller):
         if 'picking_type_id' in order:
             del order['picking_type_id']
 
-        order['name'] = order_reference
-        order['pos_reference'] = order_reference
         order['sequence_number'] = sequence_number
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())
@@ -149,19 +146,6 @@ class PosSelfOrderController(http.Controller):
         amount_untaxed = sum(lines.mapped('price_subtotal'))
         amount_total = sum(lines.mapped('price_subtotal_incl'))
         return amount_total, amount_untaxed
-
-    # The first part will be the session_id of the order.
-    # The second part will be the table_id of the order.
-    # Last part the sequence number of the order.
-    # INFO: This is allow a maximum of 999 tables and 9999 orders per table, so about ~1M orders per session.
-    # Example: 'Self-Order 00001-001-0001'
-    def _generate_unique_id(self, pos_session_id, config_id, sequence_number, device_type):
-        first_part = "{:05d}".format(int(pos_session_id))
-        second_part = "{:03d}".format(int(config_id))
-        third_part = "{:04d}".format(int(sequence_number))
-
-        device = "Kiosk" if device_type == "kiosk" else "Self-Order"
-        return f"{device} {first_part}-{second_part}-{third_part}"
 
     def _verify_pos_config(self, access_token):
         """

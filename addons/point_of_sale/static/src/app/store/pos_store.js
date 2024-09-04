@@ -860,32 +860,11 @@ export class PosStore extends Reactive {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
     }
-    generate_unique_id() {
-        // Generates a public identification number for the order.
-        // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes, should it be needed
-
-        function zero_pad(num, size) {
-            var s = "" + num;
-            while (s.length < size) {
-                s = "0" + s;
-            }
-            return s;
-        }
-        return (
-            zero_pad(this.session.id, 5) +
-            "-" +
-            zero_pad(this.session.login_number, 3) +
-            "-" +
-            zero_pad(this.session.sequence_number, 4)
-        );
-    }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
             return fp.id === this.config.default_fiscal_position_id?.id;
         });
 
-        const uniqId = this.generate_unique_id();
         const order = this.models["pos.order"].create({
             session_id: this.session,
             company_id: this.company,
@@ -896,8 +875,8 @@ export class PosStore extends Reactive {
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
-            name: _t("Order %s", uniqId),
-            pos_reference: uniqId,
+            // name: _t("Order %s", uniqId),
+            // name: uniqId,
             ...data,
         });
 
