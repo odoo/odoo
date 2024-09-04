@@ -64,6 +64,8 @@ class WebclientController(http.Controller):
                 )
             else:
                 store.add(thread, request_list=params["request_list"], as_thread=True)
+        if name == "messages":
+            store.add(request.env["mail.message"].search([("id", "in", params)]))
 
     @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):

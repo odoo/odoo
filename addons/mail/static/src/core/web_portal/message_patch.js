@@ -20,9 +20,10 @@ patch(Message.prototype, {
         if (!bodyEl) {
             return;
         }
-        super.prepareMessageBody(...arguments);
+        const res = super.prepareMessageBody(...arguments);
         Array.from(bodyEl.querySelectorAll(".o-mail-ellipsis")).forEach((el) => el.remove());
         this.insertEllipsisbtn(bodyEl);
+        return res;
     },
 
     /**

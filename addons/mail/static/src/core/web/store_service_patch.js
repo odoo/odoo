@@ -38,14 +38,14 @@ const StorePatch = {
      * Override to initialise using the lazy_session to initialise the webclient part
      */
     _fetchStoreDataDebounced() {
-        if (!this.fetchParams.includes("init_messaging")) {
+        if (!Object.prototype.hasOwnProperty.call(this.fetchParams, "init_messaging")) {
             return super._fetchStoreDataDebounced();
         }
         this.env.services["lazy_session"].getValue("store_data", (storeData) => {
             const result = this.insert(storeData);
             // if the "init_messaging" isn't the only param
-            this.fetchParams = this.fetchParams.filter((param) => param !== "init_messaging");
-            if (this.fetchParams.length > 0) {
+            delete this.fetchParams["init_messaging"];
+            if (Object.keys(this.fetchParams).length > 0) {
                 return super._fetchStoreDataDebounced();
             }
             this.fetchDeferred.resolve(result);
