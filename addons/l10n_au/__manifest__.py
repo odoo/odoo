@@ -23,6 +23,7 @@ Also:
         'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/res_currency_data.xml',
+        'data/account.account.tag.csv',
         'views/menuitems.xml',
         'views/report_invoice.xml',
         'views/res_company_views.xml',

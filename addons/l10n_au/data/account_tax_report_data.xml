@@ -320,33 +320,13 @@
                             <record id="account_tax_report_gstrpt_summary_1b" model="account.report.line">
                                 <field name="name">1B: GST on purchases</field>
                                 <field name="code">1B</field>
-                                <field name="aggregation_formula">G20.balance+7A.balance</field>
+                                <field name="aggregation_formula">G20.balance</field>
                             </record>
                         </field>
                     </record>
                     <record id="account_tax_report_gstrpt_summary_9" model="account.report.line">
                         <field name="name">9: Liability to ATO</field>
                         <field name="aggregation_formula">8A.balance-8B.balance</field>
-                    </record>
-                </field>
-            </record>
-            <record id="account_tax_report_gstrpt_comparison" model="account.report.line">
-                <field name="name">Comparison</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="account_tax_report_gstrpt_comparison_worksheet" model="account.report.line">
-                        <field name="name">GST from worksheet (G20-G9)</field>
-                        <field name="aggregation_formula">G20.balance-G9.balance</field>
-                    </record>
-                    <record id="account_tax_report_gstrpt_comparison_gl" model="account.report.line">
-                        <field name="name">GST from General Ledger</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_gstrpt_comparison_gl_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">GST from General Ledger</field>
-                            </record>
-                        </field>
                     </record>
                 </field>
             </record>
