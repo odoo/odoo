@@ -1991,3 +1991,175 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
 
             self.assertEqual(allocation.lastcall, datetime.date(2017, 12, 5))
+
+    def test_accrue_days_on_allocation_start_date(self):
+        """
+        Create an accrual plan with one milestone:
+            * Number of accrued days: 10 days
+            * Frequency: Yearly
+            * Accrue days on allocation start date.
+        Create an allocation:
+            * Start date: 25/05/2024
+            * Type: Accrual
+            * Accrual plan: Use the one defined above
+        On 25/05/2025: 10 days should be accrued.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan for Test',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'start_count': 0,
+                'start_type': 'day',
+                'accrual_date_ref': 'allocation',
+                'allocation_date_offset': 0,
+                'allocation_date_offset_type': 'day',
+            })],
+        })
+        with freeze_time("2024-5-25"):
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 0,
+            })
+            allocation.action_validate()
+
+        with freeze_time("2025-5-25"):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 10, "10 days are accrued on allocation start date")
+
+    def test_accrue_days_on_relative_date_to_allocation_start_date(self):
+        """
+        Create an accrual plan with one milestone:
+            * Number of accrued days: 10 days
+            * Frequency: Yearly
+            * Accrue days 10 days after allocation start date.
+        Create an allocation:
+            * Start date: 25/05/2024
+            * Type: Accrual
+            * Accrual plan: Use the one defined above
+        On 04/06/2025: 10 days + (10/365) * 10 = 10.27 days should be accrued.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan for Test',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'start_count': 0,
+                'start_type': 'day',
+                'accrual_date_ref': 'allocation',
+                'allocation_date_offset': 10,
+                'allocation_date_offset_type': 'day',
+            })],
+        })
+        with freeze_time("2024-5-25"):
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 0,
+            })
+            allocation.action_validate()
+
+        with freeze_time("2025-6-04"):
+            allocation._update_accrual()
+        self.assertAlmostEqual(allocation.number_of_days, 10.27, 2, "10.27 days should be accrued")
+
+    def test_accrue_days_on_relative_date_to_allocation_start_date_2(self):
+        """
+        Create an accrual plan with one milestone:
+            * Number of accrued days: 10 days
+            * Frequency: Yearly
+            * Accrue days 2 months after allocation start date.
+            * Start level 2 months after allocation start date
+        Create an allocation:
+            * Start date: 25/05/2024
+            * Type: Accrual
+            * Accrual plan: Use the one defined above
+        On 25/07/2025: 10 days should be accrued.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan for Test',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'start_count': 2,
+                'start_type': 'month',
+                'accrual_date_ref': 'allocation',
+                'allocation_date_offset': 2,
+                'allocation_date_offset_type': 'month',
+            })],
+        })
+        with freeze_time("2024-5-25"):
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 0,
+            })
+            allocation.action_validate()
+
+        with freeze_time("2025-7-25"):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 10, "10 days should be accrued")
+
+    def test_accrue_days_on_relative_date_to_allocation_start_date_3(self):
+        """
+        Create an accrual plan with one milestone:
+            * Number of accrued days: 10 days
+            * Frequency: Yearly
+            * Accrue days 26 months after allocation start date.
+            * Start level 2 months after allocation start date
+        Setting the offset from allocation start date to 26 months (2 year + 2 months) should only
+        result in 2 months offset.
+        Create an allocation:
+            * Start date: 25/05/2024
+            * Type: Accrual
+            * Accrual plan: Use the one defined above
+        On 25/07/2025: 10 days should be accrued.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan for Test',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'start_count': 2,
+                'start_type': 'month',
+                'accrual_date_ref': 'allocation',
+                'allocation_date_offset': 2,
+                'allocation_date_offset_type': 'month',
+            })],
+        })
+        with freeze_time("2024-5-25"):
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 0,
+            })
+            allocation.action_validate()
+
+        with freeze_time("2025-7-25"):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 10, "10 days should be accrued")

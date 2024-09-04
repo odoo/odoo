@@ -107,6 +107,19 @@ class AccrualPlanLevel(models.Model):
     yearly_day = fields.Integer(default=1)
     yearly_day_display = fields.Selection(
         _get_selection_days, compute='_compute_days_display', inverse='_inverse_yearly_day_display')
+    accrual_date_ref = fields.Selection(
+        [('reference', 'Reference Date'),
+         ('allocation', 'Allocation Start Date')],
+        default="reference",
+        required=True,
+        string="Accrual Date Reference",
+        help="The accrual date could be a reference date i.e. 01/05 or relative to allocation start date i.e. 3 days after allocation start date")
+    allocation_date_offset = fields.Integer(default=0, required=True)
+    allocation_date_offset_type = fields.Selection(
+        [('day', 'Days'),
+         ('month', 'Months')],
+        default='day', required=True,
+        help="This field defines the unit of time that will be used for the offset from the allocation start date to define the accrual date")
     cap_accrued_time = fields.Boolean("Cap accrued time", default=True,
         help="When the field is checked the balance of an allocation using this accrual plan will never exceed the specified amount.")
     maximum_leave = fields.Float(
@@ -226,7 +239,7 @@ class AccrualPlanLevel(models.Model):
             else:
                 level.yearly_day = DAY_SELECT_VALUES.index(level.yearly_day_display) + 1
 
-    def _get_next_date(self, last_call):
+    def _get_next_date(self, last_call, allocation_start_date):
         """
         Returns the next date with the given last call
         """
@@ -264,16 +277,24 @@ class AccrualPlanLevel(models.Model):
             else:
                 return last_call + relativedelta(years=1, month=first_month, day=self.first_month_day)
         elif self.frequency == 'yearly':
-            month = MONTHS.index(self.yearly_month) + 1
-            date = last_call + relativedelta(month=month, day=self.yearly_day)
-            if last_call < date:
-                return date
+            if self.accrual_date_ref == "reference":
+                month = MONTHS.index(self.yearly_month) + 1
+                date = last_call + relativedelta(month=month, day=self.yearly_day)
+                if last_call < date:
+                    return date
+                else:
+                    return last_call + relativedelta(years=1, month=month, day=self.yearly_day)
             else:
-                return last_call + relativedelta(years=1, month=month, day=self.yearly_day)
+                month, day = self._get_accrual_month_day_from_allocation_date(allocation_start_date)
+                date = last_call + relativedelta(month=month, day=day)
+                if last_call < date:
+                    return date
+                else:
+                    return last_call + relativedelta(years=1, month=month, day=day)
         else:
             return False
 
-    def _get_previous_date(self, last_call):
+    def _get_previous_date(self, last_call, allocation_start_date):
         """
         Returns the date a potential previous call would have been at
         For example if you have a monthly level giving 16/02 would return 01/02
@@ -314,10 +335,22 @@ class AccrualPlanLevel(models.Model):
                 return last_call + relativedelta(years=-1, month=second_month, day=self.second_month_day)
         elif self.frequency == 'yearly':
             month = MONTHS.index(self.yearly_month) + 1
-            year_date = last_call + relativedelta(month=month, day=self.yearly_day)
+            day = self.yearly_day
+            if self.accrual_date_ref == 'allocation':
+                month, day = self._get_accrual_month_day_from_allocation_date(allocation_start_date)
+            year_date = last_call + relativedelta(month=month, day=day)
             if last_call >= year_date:
                 return year_date
-            else:
-                return last_call + relativedelta(years=-1, month=month, day=self.yearly_day)
+            return year_date + relativedelta(years=-1)
         else:
             return False
+
+    def _get_accrual_month_day_from_allocation_date(self, allocation_start_date):
+        days = 0
+        months = 0
+        if self.allocation_date_offset_type == 'day':
+            days = self.allocation_date_offset
+        else:
+            months = self.allocation_date_offset
+        accrual_date = allocation_start_date + relativedelta(months=months, days=days)
+        return accrual_date.month, accrual_date.day

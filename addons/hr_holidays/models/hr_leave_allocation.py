@@ -343,7 +343,8 @@ class HolidaysAllocation(models.Model):
         previous_level = level_ids[current_level_idx - 1]
         # If the next date from the current level's start date is before the last call of the previous level
         # return the previous level
-        if current_level._get_next_date(level_start_date) < previous_level._get_next_date(level_start_date):
+        if (current_level._get_next_date(level_start_date, self.date_from) <
+            previous_level._get_next_date(level_start_date, self.date_from)):
             return (previous_level, current_level_idx - 1)
         return (current_level, current_level_idx)
 
@@ -416,7 +417,7 @@ class HolidaysAllocation(models.Model):
                 if date_to < first_level_start_date:
                     continue
                 allocation.lastcall = max(allocation.lastcall, first_level_start_date)
-                allocation.nextcall = first_level._get_next_date(allocation.lastcall)
+                allocation.nextcall = first_level._get_next_date(allocation.lastcall, allocation.date_from)
                 # adjust nextcall for carryover
                 carryover_date = allocation._get_carryover_date(allocation.nextcall)
                 allocation.nextcall = min(carryover_date, allocation.nextcall)
@@ -437,12 +438,12 @@ class HolidaysAllocation(models.Model):
                     break
                 if current_level.cap_accrued_time:
                     current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
-                nextcall = current_level._get_next_date(allocation.nextcall)
+                nextcall = current_level._get_next_date(allocation.nextcall, allocation.date_from)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
                 # this will always return lastcall except possibly on the first call
                 # this is used to prorate the first number of days given to the employee
-                period_start = current_level._get_previous_date(allocation.lastcall)
-                period_end = current_level._get_next_date(allocation.lastcall)
+                period_start = current_level._get_previous_date(allocation.lastcall, allocation.date_from)
+                period_end = current_level._get_next_date(allocation.lastcall, allocation.date_from)
                 # There are 2 cases where nextcall could be closer than the normal period:
                 # 1. Passing from one level to another, if mode is set to 'immediately'
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
@@ -476,7 +477,7 @@ class HolidaysAllocation(models.Model):
             if allocation.accrual_plan_id.accrued_gain_time == 'start':
                 # check that we are at the start of a period, not on a carry-over or level transition date
                 current_level = current_level or allocation.accrual_plan_id.level_ids[0]
-                period_start = current_level._get_previous_date(allocation.lastcall)
+                period_start = current_level._get_previous_date(allocation.lastcall, allocation.date_from)
                 if allocation.lastcall != period_start:
                     continue
                 if current_level.cap_accrued_time:
@@ -553,12 +554,12 @@ class HolidaysAllocation(models.Model):
                     allocation.lastcall = today
                     continue
                 allocation.lastcall = max(
-                    current_level._get_previous_date(today),
+                    current_level._get_previous_date(today, allocation.date_from),
                     allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type)
                 )
             if current_level and not allocation.nextcall:
                 accrual_plan = allocation.accrual_plan_id
-                allocation.nextcall = current_level._get_next_date(allocation.lastcall)
+                allocation.nextcall = current_level._get_next_date(allocation.lastcall, allocation.date_from)
                 if current_level_idx < (len(accrual_plan.level_ids) - 1) and accrual_plan.transition_mode == 'immediately':
                     next_level = accrual_plan.level_ids[current_level_idx + 1]
                     next_level_start = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
