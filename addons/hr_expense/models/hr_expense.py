@@ -195,8 +195,8 @@ class HrExpense(models.Model):
             currency=currency or self.currency_id,
             product=self.product_id,
             taxes=self.tax_ids,
-            price_unit=price_unit or self.total_amount_company,
-            quantity=quantity or 1,
+            price_unit=price_unit or 0,
+            quantity=quantity if quantity is not None else 1,  # Allows 0 quantity
             account=self.account_id,
             analytic_distribution=self.analytic_distribution,
             extra_context={'force_price_include': True},
@@ -374,7 +374,7 @@ class HrExpense(models.Model):
     @api.onchange('total_amount')
     def _inverse_total_amount(self):
         for expense in self:
-            expense.unit_amount = expense.total_amount_company / expense.quantity
+            expense.unit_amount = expense.total_amount_company / (expense.quantity or 1)
 
     @api.constrains('payment_mode')
     def _check_payment_mode(self):
