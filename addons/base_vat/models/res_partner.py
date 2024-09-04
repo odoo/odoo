@@ -667,17 +667,23 @@ class ResPartner(models.Model):
         return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
-        code = self.env['res.country'].browse(country_id).code if country_id else False
-        vat_country, vat_number = self._split_vat(vat)
-        if code and code.lower() != vat_country:
+        if not country_id:
             return vat
-        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(vat_country, 'vat'), 'compact', None)
-        #If any localization module need to define vat fix method for it's country then we give first priority to it.
-        format_func_name = 'format_vat_' + vat_country
+        country = self.env['res.country'].browse(country_id)
+        vat_country = False
+        if country in self.env.ref('base.europe').country_ids:
+            vat_country, vat_number = self._split_vat(vat)
+            if not vat_country.isalpha():
+                vat_country = False
+        to_check_country = vat_country or country.code.lower()
+        print(to_check_country)
+        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(to_check_country, 'vat'), 'compact', None)
+        # If any localization module needs to define vat fix method for its country then we give first priority to it.
+        format_func_name = 'format_vat_' + to_check_country
         format_func = getattr(self, format_func_name, None) or stdnum_vat_fix_func
         if format_func:
-            vat_number = format_func(vat_number)
-        return vat_country.upper() + vat_number
+            vat = format_func(vat)
+        return vat_country.upper() + vat if vat_country else vat
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -691,6 +697,7 @@ class ResPartner(models.Model):
         return res
 
     def write(self, values):
+        print(self.ids, values)
         if values.get('vat') and len(self.mapped('country_id')) == 1:
             country_id = values.get('country_id', self.country_id.id)
             values['vat'] = self._fix_vat_number(values['vat'], country_id)
