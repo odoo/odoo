@@ -177,7 +177,7 @@ class TestPerformanceTimeit(TransactionCase):
         self.launch_perf("records._search([], limit=10)", self.Model)
         self.launch_perf("records._search([], order='id')", self.Model)
         self.launch_perf("records._search([], order='name')", self.Model)
-        self.launch_perf("records._search([], order='parent_id.name, id desc')", self.Model)
+        self.launch_perf("records._search([], order='parent_id, id desc')", self.Model)
 
     def test_perf_domain_search(self):
         for domain in self.example_domains:
