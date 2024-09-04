@@ -138,7 +138,7 @@ patch(OrderSummary.prototype, {
         this.dialog.add(ManageGiftCardPopup, {
             title: _t("Sell/Manage physical gift card"),
             placeholder: _t("Enter Gift Card Number"),
-            getPayload: async (code, points) => {
+            getPayload: async (code, points, expirationDate) => {
                 points = parseFloat(points);
                 if (isNaN(points)) {
                     console.error("Invalid amount value:", points);
@@ -167,7 +167,7 @@ patch(OrderSummary.prototype, {
                 }
 
                 await this._updateGiftCardOrderline(code, points);
-                this.currentOrder.processGiftCard(code, points);
+                this.currentOrder.processGiftCard(code, points, expirationDate);
 
                 // update indexedDB
                 this.pos.data.syncDataWithIndexedDB(this.pos.data.records);

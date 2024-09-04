@@ -863,7 +863,7 @@ patch(PosOrder.prototype, {
      * @param {String} newGiftCardCode gift card code as a string if new gift card to be created.
      * @param {number} points number of points to assign to the gift card.
      */
-    processGiftCard(newGiftCardCode, points) {
+    processGiftCard(newGiftCardCode, points, expirationDate) {
         const partner_id = this.partner_id?.id || false;
         const product_id = this.get_selected_orderline().product_id.id;
         const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
@@ -892,6 +892,7 @@ patch(PosOrder.prototype, {
             couponData.coupon_id = couponId;
             couponData.code = newGiftCardCode;
             couponData.partner_id = partner_id;
+            couponData.expiration_date = expirationDate;
         }
 
         this.uiState.couponPointChanges[couponId] = couponData;

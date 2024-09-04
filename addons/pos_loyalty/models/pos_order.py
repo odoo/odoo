@@ -76,6 +76,7 @@ class PosOrder(models.Model):
             'code': p.get('code') or p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
             'source_pos_order_id': self.id,
+            'expiration_date': p.get('expiration_date')
         } for p in coupons_to_create.values()]
 
         # Pos users don't have the create permission
