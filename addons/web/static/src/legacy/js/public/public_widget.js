@@ -416,7 +416,7 @@ const ServicesMixin = {
  * Now this class can simply be used with the following syntax::
  *
  *     var myWidget = new MyWidget(this);
- *     myWidget.appendTo($(".some-div"));
+ *     myWidget.appendTo(document.querySelector(".some-div"));
  *
  * With these two lines, the MyWidget instance was initialized, rendered,
  * inserted into the DOM inside the ``.some-div`` div and its events were
@@ -477,9 +477,8 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
     /**
      * The selector attribute, if defined, allows to automatically create an
      * instance of this widget on page load for each DOM element according to
-     * this selector. The `PublicWidget.$el / el` element will then be that
-     * particular DOM element. This should be the main way of instantiating
-     * `PublicWidget` elements.
+     * this selector. The `PublicWidget.el` element will then be that particular
+     * DOM element. This should be the main way of instantiating `PublicWidget`.
      *
      * The value can either be a string in which case it is considered as a
      * `querySelectorAll` selector to match, or a function expecting to return
@@ -590,18 +589,18 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
     /**
      * Destroys the widget and basically restores the target to the state it
      * was before the start method was called (unlike standard widget, the
-     * associated $el DOM is not removed, if this was instantiated thanks to the
+     * associated el DOM is not removed, if this was instantiated thanks to the
      * selector property).
      */
     destroy: function () {
         EventDispatcherMixin.destroy.call(this);
-        if (this.$el) {
+        if (this.el) {
             this._undelegateEvents();
 
             // If not done with a selector (attached to existing DOM), then
             // remove the elements added to the DOM.
             if (!this.selector) {
-                this.$el.remove();
+                this.el.remove();
             }
         }
     },
@@ -613,24 +612,24 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
     /**
      * Renders the current widget and appends it to the given jQuery object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    appendTo: function (target) {
+    appendTo: function (targetEl) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.appendTo(t);
-        }, target);
+            t.append(self.el);
+        }, targetEl);
     },
     /**
      * Attach the current widget to a dom element
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    attachTo: function (target) {
+    attachTo: function (targetEl) {
         var self = this;
-        this.setElement(target);
+        this.setElement(targetEl);
         return this.willStart().then(function () {
             if (self.__parentedDestroyed) {
                 return;
@@ -642,39 +641,39 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
      * Renders the current widget and inserts it after to the given jQuery
      * object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    insertAfter: function (target) {
+    insertAfter: function (targetEl) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.insertAfter(t);
-        }, target);
+            t.parentNode.insertBefore(self.el, t.nextSibling);
+        }, targetEl);
     },
     /**
      * Renders the current widget and inserts it before to the given jQuery
      * object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    insertBefore: function (target) {
+    insertBefore: function (targetEl) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.insertBefore(t);
-        }, target);
+            t.parentNode.insertBefore(self.el, t);
+        }, targetEl);
     },
     /**
      * Renders the current widget and prepends it to the given jQuery object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    prependTo: function (target) {
+    prependTo: function (targetEl) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.prependTo(t);
-        }, target);
+            t.prepend(self.el);
+        }, targetEl);
     },
     /**
      * Renders the element. The default implementation renders the widget using
@@ -682,24 +681,25 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
      * the "widget" key that references `this`.
      */
     renderElement: function () {
-        var $el;
+        let el;
         if (this.template) {
-            $el = $(renderToElement(this.template, {widget: this}));
+            el = renderToElement(this.template, { widget: this });
         } else {
-            $el = this._makeDescriptive();
+            el = this._makeDescriptive();
         }
-        this._replaceElement($el);
+        this._replaceElement(el);
     },
     /**
      * Renders the current widget and replaces the given jQuery object.
      *
-     * @param {jQuery} target
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    replace: function (target) {
+    replace: function (targetEl) {
+        const self = this;
         return this._widgetRenderAndInsert((t) => {
-            this.$el.replaceAll(t);
-        }, target);
+            t.replaceWith(self.el);
+        }, targetEl);
     },
     /**
      * Re-sets the widget's root element (el/$el/$el).
@@ -825,7 +825,7 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
      * widget
      *
      * @private
-     * @return {jQuery}
+     * @return {HTMLElement}
      */
     _makeDescriptive: function () {
         var attrs = Object.assign({}, this.attributes || {});
@@ -835,35 +835,38 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
         if (this.className) {
             attrs['class'] = this.className;
         }
-        var $el = $(document.createElement(this.tagName));
+        const el = document.createElement(this.tagName);
         if (Object.keys(attrs || {}).length > 0) {
-            $el.attr(attrs);
+            for (const key in attrs) {
+                el.setAttribute(key, attrs[key]);
+            }
         }
-        return $el;
+        return el;
     },
     /**
      * Re-sets the widget's root element and replaces the old root element
      * (if any) by the new one in the DOM.
      *
      * @private
-     * @param {HTMLElement | jQuery} $el
+     * @param {HTMLElement} el
      * @returns {Widget} this instance, so it can be chained
      */
-    _replaceElement: function ($el) {
-        var $oldel = this.$el;
-        this.setElement($el);
-        if ($oldel && !$oldel.is(this.$el)) {
-            if ($oldel.length > 1) {
-                $oldel.wrapAll('<div/>');
-                $oldel.parent().replaceWith(this.$el);
+    _replaceElement: function (el) { // FIXME
+        var oldel = this.el;
+        this.setElement(el);
+        if (oldel && !(oldel === this.el)) {
+            if (oldel) {
+                const divEl = document.createElement('div');
+                divEl.append(oldel);
+                oldel.parentNode.replaceWith(this.el);
             } else {
-                $oldel.replaceWith(this.$el);
+                oldel.replaceWith(this.el);
             }
         }
         return this;
     },
     /**
-     * Remove all handlers registered on this.$el
+     * Remove all handlers registered on this.el
      *
      * @private
      */
@@ -876,18 +879,18 @@ export const PublicWidget = Class.extend(EventDispatcherMixin, ServicesMixin, {
      * not willStarted yet.
      *
      * @private
-     * @param {function: jQuery -> any} insertion
-     * @param {jQuery} target
+     * @param {function} insertion
+     * @param {HTMLElement} targetEl
      * @returns {Promise}
      */
-    _widgetRenderAndInsert: function (insertion, target) {
+    _widgetRenderAndInsert: function (insertion, targetEl) {
         var self = this;
         return this.willStart().then(function () {
             if (self.__parentedDestroyed) {
                 return;
             }
             self.renderElement();
-            insertion(target);
+            insertion(targetEl);
             return self.start();
         });
     },

@@ -290,7 +290,7 @@ export const PublicRoot = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onDisableOnClick: function (ev) {
-        $(ev.currentTarget).addClass('disabled');
+        ev.currentTarget.classList.add("disabled");
     },
     /**
      * Library clears the wrong date format so just ignore error
