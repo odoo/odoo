@@ -394,6 +394,7 @@ test("can remove the link of an image", async () => {
     click("button[name='unlink']");
     await animationFrame();
     expect(img.parentElement.tagName).toBe("P");
+    expect(".o-we-linkpopover").toHaveCount(0);
 });
 
 test("can undo link removing of an image", async () => {
