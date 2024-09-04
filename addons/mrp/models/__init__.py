@@ -5,6 +5,7 @@ from . import ir_attachment
 from . import product_document
 from . import res_config_settings
 from . import mrp_bom
+from . import mrp_bom_line
 from . import mrp_routing
 from . import mrp_workcenter
 from . import mrp_production
