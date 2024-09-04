@@ -4632,7 +4632,7 @@ class TestTourMrpOrder(HttpCase):
         mo = mo_form.save()
 
         action_id = self.env.ref('mrp.menu_mrp_production_action').action
-        url = f'/web#model=mrp.production&view_type=form&action={action_id.id}&id={mo.id}'
+        url = f'/odoo/action-{action_id.id}/{mo.id}'
         self.start_tour(url, "test_manufacturing_and_byproduct_sm_to_sml_synchronization", login="admin", timeout=100)
         self.assertEqual(mo.move_raw_ids.quantity, 7)
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
