@@ -11,17 +11,18 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    @api.constrains("vat", "l10n_latam_identification_type_id")
-    def check_vat(self):
-        # EXTEND account/base_vat
-        """ Add validation of UY document types CI and NIE """
-        ci_nie_types = self.filtered(
-            lambda p: p.l10n_latam_identification_type_id.l10n_uy_dgi_code in ("1", "3")
-                      and p.l10n_latam_identification_type_id.country_id.code == "UY" and p.vat)
-        for partner in ci_nie_types:
-            if not partner._l10n_uy_ci_nie_is_valid():
-                raise ValidationError(self._l10n_uy_build_vat_error_message(partner))
-        return super(ResPartner, self - ci_nie_types).check_vat()
+    def _run_check_identification(self, validation='error'):
+        """Add validation of UY document types CI and NIE  """
+        if validation == 'error':
+            ci_nie_types = self.filtered(lambda p:
+                p.l10n_latam_identification_type_id.l10n_uy_dgi_code in ("1", "3")
+                and p.l10n_latam_identification_type_id.country_id.code == "UY"
+                and p.vat
+            )
+            for partner in ci_nie_types:
+                if not partner._l10n_uy_ci_nie_is_valid():
+                    raise ValidationError(self._l10n_uy_build_vat_error_message(partner))
+        return super()._run_check_identification(validation=validation)
 
     @api.model
     def _l10n_uy_build_vat_error_message(self, partner):

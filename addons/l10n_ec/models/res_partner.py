@@ -57,26 +57,18 @@ class ResPartner(models.Model):
         help="Error message when validating the Ecuadorian VAT",
     )
 
-    @api.constrains("vat", "country_id", "l10n_latam_identification_type_id")
-    def check_vat(self):
-        it_ruc = self.env.ref("l10n_ec.ec_ruc", False)
-        it_dni = self.env.ref("l10n_ec.ec_dni", False)
-        ecuadorian_partners = self.filtered(
-            lambda x: x.country_id == self.env.ref("base.ec")
-        )
-        for partner in ecuadorian_partners:
-            if partner.vat:
-                if partner.l10n_latam_identification_type_id.id in (
-                    it_ruc.id,
-                    it_dni.id,
-                ):
-                    if partner.l10n_latam_identification_type_id.id == it_dni.id and len(partner.vat) != 10:
-                        raise ValidationError(_('If your identification type is %s, it must be 10 digits',
-                                                it_dni.display_name))
-                    if partner.l10n_latam_identification_type_id.id == it_ruc.id and len(partner.vat) != 13:
-                        raise ValidationError(_('If your identification type is %s, it must be 13 digits',
-                                                it_ruc.display_name))
-        return super(ResPartner, self - ecuadorian_partners).check_vat()
+    def _run_check_identification(self, validation='error'):
+        """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
+        extend this method in order to process it. """
+        l10n_ec_partners = self.filtered(lambda p: p.vat and p.country_code == 'EC')
+        if l10n_ec_partners and validation == 'error':
+            it_dni = self.env.ref("l10n_ec.ec_dni", False)
+            for partner in l10n_ec_partners.filtered(lambda p: p.l10n_latam_identification_type_id == it_dni):
+                if len(partner.vat) != 10 or not partner.vat.isdecimal():
+                    raise ValidationError(_('If your identification type is %s, it must be 10 digits',
+                                            it_dni.display_name))
+
+        return super(ResPartner, self - l10n_ec_partners)._run_check_identification(validation=validation)
 
     @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_vat_validation(self):

@@ -68,7 +68,7 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
             if vat_country.isnumeric():
                 vat_country = 'RS'
                 vat_number = partner.vat
-            if vat_country == 'RS' and partner.simple_vat_check(vat_country, vat_number):
+            if vat_country == 'RS' and partner._check_vat_number(vat_country, vat_number):
                 vals['company_id'] = vat_country + vat_number
         return vals_list
 

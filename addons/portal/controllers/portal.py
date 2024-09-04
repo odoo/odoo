@@ -587,16 +587,6 @@ class CustomerPortal(Controller):
             elif value:  # The value cannot be saved on the `res.partner` model.
                 extra_form_data[key] = value
 
-        if (
-            hasattr(ResPartner, 'check_vat')  # The `base_vat` module is installed.
-            and address_values.get('vat')
-            and address_values.get('country_id')
-        ):
-            address_values['vat'] = ResPartner.fix_eu_vat_number(
-                address_values['country_id'],
-                address_values['vat'],
-            )
-
         if 'zipcode' in form_data and not form_data.get('zip'):
             address_values['zip'] = form_data.pop('zipcode', '')
 
@@ -719,7 +709,7 @@ class CustomerPortal(Controller):
         ResPartnerSudo = request.env['res.partner'].sudo()
         if (
             address_values.get('vat')
-            and hasattr(ResPartnerSudo, 'check_vat')  # base_vat module is installed
+            and hasattr(ResPartnerSudo, '_check_vat')  # account module is installed
             and 'vat' not in invalid_fields
         ):
             partner_dummy = ResPartnerSudo.new({
@@ -728,7 +718,7 @@ class CustomerPortal(Controller):
                 if fname in address_values
             })
             try:
-                partner_dummy.check_vat()
+                partner_dummy._check_vat()
             except ValidationError as exception:
                 invalid_fields.add('vat')
                 error_messages.append(exception.args[0])
