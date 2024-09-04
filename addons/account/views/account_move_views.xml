@@ -1460,6 +1460,9 @@
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
                                 ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
                                 ('partner_id', 'child_of', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="payment_reference"/>
                     <field name="journal_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
