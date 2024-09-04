@@ -522,10 +522,39 @@ export class LinkPlugin extends Plugin {
         let { anchorNode, focusNode, anchorOffset, focusOffset } = selection;
         const direction = selection.direction;
         // Split the links around the selection.
-        const [startLink, endLink] = [
+        let [startLink, endLink] = [
             closestElement(anchorNode, "a"),
             closestElement(focusNode, "a"),
         ];
+        // to remove link from selected images
+        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedImageNodes = selectedNodes.filter((node) => node.tagName === "IMG");
+        if (selectedImageNodes && startLink && endLink && startLink === endLink) {
+            for (const imageNode of selectedImageNodes) {
+                let imageLink;
+                if (direction === DIRECTIONS.RIGHT) {
+                    imageLink = this.shared.splitAroundUntil(imageNode, endLink);
+                } else {
+                    imageLink = this.shared.splitAroundUntil(imageNode, startLink);
+                }
+                cursors.update(callbacksForCursorUpdate.unwrap(imageLink));
+                unwrapContents(imageLink);
+                // update the links at the selection
+                [startLink, endLink] = [
+                    closestElement(anchorNode, "a"),
+                    closestElement(focusNode, "a"),
+                ];
+            }
+            cursors.restore();
+            // when only unlink an inline image, add step after the unwrapping
+            if (
+                selectedImageNodes.length === 1 &&
+                selectedImageNodes.length === selectedNodes.length
+            ) {
+                this.dispatch("ADD_STEP");
+                return;
+            }
+        }
         if (startLink && startLink.isConnected) {
             anchorNode = this.shared.splitAroundUntil(anchorNode, startLink);
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
