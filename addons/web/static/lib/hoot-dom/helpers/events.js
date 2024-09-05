@@ -425,6 +425,21 @@ const hasTouch = () =>
     globalThis.ontouchstart !== undefined || globalThis.matchMedia("(pointer:coarse)").matches;
 
 /**
+ * @param {EventTarget} target
+ * @param {PointerOptions} [options]
+ */
+const isDifferentPosition = (target, options) => {
+    const previous = runTime.currentPosition;
+    const next = getPosition(target, options);
+    for (const key in next) {
+        if (previous[key] !== next[key]) {
+            return true;
+        }
+    }
+    return false;
+};
+
+/**
  * @param {unknown} value
  */
 const isNil = (value) => value === null || value === undefined;
@@ -926,10 +941,10 @@ const _hover = (target, options) => {
 
 /**
  * @param {EventTarget} target
- * @param {PointerOptions} options
+ * @param {PointerOptions} [options]
  */
 const _implicitHover = (target, options) => {
-    if (runTime.currentPointerTarget !== target) {
+    if (runTime.currentPointerTarget !== target || isDifferentPosition(target, options)) {
         _hover(target, options);
     }
 };
