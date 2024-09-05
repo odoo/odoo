@@ -76,7 +76,7 @@ class WebsocketCase(HttpCase):
         if 'timeout' not in kwargs:
             kwargs['timeout'] = 5
         ws = websocket.create_connection(
-            type(self)._WEBSOCKET_URL, *args, **kwargs
+            self._WEBSOCKET_URL, *args, **kwargs
         )
         if ping_after_connect:
             ws.ping()
