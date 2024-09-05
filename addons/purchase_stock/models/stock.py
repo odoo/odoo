@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.osv.expression import AND
@@ -37,6 +38,22 @@ class StockPicking(models.Model):
     def _search_delay_pass(self, operator, value):
         date_value = fields.Datetime.from_string(value)
         return [('purchase_id.date_order', operator, date_value)]
+
+    def write(self, values):
+        if values.get('scheduled_date'):
+            new_scheduled_date = values.get('scheduled_date')
+            new_scheduled_date = datetime.fromisoformat(new_scheduled_date) if isinstance(new_scheduled_date, str) else new_scheduled_date
+            for picking in self:
+                delta = new_scheduled_date - picking.scheduled_date
+                if picking.purchase_id and delta.days > 0:
+                    picking.purchase_id.message_post(
+                        body=_(
+                            'Transfer %(picking)s has been delayed by %(delay)s days.',
+                            picking=picking._get_html_link(),
+                            delay=delta.days
+                        )
+                    )
+        return super().write(values)
 
 
 class StockWarehouse(models.Model):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
+from datetime import datetime
 
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
@@ -92,6 +93,14 @@ class PurchaseOrder(models.Model):
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
+        if vals.get('date_planned') in vals and self.state == 'purchase':
+            new_date_planned = vals.get('date_planned')
+            new_date_planned = datetime.fromisoformat(new_date_planned) if isinstance(new_date_planned, str) else new_date_planned
+            for order in self:
+                delta = new_date_planned - order.date_planned
+                for picking in order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')):
+                    picking.scheduled_date += delta
+
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('order_line') and self.state == 'purchase':
             for order in self:
