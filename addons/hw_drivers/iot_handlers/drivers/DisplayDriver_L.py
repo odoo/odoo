@@ -12,7 +12,7 @@ from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.tools.helpers import Orientation
 from odoo.tools.misc import file_path
 

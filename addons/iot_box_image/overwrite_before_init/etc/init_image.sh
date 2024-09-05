@@ -221,6 +221,7 @@ groupadd usbusers
 usermod -a -G usbusers odoo
 usermod -a -G lp odoo
 usermod -a -G input lightdm
+usermod -a -G pi odoo
 mkdir -v /var/log/odoo
 chown odoo:odoo /var/log/odoo
 chown odoo:odoo -R /home/pi/odoo/
