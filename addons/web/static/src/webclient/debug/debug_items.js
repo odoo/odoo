@@ -3,36 +3,14 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-function runHootItem() {
-    const href = "/web/tests/next?debug=assets";
-    return {
-        type: "item",
-        description: _t("Run unit tests"),
-        href,
-        callback: () => browser.open(href),
-        sequence: 10,
-    };
-}
-
-function runJSTestsItem() {
+function runUnitTestsItem() {
     const href = "/web/tests?debug=assets";
     return {
         type: "item",
-        description: _t("Run QUnit tests (legacy)"),
+        description: _t("Run Unit Tests"),
         href,
         callback: () => browser.open(href),
-        sequence: 20,
-    };
-}
-
-function runJSTestsMobileItem() {
-    const href = "/web/tests/mobile?debug=assets";
-    return {
-        type: "item",
-        description: _t("Run QUnit mobile tests (legacy)"),
-        href,
-        callback: () => browser.open(href),
-        sequence: 30,
+        sequence: 10,
     };
 }
 
@@ -84,8 +62,6 @@ function globalSeparator() {
 registry
     .category("debug")
     .category("default")
-    .add("runHootItem", runHootItem)
-    .add("runJSTestsItem", runJSTestsItem)
-    .add("runJSTestsMobileItem", runJSTestsMobileItem)
+    .add("runUnitTestsItem", runUnitTestsItem)
     .add("globalSeparator", globalSeparator)
     .add("openViewItem", openViewItem);
