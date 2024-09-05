@@ -48,6 +48,9 @@ export class Map extends Component {
                 this.leafletMap = L.map(this.mapRef.el, {
                     zoom: 13,
                 });
+                this.leafletMap.attributionControl.setPrefix(
+                    '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
+                );
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
