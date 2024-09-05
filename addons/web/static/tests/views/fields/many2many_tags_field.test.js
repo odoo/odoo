@@ -152,7 +152,7 @@ test("Many2ManyTagsField with and without color", async () => {
 });
 
 test("Many2ManyTagsField with color: rendering and edition", async () => {
-    expect.assertions(24);
+    expect.assertions(26);
 
     Partner._records[0].timmy = [12, 14];
     PartnerType._records.push({ id: 13, name: "red", color: 8 });
@@ -189,9 +189,9 @@ test("Many2ManyTagsField with color: rendering and edition", async () => {
 
     // add an other existing tag
     await contains("div[name='timmy'] .o-autocomplete.dropdown input").click();
-
+    expect(`.dropdown-item-selected`).toHaveCount(2);
+    expect(queryAllTexts`.dropdown-item-selected`).toEqual(["gold", "silver"]);
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(5);
-
     expect(".o-autocomplete--dropdown-menu li a:eq(2)").toHaveText("red");
 
     await contains(".o-autocomplete--dropdown-menu li a:eq(2)").click();
