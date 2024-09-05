@@ -133,9 +133,9 @@ patch(TourHelpers.prototype, {
         };
         const element = this.anchor;
         this._ensureEnabled(element, "drag and drop");
-        const { drop, moveTo } = hoot.drag(element);
+        const { drop, moveTo } = await hoot.drag(element);
         await dragEffectDelay();
-        hoot.hover(element, {
+        await hoot.hover(element, {
             position: {
                 top: 20,
                 left: 20,
@@ -149,10 +149,10 @@ patch(TourHelpers.prototype, {
                 visible: true,
                 timeout: 500,
             });
-            moveTo(target, options);
+            await moveTo(target, options);
             await dragEffectDelay();
         }
-        drop();
+        await drop();
         await dragEffectDelay();
     },
 });

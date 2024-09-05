@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { press } from "@odoo/hoot-dom";
+import { microTick, press } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
@@ -114,7 +114,7 @@ describe("Selection collapsed", () => {
                 contentBefore: '<div><p>cd</p><br><span class="a">e[]</span></div>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfterEdit: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                 contentAfter: '<div><p>cd</p><br><span class="a">x[]</span></div>',
@@ -125,7 +125,7 @@ describe("Selection collapsed", () => {
                 contentBefore: "<div>ab<b>c[]</b>de</div>",
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                     undo(editor);
                 },
                 contentAfterEdit: '<div>ab<b data-oe-zws-empty-inline="">[]\u200B</b>de</div>',
@@ -137,7 +137,7 @@ describe("Selection collapsed", () => {
                 contentBefore: "<div>ab<b>c[]</b>de</div>",
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                     undo(editor);
                     undo(editor);
                 },
@@ -172,7 +172,7 @@ describe("Selection collapsed", () => {
                 contentBefore: '<p>uv<i style="color:red">w[]</i>xy</p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "i");
+                    await insertText(editor, "i");
                 },
                 contentAfterEdit: '<p>uv<i style="color:red">i[]</i>xy</p>',
                 contentAfter: '<p>uv<i style="color:red">i[]</i>xy</p>',
@@ -192,7 +192,7 @@ describe("Selection collapsed", () => {
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfterEdit: '<p>ab<span class="style">x[]</span>ef</p>',
                 contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
@@ -205,7 +205,7 @@ describe("Selection collapsed", () => {
                     '<p><b>ab</b><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: "<p><b>ax[]</b></p>",
             });
@@ -214,7 +214,7 @@ describe("Selection collapsed", () => {
                     '<p><span class="a">cd</span><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: '<p><span class="a">cx[]</span></p>',
             });
@@ -223,7 +223,7 @@ describe("Selection collapsed", () => {
                     '<p><b>ef</b><br><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: "<p><b>efx[]</b></p>",
             });
@@ -239,7 +239,7 @@ describe("Selection collapsed", () => {
                 contentBefore: '<div><p>cd</p><br><span class="a">[]\u200B</span></div>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: "<div><p>cd</p>x[]</div>",
             });
@@ -885,10 +885,10 @@ describe("Selection collapsed", () => {
                 contentBefore:
                     "<table><tbody><tr><td>[]<br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>",
                 stepFunction: async (editor) => {
-                    insertText(editor, "/");
-                    insertText(editor, "Heading");
+                    await insertText(editor, "/");
+                    await insertText(editor, "Heading");
                     await animationFrame();
-                    press("Enter");
+                    await press("Enter");
                     deleteBackward(editor);
                 },
                 contentAfter:
@@ -901,10 +901,10 @@ describe("Selection collapsed", () => {
                 contentBefore:
                     '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li></ul>',
                 stepFunction: async (editor) => {
-                    insertText(editor, "/");
-                    insertText(editor, "Heading");
+                    await insertText(editor, "/");
+                    await insertText(editor, "Heading");
                     await animationFrame();
-                    press("Enter");
+                    await press("Enter");
                     deleteBackward(editor);
                     deleteBackward(editor);
                 },
@@ -1373,7 +1373,7 @@ describe("Selection not collapsed", () => {
             contentBefore: '<div><p>ab <span class="style">[c]</span> d</p></div>',
             stepFunction: async (editor) => {
                 deleteBackward(editor);
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfterEdit: '<div><p>ab <span class="style">x[]</span> d</p></div>',
             contentAfter: '<div><p>ab <span class="style">x[]</span> d</p></div>',
@@ -1391,7 +1391,7 @@ describe("Selection not collapsed", () => {
             contentBefore: '<div><p>ab<span class="style">[c]</span>d</p></div>',
             stepFunction: async (editor) => {
                 deleteBackward(editor);
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfterEdit: '<div><p>ab<span class="style">x[]</span>d</p></div>',
             contentAfter: '<div><p>ab<span class="style">x[]</span>d</p></div>',
@@ -1400,7 +1400,7 @@ describe("Selection not collapsed", () => {
             contentBefore: '<div><p>ab <span class="style">[cde]</span> f</p></div>',
             stepFunction: async (editor) => {
                 deleteBackward(editor);
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfterEdit: '<div><p>ab <span class="style">x[]</span> f</p></div>',
             contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
@@ -1573,12 +1573,14 @@ describe("Selection not collapsed", () => {
     test("should delete a heading (triple click backspace) (1)", async () => {
         const { editor, el } = await setupEditor("<h1>abc</h1><p>def</p>", {});
         tripleClick(el.querySelector("h1"));
+        await microTick();
         // Chrome puts the cursor at the start of next sibling
         expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
         await tick();
         // The Editor corrects it on selection change
         expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
         tripleClick(el.querySelector("h1"));
+        await microTick();
         // Chrome puts the cursor at the start of next sibling
         expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
         await tick();
@@ -1593,6 +1595,7 @@ describe("Selection not collapsed", () => {
     test("should delete a heading (triple click backspace) (2)", async () => {
         const { editor, el } = await setupEditor("<h1>abc</h1><p><br></p><p>def</p>", {});
         tripleClick(el.querySelector("h1"));
+        await microTick();
         // Chrome puts the cursor at the start of next sibling
         expect(getContent(el)).toBe("<h1>[abc</h1><p>]<br></p><p>def</p>");
         await tick();

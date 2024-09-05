@@ -169,7 +169,7 @@ test("should insert before strikethrough (1)", async () => {
     await testEditor({
         contentBefore: `<p>d[a${s("bc]<br><br>")}</p>`,
         stepFunction: async (editor) => {
-            insertText(editor, "A");
+            await insertText(editor, "A");
         },
         contentAfter: `<p>dA[]${s(`<br><br>`)}</p>`,
     });
@@ -178,7 +178,7 @@ test("should insert before strikethrough (2)", async () => {
     await testEditor({
         contentBefore: `<p>[a${s("bc]<br><br>")}</p>`,
         stepFunction: async (editor) => {
-            insertText(editor, "A");
+            await insertText(editor, "A");
         },
         contentAfter: `<p>${s(`A[]<br><br>`)}</p>`,
     });

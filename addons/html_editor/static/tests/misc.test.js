@@ -93,11 +93,11 @@ test("event handlers are properly cleaned up after destruction", async () => {
     });
     expect(count).toBe(0);
 
-    click(document.body);
+    await click(document.body);
     expect(count).toBe(1);
 
     editor.destroy();
-    click(document.body);
+    await click(document.body);
     expect(count).toBe(1);
 });
 

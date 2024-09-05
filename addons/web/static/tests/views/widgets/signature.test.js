@@ -72,7 +72,7 @@ test.tags("desktop")("Signature widget renders a Sign button on desktop", async 
         message: "Should not have any modal",
     });
     // Clicks on the sign button to open the sign modal.
-    click(".o_widget_signature button.o_sign_button");
+    await click(".o_widget_signature button.o_sign_button");
     await waitFor(".modal .modal-body");
     expect(".modal-dialog").toHaveCount(1, {
         message: "Should have one modal opened",
@@ -109,7 +109,7 @@ test.tags("mobile")("Signature widget renders a Sign button on mobile", async ()
         message: "Should not have any modal",
     });
     // Clicks on the sign button to open the sign modal.
-    click(".o_widget_signature button.o_sign_button");
+    await click(".o_widget_signature button.o_sign_button");
     await waitFor(".modal .modal-body");
     expect(".modal-dialog").toHaveCount(1, {
         message: "Should have one modal opened",
@@ -137,7 +137,7 @@ test.tags("desktop")("Signature widget: full_name option on desktop", async () =
         </form>`,
     });
     // Clicks on the sign button to open the sign modal.
-    click("span.o_sign_label");
+    await click("span.o_sign_label");
     await waitFor(".modal .modal-body");
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1);
     expect.verifySteps(["Pop's Chock'lit"]);
@@ -166,7 +166,7 @@ test.tags("mobile")("Signature widget: full_name option on mobile", async () => 
 
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     // Clicks on the sign button to open the sign modal.
-    click("span.o_sign_label");
+    await click("span.o_sign_label");
     await waitFor(".modal .modal-body");
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1);
     expect.verifySteps(["Pop's Chock'lit"]);
@@ -190,7 +190,7 @@ test.tags("desktop")("Signature widget: highlight option on desktop", async () =
     });
 
     // Clicks on the sign button to open the sign modal.
-    click(".o_widget_signature button.o_sign_button");
+    await click(".o_widget_signature button.o_sign_button");
     await waitFor(".modal .modal-body");
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(0);
 });
@@ -214,7 +214,7 @@ test.tags("mobile")("Signature widget: highlight option on mobile", async () => 
     });
 
     // Clicks on the sign button to open the sign modal.
-    click(".o_widget_signature button.o_sign_button");
+    await click(".o_widget_signature button.o_sign_button");
     await waitFor(".modal .modal-body");
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(0);
 });

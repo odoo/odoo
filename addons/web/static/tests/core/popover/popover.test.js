@@ -199,7 +199,7 @@ test("popover is rendered nearby target (bottom-fit)", async () => {
 });
 
 test("reposition popover should properly change classNames", async () => {
-    resize({ height: 300 });
+    await resize({ height: 300 });
 
     class TestPopover extends Popover {
         setup() {
@@ -241,7 +241,7 @@ test("reposition popover should properly change classNames", async () => {
     // Change container style and force update
     container.style.height = "125px"; // height of popper + 1/2 reference
     container.style.alignItems = "flex-end";
-    resize();
+    await resize();
     await runAllTimers();
     await animationFrame();
 
@@ -290,7 +290,7 @@ test("within iframe", async () => {
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
     expect(Math.floor(popoverBox.left)).toBe(Math.floor(expectedLeft));
 
-    scroll(popoverTarget.ownerDocument.documentElement, { y: 100 });
+    await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 });
     await animationFrame();
     expect.verifySteps(["bottom"]);
     popoverBox = popoverEl.getBoundingClientRect();
@@ -364,7 +364,7 @@ test("popover fixed position", async () => {
     // force the DOM update
     container.style.height = "125px";
     container.style.alignItems = "flex-end";
-    resize();
+    await resize();
     await animationFrame();
 
     expect.verifySteps([]);

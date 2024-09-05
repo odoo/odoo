@@ -7,7 +7,9 @@ import { WebClient } from "@web/webclient/webclient";
 import { xml } from "@odoo/owl";
 
 import {
+    clickModalButton,
     clickSave,
+    contains,
     defineModels,
     editFavoriteName,
     fields,
@@ -24,8 +26,8 @@ import {
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 
-import { click, edit, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
@@ -71,13 +73,13 @@ beforeEach(() => onRpc("has_group", () => true));
 
 test("SelectCreateDialog use domain, group_by and search default", async () => {
     expect.assertions(3);
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `
+    Partner._views["search"] = /* xml */ `
         <search>
             <field name="foo" filter_domain="[('name','ilike',self), ('foo','ilike',self)]"/>
             <group expand="0" string="Group By">
@@ -187,13 +189,13 @@ test("SelectCreateDialog use domain, group_by and search default", async () => {
 test("SelectCreateDialog correctly evaluates domains", async () => {
     expect.assertions(1);
 
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
+    Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([["id", "=", 2]], {
             message: "should have correctly evaluated the domain",
@@ -209,23 +211,23 @@ test("SelectCreateDialog correctly evaluates domains", async () => {
 });
 
 test("SelectCreateDialog list view in readonly", async () => {
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list string="Partner" editable="bottom">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `<search/>`;
+    Partner._views["search"] = /* xml */ `<search/>`;
+
     await mountWithCleanup(WebClient);
+
     getService("dialog").add(SelectCreateDialog, {
         resModel: "partner",
     });
-
     await animationFrame();
 
     // click on the first row to see if the list is editable
-    click(".o_list_view tbody tr td:eq(1)");
-    await animationFrame();
+    await contains(".o_list_view tbody tr td:first").click();
 
     expect(".o_list_view tbody tr td .o_field_char input").toHaveCount(0, {
         message: "list view should not be editable in a SelectCreateDialog",
@@ -235,13 +237,13 @@ test("SelectCreateDialog list view in readonly", async () => {
 test("SelectCreateDialog cascade x2many in create mode", async () => {
     expect.assertions(5);
 
-    Partner._views["form,false"] = /* xml */ `
+    Partner._views["form"] = /* xml */ `
         <form>
             <field name="name"/>
             <field name="instrument" widget="one2many" mode="list"/>
         </form>
     `;
-    Instrument._views["form,false"] = /* xml */ `
+    Instrument._views["form"] = /* xml */ `
         <form>
             <field name="name"/>
             <field name="badassery">
@@ -251,8 +253,8 @@ test("SelectCreateDialog cascade x2many in create mode", async () => {
             </field>
         </form>
     `;
-    Badassery._views["list,false"] = /* xml */ `<list><field name="level"/></list>`;
-    Badassery._views["search,false"] = /* xml */ `<search><field name="level"/></search>`;
+    Badassery._views["list"] = /* xml */ `<list><field name="level"/></list>`;
+    Badassery._views["search"] = /* xml */ `<search><field name="level"/></search>`;
 
     onRpc(async ({ route, args }) => {
         if (route === "/web/dataset/call_kw/partner/get_formview_id") {
@@ -289,28 +291,21 @@ test("SelectCreateDialog cascade x2many in create mode", async () => {
         `,
     });
 
-    click(".o_field_x2many_list_row_add a");
-    await animationFrame();
-
-    click(".o_field_widget[name=instrument] input");
-    edit("ABC");
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_widget[name=instrument] input").edit("ABC", { confirm: false });
     await runAllTimers();
-    await animationFrame();
-
-    click(`[name="instrument"] .dropdown .dropdown-menu li:contains("Create and edit...")`);
-    await animationFrame();
+    await contains(
+        `[name="instrument"] .dropdown .dropdown-menu li:contains("Create and edit...")`
+    ).click();
 
     expect(".modal .modal-lg").toHaveCount(1);
 
-    click(queryFirst(".modal .o_field_x2many_list_row_add a"));
-    await animationFrame();
+    await contains(".modal .o_field_x2many_list_row_add a").click();
 
     expect(".modal .modal-lg").toHaveCount(2);
 
-    click(queryFirst(".modal .o_data_row input[type=checkbox]"));
-    await animationFrame(); // wait for the select button to be enabled
-    click(queryFirst(".modal .o_select_button"));
-    await animationFrame();
+    await contains(".modal .o_data_row input[type=checkbox]").check();
+    await clickModalButton({ text: "Select" });
 
     expect(".modal .modal-lg").toHaveCount(1);
     expect(".modal .o_data_cell").toHaveText("Awsome");
@@ -321,9 +316,9 @@ test("SelectCreateDialog cascade x2many in create mode", async () => {
 
 test("SelectCreateDialog: save current search", async () => {
     expect.assertions(5);
-    Partner._views["list,false"] = /* xml */ `<list><field name="name"/> </list>`;
+    Partner._views["list"] = /* xml */ `<list><field name="name"/> </list>`;
     Partner._views[
-        "search,false"
+        "search"
     ] = /* xml */ `<search><filter name="bar" help="Bar" domain="[('bar', '=', True)]"/></search>`;
 
     patchWithCleanup(listView.Controller.prototype, {
@@ -380,13 +375,13 @@ test("SelectCreateDialog: save current search", async () => {
 test("SelectCreateDialog calls on_selected with every record matching the domain", async () => {
     expect.assertions(1);
 
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list limit="2" string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
+    Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
 
     await mountWithCleanup(WebClient);
     getService("dialog").add(SelectCreateDialog, {
@@ -395,23 +390,20 @@ test("SelectCreateDialog calls on_selected with every record matching the domain
     });
     await animationFrame();
 
-    click("thead .o_list_record_selector input");
-    await animationFrame();
-    click(".o_list_selection_box .o_list_select_domain");
-    await animationFrame();
-    click(".modal .o_select_button");
-    await animationFrame();
+    await contains("thead .o_list_record_selector input").click();
+    await contains(".o_list_selection_box .o_list_select_domain").click();
+    await clickModalButton({ text: "Select" });
 });
 
 test("SelectCreateDialog calls on_selected with every record matching without selecting a domain", async () => {
     expect.assertions(1);
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list limit="2" string="Partner">
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
+    Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
 
     await mountWithCleanup(WebClient);
 
@@ -421,17 +413,14 @@ test("SelectCreateDialog calls on_selected with every record matching without se
     });
     await animationFrame();
 
-    click("thead .o_list_record_selector input");
-    await animationFrame();
-    click(".o_list_selection_box");
-    await animationFrame();
-    click(".modal .o_select_button");
-    await animationFrame();
+    await contains("thead .o_list_record_selector input").click();
+    await contains(".o_list_selection_box").click();
+    await clickModalButton({ text: "Select" });
 });
 
 test("SelectCreateDialog: multiple clicks on record", async () => {
-    Partner._views["list,false"] = /* xml */ `<list><field name="name"/></list>`;
-    Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
+    Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
+    Partner._views["search"] = /* xml */ `<search><field name="foo"/></search>`;
 
     await mountWithCleanup(WebClient);
     getService("dialog").add(SelectCreateDialog, {
@@ -441,22 +430,22 @@ test("SelectCreateDialog: multiple clicks on record", async () => {
         },
     });
     await animationFrame();
-    click(queryFirst(".modal .o_data_row .o_data_cell"));
-    click(queryFirst(".modal .o_data_row .o_data_cell"));
-    click(queryFirst(".modal .o_data_row .o_data_cell"));
+    await click(".modal .o_data_row .o_data_cell");
+    await click(".modal .o_data_row .o_data_cell");
+    await click(".modal .o_data_row .o_data_cell");
     await animationFrame();
     // should have called onSelected only once
     expect.verifySteps(["select record 1"]);
 });
 
 test("SelectCreateDialog: default props, create a record", async () => {
-    Partner._views["list,false"] = /* xml */ `<list><field name="name"/></list>`;
-    Partner._views["search,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
+    Partner._views["search"] = /* xml */ `
         <search>
             <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
         </search>
     `;
-    Partner._views["form,false"] = /* xml */ `<form><field name="name"/></form>`;
+    Partner._views["form"] = /* xml */ `<form><field name="name"/></form>`;
     await mountWithCleanup(WebClient);
 
     getService("dialog").add(SelectCreateDialog, {
@@ -473,14 +462,12 @@ test("SelectCreateDialog: default props, create a record", async () => {
     expect(".o_dialog footer button.o_form_button_cancel").toHaveCount(1);
     expect(".o_dialog .o_control_panel_main_buttons .o_list_button_add").toHaveCount(0);
 
-    click(".o_dialog footer button.o_create_button");
-    await animationFrame();
+    await contains(".o_dialog footer button.o_create_button").click();
 
     expect(".o_dialog").toHaveCount(2);
     expect(".o_dialog .o_form_view").toHaveCount(1);
 
-    click(".o_dialog .o_form_view .o_field_widget input");
-    edit("hello");
+    await contains(".o_dialog .o_form_view .o_field_widget input").edit("hello");
     await clickSave();
 
     expect(".o_dialog").toHaveCount(0);
@@ -489,13 +476,13 @@ test("SelectCreateDialog: default props, create a record", async () => {
 
 test("SelectCreateDialog empty list, default no content helper", async () => {
     Partner._records = [];
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list>
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `<search/>`;
+    Partner._views["search"] = /* xml */ `<search/>`;
     await mountWithCleanup(WebClient);
     getService("dialog").add(SelectCreateDialog, { resModel: "partner" });
     await animationFrame();
@@ -509,13 +496,13 @@ test("SelectCreateDialog empty list, default no content helper", async () => {
 
 test("SelectCreateDialog empty list, noContentHelp props", async () => {
     Partner._records = [];
-    Partner._views["list,false"] = /* xml */ `
+    Partner._views["list"] = /* xml */ `
         <list>
             <field name="name"/>
             <field name="foo"/>
         </list>
     `;
-    Partner._views["search,false"] = /* xml */ `<search/>`;
+    Partner._views["search"] = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
     const template = xml`

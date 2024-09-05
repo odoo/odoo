@@ -54,9 +54,9 @@ registerWebsitePreviewTour("website_media_dialog_external_library", {
         trigger: ".o_select_media_dialog .o_we_search_select",
         // This is a standard <select>: we can't simulate a click on the option
         // directly.
-        run(actions) {
-            actions.click();
-            actions.text("Illustrations");
+        async run(actions) {
+            await actions.click();
+            await actions.text("Illustrations");
             this.$anchor.trigger($.Event("keydown", {key: 'Enter', keyCode: 13}));
         },
     }, {

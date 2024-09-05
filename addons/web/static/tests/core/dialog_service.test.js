@@ -25,7 +25,7 @@ test("Simple rendering with a single dialog", async () => {
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Welcome");
-    click(".o_dialog footer button");
+    await click(".o_dialog footer button");
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
 });
@@ -68,7 +68,7 @@ test("rendering with two dialogs", async () => {
     await animationFrame();
     expect(".o_dialog").toHaveCount(2);
     expect(queryAllTexts("header .modal-title")).toEqual(["Hello", "Sauron"]);
-    click(".o_dialog footer button");
+    await click(".o_dialog footer button");
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Sauron");
@@ -131,7 +131,7 @@ test("a popover with an autofocus child can become the UI active element", async
     );
     expect(".btn.test").toBeFocused();
 
-    click(".btn.test");
+    await click(".btn.test");
     await animationFrame();
     expect(queryOne(".o_popover")).toBe(getService("ui").activeElement);
     expect(".o_popover input").toBeFocused();
@@ -166,7 +166,7 @@ test("Interactions between multiple dialogs", async () => {
     expect(res.active).toEqual([false, false, true]);
     expect(res.names).toEqual(["Hello", "Sauron", "Rafiki"]);
 
-    press("Escape", { bubbles: true });
+    await press("Escape", { bubbles: true });
     await animationFrame();
 
     expect(".o_dialog").toHaveCount(2);
@@ -174,7 +174,7 @@ test("Interactions between multiple dialogs", async () => {
     expect(res.active).toEqual([false, true]);
     expect(res.names).toEqual(["Hello", "Sauron"]);
 
-    click(".o_dialog:not(.o_inactive_modal) footer button");
+    await click(".o_dialog:not(.o_inactive_modal) footer button");
     await animationFrame();
 
     expect(".o_dialog").toHaveCount(1);
@@ -182,7 +182,7 @@ test("Interactions between multiple dialogs", async () => {
     expect(res.active).toEqual([true]);
     expect(res.names).toEqual(["Hello"]);
 
-    click("footer button");
+    await click("footer button");
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
 });

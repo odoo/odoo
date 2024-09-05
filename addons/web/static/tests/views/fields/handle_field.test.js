@@ -57,7 +57,7 @@ test("HandleField in x2m", async () => {
     expect(queryFirst("td")).toHaveClass("o_handle_cell", {
         message: "column widget should be displayed in css class",
     });
-    click("td:eq(1)");
+    await click("td:eq(1)");
     await animationFrame();
 
     expect("td:eq(0) span.o_row_handle").toHaveCount(1, {

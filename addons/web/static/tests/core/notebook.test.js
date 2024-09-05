@@ -49,7 +49,7 @@ test("notebook with multiple pages given as slots", async () => {
         message: "first page content is displayed by the notebook",
     });
 
-    click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
     expect(".o_notebook_headers .nav-item:nth-child(2) a").toHaveClass("active", {
         message: "second page is now selected",
@@ -198,7 +198,7 @@ test("notebook pages rendered by a template component", async () => {
         message: "third page is selected by default",
     });
 
-    click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
     expect(".o_notebook_content p").toHaveText("Second page rendered by a template component", {
         message: "displayed content corresponds to the current page",
@@ -235,7 +235,7 @@ test("each page is different", async () => {
     const firstPage = queryFirst("h3");
     expect(firstPage).toBeInstanceOf(HTMLElement);
 
-    click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
     const secondPage = queryFirst("h3");
     expect(secondPage).toBeInstanceOf(HTMLElement);
@@ -274,7 +274,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
     expect(".page3").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page3");
 
-    click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) a");
     await animationFrame();
     expect(".page2").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page2");
@@ -309,13 +309,13 @@ test("disabled pages are greyed out and can't be toggled", async () => {
         message: "tab of the disabled page is greyed out",
     });
 
-    click(".nav-item:nth-child(2) .nav-link");
+    await click(".nav-item:nth-child(2) .nav-link");
     await animationFrame();
     expect(".page1").toHaveCount(1, {
         message: "the same page is still displayed",
     });
 
-    click(".nav-item:nth-child(3) .nav-link");
+    await click(".nav-item:nth-child(3) .nav-link");
     await animationFrame();
     expect(".page3").toHaveCount(1, {
         message: "the third page is now displayed",

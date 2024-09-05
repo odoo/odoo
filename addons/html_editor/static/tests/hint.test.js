@@ -113,7 +113,7 @@ test("hint for code section should have the same padding as its text content", a
     const hintStyle = getComputedStyle(pre, "::after");
     expect(hintStyle.content).toBe('"Code"');
     const paddingHint = hintStyle.padding;
-    insertText(editor, "abc");
+    await insertText(editor, "abc");
     expect(hintStyle.content).toBe("none");
     const paddingText = getComputedStyle(pre).padding;
     expect(paddingHint).toBe(paddingText);
@@ -128,7 +128,7 @@ test("hint for blockquote should have the same padding as its text content", asy
     const hintStyle = getComputedStyle(blockquote, "::after");
     expect(hintStyle.content).toBe('"Quote"');
     const paddingHint = hintStyle.padding;
-    insertText(editor, "abc");
+    await insertText(editor, "abc");
     expect(hintStyle.content).toBe("none");
     const paddingText = getComputedStyle(blockquote).padding;
     expect(paddingHint).toBe(paddingText);

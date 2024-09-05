@@ -68,8 +68,6 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  raw?: boolean;
  * }} QueryTextOptions
  *
- * @typedef {MaybeIterable<Node> | string | null | undefined | false} Target
- *
  * @typedef {{
  *  message?: string | () => string;
  *  timeout?: number;
@@ -79,6 +77,11 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
 /**
  * @template T
  * @typedef {T | Iterable<T>} MaybeIterable
+ */
+
+/**
+ * @template [T=Node]
+ * @typedef {MaybeIterable<T> | string | null | undefined | false} Target
  */
 
 //-----------------------------------------------------------------------------

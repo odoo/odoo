@@ -45,7 +45,7 @@ test("close on click away", async () => {
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover #comp").toHaveCount(1);
 
-    click(document.body);
+    await click(document.body);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);
@@ -64,7 +64,7 @@ test.tags("desktop")("close on 'Escape' keydown", async () => {
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover #comp").toHaveCount(1);
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);
@@ -83,7 +83,7 @@ test("do not close on click away", async () => {
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover #comp").toHaveCount(1);
 
-    click(document.body);
+    await click(document.body);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -109,7 +109,7 @@ test("close callback", async () => {
     getService("popover").add(target, Comp, {}, { onClose });
     await animationFrame();
 
-    click(document.body);
+    await click(document.body);
     await animationFrame();
 
     expect.verifySteps(["close"]);
@@ -127,7 +127,7 @@ test("sub component triggers close", async () => {
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover #comp").toHaveCount(1);
 
-    click("#comp");
+    await click("#comp");
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);

@@ -105,7 +105,7 @@ test.tags("desktop")(
 
         const scrollableElement = queryOne(".o_content");
         const table = queryOne(".odoo-editor-editable table");
-        hover(".odoo-editor-editable td");
+        await hover(".odoo-editor-editable td");
         const columnControl = await waitFor(".o-we-table-menu[data-type='column']");
 
         // Table column control displayed on hover should be above the table
@@ -116,7 +116,7 @@ test.tags("desktop")(
         scrollableElement.scrollTop += distanceToTop;
         await animationFrame();
 
-        hover(".odoo-editor-editable td");
+        await hover(".odoo-editor-editable td");
         await animationFrame();
 
         // Table control should not be displayed (it should not overflow the scroll
@@ -139,9 +139,9 @@ test.tags("desktop")("Table menu should close on scroll", async () => {
 
     const scrollableElement = queryOne(".o_content");
 
-    hover(".odoo-editor-editable td");
+    await hover(".odoo-editor-editable td");
     const columnControl = await waitFor(".o-we-table-menu[data-type='column']");
-    click(columnControl);
+    await click(columnControl);
     await animationFrame();
 
     // Column menu should be displayed.

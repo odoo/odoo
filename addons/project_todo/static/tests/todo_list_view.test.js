@@ -23,7 +23,7 @@ test("Check that todo_list view is restricted to archive, unarchive, duplicate a
     });
 
     const [firstRow] = queryAll(".o_data_row");
-    check(".o_list_record_selector input", { root: firstRow });
+    await check(".o_list_record_selector input", { root: firstRow });
     await animationFrame();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     expect(queryAllTexts`.o_menu_item`).toEqual([

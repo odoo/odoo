@@ -295,12 +295,12 @@ test("has no effect when component is destroyed", async () => {
     // onPositioned called when component mounted
     expect.verifySteps(["onPositioned called"]);
 
-    scroll(queryOne("#scroll-container"), { y: 100 });
+    await scroll(queryOne("#scroll-container"), { y: 100 });
     await animationFrame();
     // onPositioned called when container scroll
     expect.verifySteps(["onPositioned called"]);
 
-    scroll(queryOne("#scroll-container"), { y: 100 });
+    await scroll(queryOne("#scroll-container"), { y: 100 });
     destroy(comp);
     await animationFrame();
     // onPositioned not called even if scroll happened right before the component destroys
@@ -341,11 +341,11 @@ test("reposition popper when a scroll event occurs", async () => {
     await mountWithCleanup(TestComp);
     // onPositioned called when component mounted
     expect.verifySteps(["onPositioned called"]);
-    scroll(queryOne("#popper"), { y: 10 });
+    await scroll(queryOne("#popper"), { y: 10 });
     await animationFrame();
     // onPositioned not called when scroll event is triggered inside popper
     expect.verifySteps([]);
-    scroll(queryOne("#scroll-container"), { y: 10 });
+    await scroll(queryOne("#scroll-container"), { y: 10 });
     await animationFrame();
     // onPositioned called when container scroll (parent of popper)
     expect.verifySteps(["onPositioned called"]);
@@ -487,7 +487,7 @@ test("iframe: popper is outside, target inside", async () => {
     // Scrolling inside the iframe should reposition the popover accordingly
     const previousPositionSolution = onPositionedArgs.solution;
     const scrollOffset = 100;
-    scroll(queryOne("iframe").contentDocument.documentElement, { y: scrollOffset });
+    await scroll(queryOne("iframe").contentDocument.documentElement, { y: scrollOffset });
     await animationFrame();
     expect.verifySteps(["bottom-middle"]);
     expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
@@ -574,7 +574,7 @@ test("iframe: both popper and target inside", async () => {
     // Scrolling inside the iframe should reposition the popover accordingly
     const previousPositionSolution = onPositionedArgs.solution;
     const scrollOffset = 100;
-    scroll(iframe.contentDocument.documentElement, { y: scrollOffset });
+    await scroll(iframe.contentDocument.documentElement, { y: scrollOffset });
     await animationFrame();
     expect.verifySteps(["bottom-middle"]);
     expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
@@ -707,7 +707,7 @@ test("popper as child of another", async () => {
     await mountWithCleanup(Parent);
     const parentPopBox1 = queryOne("#popper").getBoundingClientRect();
     const childPopBox1 = queryOne("#child .popper").getBoundingClientRect();
-    scroll("#container", { y: 150 });
+    await scroll("#container", { y: 150 });
 
     const parentPopBox2 = queryOne("#popper").getBoundingClientRect();
     const childPopBox2 = queryOne("#child .popper").getBoundingClientRect();
@@ -836,7 +836,7 @@ function getRepositionTest(from, to, containerStyleChanges) {
             Object.assign(queryOne("#container").style, CONTAINER_STYLE_MAP[styleToApply]);
             Object.assign(queryOne("#scroll-container").style, CONTAINER_STYLE_MAP[styleToApply]);
         }
-        scroll("#scroll-container", { y: 1 });
+        await scroll("#scroll-container", { y: 1 });
         await animationFrame();
 
         [d, v = "middle"] = to.split("-");

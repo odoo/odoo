@@ -1,21 +1,21 @@
+import { expect, test } from "@odoo/hoot";
+import { click, edit, press, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
     fields,
     getService,
     models,
-    mountWithCleanup,
     mountViewInDialog,
+    mountWithCleanup,
     onRpc,
     mockService,
     fieldInput,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
 
-import { WebClient } from "@web/webclient/webclient";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { WebClient } from "@web/webclient/webclient";
 
 class Partner extends models.Model {
     name = fields.Char({ string: "Displayed name" });
@@ -107,7 +107,7 @@ test("modifiers are considered on multiple <footer/> tags", async () => {
         message: "only the first button section should be visible",
     });
 
-    click(queryFirst(".o_field_boolean input"));
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(queryAllTexts(".modal-footer button:not(.d-none)")).toEqual(["Foo"], {
         message: "only the second button section should be visible",
@@ -136,9 +136,9 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     expect(".modal").toHaveCount(1);
     expect(".modal button.my_button").toHaveCount(1, { message: "should have 1 buttons in modal" });
 
-    click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add a");
     await animationFrame();
-    press("escape");
+    await press("escape");
     await animationFrame();
 
     expect(".modal").toHaveCount(1);
@@ -211,7 +211,7 @@ test.tags("desktop")("Form dialog and subview with _view_ref contexts", async ()
             </form>
         `,
     });
-    click('.o_field_widget[name="instrument"] button.o_external_button');
+    await click('.o_field_widget[name="instrument"] button.o_external_button');
     await animationFrame();
 });
 
@@ -235,11 +235,11 @@ test("click on view buttons in a FormViewDialog", async () => {
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .o_form_view button").toHaveCount(2);
     expect.verifySteps(["get_views", "web_read"]);
-    click(".o_dialog .o_form_view .btn1");
+    await click(".o_dialog .o_form_view .btn1");
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect.verifySteps(["method1", "web_read"]); // should re-read the record
-    click(".o_dialog .o_form_view .btn2");
+    await click(".o_dialog .o_form_view .btn2");
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(0);
     expect.verifySteps(["method2"]); // should not read as we closed
@@ -274,7 +274,7 @@ test("formviewdialog is not closed when button handlers return a rejected promis
     expect(".modal").toHaveCount(2, {
         message: "there are 2 modal opened, 1 for the error and 1 for the form view dialog",
     });
-    click(".o_error_dialog .btn-primary");
+    await click(".o_error_dialog .btn-primary");
     await animationFrame();
 
     expect(".modal").toHaveCount(1, { message: "modal should still be opened" });
@@ -297,7 +297,7 @@ test("FormViewDialog with remove button", async () => {
 
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-footer .o_form_button_remove").toHaveCount(1);
-    click(".o_dialog .modal-footer .o_form_button_remove");
+    await click(".o_dialog .modal-footer .o_form_button_remove");
     await animationFrame();
     expect.verifySteps(["remove"]);
     expect(".o_dialog .o_form_view").toHaveCount(0);
@@ -324,8 +324,8 @@ test("Buttons are set as disabled on click", async () => {
 
     await animationFrame();
 
-    click(".o_dialog .o_content .o_field_char .o_input");
-    edit("test");
+    await click(".o_dialog .o_content .o_field_char .o_input");
+    await edit("test");
     await animationFrame();
 
     await clickSave();
@@ -349,7 +349,7 @@ test("FormViewDialog with discard button", async () => {
 
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-footer .o_form_button_cancel").toHaveCount(1);
-    click(".o_dialog .modal-footer .o_form_button_cancel");
+    await click(".o_dialog .modal-footer .o_form_button_cancel");
     await animationFrame();
     expect.verifySteps(["discard"]);
     expect(".o_dialog .o_form_view").toHaveCount(0);
@@ -374,13 +374,13 @@ test("Save a FormViewDialog when a required field is empty don't close the dialo
 
     await animationFrame();
 
-    click('.modal button[name="save"]');
+    await click('.modal button[name="save"]');
     await animationFrame();
 
     expect(".modal").toHaveCount(1, { message: "modal should still be opened" });
-    click("[name='foo'] input");
-    edit("new");
-    click('.modal button[name="save"]');
+    await click("[name='foo'] input");
+    await edit("new");
+    await click('.modal button[name="save"]');
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "modal should be closed" });
 });
@@ -409,7 +409,7 @@ test.tags("desktop")("new record has an expand button", async () => {
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
     await fieldInput("foo").edit("new");
-    click(".o_dialog .modal-header .o_expand_button");
+    await click(".o_dialog .modal-header .o_expand_button");
     await animationFrame();
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
@@ -438,7 +438,7 @@ test.tags("desktop")("existing record has an expand button", async () => {
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
     await fieldInput("foo").edit("hola");
-    click(".o_dialog .modal-header .o_expand_button");
+    await click(".o_dialog .modal-header .o_expand_button");
     await animationFrame();
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
@@ -481,10 +481,10 @@ test.tags("desktop")("expand button with save and new", async () => {
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
     await fieldInput("name").edit("Violoncelle");
-    click(".o_dialog .modal-footer .o_form_button_save_new");
+    await click(".o_dialog .modal-footer .o_form_button_save_new");
     await animationFrame();
     await fieldInput("name").edit("Flute");
-    click(".o_dialog .modal-header .o_expand_button");
+    await click(".o_dialog .modal-header .o_expand_button");
     await animationFrame();
     expect.verifySteps([
         "save",
