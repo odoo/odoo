@@ -269,7 +269,9 @@ QUnit.test("WebSocket connects with URL corresponding to given serverURL", async
     const env = await makeTestEnv();
     env.services["bus_service"].start();
     await websocketCreatedDeferred;
-    assert.verifySteps([`${serverURL.replace("http", "ws")}/websocket?version=undefined`]);
+    assert.verifySteps([
+        `${serverURL.replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
+    ]);
 });
 
 QUnit.test("Disconnect on offline, re-connect on online", async () => {
