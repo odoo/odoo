@@ -78,6 +78,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.env["bus.bus"].search([]).unlink()
         self.make_jsonrpc_request("/websocket/on_closed", {}, headers=headers)
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         message = self.make_jsonrpc_request(
             "/websocket/peek_notifications",
             {
