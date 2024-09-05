@@ -7,6 +7,7 @@ from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools.misc import str2bool
 
 
 class DiscussChannelWebclientController(WebclientController):
@@ -46,7 +47,11 @@ class ChannelController(http.Controller):
             return
         return Store(channel).get_result()
 
-    @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
+    def _readonly(self):
+        params = request.get_json_data()['params']
+        return str2bool(params.get('readonly', False))
+
+    @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public", readonly=_readonly)
     @add_guest_to_context
     def discuss_channel_messages(self, channel_id, search_term=None, before=None, after=None, limit=30, around=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])

@@ -638,6 +638,7 @@ export class Thread extends Record {
                 after,
                 around,
                 before,
+                readonly: this.store.self.notification_preference !== "inbox"
             });
             this.store.insert(data, { html: true });
             this.isLoaded = true;
