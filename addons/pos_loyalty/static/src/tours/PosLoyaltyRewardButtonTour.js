@@ -155,8 +155,16 @@ ProductScreen.check.selectedOrderlineHas('Test Product A', '1.00', '40.00');
 ProductScreen.do.clickDisplayedProduct('Test Product B');
 ProductScreen.check.selectedOrderlineHas('Test Product B', '1.00', '40.00');
 PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("$ 10 per order on specific products");
 PosLoyalty.check.hasRewardLine('$ 10 per order on specific products', '-10.00', '1.00');
+PosLoyalty.check.orderTotalIs('70.00');
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("$ 10 per order on specific products");
 PosLoyalty.check.orderTotalIs('60.00');
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("$ 30 per order on specific products");
+PosLoyalty.check.hasRewardLine('$ 30 per order on specific products', '-30.00', '1.00');
+PosLoyalty.check.orderTotalIs('30.00');
 
 Tour.register('PosLoyaltySpecificDiscountTour', { test: true, url: '/pos/web' }, getSteps());
 

@@ -2144,6 +2144,40 @@ QUnit.module('Legacy fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('sorting one2many char field with falsy values', async function (assert) {
+            assert.expect(3);
+
+            this.data.partner.fields.foo.sortable = true;
+            this.data.partner.records.push({ id: 23, foo: "abc" });
+            this.data.partner.records.push({ id: 24, foo: false });
+            this.data.partner.records.push({ id: 25, foo: "def" });
+            this.data.partner.records[0].p = [23, 24, 25];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                debug: 1,
+            });
+
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["abc", "", "def"]);
+            await testUtils.dom.click(form.$('table thead th:contains(Foo)'));
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["", "abc", "def"]);
+            await testUtils.dom.click(form.$('table thead th:contains(Foo)'));
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["def", "abc", ""]);
+
+            form.destroy();
+        });
+
         QUnit.test('one2many list field edition', async function (assert) {
             assert.expect(6);
 

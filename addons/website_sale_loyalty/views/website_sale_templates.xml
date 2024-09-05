@@ -36,8 +36,28 @@
                                         <input type="hidden" name="reward" t-att-value="reward.id"/>
                                         <div class="alert alert-success text-start mt16" role="alert">
                                             <div class="d-flex flex-row">
-                                                <div class="flex-grow-1">
+                                                <div class="flex-grow-1 text-break">
                                                     <strong t-esc="reward.description"/>
+                                                    <div t-if="reward.reward_type == 'product'"
+                                                        class="mt-1 pe-3"
+                                                    >
+                                                        <select
+                                                            t-if="reward.multi_product"
+                                                            class="o_select w-100 form-select form-select-sm css_attribute_select"
+                                                            name="product_id"
+                                                        >
+                                                            <option
+                                                                t-foreach="reward.reward_product_ids"
+                                                                t-as="product"
+                                                                t-att-value="product.id"
+                                                            >
+                                                                <t t-out="product.display_name"/>
+                                                            </option>
+                                                        </select>
+                                                        <t t-else="">
+                                                            <t t-esc="reward.reward_product_ids.display_name"/>
+                                                        </t>
+                                                    </div>
                                                     <div t-if="reward.program_id.portal_visible">
                                                         <t t-set="coupon" t-value="coupon_reward[0]"/>
                                                         <t t-if="not reward.program_id.is_nominative">

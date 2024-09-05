@@ -26,17 +26,6 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
         },
     };
 }
-function assertPathName(pathName, trigger) {
-    return {
-        content: `Check if we have been redirected to ${pathName}`,
-        trigger: trigger,
-        run: () => {
-            if (!window.location.pathname.startsWith(pathName)) {
-                console.error(`We should be on ${pathName}.`);
-            }
-        }
-    };
-}
 
 function changeBackground(snippet, position = "bottom") {
     return {
@@ -398,18 +387,44 @@ function registerBackendAndFrontendTour(name, options, steps) {
  * @param elementName {string} the element to search
  * @param searchNeeded {Boolean} if the widget is a m2o widget and a search is needed
  */
-function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = false) {
-    const steps = [clickOnElement(`${widgetName} toggler`, `we-select[data-name=${widgetName}] we-toggler`)];
-
+function selectElementInWeSelectWidget(
+    widgetName,
+    elementName,
+    searchNeeded = false
+) {
+    const we_select = `we-select[data-name=${widgetName}]`;
+    const steps = [
+        {
+            content: `Clicking on the ${widgetName} toggler in vue to select ${elementName}`,
+            trigger: `${we_select} we-toggler`,
+            run: "click",
+        },
+    ];
     if (searchNeeded) {
         steps.push({
             content: `Inputing ${elementName} in m2o widget search`,
-            trigger: `we-select[data-name=${widgetName}] div.o_we_m2o_search input`,
-            run: `text ${elementName}`
+            trigger: `${we_select} div.o_we_m2o_search input`,
+            run: `text ${elementName}`,
         });
     }
-    steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`,
-        `we-select[data-name=${widgetName}] we-button:contains(${elementName})`));
+    steps.push({
+        content: `Clicking on the ${elementName} in the ${widgetName} widget`,
+        trigger: `${we_select} we-button:contains("${elementName}")`,
+        run: "click",
+    });
+    steps.push({
+        content:
+            "Check we-select is set and wait a delay before continue the tour",
+        trigger: `${we_select}:contains(${elementName})`,
+        async run() {
+            // fix underterministic error.
+            // When we-select is used twice a row too fast, the second we-select may not open.
+            // The first toggle is open, we click on it and almost at the same time, we click on the second one.
+            // There may be confusion with the active class.
+            // Add a delay before continue the tour solves this problem.
+            await new Promise((resolve) => setTimeout(resolve, 300));
+        },
+    });
     return steps;
 }
 
@@ -441,7 +456,6 @@ function switchWebsite(websiteId, websiteName) {
 return {
     addMedia,
     assertCssVariable,
-    assertPathName,
     changeBackground,
     changeBackgroundColor,
     changeColumnSize,
