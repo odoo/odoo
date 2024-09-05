@@ -396,6 +396,7 @@ class AccountEdiFormat(models.Model):
 
         if invoice._is_l10n_es_tbai_simplified():
             values['regime_key'].append(52)  # code for simplified invoices
+        values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
 
