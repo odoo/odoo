@@ -22,6 +22,7 @@ patch(Navbar.prototype, {
         }
         return super.orderCount;
     },
+<<<<<<< master
     showTabs() {
         if (this.pos.config.module_pos_restaurant) {
             return !this.pos.selectedTable;
@@ -29,6 +30,22 @@ patch(Navbar.prototype, {
             return super.showTabs();
         }
     },
+||||||| 6bbb977d3a1bee6e1ded52f0a90a089440b4d3c6
+    getTable() {
+        return this.pos.orderToTransferUuid
+            ? this.pos.models["pos.order"].find((o) => o.uuid == this.pos.orderToTransferUuid)
+                  ?.table_id
+            : this.pos.selectedTable;
+    },
+    showTabs() {
+        if (this.pos.config.module_pos_restaurant) {
+            return !(this.pos.selectedTable || this.pos.orderToTransferUuid);
+        } else {
+            return super.showTabs();
+        }
+    },
+=======
+>>>>>>> d23b553b089245c6b395dbb6e0aa72ebb4cd3203
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
         localStorage.setItem("floorPlanStyle", mode);
