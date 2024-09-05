@@ -407,7 +407,12 @@ export class LinkPlugin extends Plugin {
         if (this.linkElement && cleanZWChars(this.linkElement.innerText) === "") {
             this.linkElement.remove();
         }
-        if (this.linkElement && !this.linkElement.href) {
+        if (
+            this.linkElement &&
+            !this.linkElement.href &&
+            !this.linkElement.hasAttribute("t-attf-href") &&
+            !this.linkElement.hasAttribute("t-att-href")
+        ) {
             this.removeLink();
             this.dispatch("ADD_STEP");
         }
