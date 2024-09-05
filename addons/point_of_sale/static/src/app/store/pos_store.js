@@ -445,10 +445,9 @@ export class PosStore extends Reactive {
         return {
             attribute_value_ids: attributeLinesValues.map((values) => values[0].id),
             attribute_custom_values: [],
-            price_extra: attributeLinesValues.reduce(
-                (acc, values) => acc + values[0].price_extra,
-                0
-            ),
+            price_extra: attributeLinesValues
+                .filter((attr) => attr[0].attribute_id.create_variant !== "always")
+                .reduce((acc, values) => acc + values[0].price_extra, 0),
             quantity: 1,
         };
     }
@@ -564,7 +563,9 @@ export class PosStore extends Reactive {
                             if (productFound) {
                                 const attr =
                                     this.data.models["product.template.attribute.value"].get(a);
-                                return attr.is_custom;
+                                return (
+                                    attr.is_custom || attr.attribute_id.create_variant !== "always"
+                                );
                             }
                             return true;
                         })
@@ -586,7 +587,7 @@ export class PosStore extends Reactive {
                             ];
                         }
                     ),
-                    price_extra: productFound ? 0 : values.price_extra + payload.price_extra,
+                    price_extra: values.price_extra + payload.price_extra,
                     qty: payload.qty || values.qty,
                     product_id: productFound || values.product_id,
                 });
@@ -595,10 +596,9 @@ export class PosStore extends Reactive {
             }
         } else if (values.product_id.product_template_variant_value_ids.length > 0) {
             // Verify price extra of variant products
-            const priceExtra = values.product_id.product_template_variant_value_ids.reduce(
-                (acc, attr) => acc + attr.price_extra,
-                0
-            );
+            const priceExtra = values.product_id.product_template_variant_value_ids
+                .filter((attr) => attr.attribute_id.create_variant !== "always")
+                .reduce((acc, attr) => acc + attr.price_extra, 0);
             values.price_extra += priceExtra;
         }
 
