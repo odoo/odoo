@@ -709,6 +709,14 @@
         </t>
     </xpath>
 
+    <!-- Font Awesome icons -->
+    <xpath expr="//div[@data-js='FontawesomeTools']" position="inside">
+        <t t-call="website.snippet_options_border_line_widgets">
+            <t t-set="label">Border</t>
+            <t t-set="with_bs_class" t-value="True"/>
+        </t>
+    </xpath>
+
     <!-- =================================================================== -->
     <!-- Adding website specific snippet options                             -->
     <!-- =================================================================== -->

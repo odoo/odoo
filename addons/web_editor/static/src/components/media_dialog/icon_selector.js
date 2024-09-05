@@ -5,12 +5,13 @@ import { Component, useState } from "@odoo/owl";
 
 export class IconSelector extends Component {
     static mediaSpecificClasses = ["fa"];
-    static mediaSpecificStyles = ["color", "background-color"];
+    static mediaSpecificStyles = ["color", "background-color", "border-width", "border-color", "border-style"];
     static mediaExtraClasses = [
         "rounded-circle",
         "rounded",
         "img-thumbnail",
         "shadow",
+        "border",
         /^text-\S+$/,
         /^bg-\S+$/,
         /^fa-\S+$/,
