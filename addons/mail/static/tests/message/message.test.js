@@ -1039,7 +1039,7 @@ test("Notification Error", async () => {
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
     expect($(".o-mail-Message-notification i")[0]).toHaveClass("fa-envelope");
-    click(".o-mail-Message-notification").then(() => {});
+    await click(".o-mail-Message-notification").then(() => {});
     await openResendActionDef;
     await assertSteps(["do_action"]);
 });
@@ -1956,7 +1956,7 @@ test("Copy Message Link", async () => {
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click("[title='Copy Message Link']");
     await assertSteps([url(`/mail/message/${messageId_2}`)]);
-    press(["ctrl", "v"]);
+    await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });

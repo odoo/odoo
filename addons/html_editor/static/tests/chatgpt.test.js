@@ -16,9 +16,9 @@ const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";
 const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
 const openFromPowerbox = async (editor) => {
-    insertText(editor, "/ChatGPT");
+    await insertText(editor, "/ChatGPT");
     await animationFrame();
-    press("Enter");
+    await press("Enter");
 };
 const openFromToolbar = async () => {
     await contains(".o-we-toolbar .btn[name='chatgpt']").click();

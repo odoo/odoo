@@ -54,13 +54,13 @@ test("Click on element with unique odoo class", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_child_1"]);
 
-    click(".o_child_2");
+    await click(".o_child_2");
     await animationFrame();
     checkTourSteps([".o_child_1", ".o_child_2"]);
 });
@@ -78,9 +78,9 @@ test("Click on element with no unique odoo class", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_child_1:nth-child(1)"]);
 });
@@ -89,9 +89,9 @@ test("Find the nearest odoo class", async () => {
     await mountWithCleanup(`<a class="click"></a>`, { noMainContainer: true });
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_web_client > a"]);
 });
@@ -110,10 +110,10 @@ test("Click on elements with 'data-menu-xmlid' attribute", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click_1");
-    click(".click_2");
+    await click(".click_1");
+    await click(".click_2");
     await animationFrame();
     checkTourSteps([
         ".o_web_client div[data-menu-xmlid='my_menu_1']",
@@ -135,10 +135,10 @@ test("Click on elements with 'name' attribute", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click_1");
-    click(".click_2");
+    await click(".click_1");
+    await click(".click_2");
     await animationFrame();
     checkTourSteps([".o_web_client div[name='sale_id']", ".o_div[name='partner_id']"]);
 });
@@ -155,10 +155,10 @@ test("Click on element that have a link or button has parent", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click_1");
-    click(".click_2");
+    await click(".click_1");
+    await click(".click_2");
     await animationFrame();
     checkTourSteps([".o_button", ".o_link"]);
 });
@@ -183,9 +183,9 @@ test("Click on element with path that can be reduced", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps(["div[name='field_name'] .o_div_3"]);
 });
@@ -201,9 +201,9 @@ test("Click on input", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_input"]);
@@ -222,9 +222,9 @@ test("Click on tag that is inside a contenteditable", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_editor[contenteditable='true']"]);
@@ -241,15 +241,15 @@ test("Remove step during recording", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_child"]);
-    click(".o_button_steps");
+    await click(".o_button_steps");
     await animationFrame();
     contains(".o_button_delete_step").click();
-    click(".o_button_steps");
+    await click(".o_button_steps");
     await animationFrame();
     checkTourSteps([]);
 });
@@ -265,13 +265,13 @@ test("Edit input", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     expect(".click").toBeFocused();
-    edit("Bismillah");
+    await edit("Bismillah");
     await animationFrame();
     checkTourSteps([".o_input"]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["edit Bismillah"]);
@@ -297,18 +297,18 @@ test("Save custom tour", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_parent > div"]);
 
-    click(".o_button_save");
+    await click(".o_button_save");
     await animationFrame();
     await contains("input[name='name']").click();
-    edit("tour_name");
+    await edit("tour_name");
     await animationFrame();
-    click(".o_button_save_confirm");
+    await click(".o_button_save_confirm");
     await runAllTimers(); // Wait that the save notification disappear
 
     expect.verifySteps(["tour_name", "/", 1]);
@@ -328,7 +328,7 @@ test("Drag and drop", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
     await contains(".o_drag").dragAndDrop(".o_drop");
     await animationFrame();
@@ -348,16 +348,16 @@ test("Edit contenteditable", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_editor").toBeFocused();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
-    keyDown("B");
+    await keyDown("B");
     await animationFrame();
     queryOne(".o_editor").appendChild(document.createTextNode("Bismillah"));
-    keyUp("B");
+    await keyUp("B");
     await animationFrame();
     checkTourSteps([".o_editor[contenteditable='true']"]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["editor Bismillah"]);
@@ -380,13 +380,13 @@ test("Selecting item in autocomplete field through Enter", async () => {
     }
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
 
     await mountWithCleanup(Dummy);
-    click("#autocomplete");
+    await click("#autocomplete");
     await animationFrame();
-    press("Enter");
+    await press("Enter");
     checkTourSteps([
         ".o-autocomplete--input",
         ".o-autocomplete--dropdown-item > a:contains('World'), .fa-circle-o-notch",
@@ -412,14 +412,14 @@ test("Edit input after autofocus", async () => {
     }
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
 
     await mountWithCleanup(Dummy);
 
     expect(".o_input").toBeFocused();
     expect(".o_button_record").toHaveText("Record");
-    edit("Bismillah");
+    await edit("Bismillah");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_input"]);

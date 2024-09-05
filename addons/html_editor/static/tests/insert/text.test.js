@@ -8,7 +8,7 @@ describe("collapsed selection", () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">[]\u200B</span>cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter: '<p>ab<span class="a">x[]\u200B</span>cd</p>',
         });
@@ -18,7 +18,7 @@ describe("collapsed selection", () => {
         await testEditor({
             contentBefore: '<p>ab <span class="a">[]\u200B</span> cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter: '<p>ab <span class="a">x[]\u200B</span> cd</p>',
         });
@@ -28,7 +28,7 @@ describe("collapsed selection", () => {
         await testEditor({
             contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter: "<p>abx[]cd</p>",
         });
@@ -38,7 +38,7 @@ describe("collapsed selection", () => {
         await testEditor({
             contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter: "<p>abx[]cd</p>",
         });
@@ -50,7 +50,7 @@ describe("not collapsed selection", () => {
         await testEditor({
             contentBefore:
                 '<h1><font style="background-color: red;">[abc]</font><br></h1><p>def</p>',
-            stepFunction: async (editor) => insertText(editor, "g"),
+            stepFunction: async (editor) => await insertText(editor, "g"),
             contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
         });
         await testEditor({
@@ -58,7 +58,7 @@ describe("not collapsed selection", () => {
                 '<h1><font style="background-color: red;">[abc]</font><br></h1><p>def</p>',
             stepFunction: async (editor) => {
                 deleteBackward(editor);
-                insertText(editor, "g");
+                await insertText(editor, "g");
             },
             contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
         });
@@ -68,7 +68,7 @@ describe("not collapsed selection", () => {
         await testEditor({
             contentBefore: `<p><strong>ab</strong> [cd]</p>`,
             stepFunction: async (editor) => {
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter: `<p><strong>ab</strong>&nbsp;x[]</p>`,
         });
@@ -76,7 +76,7 @@ describe("not collapsed selection", () => {
 
     test("should replace text and be a undoable step", async () => {
         const { editor, el } = await setupEditor("<p>[abc]def</p>");
-        insertText(editor, "x");
+        await insertText(editor, "x");
         expect(getContent(el)).toBe("<p>x[]def</p>");
         editor.dispatch("HISTORY_UNDO");
         expect(getContent(el)).toBe("<p>[abc]def</p>");

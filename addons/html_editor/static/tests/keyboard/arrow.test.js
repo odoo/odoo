@@ -5,7 +5,7 @@ import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
 
 const keyPress = (keys) => async (editor) => {
-    simulateArrowKeyPress(editor, keys);
+    await simulateArrowKeyPress(editor, keys);
     // Allow onselectionchange handler to run.
     await tick();
 };

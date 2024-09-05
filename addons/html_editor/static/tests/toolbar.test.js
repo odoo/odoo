@@ -1,4 +1,4 @@
-import { expect, test, describe } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     keyDown,
@@ -14,20 +14,20 @@ import {
     waitUntil,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
-import { contains, patchTranslations } from "@web/../tests/web_test_helpers";
+import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { strong } from "./_helpers/tags";
 import {
     getContent,
     moveSelectionOutsideEditor,
     setContent,
     setSelection,
 } from "./_helpers/selection";
+import { strong } from "./_helpers/tags";
 
 test.tags("desktop")(
     "toolbar is only visible when selection is not collapsed in desktop",
@@ -66,7 +66,7 @@ test("toolbar closes when selection leaves editor", async () => {
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    click(document.body);
+    await click(document.body);
     moveSelectionOutsideEditor();
     await waitForNone(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(0);
@@ -154,7 +154,7 @@ test("toolbar list buttons react to selection change", async () => {
     expect(".btn[name='checklist']").not.toHaveClass("active");
 
     // Toggle to numbered list
-    click(".btn[name='numbered_list']");
+    await click(".btn[name='numbered_list']");
     await waitFor(".btn[name='numbered_list'].active");
     expect(getContent(el)).toBe("<ol><li>[abc]</li></ol>");
     expect(".btn[name='bulleted_list']").not.toHaveClass("active");
@@ -162,7 +162,7 @@ test("toolbar list buttons react to selection change", async () => {
     expect(".btn[name='checklist']").not.toHaveClass("active");
 
     // Toggle to checklist
-    click(".btn[name='checklist']");
+    await click(".btn[name='checklist']");
     await waitFor(".btn[name='checklist'].active");
     expect(getContent(el)).toBe('<ul class="o_checklist"><li>[abc]</li></ul>');
     expect(".btn[name='bulleted_list']").not.toHaveClass("active");
@@ -170,7 +170,7 @@ test("toolbar list buttons react to selection change", async () => {
     expect(".btn[name='checklist']").toHaveClass("active");
 
     // Toggle list off
-    click(".btn[name='checklist']");
+    await click(".btn[name='checklist']");
     await waitFor(".btn[name='checklist']:not(.active)");
     expect(getContent(el)).toBe("<p>[abc]</p>");
     expect(".btn[name='bulleted_list']").not.toHaveClass("active");
@@ -270,7 +270,7 @@ test.tags("desktop")("toolbar should not open on keypress tab inside table", asy
     `);
 
     const { el } = await setupEditor(contentBefore);
-    press("Tab");
+    await press("Tab");
     expect(getContent(el)).toBe(contentAfter);
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);
@@ -300,7 +300,7 @@ test.tags("desktop")("toolbar should close on keypress tab inside table", async 
 
     const { el } = await setupEditor(contentBefore);
     await waitFor(".o-we-toolbar");
-    press("Tab");
+    await press("Tab");
     expect(getContent(el)).toBe(contentAfter);
     await waitForNone(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(0);
@@ -436,7 +436,7 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
     );
     await waitFor(".o-we-toolbar");
     expect.verifySteps([]);
-    click("img");
+    await click("img");
     await animationFrame();
     expect.verifySteps(["image format evaluated"]);
 });
@@ -597,7 +597,7 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             const { el } = await setupEditor("<p>test</p>");
             expect(".o-we-toolbar").toHaveCount(0);
 
-            pointerDown(el);
+            await pointerDown(el);
             // <p>[]test</p>
             setSelection({ anchorNode: el.children[0], anchorOffset: 0 });
             await tick(); // selectionChange
@@ -609,7 +609,7 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             await animationFrame();
             expect(".o-we-toolbar").toHaveCount(0);
 
-            pointerUp(el);
+            await pointerUp(el);
             await waitFor(".o-we-toolbar");
             expect(".o-we-toolbar").toHaveCount(1);
         });
@@ -618,7 +618,7 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             const { el } = await setupEditor("<p>test</p>");
             expect(".o-we-toolbar").toHaveCount(0);
 
-            pointerDown(el);
+            await pointerDown(el);
             // <p>[]test</p>
             setSelection({ anchorNode: el.children[0], anchorOffset: 0 });
             await tick(); // selectionChange
@@ -630,7 +630,7 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             await animationFrame();
             expect(".o-we-toolbar").toHaveCount(0);
 
-            pointerUp(el.ownerDocument);
+            await pointerUp(el.ownerDocument);
             await waitFor(".o-we-toolbar");
             expect(".o-we-toolbar").toHaveCount(1);
         });
@@ -639,14 +639,14 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             const { el } = await setupEditor("<p>[test]</p><p>text</p>");
             await waitFor(".o-we-toolbar");
 
-            pointerDown(el);
+            await pointerDown(el);
             // <p>test</p><p>[]text</p>
             setSelection({ anchorNode: el.children[1], anchorOffset: 0 });
             await tick(); // selectionChange
             await waitForNone(".o-we-toolbar");
             expect(".o-we-toolbar").toHaveCount(0);
 
-            pointerUp(el);
+            await pointerUp(el);
             await tick();
             expect(getContent(el)).toBe("<p>test</p><p>[]text</p>");
             await animationFrame();
@@ -655,15 +655,19 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
 
         test("toolbar should close on mousedown (2)", async () => {
             const { el } = await setupEditor("<p>[test]</p>");
+
+            /** @todo fix warnings */
+            patchWithCleanup(console, { warn: () => {} });
+
             await waitFor(".o-we-toolbar");
 
             // Mousedown on the selected text: it does not change the selection until mouseup
-            pointerDown(el);
+            await pointerDown(el);
             await tick();
             await waitForNone(".o-we-toolbar");
             expect(".o-we-toolbar").toHaveCount(0);
 
-            pointerUp(el);
+            await pointerUp(el);
             setContent(el, "<p>[]test</p>");
             await tick();
             await animationFrame();
@@ -751,7 +755,7 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
 
             await firstClick(p);
             await secondClick(p);
-            pointerDown(p);
+            await pointerDown(p);
             manuallyDispatchProgrammaticEvent(p, "mousedown", { detail: 3 });
             setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
             await tick(); // selectionChange
@@ -773,14 +777,14 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             const { el } = await setupEditor("<p>[]test</p>");
             expect(".o-we-toolbar").toHaveCount(0);
 
-            keyDown(["Shift", "ArrowRight"]);
+            await keyDown(["Shift", "ArrowRight"]);
             setContent(el, "<p>[t]est</p>");
             await tick(); // selectionChange
 
             await animationFrame();
             expect(".o-we-toolbar").toHaveCount(0);
 
-            keyUp(["Shift", "ArrowRight"]);
+            await keyUp(["Shift", "ArrowRight"]);
 
             await advanceTime(500); // Toolbar open on keyup is debounced
             expect(".o-we-toolbar").toHaveCount(1);
@@ -791,14 +795,14 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             await waitFor(".o-we-toolbar");
 
             // Toolbar should close on keydown
-            keyDown(["Shift", "ArrowRight"]);
+            await keyDown(["Shift", "ArrowRight"]);
             setContent(el, "<p>[test]</p>");
             await tick(); // selectionChange
             await waitForNone(".o-we-toolbar");
             expect(".o-we-toolbar").toHaveCount(0);
 
             // Toolbar should open after keyup
-            keyUp(["Shift", "ArrowRight"]);
+            await keyUp(["Shift", "ArrowRight"]);
 
             await advanceTime(500); // toolbar open on keyup is debounced
             expect(".o-we-toolbar").toHaveCount(1);
@@ -809,20 +813,20 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             await waitFor(".o-we-toolbar");
 
             // Toolbar should not close on keydown shift
-            keyDown(["Shift"]);
+            await keyDown(["Shift"]);
             await tick();
             expect(".o-we-toolbar").toHaveCount(1);
 
-            keyUp(["Shift"]);
+            await keyUp(["Shift"]);
             await tick();
             expect(".o-we-toolbar").toHaveCount(1);
 
             // Toolbar should not close on keydown ctrl
-            keyDown(["Control"]);
+            await keyDown(["Control"]);
             await tick();
             expect(".o-we-toolbar").toHaveCount(1);
 
-            keyUp(["Control"]);
+            await keyUp(["Control"]);
             await tick();
             expect(".o-we-toolbar").toHaveCount(1);
         });
@@ -832,18 +836,18 @@ describe.tags("desktop")("toolbar open and close on user interaction", () => {
             expect(".o-we-toolbar").toHaveCount(0);
 
             // Keystroke # 1
-            keyDown(["Shift", "ArrowRight"]);
+            await keyDown(["Shift", "ArrowRight"]);
             setContent(el, "<p>[t]est</p>");
             await tick(); // selectionChange
-            keyUp(["Shift", "ArrowRight"]);
+            await keyUp(["Shift", "ArrowRight"]);
             await advanceTime(100);
             expect(".o-we-toolbar").toHaveCount(0);
 
             // Keystroke # 2
-            keyDown(["Shift", "ArrowRight"]);
+            await keyDown(["Shift", "ArrowRight"]);
             setContent(el, "<p>[te]st</p>");
             await tick(); // selectionChange
-            keyUp(["Shift", "ArrowRight"]);
+            await keyUp(["Shift", "ArrowRight"]);
             await advanceTime(100);
             expect(".o-we-toolbar").toHaveCount(0);
 

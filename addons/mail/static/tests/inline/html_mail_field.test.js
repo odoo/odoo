@@ -68,8 +68,8 @@ test("HtmlMail save inline html", async function () {
         </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/heading1");
-    press("enter");
+    await insertText(htmlEditor, "/heading1");
+    await press("enter");
     expect(".odoo-editor-editable").toHaveInnerHTML("<h1> first </h1>");
 
     await contains(".o_form_button_save").click();
@@ -87,11 +87,11 @@ test("HtmlMail don't have access to column commands", async function () {
         </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/");
+    await insertText(htmlEditor, "/");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
 
-    insertText(htmlEditor, "column");
+    await insertText(htmlEditor, "column");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(0);
 });

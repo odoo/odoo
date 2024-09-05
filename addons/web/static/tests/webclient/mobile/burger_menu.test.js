@@ -61,7 +61,7 @@ test("Burger Menu on an App", async () => {
     expect(
         queryAll(".o_app_menu_sidebar nav.o_burger_menu_content", { root: document.body })
     ).toHaveText("App1\nSubMenu");
-    click(".modal-backdrop", { root: document.body });
+    await click(".modal-backdrop", { root: document.body });
     await contains(".o_mobile_menu_toggle", { root: document.body }).click();
     expect(queryAll(".o_burger_menu", { root: document.body })).toHaveCount(1);
     expect(
@@ -72,13 +72,13 @@ test("Burger Menu on an App", async () => {
         "o_burger_menu_app"
     );
 
-    click(".o_sidebar_topbar", { root: document.body });
+    await click(".o_sidebar_topbar", { root: document.body });
 
     expect(queryAll(".o_burger_menu_content", { root: document.body })).not.toHaveClass(
         "o_burger_menu_dark"
     );
 
-    click(".o_sidebar_topbar", { root: document.body });
+    await click(".o_sidebar_topbar", { root: document.body });
 
     expect(queryAll(".o_burger_menu_content", { root: document.body })).toHaveClass(
         "o_burger_menu_app"
@@ -96,7 +96,7 @@ test("Burger Menu on an App without SubMenu", async () => {
     await contains(".o_mobile_menu_toggle", { root: document.body }).click();
     expect(queryAll(".o_burger_menu", { root: document.body })).toHaveCount(1);
     expect(queryAll(".o_user_menu_mobile", { root: document.body })).toHaveCount(1);
-    click(".o_sidebar_close", { root: document.body });
+    await click(".o_sidebar_close", { root: document.body });
     expect(queryAll(".o_burger_menu")).toHaveCount(0);
 });
 
@@ -148,7 +148,7 @@ test("Burger menu closes when click on menu item", async () => {
         queryAll(".o_app_menu_sidebar nav.o_burger_menu_content", { root: document.body })
     ).toHaveText("App1\nSubMenu");
 
-    click(".o_burger_menu_content li:nth-of-type(1)", { root: document.body });
+    await click(".o_burger_menu_content li:nth-of-type(1)", { root: document.body });
     // click
     await animationFrame();
     // action

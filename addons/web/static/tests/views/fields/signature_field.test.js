@@ -59,20 +59,20 @@ test("signature can be drawn", async () => {
     });
 
     // Click on the widget to open signature modal
-    click("div[name=sign] div.o_signature");
+    await click("div[name=sign] div.o_signature");
     await waitFor(".modal .modal-body");
     expect(".modal .modal-body .o_web_sign_name_and_signature").toHaveCount(1);
     expect(".modal .btn.btn-primary:not([disabled])").toHaveCount(0);
 
     // Use a drag&drop simulation to draw a signature
-    const { drop } = drag(".modal .o_web_sign_signature", {
+    const { drop } = await drag(".modal .o_web_sign_signature", {
         position: {
             x: 1,
             y: 1,
         },
         relative: true,
     });
-    drop(".modal .o_web_sign_signature", {
+    await drop(".modal .o_web_sign_signature", {
         position: {
             x: 10, // Arbitrary value
             y: 10, // Arbitrary value
@@ -83,7 +83,7 @@ test("signature can be drawn", async () => {
     expect(".modal .btn.btn-primary:not([disabled])").toHaveCount(1);
 
     // Click on "Adopt and Sign" button
-    click(".modal .btn.btn-primary:not([disabled])");
+    await click(".modal .btn.btn-primary:not([disabled])");
     await animationFrame();
     expect(".modal").toHaveCount(0);
 
@@ -92,8 +92,8 @@ test("signature can be drawn", async () => {
     expect("div[name=sign] img.o_signature").toHaveCount(1);
 
     const signImgSrc = queryFirst("div[name=sign] img.o_signature").dataset.src;
-    expect(signImgSrc.includes("placeholder")).toBe(false);
-    expect(signImgSrc.startsWith("data:image/png;base64,")).toBe(true);
+    expect(signImgSrc).not.toMatch("placeholder");
+    expect(signImgSrc).toMatch(/^data:image\/png;base64,/);
 });
 
 test("Set simple field in 'full_name' node option", async () => {
@@ -119,7 +119,7 @@ test("Set simple field in 'full_name' node option", async () => {
         message: "should have a valid signature widget",
     });
     // Click on the widget to open signature modal
-    click("div[name=sign] div.o_signature");
+    await click("div[name=sign] div.o_signature");
     await animationFrame();
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',
@@ -155,7 +155,7 @@ test("Set m2o field in 'full_name' node option", async () => {
     });
 
     // Click on the widget to open signature modal
-    click("div[name=sign] div.o_signature");
+    await click("div[name=sign] div.o_signature");
     await waitFor(".modal .modal-body");
 
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
@@ -206,17 +206,17 @@ test("clicking save manually after changing signature should change the unique o
     rec.sign = "3 kb";
     rec.write_date = "2022-08-05 08:37:00"; // 1659688620000
     const fillSignatureField = async (lineToX, lineToY) => {
-        click(".o_field_signature img", { visible: false });
+        await click(".o_field_signature img", { visible: false });
         await waitFor(".modal .modal-body");
         expect(".modal canvas").toHaveCount(1);
-        const { drop } = drag(".modal .o_web_sign_signature", {
+        const { drop } = await drag(".modal .o_web_sign_signature", {
             position: {
                 x: 1,
                 y: 1,
             },
             relative: true,
         });
-        drop(".modal .o_web_sign_signature", {
+        await drop(".modal .o_web_sign_signature", {
             position: {
                 x: lineToX,
                 y: lineToY,
@@ -224,7 +224,7 @@ test("clicking save manually after changing signature should change the unique o
             relative: true,
         });
         await animationFrame();
-        click(".modal-footer .btn-primary");
+        await click(".modal-footer .btn-primary");
         await animationFrame();
     };
     // 1659692220000, 1659695820000
@@ -252,8 +252,8 @@ test("clicking save manually after changing signature should change the unique o
     expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659688620000");
 
     await fillSignatureField(0, 2);
-    click(".o_field_widget[name='foo'] input");
-    edit("grrr", { confirm: "Enter" });
+    await click(".o_field_widget[name='foo'] input");
+    await edit("grrr", { confirm: "Enter" });
     await runAllTimers();
     await animationFrame();
     await clickSave();
@@ -299,8 +299,8 @@ test("save record with signature field modified by onchange", async () => {
             </form>`,
     });
     expect(getUnique(queryFirst(".o_field_signature img"))).toBe("1659688620000");
-    click("[name='foo'] input");
-    edit("grrr", { confirm: "Enter" });
+    await click("[name='foo'] input");
+    await edit("grrr", { confirm: "Enter" });
     await runAllTimers();
     await animationFrame();
     expect(queryFirst("div[name=sign] img").dataset.src).toBe(`data:image/png;base64,${MYB64}`);
@@ -335,7 +335,7 @@ test("signature field should render initials", async () => {
     });
 
     // Click on the widget to open signature modal
-    click("div[name=sign] div.o_signature");
+    await click("div[name=sign] div.o_signature");
     await animationFrame();
     expect(".modal .modal-body a.o_web_sign_auto_button").toHaveCount(1, {
         message: 'should open a modal with "Auto" button',

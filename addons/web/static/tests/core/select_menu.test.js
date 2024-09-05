@@ -3,6 +3,7 @@ import { click, edit, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 
@@ -61,7 +62,7 @@ class Parent extends Component {
 }
 
 async function open() {
-    click(".o_select_menu_toggler");
+    await click(".o_select_menu_toggler");
     await animationFrame();
 }
 
@@ -115,14 +116,14 @@ test("Selecting a choice calls onSelect and the displayed value is updated", asy
     expect(".o_select_menu_toggler_slot").toHaveText("World");
 
     await open();
-    click(".o_select_menu_item_label:eq(0)");
+    await click(".o_select_menu_item_label:eq(0)");
     await animationFrame();
 
     expect(".o_select_menu_toggler_slot").toHaveText("Hello");
     expect.verifySteps(["hello"]);
 
     await open();
-    click(".o_select_menu_item_label:eq(1)");
+    await click(".o_select_menu_item_label:eq(1)");
     await animationFrame();
 
     expect(".o_select_menu_toggler_slot").toHaveText("World");
@@ -137,7 +138,7 @@ test("Close dropdown on click outside", async () => {
     await open();
     expect(".o_select_menu_menu").toHaveCount(1);
 
-    click(document.body);
+    await click(document.body);
     await animationFrame();
 
     expect(".o_select_menu_menu").toHaveCount(0);
@@ -151,7 +152,7 @@ test("Close dropdown on escape keydown", async () => {
     await open();
     expect(".o_select_menu_menu").toHaveCount(1);
 
-    press("escape");
+    await press("escape");
     await animationFrame();
 
     expect(".o_select_menu_menu").toHaveCount(0);
@@ -317,7 +318,7 @@ test("Clear button calls 'onSelect' with null value and appears only when value 
     expect(".o_select_menu_toggler_clear").toHaveCount(1);
     expect(".o_select_menu_toggler_slot").toHaveText("Hello");
 
-    click(".o_select_menu_toggler_clear");
+    await click(".o_select_menu_toggler_clear");
     await animationFrame();
     expect.verifySteps(["Cleared"]);
     expect(".o_select_menu_toggler_clear").toHaveCount(0);
@@ -479,7 +480,7 @@ test("Custom template for the bottom area of the dropdown using a slot", async (
     await mountSingleApp(MyParent);
     await open();
     expect(".o_select_menu_bottom_area").toHaveText("2 items selected");
-    click(".o_select_menu_item:nth-child(3)");
+    await click(".o_select_menu_item:nth-child(3)");
     await animationFrame();
     await open();
     expect(".o_select_menu_bottom_area").toHaveText("3 items selected");
@@ -513,15 +514,17 @@ test("Custom slot for the bottom area sends the current search value", async () 
     }
     await mountSingleApp(MyParent);
     await open();
+
     expect(".coolClass").toHaveCount(0);
 
-    click("input");
-    edit("coucou");
+    await click("input");
+    await edit("coucou");
     await runAllTimers();
     await animationFrame();
+
     expect(".coolClass").toHaveCount(1);
 
-    click(".coolClass");
+    await click(".coolClass");
     await animationFrame();
     expect.verifySteps(["coucou clicked"]);
 });
@@ -668,7 +671,7 @@ test("When multiSelect is enable, value is an array of values, mutliple choices 
     expect(".o_select_menu_sticky.top-0").toHaveCount(0);
     expect(".o_select_menu_item.o_select_active").toHaveCount(0);
 
-    click(".o_select_menu_item:nth-child(1)");
+    await click(".o_select_menu_item:nth-child(1)");
     await animationFrame();
 
     expect.verifySteps([`["a"]`]);
@@ -680,7 +683,7 @@ test("When multiSelect is enable, value is an array of values, mutliple choices 
     await open();
     expect(".o_select_menu_item:nth-child(1).o_select_active").toHaveCount(1);
 
-    click(".o_select_menu_item:nth-child(2)");
+    await click(".o_select_menu_item:nth-child(2)");
     await animationFrame();
     expect.verifySteps([`["a","b"]`]);
 
@@ -722,7 +725,7 @@ test("When multiSelect is enable, allow deselecting elements by clicking the sel
     expect(".o_select_menu .o_tag_badge_text").toHaveCount(2);
 
     await open();
-    click(".o_select_menu_item:nth-child(1)");
+    await click(".o_select_menu_item:nth-child(1)");
     await animationFrame();
 
     expect.verifySteps([`["b"]`]);
@@ -733,7 +736,7 @@ test("When multiSelect is enable, allow deselecting elements by clicking the sel
     await open();
     expect(".o_select_menu_item.o_select_active").toHaveCount(1);
 
-    click(".o_tag .o_delete");
+    await click(".o_tag .o_delete");
     await animationFrame();
     expect.verifySteps(["[]"]);
 
@@ -770,22 +773,22 @@ test.tags("desktop")("Navigation is possible from the input when it is focused",
     await open();
     expect("input.o_select_menu_sticky").toBeFocused();
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
 
     expect(".focus").toHaveText("A");
     expect("input.o_select_menu_sticky").toBeFocused();
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(".focus").toHaveText("B");
 
-    press("arrowdown");
-    press("arrowdown");
+    await press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
 
     expect(".focus").toHaveText("A");
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect.verifySteps(["a"]);
 });
@@ -820,10 +823,13 @@ test.tags("desktop")(
 
         await mountSingleApp(MyParent);
         await open();
-        edit("a");
+        await edit("a");
         await animationFrame();
-        press("enter");
+
+        await press("enter");
+
         await animationFrame();
+
         expect.verifySteps(["a"]);
     }
 );
@@ -868,13 +874,14 @@ test("Props onInput is executed when the search changes", async () => {
     await open();
     expect(".o_select_menu_menu").toHaveText("Hello");
 
-    click("input");
-    edit("cou");
+    await click("input");
+    await edit("cou");
     await runAllTimers();
     await animationFrame();
+
     expect(".o_select_menu_menu").toHaveText("Coucou");
 
-    click(".o_select_menu_item_label:eq(0)");
+    await click(".o_select_menu_item_label:eq(0)");
     await animationFrame();
 
     expect.verifySteps(["hello2"]);
@@ -926,12 +933,12 @@ test("Choices are updated and filtered when props change", async () => {
     expect(".o_select_menu_menu").toHaveText("Coucou\nHello");
 
     // edit the input, to trigger onInput and update the props
-    click("input");
-    edit("aft");
+    await click("input");
+    await edit("aft");
     await runAllTimers();
     await animationFrame();
 
-    click(".o_select_menu_item_label:eq(0)");
+    await click(".o_select_menu_item_label:eq(0await)");
     await animationFrame();
     expect.verifySteps(["hello3"]);
     expect(".o_select_menu_toggler_slot").toHaveText("Good afternoon");
@@ -1009,16 +1016,18 @@ test("SelectMenu group items only after being opened", async () => {
     expect(".o_select_menu_menu").toHaveText("Option A\nGroup A\nOption B\nOption C");
     expect.verifySteps(["filterOptions"]);
 
-    click("input");
-    edit("option d");
+    await click("input");
+    await edit("option d");
     await runAllTimers();
     await animationFrame();
 
     expect(".o_select_menu_menu").toHaveText("Group B\nOption D");
     expect.verifySteps(["filterOptions"]);
-    edit("");
+    await edit("");
     await runAllTimers();
+
     await animationFrame();
+
     expect(".o_select_menu_menu").toHaveText("Option A\nGroup A\nOption B\nOption C");
     expect.verifySteps(["filterOptions"]);
 });
@@ -1049,13 +1058,13 @@ test("search value is cleared when reopening the menu", async () => {
     await mountSingleApp(MyParent);
     await open();
     expect.verifySteps([]);
-    click("input");
-    edit("a");
+    await click("input");
+    await edit("a");
     await runAllTimers();
     expect.verifySteps(["search=a"]);
 
-    // opening the menu should clear the search string, trigger onInput and update the props
-    press("escape");
+    // opening the menu should clear the search string, trigger onInput and update the awaitprops
+    await press("escape");
     await animationFrame();
     await open();
     expect.verifySteps(["search="]);
@@ -1146,7 +1155,7 @@ test("Fetch choices", async () => {
             this.state = useState({ choices: [] }, { value: "" });
         }
         loadChoice(searchString) {
-            if (searchString === 'test') {
+            if (searchString === "test") {
                 this.state.choices = [{ label: "test", value: "test" }];
             } else {
                 this.state.choices = [];
@@ -1155,8 +1164,8 @@ test("Fetch choices", async () => {
     }
     await mountSingleApp(MyParent);
     await open();
-    click("input");
-    edit("test");
+    await click("input");
+    await edit("test");
     await runAllTimers();
     await animationFrame();
     expect(queryAllTexts(".o_select_menu_item_label")).toEqual(["test"]);

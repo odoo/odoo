@@ -323,19 +323,19 @@ async function selectRange(from, to, positions) {
         endPosition.y += endRect.height / 2;
     }
 
-    pointerDown(startTarget, {
+    await pointerDown(startTarget, {
         position: startPosition,
         relative: true,
     });
     await animationFrame();
 
-    hover(to, {
+    await hover(to, {
         position: endPosition,
         relative: true,
     });
     await animationFrame();
 
-    pointerUp(to, {
+    await pointerUp(to, {
         position: endPosition,
         relative: true,
     });
@@ -3337,8 +3337,8 @@ test(`quickcreate avoid double event creation`, async () => {
     await contains(`.modal-body input`).edit("new event in quick create", { confirm: false });
 
     // Simulate ENTER pressed on Create button (after a TAB)
-    press("Enter");
-    click(`.o-calendar-quick-create--create-btn`);
+    await press("Enter");
+    await click(`.o-calendar-quick-create--create-btn`);
     await animationFrame();
 
     deferred.resolve();
@@ -5227,7 +5227,7 @@ test.tags("mobile")('calendar: tap on "Free Zone" opens quick create', async () 
     expandCalendarView();
 
     // Simulate a "TAP" (touch)
-    click(".fc-timegrid-slot-lane.fc-timegrid-slot-minor[data-time='08:30:00']");
+    await click(".fc-timegrid-slot-lane.fc-timegrid-slot-minor[data-time='08:30:00']");
     await animationFrame();
 
     // should open a Quick create modal view in mobile on short tap
@@ -5312,7 +5312,7 @@ test.tags("mobile")("calendar (year): tap on date switch to day scale", async ()
     expect(".fc-month-container").toHaveCount(12);
 
     // Tap on a date
-    click(".fc-daygrid-day[data-date='2016-02-05']");
+    await click(".fc-daygrid-day[data-date='2016-02-05']");
     await animationFrame(); // switch renderer
     await animationFrame(); // await breadcrumb update
     expect(".o_calendar_container .o_calendar_header h5").toHaveText("5 February 2016");
@@ -5330,7 +5330,7 @@ test.tags("mobile")("calendar (year): tap on date switch to day scale", async ()
     expect(".fc-dayGridMonth-view").toHaveCount(1);
 
     // Tap on a date
-    click(".fc-daygrid-day[data-date='2016-02-10']");
+    await click(".fc-daygrid-day[data-date='2016-02-10']");
     await animationFrame(); // await reload & render
     await animationFrame(); // await breadcrumb update
     expect(".o_calendar_container .o_calendar_header h5").toHaveText("February 2016");
