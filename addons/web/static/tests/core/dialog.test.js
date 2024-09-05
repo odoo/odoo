@@ -414,7 +414,7 @@ test.tags("desktop")("dialog's position is reset on resize", async () => {
         top: `${modalRect.x + 50}px`,
     });
 
-    resize();
+    await resize();
     await animationFrame();
     expect(".modal-content").toHaveStyle({
         left: "0px",

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryFirst, queryRect } from "@odoo/hoot-dom";
+import { click, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -111,12 +111,12 @@ test("radio field change value by onchange", async () => {
         `,
     });
 
-    click(".o_field_boolean input[type='checkbox']");
+    await click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
     expect("input.o_radio_input[data-value='37']").toBeChecked();
     expect("input.o_radio_input[data-value='black']").toBeChecked();
 
-    click(".o_field_boolean input[type='checkbox']");
+    await click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
     expect("input.o_radio_input[data-value='41']").toBeChecked();
     expect("input.o_radio_input[data-value='red']").toBeChecked();
@@ -134,7 +134,7 @@ test("radio field on a selection in a new record", async () => {
     expect(".o_field_radio").toHaveText("Red\nBlack");
 
     // click on 2nd option
-    click("input.o_radio_input:eq(1)");
+    await click("input.o_radio_input:eq(1)");
     await animationFrame();
 
     await clickSave();
@@ -169,7 +169,7 @@ test("two radio field with same selection", async () => {
     expect("[name='color_2'] input.o_radio_input:checked").toHaveAttribute("data-value", "black");
 
     // click on Red
-    click(queryFirst("[name='color_2'] label"));
+    await click("[name='color_2'] label");
     await animationFrame();
     expect("[name='color'] input.o_radio_input:checked").toHaveAttribute("data-value", "black");
     expect("[name='color_2'] input.o_radio_input:checked").toHaveAttribute("data-value", "red");
@@ -232,7 +232,7 @@ test("radio field with numerical keys encoded as strings", async () => {
     expect(".o_field_widget").toHaveText("Red\nBlack");
     expect(".o_radio_input:checked").toHaveCount(0, { message: "no value should be checked" });
 
-    click("input.o_radio_input:last");
+    await click("input.o_radio_input:last");
     await animationFrame();
     await clickSave();
 

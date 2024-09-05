@@ -277,45 +277,45 @@ test("edit header field", async () => {
     expect(queryFirst("[name='foo_text'] input")).toHaveValue("First default value");
 
     // edit a header field with no other changes
-    click("[name='baz'] input:eq(1)");
+    await click("[name='baz'] input:eq(1)");
     await animationFrame();
     expect(".modal").toHaveCount(0);
     expect(queryAllProperties("[name='baz'] input", "checked")).toEqual([false, true]);
     expect("[name='foo_text'] input").toHaveValue("Second default value");
 
     // edit a header field with other changes
-    click("[name='foo_text'] input");
-    edit("Hello");
+    await click("[name='foo_text'] input");
+    await edit("Hello");
     await animationFrame();
-    click("[name='baz'] input:eq(0)");
+    await click("[name='baz'] input:eq(0)");
     await animationFrame();
     expect(".modal").toHaveCount(1);
 
     // Stay here
-    click(".modal .btn-secondary");
+    await click(".modal .btn-secondary");
     await animationFrame();
     expect(queryAllProperties("[name='baz'] input", "checked")).toEqual([false, true]);
     expect("[name='foo_text'] input").toHaveValue("Hello");
 
-    click("[name='baz'] input:eq(0)");
+    await click("[name='baz'] input:eq(0)");
     await animationFrame();
     expect(".modal").toHaveCount(1);
 
     // Discard
-    click(".modal .btn-secondary:eq(1)");
+    await click(".modal .btn-secondary:eq(1)");
     await animationFrame();
     expect(queryAllProperties("[name='baz'] input", "checked")).toEqual([true, false]);
     expect("[name='foo_text'] input").toHaveValue("First default value");
 
-    click("[name='foo_text'] input");
-    edit("Hello again");
+    await click("[name='foo_text'] input");
+    await edit("Hello again");
     await animationFrame();
-    click("[name='baz'] input:eq(1)");
+    await click("[name='baz'] input:eq(1)");
     await animationFrame();
     expect(".modal").toHaveCount(1);
 
     // Save
-    click(".modal .btn-primary");
+    await click(".modal .btn-primary");
     await animationFrame();
     expect(queryAllProperties("[name='baz'] input", "checked")).toEqual([true, false]);
     expect("[name='foo_text'] input").toHaveValue("Hello again");
@@ -460,10 +460,10 @@ test("settings views does not read existing id when coming back in breadcrumbs",
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(".o_field_boolean input").not.toHaveProperty("disabled");
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
     expect(".breadcrumb").toHaveText("Settings");
-    click(".o_control_panel .breadcrumb-item a");
+    await click(".o_control_panel .breadcrumb-item a");
     await animationFrame();
     expect(".o_field_boolean input").not.toHaveProperty("disabled");
     expect.verifySteps([
@@ -536,9 +536,9 @@ test("resIds should contains only 1 id", async () => {
         `,
     });
 
-    click(".o_field_char .btn.o_field_translate"); // Translate
+    await click(".o_field_char .btn.o_field_translate"); // Translate
     await animationFrame();
-    click(".modal-footer .btn:eq(1)"); // Discard
+    await click(".modal-footer .btn:eq(1)"); // Discard
     await animationFrame();
     await clickSave(); // Save Settings
 });
@@ -594,7 +594,7 @@ test("settings views does not read existing id when reload", async () => {
         "onchange", // this is a setting view => new record transient record
     ]);
 
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
 
     expect.verifySteps([
@@ -603,7 +603,7 @@ test("settings views does not read existing id when reload", async () => {
         "onchange", // dialog: onchange
     ]);
 
-    click(".modal button.btn.btn-primary.o_form_button_save");
+    await click(".modal button.btn.btn-primary.o_form_button_save");
     await animationFrame();
 
     expect.verifySteps([
@@ -657,7 +657,7 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
     await action;
 
     await getService("action").doAction(1);
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     getService("action").doAction(4);
     await animationFrame();
@@ -691,7 +691,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
         message: "checkbox should not be checked",
     });
     expect(".o_dirty_warning").toHaveCount(0, { message: "warning message should not be shown" });
-    click(".o_field_boolean input[id=bar_0]");
+    await click(".o_field_boolean input[id=bar_0]");
     await animationFrame();
     expect(".o_field_boolean input:checked").toHaveCount(1, {
         message: "checkbox should be checked",
@@ -761,7 +761,7 @@ test("settings views does not write the id on the url", async () => {
     await runAllTimers();
     expect(browser.location.pathname).toBe("/odoo/settings");
     expect(".o_field_boolean input").not.toHaveProperty("disabled");
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
     await clickSave();
@@ -811,9 +811,9 @@ test("settings views can search when coming back in breadcrumbs", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
-    click(".o_control_panel .breadcrumb-item a");
+    await click(".o_control_panel .breadcrumb-item a");
     await animationFrame();
     await editSearch("Fo");
     await runAllTimers();
@@ -924,40 +924,40 @@ test("clicking on any button in setting should show discard warning if setting f
         message: "checkbox should not be checked",
     });
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
 
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "should open a warning dialog" });
 
-    click(".modal-footer .btn:eq(2)"); // Discard
+    await click(".modal-footer .btn:eq(2)"); // Discard
     await animationFrame();
 
     expect(".o_list_view").toHaveCount(1, { message: "should be open list view" });
-    click(".o_control_panel .breadcrumb-item a");
+    await click(".o_control_panel .breadcrumb-item a");
     await animationFrame();
     expect(".o_field_boolean input:checked").toHaveCount(0, {
         message: "checkbox should not be checked",
     });
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "should open a warning dialog" });
 
-    click(".modal-footer .btn:eq(1)"); // Stay Here
+    await click(".modal-footer .btn:eq(1)"); // Stay Here
     expect(".o_form_view").toHaveCount(1, { message: "should be remain on form view" });
 
     await clickSave();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
     expect(".o_field_boolean input").not.toHaveProperty("disabled"); // Everything must stay in edit
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
-    click(".o_control_panel .o_form_button_cancel"); // Form Discard button
+    await click(".o_control_panel .o_form_button_cancel"); // Form Discard button
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
 });
@@ -1005,7 +1005,7 @@ test("header field don't dirty settings", async () => {
     await getService("action").doAction(1);
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
 
@@ -1013,7 +1013,7 @@ test("header field don't dirty settings", async () => {
         message: "should not say that there are unsaved changes",
     });
 
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
 
@@ -1042,11 +1042,11 @@ test("clicking a button with dirty settings -- save", async () => {
         resModel: "res.config.settings",
     });
     expect.verifySteps(["get_views", "onchange"]);
-    click(".o_field_boolean input[type='checkbox']");
+    await click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
-    click(".myBtn");
+    await click(".myBtn");
     await animationFrame();
-    click(".modal .btn-primary");
+    await click(".modal .btn-primary");
     await animationFrame();
     expect.verifySteps([
         "web_save",
@@ -1077,15 +1077,15 @@ test("click on save button which throws an error", async () => {
     expect(".o_form_button_save").toHaveCount(1);
     expect(".o_form_button_save").not.toHaveProperty("disabled");
 
-    click(".o_field_boolean input[type='checkbox']");
+    await click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
-    click(".o_form_button_save");
+    await click(".o_form_button_save");
     await animationFrame();
     // error are caught asynchronously, so we have to wait for an extra animationFrame, for the error dialog to be mounted
     await animationFrame();
     expect(".o_error_dialog").toHaveCount(1);
 
-    click(".o_error_dialog .btn-close");
+    await click(".o_error_dialog .btn-close");
     await animationFrame();
     expect(".o_form_button_save").toHaveCount(1);
     expect(".o_form_button_save").not.toHaveProperty("disabled");
@@ -1184,11 +1184,11 @@ test("clicking a button with dirty settings -- discard", async () => {
     expect(queryAllTexts`.o_field_tags .o_tag`).toEqual(["xphone", "xpad"]);
     expect(".o_tag_color_1").toHaveCount(1);
     expect(".o_tag_color_3").toHaveCount(1);
-    click(".o_field_boolean[name='foo'] input[type='checkbox']");
+    await click(".o_field_boolean[name='foo'] input[type='checkbox']");
     await animationFrame();
-    click(".myBtn");
+    await click(".myBtn");
     await animationFrame();
-    click(".modal .btn-secondary:eq(1)");
+    await click(".modal .btn-secondary:eq(1)");
     await animationFrame();
     expect.verifySteps([
         'web_save - {"product_ids":[[4,37],[4,41],[1,41,{"color":3}]],"bar":true,"foo":false}',
@@ -1199,7 +1199,7 @@ test("clicking a button with dirty settings -- discard", async () => {
     expect(queryAllTexts`.o_field_tags .o_tag`).toEqual(["xphone", "xpad"]);
     expect(".o_tag_color_1").toHaveCount(1);
     expect(".o_tag_color_3").toHaveCount(1);
-    click(".o_field_boolean[name='foo'] input[type='checkbox']");
+    await click(".o_field_boolean[name='foo'] input[type='checkbox']");
 });
 
 test("clicking on a button with noSaveDialog will not show discard warning", async () => {
@@ -1244,11 +1244,11 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
     await getService("action").doAction(1);
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
 
-    click("button[name='4']");
+    await click("button[name='4']");
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
 
@@ -1304,7 +1304,7 @@ test("settings view shows a message if there are changes", async () => {
     expect(".o_control_panel .o_dirty_warning").toHaveCount(0, {
         message: "warning message should not be shown",
     });
-    click(".o_field_boolean input[id=bar_0]");
+    await click(".o_field_boolean input[id=bar_0]");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
     expect(".o_control_panel .o_dirty_warning").toHaveCount(1, {
@@ -1336,12 +1336,12 @@ test("settings view shows a message if there are changes even if the save failed
         `,
     });
 
-    click("input[id=bar_0]");
+    await click("input[id=bar_0]");
     await animationFrame();
     expect(".o_control_panel .o_dirty_warning").toHaveCount(1, {
         message: "warning message should be shown",
     });
-    click(".o_control_panel .o_form_button_save");
+    await click(".o_control_panel .o_form_button_save");
     await animationFrame();
     expect(".o_control_panel .o_dirty_warning").toHaveCount(1, {
         message: "warning message should be shown",
@@ -1407,7 +1407,7 @@ test("execute action from settings view with several actions in the breadcrumb",
     expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
     def = new Deferred();
-    click('button[name="3"]');
+    await click('button[name="3"]');
     await animationFrame();
     expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
@@ -1434,12 +1434,12 @@ test("settings can contain one2many fields", async () => {
         `,
     });
 
-    click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add a");
     await animationFrame();
-    click(".modal-body input");
-    edit("Added Task");
+    await click(".modal-body input");
+    await edit("Added Task");
     await animationFrame();
-    click(".modal-footer .btn.o_form_button_save");
+    await click(".modal-footer .btn.o_form_button_save");
     await animationFrame();
 
     expect("table.o_list_table tr.o_data_row").toHaveText("Added Task", {
@@ -1499,15 +1499,15 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
     await getService("action").doAction(1);
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
 
-    click('button[name="4"]');
+    await click('button[name="4"]');
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "should open a warning dialog" });
 
-    click(".modal-footer .btn-primary");
+    await click(".modal-footer .btn-primary");
     await animationFrame();
     expect.verifySteps([
         "web_save", // saveRecord from modal
@@ -1558,13 +1558,13 @@ test("Discard button clean the settings view", async () => {
     ]);
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
 
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input:checked").toHaveCount(1, {
         message: "checkbox should be checked",
     });
 
-    click(".o_control_panel .o_form_button_cancel");
+    await click(".o_control_panel .o_form_button_cancel");
     await animationFrame();
     expect(".o_field_boolean input").not.toBeChecked({ message: "checkbox should not be checked" });
     expect.verifySteps(["onchange"]);
@@ -1815,7 +1815,7 @@ test("settings form keeps scrolling by app", async () => {
     const scrollingEl = queryFirst(".settings");
     expect(scrollingEl).toHaveProperty("scrollTop", 0);
 
-    click(".settings_tab [data-key='otherapp']");
+    await click(".settings_tab [data-key='otherapp']");
     await animationFrame();
     expect(scrollingEl).toHaveProperty("scrollTop", 0);
     queryFirst("#deepDivOther").scrollIntoView();
@@ -1823,11 +1823,11 @@ test("settings form keeps scrolling by app", async () => {
     const scrollTop = scrollingEl.scrollTop;
     expect(scrollTop).toBeGreaterThan(0);
 
-    click(".settings_tab [data-key='crm']");
+    await click(".settings_tab [data-key='crm']");
     await animationFrame();
     expect(scrollingEl).toHaveProperty("scrollTop", 0);
 
-    click(".settings_tab [data-key='otherapp']");
+    await click(".settings_tab [data-key='otherapp']");
     await animationFrame();
     expect(scrollingEl).toHaveProperty("scrollTop", scrollTop);
 });
@@ -1875,7 +1875,7 @@ test("server actions are called with the correct context", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    click("button[name='2']");
+    await click("button[name='2']");
     await animationFrame();
     expect.verifySteps(["/web/action/run"]);
 });
@@ -1940,11 +1940,11 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     after(() => {
         document.removeEventListener("click", downloadOnClick);
     });
-    click(".fa-download");
+    await click(".fa-download");
     await animationFrame();
     await prom;
 
-    click(".o_field_binary .o_clear_file_button");
+    await click(".o_field_binary .o_clear_file_button");
     await animationFrame();
 
     expect(".o_field_binary input").not.toBeVisible({ message: "the input should be hidden" });

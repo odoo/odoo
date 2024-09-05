@@ -132,9 +132,9 @@ test("Display a tooltip on clicking copy button", async () => {
             close() {},
         },
     });
-    click("main button");
+    await click("main button");
     await animationFrame();
-    click(".fa-clone");
+    await click(".fa-clone");
 });
 
 test("WarningDialog", async () => {

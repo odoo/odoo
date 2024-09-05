@@ -197,7 +197,7 @@ test.tags("desktop")("hold position on hover", async () => {
     const menuBox1 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
 
     // Pointer enter the dropdown menu
-    hover(DROPDOWN_MENU);
+    await hover(DROPDOWN_MENU);
 
     // Add a filler to the parent
     expect(".filler").toHaveCount(0);
@@ -209,7 +209,8 @@ test.tags("desktop")("hold position on hover", async () => {
     expect(menuBox2.top - menuBox1.top).toBe(0);
 
     // Pointer leave the dropdown menu
-    leave(DROPDOWN_MENU);
+    await leave();
+
     const menuBox3 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
     expect(menuBox3.top - menuBox1.top).toBe(100);
 });
@@ -233,7 +234,7 @@ test("unlock position after close", async () => {
     const menuBox1 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
 
     // Pointer enter the dropdown menu to lock the menu
-    hover(DROPDOWN_MENU);
+    await hover(DROPDOWN_MENU);
 
     // close the menu
     click(DROPDOWN_TOGGLE);
@@ -272,7 +273,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
     await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
 
-    press("alt+m");
+    await press("alt+m");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
@@ -298,7 +299,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
 
     for (let i = 0; i < scenarioSteps.length; i++) {
         const step = scenarioSteps[i];
-        press(step.hotkey);
+        await press(step.hotkey);
         await animationFrame();
 
         expect(".dropdown-menu > .focus").toHaveClass(step.expected, {
@@ -308,27 +309,27 @@ test.tags("desktop")("dropdowns keynav", async () => {
     }
 
     // Select last one activated in previous scenario (item1)
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen dropdown
-    press("alt+m");
+    await press("alt+m");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Select second item through data-hotkey attribute
-    press("alt+2");
+    await press("alt+2");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen dropdown
-    press("alt+m");
+    await press("alt+m");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Close dropdown with keynav
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
@@ -394,11 +395,11 @@ test.tags("desktop")("refocus toggler on close with keynav", async () => {
     await animationFrame();
     expect(DROPDOWN_TOGGLE).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(".dropdown-item:first-child").toBeFocused();
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(DROPDOWN_TOGGLE).toBeFocused();
 });
@@ -426,13 +427,16 @@ test.tags("desktop")("navigationProps changes navigation behaviour", async () =>
     expect(".o-dropdown-item:nth-child(1)").not.toHaveClass("focus");
 
     // After arrow down, toggler is still focused, virtual focus in dropdown
-    press("arrowdown");
+    await press("arrowdown");
+
     expect(DROPDOWN_TOGGLE).toBeFocused();
     expect(".o-dropdown-item:nth-child(1)").toHaveClass("focus");
 
     expect.verifySteps([]);
+
     // Arrow up is overridden, nothing should change
-    press("arrowup");
+    await press("arrowup");
+
     expect(DROPDOWN_TOGGLE).toBeFocused();
     expect(".o-dropdown-item:nth-child(1)").toHaveClass("focus");
     expect.verifySteps(["arrowup"]);
@@ -534,7 +538,7 @@ test.tags("desktop")("tooltip on toggler", async () => {
     await mountWithCleanup(Parent);
     expect(DROPDOWN_TOGGLE).toHaveAttribute("data-tooltip", "My tooltip");
 
-    hover(DROPDOWN_TOGGLE);
+    await hover(DROPDOWN_TOGGLE);
     await runAllTimers();
     expect(".o-tooltip").toHaveText("My tooltip");
 });
@@ -1160,7 +1164,7 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
     ];
 
     for (const [stepIndex, step] of scenarioSteps.entries()) {
-        press(step.hotkey);
+        await press(step.hotkey);
         await animationFrame();
 
         if (step.highlighted !== undefined) {
@@ -1236,7 +1240,7 @@ test.tags("desktop")("multi-level dropdown: keynav when rtl direction", async ()
     ];
 
     for (const [stepIndex, step] of scenarioSteps.entries()) {
-        press(step.hotkey);
+        await press(step.hotkey);
         await animationFrame();
         if (step.highlighted !== undefined) {
             const activeElements = queryAll(".focus");
@@ -1357,12 +1361,12 @@ test.tags("desktop")(
         });
 
         // Mouse enter sub dropdown
-        hover(".sub");
+        await hover(".sub");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(2);
 
         // Mouse enter the adjacent dropdown item
-        hover(".item");
+        await hover(".item");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1, {
             message: "only 1st menu is opened",
@@ -1441,41 +1445,41 @@ test.tags("desktop")("multi-level dropdown: unsubscribe all keynav when root clo
     expect(DROPDOWN_MENU).toHaveCount(1);
     checkKeys(registeredHotkeys);
 
-    hover(".second");
+    await hover(".second");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
     checkKeys(registeredHotkeys);
 
-    hover(".third");
+    await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
     checkKeys(registeredHotkeys);
 
     // Close third
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
     checkKeys(removedHotkeys);
 
     // Reset hover
-    hover(getFixture());
+    await hover(getFixture());
 
     // Reopen second
-    hover(".third");
+    await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
     checkKeys(registeredHotkeys);
 
     // Close third, second and first
-    press("escape");
+    await press("escape");
     await animationFrame();
     checkKeys(removedHotkeys);
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     checkKeys(removedHotkeys);
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
     checkKeys(removedHotkeys);

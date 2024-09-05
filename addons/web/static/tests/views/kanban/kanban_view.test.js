@@ -21,7 +21,7 @@ import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
     MockServer,
     clickKanbanLoadMore,
-    clickSave,
+    clickModalButton,
     contains,
     createKanbanRecord,
     defineModels,
@@ -343,7 +343,7 @@ test("float fields are formatted properly without using a widget", async () => {
             </kanban>`,
     });
 
-    expect(queryFirst(".o_kanban_record")).toHaveText("0.40000\n0.400");
+    expect(".o_kanban_record:first").toHaveText("0.40000\n0.400");
 });
 
 test("field with widget and attributes in kanban", async () => {
@@ -423,7 +423,7 @@ test.tags("desktop")("Hide tooltip when user click inside a kanban headers item"
     expect(".o_column_title").toHaveCount(2);
     expect(".o-tooltip").toHaveCount(0);
 
-    hover(".o_kanban_group:first-child .o_kanban_header_title .o_column_title");
+    await hover(".o_kanban_group:first-child .o_kanban_header_title .o_column_title");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(1);
 
@@ -432,7 +432,7 @@ test.tags("desktop")("Hide tooltip when user click inside a kanban headers item"
     ).click();
     expect(".o-tooltip").toHaveCount(0);
 
-    hover(".o_kanban_group:first-child .o_kanban_header_title .o_column_title");
+    await hover(".o_kanban_group:first-child .o_kanban_header_title .o_column_title");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(1);
 
@@ -457,7 +457,7 @@ test("display full is supported on fields", async () => {
     });
 
     expect(".o_kanban_record span.o_text_block").toHaveCount(4);
-    expect(queryFirst("span.o_text_block").textContent).toBe("yop");
+    expect("span.o_text_block:first").toHaveText("yop");
 });
 
 test.tags("desktop")("basic grouped rendering", async () => {
@@ -513,7 +513,7 @@ test.tags("desktop")("basic grouped rendering", async () => {
     );
 
     // focuses the search bar and closes the dropdown
-    click(".o_searchview input");
+    await click(".o_searchview input");
 
     // the next line makes sure that reload works properly.  It looks useless,
     // but it actually test that a grouped local record can be reloaded without
@@ -644,7 +644,7 @@ test.tags("desktop")("empty group when grouped by date", async () => {
 
     Partner._records.shift(); // remove only record of the first group
 
-    press("Enter"); // reload
+    await press("Enter"); // reload
     await animationFrame();
 
     expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(0)", "February 2017\n(3)"]);
@@ -710,7 +710,7 @@ test.tags("desktop")("m2m grouped rendering with active field (archivable true)"
         "silver\n(2)\nyop\ngnap",
     ]);
 
-    click(getKanbanColumn(0));
+    await click(getKanbanColumn(0));
     await animationFrame();
     await toggleKanbanColumnActions(0);
 
@@ -1514,7 +1514,7 @@ test("click on a button type='delete' to delete a record in a column", async () 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(queryAll(".o_kanban_load_more", { root: getKanbanColumn(0) })).toHaveCount(0);
 
-    click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
     await animationFrame();
     expect(".modal").toHaveCount(1);
 
@@ -1753,8 +1753,8 @@ test.tags("desktop")("kanban grouped by many2one: false column is folded by defa
     expect(queryAllTexts(".o_kanban_header")).toEqual(["None\n(1)", "hello\n(1)", "xmo\n(2)"]);
 
     // reload -> None column should remain open
-    click(".o_searchview_input");
-    press("Enter");
+    await click(".o_searchview_input");
+    await press("Enter");
     await animationFrame();
 
     expect(".o_column_folded").toHaveCount(0);
@@ -1784,7 +1784,7 @@ test.tags("desktop")("quick created records in grouped kanban are on displayed t
     expect(".o_kanban_group:first .o_kanban_record").toHaveCount(2);
     expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
 
-    edit("new record");
+    await edit("new record");
     await validateKanbanRecord();
 
     expect(".o_kanban_group:first .o_kanban_record").toHaveCount(3);
@@ -1796,8 +1796,8 @@ test.tags("desktop")("quick created records in grouped kanban are on displayed t
         "gnap",
     ]);
 
-    click(".o_kanban_quick_create input"); // FIXME: should not be necessary
-    edit("another record");
+    await click(".o_kanban_quick_create input"); // FIXME: should not be necessary
+    await edit("another record");
     await validateKanbanRecord();
 
     expect(".o_kanban_group:first .o_kanban_record").toHaveCount(4);
@@ -1910,7 +1910,7 @@ test.tags("desktop")("quick create record with quick_create_view", async () => {
     // fill the quick create and validate
     await editKanbanRecordQuickCreateInput("foo", "new partner");
     await editKanbanRecordQuickCreateInput("int_field", "4");
-    click(".o_kanban_quick_create .o_field_widget[name=state] .o_priority_star:first-child");
+    await click(".o_kanban_quick_create .o_field_widget[name=state] .o_priority_star:first-child");
     await validateKanbanRecord();
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 
@@ -1974,7 +1974,7 @@ test.tags("desktop")("quick create record flickering", async () => {
     await editKanbanRecordQuickCreateInput("foo", "new partner");
     await editKanbanRecordQuickCreateInput("int_field", "4");
 
-    click(".o_kanban_quick_create .o_field_widget[name=state] .o_priority_star:first-child");
+    await click(".o_kanban_quick_create .o_field_widget[name=state] .o_priority_star:first-child");
     def = new Deferred();
     await validateKanbanRecord();
 
@@ -2045,7 +2045,7 @@ test.tags("desktop")("quick create record should focus default field", async fun
 
     await createKanbanRecord();
 
-    expect(queryFirst(".o_field_widget[name=int_field] input")).toBeFocused();
+    expect(".o_field_widget[name=int_field] input:first").toBeFocused();
 });
 
 test.tags("desktop")("quick create record should focus first field input", async function () {
@@ -2072,7 +2072,7 @@ test.tags("desktop")("quick create record should focus first field input", async
 
     await createKanbanRecord();
 
-    expect(queryFirst(".o_field_widget[name=foo] input")).toBeFocused();
+    expect(".o_field_widget[name=foo] input:first").toBeFocused();
 });
 
 test.tags("desktop")("quick_create_view without quick_create option", async () => {
@@ -2647,11 +2647,11 @@ test("quick create record and change state in grouped mode", async () => {
     await validateKanbanRecord();
 
     // Select state in kanban
-    click(getKanbanRecord({ index: 0 }).querySelector(".o_status"));
+    await click(".o_status", { root: getKanbanRecord({ index: 0 }) });
     await animationFrame();
     await contains(".dropdown-item:nth-child(2)").click();
 
-    expect(queryFirst(".o_status")).toHaveClass("o_status_green");
+    expect(".o_status:first").toHaveClass("o_status_green");
 });
 
 test("window resize should not change quick create form size", async () => {
@@ -2702,7 +2702,7 @@ test("quick create record: cancel and validate without using the buttons", async
 
     expect(".o_kanban_quick_create").toHaveCount(1);
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_kanban_quick_create").toHaveCount(0);
@@ -2714,9 +2714,9 @@ test("quick create record: cancel and validate without using the buttons", async
 
     // click to input and drag the mouse outside, should not cancel the quick creation
     await quickCreateKanbanRecord();
-    drag(".o_kanban_quick_create input").drop(
-        ".o_kanban_group:first-child .o_kanban_record:last-of-type"
-    );
+    await (
+        await drag(".o_kanban_quick_create input")
+    ).drop(".o_kanban_group:first-child .o_kanban_record:last-of-type");
     await animationFrame();
     expect(".o_kanban_quick_create").toHaveCount(1, {
         message: "the quick create should not have been destroyed after clicking outside",
@@ -2733,7 +2733,7 @@ test("quick create record: cancel and validate without using the buttons", async
     });
 
     // confirm by pressing ENTER
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
@@ -2804,7 +2804,7 @@ test("quick create record: prevent multiple adds with ENTER", async () => {
     // add an element and press ENTER twice
     await quickCreateKanbanRecord();
     await editKanbanRecordQuickCreateInput("foo", "new partner");
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect(".o_kanban_record").toHaveCount(4);
@@ -2965,9 +2965,9 @@ test("quick create record: prevent multiple adds with ENTER, with onchange", asy
     await quickCreateKanbanRecord();
     shouldDelayOnchange = true;
     await editKanbanRecordQuickCreateInput("foo", "new partner");
-    press("Enter");
+    await press("Enter");
     await animationFrame();
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect(".o_kanban_record").toHaveCount(4, {
@@ -3155,7 +3155,7 @@ test("quick create record: cancel when not dirty", async () => {
     });
 
     // press ESC: should remove the quick create
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_kanban_quick_create").toHaveCount(0, {
@@ -3219,12 +3219,12 @@ test.tags("desktop")("quick create record: cancel when modal is opened", async (
     await quickCreateKanbanRecord();
     expect(".o_kanban_quick_create").toHaveCount(1);
 
-    press("t");
-    press("e");
-    press("s");
-    press("t");
+    await press("t");
+    await press("e");
+    await press("s");
+    await press("t");
     await runAllTimers();
-    click(".o_m2o_dropdown_option_create_edit"); // open create and edit dialog
+    await click(".o_m2o_dropdown_option_create_edit"); // open create and edit dialog
     await animationFrame();
 
     // When focusing out of the many2one, a modal to add a 'product' will appear.
@@ -3235,7 +3235,7 @@ test.tags("desktop")("quick create record: cancel when modal is opened", async (
     // Check odoo/odoo#61981 for more details.
     expect(".o_dialog").toHaveCount(1, { message: "modal should be opening after m2o focusout" });
     expect(document.body).toHaveClass("modal-open");
-    click(document.body);
+    await click(document.body);
     await animationFrame();
     expect(".o_kanban_quick_create").toHaveCount(1, {
         message: "quick create should stay open while modal is opening",
@@ -3278,7 +3278,7 @@ test("quick create record: cancel when dirty", async () => {
     });
 
     // press ESC: should remove the quick create
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_kanban_quick_create").toHaveCount(0, {
@@ -3476,15 +3476,14 @@ test.tags("desktop")("quick create record fail in grouped by many2one", async ()
     await editKanbanRecordQuickCreateInput("display_name", "test");
     await validateKanbanRecord();
     expect(".modal .o_form_view .o_form_editable").toHaveCount(1);
-    expect(queryFirst(".modal .o_field_many2one input").value).toBe("hello");
+    expect(".modal .o_field_many2one input:first").toHaveValue("hello");
 
     // specify a name and save
     await contains(".modal .o_field_widget[name=foo] input").edit("test");
     await contains(".modal .o_form_button_save").click();
     expect(".modal").toHaveCount(0);
     expect(".o_kanban_group:first .o_kanban_record").toHaveCount(3);
-    const firstRecord = queryFirst(".o_kanban_group .o_kanban_record");
-    expect(firstRecord.innerText).toBe("test");
+    expect(".o_kanban_group .o_kanban_record:first").toHaveText("test");
     expect(".o_kanban_quick_create:not(.o_disabled)").toHaveCount(1);
 });
 
@@ -3530,15 +3529,14 @@ test("quick create record and click Edit, name_create fails", async () => {
     await editKanbanRecordQuickCreateInput("display_name", "test");
     await editKanbanRecord();
     expect(".modal .o_form_view .o_form_editable").toHaveCount(1);
-    expect(queryFirst(".modal .o_field_many2one input").value).toBe("hello");
+    expect(".modal .o_field_many2one input:first").toHaveValue("hello");
 
     // specify a name and save
     await contains(".modal .o_field_widget[name=foo] input").edit("test");
     await contains(".modal .o_form_button_save").click();
     expect(".modal").toHaveCount(0);
     expect(".o_kanban_group:first .o_kanban_record").toHaveCount(3);
-    const firstRecord = queryFirst(".o_kanban_group .o_kanban_record");
-    expect(firstRecord.innerText).toBe("test");
+    expect(".o_kanban_group .o_kanban_record:first").toHaveText("test");
     expect(".o_kanban_quick_create:not(.o_disabled)").toHaveCount(1);
 });
 
@@ -3623,7 +3621,7 @@ test("quick create record fails in grouped by char", async () => {
     await validateKanbanRecord();
 
     expect(".modal .o_form_view .o_form_editable").toHaveCount(1);
-    expect(queryFirst(".modal .o_field_widget[name=foo] input").value).toBe("blip");
+    expect(".modal .o_field_widget[name=foo] input").toHaveValue("blip");
     await contains(".modal .o_form_button_save").click();
 
     expect(".modal .o_form_view .o_form_editable").toHaveCount(0);
@@ -3671,7 +3669,7 @@ test("quick create record fails in grouped by selection", async () => {
     await validateKanbanRecord();
 
     expect(".modal .o_form_view .o_form_editable").toHaveCount(1);
-    expect(queryFirst(".modal .o_field_widget[name=state] select").value).toBe('"abc"');
+    expect(".modal .o_field_widget[name=state] select:first").toHaveValue('"abc"');
 
     await contains(".modal .o_form_button_save").click();
 
@@ -3940,7 +3938,7 @@ test("quick create record in grouped by char field (within quick_create_view)", 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 
     await quickCreateKanbanRecord();
-    expect(queryFirst(".o_kanban_quick_create input").value).toBe("blip", {
+    expect(".o_kanban_quick_create input:first").toHaveValue("blip", {
         message: "should have set the correct foo value by default",
     });
     await validateKanbanRecord();
@@ -4020,7 +4018,7 @@ test("quick create record in grouped by selection field (within quick_create_vie
 
     quickCreateKanbanRecord();
     await animationFrame();
-    expect(queryFirst(".o_kanban_quick_create select").value).toBe('"abc"', {
+    expect(".o_kanban_quick_create select:first").toHaveValue('"abc"', {
         message: "should have set the correct state value by default",
     });
     await contains(".o_kanban_quick_create .o_kanban_add").click();
@@ -4067,7 +4065,7 @@ test.tags("desktop")("quick create record while adding a new column", async () =
 
     await animationFrame();
 
-    expect(queryFirst(".o_column_quick_create input").value).toBe("");
+    expect(".o_column_quick_create input:first").toHaveValue("");
     expect(".o_kanban_group").toHaveCount(2);
 
     // click to add a new record
@@ -4232,8 +4230,7 @@ test("many2many_tags in kanban views", async () => {
     expect(".o_kanban_record:nth-child(2) .o_tag").toHaveCount(1, {
         message: "there should be only one tag in second record",
     });
-    const tag = queryFirst(".o_kanban_record:nth-child(2) .o_tag");
-    expect(tag.innerText).toBe("silver");
+    expect(".o_kanban_record:nth-child(2) .o_tag:first").toHaveText("silver");
 
     // Write on the record using the priority widget to trigger a re-render in readonly
     await contains(".o_kanban_record:first-child .o_priority_star:first-child").click();
@@ -4243,8 +4240,8 @@ test("many2many_tags in kanban views", async () => {
         message: "first record should still contain only 2 tags",
     });
     const tags = queryAll(".o_kanban_record:first-child .o_tag");
-    expect(tags[0].innerText).toBe("gold");
-    expect(tags[1].innerText).toBe("silver");
+    expect(tags[0]).toHaveText("gold");
+    expect(tags[1]).toHaveText("silver");
 
     // click on a tag (should trigger switch_view)
     await contains(".o_kanban_record:first-child .o_tag:first-child").click();
@@ -4301,8 +4298,7 @@ test("Do not open record when clicking on `a` with `href`", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     expect(".o_kanban_record a").toHaveCount(1);
 
-    const testLink = queryFirst(".o_kanban_record a");
-    expect(!!testLink.href).toBe(true, {
+    expect(".o_kanban_record a").toHaveAttribute("href", null, {
         message: "link inside kanban record should have non-empty href",
     });
 
@@ -4312,6 +4308,7 @@ test("Do not open record when clicking on `a` with `href`", async () => {
     // Note that we should not specify a click listener on 'a', otherwise
     // it may influence the kanban record global click handler to not open
     // the record.
+    const testLink = queryFirst(".o_kanban_record a");
     testLink.addEventListener("click", (ev) => {
         expect(ev.defaultPrevented).toBe(false, {
             message: "should not prevented browser default behaviour beforehand",
@@ -4322,7 +4319,8 @@ test("Do not open record when clicking on `a` with `href`", async () => {
         ev.preventDefault();
     });
 
-    click(testLink);
+    await click(".o_kanban_record a");
+
     expect.verifySteps([]);
 });
 
@@ -4349,7 +4347,7 @@ test("Open record when clicking on widget field", async function (assert) {
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
 
-    click(queryFirst(".o_field_monetary[name=salary]"));
+    await click(".o_field_monetary[name=salary]");
 });
 
 test("o2m loaded in only one batch", async () => {
@@ -4415,7 +4413,7 @@ test.tags("desktop")("kanban with many2many, load and reload", async () => {
         groupBy: ["product_id"],
     });
 
-    press("Enter"); // reload
+    await press("Enter"); // reload
     await animationFrame();
 
     expect.verifySteps([
@@ -4452,7 +4450,7 @@ test.tags("desktop")("kanban with reference field", async () => {
             </kanban>`,
     });
 
-    press("Enter"); // reload
+    await press("Enter"); // reload
     await animationFrame();
 
     expect.verifySteps([
@@ -4487,9 +4485,7 @@ test.tags("desktop")("drag and drop a record with load more", async () => {
     expect(queryAllTexts(".o_kanban_group:eq(0) .o_kanban_record")).toEqual(["4"]);
     expect(queryAllTexts(".o_kanban_group:eq(1) .o_kanban_record")).toEqual(["1"]);
 
-    await contains(".o_kanban_group:eq(1) .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:eq(0)")
-    );
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").dragAndDrop(".o_kanban_group:eq(0)");
     expect(queryAllTexts(".o_kanban_group:eq(0) .o_kanban_record")).toEqual(["4", "1"]);
     expect(queryAllTexts(".o_kanban_group:eq(1) .o_kanban_record")).toEqual(["2"]);
 });
@@ -4523,7 +4519,7 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
 
     // first record of first column moved to the bottom of second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
@@ -4657,7 +4653,7 @@ test("drag and drop outside of a column", async () => {
 
     // first record of first column moved to the right of a column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_column_quick_create")
+        ".o_column_quick_create"
     );
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 });
@@ -4693,7 +4689,7 @@ test.tags("desktop")("drag and drop a record, grouped by selection", async () =>
 
     // first record of second column moved to the bottom of first column
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child")
+        ".o_kanban_group:first-child"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
@@ -4755,7 +4751,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
 
     // first record of first column moved to the bottom of second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not be draggable
@@ -4772,7 +4768,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
 
     // first record of first column moved to the bottom of second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not be draggable
@@ -4784,7 +4780,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
 
     // second record of first column moved at first place
     await contains(".o_kanban_group:first-child .o_kanban_record:last-of-type").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child .o_kanban_record")
+        ".o_kanban_group:first-child .o_kanban_record"
     );
 
     // should still be able to resequence
@@ -4802,7 +4798,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
 
     // first record of first column moved to the bottom of second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not be draggable
@@ -4824,7 +4820,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
 
     // first record of first column moved to the bottom of second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not be draggable
@@ -4874,7 +4870,7 @@ test("prevent drag and drop if grouped by date/datetime field", async () => {
 
     // drag&drop a record in another column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not drag&drop record
@@ -4899,7 +4895,7 @@ test("prevent drag and drop if grouped by date/datetime field", async () => {
 
     // drag&drop a record in another column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not drag&drop record
@@ -4934,10 +4930,10 @@ test.tags("desktop")("prevent drag and drop if grouped by many2many field", asyn
     });
 
     expect(".o_kanban_group").toHaveCount(2);
-    expect(queryFirst(".o_kanban_group:first-child .o_column_title").innerText).toBe("gold\n(2)", {
+    expect(".o_kanban_group:first-child .o_column_title:first").toHaveText("gold\n(2)", {
         message: "first column should have correct title",
     });
-    expect(queryFirst(".o_kanban_group:last-child .o_column_title").innerText).toBe("silver\n(3)", {
+    expect(".o_kanban_group:last-child .o_column_title:first").toHaveText("silver\n(3)", {
         message: "second column should have correct title",
     });
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
@@ -4945,7 +4941,7 @@ test.tags("desktop")("prevent drag and drop if grouped by many2many field", asyn
 
     // drag&drop a record in another column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
@@ -4969,7 +4965,7 @@ test.tags("desktop")("prevent drag and drop if grouped by many2many field", asyn
     });
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:last-child")
+        ".o_kanban_group:last-child"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0, {
@@ -5044,7 +5040,7 @@ test("completely prevent drag and drop if records_draggable set to false", async
 
     // attempt to drag&drop a record in another column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not drag&drop record
@@ -5060,7 +5056,7 @@ test("completely prevent drag and drop if records_draggable set to false", async
 
     // attempt to drag&drop a record in the same column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child .o_kanban_record:last-of-type")
+        ".o_kanban_group:first-child .o_kanban_record:last-of-type"
     );
 
     expect(getKanbanRecordTexts()).toEqual(["yop", "gnap", "blip", "blip"], {
@@ -5096,7 +5092,7 @@ test.tags("desktop")("prevent drag and drop of record if save fails", async () =
 
     // drag&drop a record in another column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     // should not be dropped, card should reset back to first column
@@ -5317,7 +5313,7 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
     });
 
     // discard the column creation and click it again
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_column_quick_create input").toHaveCount(0, {
@@ -5353,7 +5349,7 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
 
     expect(getKanbanColumn(2)).toHaveClass("o_column_folded");
 
-    click(getKanbanColumn(2));
+    await click(getKanbanColumn(2));
     await animationFrame();
 
     expect(getKanbanColumn(1)).not.toHaveClass("o_column_folded");
@@ -5551,7 +5547,7 @@ test.tags("desktop")("show/hide help message (ESC) in quick create [REQUIRE FOCU
     expect(".o_discard_msg").toHaveCount(1, { message: "the ESC to discard message is visible" });
 
     // click outside the column (to lose focus)
-    click(queryFirst(".o_kanban_header"));
+    await click(".o_kanban_header");
     await animationFrame();
 
     expect(".o_discard_msg").toHaveCount(0, {
@@ -5630,12 +5626,12 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
 
     expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("hello\n(2)");
     expect(".o_kanban_group").toHaveCount(2, { message: "should still have two columns" });
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("None\n(2)", {
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("None\n(2)", {
         message: "first column should have no id (Undefined column)",
     });
 
     // check available actions on 'Undefined' column
-    click(getKanbanColumn(0));
+    await click(getKanbanColumn(0));
     await animationFrame();
     await toggleKanbanColumnActions(0);
 
@@ -5746,7 +5742,7 @@ test("create a column, delete it and create another one", async () => {
     await validateKanbanColumn();
 
     expect(".o_kanban_group").toHaveCount(3);
-    expect(getKanbanColumn(2).querySelector("div").innerText).toBe("new column 2\n(0)", {
+    expect(getKanbanColumn(2).querySelector("div")).toHaveText("new column 2\n(0)", {
         message: "the last column should be the newly created one",
     });
 });
@@ -5865,7 +5861,7 @@ test.tags("desktop")("edit a column in grouped on m2o", async () => {
     await clickColumnAction("Edit");
     await contains(".modal .o_form_editable input").edit("ged");
     nbRPCs = 0;
-    click(".modal .o_form_button_save"); // click on save
+    await click(".modal .o_form_button_save"); // click on save
     await animationFrame();
 
     expect(".modal").toHaveCount(0, { message: "the modal should be closed" });
@@ -6030,11 +6026,11 @@ test.tags("desktop")("quick create column with enter", async () => {
     });
 
     await quickCreateKanbanColumn();
-    edit("New Column 1");
+    await edit("New Column 1");
     await animationFrame();
     expect(".o_kanban_group").toHaveCount(2);
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(".o_kanban_group").toHaveCount(3);
 });
@@ -6100,11 +6096,10 @@ test.tags("desktop")("quick create column and examples", async () => {
 
     const firstPane = queryFirst(".modal .o_notebook_content .tab-pane");
     expect(queryAll(".o_kanban_examples_group", { root: firstPane })).toHaveCount(3);
-    expect([...firstPane.querySelectorAll("h6")].map((e) => e.textContent).join("")).toBe(
-        "Column 1Column 2Column 3",
-        { message: "column titles should be correct" }
-    );
-    expect(firstPane.querySelector(".o_kanban_examples_description").innerHTML).toBe(
+    expect(queryAllTexts("h6", { root: firstPane })).toEqual(["Column 1", "Column 2", "Column 3"], {
+        message: "column titles should be correct",
+    });
+    expect(queryFirst(".o_kanban_examples_description", { root: firstPane })).toHaveInnerHTML(
         "A weak description.",
         { message: "An escaped description should be displayed" }
     );
@@ -6112,10 +6107,9 @@ test.tags("desktop")("quick create column and examples", async () => {
     await contains(".nav-item:nth-child(2) .nav-link").click();
     const secondPane = queryFirst(".o_notebook_content");
     expect(queryAll(".o_kanban_examples_group", { root: firstPane })).toHaveCount(2);
-    expect([...secondPane.querySelectorAll("h6")].map((e) => e.textContent).join("")).toBe(
-        "Col 1Col 2",
-        { message: "column titles should be correct" }
-    );
+    expect(queryAllTexts("h6", { root: secondPane })).toEqual(["Col 1", "Col 2"], {
+        message: "column titles should be correct",
+    });
     expect(secondPane.querySelector(".o_kanban_examples_description").innerHTML).toBe(
         "A fantastic description.",
         { message: "A formatted description should be displayed." }
@@ -6538,7 +6532,7 @@ test.tags("desktop")("no content helper when no data", async () => {
     });
 
     MockServer.env["partner"].create([{ foo: "new record" }]);
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect(".o_view_nocontent").toHaveCount(0, {
@@ -6636,7 +6630,7 @@ test("no nocontent helper is shown when no longer creating column", async () => 
     });
 
     // leaving column creation mode
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_view_nocontent").toHaveCount(1, { message: "there should be a nocontent helper" });
@@ -6797,7 +6791,7 @@ test("nocontent helper is displayed again after canceling quick create", async (
     });
 
     await quickCreateKanbanRecord();
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_view_nocontent").toHaveCount(1, {
@@ -6958,7 +6952,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     });
 
     expect(".o_kanban_group").toHaveCount(2, { message: "there should be two columns" });
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(16, {
         message: "there should be 8 sample records by column",
@@ -6966,7 +6960,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
 
     await quickCreateKanbanRecord();
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(0);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(0) })).toHaveCount(1);
@@ -6975,7 +6969,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     await editKanbanRecordQuickCreateInput("display_name", "twilight sparkle");
     await validateKanbanRecord();
 
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
     expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(1)", "xmo\n(0)"]);
@@ -7009,14 +7003,14 @@ test.tags("desktop")("quick create record in grouped kanban with sample data", a
     });
 
     expect(".o_kanban_group").toHaveCount(2, { message: "there should be two columns" });
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(16, {
         message: "there should be 8 sample records by column",
     });
 
     await createKanbanRecord();
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record").toHaveCount(0);
     expect(".o_kanban_load_more").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(0);
@@ -7050,20 +7044,20 @@ test("empty grouped kanban with sample data and cancel quick create", async () =
         noContentHelp: "No content helper",
     });
     expect(".o_kanban_group").toHaveCount(2, { message: "there should be two columns" });
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(16, {
         message: "there should be 8 sample records by column",
     });
 
     await quickCreateKanbanRecord();
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(0);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(0) })).toHaveCount(1);
 
     await contains(".o_kanban_view").click();
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_quick_create").toHaveCount(0);
     expect(".o_kanban_record").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
@@ -7094,7 +7088,7 @@ test.tags("desktop")("empty grouped kanban with sample data: keynav", async () =
     expect(".o_kanban_record").toHaveCount(16);
     expect(document.activeElement).toHaveClass("o_searchview_input");
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
 
     expect(document.activeElement).toHaveClass("o_searchview_input");
@@ -7121,7 +7115,7 @@ test.tags("desktop")("empty kanban with sample data", async () => {
         noContentHelp: "No content helper",
     });
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(10, {
         message: "there should be 10 sample records",
     });
@@ -7130,7 +7124,7 @@ test.tags("desktop")("empty kanban with sample data", async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("Match nothing");
 
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
 });
@@ -7164,7 +7158,7 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
     });
 
     expect(".o_kanban_group").toHaveCount(2, { message: "there should be 2 'real' columns" });
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(queryAll(".o_kanban_record").length >= 1).toBe(true, {
         message: "there should be sample records",
     });
@@ -7216,12 +7210,11 @@ test.tags("desktop")("sample data does not change after reload with sample data"
         },
     });
 
-    const columns = queryAll(".o_kanban_group");
-    expect(columns.length >= 1).toBe(true, { message: "there should be at least 1 sample column" });
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_kanban_group").toHaveCount();
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_record").toHaveCount(16);
 
-    const kanbanText = queryFirst(".o_kanban_view").innerText;
+    const kanbanText = queryText(".o_kanban_view");
     await contains(".o_control_panel .o_switch_view.o_kanban").click();
 
     expect(".o_kanban_view").toHaveText(kanbanText, {
@@ -7248,14 +7241,14 @@ test.tags("desktop")("non empty kanban with sample data", async () => {
         noContentHelp: "No content helper",
     });
 
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     expect(".o_view_nocontent").toHaveCount(0);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Match nothing");
 
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(0);
 });
 
@@ -7287,7 +7280,7 @@ test("empty grouped kanban with sample data: add a column", async () => {
         type: "kanban",
     });
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(2);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7297,7 +7290,7 @@ test("empty grouped kanban with sample data: add a column", async () => {
     await editKanbanColumnName("Yoohoo");
     await validateKanbanColumn();
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(3);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7329,7 +7322,7 @@ test.tags("desktop")("empty grouped kanban with sample data: cannot fold a colum
         groupBy: ["product_id"],
     });
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(1);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7375,7 +7368,7 @@ test("empty grouped kanban with sample data: delete a column", async () => {
         groupBy: ["product_id"],
     });
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(1);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7419,7 +7412,7 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
         groupBy: ["product_id"],
     });
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(2);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7430,7 +7423,7 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
     await editKanbanColumnName("Yoohoo");
     await validateKanbanColumn();
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(3);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7441,7 +7434,7 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
     await clickColumnAction("Delete");
     await contains(".o_dialog footer .btn-primary").click();
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_group").toHaveCount(2);
     expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
         message: "should contain sample records",
@@ -7476,7 +7469,7 @@ test.tags("desktop")("kanban with sample data: do an on_create action", async ()
             </kanban>`,
     });
 
-    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(10, {
         message: "there should be 10 sample records",
     });
@@ -7486,7 +7479,7 @@ test.tags("desktop")("kanban with sample data: do an on_create action", async ()
     expect(".modal").toHaveCount(1);
 
     await contains(".modal .o_form_button_save").click();
-    expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
 });
@@ -7548,13 +7541,13 @@ test.tags("desktop")("bounce create button when no data and click on empty area"
     });
 
     await contains(".o_kanban_view").click();
-    expect(queryFirst(".o-kanban-button-new")).not.toHaveClass("o_catch_attention");
+    expect(".o-kanban-button-new").not.toHaveClass("o_catch_attention");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Match nothing");
 
     await contains(".o_kanban_renderer").click();
-    expect(queryFirst(".o-kanban-button-new")).toHaveClass("o_catch_attention");
+    expect(".o-kanban-button-new").toHaveClass("o_catch_attention");
 });
 
 test("buttons with modifiers", async () => {
@@ -7606,8 +7599,8 @@ test("support styling of anchor tags with action type", async function (assert) 
             </kanban>`,
     });
 
-    await click(queryFirst("a[type='action']"));
-    expect(queryFirst("a[type='action']")).toHaveClass("btn-primary");
+    await click("a[type='action']");
+    expect("a[type='action']:first").toHaveClass("btn-primary");
     expect(queryFirst("a[type='action']").style.marginLeft).toBe("10px");
 });
 
@@ -7616,8 +7609,9 @@ test("button executes action and reloads", async () => {
 
     let count = 0;
     mockService("action", {
-        doActionButton({ onClose }) {
+        async doActionButton({ onClose }) {
             count++;
+            await animationFrame();
             onClose();
         },
     });
@@ -7630,7 +7624,9 @@ test("button executes action and reloads", async () => {
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
-                        <button type="object" name="a1" class="a1"/>
+                        <button type="object" name="a1" class="a1">
+                            A1
+                        </button>
                     </div>
                 </templates>
             </kanban>`,
@@ -7643,11 +7639,15 @@ test("button executes action and reloads", async () => {
         "web_search_read",
     ]);
     expect("button.a1").toHaveCount(4);
+    expect("button.a1:first").not.toHaveAttribute("disabled");
 
-    click(queryFirst("button.a1"));
-    expect(!!queryFirst("button.a1").disabled).toBe(true);
+    await click("button.a1");
+
+    expect("button.a1:first").toHaveAttribute("disabled");
+
     await animationFrame();
 
+    expect("button.a1:first").not.toHaveAttribute("disabled");
     expect(count).toBe(1, { message: "should have triggered an execute action only once" });
     // the records should be reloaded after executing a button action
     expect.verifySteps(["web_search_read"]);
@@ -7743,8 +7743,8 @@ test("rendering date and datetime (value)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date").innerText).toBe("01/25/2017");
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime").innerText).toBe(
+    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("01/25/2017");
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
         "12/12/2016 11:55:05"
     );
 });
@@ -7769,10 +7769,10 @@ test("rendering date and datetime (raw value)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date").innerText).toBe(
+    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText(
         "2017-01-25T00:00:00.000+01:00"
     );
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime").innerText).toBe(
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
         "2016-12-12T11:55:05.000+01:00"
     );
 });
@@ -7864,22 +7864,20 @@ test.tags("desktop")("resequence columns in grouped by m2o", async () => {
     });
 
     expect(".o_kanban_group").toHaveCount(2);
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
-    await contains(".o_kanban_group:first-child").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
-    );
+    await contains(".o_kanban_group:first-child").dragAndDrop(".o_kanban_group:nth-child(2)");
 
     // Drag & drop on column (not title) should not work
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     await contains(".o_kanban_group:first-child .o_column_title").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("xmo\n(2)");
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("xmo\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["2", "4", "1", "3"]);
 });
 
@@ -7958,22 +7956,20 @@ test("prevent resequence columns if groups_draggable=false", async () => {
     });
 
     expect(".o_kanban_group").toHaveCount(2);
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
-    await contains(".o_kanban_group:first-child").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
-    );
+    await contains(".o_kanban_group:first-child").dragAndDrop(".o_kanban_group:nth-child(2)");
 
     // Drag & drop on column (not title) should not work
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     await contains(".o_kanban_group:first-child .o_column_title").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("hello\n(2)");
+    expect(getKanbanColumn(0).querySelector(".o_column_title")).toHaveText("hello\n(2)");
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 });
 
@@ -8322,11 +8318,11 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
     await toggleMenuItem("GroupBy Product");
 
     expect(".o_kanban_group").toHaveCount(3, { message: "should have 3 columns" });
-    expect(queryFirst(".o_kanban_group")).toHaveClass("o_column_folded");
+    expect(".o_kanban_group:first").toHaveClass("o_column_folded");
 
     await contains(".o_kanban_group").click();
     expect(".o_kanban_group").toHaveCount(3, { message: "should have 3 columns" });
-    expect(queryFirst(".o_kanban_group")).not.toHaveClass("o_column_folded");
+    expect(".o_kanban_group:first").not.toHaveClass("o_column_folded");
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(2) })).toHaveCount(1);
@@ -8334,7 +8330,7 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
         message: "first column should have a default title for when no value is provided",
     });
 
-    hover(queryFirst(".o_column_title"));
+    await hover(".o_column_title");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(0, {
         message:
@@ -8343,17 +8339,16 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
     // should not have done any read on product because no value
     expect.verifySteps([]);
 
-    hover(queryOne(".o_column_title:eq(1)"));
+    await hover(".o_column_title:eq(1)");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(1, {
         message:
             "second column should have a tooltip with the group_by_tooltip title and many2one field value",
     });
-    expect(queryFirst(".o-tooltip").textContent).toBe("Kikouhello");
-    expect(queryFirst(".o_kanban_group:nth-child(2) .o_column_title").textContent).toBe(
-        "hello(2)",
-        { message: "second column should have a title with a value from the many2one" }
-    );
+    expect(".o-tooltip:first").toHaveText("Kikou\nhello");
+    expect(".o_kanban_group:nth-child(2) .o_column_title").toHaveText("hello\n(2)", {
+        message: "second column should have a title with a value from the many2one",
+    });
     // should have done one read on product for the second column tooltip
     expect.verifySteps(["read: product"]);
 });
@@ -8381,15 +8376,15 @@ test.tags("desktop")("asynchronous tooltips when grouped", async () => {
     expect(".o_kanban_renderer").toHaveClass("o_kanban_grouped");
     expect(".o_column_title").toHaveCount(2);
 
-    hover(".o_kanban_group .o_kanban_header_title .o_column_title");
+    await hover(".o_kanban_group .o_kanban_header_title .o_column_title");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(0);
 
-    leave(".o_kanban_group .o_kanban_header_title .o_column_title");
+    await leave();
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(0);
 
-    hover(".o_kanban_group .o_kanban_header_title .o_column_title");
+    await hover(".o_kanban_group .o_kanban_header_title .o_column_title");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(0);
 
@@ -8397,7 +8392,7 @@ test.tags("desktop")("asynchronous tooltips when grouped", async () => {
     await animationFrame();
 
     expect(".o-tooltip").toHaveCount(1);
-    expect(queryFirst(".o-tooltip").textContent.trim()).toBe("Namehello");
+    expect(".o-tooltip").toHaveText("Name\nhello");
     expect.verifySteps(["read: product"]);
 });
 
@@ -8420,20 +8415,20 @@ test.tags("desktop")("loads data tooltips only when first opening", async () => 
             </kanban>`,
     });
 
-    hover(".o_kanban_group .o_kanban_header_title .o_column_title");
-    await runAllTimers();
+    await hover(".o_kanban_group .o_kanban_header_title .o_column_title");
+    await await runAllTimers();
     expect(".o-tooltip").toHaveCount(1);
-    expect(queryFirst(".o-tooltip").textContent.trim()).toBe("Namehello");
+    expect(".o-tooltip").toHaveText("Name\nhello");
     expect.verifySteps(["read: product"]);
 
-    leave(".o_kanban_group .o_kanban_header_title .o_column_title");
+    await leave();
     await animationFrame();
     expect(".o-tooltip").toHaveCount(0, { message: "tooltip should be closed" });
 
-    hover(".o_kanban_group .o_kanban_header_title .o_column_title");
+    await hover(".o_kanban_group .o_kanban_header_title .o_column_title");
     await runAllTimers();
     expect(".o-tooltip").toHaveCount(1);
-    expect(queryFirst(".o-tooltip").textContent.trim()).toBe("Namehello");
+    expect(".o-tooltip").toHaveText("Name\nhello");
     expect.verifySteps([]);
 });
 
@@ -8468,14 +8463,14 @@ test.tags("desktop")("move a record then put it again in the same column", async
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(1);
 
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child")
+        ".o_kanban_group:first-child"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(0);
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0);
@@ -8521,9 +8516,7 @@ test.tags("desktop")("resequence a record twice", async () => {
         message: "records should be correctly ordered",
     });
 
-    await contains(".o_kanban_record:nth-child(2)").dragAndDrop(
-        queryFirst(".o_kanban_record:nth-child(3)")
-    );
+    await contains(".o_kanban_record:nth-child(2)").dragAndDrop(".o_kanban_record:nth-child(3)");
     def.resolve();
     await animationFrame();
 
@@ -8532,9 +8525,7 @@ test.tags("desktop")("resequence a record twice", async () => {
         message: "records should be correctly ordered",
     });
 
-    await contains(".o_kanban_record:nth-child(3)").dragAndDrop(
-        queryFirst(".o_kanban_record:nth-child(2)")
-    );
+    await contains(".o_kanban_record:nth-child(3)").dragAndDrop(".o_kanban_record:nth-child(2)");
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
     expect(getKanbanRecordTexts()).toEqual(["record2", "record1"], {
@@ -8572,9 +8563,7 @@ test("basic support for widgets (being Owl Components)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 2 }).querySelector(".o_widget").innerText).toBe(
-        '{"foo":"gnap"}'
-    );
+    expect(getKanbanRecord({ index: 2 }).querySelector(".o_widget")).toHaveText('{"foo":"gnap"}');
 });
 
 test("kanban card: record value should be updated", async () => {
@@ -8607,7 +8596,7 @@ test("kanban card: record value should be updated", async () => {
 
     expect(queryText(".foo", { root: getKanbanRecord({ index: 0 }) })).toBe("yop");
 
-    click(queryOne("button", { root: getKanbanRecord({ index: 0 }) }));
+    await click(queryOne("button", { root: getKanbanRecord({ index: 0 }) }));
     await animationFrame();
     await animationFrame();
 
@@ -8725,16 +8714,16 @@ test('column progressbars: "false" bar is clickable', async () => {
     expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200").toHaveCount(1, {
         message: "should have false kanban color",
     });
-    expect(
-        queryFirst(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200")
-    ).toHaveClass("bg-200");
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200:first").toHaveClass(
+        "bg-200"
+    );
 
     await contains(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200").click();
 
-    expect(
-        queryFirst(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200")
-    ).toHaveClass("progress-bar-animated");
-    expect(queryFirst(".o_kanban_group:last-child")).toHaveClass("o_kanban_group_show_200");
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200:first").toHaveClass(
+        "progress-bar-animated"
+    );
+    expect(".o_kanban_group:last-child").toHaveClass("o_kanban_group_show_200");
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -8781,9 +8770,9 @@ test('column progressbars: "false" bar with sum_field', async () => {
 
     await contains(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200").click();
 
-    expect(
-        queryFirst(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200")
-    ).toHaveClass("progress-bar-animated");
+    expect(".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200:first").toHaveClass(
+        "progress-bar-animated"
+    );
     expect(getKanbanCounters()).toEqual(["-4", "15"]);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -9223,19 +9212,19 @@ test.tags("desktop")("drag & drop records grouped by m2o with progressbar", asyn
     expect(getKanbanCounters()).toEqual(["1", "1", "2"]);
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(getKanbanCounters()).toEqual(["0", "2", "2"]);
 
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child")
+        ".o_kanban_group:first-child"
     );
 
     expect(getKanbanCounters()).toEqual(["1", "1", "2"]);
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(3)")
+        ".o_kanban_group:nth-child(3)"
     );
 
     expect(getKanbanCounters()).toEqual(["0", "1", "3"]);
@@ -9298,7 +9287,7 @@ test.tags("desktop")("d&d records grouped by date with progressbar with aggregat
     expect(getKanbanCounters()).toEqual(["13", "19"]);
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(getKanbanCounters()).toEqual(["-4", "36"]);
@@ -9378,7 +9367,7 @@ test.tags("desktop")("progress bar recompute after d&d to and from other column"
 
     // Drag the last kanban record to the first column
     await contains(".o_kanban_group:last-child .o_kanban_record:nth-child(4)").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child")
+        ".o_kanban_group:first-child"
     );
 
     expect(getKanbanColumnTooltips()).toEqual(["1 gnap", "1 blip", "1 yop", "1 blip"]);
@@ -9687,7 +9676,7 @@ test.tags("desktop")("load more should load correct records after drag&drop even
 
     // Drag the first kanban record on top of the last
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:last-child .o_kanban_record")
+        ".o_kanban_group:last-child .o_kanban_record"
     );
 
     // load more twice to load all records of second column
@@ -9847,14 +9836,14 @@ test.tags("desktop")("quickcreate in first column after moving a record from it"
 
     await createKanbanRecord();
 
-    expect(queryFirst(".o_kanban_quick_create").closest(".o_kanban_group")).toBe(
+    expect(queryFirst(".o_kanban_group:has(.o_kanban_quick_create)")).toBe(
         queryFirst(".o_kanban_group")
     );
 
-    await contains(".o_kanban_record").dragAndDrop(queryFirst(".o_kanban_group:nth-child(2)"));
+    await contains(".o_kanban_record").dragAndDrop(".o_kanban_group:nth-child(2)");
     await createKanbanRecord();
 
-    expect(queryFirst(".o_kanban_quick_create").closest(".o_kanban_group")).toBe(
+    expect(queryFirst(".o_kanban_group:has(.o_kanban_quick_create)")).toBe(
         queryFirst(".o_kanban_group")
     );
 });
@@ -9898,8 +9887,8 @@ test.tags("desktop")("grouped kanban: clear groupby when reloading", async () =>
     expect(".o_kanban_renderer").not.toHaveClass("o_kanban_ungrouped");
     expect(queryAllTexts(".o_facet_value")).toEqual(["My Filter", "GroupBy Bar"]);
 
-    await contains(queryFirst(".o_facet_remove")).click();
-    await contains(queryOne(".o_facet_remove")).click();
+    await contains(".o_facet_remove:first").click();
+    await contains(".o_facet_remove:only").click();
     def.resolve(); // simulate slow 1st update of kanban view
     await animationFrame();
 
@@ -9946,13 +9935,13 @@ test("keynav: right/left", async () => {
             </kanban>`,
     });
 
-    pointerDown(getKanbanRecord({ index: 0 }));
+    await pointerDown(getKanbanRecord({ index: 0 }));
     expect(getKanbanRecord({ index: 0 })).toBeFocused();
 
-    press("ArrowRight");
+    await press("ArrowRight");
     expect(getKanbanRecord({ index: 1 })).toBeFocused();
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     expect(getKanbanRecord({ index: 0 })).toBeFocused();
 });
 
@@ -9971,8 +9960,8 @@ test("keynav: down, with focus is inside a card", async () => {
             </kanban>`,
     });
 
-    pointerDown(getKanbanRecord({ index: 0 }).querySelector(".o-this-is-focussable"));
-    press("ArrowDown");
+    await pointerDown(getKanbanRecord({ index: 0 }).querySelector(".o-this-is-focussable"));
+    await press("ArrowDown");
 
     expect(getKanbanRecord({ index: 1 })).toBeFocused();
 });
@@ -9991,33 +9980,33 @@ test.tags("desktop")("keynav: grouped kanban", async () => {
             </kanban>`,
         groupBy: ["bar"],
     });
-    const cardsByColumn = [...queryAll(".o_kanban_group")].map((c) => [
-        ...c.querySelectorAll(".o_kanban_record"),
-    ]);
+    const cardsByColumn = queryAll(".o_kanban_group").map((root) =>
+        queryAll(".o_kanban_record", { root })
+    );
     const firstColumnFirstCard = cardsByColumn[0][0];
     const secondColumnFirstCard = cardsByColumn[1][0];
     const secondColumnSecondCard = cardsByColumn[1][1];
 
     // DOWN should focus the first card
-    press("ArrowDown");
+    await press("ArrowDown");
     expect(firstColumnFirstCard).toBeFocused({
         message: "LEFT should select the first card of the first column",
     });
 
     // RIGHT should select the next column
-    press("ArrowRight");
+    await press("ArrowRight");
     expect(secondColumnFirstCard).toBeFocused({
         message: "RIGHT should select the first card of the next column",
     });
 
     // DOWN should move up one card
-    press("ArrowDown");
+    await press("ArrowDown");
     expect(secondColumnSecondCard).toBeFocused({
         message: "DOWN should select the second card of the current column",
     });
 
     // LEFT should go back to the first column
-    press("ArrowLeft");
+    await press("ArrowLeft");
     expect(firstColumnFirstCard).toBeFocused({
         message: "LEFT should select the first card of the first column",
     });
@@ -10078,26 +10067,26 @@ test.tags("desktop")("keynav: grouped kanban with empty columns", async () => {
      *    |     | yop  |     |     | gnap |
      *    |     | blip |     |     | blip |
      */
-    const cardsByColumn = [...queryAll(".o_kanban_group")].map((c) => [
-        ...c.querySelectorAll(".o_kanban_record"),
-    ]);
+    const cardsByColumn = queryAll(".o_kanban_group").map((root) =>
+        queryAll(".o_kanban_record", { root })
+    );
     const yop = cardsByColumn[1][0];
     const gnap = cardsByColumn[4][0];
 
     // DOWN should focus yop (first card)
-    press("ArrowDown");
+    await press("ArrowDown");
     expect(yop).toBeFocused({
         message: "LEFT should select the first card of the first column that has a card",
     });
 
     // RIGHT should select the next column that has a card
-    press("ArrowRight");
+    await press("ArrowRight");
     expect(gnap).toBeFocused({
         message: "RIGHT should select the first card of the next column that has a card",
     });
 
     // LEFT should go back to the first column that has a card
-    press("ArrowLeft");
+    await press("ArrowLeft");
     expect(yop).toBeFocused({
         message: "LEFT should select the first card of the first column that has a card",
     });
@@ -10120,9 +10109,9 @@ test.tags("desktop")("keynav: no global_click, press ENTER on card with a link",
         },
     });
 
-    press("ArrowDown");
-    expect(queryFirst(".o_kanban_record")).toBeFocused();
-    press("Enter");
+    await press("ArrowDown");
+    expect(".o_kanban_record:first").toBeFocused();
+    await press("Enter");
 
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
@@ -10152,9 +10141,9 @@ test.tags("desktop")("keynav: kanban with global_click", async () => {
         },
     });
 
-    press("ArrowDown");
-    expect(queryFirst(".o_kanban_record")).toBeFocused();
-    press("Enter");
+    await press("ArrowDown");
+    expect(".o_kanban_record:first").toBeFocused();
+    await press("Enter");
 });
 
 test.tags("desktop")(`kanban should ask to scroll to top on page changes`, async () => {
@@ -10327,7 +10316,7 @@ test.tags("desktop")("set cover image", async () => {
     expect(".modal .btn:contains(Discard)").toHaveCount(1);
     expect(".modal .btn:contains(Remove Cover Image)").toHaveCount(0);
 
-    dblclick(".modal .o_kanban_cover_image img"); // doesn't work
+    await dblclick(".modal .o_kanban_cover_image img"); // doesn't work
     await animationFrame();
 
     expect('img[data-src*="/web/image/2"]').toHaveCount(1);
@@ -10467,7 +10456,7 @@ test.tags("desktop")("unset cover image", async () => {
     expect(queryText(coverButton)).toBe("Set Cover Image");
     await contains(coverButton).click();
 
-    dblclick(".modal .o_kanban_cover_image img"); // doesn't work
+    await dblclick(".modal .o_kanban_cover_image img"); // doesn't work
     await animationFrame();
 
     expect(queryAll("img", { root: getKanbanRecord({ index: 1 }) })).toHaveCount(0, {
@@ -10619,7 +10608,7 @@ test("kanban view with boolean toggle widget", async () => {
     expect(getKanbanRecord({ index: 0 }).querySelector("[name='bar'] input")).toBeChecked();
     expect(getKanbanRecord({ index: 1 }).querySelector("[name='bar'] input")).toBeChecked();
 
-    click(queryOne("[name='bar'] input", { root: getKanbanRecord({ index: 1 }) }));
+    await click("[name='bar'] input:only", { root: getKanbanRecord({ index: 1 }) });
     await animationFrame();
 
     expect(getKanbanRecord({ index: 0 }).querySelector("[name='bar'] input")).toBeChecked();
@@ -10678,7 +10667,7 @@ test.tags("desktop")("quick create: keyboard navigation to buttons", async () =>
     await editKanbanRecordQuickCreateInput("display_name", "aaa"); // pressed Tab to trigger "change"
     expect(".o_kanban_add").toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     expect(".o_kanban_edit").toBeFocused();
 });
 
@@ -11011,7 +11000,7 @@ test("kanban widget can extract props from attrs", async () => {
     });
 
     expect(".o-test-widget-option").toHaveCount(4);
-    expect(queryFirst(".o-test-widget-option").textContent).toBe("Widget with Option");
+    expect(".o-test-widget-option:first").toHaveText("Widget with Option");
 });
 
 test("action/type attributes on kanban arch, type='object'", async () => {
@@ -11099,7 +11088,7 @@ test("Missing t-key is automatically filled with a warning", async () => {
     });
 
     expect.verifySteps(["warning"]);
-    expect(getKanbanRecord({ index: 0 }).innerText).toBe("123");
+    expect(getKanbanRecord({ index: 0 })).toHaveText("123");
 });
 
 test("Quick created record is rendered after load", async () => {
@@ -11939,7 +11928,7 @@ test.tags("desktop")("keep focus in cp when pressing arrowdown and no kanban car
     expect(".o_searchview_input").toBeFocused();
 
     // Trigger the ArrowDown hotkey
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(".o_searchview_input").toBeFocused();
 });
@@ -12000,7 +11989,7 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
 
     // try again to move "yop" from second to third column
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(3)").dragAndDrop(
-        queryOne(".o_kanban_group:nth-child(3)")
+        ".o_kanban_group:nth-child(3)"
     );
 
     expect(".o_kanban_group:nth-child(1) .o_kanban_record").toHaveCount(0);
@@ -12045,9 +12034,7 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
     expect.verifySteps([]);
 
     // move second "blip" to third place
-    await contains(".o_kanban_record:nth-child(2)").dragAndDrop(
-        queryFirst(".o_kanban_record:nth-child(3)")
-    );
+    await contains(".o_kanban_record:nth-child(2)").dragAndDrop(".o_kanban_record:nth-child(3)");
 
     expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
         "blip",
@@ -12058,9 +12045,7 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
     expect.verifySteps(["resequence"]);
 
     // try again
-    await contains(".o_kanban_record:nth-child(2)").dragAndDrop(
-        queryFirst(".o_kanban_record:nth-child(3)")
-    );
+    await contains(".o_kanban_record:nth-child(2)").dragAndDrop(".o_kanban_record:nth-child(3)");
     expect.verifySteps([]);
 
     def.resolve();
@@ -12073,9 +12058,7 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
         "gnap",
     ]);
 
-    await contains(".o_kanban_record:nth-child(3)").dragAndDrop(
-        queryFirst(".o_kanban_record:nth-child(4)")
-    );
+    await contains(".o_kanban_record:nth-child(3)").dragAndDrop(".o_kanban_record:nth-child(4)");
 
     expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
         "blip",
@@ -12110,7 +12093,7 @@ test("fieldDependencies support for fields", async () => {
             </kanban>`,
     });
 
-    expect(queryFirst("[name=foo] span").innerText).toBe("10");
+    expect("[name=foo] span:first").toHaveText("10");
 });
 
 test("fieldDependencies support for fields: dependence on a relational field", async () => {
@@ -12139,7 +12122,7 @@ test("fieldDependencies support for fields: dependence on a relational field", a
             </kanban>`,
     });
 
-    expect(queryFirst("[name=foo] span").innerText).toBe("hello");
+    expect("[name=foo] span:first").toHaveText("hello");
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -12197,15 +12180,13 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(1).innerText).toBe("xmo\n(2)");
+    expect(getKanbanColumn(1)).toHaveText("xmo\n(2)");
 
-    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_column_folded")
-    );
+    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(".o_column_folded");
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(1).innerText).toBe("xmo\n(3)");
+    expect(getKanbanColumn(1)).toHaveText("xmo\n(3)");
 });
 
 test.tags("desktop")("drag record on initially folded column should not unfold it", async () => {
@@ -12233,9 +12214,7 @@ test.tags("desktop")("drag record on initially folded column should not unfold i
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
     expect(queryText(getKanbanColumn(1))).toBe("xmo\n(2)");
 
-    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_column_folded")
-    );
+    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(".o_column_folded");
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
@@ -12278,7 +12257,7 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
     expect(queryText(getKanbanColumn(1))).toBe("Yes\n(2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
@@ -12336,7 +12315,7 @@ test.tags("desktop")("quick create record in grouped kanban in a form view dialo
 
     expect(".modal").toHaveCount(1);
 
-    await clickSave(queryFirst(".modal"));
+    await clickModalButton({ text: "Save & Close" });
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(3, {
         message: "first column should contain three records",
@@ -12445,14 +12424,14 @@ test.tags("desktop")("Move multiple records in different columns simultaneously"
 
     // Move 3 at end of 1st column
     await contains(".o_kanban_group:last-of-type .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group")
+        ".o_kanban_group:first"
     );
 
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "2", "4"]);
 
     // Move 4 at end of 1st column
     await contains(".o_kanban_group:last-of-type .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group")
+        ".o_kanban_group:first"
     );
 
     expect(getKanbanRecordTexts()).toEqual(["1", "3", "4", "2"]);
@@ -12479,7 +12458,7 @@ test.tags("desktop")("drag & drop: content scrolls when reaching the edges", asy
     });
 
     const width = 600;
-    const content = queryFirst(".o_content");
+    const content = queryOne(".o_content");
     content.setAttribute("style", `max-width:${width}px;overflow:auto;`);
 
     expect(content.scrollLeft).toBe(0);
@@ -12499,7 +12478,7 @@ test.tags("desktop")("drag & drop: content scrolls when reaching the edges", asy
     expect(content.scrollLeft + width).toBe(content.scrollWidth);
 
     // Cancel drag: press "Escape"
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_kanban_record.o_dragged").toHaveCount(0);
@@ -12583,7 +12562,7 @@ test.tags("desktop")("d&d records grouped by m2o with m2o displayed in records",
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "xmo", "xmo"]);
 
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:first-child")
+        ".o_kanban_group:first-child"
     );
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "hello", "xmo"]);
 
@@ -12612,7 +12591,7 @@ test("Can't use KanbanRecord implementation details in arch", async () => {
                 </templates>
             </kanban>`,
     });
-    expect(queryFirst(".o_kanban_record").innerHTML).toBe("<div></div>");
+    expect(".o_kanban_record:first").toHaveInnerHTML("<div></div>");
 });
 
 test.tags("desktop")("rerenders only once after resequencing records", async () => {
@@ -12656,7 +12635,7 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
 
     // drag yop to the second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
@@ -12675,7 +12654,7 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
     saveDef = new Deferred();
     resequenceDef = new Deferred();
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 2, 4: 1 });
@@ -12838,7 +12817,7 @@ test.tags("desktop")(`kanban view: press "hotkey" to execute header button actio
             </kanban>`,
     });
 
-    press(["alt", "a"]);
+    await press(["alt", "a"]);
     await tick();
     expect.verifySteps(["execute_action: display"]);
 });
@@ -13174,7 +13153,7 @@ test.tags("desktop")("group by properties and drag and drop", async () => {
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(1);
 
     await contains(".o_kanban_group:nth-child(2) .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(3)")
+        ".o_kanban_group:nth-child(3)"
     );
 
     expect.verifySteps(["web_save", "resequence"]);
@@ -13271,7 +13250,7 @@ test("grouped on field with readonly expression depending on context", async () 
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
@@ -13302,7 +13281,7 @@ test.tags("desktop")("grouped on field with readonly expression depending on fie
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(2)")
+        ".o_kanban_group:nth-child(2)"
     );
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
@@ -13330,10 +13309,10 @@ test.tags("desktop")("quick create a column by pressing enter when input is focu
 
     // We don't use the editInput helper as it would trigger a change event automatically.
     // We need to wait for the enter key to trigger the event.
-    press("N");
-    press("e");
-    press("w");
-    press("Enter");
+    await press("N");
+    await press("e");
+    await press("w");
+    await press("Enter");
     await animationFrame();
 
     expect(".o_kanban_group").toHaveCount(3);

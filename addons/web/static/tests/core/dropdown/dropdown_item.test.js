@@ -65,9 +65,9 @@ test("prevents click default with href", async () => {
     // so as not to prevent the background change flow for example
     click(DROPDOWN_TOGGLE);
     await animationFrame();
-    click(".link");
-    click("button.dropdown-toggle");
-    click(".nolink");
+    await click(".link");
+    await click("button.dropdown-toggle");
+    await click(".nolink");
 });
 
 test("can be styled", async () => {

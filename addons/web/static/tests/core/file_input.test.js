@@ -56,7 +56,7 @@ test("Upload a file: default props", async () => {
     });
 
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([]);
+    await setInputFiles([]);
 
     expect(".o_file_input input").not.toHaveAttribute("multiple", null, {
         message: "'multiple' attribute should not be set",
@@ -97,7 +97,7 @@ test("Upload a file: custom attachment", async () => {
     });
 
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([]);
+    await setInputFiles([]);
 
     expect(".o_file_input input").toHaveAttribute("multiple", null, {
         message: "'multiple' attribute should be set",

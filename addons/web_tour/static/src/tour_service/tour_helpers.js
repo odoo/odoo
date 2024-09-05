@@ -22,10 +22,10 @@ export class TourHelpers {
      * @example
      *  run: "check input[type=checkbox]", // Checks the selector
      */
-    check(selector) {
+    async check(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "check");
-        hoot.check(element);
+        await hoot.check(element);
     }
 
     /**
@@ -42,11 +42,11 @@ export class TourHelpers {
      * @example
      *  run: "clear input#my_input", // Clears the value of the selector
      */
-    clear(selector) {
+    async clear(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "clear");
-        hoot.click(element);
-        hoot.clear();
+        await hoot.click(element);
+        await hoot.clear();
     }
 
     /**
@@ -58,10 +58,10 @@ export class TourHelpers {
      * @example
      *  run: "click .o_rows:first", // Click on the selector
      */
-    click(selector) {
+    async click(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "click");
-        hoot.click(element);
+        await hoot.click(element);
     }
 
     /**
@@ -73,10 +73,10 @@ export class TourHelpers {
      * @example
      *  run: "dblclick .o_rows:first", // Double click on the selector
      */
-    dblclick(selector) {
+    async dblclick(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "dblclick");
-        hoot.dblclick(element);
+        await hoot.dblclick(element);
     }
 
     /**
@@ -106,9 +106,9 @@ export class TourHelpers {
         };
         const element = this.anchor;
         this._ensureEnabled(element, "drag and drop");
-        const { drop, moveTo } = hoot.drag(element);
+        const { drop, moveTo } = await hoot.drag(element);
         await dragEffectDelay();
-        hoot.hover(element, {
+        await hoot.hover(element, {
             position: {
                 top: 20,
                 left: 20,
@@ -120,9 +120,9 @@ export class TourHelpers {
             visible: true,
             timeout: 500,
         });
-        moveTo(target, options);
+        await moveTo(target, options);
         await dragEffectDelay();
-        drop();
+        await drop();
         await dragEffectDelay();
     }
 
@@ -133,10 +133,10 @@ export class TourHelpers {
      * @example
      *  run: "edit Hello Mr. Doku",
      */
-    edit(text, selector) {
+    async edit(text, selector) {
         const element = this._get_action_element(selector);
-        hoot.click(element);
-        hoot.edit(text);
+        await hoot.click(element);
+        await hoot.edit(text);
     }
 
     /**
@@ -144,21 +144,21 @@ export class TourHelpers {
      * @param {string} text
      * @param {Selector} selector
      */
-    editor(text, selector) {
+    async editor(text, selector) {
         const element = this._get_action_element(selector);
-        const InEditor = !!element.closest(".odoo-editor-editable");
+        const InEditor = Boolean(element.closest(".odoo-editor-editable"));
         if (!InEditor) {
             throw new Error("run 'editor' always on an element in an editor");
         }
         this._ensureEnabled(element, "edit wysiwyg");
-        hoot.click(element);
+        await hoot.click(element);
         this._set_range(element, "start");
-        hoot.keyDown("_");
+        await hoot.keyDown("_");
         element.textContent = text;
-        hoot.manuallyDispatchProgrammaticEvent(element, "input");
+        await hoot.manuallyDispatchProgrammaticEvent(element, "input");
         this._set_range(element, "stop");
-        hoot.keyUp("_");
-        hoot.manuallyDispatchProgrammaticEvent(element, "change");
+        await hoot.keyUp("_");
+        await hoot.manuallyDispatchProgrammaticEvent(element, "change");
     }
 
     /**
@@ -170,10 +170,10 @@ export class TourHelpers {
      * @param {string} value
      * @param {Selector} selector
      */
-    fill(value, selector) {
+    async fill(value, selector) {
         const element = this._get_action_element(selector);
-        hoot.click(element);
-        hoot.fill(value);
+        await hoot.click(element);
+        await hoot.fill(value);
     }
 
     /**
@@ -182,9 +182,9 @@ export class TourHelpers {
      * @example
      *  run: "hover",
      */
-    hover(selector) {
+    async hover(selector) {
         const element = this._get_action_element(selector);
-        hoot.hover(element);
+        await hoot.hover(element);
     }
 
     /**
@@ -192,11 +192,11 @@ export class TourHelpers {
      * @param {string|number} value
      * @param {Selector} selector
      */
-    range(value, selector) {
+    async range(value, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "range");
-        hoot.click(element);
-        hoot.setInputRange(element, value);
+        await hoot.click(element);
+        await hoot.setInputRange(element, value);
     }
 
     /**
@@ -221,11 +221,11 @@ export class TourHelpers {
      * @example
      * run: "select Foden47",
      */
-    select(value, selector) {
+    async select(value, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "select");
-        hoot.click(element);
-        hoot.select(value, { target: element });
+        await hoot.click(element);
+        await hoot.select(value, { target: element });
     }
 
     /**
@@ -236,14 +236,14 @@ export class TourHelpers {
      * @example
      *  run: "selectByIndex 2", //Select the third option
      */
-    selectByIndex(index, selector) {
+    async selectByIndex(index, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "selectByIndex");
-        hoot.click(element);
+        await hoot.click(element);
         const value = hoot.queryValue(`option:eq(${index})`, { root: element });
         if (value) {
-            hoot.select(value, { target: element });
-            element.dispatchEvent(new Event("input"));
+            await hoot.select(value, { target: element });
+            await hoot.manuallyDispatchProgrammaticEvent(element, "input");
         }
     }
 
@@ -255,12 +255,12 @@ export class TourHelpers {
      * @example
      *  run: "selectByLabel Jeremy Doku", //Select all options where label contains Jeremy Doku
      */
-    selectByLabel(contains, selector) {
+    async selectByLabel(contains, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "selectByLabel");
-        hoot.click(element);
+        await hoot.click(element);
         const values = hoot.queryAllValues(`option:contains(${contains})`, { root: element });
-        hoot.select(values, { target: element });
+        await hoot.select(values, { target: element });
     }
 
     /**
@@ -304,7 +304,7 @@ export class TourHelpers {
         if (typeof selector === "string" && selector.length) {
             const nodes = hoot.queryAll(selector);
             return nodes.find(hoot.isVisible) || nodes.at(0);
-        } else if (selector instanceof Node) {
+        } else if (typeof selector === "object" && Boolean(selector?.nodeType)) {
             return selector;
         }
         return this.anchor;

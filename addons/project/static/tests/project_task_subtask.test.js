@@ -240,7 +240,7 @@ test("project.task (kanban): check subtask creation", async () => {
     await animationFrame();
     click(".subtask_create");
     await animationFrame();
-    click(".subtask_create_input input");
+    await click(".subtask_create_input input");
     edit("New Subtask", { confirm: "enter" });
     await animationFrame();
     expect(".subtask_list_row").toHaveCount(4, {
@@ -267,8 +267,8 @@ test("project.task (form): check that the subtask of another project can be adde
     await animationFrame();
     click(".o_field_project li");
     await animationFrame();
-    click(".o_field_project input");
-    edit("aaa");
+    await click(".o_field_project input");
+    await edit("aaa");
     click(".o_form_button_save");
     await animationFrame();
     expect(".o_field_project").toHaveText("Project 1");

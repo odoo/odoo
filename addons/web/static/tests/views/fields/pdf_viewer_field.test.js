@@ -69,7 +69,7 @@ test("PdfViewerField: upload rendering", async () => {
 
     expect("iframe.o_pdfview_iframe").toHaveCount(0);
     const file = new File(["test"], "test.pdf", { type: "application/pdf" });
-    click(".o_field_pdf_viewer input[type=file]");
+    await click(".o_field_pdf_viewer input[type=file]");
     setInputFiles(file);
     await waitFor("iframe.o_pdfview_iframe");
     expect(getIframeProtocol()).toBe("blob");

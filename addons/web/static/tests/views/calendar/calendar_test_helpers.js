@@ -1,5 +1,5 @@
 import { click, drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
-import { advanceTime, advanceFrame, animationFrame } from "@odoo/hoot-mock";
+import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
 
@@ -310,7 +310,7 @@ export function findFilterPanelSectionFilter(sectionName) {
 export async function pickDate(date) {
     const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    click(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`);
+    await click(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`);
     await animationFrame();
 }
 
@@ -323,7 +323,7 @@ export async function clickAllDaySlot(date) {
 
     instantScrollTo(slot);
 
-    click(slot);
+    await click(slot);
     await animationFrame();
 }
 
@@ -336,7 +336,7 @@ export async function clickDate(date) {
 
     instantScrollTo(cell);
 
-    click(cell);
+    await click(cell);
     await advanceTime(500);
 }
 
@@ -349,7 +349,7 @@ export async function clickEvent(eventId) {
 
     instantScrollTo(eventEl);
 
-    click(eventEl);
+    await click(eventEl);
     await advanceTime(500); // wait for the popover to open (debounced)
 }
 
@@ -389,13 +389,14 @@ export async function selectTimeRange(startDateTime, endDateTime) {
         relative: true,
         position: { y: 1, x: startColumnRect.left },
     };
-    hover(startRow, optionStart);
+
+    await hover(startRow, optionStart);
     await animationFrame();
-    const { drop } = drag(startRow, optionStart);
+    const { drop } = await drag(startRow, optionStart);
     await animationFrame();
-    drop(endRow, {
-        relative: true,
+    await drop(endRow, {
         position: { y: -1, x: endColumnRect.left },
+        relative: true,
     });
 
     await animationFrame();
@@ -412,16 +413,16 @@ export async function selectDateRange(startDate, endDate) {
 
     instantScrollTo(startCell);
 
-    hover(startCell);
+    await hover(startCell);
     await animationFrame();
 
-    const { moveTo, drop } = drag(startCell);
+    const { moveTo, drop } = await drag(startCell);
     await animationFrame();
 
-    moveTo(endCell);
+    await moveTo(endCell);
     await animationFrame();
 
-    drop();
+    await drop();
     await animationFrame();
 }
 
@@ -436,13 +437,13 @@ export async function selectAllDayRange(startDate, endDate) {
 
     instantScrollTo(start);
 
-    hover(start);
+    await hover(start);
     await animationFrame();
 
-    const { drop } = drag(start);
+    const { drop } = await drag(start);
     await animationFrame();
 
-    drop(end);
+    await drop(end);
     await animationFrame();
 }
 export async function closeCwPopOver() {
@@ -464,17 +465,17 @@ export async function moveEventToDate(eventId, date, options) {
 
     instantScrollTo(eventEl);
 
-    hover(eventEl);
+    await hover(eventEl);
     await animationFrame();
 
-    const { drop, moveTo } = drag(eventEl);
+    const { drop, moveTo } = await drag(eventEl);
     await animationFrame();
 
-    moveTo(cell);
+    await moveTo(cell);
     await animationFrame();
 
     if (!options?.disableDrop) {
-        drop();
+        await drop();
     }
 
     await animationFrame();
@@ -498,16 +499,16 @@ export async function moveEventToTime(eventId, dateTime) {
 
     instantScrollTo(eventEl);
 
-    hover(eventEl, {
+    await hover(eventEl, {
         position: { y: 0 },
         relative: true,
     });
     await animationFrame();
 
-    const { drop, moveTo } = drag(eventEl);
+    const { drop, moveTo } = await drag(eventEl);
     await animationFrame();
 
-    moveTo(row, {
+    await moveTo(row, {
         position: {
             y: rowRect.y + 1,
             x: columnRect.x + columnRect.width / 2,
@@ -515,7 +516,7 @@ export async function moveEventToTime(eventId, dateTime) {
     });
     await animationFrame();
 
-    drop();
+    await drop();
     await advanceFrame(5);
 }
 
@@ -538,16 +539,16 @@ export async function moveEventToAllDaySlot(eventId, date) {
 
     instantScrollTo(eventEl);
 
-    hover(eventEl, {
+    await hover(eventEl, {
         position: { y: 0 },
         relative: true,
     });
     await animationFrame();
 
-    const { drop, moveTo } = drag(eventEl);
+    const { drop, moveTo } = await drag(eventEl);
     await animationFrame();
 
-    moveTo(slot, {
+    await moveTo(slot, {
         position: {
             x: columnRect.x + columnRect.width / 2,
             y: slotRect.y,
@@ -555,7 +556,7 @@ export async function moveEventToAllDaySlot(eventId, date) {
     });
     await animationFrame();
 
-    drop();
+    await drop();
     await advanceFrame(5);
 }
 
@@ -569,7 +570,7 @@ export async function resizeEventToTime(eventId, dateTime) {
 
     instantScrollTo(eventEl);
 
-    hover(`.fc-event-main:first`, { root: eventEl });
+    await hover(`.fc-event-main:first`, { root: eventEl });
     await animationFrame();
 
     const resizer = queryFirst(`.fc-event-resizer-end`, { root: eventEl });
@@ -586,7 +587,9 @@ export async function resizeEventToTime(eventId, dateTime) {
     const column = findDateColumn(date);
     const columnRect = queryRect(column);
 
-    drag(resizer).drop(row, {
+    await (
+        await drag(resizer)
+    ).drop(row, {
         position: { x: columnRect.x, y: -1 },
         relative: true,
     });
@@ -604,7 +607,7 @@ export async function resizeEventToDate(eventId, date) {
 
     instantScrollTo(eventEl);
 
-    hover(".fc-event-main", { root: eventEl });
+    await hover(".fc-event-main", { root: eventEl });
     await animationFrame();
 
     // Show the resizer
@@ -620,16 +623,16 @@ export async function resizeEventToDate(eventId, date) {
     const columnRect = queryRect(dateCell);
 
     // Perform the drag-and-drop operation
-    hover(resizer, {
+    await hover(resizer, {
         position: { x: 0 },
         relative: true,
     });
     await animationFrame();
 
-    const { drop } = drag(resizer);
+    const { drop } = await drag(resizer);
     await animationFrame();
 
-    drop(dateCell, {
+    await drop(dateCell, {
         position: { y: rowRect.y - columnRect.y },
         relative: true,
     });
@@ -690,11 +693,11 @@ export async function toggleFilter(sectionName, filterValue) {
 
     instantScrollTo(input);
 
-    click(input);
+    await click(input);
     await animationFrame();
 
     if (otherCalendarPanel) {
-        click(otherCalendarPanel);
+        await click(otherCalendarPanel);
         await animationFrame();
     }
 }
@@ -706,7 +709,7 @@ export async function toggleFilter(sectionName, filterValue) {
 export async function toggleSectionFilter(sectionName) {
     const otherCalendarPanel = queryFirst(".o_other_calendar_panel");
     if (otherCalendarPanel) {
-        click(otherCalendarPanel);
+        await click(otherCalendarPanel);
         await animationFrame();
     }
     const root = findFilterPanelSectionFilter(sectionName);
@@ -714,11 +717,11 @@ export async function toggleSectionFilter(sectionName) {
 
     instantScrollTo(input);
 
-    click(input);
+    await click(input);
     await animationFrame();
 
     if (otherCalendarPanel) {
-        click(otherCalendarPanel);
+        await click(otherCalendarPanel);
         await animationFrame();
     }
 }
@@ -734,6 +737,6 @@ export async function removeFilter(sectionName, filterValue) {
 
     instantScrollTo(button);
 
-    click(button);
+    await click(button);
     await animationFrame();
 }
