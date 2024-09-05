@@ -280,37 +280,46 @@ class MailActivityMixin(models.AbstractModel):
             for gb in annotated_groupbys
         ]
         from_clause, where_clause, where_params = query.get_sql()
+
+        MailActivity = self.env['mail.activity']
+        activity_query = MailActivity._where_calc([('res_model', '=', self._name)])
+        MailActivity._apply_ir_rules(activity_query, 'read')
+        activity_user_alias = activity_query.left_join(MailActivity._table, 'user_id', 'res_users', 'id', 'user_id')
+        activity_partner_alias = activity_query.left_join(activity_user_alias, 'partner_id', 'res_partner', 'id', 'partner_id')
+        activity_from_clause, activity_where_clause, activity_where_params = activity_query.get_sql()
+
         tz = self._context.get('tz') or self.env.user.tz or 'UTC'
         select_query = """
-            SELECT 1 AS id, count(*) AS "__count", {fields}
-            FROM {from_clause}
-            JOIN (
-                SELECT res_id,
+            WITH _last_activity_state (id, activity_state) AS (
+                SELECT res_id AS id,
                 CASE
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) > 0 THEN 'planned'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) < 0 THEN 'overdue'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) = 0 THEN 'today'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE({activity_partner_alias}.tz, %s))::date) > 0 THEN 'planned'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE({activity_partner_alias}.tz, %s))::date) < 0 THEN 'overdue'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE({activity_partner_alias}.tz, %s))::date) = 0 THEN 'today'
                     ELSE null
                 END AS activity_state
-                FROM mail_activity
-                JOIN res_users ON (res_users.id = mail_activity.user_id)
-                JOIN res_partner ON (res_partner.id = res_users.partner_id)
-                WHERE res_model = '{model}'
+                FROM {activity_from_clause}
+                WHERE {activity_where_clause}
                 GROUP BY res_id
-            ) AS "_last_activity_state" ON ("{table}".id = "_last_activity_state".res_id)
+            )
+            SELECT 1 AS id, count(*) AS "__count", {fields}
+            FROM {from_clause}
+            JOIN "_last_activity_state" ON ("{table}".id = "_last_activity_state".id)
             WHERE {where_clause}
             GROUP BY {group_by}
         """.format(
             fields=', '.join(select_terms),
             from_clause=from_clause,
-            model=self._name,
             table=self._table,
             where_clause=where_clause or '1=1',
+            activity_from_clause=activity_from_clause,
+            activity_where_clause=activity_where_clause or '1=1',
+            activity_partner_alias=activity_partner_alias,
             group_by=', '.join(groupby_terms),
         )
-        num_from_params = from_clause.count('%s')
-        where_params[num_from_params:num_from_params] = [tz] * 3 # timezone after from parameters
-        self.env.cr.execute(select_query, where_params)
+
+        last_activity_state_where_params = [tz] * 3
+        self.env.cr.execute(select_query, last_activity_state_where_params + activity_where_params + where_params)
         fetched_data = self.env.cr.dictfetchall()
         self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
         data = [
