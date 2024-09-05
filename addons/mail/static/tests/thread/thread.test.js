@@ -3,7 +3,6 @@ import {
     assertSteps,
     click,
     contains,
-    createFile,
     defineMailModels,
     dragenterFiles,
     focus,
@@ -36,16 +35,10 @@ test("dragover files on thread with composer", async () => {
         group_public_id: false,
         name: "General",
     });
+    const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    const files = [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text3.txt",
-        }),
-    ];
-    await dragenterFiles(".o-mail-Thread", files);
+    await dragenterFiles(".o-mail-Thread", [text3]);
     await contains(".o-mail-Dropzone");
 });
 

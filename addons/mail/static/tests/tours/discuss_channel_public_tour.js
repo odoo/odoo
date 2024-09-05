@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
+import { click, contains, inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     test: true,
@@ -42,13 +42,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Add a text file in composer",
             trigger: ".o-mail-Composer button[aria-label='Attach files']",
             async run() {
-                await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-                    await createFile({
-                        content: "hello, world",
-                        contentType: "text/plain",
-                        name: "text.txt",
-                    }),
-                ]);
+                const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
+                await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
             },
         },
         {
@@ -158,12 +153,9 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Add one more file in composer",
             trigger: ".o-mail-Message .o-mail-Composer button[aria-label='Attach files']",
             async run() {
-                inputFiles(".o-mail-Message .o-mail-Composer-coreMain .o_input_file", [
-                    await createFile({
-                        content: "hello 2",
-                        contentType: "text/plain",
-                        name: "extra.txt",
-                    }),
+                const extratxt = new File(["hello 2"], "extra.txt", { type: "text/plain" });
+                await inputFiles(".o-mail-Message .o-mail-Composer-coreMain .o_input_file", [
+                    extratxt,
                 ]);
             },
         },

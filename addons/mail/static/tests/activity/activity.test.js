@@ -4,7 +4,6 @@ import {
     assertSteps,
     click,
     contains,
-    createFile,
     defineMailModels,
     inputFiles,
     openFormView,
@@ -63,13 +62,8 @@ test("activity can upload a document", async () => {
             </form>`,
     });
     await contains(".o-mail-Activity .btn", { text: "Upload Document" });
-    await inputFiles(".o-mail-Activity .o_input_file", [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ]);
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await inputFiles(".o-mail-Activity .o_input_file", [file]);
     await contains(".o-mail-Activity .btn", { count: 0, text: "Upload Document" });
     await contains("button[aria-label='Attach files']", { text: "1" });
 });

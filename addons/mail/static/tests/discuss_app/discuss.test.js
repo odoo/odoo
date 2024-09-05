@@ -5,7 +5,6 @@ import {
     assertSteps,
     click,
     contains,
-    createFile,
     defineMailModels,
     editInput,
     insertText,
@@ -1594,11 +1593,7 @@ test("warning on send with shortcut when attempting to post message with still-u
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer input[type=file]");
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await contains(".o-mail-AttachmentCard");
@@ -1730,11 +1725,7 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]"
     );
     // Add attachment in a message for #general
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await editInput(
         document.body,
         ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]",
@@ -1744,23 +1735,11 @@ test("composer state: attachments save and restore", async () => {
     // Switch to #special
     await click("button", { text: "Special" });
     // Attach files in a message for #special
-    const files = await Promise.all([
-        createFile({
-            content: "hello2, world",
-            contentType: "text/plain",
-            name: "text2.txt",
-        }),
-        createFile({
-            content: "hello3, world",
-            contentType: "text/plain",
-            name: "text3.txt",
-        }),
-        createFile({
-            content: "hello4, world",
-            contentType: "text/plain",
-            name: "text4.txt",
-        }),
-    ]);
+    const files = [
+        new File(["hello2, world"], "text2.txt", { type: "text/plain" }),
+        new File(["hello3, world"], "text3.txt", { type: "text/plain" }),
+        new File(["hello4, world"], "text4.txt", { type: "text/plain" }),
+    ];
     await contains(
         ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]"
     );
