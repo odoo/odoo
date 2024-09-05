@@ -10,7 +10,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
+class TestFrontendCommon(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
     def _get_url(self):
         return f"/pos/ui?config_id={self.pos_config.id}"
@@ -264,6 +264,9 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             name="A powerful PoS man!",
             tz="Europe/Brussels",
         )
+
+
+class TestFrontend(TestFrontendCommon):
 
     def test_01_pos_restaurant(self):
 
