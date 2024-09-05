@@ -34,6 +34,7 @@ export class ImageField extends Component {
         width: { type: Number, optional: true },
         height: { type: Number, optional: true },
         reload: { type: Boolean, optional: true },
+        convertToWebp: { type: Boolean, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
@@ -137,6 +138,24 @@ export class ImageField extends Component {
     }
     async onFileUploaded(info) {
         this.state.isValid = true;
+        if (
+            this.props.convertToWebp &&
+            !["image/gif", "image/svg+xml", "image/webp"].includes(info.type)
+        ) {
+            const image = document.createElement("img");
+            image.src = `data:${info.type};base64,${info.data}`;
+            await new Promise((resolve) => image.addEventListener("load", resolve));
+
+            const canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0);
+
+            info.data = canvas.toDataURL("image/webp", 0.75).split(",")[1];
+            info.type = "image/webp";
+            info.name = info.name.replace(/\.[^/.]+$/, ".webp");
+        }
         if (info.type === "image/webp") {
             // Generate alternate sizes and format for reports.
             const image = document.createElement("img");
@@ -227,6 +246,11 @@ export const imageField = {
             type: "boolean",
         },
         {
+            label: _t("Convert to webp"),
+            name: "convert_to_webp",
+            type: "boolean",
+        },
+        {
             label: _t("Zoom delay"),
             name: "zoom_delay",
             type: "number",
@@ -260,6 +284,7 @@ export const imageField = {
     extractProps: ({ attrs, options }) => ({
         alt: attrs.alt,
         enableZoom: options.zoom,
+        convertToWebp: options.convert_to_webp,
         imgClass: options.img_class,
         zoomDelay: options.zoom_delay,
         previewImage: options.preview_image,
