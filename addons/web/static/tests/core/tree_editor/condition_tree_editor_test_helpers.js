@@ -1,5 +1,34 @@
-import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryOne, queryText, queryValue } from "@odoo/hoot-dom";
 import { contains, fields, models } from "@web/../tests/web_test_helpers";
+
+/**
+ * @typedef {import("@odoo/hoot-dom").FillOptions} FillOptions
+ * @typedef {import("@odoo/hoot-dom").Target} Target
+ */
+
+function getValue(root) {
+    if (!root) {
+        return null;
+    }
+    const el = queryOne("input,select,span:not(.o_tag):not(.o_dropdown_button)", { root });
+    switch (el.tagName) {
+        case "INPUT":
+            return queryValue(el);
+        case "SELECT":
+            return el.options[el.selectedIndex].label;
+        default:
+            return queryText(el);
+    }
+}
+
+/**
+ * @param {Target} selector
+ * @param {number} [index]
+ * @param {Target} [root]
+ */
+function queryAt(selector, index, root) {
+    return queryAll(selector, { root }).at(index || 0);
+}
 
 export class Partner extends models.Model {
     foo = fields.Char();
@@ -85,150 +114,209 @@ export function getTreeEditorContent(options = {}) {
     return content;
 }
 
-export function get(selector, index, root) {
-    return queryAll(selector, { root }).at(index || 0);
-}
-
-function getValue(root) {
-    if (root) {
-        const el = queryOne("input,select,span:not(.o_tag):not(.o_dropdown_button)", { root });
-        switch (el.tagName) {
-            case "INPUT":
-                return el.value;
-            case "SELECT":
-                return el.options[el.selectedIndex].label;
-            default:
-                return el.innerText;
-        }
-    }
-}
-
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function getCurrentPath(index, target) {
-    const pathEditor = get(SELECTORS.pathEditor, index, target);
+    const pathEditor = queryAt(SELECTORS.pathEditor, index, target);
     if (pathEditor) {
         if (pathEditor.querySelector(".o_model_field_selector")) {
             return getModelFieldSelectorValues(pathEditor).join(" > ");
         }
-        return pathEditor.innerText;
+        return queryText(pathEditor);
     }
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function getCurrentOperator(index, target) {
-    const operatorEditor = get(SELECTORS.operatorEditor, index, target);
+    const operatorEditor = queryAt(SELECTORS.operatorEditor, index, target);
     return getValue(operatorEditor);
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function getCurrentValue(index, target) {
-    const valueEditor = get(SELECTORS.valueEditor, index, target);
+    const valueEditor = queryAt(SELECTORS.valueEditor, index, target);
     const value = getValue(valueEditor);
     if (valueEditor) {
-        const tags = queryAll(".o_tag", { root: valueEditor });
-        if (tags.length) {
-            let text = `${tags.map((t) => t.innerText).join(" ")}`;
+        const texts = queryAllTexts(`.o_tag`, { root: valueEditor });
+        if (texts.length) {
             if (value) {
-                text += ` ${value}`;
+                texts.push(value);
             }
-            return text;
+            return texts.join(" ");
         }
     }
     return value;
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function getOperatorOptions(index, target) {
-    const el = get(SELECTORS.operatorEditor, index, target);
+    const el = queryAt(SELECTORS.operatorEditor, index, target);
     if (el) {
-        const select = queryOne("select", { root: el });
-        return [...select.options].map((o) => o.label);
+        return queryAll(`select:only option`, { root: el }).map((o) => o.label);
     }
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function getValueOptions(index, target) {
-    const el = get(SELECTORS.valueEditor, index, target);
+    const el = queryAt(SELECTORS.valueEditor, index, target);
     if (el) {
-        const select = queryOne("select", { root: el });
-        return [...select.options].map((o) => o.label);
+        return queryAll(`select:only option`, { root: el }).map((o) => o.label);
     }
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 function getCurrentComplexCondition(index, target) {
-    const input = get(SELECTORS.complexConditionInput, index, target);
+    const input = queryAt(SELECTORS.complexConditionInput, index, target);
     return input?.value;
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function getConditionText(index, target) {
-    const condition = get(SELECTORS.condition, index, target);
+    const condition = queryAt(SELECTORS.condition, index, target);
     return queryText(condition).replace(/\n/g, " ");
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 function getCurrentCondition(index, target) {
     const values = [getCurrentPath(index, target), getCurrentOperator(index, target)];
-    const valueEditor = get(SELECTORS.valueEditor, index, target);
+    const valueEditor = queryAt(SELECTORS.valueEditor, index, target);
     if (valueEditor) {
         values.push(getCurrentValue(index, target));
     }
     return values;
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 function getCurrentConnector(index, target) {
-    const connectorText = queryText(
-        get(
-            `${SELECTORS.connector} .dropdown-toggle, ${SELECTORS.connector} > span:nth-child(2), ${SELECTORS.connector} > span > strong`,
-            index,
-            target
-        )
-    );
+    const connectorText = queryAllTexts(
+        `${SELECTORS.connector} .dropdown-toggle, ${SELECTORS.connector} > span:nth-child(2), ${SELECTORS.connector} > span > strong`,
+        { root: target }
+    ).at(index);
     return connectorText.includes("all") ? "all" : connectorText;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function isNotSupportedPath(index, target) {
-    const pathEditor = get(SELECTORS.pathEditor, index, target);
+    const pathEditor = queryAt(SELECTORS.pathEditor, index, target);
     return Boolean(queryOne(SELECTORS.clearNotSupported, { root: pathEditor }));
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function isNotSupportedOperator(index, target) {
-    const operatorEditor = get(SELECTORS.operatorEditor, index, target);
+    const operatorEditor = queryAt(SELECTORS.operatorEditor, index, target);
     return Boolean(queryOne(SELECTORS.clearNotSupported, { root: operatorEditor }));
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export function isNotSupportedValue(index, target) {
-    const valueEditor = get(SELECTORS.valueEditor, index, target);
+    const valueEditor = queryAt(SELECTORS.valueEditor, index, target);
     return Boolean(queryOne(SELECTORS.clearNotSupported, { root: valueEditor }));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @param {any} operator
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function selectOperator(operator, index, target) {
-    await contains(get(SELECTORS.operatorEditor + " select", index, target)).select(
+    await contains(`${SELECTORS.operatorEditor}:eq(${index || 0}) select`, { root: target }).select(
         JSON.stringify(operator)
     );
 }
 
+/**
+ * @param {any} value
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function selectValue(value, index, target) {
-    await contains(get(SELECTORS.valueEditor + " select", index, target)).select(
+    await contains(`${SELECTORS.valueEditor}:eq(${index || 0}) select`, { root: target }).select(
         JSON.stringify(value)
     );
 }
 
+/**
+ * @param {any} value
+ * @param {FillOptions} [options]
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function editValue(value, options, index, target) {
-    await contains(get(SELECTORS.valueEditor + " input", index, target)).edit(value, options);
+    await contains(`${SELECTORS.valueEditor}:eq(${index || 0}) input`, { root: target }).edit(
+        value,
+        options
+    );
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function clickOnButtonAddNewRule(index, target) {
-    await contains(get(SELECTORS.buttonAddNewRule, index, target)).click();
+    await contains(queryAt(SELECTORS.buttonAddNewRule, index, target)).click();
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function clickOnButtonAddBranch(index, target) {
-    await contains(get(SELECTORS.buttonAddBranch, index, target)).click();
+    await contains(queryAt(SELECTORS.buttonAddBranch, index, target)).click();
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function clickOnButtonDeleteNode(index, target) {
-    await contains(get(SELECTORS.buttonDeleteNode, index, target)).click();
+    await contains(queryAt(SELECTORS.buttonDeleteNode, index, target)).click();
 }
 
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
 export async function clearNotSupported(index, target) {
-    await contains(get(SELECTORS.clearNotSupported, index, target)).click();
+    await contains(queryAt(SELECTORS.clearNotSupported, index, target)).click();
 }
 
 export async function addNewRule() {
@@ -241,6 +329,9 @@ export async function toggleArchive() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @param {number} [index=0]
+ */
 export async function openModelFieldSelectorPopover(index = 0) {
     await contains(`.o_model_field_selector:eq(${index})`).click();
 }
@@ -261,6 +352,9 @@ export async function clickPrev() {
     await contains(".o_model_field_selector_popover_prev_page").click();
 }
 
+/**
+ * @param {number} [index=0]
+ */
 export async function followRelation(index = 0) {
     await contains(`.o_model_field_selector_popover_item_relation:eq(${index})`).click();
 }

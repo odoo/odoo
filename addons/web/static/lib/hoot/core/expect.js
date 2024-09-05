@@ -50,7 +50,6 @@ import { Test } from "./test";
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
- * @typedef {import("@odoo/hoot-dom").Position} Position
  * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
