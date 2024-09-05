@@ -4546,3 +4546,14 @@ class MailThread(models.AbstractModel):
             tracking_message += return_line
 
         return tracking_message
+
+    def _merge_method(self, destination, source):
+        """ Using the default merge method risks duplicating the SQL key for mail_followers (res_model, res_id, partner_id).
+        Adding a partner as follower to a record twice nullifies the transaction, preventing the merge of followers.
+        This function ensures we don't try unsafe subscriptions.
+        """
+        dest_followers = destination.message_follower_ids.partner_id
+        new_followers = source.message_follower_ids.partner_id - dest_followers
+        # Unsubscribe all from the source tickets to avoid duplicating SQL unique keys
+        source.message_unsubscribe(source.message_follower_ids.partner_id.ids)
+        destination.message_subscribe(new_followers.ids)
