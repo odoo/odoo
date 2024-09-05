@@ -108,26 +108,46 @@ export function useEmojiPicker(ref, props, options = {}) {
     return state;
 }
 
+const loadingListeners = [];
+
 export const loader = {
     loadEmoji: () => loadBundle("web.assets_emoji"),
+    /** @type {{ emojiValueToShortcode: Object<string, string> }} */
+    loaded: undefined,
+    onEmojiLoaded(cb) {
+        loadingListeners.push(cb);
+    },
 };
 
 /**
  * @returns {import("@web/core/emoji_picker/emoji_data")}
  */
 export async function loadEmoji() {
+    const res = { categories: [], emojis: [] };
     try {
         await loader.loadEmoji();
         const { getCategories, getEmojis } = odoo.loader.modules.get(
             "@web/core/emoji_picker/emoji_data"
         );
-        return {
-            categories: getCategories(),
-            emojis: getEmojis(),
-        };
+        res.categories = getCategories();
+        res.emojis = getEmojis();
+        return res;
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
-        return { emojis: [], categories: [] };
+        return res;
+    } finally {
+        if (!loader.loaded) {
+            loader.loaded = { emojiValueToShortcode: {} };
+            for (const emoji of res.emojis) {
+                const value = emoji.codepoints;
+                const shortcode = emoji.shortcodes[0];
+                loader.loaded.emojiValueToShortcode[value] = shortcode;
+                for (const listener of loadingListeners) {
+                    listener();
+                }
+                loadingListeners.length = 0;
+            }
+        }
     }
 }
 
