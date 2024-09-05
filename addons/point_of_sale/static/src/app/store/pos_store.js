@@ -31,6 +31,7 @@ import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
+import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 
 const { DateTime } = luxon;
 
@@ -1154,7 +1155,11 @@ export class PosStore extends Reactive {
         };
     }
     async getClosePosInfo() {
-        return await this.data.call("pos.session", "get_closing_control_data", [[this.session.id]]);
+        this.closingInfo = await this.data.call("pos.session", "get_closing_control_data", [
+            [this.session.id],
+        ]);
+
+        return this.closingInfo;
     }
     // return the current order
     get_order() {
@@ -1720,6 +1725,21 @@ export class PosStore extends Reactive {
         this.searchProductWord = "";
         const { start_category, iface_start_categ_id } = this.config;
         this.setSelectedCategory((start_category && iface_start_categ_id?.[0]) || 0);
+    }
+
+    onCashMoveButtonClick(fromClosingRegistrer = false) {
+        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        this.dialog.add(
+            CashMovePopup,
+            {},
+            {
+                onClose: () => {
+                    if (fromClosingRegistrer) {
+                        this.getClosePosInfo();
+                    }
+                },
+            }
+        );
     }
 }
 

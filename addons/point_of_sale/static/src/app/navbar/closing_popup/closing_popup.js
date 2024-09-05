@@ -37,11 +37,11 @@ export class ClosePosPopup extends Component {
     getInitialState() {
         const initialState = { notes: "", payments: {} };
         if (this.pos.config.cash_control) {
-            initialState.payments[this.props.default_cash_details.id] = {
+            initialState.payments[this.pos.closingInfo.default_cash_details.id] = {
                 counted: "0",
             };
         }
-        this.props.non_cash_payment_methods.forEach((pm) => {
+        this.pos.closingInfo.non_cash_payment_methods.forEach((pm) => {
             if (pm.type === "bank") {
                 initialState.payments[pm.id] = {
                     counted: this.env.utils.formatCurrency(pm.amount, false),
@@ -74,7 +74,7 @@ export class ClosePosPopup extends Component {
             title: _t("Payments Difference"),
             body: _t(
                 "The maximum difference allowed is %s.\nPlease contact your manager to accept the closing difference.",
-                this.env.utils.formatCurrency(this.props.amount_authorized_diff)
+                this.env.utils.formatCurrency(this.pos.closingInfo.amount_authorized_diff)
             ),
         });
     }
@@ -96,7 +96,7 @@ export class ClosePosPopup extends Component {
             action: action,
             getPayload: (payload) => {
                 const { total, moneyDetailsNotes, moneyDetails } = payload;
-                this.state.payments[this.props.default_cash_details.id].counted =
+                this.state.payments[this.pos.closingInfo.default_cash_details.id].counted =
                     this.env.utils.formatCurrency(total, false);
                 if (moneyDetailsNotes) {
                     this.state.notes = moneyDetailsNotes;
@@ -121,9 +121,10 @@ export class ClosePosPopup extends Component {
             return NaN;
         }
         const expectedAmount =
-            paymentId === this.props.default_cash_details?.id
-                ? this.props.default_cash_details.amount
-                : this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId).amount;
+            paymentId === this.pos.closingInfo.default_cash_details?.id
+                ? this.pos.closingInfo.default_cash_details.amount
+                : this.pos.closingInfo.non_cash_payment_methods.find((pm) => pm.id === paymentId)
+                      .amount;
 
         return parseFloat(counted) - expectedAmount;
     }
@@ -137,9 +138,9 @@ export class ClosePosPopup extends Component {
     }
     hasUserAuthority() {
         return (
-            this.props.is_manager ||
-            this.props.amount_authorized_diff == null ||
-            this.getMaxDifference() <= this.props.amount_authorized_diff
+            this.pos.closingInfo.is_manager ||
+            this.pos.closingInfo.amount_authorized_diff == null ||
+            this.getMaxDifference() <= this.pos.closingInfo.amount_authorized_diff
         );
     }
     canCancel() {
@@ -171,7 +172,7 @@ export class ClosePosPopup extends Component {
                 [this.pos.session.id],
                 {
                     counted_cash: parseFloat(
-                        this.state.payments[this.props.default_cash_details.id].counted
+                        this.state.payments[this.pos.closingInfo.default_cash_details.id].counted
                     ),
                 }
             );
@@ -196,7 +197,7 @@ export class ClosePosPopup extends Component {
         }
 
         try {
-            const bankPaymentMethodDiffPairs = this.props.non_cash_payment_methods
+            const bankPaymentMethodDiffPairs = this.pos.closingInfo.non_cash_payment_methods
                 .filter((pm) => pm.type == "bank")
                 .map((pm) => [pm.id, this.getDifference(pm.id)]);
             const response = await this.pos.data.call("pos.session", "close_session_from_ui", [
@@ -253,7 +254,7 @@ export class ClosePosPopup extends Component {
         }
     }
     getMovesTotalAmount() {
-        const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
+        const amounts = this.pos.closingInfo.default_cash_details.moves.map((move) => move.amount);
         return amounts.reduce((acc, x) => acc + x, 0);
     }
 }

@@ -7,8 +7,8 @@
                 <div class="d-flex flex-grow-1 justify-content-between">
                     <h4 class="align-middle my-1">Closing Register</h4>
                     <div class="total-orders fw-bolder align-middle my-1">
-                        <t t-esc="props.orders_details.quantity"/> orders:
-                        <span class="amount" t-esc="env.utils.formatCurrency(props.orders_details.amount)"/>
+                        <t t-esc="pos.closingInfo.orders_details.quantity"/> orders:
+                        <span class="amount" t-esc="env.utils.formatCurrency(pos.closingInfo.orders_details.amount)"/>
                     </div>
                 </div>
             </t>
@@ -25,23 +25,23 @@
                         <t t-if="pos.config.cash_control">
                             <tbody>
                                 <tr>
-                                    <td t-esc="props.default_cash_details.name"/>
-                                    <td t-esc="env.utils.formatCurrency(props.default_cash_details.amount)"/>
+                                    <td t-esc="pos.closingInfo.default_cash_details.name"/>
+                                    <td t-esc="env.utils.formatCurrency(pos.closingInfo.default_cash_details.amount)"/>
                                     <td class="d-flex gap-1">
-                                        <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                                        <Input tModel="[state.payments[pos.closingInfo.default_cash_details.id], 'counted']"
                                             callback.bind="(value) =>  this.setManualCashInput(value)"
                                             isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>
                                         <button class="icon fa fa-money fa-lg btn btn-secondary btn-lg lh-lg" t-on-click="openDetailsPopup" />
                                     </td>
-                                    <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                                    <t t-set="diff" t-value="getDifference(pos.closingInfo.default_cash_details.id)" />
                                     <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
-                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
+                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(pos.closingInfo.default_cash_details.id))}"/>
                                 </tr>
                             </tbody>
                             <tbody class="cash-overview border-start small text-muted">
                                 <tr>
                                     <td>Opening</td>
-                                    <td class="align-top" t-esc="env.utils.formatCurrency(props.default_cash_details.opening)"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(pos.closingInfo.default_cash_details.opening)"/>
                                 </tr>
                                 <t t-set="_totalAmount" t-value="getMovesTotalAmount()" />
                                 <t t-if="_totalAmount != 0">
@@ -55,19 +55,19 @@
                                         <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(_totalAmount))"/>
                                     </tr>
                                 </t>
-                                <tr t-if="props.default_cash_details.payment_amount">
+                                <tr t-if="pos.closingInfo.default_cash_details.payment_amount">
                                     <td>
                                         <div class="flex d-flex flex-row text-nowrap">
-                                            <div class="cash-sign me-1" t-esc="props.default_cash_details.payment_amount &lt; 0 ? '-' : '+'"/>
-                                            Payments in <t t-esc="props.default_cash_details.name"/>
+                                            <div class="cash-sign me-1" t-esc="pos.closingInfo.default_cash_details.payment_amount &lt; 0 ? '-' : '+'"/>
+                                            Payments in <t t-esc="pos.closingInfo.default_cash_details.name"/>
                                         </div>
                                     </td>
-                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(pos.closingInfo.default_cash_details.payment_amount))"/>
                                 </tr>
                             </tbody>
                         </t>
-                        <tbody t-if="props.non_cash_payment_methods.length > 0">
-                            <tr t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
+                        <tbody t-if="pos.closingInfo.non_cash_payment_methods.length > 0">
+                            <tr t-foreach="pos.closingInfo.non_cash_payment_methods" t-as="pm" t-key="pm.id">
                                 <td t-esc="pm.name" class="text-nowrap" t-att-class="{ 'pt-2': pm_index === 0 }" />
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
@@ -82,10 +82,10 @@
                     </table>
                 </div>
                 <div class="notes-container d-flex flex-column flex-sm-row gap-3 border-top mt-3 pt-3">
-                    <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="props.opening_notes" >
-                        <label class="form-label" for="props.opening_notes">Opening note</label>
-                        <textarea class="opening-notes form-control" rows="7" id="props.opening_notes">
-                            <t t-esc="props.opening_notes"/>
+                    <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="pos.closingInfo.opening_notes" >
+                        <label class="form-label" for="pos.closingInfo.opening_notes">Opening note</label>
+                        <textarea class="opening-notes form-control" rows="7" id="pos.closingInfo.opening_notes">
+                            <t t-esc="pos.closingInfo.opening_notes"/>
                         </textarea>
                     </div>
                     <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
@@ -97,6 +97,7 @@
                 <div class="modal-footer-left d-flex gap-2">
                     <button class="button highlight btn btn-lg btn-primary" t-att-disabled="!canConfirm()" t-on-click="confirm">Close Register</button>
                     <button class="button btn btn-lg btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel">Discard</button>
+                    <button class="button btn btn-lg btn-secondary" t-on-click="() => this.pos.onCashMoveButtonClick(true)">Cash In/Out</button>
                 </div>
                 <!-- Download Sale Details -->
                 <div class="modal-footer-right d-flex gap-2 ms-sm-auto">

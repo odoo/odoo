@@ -8,6 +8,7 @@ import { CashMoveReceipt } from "@point_of_sale/app/navbar/cash_move_popup/cash_
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/money_details_popup";
 
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
@@ -21,7 +22,6 @@ export class CashMovePopup extends Component {
         this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
         this.state = useState({
-            /** @type {'in'|'out'} */
             type: "out",
             amount: "",
             reason: "",
@@ -30,14 +30,16 @@ export class CashMovePopup extends Component {
     }
 
     async confirm() {
-        const amount = parseFloat(this.state.amount);
-        const formattedAmount = this.env.utils.formatCurrency(amount);
+        let amount = parseFloat(String(this.state.amount).replace(",", "."));
+        const formattedAmount = this.env.utils.formatCurrency(Math.abs(amount));
         if (!amount) {
             this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount));
             return this.props.close();
         }
 
-        const type = this.state.type;
+        const type = amount > 0 ? "in" : "out";
+        this.state.type = type;
+        amount = Math.abs(amount);
         const translatedType = _t(type);
         const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
@@ -70,10 +72,7 @@ export class CashMovePopup extends Component {
             super._onWindowKeyup(...arguments);
         }
     }
-    onClickButton(type) {
-        this.state.type = type;
-        this.inputRef.el.focus();
-    }
+
     format(value) {
         return this.env.utils.isValidFloat(value)
             ? this.env.utils.formatCurrency(parseFloat(value))
@@ -81,5 +80,26 @@ export class CashMovePopup extends Component {
     }
     _prepare_try_cash_in_out_payload(type, amount, reason, extras) {
         return [[this.pos.session.id], type, amount, reason, extras];
+    }
+    toggleSign() {
+        this.state.amount = -Number(this.state.amount);
+    }
+
+    async openDetailsPopup() {
+        const action = _t("Cash In/Out");
+        this.hardwareProxy.openCashbox(action);
+        this.dialog.add(MoneyDetailsPopup, {
+            moneyDetails: this.moneyDetails,
+            action: action,
+            getPayload: (payload) => {
+                const { total, moneyDetailsNotes, moneyDetails } = payload;
+                this.state.amount = this.env.utils.formatCurrency(total, false);
+                if (moneyDetailsNotes) {
+                    this.state.notes = moneyDetailsNotes;
+                }
+                this.moneyDetails = moneyDetails;
+            },
+            context: "Cash In/Out",
+        });
     }
 }

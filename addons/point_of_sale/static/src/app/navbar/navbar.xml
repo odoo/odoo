@@ -48,7 +48,7 @@
                                 <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
                                     Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
                                 </DropdownItem>
-                                <DropdownItem t-if="showCashMoveButton" onSelected="() => this.onCashMoveButtonClick()">
+                                <DropdownItem t-if="showCashMoveButton" onSelected="() => this.pos.onCashMoveButtonClick()">
                                     Cash In/Out
                                 </DropdownItem>
                                 <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
@@ -72,7 +72,7 @@
                             </div>
                         </t>
                     </Dropdown>
-                </div> 
+                </div>
             </div>
         </div>
     </t>

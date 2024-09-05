@@ -11,7 +11,7 @@
             <div t-if="!props.isSmall || state.isOpen"
                 class="input-group">
                 <div class="form-control form-control-lg input-container d-flex align-items-center bg-view"
-                    t-att-class="{'is-invalid': !props.isValid(getValue())}">
+                    t-att-class="{'is-invalid': !props.isValid(getValue()), 'border-0' : props.noBorder}">
                     <t t-if="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
                     <input class="border-0 mx-2" type="text" style="min-width: 60px;"
                         t-on-focus="ev=>ev.target.select()"
