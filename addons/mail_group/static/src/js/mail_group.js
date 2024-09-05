@@ -14,8 +14,8 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.mailgroupId = this.$el.data('id');
-        this.isMember = this.$el.data('isMember') || false;
+        this.mailgroupId = parseInt(this.el.dataset.id);
+        this.isMember = this.el.dataset.isMember === "true" || false;
         const searchParams = (new URL(document.location.href)).searchParams;
         this.token = searchParams.get('token');
         this.forceUnsubscribe = searchParams.has('unsubscribe');
@@ -31,15 +31,21 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
      */
     _onSubscribeBtnClick: async function (ev) {
         ev.preventDefault();
-        const $email = this.$el.find(".o_mg_subscribe_email");
-        const email = $email.val();
+        const emailElem = this.el.querySelector(".o_mg_subscribe_email");
+        const email = emailElem.value;
 
         if (!email.match(/.+@.+/)) {
-            this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+            this.el.classList.add("o_has_error");
+            [...this.el.querySelectorAll(".form-control, .form-select")].forEach((elem) =>
+                elem.classList.add("is-invalid")
+            );
             return false;
         }
 
-        this.$el.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+        this.el.classList.remove("o_has_error");
+        [...this.el.querySelectorAll(".form-control, .form-select")].forEach((elem) =>
+            elem.classList.remove("is-invalid")
+        );
 
         const action = (this.isMember || this.forceUnsubscribe) ? 'unsubscribe' : 'subscribe';
 
@@ -49,38 +55,45 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
             'token': this.token,
         });
 
-        this.$el.find('.o_mg_alert').remove();
+        [...this.el.querySelectorAll(".o_mg_alert")].forEach((elem) => elem.remove());
 
+        const subscribeBtnEl = this.el.querySelector(".o_mg_subscribe_btn");
         if (response === 'added') {
             this.isMember = true;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            subscribeBtnEl.textContent = _t("Unsubscribe");
+            subscribeBtnEl.classList.remove("btn-primary");
+            subscribeBtnEl.classList.add("btn-outline-primary");
         } else if (response === 'removed') {
             this.isMember = false;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Subscribe')).removeClass('btn-outline-primary').addClass('btn-primary');
+            subscribeBtnEl.textContent = _t("Subscribe");
+            subscribeBtnEl.classList.remove("btn-outline-primary");
+            subscribeBtnEl.classList.add("btn-primary");
         } else if (response === 'email_sent') {
             // The confirmation email has been sent
-            this.$el.html(
-                $('<div class="o_mg_alert alert alert-success" role="alert"/>')
-                .text(_t('An email with instructions has been sent.'))
-            );
+            this.el.outerHTML = `<div class="o_mg_alert alert alert-success" role="alert">${_t(
+                "An email with instructions has been sent."
+            )}</div>`;
         } else if (response === 'is_already_member') {
             this.isMember = true;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
-            this.$el.find('.o_mg_subscribe_form').before(
-                $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
-                .text(_t('This email is already subscribed.'))
-            );
+            subscribeBtnEl.textContent = _t("Unsubscribe");
+            subscribeBtnEl.classList.remove("btn-primary");
+            subscribeBtnEl.classList.add("btn-outline-primary");
+            const alertEl = document.createElement("div");
+            alertEl.setAttribute("class", "o_mg_alert alert alert-warning");
+            alertEl.setAttribute("role", "alert");
+            alertEl.textContent = _t("This email is already subscribed.");
+            document.insertBefore(alertEl, this.el.querySelector(".o_mg_subscribe_form"));
         } else if (response === 'is_not_member') {
             if (!this.forceUnsubscribe) {
                 this.isMember = false;
-                this.$el.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+                subscribeBtnEl.textContent = _t("Subscribe");
             }
-            this.$el.find('.o_mg_subscribe_form').before(
-                $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
-                .text(_t('This email is not subscribed.'))
-            );
+            const alertEl = document.createElement("div");
+            alertEl.setAttribute("class", "o_mg_alert alert alert-warning");
+            alertEl.setAttribute("role", "alert");
+            alertEl.textContent = _t("This email is not subscribed.");
+            document.insertBefore(alertEl, this.el.querySelector(".o_mg_subscribe_form"));
         }
-
     },
 });
 

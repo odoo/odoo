@@ -3,12 +3,10 @@
 import { scrollTo } from "@web/core/utils/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import PortalSidebar from "@portal/js/portal_sidebar";
+import { setHeight } from "@web/core/utils/misc"
 
 publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_invoice_sidebar',
-    events: {
-        'click .o_portal_invoice_print': '_onPrintInvoice',
-    },
 
     /**
      * @override
@@ -16,16 +14,16 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        var $invoiceHtml = this.$el.find('iframe#invoice_html');
-        var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
+        const invoiceHtmlEl = this.el.querySelector("iframe#invoice_html");
+        const updateIframeSize = this._updateIframeSize.bind(this, invoiceHtmlEl);
 
-        $(window).on('resize', updateIframeSize);
+        window.addEventListener("resize", updateIframeSize);
 
-        var iframeDoc = $invoiceHtml[0].contentDocument || $invoiceHtml[0].contentWindow.document;
-        if (iframeDoc.readyState === 'complete') {
+        const iframeDoc = invoiceHtmlEl.contentDocument || invoiceHtmlEl.contentWindow.document;
+        if (iframeDoc.readyState === "complete") {
             updateIframeSize();
         } else {
-            $invoiceHtml.on('load', updateIframeSize);
+            invoiceHtmlEl.addEventListener("load", updateIframeSize);
         }
 
         return def;
@@ -42,30 +40,22 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      * @private
      * @param {object} $el: the iframe
      */
-    _updateIframeSize: function ($el) {
-        var $wrapwrap = $el.contents().find('div#wrapwrap');
+    _updateIframeSize(el) {
+        const wrapwrapEl = el.contentDocument.querySelector("div#wrapwrap");
+
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
-        $el.height(0);
-        $el.height($wrapwrap[0].scrollHeight);
+        setHeight(el, 0);
+        setHeight(el, wrapwrapEl.scrollHeight);
 
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)
         if (!isAnchor) {
             return;
         }
-        var $target = $(window.location.hash);
-        if (!$target.length) {
+        const target = window.location.hash;
+        if (!target.length) {
             return;
         }
-        scrollTo($target[0], { behavior: "instant" });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPrintInvoice: function (ev) {
-        ev.preventDefault();
-        var href = $(ev.currentTarget).attr('href');
-        this._printIframeContent(href);
+        scrollTo(target, { behavior: "instant" });
     },
 });

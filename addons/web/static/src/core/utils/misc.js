@@ -26,3 +26,54 @@ export function markEventHandled(ev, markName) {
     }
     eventHandledWeakMap.get(ev).push(markName);
 }
+
+/**
+ * Iterate through all parent elements and find the parent where selector
+ * matches and return all those parents.
+ * This method is similar to parents method of jQuery.
+ *
+ * @param {HTMLElement} el
+ * @param {string} selector
+ */
+export function parents(el, selector) {
+    const parents = [];
+    while ((el = el.parentNode) && el !== document) {
+      if (!selector || el.matches(selector)) parents.push(el);
+    }
+    return parents;
+}
+
+/**
+ * Set height on HTML Element.
+ *
+ * @param {HTMLElement} el
+ * @param {Integer} val
+ */
+export function setHeight(el, val) {
+    if (typeof val === 'function') {
+        val = val();
+    }
+    if (typeof val === 'string') {
+        el.style.height = val;
+    } else {
+        el.style.height = val + 'px';
+    }
+}
+
+/**
+ * Typecase values of Element Dataset, it runs on each key and typecast it.
+ *
+ * @param {Object} dataset
+ */
+export function typeCastDataset(dataset) {
+    const data = {};
+    Object.keys(dataset).forEach((key) => {
+        const val = +dataset[key];
+        if(isNaN(val)) {
+            data[key] = dataset[key];
+        } else {
+            data[key] = val;
+        }
+    });
+    return data;
+}
