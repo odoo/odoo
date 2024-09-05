@@ -102,7 +102,7 @@ test("boolean field in editable list view", async () => {
     expect(`${cell} .o-checkbox input:only`).not.toBeChecked();
     expect(`${cell} .o-checkbox input:only`).toBeEnabled();
 
-    click(`${cell} .o-checkbox`);
+    await click(`${cell} .o-checkbox`);
     click(cell);
     await animationFrame();
     expect(`${cell} .o-checkbox input:only`).toBeChecked();

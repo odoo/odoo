@@ -51,11 +51,11 @@ wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
 {
     content: "Click on the anchor option",
     trigger: '#oe_snippets .snippet-option-anchor we-button',
-    run(helpers) {
+    async run(helpers) {
         // Patch and ignore write on clipboard in tour as we don't have permissions
         const oldWriteText = browser.navigator.clipboard.writeText;
         browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
-        helpers.click();
+        await helpers.click();
         browser.navigator.clipboard.writeText = oldWriteText;
     }
 }, {

@@ -465,7 +465,7 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
         "hello",
         { confirm: false }
     );
-    click(`.o_content`); // confirm change by focusing out the input.
+    await click(`.o_content`); // confirm change by focusing out the input.
     await animationFrame();
     await animationFrame();
     await animationFrame();
@@ -2395,22 +2395,22 @@ test.tags("desktop")(`tooltips on multiple occurrences of fields and labels`, as
             </form>
         `,
     });
-    hover(".o_form_label[for=foo_0] sup");
+    await hover(".o_form_label[for=foo_0] sup");
     await runAllTimers();
     await animationFrame();
     expect(".o-tooltip .o-tooltip--help").toHaveText("foo tooltip");
 
-    hover(".o_form_label[for=bar_0] sup");
+    await hover(".o_form_label[for=bar_0] sup");
     await runAllTimers();
     await animationFrame();
     expect(".o-tooltip .o-tooltip--help").toHaveText("bar tooltip");
 
-    hover(".o_form_label[for=foo_1] sup");
+    await hover(".o_form_label[for=foo_1] sup");
     await runAllTimers();
     await animationFrame();
     expect(".o-tooltip .o-tooltip--help").toHaveText("foo tooltip");
 
-    hover(".o_form_label[for=bar_1] sup");
+    await hover(".o_form_label[for=bar_1] sup");
     await runAllTimers();
     await animationFrame();
     expect(".o-tooltip .o-tooltip--help").toHaveText("bar tooltip");
@@ -2501,8 +2501,8 @@ test.tags("desktop")(`readonly attrs on lines are re-evaluated on field change 2
     await contains(`.dropdown .dropdown-item:contains(first record)`).click();
     expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass("o_readonly_modifier");
 
-    clear();
-    click(`.o_content`); // blur input to trigger change
+    await clear();
+    await click(`.o_content`); // blur input to trigger change
     await animationFrame();
     expect(`.o_field_one2many[name="product_ids"]`).toHaveClass("o_readonly_modifier");
 
@@ -2510,8 +2510,8 @@ test.tags("desktop")(`readonly attrs on lines are re-evaluated on field change 2
     await contains(`.dropdown .dropdown-item:contains(second record)`).click();
     expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass("o_readonly_modifier");
 
-    clear();
-    click(`.o_content`); // blur input to trigger change
+    await clear();
+    await click(`.o_content`); // blur input to trigger change
     await animationFrame();
     expect(`.o_field_one2many[name="product_ids"]`).toHaveClass("o_readonly_modifier");
 });
@@ -3184,7 +3184,7 @@ test(`buttons with data-hotkey attribute`, async () => {
     });
     expect(`.o_form_view button[data-hotkey=v]`).toHaveCount(1);
 
-    press(["alt", "v"]);
+    await press(["alt", "v"]);
     await animationFrame();
     expect.verifySteps(["validate"]);
 });
@@ -4950,7 +4950,7 @@ test(`keynav: switching to another record from an invalid one`, async () => {
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
 
     await contains(`.o_field_widget[name=foo] input`).edit("");
-    press(["alt", "n"]);
+    await press(["alt", "n"]);
     await animationFrame();
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_form_status_indicator .text-danger`).toHaveAttribute(
@@ -4976,7 +4976,7 @@ test.tags("desktop")(
         expect(`.o_pager_counter`).toHaveText("1 / 2");
 
         await contains(`.o_field_widget[name=foo] input`).edit("");
-        press(["alt", "n"]);
+        await press(["alt", "n"]);
         await animationFrame();
         expect(`.o_pager_counter`).toHaveText("1 / 2");
     }
@@ -5038,12 +5038,12 @@ test(`keynav: switching to another record from a dirty one`, async () => {
     expect(`.o_field_widget[name=foo] input`).toHaveValue("yop");
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
-    press(["alt", "n"]);
+    await press(["alt", "n"]);
     await animationFrame();
     expect.verifySteps(["web_save"]);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 
-    press(["alt", "p"]);
+    await press(["alt", "p"]);
     await animationFrame();
     expect.verifySteps([]);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("new value");
@@ -5063,11 +5063,11 @@ test.tags("desktop")(
         expect(getPagerLimit()).toBe(2);
 
         await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
-        press(["alt", "n"]);
+        await press(["alt", "n"]);
         await animationFrame();
         expect(`.o_pager_counter`).toHaveText("2 / 2");
 
-        press(["alt", "p"]);
+        await press(["alt", "p"]);
         await animationFrame();
         expect(`.o_pager_counter`).toHaveText("1 / 2");
     }
@@ -8506,15 +8506,15 @@ test.tags("desktop")(`display tooltips for buttons (debug = false)`, async () =>
         `,
     });
 
-    hover(`button[name='empty_method']`);
+    await hover(`button[name='empty_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveCount(0);
 
-    hover(`button[name='some_method']`);
+    await hover(`button[name='some_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText("This is title");
 
-    hover(`button[name='other_method']`);
+    await hover(`button[name='other_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText("Button2\n\nhelp Button2");
 });
@@ -8536,19 +8536,19 @@ test.tags("desktop")(`display tooltips for buttons (debug = true)`, async () => 
         `,
     });
 
-    hover(`button[name='empty_method']`);
+    await hover(`button[name='empty_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText(
         "Button : Empty Button\nObject:partner\nButton Type:object\nMethod:empty_method"
     );
 
-    hover(`button[name='some_method']`);
+    await hover(`button[name='some_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText(
         `Button : Button\n\nThis is title\n\nObject:partner\nReadonly:display_name == 'readonly'\nButton Type:object\nMethod:some_method`
     );
 
-    hover(`button[name='other_method']`);
+    await hover(`button[name='other_method']`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveText(
         `Button : Button2\n\nhelp Button2\n\nObject:partner\nButton Type:object\nMethod:other_method`
@@ -8851,7 +8851,7 @@ test.tags("desktop")(`proper stringification in debug mode tooltip`, async () =>
         `,
     });
 
-    hover(`[name='product_id']`);
+    await hover(`[name='product_id']`);
     await runAllTimers();
     expect(`.o-tooltip--technical > li[data-item="context"]`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="context"]`).toHaveText(/{'lang': 'en_US'}/);
@@ -8880,7 +8880,7 @@ test.tags("desktop")(`field tooltip in debug mode, on field with domain attr`, a
         `,
     });
 
-    hover(`[name='product_id']`);
+    await hover(`[name='product_id']`);
     await runAllTimers();
     expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveText(/\[\['id', '>', 3\]\]/);
@@ -8901,7 +8901,7 @@ test.tags("desktop")(`do not display unset attributes in debug field tooltip`, a
         `,
     });
 
-    hover(`[name='product_id']`);
+    await hover(`[name='product_id']`);
     await runAllTimers();
     expect(queryAllTexts`.o-tooltip--technical > li`).toEqual([
         "Label:Product",
@@ -9609,13 +9609,13 @@ test.tags("desktop")(`company_dependent field in form view, in multi company gro
         `,
     });
 
-    hover(`.o_form_label[for=product_id_0] sup`);
+    await hover(`.o_form_label[for=product_id_0] sup`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--help`).toHaveText(
         "this is a tooltip\n\nValues set here are company-specific."
     );
 
-    hover(`.o_form_label[for=foo_0] sup`);
+    await hover(`.o_form_label[for=foo_0] sup`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--help`).toHaveText("Values set here are company-specific.");
 });
@@ -9642,7 +9642,7 @@ test.tags("desktop")(
             `,
         });
 
-        hover(`.o_form_label sup`);
+        await hover(`.o_form_label sup`);
         await runAllTimers();
         expect(`.o-tooltip .o-tooltip--help`).toHaveText("this is a tooltip");
     }
@@ -9994,11 +9994,11 @@ test.tags("desktop")(`help on field is shown without debug mode -- form`, async 
         `,
     });
 
-    hover(`.o_form_label[for=foo_0] sup`);
+    await hover(`.o_form_label[for=foo_0] sup`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--help`).toHaveText(/foo xml tooltip/);
 
-    hover(`.o_form_label[for=bar_0] sup`);
+    await hover(`.o_form_label[for=bar_0] sup`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--help`).toHaveText(/bar xml tooltip/);
 });

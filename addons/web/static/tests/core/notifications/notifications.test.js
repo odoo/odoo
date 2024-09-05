@@ -242,11 +242,11 @@ test.tags("desktop")("can refresh the duration of a non-sticky notification", as
     expect(".o_notification").toHaveCount(2);
 
     await advanceTime(3000);
-    hover(".o_notification:first-child");
+    await hover(".o_notification:first-child");
     await advanceTime(5000);
     // Both notifications should be visible as long as mouse is over one of them
     expect(".o_notification").toHaveCount(2);
-    leave();
+    await leave();
     await advanceTime(3000);
     // Both notifications should be refreshed in duration (4000 ms)
     expect(".o_notification").toHaveCount(2);

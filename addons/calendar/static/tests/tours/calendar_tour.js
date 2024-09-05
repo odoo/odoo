@@ -84,7 +84,7 @@ const clickOnTheEvent = {
     content: "Click on the event (focus + waiting)",
     trigger: 'a .fc-event-main:contains("Test Event")',
     async run(actions) {
-        actions.click();
+        await actions.click();
         await new Promise((r) => setTimeout(r, 1000));
         const custom = document.querySelector(".o_cw_custom_highlight");
         if (custom) {

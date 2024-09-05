@@ -1298,7 +1298,7 @@ test("remove namespace with backspace", async () => {
 
     // Does not remove the namespace if the backspace is repeatedly applied.
     // You don't want to remove the namespace by pressing the "backspace" key
-    press("backspace", { repeat: true });
+    await press("backspace", { repeat: true });
     expect(".o_command_palette .o_namespace").toHaveText("@");
 });
 

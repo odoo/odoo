@@ -101,13 +101,13 @@ function getTestComponent(virtualGridParams) {
     return TestComponent;
 }
 
-beforeEach(() => {
+beforeEach(async () => {
     patchWithCleanup(localization, { direction: "ltr" });
 
     // In this test suite, we trick the hook by setting the window size to the size
     // of the scrollable, so that it is a measurable size and this suite can run
     // in a window of any size.
-    resize({ height: CONTAINER_HEIGHT, width: CONTAINER_WIDTH });
+    await resize({ height: CONTAINER_HEIGHT, width: CONTAINER_WIDTH });
 });
 
 test("basic usage", async () => {

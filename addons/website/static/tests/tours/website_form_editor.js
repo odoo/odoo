@@ -331,7 +331,7 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: "edit Development Service",
-        }, 
+        },
         {
             // TODO: Fix code to avoid this behavior
             content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
@@ -383,7 +383,7 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: "edit France",
-        }, 
+        },
         {
             // TODO: Fix code to avoid this behavior
             content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
@@ -394,7 +394,7 @@
             content: "Click on Add new Checkbox",
             trigger: 'we-button.o_we_list_add_optional',
             run: "click",
-        }, 
+        },
         {
             // TODO: Fix code to avoid this behavior
             content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
@@ -410,7 +410,7 @@
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
             run: "click",
-        }, 
+        },
         {
             // TODO: Fix code to avoid this behavior
             content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
@@ -737,7 +737,7 @@ function editContactUs(steps) {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
             // TODO: remove && click body
-            run: "edit test@test.test && click body", 
+            run: "edit test@test.test && click body",
         },
     ]));
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
@@ -775,8 +775,8 @@ function editContactUs(steps) {
         {
             content: "Select the form by clicking on an input field",
             trigger: ':iframe section.s_website_form input',
-            run: function (actions) {
-                actions.click();
+            async run(actions) {
+                await actions.click();
 
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
@@ -816,7 +816,7 @@ function editContactUs(steps) {
             content: "Choose first checkbox as condition item",
             trigger: 'we-button[data-set-visibility-dependency="Checkbox 1"]',
             async run(helpers) {
-                helpers.click();
+                await helpers.click();
                 // TODO:to be removed
                 await new Promise((r) => setTimeout(r, 300));
             }
@@ -831,7 +831,7 @@ function editContactUs(steps) {
             content: "Choose 'not equal to' comparator",
             trigger: 'we-button[data-select-data-attribute="!selected"]',
             async run(helpers) {
-                helpers.click();
+                await helpers.click();
                 // TODO: to be removed
                 await new Promise((r) => setTimeout(r, 300));
             }

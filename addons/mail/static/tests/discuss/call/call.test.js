@@ -15,7 +15,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
+import { mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     mockService,
@@ -68,8 +68,7 @@ test("keep the `more` popover active when hovering it", async () => {
     await click("[title='More']");
     const enterFullScreenSelector = ".o-dropdown-item[title='Enter Full Screen']";
     await contains(enterFullScreenSelector);
-    hover(queryFirst(enterFullScreenSelector));
-    await animationFrame();
+    await hover(queryFirst(enterFullScreenSelector));
     await contains(enterFullScreenSelector);
 });
 

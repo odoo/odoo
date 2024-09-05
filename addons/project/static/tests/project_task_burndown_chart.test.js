@@ -127,7 +127,7 @@ test("burndown.chart: check that the sort buttons are invisible", async () => {
 
 test("burndown.chart: check that removing the group by 'Date: Month > Stage' in the search bar triggers a notification", async () => {
     await mountViewWithSearch();
-    click(".o_facet_remove");
+    await click(".o_facet_remove");
     // Only the notification will be triggered and the file won't be uploaded.
     expect.verifySteps(["notification"]);
 });

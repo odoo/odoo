@@ -2551,7 +2551,7 @@ test(`quickcreate avoid double event creation`, async () => {
     await contains(`.modal-body input`).edit("new event in quick create", { confirm: false });
 
     // Simulate ENTER pressed on Create button (after a TAB)
-    press("Enter");
+    await press("Enter");
     click(`.o-calendar-quick-create--create-btn`);
     await animationFrame();
 

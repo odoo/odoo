@@ -80,7 +80,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
-        }, 
+        },
         {
             trigger: `body:not(:has(.o_we_ui_loading))`,
         },
@@ -99,7 +99,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Remove the text snippet containing the text with class ${fontSizeClass}`,
             trigger: `.oe_snippet_remove`,
             async run(helpers) {
-                helpers.click();
+                await helpers.click();
                 // TODO: Remove the below setTimeout or understand why it should be required.
                 await new Promise((r) => setTimeout(r, 300));
             },

@@ -198,11 +198,11 @@ test("widget many2many_tags_avatar list view - don't crash on keyboard navigatio
     await contains(".o_data_row:nth-child(2) .o_data_cell").click();
 
     // Pressing left arrow should focus on the right-most (second) tag.
-    press("arrowleft");
+    await press("arrowleft");
     expect(".o_data_row:nth-child(2) .o_field_tags span:nth-child(2):first").toBeFocused();
 
     // Pressing left arrow again should not crash and should focus on the first tag.
-    press("arrowleft");
+    await press("arrowleft");
     expect(".o_data_row:nth-child(2) .o_field_tags span:nth-child(1):first").toBeFocused();
 });
 
@@ -397,8 +397,8 @@ test("widget many2many_tags_avatar quick add tags and close in kanban view with 
     });
     await contains(".o_kanban_record:eq(0) .o_quick_assign", { visible: false }).click();
     // add and directly close the dropdown
-    press("Tab");
-    press("Enter");
+    await press("Tab");
+    await press("Enter");
     await animationFrame();
     expect(".o_kanban_record:eq(0) .o_field_many2many_tags_avatar .o_tag").toHaveCount(1);
     expect(".o_kanban_record:eq(0) .o_field_many2many_tags_avatar .o_popover").toHaveCount(0);

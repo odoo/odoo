@@ -21,11 +21,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Click on the display 'On Click' option",
         trigger: "#oe_snippets we-button[data-name='onclick_opt']",
         in_modal: false,
-        run(helpers) {
+        async run(helpers) {
             // Patch and ignore write on clipboard in tour as we don't have permissions
             const oldWriteText = browser.navigator.clipboard.writeText;
             browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
-            helpers.click();
+            await helpers.click();
             browser.navigator.clipboard.writeText = oldWriteText;
         }
     },

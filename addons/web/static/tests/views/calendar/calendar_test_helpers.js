@@ -310,7 +310,7 @@ export function findFilterPanelSectionFilter(sectionName) {
 export async function pickDate(date) {
     const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    click(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`);
+    await click(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`);
     await animationFrame();
 }
 
@@ -321,7 +321,7 @@ export async function pickDate(date) {
 export async function clickAllDaySlot(date) {
     const slot = findAllDaySlot(date);
     instantScrollTo(slot);
-    click(slot);
+    await click(slot);
     await animationFrame();
 }
 
@@ -332,7 +332,7 @@ export async function clickAllDaySlot(date) {
 export async function clickDate(date) {
     const cell = findDateCell(date);
     instantScrollTo(cell);
-    click(cell);
+    await click(cell);
     await advanceTime(500);
 }
 
@@ -343,7 +343,7 @@ export async function clickDate(date) {
 export async function clickEvent(eventId) {
     const event = findEvent(eventId);
     instantScrollTo(event);
-    click(event);
+    await click(event);
     await advanceTime(500); // wait for the popover to open (debounced)
 }
 
@@ -370,15 +370,14 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const endColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${endDate}"]`);
     const endRow = queryFirst(`.fc-timegrid-slot[data-time="${endTime}"]:eq(1)`);
 
-    const { moveTo, drop } = drag(startRow, {
-        relative: true,
+    const { drop } = await drag(startRow, {
         position: { y: 1, x: startColumnRect.left },
-    });
-    moveTo(endRow, {
         relative: true,
-        position: { y: -1, x: endColumnRect.left },
     });
-    drop();
+    await drop(endRow, {
+        position: { y: -1, x: endColumnRect.left },
+        relative: true,
+    });
 
     await animationFrame();
 }
@@ -393,10 +392,7 @@ export async function selectDateRange(startDate, endDate) {
     const endCell = findDateCell(endDate);
 
     instantScrollTo(startCell);
-    const { moveTo, drop } = drag(startCell);
-    moveTo(endCell);
-    drop();
-
+    await (await drag(startCell)).drop(endCell);
     await animationFrame();
 }
 
@@ -410,10 +406,7 @@ export async function selectAllDayRange(startDate, endDate) {
     const end = findAllDaySlot(endDate);
 
     instantScrollTo(start);
-    const { moveTo, drop } = drag(start);
-    moveTo(end);
-    drop();
-
+    await (await drag(start)).drop(end);
     await animationFrame();
 }
 
@@ -428,11 +421,10 @@ export async function moveEventToDate(eventId, date, options = {}) {
     const cell = findDateCell(date);
 
     instantScrollTo(event);
-    const { moveTo, drop } = drag(event);
-    moveTo(cell);
+    const { drop } = await (await drag(event)).moveTo(cell);
 
     if (!options.disableDrop) {
-        drop();
+        await drop();
     }
 
     await animationFrame();
@@ -451,10 +443,15 @@ export async function moveEventToTime(eventId, dateTime) {
     const row = findTimeRow(time);
 
     instantScrollTo(event);
-    const { moveTo, drop } = drag(event, { relative: true, position: { y: 0, x: 0 } });
-    moveTo(row, { relative: true, position: { y: 0, x: columnRect.x } });
-    drop();
-
+    await (
+        await drag(event, {
+            position: { y: 0, x: 0 },
+            relative: true,
+        })
+    ).drop(row, {
+        position: { y: 0, x: columnRect.x },
+        relative: true,
+    });
     await animationFrame();
 }
 
@@ -468,10 +465,7 @@ export async function moveEventToAllDaySlot(eventId, date) {
     const slot = findAllDaySlot(date);
 
     instantScrollTo(event);
-    const { moveTo, drop } = drag(event);
-    moveTo(slot);
-    drop();
-
+    await (await drag(event)).drop(slot);
     await animationFrame();
 }
 
@@ -483,7 +477,7 @@ export async function moveEventToAllDaySlot(eventId, date) {
 export async function resizeEventToTime(eventId, dateTime) {
     const event = findEvent(eventId);
     instantScrollTo(event);
-    hover(queryFirst(`.fc-event-main`, { root: event }));
+    await hover(queryFirst(`.fc-event-main`, { root: event }));
     await animationFrame();
 
     const resizer = queryFirst(`.fc-event-resizer-end`, { root: event });
@@ -492,10 +486,15 @@ export async function resizeEventToTime(eventId, dateTime) {
     const columnRect = queryRect(findDateColumn(date));
     const row = findTimeRow(time);
 
-    const { moveTo, drop } = drag(resizer, { relative: true, position: { y: 0, x: 0 } });
-    moveTo(row, { relative: true, position: { y: -1, x: columnRect.x } });
-    drop();
-
+    await (
+        await drag(resizer, {
+            position: { y: 0, x: 0 },
+            relative: true,
+        })
+    ).drop(row, {
+        position: { y: -1, x: columnRect.x },
+        relative: true,
+    });
     await advanceTime(500);
 }
 
@@ -509,11 +508,11 @@ export async function resizeEventToDate(eventId, date) {
     const slot = findAllDaySlot(date);
 
     instantScrollTo(event);
-    hover(queryFirst('.fc-event-main', { root: event }));
+    await hover(queryFirst(".fc-event-main", { root: event }));
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst('.fc-event-resizer-end', { root: event });
+    const resizer = queryFirst(".fc-event-resizer-end", { root: event });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
 
     instantScrollTo(slot);
@@ -524,10 +523,15 @@ export async function resizeEventToDate(eventId, date) {
     const startRow = queryRect(resizer);
 
     // Perform the drag-and-drop operation
-    const { moveTo, drop } = drag(resizer, { relative: true, position: { y: 0, x: 0 } });
-    moveTo(dateCell, { relative: true, position: { y: startRow.y - columnRect.y, x: 0 } });
-    drop();
-
+    await (
+        await drag(resizer, {
+            position: { y: 0, x: 0 },
+            relative: true,
+        })
+    ).drop(dateCell, {
+        position: { y: startRow.y - columnRect.y, x: 0 },
+        relative: true,
+    });
     await advanceTime(500);
 }
 
@@ -557,7 +561,7 @@ export async function toggleFilter(sectionName, filterValue) {
     const root = findFilterPanelFilter(sectionName, filterValue);
     const input = queryFirst(`input`, { root });
     instantScrollTo(input);
-    click(input);
+    await click(input);
     await animationFrame();
 }
 
@@ -569,7 +573,7 @@ export async function toggleSectionFilter(sectionName) {
     const root = findFilterPanelSectionFilter(sectionName);
     const input = queryFirst(`input`, { root });
     instantScrollTo(input);
-    click(input);
+    await click(input);
     await animationFrame();
 }
 
@@ -582,6 +586,6 @@ export async function removeFilter(sectionName, filterValue) {
     const root = findFilterPanelFilter(sectionName, filterValue);
     const button = queryFirst(`.o_remove`, { root });
     instantScrollTo(button);
-    click(button);
+    await click(button);
     await animationFrame();
 }

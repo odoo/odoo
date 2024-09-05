@@ -214,7 +214,7 @@ test("onchange update image fields", async () => {
         message: "the image should have the correct src",
     });
 
-    click(`[name="name"] input`);
+    await click(`[name="name"] input`);
     edit("test", { confirm: "enter" });
     await runAllTimers();
     await animationFrame();

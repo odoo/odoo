@@ -99,8 +99,8 @@ test.tags("desktop")(
         expect(DROPDOWN_MENU).toHaveCount(0);
 
         // Hover on ONE, TWO, THREE
-        hover(".one");
-        hover(".two");
+        await hover(".one");
+        await hover(".two");
         hover(".three");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(0);

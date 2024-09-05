@@ -199,7 +199,7 @@ test("Rendering with multiple anchors and scrolls", async () => {
     await mountWithCleanup(MyComponent);
     const scrollableParent = queryOne("#scroller");
     expect(scrollableParent.scrollTop).toBe(0);
-    click(".link1");
+    await click(".link1");
 
     // The element must be contained in the scrollable parent (top and bottom)
     const isVisible = (selector) => {

@@ -1,5 +1,5 @@
 import { describe, expect, getFixture, onError as onErrorHoot, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { pointerDown, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -231,8 +231,8 @@ test("Can delete record tag in the filter by hitting Backspace", async function 
     const autoCompleteInput = filter.querySelector(".o-autocomplete--input.o_input");
     expect(filter.querySelectorAll(".o_tag").length).toBe(1);
 
-    autoCompleteInput.focus();
-    press("Backspace");
+    await pointerDown(autoCompleteInput);
+    await press("Backspace");
     await animationFrame();
     expect(filter.querySelectorAll(".o_tag").length).toBe(0);
 });

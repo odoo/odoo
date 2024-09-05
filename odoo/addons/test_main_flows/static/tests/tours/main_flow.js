@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     content: _t("Let's create products."),
     position: "bottom",
     run: "click",
-}, 
+},
 {
     trigger: ".o_breadcrumb .active:contains('Products')",
 },
@@ -91,13 +91,13 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: function (actions) {
-        actions.click();
+    async run(actions) {
+        await actions.click();
         const e = queryFirst(".ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active");
         if (e) {
-            actions.click(e);
+            await actions.click(e);
         } else {
-            actions.click(); // close dropdown
+            await actions.click(); // close dropdown
         }
     },
 }, {
@@ -529,15 +529,15 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: function (actions) {
-        actions.click();
+    async run(actions) {
+        await actions.click();
         const e = queryFirst(
             ".o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
         );
         if (e) {
-            actions.click(e);
+            await actions.click(e);
         } else {
-            actions.click(); // close dropdown
+            await actions.click(); // close dropdown
         }
     },
 }, {

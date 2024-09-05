@@ -44,11 +44,11 @@ test("IframeWrapperField in form view with onchange", async () => {
         `,
     });
 
-    expect(queryFirst("iframe:iframe .nice_div")).toHaveInnerHTML("<p>Some content</p>");
-    expect(queryFirst("iframe:iframe .nice_div p")).toHaveStyle({
+    expect("iframe:iframe .nice_div:first").toHaveInnerHTML("<p>Some content</p>");
+    expect("iframe:iframe .nice_div p:first").toHaveStyle({
         color: "rgb(255, 0, 0)",
     });
-    click(".o_field_widget[name=int_field] input");
+    await click(".o_field_widget[name=int_field] input");
     edit(264, { confirm: "enter" });
     await animationFrame();
     expect(queryFirst("iframe:iframe .nice_div")).toHaveInnerHTML("<p>New content</p>");

@@ -108,8 +108,8 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Insert text inside editable",
             trigger: ".note-editable.odoo-editor-editable",
-            run(actions) {
-                actions.editor(`/`);
+            async run(actions) {
+                await actions.editor(`/`);
                 document.querySelector(".note-editable").dispatchEvent(
                     new InputEvent("input", {
                         inputType: "insertText",

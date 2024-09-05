@@ -1,11 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    queryAll,
-    queryAllAttributes,
-    queryAllTexts,
-    queryAllProperties,
-} from "@odoo/hoot-dom";
+import { click, queryAllAttributes, queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clearRegistry,
     contains,
@@ -108,7 +103,14 @@ test("can be rendered", async () => {
         "eye",
     ]);
     expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual(["Ring", "Bad", "Frodo", "Eye"]);
-    queryAll(".dropdown-menu .dropdown-item").forEach((el) => click(el));
+
+    for (let i = 0; i < 4; i++) {
+        await click(`.dropdown-menu .dropdown-item:eq(${i})`);
+
+        click("button.dropdown-toggle"); // re-open the dropdown
+        await animationFrame();
+    }
+
     expect.verifySteps([
         "callback ring_item",
         "callback bad_item",

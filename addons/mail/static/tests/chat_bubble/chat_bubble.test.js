@@ -201,11 +201,11 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await start();
     await hover(".o-mail-ChatBubble[name='Marc']");
     await contains(".o-mail-ChatBubble-preview", { text: "MarcHello!" });
-    await leave(".o-mail-ChatBubble[name='Marc']");
+    await leave();
     await contains(".o-mail-ChatBubble-preview", { count: 0 });
     await hover(".o-mail-ChatBubble[name='Demo']");
     await contains(".o-mail-ChatBubble-preview", { text: "Demo" });
-    await leave(".o-mail-ChatBubble[name='Demo']");
+    await leave();
     rpc("/mail/message/post", {
         post_data: { body: "Hi", message_type: "comment" },
         thread_id: demoChannelId,
@@ -317,7 +317,7 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
     // Can make chat from hidden menu
     await hover(".o-mail-ChatHub-hiddenBtn");
     await click(".o-mail-ChatHub-hiddenItem");
-    leave(".o-mail-ChatHub-hiddenBtn"); // FIXME: hover is persistent otherwise
+    await leave(); // FIXME: hover is persistent otherwise
     await contains(".o-mail-ChatHub-hiddenItem", { count: 0 });
     await contains(".o-mail-ChatHub-hiddenBtn", { count: 0 });
     await contains(".o-mail-ChatWindow");

@@ -136,13 +136,13 @@ test("ReferenceField can quick create models", async () => {
         arch: /* xml */ `<form><field name="reference" /></form>`,
     });
 
-    click("select");
+    await click("select");
     select("partner");
     await animationFrame();
-    click(".o_field_widget[name='reference'] input");
-    edit("new partner");
+    await click(".o_field_widget[name='reference'] input");
+    await edit("new partner");
     await runAllTimers();
-    click(".o_field_widget[name='reference'] .o_m2o_dropdown_option_create");
+    await click(".o_field_widget[name='reference'] .o_m2o_dropdown_option_create");
     await animationFrame();
 
     await clickSave();
@@ -165,11 +165,11 @@ test("ReferenceField respects no_quick_create", async () => {
         arch: /* xml */ `<form><field name="reference" options="{'no_quick_create': 1}" /></form>`,
     });
 
-    click("select");
+    await click("select");
     select("partner");
     await animationFrame();
-    click(".o_field_widget[name='reference'] input");
-    edit("new partner");
+    await click(".o_field_widget[name='reference'] input");
+    await edit("new partner");
     await runAllTimers();
     expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(1, {
         message: "Dropdown should be opened and have only one item",
@@ -216,7 +216,7 @@ test("ReferenceField in modal readonly mode", async () => {
     expect(queryFirst(".o_data_cell")).toHaveText("second record", {
         message: "the list should have one record",
     });
-    click(queryFirst(".o_data_cell"));
+    await click(".o_data_cell");
     await animationFrame();
 
     // In modal
@@ -264,7 +264,7 @@ test("ReferenceField in modal write mode", async () => {
         message: "The reference field's record should be xphone",
     });
 
-    click(queryFirst(".o_data_cell"));
+    await click(".o_data_cell");
     await animationFrame();
 
     // In modal
@@ -363,14 +363,14 @@ test("reference in form view", async () => {
         }
     );
 
-    click(".o_external_button");
+    await click(".o_external_button");
     await animationFrame();
 
     expect(".o_dialog:not(.o_inactive_modal) .modal-title").toHaveText("Open: custom label", {
         message: "dialog title should display the custom string label",
     });
 
-    click(".o_dialog:not(.o_inactive_modal) .o_form_button_cancel");
+    await click(".o_dialog:not(.o_inactive_modal) .o_form_button_cancel");
     await animationFrame();
 
     select("partner.type", { target: ".o_field_widget select" });
@@ -380,9 +380,9 @@ test("reference in form view", async () => {
         message: "many2one value should be reset after model change",
     });
 
-    click(".o_field_widget[name=reference] input");
+    await click(".o_field_widget[name=reference] input");
     await animationFrame();
-    click(".o_field_widget[name=reference] .ui-menu-item");
+    await click(".o_field_widget[name=reference] .ui-menu-item");
 
     await clickSave();
     expect(".o_field_widget[name=reference] input").toHaveValue("gold", {
@@ -403,18 +403,18 @@ test("Many2One 'Search more...' updates on resModel change", async () => {
     });
 
     // Selecting a relation
-    click("div.o_field_reference select.o_input");
-    select("partner.type");
+    await click("div.o_field_reference select.o_input");
+    await select("partner.type");
 
     // Selecting another relation
-    click("div.o_field_reference select.o_input");
+    await click("div.o_field_reference select.o_input");
     select("product");
     await animationFrame();
 
     // Opening the Search More... option
-    click("div.o_field_reference input.o_input");
+    await click("div.o_field_reference input.o_input");
     await animationFrame();
-    click("div.o_field_reference .o_m2o_dropdown_option_search_more");
+    await click("div.o_field_reference .o_m2o_dropdown_option_search_more");
     await animationFrame();
 
     expect(queryFirst("div.modal td.o_data_cell")).toHaveText("xphone", {
@@ -448,7 +448,7 @@ test("computed reference field changed by onchange to 'False,0' value", async ()
     });
 
     // trigger the onchange to set a value for the reference field
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
 
     await clickSave();
@@ -480,17 +480,17 @@ test("interact with reference field changed by onchange", async () => {
     });
 
     // trigger the onchange to set a value for the reference field
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await animationFrame();
 
     expect(".o_field_widget[name=reference] select").toHaveValue("partner");
 
     // manually update reference field
     queryFirst(".o_field_widget[name=reference] input").tabIndex = 0;
-    click(".o_field_widget[name=reference] input");
-    edit("aaa");
+    await click(".o_field_widget[name=reference] input");
+    await edit("aaa");
     await runAllTimers();
-    click(".ui-autocomplete .ui-menu-item");
+    await click(".ui-autocomplete .ui-menu-item");
 
     // save
     await clickSave();
@@ -534,8 +534,8 @@ test("default_get and onchange with a reference field", async () => {
     });
 
     // trigger onchange
-    click(".o_field_widget[name=int_field] input");
-    edit(12, { confirm: "enter" });
+    await click(".o_field_widget[name=int_field] input");
+    await edit(12, { confirm: "enter" });
     await animationFrame();
 
     expect(".o_field_widget[name='reference'] select").toHaveValue("partner.type", {
@@ -615,8 +615,8 @@ test("ReferenceField on char field, reset by onchange", async () => {
         message: "foo field should be correctly set",
     });
     // trigger onchange
-    click(".o_field_widget[name=int_field] input");
-    edit(41, { confirm: "enter" });
+    await click(".o_field_widget[name=int_field] input");
+    await edit(41, { confirm: "enter" });
     await runAllTimers();
     await animationFrame();
     expect(nbNameGet).toBe(2, { message: "the second name_get should have been done" });
@@ -639,11 +639,11 @@ test("reference and list navigation", async () => {
     });
 
     // edit first row
-    click(".o_data_row .o_data_cell");
+    await click(".o_data_row .o_data_cell");
     await animationFrame();
     expect(".o_data_row [name='reference'] input").toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(".o_data_row:nth-child(2) [name='reference'] select").toBeFocused();
 });
@@ -672,29 +672,29 @@ test("ReferenceField with model_field option", async () => {
         message: "no record should be selected in the reference field",
     });
 
-    click(".o_field_widget[name='reference'] input");
-    edit("Product 1");
+    await click(".o_field_widget[name='reference'] input");
+    await edit("Product 1");
     await runAllTimers();
-    click(".ui-autocomplete .ui-menu-item:first-child");
+    await click(".ui-autocomplete .ui-menu-item:first-child");
     await animationFrame();
     expect(".o_field_widget[name='reference'] input").toHaveValue("Product 1", {
         message: "the Product 1 record should be selected in the reference field",
     });
 
-    click(".o_field_widget[name='model_id'] input");
-    edit("Partner");
+    await click(".o_field_widget[name='model_id'] input");
+    await edit("Partner");
     await runAllTimers();
-    click(".ui-autocomplete .ui-menu-item:first-child");
+    await click(".ui-autocomplete .ui-menu-item:first-child");
     await runAllTimers();
     await animationFrame();
     expect(".o_field_widget[name='reference'] input").toHaveValue("", {
         message: "no record should be selected in the reference field",
     });
 
-    click(".o_field_widget[name='reference'] input");
-    edit("John");
+    await click(".o_field_widget[name='reference'] input");
+    await edit("John");
     await runAllTimers();
-    click(".ui-autocomplete .ui-menu-item:first-child");
+    await click(".ui-autocomplete .ui-menu-item:first-child");
     await animationFrame();
     expect(".o_field_widget[name='reference'] input").toHaveValue("John Smith", {
         message: "the John Smith record should be selected in the reference field",
@@ -759,12 +759,12 @@ test("Reference field with default value in list view", async () => {
             </tree>
         `,
     });
-    click(".o_control_panel_main_buttons .o_list_button_add");
+    await click(".o_control_panel_main_buttons .o_list_button_add");
     await animationFrame();
-    click('.o_list_char[name="name"] input');
-    edit("Blabla");
+    await click('.o_list_char[name="name"] input');
+    await edit("Blabla");
     await runAllTimers();
-    click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 });
 
@@ -793,14 +793,14 @@ test("ReferenceField with model_field option (tree list in form view)", async ()
     expect(".reference_field").toHaveText("xpad");
 
     // Select the second product without changing the model
-    click(".o_list_table .reference_field");
+    await click(".o_list_table .reference_field");
     await animationFrame();
 
-    click(".o_list_table .reference_field input");
+    await click(".o_list_table .reference_field input");
     await animationFrame();
 
     // Enter to select it
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect(".reference_field input").toHaveValue("xphone", {
@@ -833,13 +833,13 @@ test("edit a record containing a ReferenceField with model_field option (list in
     expect(".o_list_table [name='name']").toHaveText("first record");
     expect(".o_list_table [name='reference']").toHaveText("xpad");
 
-    click(".o_list_table .o_data_cell");
+    await click(".o_list_table .o_data_cell");
     await animationFrame();
 
-    click(".o_list_table [name='name'] input");
-    edit("plop");
+    await click(".o_list_table [name='name'] input");
+    await edit("plop");
     await animationFrame();
-    click(".o_form_view");
+    await click(".o_form_view");
     await animationFrame();
 
     expect(".o_list_table [name='name']").toHaveText("plop");
@@ -871,12 +871,14 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
     expect(".reference_field").toHaveText("xpad");
     expect(".o_list_many2one").toHaveText("Product");
 
-    click(".o_list_table td.o_list_many2one");
+    await click(".o_list_table td.o_list_many2one");
     await animationFrame();
-    click(".o_list_table .o_list_many2one input");
+    await click(".o_list_table .o_list_many2one input");
     await animationFrame();
     //Select the "Partner" option, different from original "Product"
-    click(".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item:contains(Partner)");
+    await click(
+        ".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item:contains(Partner)"
+    );
     await runAllTimers();
     await animationFrame();
     expect(".reference_field input").toHaveValue("");
@@ -885,9 +887,9 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
     await click(".o_list_table .reference_field input");
     const textInput = queryFirst(".o_list_table .reference_field input");
     textInput.setSelectionRange(0, textInput.value.length);
-    click(".o_list_table .reference_field input");
-    press("Backspace");
-    click(".o_form_view_container");
+    await click(".o_list_table .reference_field input");
+    await press("Backspace");
+    await click(".o_form_view_container");
     await animationFrame();
 
     expect(".o_list_table .reference_field.o_field_invalid").toHaveCount(1);

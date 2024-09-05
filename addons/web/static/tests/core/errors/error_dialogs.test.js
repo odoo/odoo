@@ -123,7 +123,7 @@ test("Display a tooltip on clicking Copy Error Message button", async () => {
             close() {},
         },
     });
-    click(".fa-clipboard");
+    await click(".fa-clipboard");
 });
 
 test("WarningDialog", async () => {

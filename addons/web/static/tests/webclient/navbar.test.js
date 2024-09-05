@@ -14,13 +14,12 @@ import {
 
 import { Component, onRendered, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-
 import { NavBar } from "@web/webclient/navbar/navbar";
 
 const systrayRegistry = registry.category("systray");
 
 // Debounce time for Adaptation (`debouncedAdapt`) on resize event in navbar
-const navbarDebounceTime = 250;
+const waitNavbarAdaptation = () => advanceTime(500);
 
 class MySystrayItem extends Component {
     static props = ["*"];
@@ -379,35 +378,30 @@ test.tags("desktop")("can adapt with 'more' menu sections behavior", async () =>
     ]);
 
     // Force the parent width, to make this test independent of screen size
-    resize({ width: 1080 });
-
+    await resize({ width: 1080 });
     await makeMockEnv();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
     await mountWithCleanup(MyNavbar);
-    expect(".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)").toHaveCount(3, {
+
+    expect(".o_menu_sections > *:not(.o_menu_sections_more):visible").toHaveCount(3, {
         message: "should have 3 menu sections displayed (that are not the 'more' menu)",
     });
-    expect(".o_menu_sections_more").toHaveCount(0, { message: "the 'more' menu should not exist" });
+    expect(".o_menu_sections_more").toHaveCount(0);
+
     // Force minimal width
-    resize({ width: 0 });
-    await advanceTime(navbarDebounceTime);
-    expect(".o_menu_sections > *:not(.d-none)").toHaveCount(1, {
-        message: "only one menu section should be displayed",
+    await resize({ width: 0 });
+    await waitNavbarAdaptation();
+
+    expect(".o_menu_sections").not.toBeVisible({
+        message: "no menu section should be displayed",
     });
-    expect(".o_menu_sections_more:not(.d-none)").toHaveCount(1, {
-        message: "the displayed menu section should be the 'more' menu",
-    });
-    // Open the more menu
-    await contains(".o_menu_sections_more .dropdown-toggle").click();
-    expect(queryAllTexts(".dropdown-menu > *")).toEqual(
-        ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
-        { message: "'more' menu should contain all hidden sections in correct order" }
-    );
+
     // Reset to full width
-    resize({ width: 1366 });
-    await advanceTime(navbarDebounceTime);
+    await resize({ width: 1366 });
+    await waitNavbarAdaptation();
+
     expect(".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)").toHaveCount(3, {
         message: "should have 3 menu sections displayed (that are not the 'more' menu)",
     });
@@ -447,9 +441,24 @@ test.tags("desktop")(
                     {
                         id: 1,
                         children: [
-                            { id: 11, children: [], name: "Section 1", appID: 1 },
-                            { id: 12, children: [], name: "Section 2", appID: 1 },
-                            { id: 13, children: [], name: "Section 3", appID: 1 },
+                            {
+                                id: 11,
+                                children: [],
+                                name: "Section with a very long name 1",
+                                appID: 1,
+                            },
+                            {
+                                id: 12,
+                                children: [],
+                                name: "Section with a very long name 2",
+                                appID: 1,
+                            },
+                            {
+                                id: 13,
+                                children: [],
+                                name: "Section with a very long name 3",
+                                appID: 1,
+                            },
                         ],
                         name: "App1",
                         appID: 1,
@@ -461,20 +470,26 @@ test.tags("desktop")(
         ]);
 
         // Force the parent width, to make this test independent of screen size
-        resize({ width: 600 });
+        await resize({ width: 600 });
+
+        // TODO: this test case doesn't make sense since it relies on small widths
+        // with `env.isSmall` still returning `false`.
+        const env = await makeMockEnv();
+        Object.defineProperty(env, "isSmall", { get: () => false });
 
         const navbar = await mountWithCleanup(MyNavbar);
+
         expect(navbar.currentAppSections).toHaveLength(0, { message: "0 app sub menus" });
-        expect(".o_navbar").toHaveProperty("offsetWidth", 600);
+        expect(".o_navbar").toHaveRect({ width: 600 });
         expect(adaptCount).toBe(1);
         expect(adaptRenderCount).toBe(0, {
             message: "during adapt, render not triggered as the navbar has no app sub menus",
         });
 
-        // Force minimal width
-        resize({ width: 0 });
-        await advanceTime(navbarDebounceTime);
-        expect(".o_navbar").toHaveProperty("offsetWidth", 0);
+        await resize({ width: 0 });
+        await waitNavbarAdaptation();
+
+        expect(".o_navbar").toHaveRect({ width: 0 });
         expect(adaptCount).toBe(2);
         expect(adaptRenderCount).toBe(0, {
             message: "during adapt, render not triggered as the navbar has no app sub menus",
@@ -483,6 +498,7 @@ test.tags("desktop")(
         // Set menu
         getService("menu").setCurrentMenu(1);
         await animationFrame();
+
         expect(navbar.currentAppSections).toHaveLength(3, { message: "3 app sub menus" });
         expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
             message: "all app sub menus are inside the more menu",
@@ -494,8 +510,9 @@ test.tags("desktop")(
         });
 
         // Force small width
-        resize({ width: 240 });
-        await advanceTime(navbarDebounceTime);
+        await resize({ width: 240 });
+        await waitNavbarAdaptation();
+
         expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
             message: "all app sub menus are inside the more menu",
         });
@@ -506,8 +523,9 @@ test.tags("desktop")(
         });
 
         // Reset to full width
-        resize({ width: 1366 });
-        await advanceTime(navbarDebounceTime);
+        await resize({ width: 1366 });
+        await waitNavbarAdaptation();
+
         expect(navbar.currentAppSections).toHaveLength(3, { message: "still 3 app sub menus" });
         expect(navbar.currentAppSectionsExtra).toHaveLength(0, {
             message: "all app sub menus are NO MORE inside the more menu",
@@ -571,17 +589,20 @@ test.tags("desktop")("'more' menu sections properly updated on app change", asyn
     ]);
 
     // Force the parent width, to make this test independent of screen size
-    resize({ width: 1080 });
+    await resize({ width: 1080 });
 
-    await makeMockEnv();
+    // TODO: this test case doesn't make sense since it relies on small widths
+    // with `env.isSmall` still returning `false`.
+    const env = await makeMockEnv();
+    Object.defineProperty(env, "isSmall", { get: () => false });
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
     await mountWithCleanup(NavBar);
 
     // Force minimal width
-    resize({ width: 0 });
-    await advanceTime(navbarDebounceTime);
+    await resize({ width: 0 });
+    await waitNavbarAdaptation();
     expect(".o_menu_sections > *:not(.d-none)").toHaveCount(1, {
         message: "only one menu section should be displayed",
     });
@@ -626,10 +647,10 @@ test("Do not execute adapt when navbar is destroyed", async () => {
     getService("menu").setCurrentMenu(1);
     const navbar = await mountWithCleanup(MyNavbar);
     expect.verifySteps(["adapt NavBar"]);
-    resize();
+    await resize();
     await runAllTimers();
     expect.verifySteps(["adapt NavBar"]);
-    resize();
+    await resize();
     destroy(navbar);
     await runAllTimers();
     expect.verifySteps([]);

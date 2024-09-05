@@ -49,13 +49,13 @@ test("Click on element with unique odoo class", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_child_1"]);
 
-    click(".o_child_2");
+    await click(".o_child_2");
     await animationFrame();
     checkTourSteps([".o_child_1", ".o_child_2"]);
 });
@@ -73,9 +73,9 @@ test("Click on element with no unique odoo class", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_child_1:nth-child(1)"]);
 });
@@ -84,9 +84,9 @@ test("Find the nearest odoo class", async () => {
     await mountWithCleanup(`<a class="click"></a>`, { noMainContainer: true });
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_web_client > a"]);
 });
@@ -105,10 +105,10 @@ test("Click on elements with 'data-menu-xmlid' attribute", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click_1");
-    click(".click_2");
+    await click(".click_1");
+    await click(".click_2");
     await animationFrame();
     checkTourSteps([
         ".o_web_client div[data-menu-xmlid='my_menu_1']",
@@ -130,10 +130,10 @@ test("Click on elements with 'name' attribute", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click_1");
-    click(".click_2");
+    await click(".click_1");
+    await click(".click_2");
     await animationFrame();
     checkTourSteps([".o_web_client div[name='sale_id']", ".o_div[name='partner_id']"]);
 });
@@ -150,10 +150,10 @@ test("Click on element that have a link or button has parent", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click_1");
-    click(".click_2");
+    await click(".click_1");
+    await click(".click_2");
     await animationFrame();
     checkTourSteps([".o_button", ".o_link"]);
 });
@@ -178,9 +178,9 @@ test("Click on element with path that can be reduced", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps(["div[name='field_name'] .o_div_3"]);
 });
@@ -196,9 +196,9 @@ test("Click on input", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_input"]);
@@ -217,9 +217,9 @@ test("Click on tag that is inside a contenteditable", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_editor[contenteditable='true']"]);
@@ -236,15 +236,15 @@ test("Remove step during recording", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_child"]);
-    click(".o_button_steps");
+    await click(".o_button_steps");
     await animationFrame();
     contains(".o_button_delete_step").click();
-    click(".o_button_steps");
+    await click(".o_button_steps");
     await animationFrame();
     checkTourSteps([]);
 });
@@ -260,9 +260,9 @@ test("Edit input", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     expect(".click").toBeFocused();
@@ -283,18 +283,18 @@ test("Save a custom tour in the localStorage", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_parent > div"]);
 
-    click(".o_button_save");
+    await click(".o_button_save");
     await animationFrame();
     await contains("input[name='name']").click();
     edit("tour_name");
     await animationFrame();
-    click(".o_button_save_confirm");
+    await click(".o_button_save_confirm");
     await animationFrame();
 
     const customToursString = browser.localStorage.getItem("custom_tours");
@@ -325,24 +325,24 @@ test("Save a custom tour and check the tour dialog", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_parent > div"]);
 
-    click(".o_button_save");
+    await click(".o_button_save");
     await animationFrame();
     await contains("input[name='name']").click();
     edit("tour_name");
     await animationFrame();
-    click(".o_button_save_confirm");
+    await click(".o_button_save_confirm");
     await animationFrame();
     expect(".o_notification_manager .o_notification_body").toHaveText(
         "Custom tour 'tour_name' has been added."
     );
 
-    click(".o_debug_manager > button");
+    await click(".o_debug_manager > button");
     await contains(".o-dropdown-item:contains('Start Tour')").click();
 
     expect("table tr td:contains('tour_name')").toHaveCount(1);
@@ -359,26 +359,26 @@ test("Delete saved custom tour and check the tour dialog", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_parent > div"]);
 
-    click(".o_button_save");
+    await click(".o_button_save");
     await animationFrame();
     await contains("input[name='name']").click();
     edit("tour_name");
     await animationFrame();
-    click(".o_button_save_confirm");
+    await click(".o_button_save_confirm");
     await runAllTimers(); // Wait that the save notification disappear
 
-    click(".o_debug_manager > button");
+    await click(".o_debug_manager > button");
     await contains(".o-dropdown-item:contains('Start Tour')").click();
 
     expect("table tr td:contains('tour_name')").toHaveCount(1);
 
-    click(".o_button_extra");
+    await click(".o_button_extra");
     await contains(".o-dropdown-item:contains('Delete')").click();
 
     expect(".o_notification_manager .o_notification_body").toHaveText(
@@ -405,7 +405,7 @@ test("Drag and drop", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
     await contains(".o_drag").dragAndDrop(".o_drop");
     await animationFrame();
@@ -425,9 +425,9 @@ test("Edit contenteditable", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     expect(".o_editor").toBeFocused();
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
@@ -451,22 +451,22 @@ test("Run custom tour", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_parent > div"]);
 
-    click(".o_button_save");
+    await click(".o_button_save");
     await animationFrame();
     await contains("input[name='name']").click();
     edit("tour_name");
     await animationFrame();
-    click("input[name='url']");
+    await click("input[name='url']");
     await animationFrame();
     edit("");
     await animationFrame();
-    click(".o_button_save_confirm");
+    await click(".o_button_save_confirm");
     await animationFrame();
     expect(".o_notification_manager .o_notification_body").toHaveText(
         "Custom tour 'tour_name' has been added."
@@ -482,11 +482,11 @@ test("Run custom tour", async () => {
         def.resolve();
     });
 
-    click(".o_debug_manager > button");
+    await click(".o_debug_manager > button");
     await contains(".o-dropdown-item:contains('Start Tour')").click();
 
     expect("table tr td:contains('tour_name')").toHaveCount(1);
-    click(".o_test_tour");
+    await click(".o_test_tour");
 
     // Max timeout before triggering an error from tour compiler
     await advanceTime(9999);
@@ -510,43 +510,43 @@ test("Run a custom tour twice doesn't trigger traceback", async () => {
     );
 
     expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
+    await click(".o_button_record");
     await animationFrame();
-    click(".click");
+    await click(".click");
     await animationFrame();
     checkTourSteps([".o_parent > div"]);
 
-    click(".o_button_save");
+    await click(".o_button_save");
     await animationFrame();
     await contains("input[name='name']").click();
     edit("tour_name");
     await animationFrame();
-    click("input[name='url']");
+    await click("input[name='url']");
     await animationFrame();
     edit("");
     await animationFrame();
-    click(".o_button_save_confirm");
+    await click(".o_button_save_confirm");
     await animationFrame();
     expect(".o_notification_manager .o_notification_body").toHaveText(
         "Custom tour 'tour_name' has been added."
     );
 
-    click(".o_debug_manager > button");
+    await click(".o_debug_manager > button");
     await contains(".o-dropdown-item:contains('Start Tour')").click();
 
     expect("table tr td:contains('tour_name')").toHaveCount(1);
-    click(".o_start_tour");
+    await click(".o_start_tour");
     await animationFrame();
 
-    click(".o_debug_manager > button");
+    await click(".o_debug_manager > button");
     await contains(".o-dropdown-item:contains('Start Tour')").click();
 
     expect("table tr td:contains('tour_name')").toHaveCount(2);
-    click(".o_start_tour:eq(1)");
+    await click(".o_start_tour:eq(1)");
     await animationFrame();
     await advanceTime(100);
 
-    click(".o_parent > div");
+    await click(".o_parent > div");
     await advanceTime(100);
     await animationFrame();
 });

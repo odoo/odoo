@@ -374,19 +374,20 @@ function getSizeFromWidth(width) {
  * @param {number|undefined} [params.width]
  * @param {number|undefined} [params.height]
  */
-export function patchUiSize({ height, size, width }) {
+export async function patchUiSize({ height, size, width }) {
     if ((!size && !width) || (size && width)) {
         throw new Error("Either size or width must be given to the patchUiSize function");
     }
     size = size === undefined ? getSizeFromWidth(width) : size;
     width = width || getWidthFromSize(size);
 
-    resize({ width, height });
     patchWithCleanup(uiUtils, {
         getSize() {
             return size;
         },
     });
+
+    await resize({ width, height });
 }
 
 /**
@@ -603,5 +604,5 @@ export function isInViewportOf(parent, child) {
 
 export async function hover(selector) {
     await contains(selector);
-    hootHover(selector);
+    await hootHover(selector);
 }

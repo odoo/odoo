@@ -24,7 +24,7 @@ function getUnique(target) {
 }
 
 async function setFiles(files) {
-    click("input[type=file]", { visible: false });
+    await click("input[type=file]", { visible: false });
     setInputFiles(files);
     await waitFor(`div[name=document] img[data-src^="data:image/"]`, { timeout: 1000 });
 }
@@ -321,7 +321,7 @@ test("clicking save manually after uploading new image should change the unique 
         `data:image/png;base64,${MY_IMAGE}`
     );
 
-    click(".o_field_widget[name='foo'] input");
+    await click(".o_field_widget[name='foo'] input");
     edit("grrr");
     await animationFrame();
     expect("div[name=document] img").toHaveAttribute(
@@ -379,7 +379,7 @@ test("save record with image field modified by onchange", async () => {
         `,
     });
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
-    click("[name='foo'] input");
+    await click("[name='foo'] input");
     edit("grrr", { confirm: "enter" });
     await animationFrame();
     expect("div[name=document] img").toHaveAttribute(
@@ -703,7 +703,7 @@ test("unique in url doesn't change on onchange", async () => {
     // same unique as before
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 
-    click(".o_field_widget[name='foo'] input");
+    await click(".o_field_widget[name='foo'] input");
     edit("grrr", { confirm: "enter" });
     await animationFrame();
     expect.verifySteps(["onchange"]);
@@ -760,7 +760,7 @@ test("unique in url does not change on record change if reload option is set to 
         `,
     });
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
-    click("div[name='write_date'] > div > input");
+    await click("div[name='write_date'] > div > input");
     edit("2022-08-05 08:39:00", { confirm: "enter" });
     await animationFrame();
     await clickSave();

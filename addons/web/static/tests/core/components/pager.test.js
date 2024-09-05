@@ -32,11 +32,8 @@ test("basic interactions", async () => {
         },
     });
 
-    click(".o_pager button.o_pager_next");
-    await animationFrame();
-
-    click(".o_pager button.o_pager_previous");
-    await animationFrame();
+    await contains(".o_pager button.o_pager_next:enabled").click();
+    await contains(".o_pager button.o_pager_previous:enabled").click();
 
     expect.verifySteps(["offset: 4, limit: 4", "offset: 0, limit: 4"]);
 });
@@ -330,20 +327,20 @@ test.tags("desktop")("updateTotal props: click next", async () => {
     expect(".o_pager_limit").toHaveText("10+");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
-    click(".o_pager_next");
-    await animationFrame();
+    await contains(".o_pager_next:enabled").click();
+
     expect(".o_pager_value").toHaveText("6-10");
     expect(".o_pager_limit").toHaveText("10+");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
-    click(".o_pager_next");
-    await animationFrame();
+    await contains(".o_pager_next:enabled").click();
+
     expect(".o_pager_value").toHaveText("11-15");
     expect(".o_pager_limit").toHaveText("15+");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
-    click(".o_pager_next");
-    await animationFrame();
+    await contains(".o_pager_next:enabled").click();
+
     expect(".o_pager_value").toHaveText("16-18");
     expect(".o_pager_limit").toHaveText("18");
     expect(".o_pager_limit").not.toHaveClass("o_pager_limit_fetch");

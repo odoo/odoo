@@ -112,7 +112,7 @@ test.tags("desktop")("JournalDashboardGraphField is rendered correctly", async (
     });
 
     // reload kanban
-    click("input.o_searchview_input");
+    await click("input.o_searchview_input");
     press("Enter");
     await animationFrame();
 
