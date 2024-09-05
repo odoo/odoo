@@ -6,24 +6,12 @@
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//templates" position="before">
-                    <t groups="hr_recruitment.group_hr_recruitment_user">
-                        <field name="new_applicant_count"/>
-                        <field name="new_hired_employee"/>
-                        <field name="expected_employee"/>
-                    </t>
-                </xpath>
-
-                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <t groups="hr_recruitment.group_hr_recruitment_user">
-                        <div t-if="record.new_applicant_count.raw_value > 0" class="row ml16">
-                            <div class="col">
-                                <a name="%(hr_applicant_action_from_department)d" type="action">
-                                    <field name="new_applicant_count"/> New Applicants
-                                </a>
-                            </div>
-                        </div>
-                    </t>
+                <xpath expr="//div[@name='o_kanban_primary_right']" position="inside">
+                    <div t-if="record.new_applicant_count.raw_value > 0" class="row g-0 ml32" groups="hr_recruitment.group_hr_recruitment_user">
+                        <a name="%(hr_applicant_action_from_department)d" class="col" type="action">
+                            <field name="new_applicant_count"/> New Applicants
+                        </a>
+                    </div>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">

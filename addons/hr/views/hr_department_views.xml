@@ -76,18 +76,13 @@
             <field name="name">hr.department.kanban</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_dashboard o_hr_department_kanban o_kanban_small_column" can_open="0" sample="1">
-                    <field name="name"/>
-                    <field name="company_id"/>
-                    <field name="manager_id"/>
-                    <field name="color"/>
-                    <field name="total_employee"/>
+                <kanban highlight_color="color" class="o_hr_department_kanban o_kanban_small_column" can_open="0" sample="1">
                     <field name="active"/>
                     <templates>
                         <t t-name="kanban-menu" t-if="!selection_mode">
                             <div class="container">
                                 <div class="row">
-                                    <div class="o_kanban_card_manage_section o_kanban_manage_view col-6 o_kanban_manage_views">
+                                    <div class="col-6">
                                         <h5 role="menuitem" class="o_kanban_card_manage_title">
                                             <span>View</span>
                                         </h5>
@@ -98,7 +93,7 @@
                                             <a name="action_open_view_child_departments" type="object">Child departments</a>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_card_manage_section o_kanban_manage_view col-6 o_kanban_manage_reports">
+                                    <div class="col-6 o_kanban_manage_reports">
                                         <h5 role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </h5>
@@ -106,46 +101,34 @@
                                 </div>
                                 <div class="o_kanban_card_manage_settings row" groups="hr.group_hr_user">
                                     <div t-if="widget.editable" role="menuitem" aria-haspopup="true" class="col-6">
-                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                        <field name="color" widget="kanban_color_picker"/>
                                     </div>
                                     <div class="col-6">
-                                        <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                                        <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="open">Configuration</a>
                                         <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
                                         <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
                                     </div>
                                 </div>
                             </div>
                         </t>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                                <div t-attf-class="o_kanban_card_header oe_kanban_details">
-                                    <div class="o_kanban_card_header_title">
-                                        <div class="o_primary"><a type="edit"><field name="name"/></a></div>
-                                        <div class="text-muted">
-                                            <field name="manager_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" readonly="1"/>
-                                        </div>
-                                        <div class="o_secondary" groups="base.group_multi_company">
-                                            <small>
-                                                <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
-                                            </small>
-                                        </div>
-                                    </div>
+                        <t t-name="kanban-card">
+                            <a type="open"><field name="name" class="fw-bold fs-4 d-bolck ms-2"/></a>
+                            <field name="manager_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" readonly="1" class="text-muted ms-2"/>
+                            <div class="small mt-1 ms-2" groups="base.group_multi_company">
+                                <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
+                            </div>
+                            <div class="row g-0 mt-3 mb-2 ms-2" t-if="!selection_mode">
+                                <div class="col-6">
+                                    <button class="btn btn-primary" name="action_employee_from_department" type="object">
+                                        <field name="total_employee"/> Employees
+                                    </button>
                                 </div>
-                                <div class="container o_kanban_card_content" t-if="!selection_mode">
-                                    <div class="row o_kanban_card_upper_content">
-                                        <div class="col-6 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="action_employee_from_department" type="object">
-                                                <t t-out="record.total_employee.raw_value"/> Employees
-                                            </button>
-                                        </div>
-                                        <div class="col-6 o_kanban_primary_right">
-                                        </div>
-                                    </div>
-                                    <div class="o_kanban_card_lower_content"
-                                         style="justify-content: end">
-                                        <!-- placeholder for bottom content -->
-                                    </div>
+                                <div name="o_kanban_primary_right" class="col-6">
+                                    <!-- placeholder for xpaths -->
                                 </div>
+                            </div>
+                            <div name="o_kanban_card_lower_content" class="mt-auto" t-if="!selection_mode">
+                                <!-- placeholder for bottom content -->
                             </div>
                         </t>
                     </templates>

@@ -6,17 +6,11 @@
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//templates" position="before">
-                    <field name="expense_sheets_to_approve_count" groups="hr_expense.group_hr_expense_team_approver"/>
-                </xpath>
-
-                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row ml16" groups="hr_expense.group_hr_expense_team_approver">
-                        <div class="col">
-                            <a name="%(action_hr_expense_sheet_department_to_approve)d" type="action">
-                                <t t-out="record.expense_sheets_to_approve_count.raw_value"/> Expense Reports
-                            </a>
-                        </div>
+                <xpath expr="//div[@name='o_kanban_primary_right']" position="inside">
+                    <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row ml32 g-0" groups="hr_expense.group_hr_expense_team_approver">
+                        <a name="%(action_hr_expense_sheet_department_to_approve)d" class="col" type="action">
+                            <field name="expense_sheets_to_approve_count" groups="hr_expense.group_hr_expense_team_approver"/> Expense Reports
+                        </a>
                     </div>
                 </xpath>
 
