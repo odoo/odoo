@@ -33,7 +33,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     RECONNECTING: 4003,
 });
 /** @deprecated worker version is now retrieved from `session.websocket_worker_bundle` */
-export const WORKER_VERSION = "1.0.8";
+export const WORKER_VERSION = "17.2-1";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
