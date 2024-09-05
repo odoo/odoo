@@ -16,7 +16,7 @@ preventResizeObserverError();
 
 function getDomValue() {
     return queryAll(".ace_line")
-        .map((line) => queryAllTexts(":scope > span", { root: line }).join(""))
+        .map((root) => queryAllTexts(`:scope > span`, { root }).join(""))
         .join("\n");
 }
 
