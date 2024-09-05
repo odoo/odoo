@@ -610,7 +610,7 @@ class WebsiteForum(WebsiteProfile):
             url = f'/forum/{slug(forum)}/closed_posts'
         else:
             url = f'/forum/{slug(forum)}/validation_queue'
-        post._validate()
+        post.validate()
         return request.redirect(url)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
