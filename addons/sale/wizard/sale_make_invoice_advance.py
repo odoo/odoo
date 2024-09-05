@@ -256,9 +256,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         computed_taxes = self.env['account.tax']._compute_taxes(tax_base_line_dicts, self.company_id)
         down_payment_values = []
         for line, tax_repartition in computed_taxes['base_lines_to_update']:
-            account = line['product'].product_tmpl_id.get_product_accounts(
-                fiscal_pos=order.fiscal_position_id
-            ).get('income')
+            product_account = line['product'].product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
+            account = product_account.get('downpayment') or product_account.get('income')
+
             taxes = line['taxes'].flatten_taxes_hierarchy()
             fixed_taxes = taxes.filtered(lambda tax: tax.amount_type == 'fixed')
             down_payment_values.append([

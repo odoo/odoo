@@ -664,14 +664,7 @@ class AccountChartTemplate(models.AbstractModel):
         if not company.parent_id and self.env['account.tax'].search_count([('tax_exigibility', '=', 'on_payment')], limit=1):
             company.tax_exigibility = True
 
-        for field, model in {
-            **additional_properties,
-            'property_account_receivable_id': 'res.partner',
-            'property_account_payable_id': 'res.partner',
-            'property_account_expense_categ_id': 'product.category',
-            'property_account_income_categ_id': 'product.category',
-            'property_stock_journal': 'product.category',
-        }.items():
+        for field, model in self._get_property_accounts(additional_properties).items():
             value = template_data.get(field)
             if value and field in self.env[model]._fields:
                 self.env['ir.property']._set_default(field, model, self.ref(value).id, company=company)
@@ -680,6 +673,16 @@ class AccountChartTemplate(models.AbstractModel):
         reco = self.ref('internal_transfer_reco', raise_if_not_found=False)
         if reco:
             reco.line_ids.write({'account_id': company.transfer_account_id.id})
+
+    def _get_property_accounts(self, additional_properties):
+        return {
+            **additional_properties,
+            'property_account_receivable_id': 'res.partner',
+            'property_account_payable_id': 'res.partner',
+            'property_account_expense_categ_id': 'product.category',
+            'property_account_income_categ_id': 'product.category',
+            'property_stock_journal': 'product.category',
+        }
 
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))

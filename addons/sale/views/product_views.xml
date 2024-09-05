@@ -130,4 +130,15 @@
         </field>
     </record>
 
+    <record id="view_category_property_form" model="ir.ui.view">
+        <field name="name">product.category.property.form.inherit.sale</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <field name="property_account_expense_categ_id" position="after">
+                <field name="property_account_downpayment_categ_id"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>
