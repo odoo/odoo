@@ -761,3 +761,42 @@ test("unique in url does not change on record change if reload option is set to 
     await clickSave();
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 });
+
+test("convert image to webp", async () => {
+    onRpc(({ method, model, args }) => {
+        if (method == "create_unique" && model == "ir.attachment") {
+            // This RPC call is done two times - once for storing webp and once for storing jpeg
+            // This handles first RPC call to store webp
+            if (!args[0][0].res_id) {
+                // Here we check the image data we pass and generated data.
+                // Also we check the file type
+                expect(args[0][0].datas).not.toBe(imageData);
+                expect(args[0][0].mimetype).toBe("image/webp");
+                return [1];
+            }
+            // This handles second RPC call to store jpeg
+            expect(args[0][0].datas).not.toBe(imageData);
+            expect(args[0][0].mimetype).toBe("image/jpeg");
+            return true;
+        }
+    })
+
+    const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" required="1" options="{'convert_to_webp': True}" />
+            </form>
+        `,
+    });
+
+    const imageFile = new File([imageData], "fake_file.jpeg", { type: "jpeg" });
+    expect("img[data-alt='Binary file']").toHaveAttribute(
+        "data-src",
+        "/web/static/img/placeholder.png",
+        { message: "image field should not be set" }
+    );
+    await setFiles(imageFile);
+})
