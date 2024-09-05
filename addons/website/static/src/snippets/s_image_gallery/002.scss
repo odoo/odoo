@@ -90,9 +90,6 @@
     }
 
     &.o_slideshow {
-        --o-carousel-indicators-dots-size: .75rem;
-        --o-carousel-controllers-size: #{map-get($spacers, 5)};
-
         .carousel {
             &, .carousel-inner {
                 height: var(--snippet-preview-height, 100%);
@@ -126,6 +123,7 @@
 
         .carousel-indicators {
             align-items: center;
+            min-width: 0;
         }
 
         .carousel-control-prev, .carousel-control-next {
@@ -133,8 +131,8 @@
         }
 
         .carousel-control-prev-icon, .carousel-control-next-icon {
-            width: var(--o-carousel-controllers-size);
-            height: var(--o-carousel-controllers-size);
+            width: $-o-carousel-controllers-size;
+            height: $-o-carousel-controllers-size;
             background-size: 50%;
         }
 
@@ -193,8 +191,8 @@
         // Indicators - Squared Miniatures / Rounded Miniatures
         &.s_image_gallery_indicators_squared, &.s_image_gallery_indicators_rounded {
             .carousel-indicators > button {
-                width: var(--o-carousel-controllers-size);
-                height: var(--o-carousel-controllers-size);
+                width: $-o-carousel-controllers-size;
+                height: $-o-carousel-controllers-size;
                 border: 0;
                 background-size: cover;
                 background-position: center;
@@ -217,10 +215,8 @@
         // Indicators - Dots
         &.s_image_gallery_indicators_dots {
             .carousel-indicators > button {
-                --o-carousel-indicators-spacer: #{$carousel-indicator-spacer * -4};
-
-                width: var(--o-carousel-indicators-dots-size);
-                height: var(--o-carousel-indicators-dots-size);
+                width: $-o-carousel-indicators-dots-size;
+                height: $-o-carousel-indicators-dots-size;
                 border: 0;
                 border-radius: $border-radius-pill;
                 background-image: none !important;
@@ -230,14 +226,13 @@
                 // Increases the click area for easier navigation.
                 &:before {
                     position: absolute;
-                    inset: var(--o-carousel-indicators-spacer);
+                    inset: $carousel-indicator-spacer * -4;
                     display: block;
                     content: '';
                 }
 
                 &.active {
-                    --o-carousel-indicators-spacer: #{$carousel-indicator-spacer * -1};
-
+                    inset: $carousel-indicator-spacer * -1;
                     transform: scale(.8);
                 }
             }
@@ -253,10 +248,10 @@
         &.s_image_gallery_controllers_outside {
 
             .carousel-inner {
-                padding-bottom: calc(var(--o-carousel-controllers-size) + #{map-get($spacers, 2)});
+                padding-bottom: $-o-carousel-controllers-size + map-get($spacers, 2);
             }
             .o_carousel_controllers {
-                height: var(--o-carousel-controllers-size);
+                height: $-o-carousel-controllers-size;
             }
         }
 
@@ -266,13 +261,15 @@
                 justify-content: center;
             }
 
-            .carousel-control-prev, .carousel-control-next {
-                bottom: calc(var(--o-carousel-controllers-size) + #{map-get($spacers, 2)});
+            &:not(.s_image_gallery_indicators_hidden) {
+                .carousel-control-prev, .carousel-control-next {
+                    bottom: $-o-carousel-controllers-size + map-get($spacers, 2);
+                }
             }
 
             .carousel-indicators {
                 bottom: 0;
-                height: var(--o-carousel-controllers-size);
+                height: $-o-carousel-controllers-size;
                 margin-bottom: 0;
             }
         }

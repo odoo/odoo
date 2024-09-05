@@ -795,6 +795,10 @@ table.table_desc tr td {
 // Snippets
 //
 
+// Variables shared between carousel snippets and s_image_gallery
+$-o-carousel-indicators-dots-size: .75rem;
+$-o-carousel-controllers-size: map-get($spacers, 5);
+
 // This style is shared by old versions of carousels
 // 000 for s_carousel & 000 and 001 for s_quotes_carousel
 %old_s_carousel_variants {
@@ -958,26 +962,34 @@ table.table_desc tr td {
 // This style is shared by the new versions of carousels
 // 001 for s_carousel & 002 for s_quotes_carousel
 %s_carousel_variants {
-
-    --o-carousel-indicators-dots-size: .75rem;
-    --o-carousel-controllers-size: #{map-get($spacers, 5)};
-
-    // Controls
+    // Controllers in Mobile
     @include media-breakpoint-down(md) {
         .carousel-control-prev,
         .carousel-control-next {
-            display: none; // remove arrows on mobile
+            top: auto;
+            bottom: map-get($spacers, 3);
+            height: $-o-carousel-controllers-size;
+            width: auto;
+            margin: 0 map-get($spacers, 3);
+        }
+
+        &:not(.s_carousel_arrows_hidden) .carousel-indicators {
+            $-margin-x: map-get($spacers, 3) * 2 + $-o-carousel-controllers-size;
+
+            margin: 0 $-margin-x 1em;
         }
     }
 
-    &.carousel-dark {
-        --o-carousel-indicator-dots-bg-color: #{to-rgb(#fff)};
+    .carousel-control-prev,
+    .carousel-control-next,
+    .carousel-indicators {
+        position: absolute;
     }
 
-    .carousel-control-prev,
-    .carousel-control-next {
-        position: absolute;
-        width: 10%;
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: $-o-carousel-controllers-size;
+        height: $-o-carousel-controllers-size;
+        background-size: 50%;
     }
 
     &.s_carousel_default {
@@ -998,11 +1010,8 @@ table.table_desc tr td {
 
     &.s_carousel_boxed, &.s_carousel_rounded {
         .carousel-control-prev-icon, .carousel-control-next-icon {
-            width: var(--o-carousel-controllers-size);
-            height: var(--o-carousel-controllers-size);
             border-radius: $border-radius;
             border: $border-width solid $border-color;
-            background-size: 50%;
             background-color: $carousel-dark-indicator-active-bg;
             filter: $carousel-dark-control-icon-filter;
         }
@@ -1046,10 +1055,12 @@ table.table_desc tr td {
 
     // Indicators
     .carousel-indicators {
+        align-items: center;
+        height: $-o-carousel-controllers-size;
+
         &.s_carousel_indicators_dots > button {
-            --o-carousel-indicators-spacer: #{$carousel-indicator-spacer * -4};
-            width: var(--o-carousel-indicators-dots-size);
-            height: var(--o-carousel-indicators-dots-size);
+            width: $-o-carousel-indicators-dots-size;
+            height: $-o-carousel-indicators-dots-size;
             border: 0;
             border-radius: $border-radius-pill;
             transform: scale(.5);
@@ -1058,7 +1069,7 @@ table.table_desc tr td {
             // Increases the click area for easier navigation.
             &:before {
                 position: absolute;
-                inset: var(--o-carousel-indicators-spacer);
+                inset: $carousel-indicator-spacer * -4;
                 display: block;
                 content: '';
             }
@@ -1068,8 +1079,7 @@ table.table_desc tr td {
             }
 
             &.active {
-                --o-carousel-indicators-spacer: #{$carousel-indicator-spacer * -1};
-
+                inset: $carousel-indicator-spacer * -1;
                 transform: scale(1);
             }
         }
@@ -1080,12 +1090,19 @@ table.table_desc tr td {
     }
 
     // Style - Indicators outside
-    &.s_carousel_controllers_indicators_outside .carousel-indicators {
-        position: relative;
+    &.s_carousel_controllers_indicators_outside {
+        .carousel-control-prev, .carousel-control-next {
+            margin-bottom: $-o-carousel-controllers-size;
+        }
 
-        button {
-            background-color: currentColor;
-            color: inherit;
+        .carousel-indicators {
+            position: relative;
+            margin-bottom: 0;
+
+            button {
+                background-color: currentColor;
+                color: inherit;
+            }
         }
     }
 }
