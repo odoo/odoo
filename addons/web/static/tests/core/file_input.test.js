@@ -56,7 +56,7 @@ test("Upload a file: default props", async () => {
     });
 
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([]);
+    await setInputFiles([]);
 
     expect(".o_file_input input").not.toHaveAttribute("multiple", null, {
         message: "'multiple' attribute should not be set",
@@ -97,7 +97,7 @@ test("Upload a file: custom attachment", async () => {
     });
 
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([]);
+    await setInputFiles([]);
 
     expect(".o_file_input input").toHaveAttribute("multiple", null, {
         message: "'multiple' attribute should be set",
@@ -128,12 +128,12 @@ test("uploading the same file twice triggers the onChange twice", async () => {
 
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await animationFrame();
     expect.verifySteps(["fake_file.txt"]);
 
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await animationFrame();
     expect.verifySteps(["fake_file.txt"]);
 });
@@ -161,7 +161,7 @@ test("uploading a file that is too heavy will send a notification", async () => 
 
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await animationFrame();
     expect.verifySteps(["notification"]);
 });
@@ -179,7 +179,7 @@ test("Upload button is disabled if attachment upload is not finished", async () 
     });
     //enable button
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([]);
+    await setInputFiles([]);
     await animationFrame();
 
     //disable button

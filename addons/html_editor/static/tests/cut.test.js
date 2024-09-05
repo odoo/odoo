@@ -79,7 +79,7 @@ describe("range not collapsed", () => {
                 const selection = editor.document.getSelection();
                 selection.extend(selection.anchorNode, 4);
                 cut(editor);
-                press("Delete");
+                await press("Delete");
             },
             contentAfter: "<p>a[]</p>",
         });

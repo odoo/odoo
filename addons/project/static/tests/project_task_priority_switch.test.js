@@ -23,7 +23,7 @@ test("project.task (form): check ProjectTaskPrioritySwitch", async () => {
     expect("div[name='priority'] .fa-star-o").toHaveCount(1, {
         message: "The low priority should display the fa-star-o (empty) icon",
     });
-    press("alt+r");
+    await press("alt+r");
     await animationFrame();
     expect("div[name='priority'] .fa-star").toHaveCount(1, {
         message:

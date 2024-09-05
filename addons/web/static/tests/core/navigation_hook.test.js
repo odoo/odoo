@@ -35,7 +35,7 @@ describe.current.tags("desktop");
 
 test("default navigation", async () => {
     async function navigate(hotkey, focused) {
-        press(hotkey);
+        await press(hotkey);
         await animationFrame();
 
         expect(focused).toBeFocused();
@@ -72,12 +72,12 @@ test("default navigation", async () => {
     await navigate("space", ".one");
     await navigate("escape", ".one");
 
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect.verifySteps([1]);
 
     await navigate("arrowdown", ".two");
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect.verifySteps([2]);
 });
@@ -106,12 +106,12 @@ test("hotkey override options", async () => {
 
     expect(".one").toBeFocused();
 
-    press("arrowleft");
+    await press("arrowleft");
     await animationFrame();
     expect(".three").toBeFocused();
     expect.verifySteps([0]);
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(".one").toBeFocused();
     expect.verifySteps(["escape"]);
@@ -119,7 +119,7 @@ test("hotkey override options", async () => {
 
 test("navigation with virtual focus", async () => {
     async function navigate(hotkey, expected) {
-        press(hotkey);
+        await press(hotkey);
         await animationFrame();
         // Focus is kept on button outside container
         expect(".outside").toBeFocused();
@@ -155,12 +155,12 @@ test("navigation with virtual focus", async () => {
     await navigate("tab", ".two");
     await navigate("shift+tab", ".one");
 
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect.verifySteps([1]);
 
     await navigate("arrowdown", ".two");
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect.verifySteps([2]);
 });

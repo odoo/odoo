@@ -101,16 +101,16 @@ describe("2 columns", () => {
 
     test("apply '2 columns' powerbox command", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
-        insertText(editor, "/2columns");
+        await insertText(editor, "/2columns");
         await animationFrame();
         expect(".active .o-we-command-name").toHaveText("2 columns");
 
-        press("enter");
+        await press("enter");
         expect(getContent(el)).toBe(
             `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
         );
 
-        insertText(editor, "/columns");
+        await insertText(editor, "/columns");
         await animationFrame();
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "3 columns",
@@ -194,16 +194,16 @@ describe("3 columns", () => {
 
     test("apply '3 columns' powerbox command", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
-        insertText(editor, "/3columns");
+        await insertText(editor, "/3columns");
         await animationFrame();
         expect(".active .o-we-command-name").toHaveText("3 columns");
 
-        press("enter");
+        await press("enter");
         expect(getContent(el)).toBe(
             `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div></div><p><br></p>`
         );
 
-        insertText(editor, "/columns");
+        await insertText(editor, "/columns");
         await animationFrame();
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "2 columns",
@@ -280,16 +280,16 @@ describe("4 columns", () => {
 
     test("apply '4 columns' powerbox command", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
-        insertText(editor, "/4columns");
+        await insertText(editor, "/4columns");
         await animationFrame();
         expect(".active .o-we-command-name").toHaveText("4 columns");
 
-        press("enter");
+        await press("enter");
         expect(getContent(el)).toBe(
             `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div></div></div><p><br></p>`
         );
 
-        insertText(editor, "/columns");
+        await insertText(editor, "/columns");
         await animationFrame();
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "2 columns",
@@ -345,7 +345,7 @@ describe("remove columns", () => {
 
     test("apply 'remove columns' powerbox command", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
-        insertText(editor, "/columns");
+        await insertText(editor, "/columns");
         await animationFrame();
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "2 columns",
@@ -354,15 +354,15 @@ describe("remove columns", () => {
         ]);
 
         // add 2 columns
-        press("enter");
+        await press("enter");
         expect(getContent(el)).toBe(
             `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
         );
 
-        insertText(editor, "/removecolumns");
+        await insertText(editor, "/removecolumns");
         await animationFrame();
         expect(".active .o-we-command-name").toHaveText("Remove columns");
-        press("enter");
+        await press("enter");
         expect(getContent(el)).toBe(`<p>ab[]cd</p><p><br></p><p><br></p>`);
     });
 });
@@ -413,7 +413,7 @@ describe("undo", () => {
             stepFunction: async (editor) => {
                 columnize(2)(editor);
                 undo(editor);
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter: "<p>x[]</p>",
         });
@@ -426,7 +426,7 @@ describe("undo", () => {
                 columnize(2)(editor);
                 undo(editor);
                 redo(editor);
-                insertText(editor, "x");
+                await insertText(editor, "x");
             },
             contentAfter:
                 columnsContainer(column(6, "<p>x[]</p>") + column(6, "<p><br></p>")) +

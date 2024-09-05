@@ -46,7 +46,7 @@ const makeSteps = (steps = []) => [
                 }, 999);
             });
         },
-    }, 
+    },
     {
         trigger: "body.o_test_delay",
     },
@@ -91,8 +91,8 @@ registerWebsitePreviewTour('website_no_dirty_page', {
     }, {
         content: "Click on button",
         trigger: ':iframe .s_text_image .btn',
-        run: function (actions) {
-            actions.click();
+        async run(actions) {
+            await actions.click();
             const el = this.anchor;
             const sel = el.ownerDocument.getSelection();
             sel.collapse(el, 0);
@@ -110,7 +110,7 @@ registerWebsitePreviewTour('website_no_dirty_lazy_image', {
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
-    }), 
+    }),
     {
         // Ensure the test keeps testing what it should test (eg if we ever
         trigger: ':iframe img.o_lang_flag[loading="lazy"]',
@@ -120,7 +120,7 @@ registerWebsitePreviewTour('website_no_dirty_lazy_image', {
         // remove the lazy loading on those language img))
         trigger: ':iframe #wrap .s_text_image p',
         run: 'editor SomeTestText',
-    }, 
+    },
     {
         trigger: ':iframe #wrap .s_text_image p:contains("SomeTestText")',
     },
@@ -128,7 +128,7 @@ registerWebsitePreviewTour('website_no_dirty_lazy_image', {
         content: "Click elsewhere to be sure the editor fully process the new content",
         trigger: ':iframe #wrap .s_text_image img',
         run: "click",
-    }, 
+    },
     {
         trigger: '.o_we_user_value_widget[data-replace-media="true"]',
     },

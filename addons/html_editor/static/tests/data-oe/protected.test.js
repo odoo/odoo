@@ -15,7 +15,7 @@ test("should ignore protected elements children mutations (true)", async () => {
                 <div data-oe-protected="true"><p>a</p></div>
                 `),
         stepFunction: async (editor) => {
-            insertText(editor, "bc");
+            await insertText(editor, "bc");
             const protectedParagraph = editor.editable.querySelector(
                 '[data-oe-protected="true"] > p'
             );
@@ -37,12 +37,12 @@ test("should not ignore unprotected elements children mutations (false)", async 
                 <div data-oe-protected="true"><div data-oe-protected="false"><p>a</p></div></div>
                 `),
         stepFunction: async (editor) => {
-            insertText(editor, "bc");
+            await insertText(editor, "bc");
             const unProtectedParagraph = editor.editable.querySelector(
                 '[data-oe-protected="false"] > p'
             );
             setSelection({ anchorNode: unProtectedParagraph, anchorOffset: 1 });
-            insertText(editor, "bc");
+            await insertText(editor, "bc");
             editor.dispatch("HISTORY_UNDO");
         },
         contentAfterEdit: unformat(`

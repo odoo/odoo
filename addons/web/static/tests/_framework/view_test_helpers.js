@@ -148,7 +148,7 @@ export async function clickFieldDropdownItem(fieldName, itemContent, options) {
     if (indexToClick === -1) {
         throw new Error(`The element '${itemContent}' does not exist in the dropdown`);
     }
-    click(dropdownItems[indexToClick]);
+    await click(dropdownItems[indexToClick]);
     await animationFrame();
 }
 

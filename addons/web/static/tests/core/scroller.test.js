@@ -27,10 +27,10 @@ test("Ignore empty hrefs", async () => {
 
     browser.location.hash = "#testscroller";
 
-    click(".inactive_link");
+    await click(".inactive_link");
     await animationFrame();
 
-    click(".fa.fa-trash");
+    await click(".fa.fa-trash");
     await animationFrame();
 
     expect(browser.location.hash).toBe("#testscroller");
@@ -83,7 +83,7 @@ test("Simple rendering with a scroll", async () => {
     await mountWithCleanup(MyComponent);
 
     expect(queryOne("#scroller").scrollTop).toBe(0);
-    click(".btn.btn-primary");
+    await click(".btn.btn-primary");
     await animationFrame();
     expect(queryOne("#scroller").scrollTop).toBeGreaterThan(0);
 });
@@ -200,7 +200,7 @@ test("Rendering with multiple anchors and scrolls", async () => {
     await mountWithCleanup(MyComponent);
     const scrollableParent = queryOne("#scroller");
     expect(scrollableParent.scrollTop).toBe(0);
-    click(".link1");
+    await click(".link1");
 
     // The element must be contained in the scrollable parent (top and bottom)
     const isVisible = (selector) => {
@@ -212,10 +212,10 @@ test("Rendering with multiple anchors and scrolls", async () => {
     };
 
     expect(isVisible("#anchor1")).toBe(true);
-    click(".link2");
+    await click(".link2");
     await animationFrame();
     expect(isVisible("#anchor2")).toBe(true);
-    click(".link3");
+    await click(".link3");
     await animationFrame();
     expect(isVisible("#anchor3")).toBe(true);
 });
@@ -250,11 +250,11 @@ test("clicking anchor when no scrollable", async () => {
     await mountWithCleanup(MyComponent);
     const scrollableParent = queryOne("#scroller");
     expect(scrollableParent.scrollTop).toBe(0);
-    click(".btn.btn-primary");
+    await click(".btn.btn-primary");
     await animationFrame();
     expect(scrollableParent.scrollTop).toBe(0, { message: "no scroll happened" });
     queryOne(".inactive-container").style.maxHeight = "unset";
-    click(".btn.btn-primary");
+    await click(".btn.btn-primary");
     await animationFrame();
     expect(scrollableParent.scrollTop).toBeGreaterThan(0, { message: "a scroll happened" });
 });
@@ -338,12 +338,12 @@ test("clicking anchor when multi levels scrollables", async () => {
     };
 
     expect(scrollableParent.scrollTop).toBe(0);
-    click(".btn1");
+    await click(".btn1");
     await animationFrame();
     expect(border("#scroll1").top).toBeLessThan(10, {
         message: "the element must be near the top border",
     });
-    click(".btn2");
+    await click(".btn2");
     await animationFrame();
     expect(border("#scroll2").top).toBeLessThan(10, {
         message: "the element must be near the top border",

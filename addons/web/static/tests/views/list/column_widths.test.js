@@ -676,7 +676,7 @@ test.todo(`width computation: widths are re-computed on window resize`, async ()
     const initialTextWidth = queryRect(`th[data-name="text"]`).width;
     const selectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
 
-    resize({ width: queryRect(getFixture()).width / 2 });
+    await resize({ width: queryRect(getFixture()).width / 2 });
     await animationFrame();
     const postResizeTextWidth = queryRect(`th[data-name="text"]`).width;
     const postResizeSelectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
@@ -707,7 +707,7 @@ test(`width computation: button columns don't have a max width`, async () => {
     expect(columnWidths[2]).toBeGreaterThan(330);
 
     // simulate a window resize (buttons column width should not be squeezed)
-    resize({ width: 300 });
+    await resize({ width: 300 });
     await runAllTimers();
     await animationFrame();
     const tableWidth = queryAllProperties(".o_list_table", "offsetWidth")[0];
@@ -839,7 +839,7 @@ test(`freeze widths: switch mode (lot of fields)`, async () => {
 
     // the width is hardcoded to make sure we have the same condition
     // between debug mode and non debug mode
-    resize({ width: 1200 });
+    await resize({ width: 1200 });
     await mountView({
         resModel: "foo",
         type: "list",
@@ -985,7 +985,7 @@ test(`freeze widths: grouped list, open a group`, async () => {
 });
 
 test(`freeze widths: toggle a filter, vertical scrollbar appears`, async () => {
-    resize({ height: 500 });
+    await resize({ height: 500 });
 
     for (let i = 10; i < 20; i++) {
         Foo._records.push({ id: i, bar: true, foo: `Foo ${i}` });

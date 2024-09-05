@@ -124,7 +124,7 @@ test("double clicking on a figure doesn't open the side panel", async () => {
     ];
     await createSpreadsheetDashboard({ serverData });
     await contains(".o-chart-container").focus();
-    dblclick(".o-chart-container");
+    await dblclick(".o-chart-container");
     await animationFrame();
     expect(".o-chart-container").toHaveCount(1);
     expect(".o-sidePanel").toHaveCount(0);

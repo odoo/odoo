@@ -411,7 +411,7 @@ describe("Selection collapsed", () => {
                 contentBefore: "<p><a>ab[]</a></p>",
                 stepFunction: async (editor) => {
                     splitBlock(editor);
-                    press("enter");
+                    await press("enter");
                     editor.shared.focusEditable();
                     await tick();
                 },

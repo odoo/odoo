@@ -80,14 +80,14 @@ test.tags("desktop")("open datepicker on Control+Enter", async () => {
 
     expect(".o_field_date input").toHaveCount(1);
 
-    press(["ctrl", "enter"]);
+    await press(["ctrl", "enter"]);
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1);
 
     //edit the input and open the datepicker again with ctrl+enter
     await contains(".o_field_date .o_input").click();
-    edit("09/01/1997");
-    press(["ctrl", "enter"]);
+    await edit("09/01/1997");
+    await press(["ctrl", "enter"]);
     await animationFrame();
     assertDateTimePicker({
         title: "January 1997",
@@ -444,7 +444,7 @@ test("date field with min_precision option", async () => {
                 </form>`,
     });
 
-    click(".o_field_date input");
+    await click(".o_field_date input");
     await animationFrame();
     expect(".o_date_item_cell").toHaveCount(12);
     expect(queryAllTexts(".o_date_item_cell")).toEqual([
@@ -463,7 +463,7 @@ test("date field with min_precision option", async () => {
     ]);
     expect(".o_date_item_cell.o_selected").toHaveText("Feb");
 
-    click(getPickerCell("Jan"));
+    await click(getPickerCell("Jan"));
     await animationFrame();
     // The picker should be closed
     expect(".o_date_item_cell").toHaveCount(0);
@@ -484,7 +484,7 @@ test("date field with max_precision option", async () => {
                 </form>`,
     });
 
-    click(".o_field_date input");
+    await click(".o_field_date input");
     await animationFrame();
     // Try to zoomOut twice to be in the year selector
     await zoomOut();
@@ -495,9 +495,9 @@ test("date field with max_precision option", async () => {
     expect(".o_datetime_picker_header").toHaveText("2017");
     expect(".o_date_item_cell.o_selected").toHaveText("Feb");
 
-    click(getPickerCell("Jan"));
+    await click(getPickerCell("Jan"));
     await animationFrame();
-    click(getPickerCell("12"));
+    await click(getPickerCell("12"));
     await animationFrame();
     expect(".o_field_widget[name='date'] input").toHaveValue("01/12/2017");
 });

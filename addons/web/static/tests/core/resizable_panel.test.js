@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Component, reactive, xml } from "@odoo/owl";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { drag, queryOne, resize } from "@odoo/hoot-dom";
+import { drag, queryOne, queryRect, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { Component, reactive, xml } from "@odoo/owl";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 
 describe.current.tags("desktop");
 
@@ -27,8 +27,7 @@ test("Width cannot exceed viewport width", async () => {
     const vw = window.innerWidth;
     queryOne(".o_resizable_panel").style.width = `${vw + 100}px`;
 
-    const sidepanelWidth = queryOne(".o_resizable_panel").getBoundingClientRect().width;
-    expect(sidepanelWidth).toBeWithin(vw * 0.95, vw);
+    expect(queryRect(".o_resizable_panel").width).toBeWithin(vw * 0.95, vw);
 });
 
 test("handles right-to-left", async () => {
@@ -48,14 +47,16 @@ test("handles right-to-left", async () => {
     }
 
     await mountWithCleanup(Parent);
-    expect(queryOne(".o_resizable_panel").getBoundingClientRect().width).toBe(30);
-    drag(".o_resizable_panel_handle").drop(".o_resizable_panel_handle", {
+    expect(".o_resizable_panel").toHaveRect({ width: 30 });
+    await (
+        await drag(".o_resizable_panel_handle")
+    ).drop(".o_resizable_panel_handle", {
         position: {
             x: 10,
         },
     });
 
-    expect(queryOne(".o_resizable_panel").getBoundingClientRect().width).toBeGreaterThan(
+    expect(queryRect(".o_resizable_panel").width).toBeGreaterThan(
         queryOne(".parent-el").offsetWidth - 10 - 50
     );
 });
@@ -78,18 +79,18 @@ test("handles resize handle at start in fixed position", async () => {
     await mountWithCleanup(Parent);
     const resizablePanelEl = queryOne(".o_resizable_panel");
     resizablePanelEl.style.setProperty("right", "100px");
-    let resizablePabelRect = resizablePanelEl.getBoundingClientRect();
-    expect(resizablePabelRect.width).toBe(30);
+    expect(resizablePanelEl).toHaveRect({ width: 30 });
 
-    drag(".o_resizable_panel_handle").drop(".o_resizable_panel_handle", {
+    await (
+        await drag(".o_resizable_panel_handle")
+    ).drop(".o_resizable_panel_handle", {
         position: {
             x: window.innerWidth - 200,
         },
     });
-    resizablePabelRect = resizablePanelEl.getBoundingClientRect();
-    expect(resizablePabelRect.width).toBe(
-        100 + queryOne(".o_resizable_panel_handle").offsetWidth / 2
-    );
+    expect(resizablePanelEl).toHaveRect({
+        width: 100 + queryRect(".o_resizable_panel_handle").width / 2,
+    });
 });
 
 test("resizing the window adapts the panel", async () => {
@@ -108,7 +109,9 @@ test("resizing the window adapts the panel", async () => {
     }
 
     await mountWithCleanup(Parent);
-    drag(".o_resizable_panel_handle").drop(".o_resizable_panel_handle", {
+    await (
+        await drag(".o_resizable_panel_handle")
+    ).drop(".o_resizable_panel_handle", {
         position: {
             x: 99999,
         },
@@ -116,7 +119,7 @@ test("resizing the window adapts the panel", async () => {
 
     expect(queryOne(".o_resizable_panel").offsetWidth).toBe(398);
     queryOne(".parent-el").style.width = "200px";
-    resize();
+    await resize();
     expect(queryOne(".o_resizable_panel").offsetWidth).toBe(198);
 });
 
@@ -138,19 +141,23 @@ test("minWidth props can be updated", async () => {
     await mountWithCleanup(Parent, {
         props: { state },
     });
-    drag(".o_resizable_panel_handle").drop(".o_resizable_panel_handle", {
+    await (
+        await drag(".o_resizable_panel_handle")
+    ).drop(".o_resizable_panel_handle", {
         position: {
             x: 15,
         },
     });
 
-    expect(queryOne(".o_resizable_panel").getBoundingClientRect().width).toBe(20);
+    expect(".o_resizable_panel").toHaveRect({ width: 20 });
     state.minWidth = 40;
     await animationFrame();
-    drag(".o_resizable_panel_handle").drop(".o_resizable_panel_handle", {
+    await (
+        await drag(".o_resizable_panel_handle")
+    ).drop(".o_resizable_panel_handle", {
         position: {
             x: 15,
         },
     });
-    expect(queryOne(".o_resizable_panel").getBoundingClientRect().width).toBe(40);
+    expect(".o_resizable_panel").toHaveRect({ width: 40 });
 });

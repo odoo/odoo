@@ -11,7 +11,7 @@ import { setSelection } from "./selection";
  * @param {Editor} editor
  * @param {string} text
  */
-export function insertText(editor, text) {
+export async function insertText(editor, text) {
     const insertChar = (char) => {
         // Create and dispatch events to mock text insertion. Unfortunatly, the
         // events will be flagged `isTrusted: false` by the browser, requiring
@@ -39,19 +39,19 @@ export function insertText(editor, text) {
     };
     for (const char of text) {
         // KeyDownEvent is required to trigger deleteRange.
-        manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
+        await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
         // InputEvent is required to simulate the insert text.
-        manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+        await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
             inputType: "insertText",
             data: char,
         });
         insertChar(char);
-        manuallyDispatchProgrammaticEvent(editor.editable, "input", {
+        await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
             inputType: "insertText",
             data: char,
         });
         // KeyUpEvent is not required but is triggered like the browser would.
-        manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
+        await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
     }
 }
 
@@ -103,12 +103,14 @@ export function toggleCheckList(editor) {
  * @param {HTMLLIElement} li
  * @throws {Error} If the provided element is not a LI element within a checklist.
  */
-export function clickCheckbox(li) {
+export async function clickCheckbox(li) {
     if (li.tagName !== "LI" || !li.parentNode.classList.contains("o_checklist")) {
         throw new Error("Expected a LI element in a checklist");
     }
-    const liRect = li.getBoundingClientRect();
-    click(li, { position: { clientX: liRect.left - 10, clientY: liRect.top + 10 } });
+    await click(li, {
+        position: { x: -10, y: 10 },
+        relative: true,
+    });
 }
 
 /** @param {Editor} editor */
@@ -147,7 +149,7 @@ export function splitBlock(editor) {
 }
 
 export async function simulateArrowKeyPress(editor, keys) {
-    press(keys);
+    await press(keys);
     const keysArray = Array.isArray(keys) ? keys : [keys];
     const alter = keysArray.includes("Shift") ? "extend" : "move";
     const direction =
@@ -164,21 +166,24 @@ export function unlinkByCommand(editor) {
 
 export async function unlinkFromToolbar() {
     await waitFor(".o-we-toolbar");
-    click(".btn[name='unlink']");
+    await click(".btn[name='unlink']");
 }
 
 export async function unlinkFromPopover() {
     await waitFor(".o-we-linkpopover");
-    click(".o_we_remove_link");
+    await click(".o_we_remove_link");
 }
 
 /** @param {Editor} editor */
-export function keydownTab(editor) {
-    manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: "Tab" });
+export async function keydownTab(editor) {
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: "Tab" });
 }
 /** @param {Editor} editor */
-export function keydownShiftTab(editor) {
-    manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: "Tab", shiftKey: true });
+export async function keydownShiftTab(editor) {
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+        key: "Tab",
+        shiftKey: true,
+    });
 }
 /** @param {Editor} editor */
 export function resetSize(editor) {
@@ -253,7 +258,7 @@ export function pasteOdooEditorHtml(editor, html) {
 export async function tripleClick(node) {
     const anchorNode = node;
     node = node.nodeType === Node.ELEMENT_NODE ? node : node.parentNode;
-    manuallyDispatchProgrammaticEvent(node, "mousedown", { detail: 3 });
+    await manuallyDispatchProgrammaticEvent(node, "mousedown", { detail: 3 });
     let focusNode = closestBlock(anchorNode).nextSibling;
     let focusOffset = 0;
     if (!focusNode) {
@@ -265,8 +270,8 @@ export async function tripleClick(node) {
         focusNode,
         focusOffset,
     });
-    manuallyDispatchProgrammaticEvent(node, "mouseup", { detail: 3 });
-    manuallyDispatchProgrammaticEvent(node, "click", { detail: 3 });
+    await manuallyDispatchProgrammaticEvent(node, "mouseup", { detail: 3 });
+    await manuallyDispatchProgrammaticEvent(node, "click", { detail: 3 });
 
     await tick();
 }

@@ -72,9 +72,9 @@ registry.category("web_tour.tours").add("purchase_tour", {
             trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",
             content: _t("Select a product, or create a new one on the fly."),
             tooltipPosition: "right",
-            run: function (actions) {
+            async run(actions) {
                 const input = this.anchor.querySelector("input");
-                actions.edit("DESK0001", input || this.anchor);
+                await actions.edit("DESK0001", input || this.anchor);
                 const descriptionElement = queryFirst('.o_form_editable textarea[name="name"]');
                 // when description changes, we know the product has been created
                 descriptionElement.addEventListener("change", () => {

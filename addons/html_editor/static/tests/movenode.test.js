@@ -5,6 +5,8 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 
+describe.current.tags("desktop")
+
 const styles = `
 .odoo-editor-editable {
     position: fixed;
@@ -18,7 +20,7 @@ test("should show the hook when hovering a P", async () => {
     const { el } = await setupEditor("<p>a[]</p><p>b</p>", {
         styleContent: styles,
     });
-    hover(el.querySelector("p"));
+    await hover(el.querySelector("p"));
     const moveElements = [...document.querySelectorAll(".oe-sidewidget-move")];
     expect(moveElements).toHaveLength(1);
     const elementRect = moveElements[0].getBoundingClientRect();
@@ -29,7 +31,7 @@ test("should show the hook when hovering the second P", async () => {
     const { el } = await setupEditor("<p>a[]</p><p>b</p>", {
         styleContent: styles,
     });
-    hover(el.querySelector("p:last-child"));
+    await hover(el.querySelector("p:last-child"));
     const moveElements = [...document.querySelectorAll(".oe-sidewidget-move")];
     expect(moveElements).toHaveLength(1);
     const elementRect = moveElements[0].getBoundingClientRect();
@@ -40,7 +42,7 @@ test("should not show the hook when hovering a DIV", async () => {
     const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p>", {
         styleContent: styles,
     });
-    hover(el.querySelector("div"));
+    await hover(el.querySelector("div"));
     const moveElements = [...document.querySelectorAll(".oe-sidewidget-move")];
     expect(moveElements).toHaveLength(0);
 });
@@ -51,7 +53,7 @@ describe("drag", () => {
         });
         await animationFrame();
         const firstP = el.querySelector("p");
-        hover(firstP);
+        await hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
         let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
         expect(dropzones).toHaveLength(0);
@@ -69,7 +71,7 @@ describe("drag", () => {
         });
         await animationFrame();
         const firstP = el.querySelector("p");
-        hover(firstP);
+        await hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
         let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
         expect(dropzones).toHaveLength(0);
@@ -87,7 +89,7 @@ describe("drag", () => {
         });
         await animationFrame();
         const firstP = el.querySelector("p");
-        hover(firstP);
+        await hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
         let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
         expect(dropzones).toHaveLength(0);
@@ -105,7 +107,7 @@ describe("drag", () => {
         });
         await animationFrame();
         const firstP = el.querySelector("p");
-        hover(firstP);
+        await hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
         let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
         expect(dropzones).toHaveLength(0);
@@ -123,7 +125,7 @@ describe("drag", () => {
         });
         await animationFrame();
         const firstP = el.querySelector("p");
-        hover(firstP);
+        await hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
         let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
         expect(dropzones).toHaveLength(0);
@@ -143,7 +145,7 @@ describe("drag", () => {
         });
         await animationFrame();
         const firstP = el.querySelector("p");
-        hover(firstP);
+        await hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
         let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
         expect(dropzones).toHaveLength(0);

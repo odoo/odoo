@@ -16,9 +16,9 @@ const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";
 const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
 const openFromPowerbox = async (editor) => {
-    insertText(editor, "/ChatGPT");
+    await insertText(editor, "/ChatGPT");
     await animationFrame();
-    press("Enter");
+    await press("Enter");
 };
 const openFromToolbar = async () => {
     await contains(".o-we-toolbar .btn[name='chatgpt']").click();
@@ -299,7 +299,7 @@ test("press escape to close ChatGPT dialog", async () => {
     await waitFor(promptDialogHeaderSelector);
     expect(getActiveElement()).toBe(queryOne('.modal [name="promptInput"]'));
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(promptDialogHeaderSelector).toHaveCount(0);
     expect(getContent(el)).toBe("<p>te[]st</p>");

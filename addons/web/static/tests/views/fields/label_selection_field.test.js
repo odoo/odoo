@@ -1,7 +1,7 @@
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { click, queryFirst } from "@odoo/hoot-dom";
+import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     foo = fields.Char();
@@ -96,7 +96,7 @@ test("LabelSelectionField in editable list view", async () => {
     });
 
     // switch to edit mode and check the result
-    click(queryFirst("tbody td:not(.o_list_record_selector)"));
+    await click("tbody td:not(.o_list_record_selector)");
     await animationFrame();
 
     expect(".o_field_widget .badge:not(:empty)").toHaveCount(3, {
@@ -122,7 +122,7 @@ test("LabelSelectionField in editable list view", async () => {
     });
 
     // save and check the result
-    click(queryFirst(".o_control_panel_main_buttons .o_list_button_save"));
+    await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
     expect(".o_field_widget .badge:not(:empty)").toHaveCount(3, {
         message: "should have three visible status labels",
