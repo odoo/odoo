@@ -102,7 +102,7 @@ test("model_field_selector should close on dialog drag", async () => {
 
     const header = queryOne(".modal-header");
     const headerRect = header.getBoundingClientRect();
-    (await contains(header).drag()).drop(document.body, {
+    await contains(header).dragAndDrop(document.body, {
         position: {
             // the util function sets the source coordinates at (x; y) + (w/2; h/2)
             // so we need to move the dialog based on these coordinates.

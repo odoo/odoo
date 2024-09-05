@@ -248,12 +248,12 @@ test("text field without line breaks", async () => {
     expect(".o_field_text textarea").toHaveCount(1);
     expect(".o_field_text textarea").toHaveValue("Description as text");
     await contains(".o_field_text textarea").click();
-    press("Enter");
+    await press("Enter");
     expect(".o_field_text textarea").toHaveValue("Description as text");
 
     await contains(".o_field_text textarea").clear({ confirm: false });
-    navigator.clipboard.writeText("text\nwith\nline\nbreaks\n"); // copy
-    press(["ctrl", "v"]); // paste
+    await navigator.clipboard.writeText("text\nwith\nline\nbreaks\n"); // copy
+    await press(["ctrl", "v"]); // paste
     expect(".o_field_text textarea").toHaveValue("text with line breaks ", {
         message: "no line break should appear",
     });

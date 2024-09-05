@@ -1,21 +1,21 @@
 import { after, expect, test } from "@odoo/hoot";
-import { press, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
     editFavoriteName,
+    editSearch,
     fields,
+    getFacetTexts,
+    mockService,
     models,
     mountWithSearch,
+    onRpc,
+    saveFavorite,
     toggleSaveFavorite,
     toggleSearchBarMenu,
-    saveFavorite,
-    getFacetTexts,
-    onRpc,
-    editSearch,
     validateSearch,
-    mockService,
 } from "@web/../tests/web_test_helpers";
 
 import { SearchBar } from "@web/search/search_bar/search_bar";
@@ -73,21 +73,21 @@ test("favorites use by default and share are exclusive", async () => {
     expect(`input[type="checkbox"]`).toHaveCount(2);
     expect(`input[type="checkbox"]:checked`).toHaveCount(0);
 
-    await contains(queryAll`input[type="checkbox"]`[0]).check();
-    expect(queryAll`input[type="checkbox"]`[0]).toBeChecked();
-    expect(queryAll`input[type="checkbox"]`[1]).not.toBeChecked();
+    await contains(`input[type="checkbox"]:eq(0)`).check();
+    expect(`input[type="checkbox"]:eq(0)`).toBeChecked();
+    expect(`input[type="checkbox"]:eq(1)`).not.toBeChecked();
 
-    await contains(queryAll`input[type="checkbox"]`[1]).check();
-    expect(queryAll`input[type="checkbox"]`[0]).not.toBeChecked();
-    expect(queryAll`input[type="checkbox"]`[1]).toBeChecked();
+    await contains(`input[type="checkbox"]:eq(1)`).check();
+    expect(`input[type="checkbox"]:eq(0)`).not.toBeChecked();
+    expect(`input[type="checkbox"]:eq(1)`).toBeChecked();
 
-    await contains(queryAll`input[type="checkbox"]`[0]).check();
-    expect(queryAll`input[type="checkbox"]`[0]).toBeChecked();
-    expect(queryAll`input[type="checkbox"]`[1]).not.toBeChecked();
+    await contains(`input[type="checkbox"]:eq(0)`).check();
+    expect(`input[type="checkbox"]:eq(0)`).toBeChecked();
+    expect(`input[type="checkbox"]:eq(1)`).not.toBeChecked();
 
-    await contains(queryAll`input[type="checkbox"]`[0]).uncheck();
-    expect(queryAll`input[type="checkbox"]`[0]).not.toBeChecked();
-    expect(queryAll`input[type="checkbox"]`[1]).not.toBeChecked();
+    await contains(`input[type="checkbox"]:eq(0)`).uncheck();
+    expect(`input[type="checkbox"]:eq(0)`).not.toBeChecked();
+    expect(`input[type="checkbox"]:eq(1)`).not.toBeChecked();
 });
 
 test("save filter", async () => {

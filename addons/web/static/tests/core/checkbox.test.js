@@ -42,11 +42,11 @@ test("call onChange prop when some change occurs", async () => {
 
     expect(`.o-checkbox input`).toHaveCount(1);
 
-    check("input");
+    await check("input");
 
     expect(value).toBe(true);
 
-    uncheck("input");
+    await uncheck("input");
 
     expect(value).toBe(false);
 });

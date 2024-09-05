@@ -854,9 +854,13 @@ test("click on action-bound links in banner (concurrency)", async () => {
         tag: "gout",
     }));
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
+
     click("a[data-method='setTheControl']");
     await animationFrame();
+
     click("a[data-method='heartOfTheSun']");
+    await animationFrame();
+
     prom.resolve();
     await animationFrame();
 });
