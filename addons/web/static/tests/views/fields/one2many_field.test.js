@@ -5,7 +5,6 @@ import {
     queryAll,
     queryAllTexts,
     queryFirst,
-    queryLast,
     queryOne,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
@@ -7595,7 +7594,7 @@ test("editing tabbed one2many (editable=bottom)", async () => {
     });
     await contains(".o_field_x2many_list_row_add a").click();
     expect("tr.o_data_row").toHaveCount(41);
-    expect(queryLast("tr.o_data_row")).toHaveClass("o_selected_row");
+    expect("tr.o_data_row:last").toHaveClass("o_selected_row");
 
     await contains('.o_data_row [name="turtle_foo"] input').edit("rainbow dash", {
         confirm: false,
@@ -13035,12 +13034,12 @@ test.tags("desktop")("expand record in dialog", async () => {
     await contains("[name='name'] input").edit("new turtle");
     await contains(".o_dialog .o_form_button_save").click();
     expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(2);
-    await contains(queryLast(".o_field_widget[name=turtles] .o_data_cell")).click();
+    await contains(".o_field_widget[name=turtles] .o_data_cell:last").click();
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
     await contains(".o_dialog .modal-header .btn-close").click();
     await clickSave();
-    await contains(queryLast(".o_field_widget[name=turtles] .o_data_cell")).click();
+    await contains(".o_field_widget[name=turtles] .o_data_cell:last").click();
     expect(".o_dialog .o_form_view").toHaveCount(1);
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
     await contains(".o_dialog .modal-header .o_expand_button").click();
