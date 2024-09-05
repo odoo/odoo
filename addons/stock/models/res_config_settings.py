@@ -44,7 +44,6 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_starshipit = fields.Boolean("Starshipit Connector")
     module_quality_control = fields.Boolean("Quality")
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
-    module_quality_control_spreadsheet = fields.Boolean("Quality Spreadsheets")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
     annual_inventory_month = fields.Selection(related='company_id.annual_inventory_month', readonly=False)
