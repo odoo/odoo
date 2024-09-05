@@ -70,10 +70,6 @@ odoo-bin" | tee --append .git/info/sparse-checkout > /dev/null
     git read-tree -mu HEAD
 fi
 
-# copy the odoo.conf file to the overwrite directory
-mv -v "${CLONE_DIR}/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/"
-chown pi:pi "${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo.conf"
-
 cd "${__dir}"
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
 mkdir -pv "${USR_BIN}"
@@ -169,6 +165,10 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
         patch -f --verbose "${file}" < "${iotpatch}"
     done
 done
+
+# copy the odoo.conf file to the overwrite directory
+mv -v "${MOUNT_POINT}/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "${MOUNT_POINT}/home/pi/"
+chown pi:pi "${MOUNT_POINT}/home/pi/odoo.conf"
 
 # cleanup
 umount -fv "${MOUNT_POINT}"/boot/
