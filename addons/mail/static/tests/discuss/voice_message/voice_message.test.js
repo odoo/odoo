@@ -1,7 +1,6 @@
 import {
     click,
     contains,
-    createFile,
     defineMailModels,
     mockGetMedia,
     openDiscuss,
@@ -122,12 +121,7 @@ function patchAudio() {
 }
 
 test("make voice message in chat", async () => {
-    const file = await createFile({
-        content: Array(500).map(() => new Int8Array()), // some non-empty content
-        contentType: "audio/mp3",
-        name: "test.mp3",
-        size: 25_000,
-    });
+    const file = new File([new Uint8Array(25000)], "test.mp3", { type: "audio/mp3" });
     const voicePlayerDrawing = new Deferred();
     patchWithCleanup(VoiceRecorder.prototype, {
         _encode() {},
